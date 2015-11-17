@@ -6,7 +6,7 @@ import io.realm.RealmObject;
 /**
  * Created by Claudio Redi on 11/4/2015.
  */
-public class SummitAttendee extends RealmObject implements IEntity {
+public class SummitAttendee extends RealmObject implements IPerson {
     private int id;
     private String firstName;
     private String lastName;
@@ -16,11 +16,11 @@ public class SummitAttendee extends RealmObject implements IEntity {
     private String twitter;
     private String irc;
     private String email;
-    private int memberId;
+    private Integer memberId;
     private TicketType ticketType;
-    private RealmList<SummitEvent> scheduledEvents;
-    private RealmList<SummitEvent> bookmarkedEvents;
-    private RealmList<Feedback> feedback;
+    private RealmList<SummitEvent> scheduledEvents = new RealmList<>();
+    private RealmList<SummitEvent> bookmarkedEvents = new RealmList<>();
+    private RealmList<Feedback> feedback = new RealmList<>();
 
     public int getId() {
         return id;
@@ -94,11 +94,11 @@ public class SummitAttendee extends RealmObject implements IEntity {
         this.email = email;
     }
 
-    public int getMemberId() {
+    public Integer getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(int memberId) {
+    public void setMemberId(Integer memberId) {
         this.memberId = memberId;
     }
 

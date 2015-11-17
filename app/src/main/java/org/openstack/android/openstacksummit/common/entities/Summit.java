@@ -14,11 +14,11 @@ public class Summit extends RealmObject implements INamedEntity {
     private Date startDate;
     private Date endDate;
     private String timeZone;
-    private RealmList<SummitType> types;
-    private RealmList<TicketType> ticketTypes;
-    private RealmList<Venue> venues;
-    private RealmList<SummitEvent> events;
-    private RealmList<Track> tracks;
+    private RealmList<SummitType> types = new RealmList<>();
+    private RealmList<TicketType> ticketTypes = new RealmList<>();
+    private RealmList<Venue> venues = new RealmList<>();
+    private RealmList<SummitEvent> events = new RealmList<>();
+    private RealmList<Track> tracks = new RealmList<>();
 
     public int getId() {
         return id;

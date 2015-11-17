@@ -10,8 +10,7 @@ public class Presentation extends RealmObject implements IEntity {
     private int id;
     private String level;
     private Track track;
-    private RealmList<PresentationSpeaker> speakers;
-    private RealmList<Tag> tags;
+    private RealmList<PresentationSpeaker> speakers = new RealmList<>();
 
     public int getId() {
         return id;
@@ -43,14 +42,6 @@ public class Presentation extends RealmObject implements IEntity {
 
     public void setSpeakers(RealmList<PresentationSpeaker> speakers) {
         this.speakers = speakers;
-    }
-
-    public RealmList<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(RealmList<Tag> tags) {
-        this.tags = tags;
     }
 
     /*public var event: SummitEvent {

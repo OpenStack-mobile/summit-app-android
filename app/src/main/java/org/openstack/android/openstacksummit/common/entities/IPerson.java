@@ -3,7 +3,7 @@ package org.openstack.android.openstacksummit.common.entities;
 /**
  * Created by Claudio Redi on 11/5/2015.
  */
-public interface IPerson {
+public interface IPerson extends IEntity {
     public String getFirstName();
     public void setFirstName(String firstName);
     public String getLastName();
@@ -20,6 +20,6 @@ public interface IPerson {
     public void setIrc(String irc);
     public String getEmail();
     public void setEmail(String email);
-    public int getMemberId();
-    public void setMemberId(int memberId);
+    public Integer getMemberId();
+    public void setMemberId(Integer memberId);
 }
