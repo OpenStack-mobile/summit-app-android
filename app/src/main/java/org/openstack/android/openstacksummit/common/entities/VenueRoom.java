@@ -9,6 +9,7 @@ public class VenueRoom extends RealmObject implements INamedEntity {
     private int id;
     private String name;
     private int capacity;
+    private String locationDescription;
 
     public int getId() {
         return id;
@@ -32,6 +33,14 @@ public class VenueRoom extends RealmObject implements INamedEntity {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public String getLocationDescription() {
+        return locationDescription;
+    }
+
+    public void setLocationDescription(String locationDescription) {
+        this.locationDescription = locationDescription;
     }
 
     /*public var venue: Venue {

@@ -16,8 +16,9 @@ public class SummitEvent extends RealmObject implements INamedEntity {
     private String eventDescription;
     private Boolean allowFeedback;
     private EventType eventType;
-    private RealmList<SummitType> summitTypes;
-    private RealmList<Company> sponsors;
+    private RealmList<SummitType> summitTypes = new RealmList<>();
+    private RealmList<Company> sponsors = new RealmList<>();
+    private RealmList<Tag> tags = new RealmList<>();
     private Presentation presentation;
     private Venue venue;
     private VenueRoom venueRoom;
@@ -116,6 +117,14 @@ public class SummitEvent extends RealmObject implements INamedEntity {
 
     public void setVenueRoom(VenueRoom venueRoom) {
         this.venueRoom = venueRoom;
+    }
+
+    public RealmList<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(RealmList<Tag> tags) {
+        this.tags = tags;
     }
 
     /*public var summit: Summit {

@@ -2,34 +2,56 @@ package org.openstack.android.openstacksummit.common.data_access.deserialization
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openstack.android.openstacksummit.common.entities.Company;
-import org.openstack.android.openstacksummit.common.entities.EventType;
-import org.openstack.android.openstacksummit.common.entities.IEntity;
+import org.openstack.android.openstacksummit.common.entities.*;
+
 import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 11/4/2015.
  */
-@SuppressWarnings("unchecked")
-public class Deserializer {
-    @Inject
-    ICompanyDeserializer companyDeserializer;
-    @Inject
-    IEventTypeDeserializer eventTypeDeserializer;
+
+public class Deserializer implements IDeserializer {
+    IGenericDeserializer genericDeserializer;
+    IFeedbackDeserializer feedbackDeserializer;
+    IMemberDeserializer memberDeserializer;
+    IPresentationDeserializer presentationDeserializer;
+    IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
+    ISummitAttendeeDeserializer summitAttendeeDeserializer;
+    ISummitDeserializer summitDeserializer;
+    ISummitEventDeserializer summitEventDeserializer;
+
+    public Deserializer()
+    {
+    }
 
     @Inject
-    public Deserializer() {}
+    public Deserializer(IGenericDeserializer genericDeserializer,
+                        IFeedbackDeserializer feedbackDeserializer,
+                        IMemberDeserializer memberDeserializer,
+                        IPresentationDeserializer presentationDeserializer,
+                        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+                        ISummitAttendeeDeserializer summitAttendeeDeserializer,
+                        ISummitDeserializer summitDeserializer,
+                        ISummitEventDeserializer summitEventDeserializer)
+    {
+        this.genericDeserializer = genericDeserializer;
+        this.feedbackDeserializer = feedbackDeserializer;
+        this.memberDeserializer = memberDeserializer;
+        this.presentationDeserializer = presentationDeserializer;
+        this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
+        this.summitAttendeeDeserializer = summitAttendeeDeserializer;
+        this.summitDeserializer = summitDeserializer;
+        this.summitEventDeserializer = summitEventDeserializer;
+    }
 
-    public IEntity deserialize(JSONObject jsonObject, Class type) throws JSONException, IllegalArgumentException {
+    @Override
+    public <T extends IEntity> T deserialize(String jsonString, Class<T> type) throws JSONException, IllegalArgumentException {
 
-        if (type == Company.class) {
-            return companyDeserializer.deserialize(jsonObject);
-        }
-        else if (type == EventType.class) {
-            return eventTypeDeserializer.deserialize(jsonObject);
+        if (type == Feedback.class) {
+            return (T)feedbackDeserializer.deserialize(jsonString);
         }
         else {
-            throw new IllegalArgumentException();
+            return genericDeserializer.deserialize(jsonString, type);
         }
     }
 }

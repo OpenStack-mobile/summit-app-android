@@ -26,15 +26,14 @@ public class DeserializerTests  {
         Company company = new Company();
         company.setId(1);
         company.setName("test");
-        String json = "{ \"id\":1, \"name\":\"test\"}";
-        JSONObject jsonObject = new JSONObject(json);
-        CompanyDeserializer companyDeserializerMock = mock(CompanyDeserializer.class);
-        when(companyDeserializerMock.deserialize(jsonObject)).thenReturn(company);
+        String jsonString = "{ \"id\":1, \"name\":\"test\"}";
+        GenericDeserializer genericDeserializerMock = mock(GenericDeserializer.class);
+        when(genericDeserializerMock.deserialize(jsonString, Company.class)).thenReturn(company);
         Deserializer deserializer = new Deserializer();
-        deserializer.companyDeserializer = companyDeserializerMock;
+        deserializer.genericDeserializer = genericDeserializerMock;
 
         // Act
-        Company deserializedCompany = (Company)deserializer.deserialize(jsonObject, Company.class);
+        Company deserializedCompany = deserializer.deserialize(jsonString, Company.class);
 
         // Assert
         Assert.assertEquals(company, deserializedCompany);
@@ -46,15 +45,14 @@ public class DeserializerTests  {
         EventType eventType = new EventType();
         eventType.setId(1);
         eventType.setName("test");
-        String json = "{ \"id\":1, \"name\":\"test\"}";
-        JSONObject jsonObject = new JSONObject(json);
-        EventTypeDeserializer eventTypeDeserializerMock = mock(EventTypeDeserializer.class);
-        when(eventTypeDeserializerMock.deserialize(jsonObject)).thenReturn(eventType);
+        String jsonString = "{ \"id\":1, \"name\":\"test\"}";
+        GenericDeserializer genericDeserializerMock = mock(GenericDeserializer.class);
+        when(genericDeserializerMock.deserialize(jsonString, EventType.class)).thenReturn(eventType);
         Deserializer deserializer = new Deserializer();
-        deserializer.eventTypeDeserializer = eventTypeDeserializerMock;
+        deserializer.genericDeserializer = genericDeserializerMock;
 
         // Act
-        EventType deserializedEventType = (EventType)deserializer.deserialize(jsonObject, EventType.class);
+        EventType deserializedEventType = deserializer.deserialize(jsonString, EventType.class);
 
         // Assert
         Assert.assertEquals(eventType, deserializedEventType);

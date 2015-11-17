@@ -5,7 +5,7 @@ import io.realm.RealmObject;
 /**
  * Created by Claudio Redi on 11/4/2015.
  */
-public class Image extends RealmObject {
+public class Image extends RealmObject implements IEntity {
     private int id;
     private String url;
 
