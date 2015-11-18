@@ -23,7 +23,6 @@ public class PresentationDeserializerTests {
     public void deserialize_validJSON_returnsCorrectInstance() throws JSONException {
         // Arrange
         String jsonString = "{\"id\":4189,\"title\":\"A Day in the Life of an Openstack & Cloud Architect\",\"description\":\"Event Description\",\"start_date\":1445922900,\"end_date\":1445925300,\"location_id\":28,\"type_id\":1,\"class_name\":\"Presentation\",\"track_id\":5,\"moderator_speaker_id\":null,\"level\":\"Intermediate\",\"allow_feedback\":false,\"summit_types\":[1,2],\"sponsors\":[],\"speakers\":[795,1873],\"tags\":[],\"slides\":[],\"videos\":[]}";
-        Deserializer deserializerMock = mock(Deserializer.class);
         DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         int trackId = 5;
         Track track = new Track();
@@ -40,7 +39,7 @@ public class PresentationDeserializerTests {
         presentationSpeaker1.setId(speakerId2);
         when(deserializerStorageMock.get(speakerId2, PresentationSpeaker.class)).thenReturn(presentationSpeaker2);
 
-        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(deserializerMock, deserializerStorageMock);
+        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(deserializerStorageMock);
 
         // Act
         Presentation presentation = presentationDeserializer.deserialize(jsonString);
@@ -58,10 +57,9 @@ public class PresentationDeserializerTests {
     public void deserialize_invalidJSONWithAllRequiredFieldsMissled_throwsJSONException() throws JSONException {
         String jsonString = "{}";
 
-        Deserializer deserializerMock = mock(Deserializer.class);
         DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
 
-        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(deserializerMock, deserializerStorageMock);
+        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(deserializerStorageMock);
         String exceptionMessage = "";
         int exceptionCount = 0;
         int expectedExceptionCount = 1;
@@ -84,7 +82,6 @@ public class PresentationDeserializerTests {
     public void deserialize_validJSONWithAllOptionalFieldsInNull_returnsCorrectInstance() throws JSONException {
         // Arrange
         String jsonString = "{\"id\":4189,\"title\":\"A Day in the Life of an Openstack & Cloud Architect\",\"description\":\"Event Description\",\"start_date\":1445922900,\"end_date\":1445925300,\"location_id\":28,\"type_id\":1,\"class_name\":\"Presentation\",\"track_id\":5,\"moderator_speaker_id\":null,\"level\":null,\"allow_feedback\":false,\"summit_types\":[1,2],\"sponsors\":[],\"speakers\":[795,1873],\"tags\":[],\"slides\":[],\"videos\":[]}";
-        Deserializer deserializerMock = mock(Deserializer.class);
         DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         int trackId = 5;
         Track track = new Track();
@@ -101,7 +98,7 @@ public class PresentationDeserializerTests {
         presentationSpeaker1.setId(speakerId2);
         when(deserializerStorageMock.get(speakerId2, PresentationSpeaker.class)).thenReturn(presentationSpeaker2);
 
-        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(deserializerMock, deserializerStorageMock);
+        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(deserializerStorageMock);
 
         // Act
         Presentation presentation = presentationDeserializer.deserialize(jsonString);

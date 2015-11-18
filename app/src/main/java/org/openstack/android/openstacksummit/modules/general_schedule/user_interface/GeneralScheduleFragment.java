@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import org.openstack.android.openstacksummit.R;
 import org.openstack.android.openstacksummit.common.user_interface.BaseFragment;
 import org.openstack.android.openstacksummit.dagger.HasComponent;
-import org.openstack.android.openstacksummit.dagger.components.GeneralScheduleComponent;
 import org.openstack.android.openstacksummit.dagger.modules.GeneralScheduleModule;
 
 import javax.inject.Inject;

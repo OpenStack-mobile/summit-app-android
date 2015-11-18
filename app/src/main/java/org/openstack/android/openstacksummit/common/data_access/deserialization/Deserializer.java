@@ -1,8 +1,14 @@
 package org.openstack.android.openstacksummit.common.data_access.deserialization;
 
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.openstack.android.openstacksummit.common.entities.*;
+import org.openstack.android.openstacksummit.common.entities.Feedback;
+import org.openstack.android.openstacksummit.common.entities.IEntity;
+import org.openstack.android.openstacksummit.common.entities.Member;
+import org.openstack.android.openstacksummit.common.entities.Presentation;
+import org.openstack.android.openstacksummit.common.entities.PresentationSpeaker;
+import org.openstack.android.openstacksummit.common.entities.Summit;
+import org.openstack.android.openstacksummit.common.entities.SummitAttendee;
+import org.openstack.android.openstacksummit.common.entities.SummitEvent;
 
 import javax.inject.Inject;
 
@@ -49,6 +55,24 @@ public class Deserializer implements IDeserializer {
 
         if (type == Feedback.class) {
             return (T)feedbackDeserializer.deserialize(jsonString);
+        }
+        if (type == Member.class) {
+            return (T)memberDeserializer.deserialize(jsonString);
+        }
+        if (type == Presentation.class) {
+            return (T)presentationDeserializer.deserialize(jsonString);
+        }
+        if (type == PresentationSpeaker.class) {
+            return (T)presentationSpeakerDeserializer.deserialize(jsonString);
+        }
+        if (type == SummitAttendee.class) {
+            return (T)summitAttendeeDeserializer.deserialize(jsonString);
+        }
+        if (type == Summit.class) {
+            return (T)summitDeserializer.deserialize(jsonString);
+        }
+        if (type == SummitEvent.class) {
+            return (T)summitEventDeserializer.deserialize(jsonString);
         }
         else {
             return genericDeserializer.deserialize(jsonString, type);

@@ -1,7 +1,5 @@
 package org.openstack.android.openstacksummit.common.data_access.deserialization;
 
-import android.text.TextUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,12 +20,15 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 11/13/2015.
  */
 public class SummitEventDeserializer extends BaseDeserializer implements ISummitEventDeserializer {
-    IDeserializer deserializer;
+    IGenericDeserializer genericDeserializer;
+    IPresentationDeserializer presentationDeserializer;
     IDeserializerStorage deserializerStorage;
 
+
     @Inject
-    public SummitEventDeserializer(IDeserializer deserializer, IDeserializerStorage deserializerStorage){
-        this.deserializer = deserializer;
+    public SummitEventDeserializer(IGenericDeserializer genericDeserializer, IPresentationDeserializer presentationDeserializer, IDeserializerStorage deserializerStorage){
+        this.genericDeserializer = genericDeserializer;
+        this.presentationDeserializer = presentationDeserializer;
         this.deserializerStorage = deserializerStorage;
     }
 
@@ -36,9 +37,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         JSONObject jsonObject = new JSONObject(jsonString);
 
         String[] missedFields = validateRequiredFields(new String[] {"id", "start_date", "end_date", "title", "allow_feedback", "type_id"},  jsonObject);
-        if (missedFields.length > 0) {
-            throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
-        }
+        handleMissedFieldsIfAny(missedFields);
 
         SummitEvent summitEvent = new SummitEvent();
         summitEvent.setId(jsonObject.getInt("id"));
@@ -74,18 +73,18 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             venue.setId(locationId);
             VenueRoom venueRoom = new VenueRoom();
             venueRoom.setId(locationId);
-            if (deserializerStorage.exist(venue, Venue.class)){
+            if (deserializerStorage.exist(locationId, Venue.class)){
                 venue = deserializerStorage.get(locationId, Venue.class);
                 summitEvent.setVenue(venue);
             }
-            else if (deserializerStorage.exist(venueRoom, VenueRoom.class)) {
+            else if (deserializerStorage.exist(locationId, VenueRoom.class)) {
                 venueRoom = deserializerStorage.get(locationId, VenueRoom.class);
                 summitEvent.setVenueRoom(venueRoom);
             }
         }
 
         if (jsonObject.has("track_id")) {
-            Presentation presentation = deserializer.deserialize(jsonString, Presentation.class);
+            Presentation presentation = presentationDeserializer.deserialize(jsonString);
             summitEvent.setPresentation(presentation);
         }
 
@@ -94,10 +93,9 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         JSONArray jsonArrayTags  = jsonObject.getJSONArray("tags");
         for (int i = 0; i < jsonArrayTags.length(); i++) {
             jsonObjectTag = jsonArrayTags.getJSONObject(i);
-            tag = deserializer.deserialize(jsonObjectTag.toString(), Tag.class);
+            tag = genericDeserializer.deserialize(jsonObjectTag.toString(), Tag.class);
             summitEvent.getTags().add(tag);
         }
-
 
         deserializerStorage.add(summitEvent, SummitEvent.class);
 

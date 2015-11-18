@@ -3,7 +3,6 @@ package org.openstack.android.openstacksummit.common.data_access.deserialization
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.openstacksummit.common.entities.DataUpdate;
-import org.openstack.android.openstacksummit.common.entities.EventType;
 
 import javax.inject.Inject;
 

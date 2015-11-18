@@ -3,8 +3,6 @@ package org.openstack.android.openstacksummit.common.data_access.deserialization
 import org.openstack.android.openstacksummit.common.entities.IEntity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +42,13 @@ public class DeserializerStorage implements IDeserializerStorage {
     }
 
     @Override
+    public <T extends IEntity> Boolean exist(int entityId, Class<T> type) {
+        return deserializedEntityDictionary.containsKey(type) && deserializedEntityDictionary.get(type).containsKey(entityId);
+    }
+
+    @Override
     public <T extends IEntity> Boolean exist(T entity, Class<T> type) {
-        return deserializedEntityDictionary.containsKey(type) && deserializedEntityDictionary.get(type).containsKey(entity.getId());
+        return exist(entity.getId(), type);
     }
 
     @Override

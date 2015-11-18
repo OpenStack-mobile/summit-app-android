@@ -1,11 +1,8 @@
 package org.openstack.android.openstacksummit;
 
-import android.app.FragmentManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,9 +16,7 @@ import android.view.MenuItem;
 import org.openstack.android.openstacksummit.dagger.components.ApplicationComponent;
 import org.openstack.android.openstacksummit.dagger.modules.ActivityModule;
 import org.openstack.android.openstacksummit.modules.event_detail.EventDetailWireframe;
-import org.openstack.android.openstacksummit.modules.event_detail.user_interface.EventDetailFragment;
-import org.openstack.android.openstacksummit.modules.general_schedule.GeneralScheduleWireframe;
-import org.openstack.android.openstacksummit.modules.general_schedule.user_interface.GeneralScheduleFragment;
+import org.openstack.android.openstacksummit.modules.general_schedule.IGeneralScheduleWireframe;
 
 import javax.inject.Inject;
 
@@ -29,7 +24,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
-    GeneralScheduleWireframe generalScheduleWireframe;
+    IGeneralScheduleWireframe generalScheduleWireframe;
 
     @Inject
     EventDetailWireframe eventDetailWireframe;

@@ -1,7 +1,5 @@
 package org.openstack.android.openstacksummit.common.data_access.deserialization;
 
-import android.text.TextUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,13 +16,13 @@ import javax.inject.Inject;
 public class SummitAttendeeDeserializer extends BaseDeserializer implements ISummitAttendeeDeserializer {
     IPersonDeserializer personDeserializer;
     IDeserializerStorage deserializerStorage;
-    IDeserializer deserializer;
+    IFeedbackDeserializer feedbackDeserializer;
 
     @Inject
-    public SummitAttendeeDeserializer(IPersonDeserializer personDeserializer, IDeserializerStorage deserializerStorage, IDeserializer deserializer) {
+    public SummitAttendeeDeserializer(IPersonDeserializer personDeserializer, IFeedbackDeserializer feedbackDeserializer, IDeserializerStorage deserializerStorage) {
         this.personDeserializer = personDeserializer;
         this.deserializerStorage = deserializerStorage;
-        this.deserializer = deserializer;
+        this.feedbackDeserializer = feedbackDeserializer;
     }
 
     @Override
@@ -54,7 +52,7 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         JSONArray jsonArrayFeedback = jsonObject.getJSONArray("event_types");
         for (int i = 0; i < jsonArrayFeedback.length(); i++) {
             jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
-            feedback = deserializer.deserialize(jsonObjectFeedback.toString(), Feedback.class);
+            feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());
             summitAttendee.getFeedback().add(feedback);
         }
 

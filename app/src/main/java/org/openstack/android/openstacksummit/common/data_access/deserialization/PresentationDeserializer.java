@@ -1,13 +1,10 @@
 package org.openstack.android.openstacksummit.common.data_access.deserialization;
 
-import android.text.TextUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.openstacksummit.common.entities.Presentation;
 import org.openstack.android.openstacksummit.common.entities.PresentationSpeaker;
-import org.openstack.android.openstacksummit.common.entities.Tag;
 import org.openstack.android.openstacksummit.common.entities.Track;
 
 import javax.inject.Inject;
@@ -16,12 +13,10 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 11/13/2015.
  */
 public class PresentationDeserializer extends BaseDeserializer implements IPresentationDeserializer {
-    IDeserializer deserializer;
     IDeserializerStorage deserializerStorage;
 
     @Inject
-    public PresentationDeserializer(IDeserializer deserializer, IDeserializerStorage deserializerStorage){
-        this.deserializer = deserializer;
+    public PresentationDeserializer(IDeserializerStorage deserializerStorage){
         this.deserializerStorage = deserializerStorage;
     }
 

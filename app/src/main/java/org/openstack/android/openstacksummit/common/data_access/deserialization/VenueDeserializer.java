@@ -13,12 +13,12 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 11/13/2015.
  */
 public class VenueDeserializer extends BaseDeserializer implements IVenueDeserializer {
-    IDeserializer deserializer;
+    IGenericDeserializer genericDeserializer;
     IDeserializerStorage deserializerStorage;
 
     @Inject
-    public VenueDeserializer(IDeserializer deserializer, IDeserializerStorage deserializerStorage){
-        this.deserializer = deserializer;
+    public VenueDeserializer(IGenericDeserializer genericDeserializer, IDeserializerStorage deserializerStorage){
+        this.genericDeserializer = genericDeserializer;
         this.deserializerStorage = deserializerStorage;
     }
 
@@ -47,7 +47,7 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
         JSONObject jsonObjectMap;
         for (int i = 0; i < jsonObject.getJSONArray("maps").length(); i++) {
             jsonObjectMap = jsonObject.getJSONArray("maps").getJSONObject(i);
-            map = deserializer.deserialize(jsonObjectMap.toString(), Image.class);
+            map = genericDeserializer.deserialize(jsonObjectMap.toString(), Image.class);
             venue.getMaps().add(map);
         }
 

@@ -12,12 +12,10 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 11/13/2015.
  */
 public class VenueRoomDeserializer extends BaseDeserializer implements IVenueRoomDeserializer {
-    IDeserializer deserializer;
     IDeserializerStorage deserializerStorage;
 
     @Inject
-    public VenueRoomDeserializer(IDeserializer deserializer, IDeserializerStorage deserializerStorage){
-        this.deserializer = deserializer;
+    public VenueRoomDeserializer(IDeserializerStorage deserializerStorage){
         this.deserializerStorage = deserializerStorage;
     }
 
