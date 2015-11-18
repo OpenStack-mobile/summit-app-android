@@ -12,13 +12,14 @@ import javax.inject.Inject;
 /**
  * Created by claudio on 11/2/2015.
  */
-public class EventDetailWireframe {
+public class EventDetailWireframe implements IEventDetailWireframe {
 
     @Inject
     public EventDetailWireframe() {
 
     }
 
+    @Override
     public void presentEventDetailView(Activity context) {
         EventDetailFragment eventDetailFragment = new EventDetailFragment();
         FragmentManager fragmentManager = context.getFragmentManager();

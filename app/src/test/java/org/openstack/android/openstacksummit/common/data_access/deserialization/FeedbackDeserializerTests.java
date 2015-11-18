@@ -1,7 +1,5 @@
 package org.openstack.android.openstacksummit.common.data_access.deserialization;
 
-import android.text.TextUtils;
-
 import junit.framework.Assert;
 
 import org.json.JSONException;

@@ -16,5 +16,7 @@ public interface IDeserializerStorage {
 
     <T extends IEntity> Boolean exist(T entity, Class<T> type);
 
+    <T extends IEntity> Boolean exist(int entityId, Class<T> type);
+
     void clear();
 }

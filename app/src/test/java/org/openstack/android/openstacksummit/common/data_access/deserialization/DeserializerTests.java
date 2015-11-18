@@ -1,12 +1,8 @@
 package org.openstack.android.openstacksummit.common.data_access.deserialization;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
-
 import junit.framework.Assert;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.openstack.android.openstacksummit.common.entities.Company;
 import org.openstack.android.openstacksummit.common.entities.EventType;

@@ -12,8 +12,10 @@ public class MemberDeserializerTests {
     public void deserialize_validJSON_returnsCorrectInstance() {
         // Arrange
         Deserializer deserializerMock = mock(Deserializer.class);
+        PresentationSpeakerDeserializer presentationSpeakerDeserializer = mock(PresentationSpeakerDeserializer.class);
+        SummitAttendeeDeserializer summitAttendeeDeserializer = mock(SummitAttendeeDeserializer.class);
 
-        IMemberDeserializer memberDeserializer = new MemberDeserializer(deserializerMock);
+        IMemberDeserializer memberDeserializer = new MemberDeserializer(presentationSpeakerDeserializer, summitAttendeeDeserializer);
 
         // Act
 

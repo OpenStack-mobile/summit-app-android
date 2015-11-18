@@ -1,9 +1,5 @@
 package org.openstack.android.openstacksummit.common.data_access.deserialization;
 
-import android.text.TextUtils;
-
-import com.alibaba.fastjson.JSON;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.openstacksummit.common.entities.Feedback;

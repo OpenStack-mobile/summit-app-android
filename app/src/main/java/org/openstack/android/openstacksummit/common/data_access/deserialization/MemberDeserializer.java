@@ -12,11 +12,13 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 11/13/2015.
  */
 public class MemberDeserializer implements IMemberDeserializer {
-    IDeserializer deserializer;
+    IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
+    ISummitAttendeeDeserializer summitAttendeeDeserializer;
 
     @Inject
-    public MemberDeserializer(IDeserializer deserializer) {
-        this.deserializer = deserializer;
+    public MemberDeserializer(IPresentationSpeakerDeserializer presentationSpeakerDeserializer, ISummitAttendeeDeserializer summitAttendeeDeserializer) {
+        this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
+        this.summitAttendeeDeserializer = summitAttendeeDeserializer;
     }
 
     @Override
@@ -24,8 +26,8 @@ public class MemberDeserializer implements IMemberDeserializer {
         JSONObject jsonObject = new JSONObject(jsonString);
         Member member = new Member();
         member.setId(jsonObject.getInt("id"));
-        SummitAttendee summitAttendee = deserializer.deserialize(jsonObject.getJSONObject("attendee").toString(), SummitAttendee.class);
-        PresentationSpeaker presentationSpeaker = deserializer.deserialize(jsonObject.getJSONObject("speaker").toString(), PresentationSpeaker.class);
+        SummitAttendee summitAttendee = summitAttendeeDeserializer.deserialize(jsonObject.getJSONObject("attendee").toString());
+        PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonObject.getJSONObject("speaker").toString());
         member.setAttendeeRole(summitAttendee);
         member.setSkeaperRole(presentationSpeaker);
         return member;
