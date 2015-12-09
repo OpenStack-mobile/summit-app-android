@@ -2,10 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_general_schedule"
-    tools:context="org.openstack.android.openstacksummit.modules.general_schedule.user_interface.GeneralScheduleFragment">
+    tools:context="org.openstack.android.summit.modules.events.user_interface.EventsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="TESTING HOLA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA SD F DF DF D FD D FD D DF " />
-
+    <ListView android:id="@+id/list_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:background="#00222222"
+        android:drawSelectorOnTop="false"
+        android:listSelector="@android:color/transparent"/>
 </FrameLayout>
