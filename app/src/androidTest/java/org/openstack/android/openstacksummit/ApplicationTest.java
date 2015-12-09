@@ -1,4 +1,4 @@
-package org.openstack.android.openstacksummit;
+package org.openstack.android.summit;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
