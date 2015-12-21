@@ -10,13 +10,14 @@ import org.openstack.android.summit.dagger.modules.DTOAssemblerModule;
 import org.openstack.android.summit.dagger.modules.DataAccessModule;
 import org.openstack.android.summit.dagger.modules.EventDetailModule;
 import org.openstack.android.summit.dagger.modules.EventsModule;
+import org.openstack.android.summit.dagger.modules.SecurityModule;
 import org.openstack.android.summit.modules.events.user_interface.EventsFragment;
 
 import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class } )
+@Component(modules = { ApplicationModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class} )
 public interface ApplicationComponent {
     void inject(MainActivity mainActivity);
     void inject(EventsFragment generalScheduleFragment);

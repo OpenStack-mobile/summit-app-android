@@ -5,19 +5,20 @@ package org.openstack.android.summit.common.DTOs;
  * Created by Claudio Redi on 11/18/2015.
  */
 public class ScheduleItemDTO extends NamedDTO {
-    private String date;
+    private String time;
+    private String dateTime;
     private String location;
     private String track;
     private String credentials;
     private String sponsors;
     private String eventType;
 
-    public String getDate() {
-        return date;
+    public String getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDateTime(String date) {
+        this.dateTime = date;
     }
 
     public String getLocation() {
@@ -58,5 +59,13 @@ public class ScheduleItemDTO extends NamedDTO {
 
     public void setEventType(String eventType) {
         this.eventType = eventType;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

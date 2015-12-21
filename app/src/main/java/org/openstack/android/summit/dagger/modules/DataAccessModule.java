@@ -1,7 +1,11 @@
 package org.openstack.android.summit.dagger.modules;
 
+import org.openstack.android.summit.common.data_access.IMemberDataStore;
+import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitRemoteDataStore;
+import org.openstack.android.summit.common.data_access.MemberDataStore;
+import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.SummitDataStore;
 import org.openstack.android.summit.common.data_access.SummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.Deserializer;
@@ -30,6 +34,7 @@ import org.openstack.android.summit.common.data_access.deserialization.SummitDes
 import org.openstack.android.summit.common.data_access.deserialization.SummitEventDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
+import org.openstack.android.summit.common.network.IHttpTaskFactory;
 
 import dagger.Module;
 import dagger.Provides;
@@ -125,12 +130,22 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitRemoteDataStore providesSummitRemoteDataStore(IDeserializer deserializer) {
-        return new SummitRemoteDataStore(deserializer);
+    ISummitRemoteDataStore providesSummitRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
+        return new SummitRemoteDataStore(httpTaskFactory, deserializer);
     }
 
     @Provides
     ISummitDataStore providesSummitDataStore(ISummitRemoteDataStore summitRemoteDataStore) {
         return new SummitDataStore(summitRemoteDataStore);
+    }
+
+    @Provides
+    IMemberRemoteDataStore providesMemberRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
+        return new MemberRemoteDataStore(httpTaskFactory, deserializer);
+    }
+
+    @Provides
+    IMemberDataStore providesMemberDataStore(IMemberRemoteDataStore memberRemoteDataStore) {
+        return new MemberDataStore(memberRemoteDataStore);
     }
 }

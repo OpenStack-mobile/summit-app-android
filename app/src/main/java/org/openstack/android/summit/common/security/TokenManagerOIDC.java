@@ -6,9 +6,11 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.os.Bundle;
+import android.util.Log;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
 
 import java.io.IOException;
 
@@ -17,11 +19,17 @@ import java.io.IOException;
  */
 public class TokenManagerOIDC implements ITokenManager {
     @Override
-    public String getToken() throws AuthenticatorException, OperationCanceledException, IOException {
+    public String getToken() throws TokenGenerationException {
         final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
         Account account = getOIDCAccount();
         AccountManagerFuture<Bundle> futureManager = accountManager.getAuthToken(account, Authenticator.TOKEN_TYPE_ACCESS, null, true, null, null);
-        String token = futureManager.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+        String token = null;
+        try {
+            token = futureManager.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG,"", e);
+            throw new TokenGenerationException(e);
+        }
         return token;
     }
 

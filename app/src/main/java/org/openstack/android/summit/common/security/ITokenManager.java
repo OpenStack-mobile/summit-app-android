@@ -9,6 +9,6 @@ import java.io.IOException;
  * Created by Claudio Redi on 12/8/2015.
  */
 public interface ITokenManager {
-    String getToken() throws AuthenticatorException, OperationCanceledException, IOException;
+    String getToken() throws TokenGenerationException;
     void invalidateToken(String token);
 }

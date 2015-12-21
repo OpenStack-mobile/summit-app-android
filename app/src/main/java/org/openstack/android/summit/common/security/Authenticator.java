@@ -14,6 +14,8 @@ import android.util.Log;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 
+import org.openstack.android.summit.common.Constants;
+
 import java.io.IOException;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
@@ -114,7 +116,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 IdTokenResponse tokenResponse;
 
                 try {
-                    tokenResponse = OIDCUtils.refreshTokens(ConfigOIDC.tokenServerUrl,
+                    tokenResponse = OIDCUtils.refreshTokens(Constants.TOKEN_SERVER_URL,
                             ConfigOIDC.clientId,
                             ConfigOIDC.clientSecret,
                             ConfigOIDC.scopes,
@@ -149,7 +151,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 catch (IOException e) {
                     // There's not much we can do if we get here
                     Log.e(TAG, "Couldn't get new tokens.", e);
-
                 }
 
                 // Now, let's return the token that was requested
@@ -179,20 +180,20 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
         switch (ConfigOIDC.flowType) {
             case AuthorizationCode :
-                authUrl = OIDCUtils.codeFlowAuthenticationUrl(ConfigOIDC.authorizationServerUrl,
+                authUrl = OIDCUtils.codeFlowAuthenticationUrl(Constants.AUTHORIZATION_SERVER_URL,
                         ConfigOIDC.clientId, ConfigOIDC.redirectUrl, ConfigOIDC.scopes);
                 break;
             case Implicit:
-                authUrl = OIDCUtils.implicitFlowAuthenticationUrl(ConfigOIDC.authorizationServerUrl,
+                authUrl = OIDCUtils.implicitFlowAuthenticationUrl(Constants.AUTHORIZATION_SERVER_URL,
                         ConfigOIDC.clientId, ConfigOIDC.redirectUrl, ConfigOIDC.scopes);
                 break;
             case Hybrid:
-                authUrl = OIDCUtils.hybridFlowAuthenticationUrl(ConfigOIDC.authorizationServerUrl,
+                authUrl = OIDCUtils.hybridFlowAuthenticationUrl(Constants.AUTHORIZATION_SERVER_URL,
                         ConfigOIDC.clientId, ConfigOIDC.redirectUrl, ConfigOIDC.scopes);
                 break;
             default:
                 Log.d(TAG, "Requesting unsupported flowType! Using CodeFlow instead");
-                authUrl = OIDCUtils.codeFlowAuthenticationUrl(ConfigOIDC.authorizationServerUrl,
+                authUrl = OIDCUtils.codeFlowAuthenticationUrl(Constants.AUTHORIZATION_SERVER_URL,
                         ConfigOIDC.clientId, ConfigOIDC.redirectUrl, ConfigOIDC.scopes);
                 break;
         }
