@@ -1,8 +1,17 @@
 package org.openstack.android.summit.common.data_access;
 
+import android.util.Log;
+
+import org.json.JSONException;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.network.HttpTask;
+import org.openstack.android.summit.common.network.HttpTaskConfig;
+import org.openstack.android.summit.common.network.HttpTaskListener;
+import org.openstack.android.summit.common.network.IHttpFactory;
+import org.openstack.android.summit.common.network.IHttpTaskFactory;
+import org.openstack.android.summit.common.security.AccountType;
 
 /**
  * Created by Claudio Redi on 11/17/2015.
@@ -10,16 +19,39 @@ import org.openstack.android.summit.common.entities.Summit;
 public class SummitRemoteDataStore implements ISummitRemoteDataStore {
     private IDeserializer deserializer;
     private IDataStoreOperationListener<Summit> delegate;
+    private IHttpTaskFactory httpTaskFactory;
 
-    public SummitRemoteDataStore(IDeserializer deserializer) {
+    public SummitRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
+        this.httpTaskFactory = httpTaskFactory;
         this.deserializer = deserializer;
     }
 
     @Override
-    public void getActive(IDataStoreOperationListener<Summit> delegate) {
+    public void getActive() {
 
         try {
-            Summit summit = deserializer.deserialize(Constants.summitJSON, Summit.class);
+            HttpTaskListener httpTaskListener = new HttpTaskListener() {
+                @Override
+                public void onSucceed(String data) {
+                    try {
+                        Summit summit = deserializer.deserialize(data, Summit.class);
+                        delegate.onSuceedWithData(summit);
+                    } catch (JSONException e) {
+                        Log.e(Constants.LOG_TAG,"", e);
+                        delegate.onError(e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+                    delegate.onError(error);
+                }
+            };
+            String url = Constants.RESOURCE_SERVER_BASE_URL + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";
+            HttpTask httpTask = httpTaskFactory.Create(AccountType.ServiceAccount, url, "GET", httpTaskListener);
+            httpTask.execute();
+
+            Summit summit = deserializer.deserialize("", Summit.class);
             delegate.onSuceedWithData(summit);
         } catch (Exception e) {
             delegate.onError(e.getMessage());

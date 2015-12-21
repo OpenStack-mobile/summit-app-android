@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.security;
 
+import org.openstack.android.summit.common.Constants;
+
 /**
  * Created by Claudio Redi on 12/8/2015.
  */
@@ -7,10 +9,6 @@ public class ConfigServiceAccount {
     // TODO: Add the information you received from your OIDC provider below.
     public static final String clientId = "JYvz.AKTzlpLfSl4G.i42Abp-e5dVGVn.openstack.client";
     public static final String clientSecret = "lQxHMrd576TK.iLXFXVK7mpxY1hOie~gD71T_2H1o7kR0GlstSeomMU~rfMfy_Vy";
-
-    public static final String authorizationServerUrl = "https://testopenstackid.openstack.org/oauth2/auth";
-    public static final String tokenServerUrl = "https://testopenstackid.openstack.org/oauth2/token";
-    public static final String userInfoUrl= "https://testopenstackid.openstack.org/api/v1/users/info";
 
     // The `offline_access` scope enables us to request Refresh Tokens, so we don't have to ask the
     // user to authorise us again every time the tokens expire. Some providers might have an

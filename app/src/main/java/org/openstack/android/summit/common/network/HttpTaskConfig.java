@@ -13,10 +13,10 @@ import org.openstack.android.summit.common.security.ITokenManager;
  */
 public class HttpTaskConfig {
     private String url;
-    private String method;
-    private Activity context;
+    private String method = "GET";
     private ITokenManager tokenManager;
     private HttpTaskListener delegate;
+    private IHttp http;
 
     public String getUrl() {
         return url;
@@ -34,14 +34,6 @@ public class HttpTaskConfig {
         this.method = method;
     }
 
-    public Activity getContext() {
-        return context;
-    }
-
-    public void setContext(Activity context) {
-        this.context = context;
-    }
-
     public HttpTaskListener getDelegate() {
         return delegate;
     }
@@ -50,11 +42,19 @@ public class HttpTaskConfig {
         this.delegate = delegate;
     }
 
-    public ITokenManager getTokenManager() {
+/*    public ITokenManager getTokenManager() {
         return tokenManager;
     }
 
     public void setTokenManager(ITokenManager tokenManager) {
         this.tokenManager = tokenManager;
+    }*/
+
+    public IHttp getHttp() {
+        return http;
+    }
+
+    public void setHttp(IHttp http) {
+        this.http = http;
     }
 }

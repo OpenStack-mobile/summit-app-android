@@ -28,13 +28,13 @@ public class SummitDataStore extends GenericDataStore implements IDataStoreOpera
             }
         }
         else {
-            summitRemoteDataStore.getActive(this);
+            summitRemoteDataStore.getActive();
         }
     }
 
     @Override
     public void onSuceedWithData(Summit data) {
-
+        delegate.onSuceedWithData(data);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class SummitDataStore extends GenericDataStore implements IDataStoreOpera
 
     @Override
     public void onError(String message) {
-
+        delegate.onError(message);
     }
 
     public IDataStoreOperationListener<Summit> getDelegate() {

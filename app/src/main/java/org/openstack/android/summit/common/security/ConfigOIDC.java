@@ -13,10 +13,6 @@ public final class ConfigOIDC {
     public static final String clientId = "9HKaikkxU~6Qvor_GvhQm6ADYi7QmwUL.openstack.client";
     public static final String clientSecret = "oWqW0hf49Im5Iyk-z59DsOekc9FZbcfVc4o9sGGX6gw3Ef6NRntlhqWEwzDGYPfT";
 
-    public static final String authorizationServerUrl = "https://testopenstackid.openstack.org/oauth2/auth";
-    public static final String tokenServerUrl = "https://testopenstackid.openstack.org/oauth2/token";
-    public static final String userInfoUrl= "https://testopenstackid.openstack.org/api/v1/users/info";
-
     // This URL doesn't really have a use with native apps and basically just signifies the end
     // of the authorisation process. It doesn't have to be a real URL, but it does have to be the
     // same URL that is registered with your provider.

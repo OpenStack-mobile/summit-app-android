@@ -26,10 +26,14 @@ public class MemberDeserializer implements IMemberDeserializer {
         JSONObject jsonObject = new JSONObject(jsonString);
         Member member = new Member();
         member.setId(jsonObject.getInt("id"));
-        SummitAttendee summitAttendee = summitAttendeeDeserializer.deserialize(jsonObject.getJSONObject("attendee").toString());
-        PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonObject.getJSONObject("speaker").toString());
+        SummitAttendee summitAttendee = summitAttendeeDeserializer.deserialize(jsonString);
         member.setAttendeeRole(summitAttendee);
-        member.setSkeaperRole(presentationSpeaker);
+
+        if (jsonObject.has("speaker")) {
+            JSONObject speakerJSONObject = jsonObject.getJSONObject("speaker");
+            PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(speakerJSONObject.toString());
+            member.setSkeaperRole(presentationSpeaker);
+        }
         return member;
     }
 }

@@ -21,6 +21,7 @@ import com.google.api.client.auth.openidconnect.IdTokenResponse;
 import com.google.api.client.json.gson.GsonFactory;
 
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
 
 import java.io.IOException;
 import java.util.Date;
@@ -248,7 +249,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 Log.i(TAG, "Requesting access_token with AuthCode : " + authCode);
 
                 try {
-                    response = OIDCUtils.requestTokens(ConfigOIDC.tokenServerUrl,
+                    response = OIDCUtils.requestTokens(Constants.TOKEN_SERVER_URL,
                             ConfigOIDC.redirectUrl,
                             ConfigOIDC.clientId,
                             ConfigOIDC.clientSecret,
@@ -299,7 +300,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             Log.d(TAG, "Requesting ID token.");
 
             try {
-                response = OIDCUtils.requestTokens(ConfigOIDC.tokenServerUrl,
+                response = OIDCUtils.requestTokens(Constants.TOKEN_SERVER_URL,
                         ConfigOIDC.redirectUrl,
                         ConfigOIDC.clientId,
                         ConfigOIDC.clientSecret,

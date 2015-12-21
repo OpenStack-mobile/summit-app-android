@@ -1,11 +1,5 @@
 package org.openstack.android.summit;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,10 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
 import org.openstack.android.summit.common.security.*;
-import org.openstack.android.summit.common.security.SecurityManager;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
 import org.openstack.android.summit.modules.event_detail.EventDetailWireframe;
@@ -39,13 +31,18 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener {
 
     @Inject
     IEventsWireframe generalScheduleWireframe;
 
     @Inject
     EventDetailWireframe eventDetailWireframe;
+
+    @Inject
+    ISecurityManager securityManager;
+
+    MenuItem menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +73,8 @@ public class MainActivity extends AppCompatActivity
         generalScheduleWireframe.presentGeneralScheduleView(this);
 
         trustEveryone();
+
+        securityManager.setDelegate(this);
     }
 
     @Override
@@ -118,7 +117,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camara) {
-            login();
+            if (!securityManager.isLoggedIn()) {
+                securityManager.login(this);
+            }
+            else {
+                securityManager.logout();
+            }
         } else if (id == R.id.nav_gallery) {
             //generalScheduleWireframe.presentGeneralScheduleView(this);
         } else if (id == R.id.nav_slideshow) {
@@ -136,11 +140,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void login() {
-        SecurityManager securityManager = new SecurityManager();
-        securityManager.login(this);
     }
 
     public ApplicationComponent getApplicationComponent() {
@@ -172,5 +171,20 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) { // should never happen
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onLoggedIn() {
+        menuItem.setTitle("Log out");
+    }
+
+    @Override
+    public void onLoggedOut() {
+
+    }
+
+    @Override
+    public void onError(String message) {
+
     }
 }

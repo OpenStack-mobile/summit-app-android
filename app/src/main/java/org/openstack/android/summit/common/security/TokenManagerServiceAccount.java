@@ -11,6 +11,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.json.gson.GsonFactory;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.common.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,8 +28,8 @@ public class TokenManagerServiceAccount implements ITokenManager {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(OpenStackSummitApplication.context);
         String token = settings.getString(TOKEN_SERVICE_ACCOUNT, "");
 
-        if (token == null) {
-            TokenResponse tokenResponse = getOauth2AccessToken(ConfigServiceAccount.tokenServerUrl, ConfigServiceAccount.clientId, ConfigServiceAccount.clientSecret);
+        if (token == "" && token == null) {
+            TokenResponse tokenResponse = getOauth2AccessToken(Constants.TOKEN_SERVER_URL, ConfigServiceAccount.clientId, ConfigServiceAccount.clientSecret);
             SharedPreferences.Editor editor = settings.edit();
             editor.putString(TOKEN_SERVICE_ACCOUNT, tokenResponse.getAccessToken());
             editor.apply();

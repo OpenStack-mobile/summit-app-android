@@ -232,15 +232,4 @@ public class OIDCUtils {
 
         return verifier.verify(idToken);
     }
-
-    /**
-     * Prepares an arbitrary API request by injecting an ID Token into an HttpRequest. Uses an
-     * external library to make my life easier, but you can modify this to use whatever in case you
-     * don't like the (small) dependency.
-     */
-    public static HttpRequest prepareApiRequest(HttpRequest request, String idToken)
-            throws IOException {
-
-        return request.authorization("Bearer " + idToken).acceptJson();
-    }
 }
