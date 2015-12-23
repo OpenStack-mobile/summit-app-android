@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.view.ViewPager
+    android:id="@+id/events_pager"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v4.view.PagerTabStrip
+        android:id="@+id/pager_header"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="top"
+        android:paddingBottom="30dp"
+        android:paddingTop="4dp"
+        android:textColor="@android:color/white"
+        android:background="#14273d"/>
+
+</android.support.v4.view.ViewPager>

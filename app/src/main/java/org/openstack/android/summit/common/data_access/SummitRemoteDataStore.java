@@ -50,9 +50,6 @@ public class SummitRemoteDataStore implements ISummitRemoteDataStore {
             String url = Constants.RESOURCE_SERVER_BASE_URL + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";
             HttpTask httpTask = httpTaskFactory.Create(AccountType.ServiceAccount, url, "GET", httpTaskListener);
             httpTask.execute();
-
-            Summit summit = deserializer.deserialize("", Summit.class);
-            delegate.onSuceedWithData(summit);
         } catch (Exception e) {
             delegate.onError(e.getMessage());
         }

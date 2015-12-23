@@ -1,7 +1,8 @@
 package org.openstack.android.summit.modules.events;
 
 import android.app.Activity;
-import android.app.FragmentManager;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentActivity;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
@@ -14,25 +15,13 @@ import javax.inject.Inject;
  */
 public class EventsWireframe implements IEventsWireframe {
 
-    IEventDetailWireframe eventDetailWireframe;
-
-    @Inject
-    public EventsWireframe(IEventDetailWireframe eventDetailWireframe) {
-        this.eventDetailWireframe = eventDetailWireframe;
-    }
-
     @Override
-    public void showEventDetail(Activity context) {
-        eventDetailWireframe.presentEventDetailView(context);
-    }
-
-    @Override
-    public void presentGeneralScheduleView(Activity context) {
-        EventsFragment generalScheduleFragment = new EventsFragment();
-        FragmentManager fragmentManager = context.getFragmentManager();
+    public void presentEventsView(FragmentActivity context) {
+        EventsFragment eventsFragment = new EventsFragment();
+        FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.frame_layout_content, generalScheduleFragment)
+                .replace(R.id.frame_layout_content, eventsFragment)
                 .addToBackStack(null)
                 .commit();
     }

@@ -1,61 +1,81 @@
 package org.openstack.android.summit.common.business_logic;
 
+import android.util.Log;
+
+import com.google.api.client.util.store.DataStore;
+
+import org.json.JSONException;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.entities.SummitEvent;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
-public class ScheduleInteractor implements IScheduleInteractor, IDataStoreOperationListener<Summit> {
+public class ScheduleInteractor implements IScheduleInteractor {
+    private ISummitEventDataStore summitEventDataStore;
     private ISummitDataStore summitDataStore;
-    private IInteractorOperationListener<SummitDTO> delegate;
     private IDTOAssembler dtoAssembler;
 
     @Inject
-    public ScheduleInteractor(ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler) {
+    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler) {
+        this.summitEventDataStore = summitEventDataStore;
         this.summitDataStore = summitDataStore;
-        this.summitDataStore.setDelegate(this);
         this.dtoAssembler = dtoAssembler;
     }
 
     @Override
-    public void onSuceedWithData(Summit data) {
-        if (delegate != null) {
-            SummitDTO summitDTO = dtoAssembler.createDTO(data, SummitDTO.class);
-            delegate.onSuceedWithData(summitDTO);
+    public List<ScheduleItemDTO> getScheduleEvents(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> tracks, List<String> tags, List<String> levels) {
+        List<SummitEvent> summitEvents = summitEventDataStore.getByFilterLocal(startDate, endDate, eventTypes, summitTypes, tracks, tags, levels);
+
+        ArrayList<ScheduleItemDTO> dtos = new ArrayList<>();
+        ScheduleItemDTO scheduleItemDTO;
+        for (SummitEvent event: summitEvents) {
+            scheduleItemDTO = dtoAssembler.createDTO(event, ScheduleItemDTO.class);
+            dtos.add(scheduleItemDTO);
         }
+
+        return dtos;
     }
 
     @Override
-    public void onSucceed() {
+    public void getActiveSummit(IInteractorAsyncOperationListener<SummitDTO> delegate) {
+        final IInteractorAsyncOperationListener<SummitDTO> innerDelegate = delegate;
+        DataStoreOperationListener<Summit> dataStoreOperationListener = new DataStoreOperationListener<Summit>() {
+            @Override
+            public void onSuceedWithData(Summit data) {
+                if (innerDelegate != null) {
+                    try{
+                        SummitDTO summitDTO = dtoAssembler.createDTO(data, SummitDTO.class);
+                        innerDelegate.onSuceedWithData(summitDTO);
+                    } catch (Exception e) {
+                        Log.e(Constants.LOG_TAG, "", e);
+                        innerDelegate.onError(e.getMessage());
+                    }
+                }
+            }
 
-    }
-
-    @Override
-    public void onError(String message) {
-        if (delegate != null) {
-            delegate.onError(message);
-        }
-    }
-
-    @Override
-    public IInteractorOperationListener<SummitDTO> getDelegate() {
-        return delegate;
-    }
-
-    @Override
-    public void setDelegate(IInteractorOperationListener<SummitDTO> delegate) {
-        this.delegate = delegate;
-    }
-
-    @Override
-    public void getActiveSummit() {
+            @Override
+            public void onError(String message) {
+                if (innerDelegate != null) {
+                    innerDelegate.onError(message);
+                }
+            }
+        };
+        summitDataStore.setDelegate(dataStoreOperationListener);
         summitDataStore.getActive();
     }
-
 }

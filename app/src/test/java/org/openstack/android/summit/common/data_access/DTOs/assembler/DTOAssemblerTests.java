@@ -29,8 +29,8 @@ public class DTOAssemblerTests {
         DTOAssembler dtoAssembler = new DTOAssembler();
         Summit summit = new Summit();
         summit.setName("Tokio");
-        summit.setStartDate(new Date(1447825312));
-        summit.setEndDate(new Date(1447855312));
+        summit.setStartDate(new Date(1447825312L*1000));
+        summit.setEndDate(new Date(1447855312L*1000));
         summit.setTimeZone("CST");
 
         // Act

@@ -43,8 +43,8 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         summitEvent.setId(jsonObject.getInt("id"));
         summitEvent.setName(jsonObject.getString("title"));
         summitEvent.setAllowFeedback(jsonObject.getBoolean("allow_feedback"));
-        summitEvent.setStart(new Date(jsonObject.getInt("start_date")));
-        summitEvent.setEnd(new Date(jsonObject.getInt("end_date")));
+        summitEvent.setStart(new Date(jsonObject.getLong("start_date")*1000));
+        summitEvent.setEnd(new Date(jsonObject.getLong("end_date")*1000));
         summitEvent.setEventDescription(jsonObject.getString("description"));
         EventType eventType = deserializerStorage.get(jsonObject.getInt("type_id"), EventType.class);
         summitEvent.setEventType(eventType);
@@ -67,7 +67,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             summitEvent.getSponsors().add(company);
         }
 
-        if (jsonObject.has("location_id")) {
+        if (jsonObject.has("location_id") && !jsonObject.isNull("location_id")) {
             int locationId = jsonObject.getInt("location_id");
             Venue venue = new Venue();
             venue.setId(locationId);
@@ -83,7 +83,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             }
         }
 
-        if (jsonObject.has("track_id")) {
+        if (jsonObject.has("track_id") && !jsonObject.isNull("track_id")) {
             Presentation presentation = presentationDeserializer.deserialize(jsonString);
             summitEvent.setPresentation(presentation);
         }

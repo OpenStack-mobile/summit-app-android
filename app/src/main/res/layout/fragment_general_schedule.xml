@@ -4,6 +4,14 @@
     android:id="@+id/fragment_general_schedule"
     tools:context="org.openstack.android.summit.modules.events.user_interface.EventsFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#ddd">
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+    </LinearLayout>
     <ListView android:id="@+id/list_schedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

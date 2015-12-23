@@ -1,10 +1,12 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
@@ -120,6 +122,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         for (int i = 0; i < jsonArrayPresentationSpeakers.length(); i++) {
             jsonObjectPresentationSpeaker = jsonArrayPresentationSpeakers.getJSONObject(i);
             presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonObjectPresentationSpeaker.toString());
+            deserializerStorage.add(presentationSpeaker, PresentationSpeaker.class);
         }
 
         SummitEvent summitEvent;
