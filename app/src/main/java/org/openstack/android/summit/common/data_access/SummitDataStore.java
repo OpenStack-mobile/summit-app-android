@@ -1,10 +1,13 @@
 package org.openstack.android.summit.common.data_access;
 
+import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Summit;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.realm.RealmObject;
 
 /**
  * Created by Claudio Redi on 11/17/2015.
@@ -28,6 +31,30 @@ public class SummitDataStore extends GenericDataStore implements IDataStoreOpera
             }
         }
         else {
+
+            DataStoreOperationListener<Summit> remoteDelegate = new DataStoreOperationListener<Summit>() {
+                @Override
+                public void onSuceedWithData(Summit data) {
+                    try{
+                        realm.beginTransaction();
+                        Summit realmEntity = realm.copyToRealmOrUpdate(data);
+                        realm.commitTransaction();
+                        if (delegate != null) {
+                            delegate.onSuceedWithData(realmEntity);
+                        }
+                    }
+                    catch (Exception ex) {
+                        delegate.onError(ex.getMessage());
+                    }
+                }
+
+                @Override
+                public void onError(String message) {
+                    super.onError(message);
+                }
+            };
+
+            summitRemoteDataStore.setDelegate(remoteDelegate);
             summitRemoteDataStore.getActive();
         }
     }

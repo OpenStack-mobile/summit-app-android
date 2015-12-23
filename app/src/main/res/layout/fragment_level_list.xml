@@ -1,10 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment">
+    tools:context="org.openstack.android.summit.modules.level_list.user_interface.LevelListFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="test" />
+        android:text="@string/hello_blank_fragment" />
 
 </FrameLayout>

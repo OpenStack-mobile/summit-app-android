@@ -3,20 +3,20 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView android:id="@+id/list_schedule_item_time"
+    <TextView android:id="@+id/item_schedule_textview_time"
         android:textSize="12sp"
         android:textColor="#555555"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <TextView android:id="@+id/list_schedule_item_name"
+    <TextView android:id="@+id/item_schedule_textview_name"
         android:textSize="15sp"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <TextView android:id="@+id/list_schedule_item_place"
+    <TextView android:id="@+id/item_schedule_textview_place"
         android:textSize="15sp"
         android:textColor="@android:color/white"
         android:layout_width="match_parent"

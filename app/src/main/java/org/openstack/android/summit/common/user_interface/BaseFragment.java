@@ -1,6 +1,6 @@
 package org.openstack.android.summit.common.user_interface;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -34,4 +34,3 @@ public abstract class BaseFragment extends Fragment {
         return ((MainActivity)getActivity()).getApplicationComponent();
     }
 }
-

@@ -28,7 +28,7 @@ public class TokenManagerServiceAccount implements ITokenManager {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(OpenStackSummitApplication.context);
         String token = settings.getString(TOKEN_SERVICE_ACCOUNT, "");
 
-        if (token == "" && token == null) {
+        if (token == "" || token == null) {
             TokenResponse tokenResponse = getOauth2AccessToken(Constants.TOKEN_SERVER_URL, ConfigServiceAccount.clientId, ConfigServiceAccount.clientSecret);
             SharedPreferences.Editor editor = settings.edit();
             editor.putString(TOKEN_SERVICE_ACCOUNT, tokenResponse.getAccessToken());

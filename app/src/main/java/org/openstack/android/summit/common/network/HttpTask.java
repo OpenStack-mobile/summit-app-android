@@ -1,7 +1,12 @@
 package org.openstack.android.summit.common.network;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
 import com.github.kevinsawicki.http.HttpRequest;
+
+import org.openstack.android.summit.common.Constants;
+
 import java.io.IOException;
 
 /**
@@ -33,7 +38,7 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
                 taskResult.setBody("Invalid http method");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(Constants.LOG_TAG, "", e);
             taskResult.setSucceed(false);
             taskResult.setBody(e.getMessage());
         }

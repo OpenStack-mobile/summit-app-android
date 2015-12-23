@@ -77,8 +77,8 @@ public class SummitEventDeserializerTests {
         Assert.assertEquals("A Day in the Life of an Openstack & Cloud Architect", summitEvent.getName());
         Assert.assertEquals("Event Description", summitEvent.getEventDescription());
         Assert.assertTrue(summitEvent.getAllowFeedback());
-        Assert.assertEquals(1445922900, summitEvent.getStart().getTime());
-        Assert.assertEquals(1445925300, summitEvent.getEnd().getTime());
+        Assert.assertEquals(1445922900000L, summitEvent.getStart().getTime());
+        Assert.assertEquals(1445925300000L, summitEvent.getEnd().getTime());
         Assert.assertEquals(eventType, summitEvent.getEventType());
         Assert.assertEquals(venueRoom, summitEvent.getVenueRoom());
         Assert.assertNull(summitEvent.getVenue());
@@ -136,8 +136,8 @@ public class SummitEventDeserializerTests {
         Assert.assertEquals("A Day in the Life of an Openstack & Cloud Architect", summitEvent.getName());
         Assert.assertEquals("Event Description", summitEvent.getEventDescription());
         Assert.assertFalse(summitEvent.getAllowFeedback());
-        Assert.assertEquals(1445922900, summitEvent.getStart().getTime());
-        Assert.assertEquals(1445925300, summitEvent.getEnd().getTime());
+        Assert.assertEquals(1445922900000L, summitEvent.getStart().getTime());
+        Assert.assertEquals(1445925300000L, summitEvent.getEnd().getTime());
         Assert.assertEquals(eventType, summitEvent.getEventType());
         Assert.assertEquals(venue, summitEvent.getVenue());
         Assert.assertNull(summitEvent.getVenueRoom());
