@@ -1,25 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
-    <TextView android:id="@+id/item_schedule_textview_time"
-        android:textSize="12sp"
-        android:textColor="#555555"
+    <View
+        android:id="@+id/item_schedule_view_summit_type_color"
+        android:layout_width="6dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"
+        android:layout_marginRight="12dp">
+    </View>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView android:id="@+id/item_schedule_textview_name"
-        android:textSize="15sp"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
 
-    <TextView android:id="@+id/item_schedule_textview_place"
-        android:textSize="15sp"
-        android:textColor="@android:color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:id="@+id/item_schedule_layout_time_and_name"
+                android:layout_weight=".95"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+                <RelativeLayout
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/item_schedule_imageview_time"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/time"/>
+
+                    <TextView android:id="@+id/item_schedule_textview_time"
+                        android:textSize="12sp"
+                        android:textColor="#555555"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/item_schedule_imageview_time"/>
+
+                </RelativeLayout>
+
+                <TextView android:id="@+id/item_schedule_textview_name"
+                    android:textSize="17sp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/item_schedule_imagebutton_scheduled"
+                android:layout_weight=".05"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="8dp"
+                android:scaleType="centerInside"
+                android:background="@android:color/transparent"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/unchecked" />
+
+        </LinearLayout>
+
+        <TextView android:id="@+id/item_schedule_textview_sponsors"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView android:id="@+id/item_schedule_textview_track"
+                android:textSize="14sp"
+                android:textColor="#9B9B9B"
+                android:layout_width="0dp"
+                android:layout_weight=".50"
+                android:layout_height="wrap_content" />
+
+            <TextView android:id="@+id/item_schedule_textview_event_type"
+                android:textSize="14sp"
+                android:textColor="#9B9B9B"
+                android:layout_width="0dp"
+                android:layout_weight=".50"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="end"
+                android:textAlignment="viewEnd"
+                android:layout_marginRight="10dp"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

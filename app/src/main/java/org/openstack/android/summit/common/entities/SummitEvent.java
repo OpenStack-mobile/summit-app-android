@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Claudio Redi on 11/4/2015.
  */
-public class SummitEvent extends RealmObject implements INamedEntity {
+public class SummitEvent extends RealmObject implements ISummitEvent {
     @PrimaryKey
     private int id;
     private String name;

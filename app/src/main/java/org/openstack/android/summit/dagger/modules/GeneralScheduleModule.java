@@ -27,18 +27,17 @@ public class GeneralScheduleModule {
     }
 
     @Provides
-    IGeneralScheduleWireframe providesGeneralScheduleWireframe(IEventDetailWireframe eventDetailWireframe) {
+    GeneralScheduleWireframe providesGeneralScheduleWireframe(IEventDetailWireframe eventDetailWireframe) {
         return new GeneralScheduleWireframe(eventDetailWireframe);
     }
 
     @Provides
-    IGeneralScheduleInteractor providesGeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler) {
+    GeneralScheduleInteractor providesGeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler) {
         return new GeneralScheduleInteractor(summitEventDataStore, summitDataStore, dtoAssembler);
     }
 
     @Provides
-    IGeneralSchedulePresenter providesGeneralSchedulePresenter(IGeneralScheduleInteractor generalScheduleInteractor, IGeneralScheduleWireframe generalScheduleWireframe) {
+    GeneralSchedulePresenter providesGeneralSchedulePresenter(GeneralScheduleInteractor generalScheduleInteractor, GeneralScheduleWireframe generalScheduleWireframe) {
         return new GeneralSchedulePresenter(generalScheduleInteractor, generalScheduleWireframe);
     }
-
 }

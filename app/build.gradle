@@ -17,6 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        pickFirst  'META-INF/license.txt'
+        pickFirst  'META-INF/LICENSE.txt'
+        pickFirst  'META-INF/NOTICE.txt'
+    }
 }
 
 // Assists in working with annotation processors for Android Studio.
@@ -53,6 +59,8 @@ dependencies {
     compile 'io.realm:realm-android:0.84.1'
     compile 'com.alibaba:fastjson:1.2.+'
     compile 'org.modelmapper:modelmapper:0.+'
+
+    compile 'com.github.claudioredi:Ranger:ac3f14a'
 
     testCompile "org.mockito:mockito-core:2.0.5-beta"
     testCompile 'junit:junit:4.12'
