@@ -15,5 +15,5 @@ import io.realm.SummitEventRealmProxy;
 /**
  * Created by Claudio Redi on 12/19/2015.
  */
-public class SummitEvent2ScheduleItemDTO extends AbstractSummitEvent2ScheduleItemDTO<SummitEvent> {
+public class SummitEventRealmProxy2ScheduleItemDTO extends AbstractSummitEvent2ScheduleItemDTO<SummitEventRealmProxy> {
 }

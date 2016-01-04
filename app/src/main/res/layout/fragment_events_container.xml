@@ -8,10 +8,8 @@
     <android.support.v4.view.PagerTabStrip
         android:id="@+id/pager_header"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_gravity="top"
-        android:paddingBottom="30dp"
-        android:paddingTop="4dp"
+        android:layout_height="75dp"
+        android:paddingBottom="25dp"
         android:textColor="@android:color/white"
         android:background="#14273d"/>
 

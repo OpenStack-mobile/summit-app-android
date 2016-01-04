@@ -78,4 +78,23 @@ public class ScheduleInteractor implements IScheduleInteractor {
         summitDataStore.setDelegate(dataStoreOperationListener);
         summitDataStore.getActive();
     }
+
+    public Boolean isEventScheduledByLoggedMember(int eventId) {
+        /*guard let loggedInMember = securityManager.getCurrentMember() else {
+            return false
+        }
+
+        return loggedInMember.attendeeRole!.scheduledEvents.filter("id = \(eventId)").count > 0*/
+        return false;
+    }
+
+    @Override
+    public void addEventToLoggedInMemberSchedule(int id, InteractorAsyncOperationListener<Void> interactorOperationListener) {
+
+    }
+
+    @Override
+    public void removeEventToLoggedInMemberSchedule(int id, InteractorAsyncOperationListener<Void> interactorOperationListener) {
+
+    }
 }

@@ -13,4 +13,10 @@ public interface IScheduleInteractor {
     void getActiveSummit(IInteractorAsyncOperationListener<SummitDTO> delegate);
 
     List<ScheduleItemDTO> getScheduleEvents(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> tracks, List<String> tags, List<String> levels);
+
+    Boolean isEventScheduledByLoggedMember(int eventId);
+
+    void addEventToLoggedInMemberSchedule(int id, InteractorAsyncOperationListener<Void> interactorOperationListener);
+
+    void removeEventToLoggedInMemberSchedule(int id, InteractorAsyncOperationListener<Void> interactorOperationListener);
 }

@@ -10,6 +10,7 @@ public class SummitType extends RealmObject implements INamedEntity {
     @PrimaryKey
     private int id;
     private String name;
+    private String color;
 
     public int getId() {
         return id;
@@ -25,5 +26,13 @@ public class SummitType extends RealmObject implements INamedEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
