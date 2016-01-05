@@ -11,4 +11,6 @@ public interface IMemberDataStore {
     IDataStoreOperationListener<Member> getDelegate();
 
     void setDelegate(IDataStoreOperationListener<Member> delegate);
+
+    Member getByIdLocal(int id);
 }

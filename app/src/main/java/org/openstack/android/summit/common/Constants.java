@@ -8,4 +8,5 @@ public class Constants {
     static public final String TOKEN_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/token";
     static public final String AUTHORIZATION_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/auth";
     static public final String RESOURCE_SERVER_BASE_URL = "https://testresource-server.openstack.org";
+    static public final String CURRENT_MEMBER_ID = "CurrentMemberId";
 }

@@ -15,6 +15,7 @@ import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,14 +26,14 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
-public class ScheduleInteractor implements IScheduleInteractor {
+public class ScheduleInteractor extends ScheduleableInteractor implements IScheduleInteractor {
     private ISummitEventDataStore summitEventDataStore;
     private ISummitDataStore summitDataStore;
     private IDTOAssembler dtoAssembler;
 
     @Inject
-    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler) {
-        this.summitEventDataStore = summitEventDataStore;
+    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager) {
+        super(securityManager, summitEventDataStore);
         this.summitDataStore = summitDataStore;
         this.dtoAssembler = dtoAssembler;
     }

@@ -1,5 +1,6 @@
 package org.openstack.android.summit.dagger.modules;
 
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.network.HttpFactory;
 import org.openstack.android.summit.common.network.HttpTaskFactory;
@@ -35,7 +36,7 @@ public class SecurityModule {
 
     @Provides
     @Singleton
-    ISecurityManager providesSecurityManager(IHttpTaskFactory httpTaskFactory, IMemberDataStore memberDataStore) {
-        return new SecurityManager(httpTaskFactory, memberDataStore);
+    ISecurityManager providesSecurityManager(IHttpTaskFactory httpTaskFactory, IMemberDataStore memberDataStore, ISession session) {
+        return new SecurityManager(httpTaskFactory, memberDataStore, session);
     }
 }
