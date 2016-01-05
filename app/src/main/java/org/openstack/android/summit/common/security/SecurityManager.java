@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.entities.Member;
@@ -37,15 +38,18 @@ public class SecurityManager implements ISecurityManager {
     private IMemberDataStore memberDataStore;
     private Member member;
     private ISecurityManagerListener delegate;
+    private ISession session;
 
     @Inject
-    public SecurityManager(IHttpTaskFactory httpTaskFactory, IMemberDataStore memberDataStore) {
+    public SecurityManager(IHttpTaskFactory httpTaskFactory, final IMemberDataStore memberDataStore, final ISession session) {
         this.httpTaskFactory = httpTaskFactory;
         this.memberDataStore = memberDataStore;
+        this.session = session;
         this.memberDataStore.setDelegate(new IDataStoreOperationListener<Member>() {
             @Override
             public void onSuceedWithData(Member data) {
                 member = data;
+                session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
                 if (delegate != null) {
                     delegate.onLoggedIn();
                 }
@@ -102,6 +106,7 @@ public class SecurityManager implements ISecurityManager {
             }
         }
         member = null;
+        session.setInt(Constants.CURRENT_MEMBER_ID,0);
         if (delegate != null) {
             delegate.onLoggedOut();
         }
@@ -113,6 +118,16 @@ public class SecurityManager implements ISecurityManager {
 
     public void setDelegate(ISecurityManagerListener delegate) {
         this.delegate = delegate;
+    }
+
+    @Override
+    public Member getCurrentMember() {
+        // TODO: check if token is valid
+        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
+        if (currentMemberId > 0) {
+            member = memberDataStore.getByIdLocal(currentMemberId);
+        }
+        return member;
     }
 
     public Boolean isLoggedIn() {

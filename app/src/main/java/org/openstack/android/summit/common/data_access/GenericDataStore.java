@@ -10,13 +10,15 @@ import io.realm.RealmResults;
 /**
  * Created by Claudio Redi on 11/17/2015.
  */
-public class GenericDataStore {
+public class GenericDataStore implements IGenericDataStore {
     Realm realm = Realm.getDefaultInstance();
 
+    @Override
     public <T extends RealmObject> T getByIdLocal(int id, Class<T> type) {
         return realm.where(type).equalTo("id", id).findFirst();
     }
 
+    @Override
     public <T extends RealmObject> List<T> getaAllLocal(Class<T> type) {
         ArrayList<T> list = new ArrayList<>();
         RealmResults<T> result = realm.where(type).findAll();
@@ -24,6 +26,7 @@ public class GenericDataStore {
         return list;
     }
 
+    @Override
     public <T extends RealmObject> void SaveOrUpdate(final T entity, IDataStoreOperationListener<T> delegate, Class<T> type) {
         T realmEntity;
         try{
@@ -39,6 +42,7 @@ public class GenericDataStore {
         }
     }
 
+    @Override
     public <T extends RealmObject> void delete(int id, IDataStoreOperationListener<T> delegate, Class<T> type) {
         try{
             realm.beginTransaction();

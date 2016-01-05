@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 import javax.inject.Inject;
 
@@ -13,7 +14,7 @@ import javax.inject.Inject;
 public class GeneralScheduleInteractor extends ScheduleInteractor implements IGeneralScheduleInteractor {
 
     @Inject
-    public GeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler) {
-        super(summitEventDataStore, summitDataStore, dtoAssembler);
+    public GeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager) {
+        super(summitEventDataStore, summitDataStore, dtoAssembler, securityManager);
     }
 }

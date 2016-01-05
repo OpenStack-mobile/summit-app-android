@@ -3,6 +3,7 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.general_schedule.GeneralScheduleWireframe;
 import org.openstack.android.summit.modules.general_schedule.IGeneralScheduleWireframe;
@@ -32,8 +33,8 @@ public class GeneralScheduleModule {
     }
 
     @Provides
-    GeneralScheduleInteractor providesGeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler) {
-        return new GeneralScheduleInteractor(summitEventDataStore, summitDataStore, dtoAssembler);
+    GeneralScheduleInteractor providesGeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager) {
+        return new GeneralScheduleInteractor(summitEventDataStore, summitDataStore, dtoAssembler, securityManager);
     }
 
     @Provides

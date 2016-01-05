@@ -1,5 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
+import org.openstack.android.summit.common.data_access.GenericDataStore;
+import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -51,7 +53,7 @@ public class DataAccessModule {
 
     @Provides
     @Singleton
-    IDeserializerStorage providesdeserializerStorage() {
+    IDeserializerStorage providesDeserializerStorage() {
         return new DeserializerStorage();
     }
 
@@ -150,8 +152,13 @@ public class DataAccessModule {
     }
 
     @Provides
-    IMemberDataStore providesMemberDataStore(IMemberRemoteDataStore memberRemoteDataStore) {
-        return new MemberDataStore(memberRemoteDataStore);
+    IGenericDataStore providesGenericDataStore() {
+        return new GenericDataStore();
+    }
+
+    @Provides
+    IMemberDataStore providesMemberDataStore(IMemberRemoteDataStore memberRemoteDataStore, IGenericDataStore genericDataStore) {
+        return new MemberDataStore(memberRemoteDataStore, genericDataStore);
     }
 
     @Provides

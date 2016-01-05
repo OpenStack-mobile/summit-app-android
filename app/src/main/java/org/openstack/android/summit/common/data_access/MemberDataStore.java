@@ -8,16 +8,22 @@ import org.openstack.android.summit.common.entities.Summit;
  */
 public class MemberDataStore implements IDataStoreOperationListener<Member>,IMemberDataStore {
     private IMemberRemoteDataStore memberRemoteDataStore;
+    private IGenericDataStore genericDataStore;
     private IDataStoreOperationListener<Member> delegate;
 
-    public MemberDataStore(IMemberRemoteDataStore memberRemoteDataStore) {
+    public MemberDataStore(IMemberRemoteDataStore memberRemoteDataStore, IGenericDataStore genericDataStore) {
         this.memberRemoteDataStore = memberRemoteDataStore;
+        this.genericDataStore = genericDataStore;
         this.memberRemoteDataStore.setDelegate(this);
     }
 
     @Override
     public void getLoggedInMemberOrigin() {
         memberRemoteDataStore.getLoggedInMember();
+    }
+
+    public Member getByIdLocal(int id) {
+        return genericDataStore.getByIdLocal(id, Member.class);
     }
 
     @Override
@@ -44,18 +50,4 @@ public class MemberDataStore implements IDataStoreOperationListener<Member>,IMem
     public void setDelegate(IDataStoreOperationListener<Member> delegate) {
         this.delegate = delegate;
     }
-
-    /*public func getLoggedInMemberOrigin(completionBlock : (Member?, NSError?) -> Void)  {
-        memberRemoteStorage.getLoggedInMember { member, error in
-
-            if (error != nil) {
-                completionBlock(member, error)
-                return
-            }
-
-            self.saveOrUpdateLocal(member!)  { member, error in
-                completionBlock(member, error)
-            }
-        }
-    }*/
 }
