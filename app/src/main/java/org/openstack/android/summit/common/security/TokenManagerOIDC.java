@@ -27,7 +27,7 @@ public class TokenManagerOIDC implements ITokenManager {
         try {
             token = futureManager.getResult().getString(AccountManager.KEY_AUTHTOKEN);
         } catch (Exception e) {
-            Log.e(Constants.LOG_TAG,"", e);
+            Log.e(Constants.LOG_TAG,"Error getting token", e);
             throw new TokenGenerationException(e);
         }
         return token;

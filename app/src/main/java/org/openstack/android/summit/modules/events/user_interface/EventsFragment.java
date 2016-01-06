@@ -56,15 +56,12 @@ public class EventsFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_events_container, container, false);
         ViewPager eventsViewPager = (ViewPager)view.findViewById(R.id.events_pager);
-        EventsPageAdapter eventsPageAdapter = new EventsPageAdapter(getActivity().getSupportFragmentManager());
+        EventsPageAdapter eventsPageAdapter = new EventsPageAdapter(getChildFragmentManager());
         eventsViewPager.setAdapter(eventsPageAdapter);
         eventsViewPager.setCurrentItem(0);
 
         return view;
     }
-
-    //@Override
-    //public void
 
     private class EventsPageAdapter extends FragmentPagerAdapter {
         public EventsPageAdapter(FragmentManager fm) {

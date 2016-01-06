@@ -49,7 +49,7 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
 
         Feedback feedback;
         JSONObject jsonObjectFeedback;
-        JSONArray jsonArrayFeedback = jsonObject.getJSONArray("event_types");
+        JSONArray jsonArrayFeedback = jsonObject.getJSONArray("feedback");
         for (int i = 0; i < jsonArrayFeedback.length(); i++) {
             jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
             feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());

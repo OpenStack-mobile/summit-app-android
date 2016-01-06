@@ -6,7 +6,9 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -45,28 +47,6 @@ public class SecurityManager implements ISecurityManager {
         this.httpTaskFactory = httpTaskFactory;
         this.memberDataStore = memberDataStore;
         this.session = session;
-        this.memberDataStore.setDelegate(new IDataStoreOperationListener<Member>() {
-            @Override
-            public void onSuceedWithData(Member data) {
-                member = data;
-                session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
-                if (delegate != null) {
-                    delegate.onLoggedIn();
-                }
-            }
-
-            @Override
-            public void onSucceed() {
-
-            }
-
-            @Override
-            public void onError(String message) {
-                if (delegate != null) {
-                    delegate.onError(message);
-                }
-            }
-        });
     }
 
     @Override
@@ -88,7 +68,30 @@ public class SecurityManager implements ISecurityManager {
                     }, null);
         }
         else {
-            memberDataStore.getLoggedInMemberOrigin();
+            IDataStoreOperationListener<Member> dataStoreOperationListener = new IDataStoreOperationListener<Member>() {
+                @Override
+                public void onSuceedWithData(Member data) {
+                    member = data;
+                    session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
+
+                    if (delegate != null) {
+                        delegate.onLoggedIn();
+                    }
+                }
+
+                @Override
+                public void onSucceed() {
+
+                }
+
+                @Override
+                public void onError(String message) {
+                    if (delegate != null) {
+                        delegate.onError(message);
+                    }
+                }
+            };
+            memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
         }
     }
 

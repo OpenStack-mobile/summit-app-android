@@ -9,9 +9,11 @@ import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
+import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
+import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 import org.robolectric.RobolectricTestRunner;
@@ -76,11 +78,19 @@ public class DTOAssemblerTests {
         summitType2.setId(2);
         summitType2.setName("Design Summit");
 
+        Track track = new Track();
+        track.setId(1);
+        track.setName("test track");
+
+        Presentation presentation = new Presentation();
+        presentation.setId(2000);
+        presentation.setTrack(track);
+
         SummitEvent summitEvent = new SummitEvent();
         summitEvent.setId(4);
         summitEvent.setName("Registration Check-In");
-        summitEvent.setStart(new Date(1441137600L*1000));
-        summitEvent.setEnd(new Date(1441141200L*1000));
+        summitEvent.setStart(new Date(1441137600L * 1000));
+        summitEvent.setEnd(new Date(1441141200L * 1000));
         summitEvent.setSummit(summit);
         summitEvent.getSponsors().add(company1);
         summitEvent.getSponsors().add(company2);
@@ -88,7 +98,7 @@ public class DTOAssemblerTests {
         summitEvent.setVenueRoom(venueRoom);
         summitEvent.getSummitTypes().add(summitType1);
         summitEvent.getSummitTypes().add(summitType2);
-
+        summitEvent.setPresentation(presentation);
         // Act
         ScheduleItemDTO scheduleItemDTO = dtoAssembler.createDTO(summitEvent, ScheduleItemDTO.class);
 
@@ -100,5 +110,6 @@ public class DTOAssemblerTests {
         Assert.assertEquals("Grand Prince International Convention Center & Hotels - PAMIR Building 3, Level 1F", scheduleItemDTO.getLocation());
         Assert.assertEquals("Sponsored by company 1, company 2", scheduleItemDTO.getSponsors());
         Assert.assertEquals("Main Summit, Design Summit", scheduleItemDTO.getCredentials());
+        Assert.assertEquals(track.getName(), scheduleItemDTO.getTrack());
     }
 }

@@ -10,7 +10,9 @@ import org.openstack.android.summit.common.security.TokenGenerationException;
 
 import java.io.IOException;
 
+import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 
 public class Http implements IHttp {
@@ -25,19 +27,29 @@ public class Http implements IHttp {
         return makeRequest(HttpRequest.METHOD_GET, url, getTokenManager(), true);
     }
 
+    @Override
+    public String POST(String url) throws IOException {
+        return makeRequest(HttpRequest.METHOD_POST, url, getTokenManager(), true);
+    }
+
+    @Override
+    public String DELETE(String url) throws IOException {
+        return makeRequest(HttpRequest.METHOD_DELETE, url, getTokenManager(), true);
+    }
+
     protected String makeRequest(String method, String url, ITokenManager tokenManager, boolean doRetry) throws IOException {
 
         String token = null;
         try {
             token = tokenManager.getToken();
         } catch (TokenGenerationException e) {
-            Log.e(Constants.LOG_TAG, "", e);
+            Log.e(Constants.LOG_TAG, "Error getting token", e);
         }
         // Prepare an API request using the token
         HttpRequest request = new HttpRequest(url, method);
         request = prepareApiRequest(request, token);
 
-        if (request.ok()) {
+        if (request.ok() || request.code() == HTTP_CREATED || request.code() == HTTP_NO_CONTENT) {
             return request.body();
         } else {
             int code = request.code();

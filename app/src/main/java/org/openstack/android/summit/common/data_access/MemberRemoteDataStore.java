@@ -24,7 +24,6 @@ import javax.inject.Inject;
  */
 public class MemberRemoteDataStore implements IMemberRemoteDataStore {
     private IDeserializer deserializer;
-    private IDataStoreOperationListener<Member> delegate;
     private IHttpTaskFactory httpTaskFactory;
 
     @Inject
@@ -34,22 +33,24 @@ public class MemberRemoteDataStore implements IMemberRemoteDataStore {
     }
 
     @Override
-    public void getLoggedInMember() {
+    public void getLoggedInMember(IDataStoreOperationListener<Member> dataStoreOperationListener) {
+        final IDataStoreOperationListener<Member> finalDataStoreOperationListener = dataStoreOperationListener;
+
         HttpTaskListener httpTaskListener = new HttpTaskListener() {
             @Override
             public void onSucceed(String data) {
                 try {
                     Member member = deserializer.deserialize(data, Member.class);
-                    delegate.onSuceedWithData(member);
+                    finalDataStoreOperationListener.onSuceedWithData(member);
                 } catch (JSONException e) {
-                    Log.e(Constants.LOG_TAG, "", e);
-                    delegate.onError(e.getMessage());
+                    Log.e(Constants.LOG_TAG, "Error deserializing member", e);
+                    finalDataStoreOperationListener.onError(e.getMessage());
                 }
             }
 
             @Override
             public void onError(String error) {
-                delegate.onError(error);
+                finalDataStoreOperationListener.onError(error);
             }
         };
 
@@ -61,15 +62,5 @@ public class MemberRemoteDataStore implements IMemberRemoteDataStore {
             e.printStackTrace();
         }
         httpTask.execute();
-    }
-
-    @Override
-    public IDataStoreOperationListener<Member> getDelegate() {
-        return delegate;
-    }
-
-    @Override
-    public void setDelegate(IDataStoreOperationListener<Member> delegate) {
-        this.delegate = delegate;
     }
 }
