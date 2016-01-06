@@ -137,4 +137,10 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
         toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor);
     }
+
+    @Override
+    public void showEventDetail(int position) {
+        ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
+        wireframe.showEventDetail(view.getActivity());
+    }
 }

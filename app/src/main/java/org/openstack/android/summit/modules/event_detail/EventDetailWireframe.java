@@ -1,7 +1,8 @@
 package org.openstack.android.summit.modules.event_detail;
 
 import android.app.Activity;
-import android.app.FragmentManager;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
@@ -19,9 +20,9 @@ public class EventDetailWireframe implements IEventDetailWireframe {
     }
 
     @Override
-    public void presentEventDetailView(Activity context) {
+    public void presentEventDetailView(FragmentActivity context) {
         EventDetailFragment eventDetailFragment = new EventDetailFragment();
-        FragmentManager fragmentManager = context.getFragmentManager();
+        FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, eventDetailFragment)

@@ -12,5 +12,7 @@ public interface ISchedulePresenter<V extends ScheduleFragment, I extends ISched
     void reloadSchedule();
 
     void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position);
+
+    void showEventDetail(int position);
 }
 
