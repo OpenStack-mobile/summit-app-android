@@ -1,8 +1,15 @@
 package org.openstack.android.summit.common.user_interface;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.joda.time.DateTime;
+import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.IScheduleWireframe;
@@ -16,7 +23,7 @@ import java.util.TimeZone;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
-public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleInteractor, W extends IScheduleWireframe> implements ISchedulePresenter<V, I , W> {
+public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleInteractor, W extends IScheduleWireframe> extends ScheduleablePresenter implements ISchedulePresenter<V, I , W> {
     V view;
     I interactor;
     W wireframe;
@@ -24,7 +31,6 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
     Date selectedDate;
     int summitTimeZoneOffset;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
-
     public SchedulePresenter(I interactor, W wireframe) {
         this.interactor = interactor;
         this.wireframe = wireframe;
@@ -48,12 +54,16 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        initialize(savedInstanceState);
+    }
+
+    private void initialize(Bundle savedInstanceState) {
         InteractorAsyncOperationListener<SummitDTO> summitDTOIInteractorOperationListener = new InteractorAsyncOperationListener<SummitDTO>() {
             @Override
             public void onSuceedWithData(SummitDTO data) {
                 summitTimeZoneOffset = TimeZone.getTimeZone(data.getTimeZone()).getOffset(new Date().getTime());
                 DateTime startDate = new DateTime(data.getStartDate()).plus(summitTimeZoneOffset).withTime(0, 0, 0, 0);
-                DateTime endDate = new DateTime(data.getEndDate()).plus(summitTimeZoneOffset).plusDays(1);
+                DateTime endDate = new DateTime(data.getEndDate()).plus(summitTimeZoneOffset).withTime(23, 59, 59, 999);
 
                 view.setStartAndEndDateWithParts(
                         startDate.getYear(),
@@ -97,7 +107,11 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
         scheduleItemView.setSponsors(scheduleItemDTO.getSponsors());
         scheduleItemView.setEventType(scheduleItemDTO.getEventType().toUpperCase());
         scheduleItemView.setTrack(scheduleItemDTO.getTrack());
-        String summitTypeColor = scheduleItemDTO.getSummitTypeColor() != "" ? scheduleItemDTO.getSummitTypeColor() : "#4A4A4A";
+        scheduleItemView.setIsScheduledStatusVisible(interactor.isMemberLoggedIn());
+        if (interactor.isMemberLoggedIn()) {
+            scheduleItemView.setScheduled(interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()));
+        }
+        String summitTypeColor = scheduleItemDTO.getSummitTypeColor() != "" ? scheduleItemDTO.getSummitTypeColor() : "#8A8A8A";
         scheduleItemView.setSummitTypeColor(summitTypeColor);
     }
 
@@ -106,7 +120,7 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
 
         int offsetLocalTimeZone  = TimeZone.getDefault().getOffset(new Date().getTime());
 
-        DateTime startDate = new DateTime(view.getSelectedDate()).plus(offsetLocalTimeZone - summitTimeZoneOffset).withTime(0, 0, 0, 0);
+        DateTime startDate = new DateTime(view.getSelectedDate()).withTime(0, 0, 0, 0).plus(offsetLocalTimeZone - summitTimeZoneOffset);
         DateTime endDate = new DateTime(view.getSelectedDate()).withTime(23, 59, 59, 999).plus(offsetLocalTimeZone - summitTimeZoneOffset);
 
         dayEvents = getScheduledEvents(startDate, endDate, interactor);
@@ -122,53 +136,5 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
         toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor);
-    }
-
-    public void toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleInteractor interactor) {
-        Boolean isScheduled = interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId());
-
-        if (isScheduled) {
-            removeEventFromSchedule(scheduleItemDTO, scheduleableView, interactor);
-        }
-        else {
-            addEventToSchedule(scheduleItemDTO, scheduleableView, interactor);
-        }
-
-    }
-
-    private void removeEventFromSchedule(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleInteractor interactor) {
-        scheduleableView.setScheduled(false);
-        final IScheduleableView finalScheduleable = scheduleableView;
-        InteractorAsyncOperationListener<Void> interactorOperationListener = new InteractorAsyncOperationListener<Void>() {
-            @Override
-            public void onSuceedWithData(Void data) {
-
-            }
-
-            @Override
-            public void onError(String message) {
-                finalScheduleable.setScheduled(!finalScheduleable.getScheduled());
-            }
-        };
-
-        interactor.removeEventToLoggedInMemberSchedule(scheduleItemDTO.getId(), interactorOperationListener);
-    }
-
-    private void addEventToSchedule(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleInteractor interactor) {
-        scheduleableView.setScheduled(true);
-        final IScheduleableView finalScheduleable = scheduleableView;
-        InteractorAsyncOperationListener<Void> interactorOperationListener = new InteractorAsyncOperationListener<Void>() {
-            @Override
-            public void onSuceedWithData(Void data) {
-
-            }
-
-            @Override
-            public void onError(String message) {
-                finalScheduleable.setScheduled(!finalScheduleable.getScheduled());
-            }
-        };
-
-        interactor.addEventToLoggedInMemberSchedule(scheduleItemDTO.getId(), interactorOperationListener);
     }
 }

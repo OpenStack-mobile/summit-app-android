@@ -14,6 +14,7 @@ import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.TicketType;
+import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 
@@ -94,6 +95,16 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
             eventType = genericDeserializer.deserialize(jsonObjectEventType.toString(), EventType.class);
             deserializerStorage.add(eventType, EventType.class);
             summit.getEventTypes().add(eventType);
+        }
+
+        Track track;
+        JSONObject jsonObjectTrack;
+        JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
+        for (int i = 0; i < jsonArrayTracks.length(); i++) {
+            jsonObjectTrack = jsonArrayTracks.getJSONObject(i);
+            track = genericDeserializer.deserialize(jsonObjectTrack.toString(), Track.class);
+            deserializerStorage.add(track, Track.class);
+            summit.getTracks().add(track);
         }
 
         Venue venue;

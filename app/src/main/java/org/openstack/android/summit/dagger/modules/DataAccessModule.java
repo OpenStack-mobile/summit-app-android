@@ -4,11 +4,15 @@ import org.openstack.android.summit.common.data_access.GenericDataStore;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
+import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.ISummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.MemberDataStore;
 import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.SummitAttendeeDataStore;
+import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.SummitDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventDataStore;
 import org.openstack.android.summit.common.data_access.SummitRemoteDataStore;
@@ -157,12 +161,22 @@ public class DataAccessModule {
     }
 
     @Provides
-    IMemberDataStore providesMemberDataStore(IMemberRemoteDataStore memberRemoteDataStore, IGenericDataStore genericDataStore) {
-        return new MemberDataStore(memberRemoteDataStore, genericDataStore);
+    IMemberDataStore providesMemberDataStore(IMemberRemoteDataStore memberRemoteDataStore) {
+        return new MemberDataStore(memberRemoteDataStore);
     }
 
     @Provides
     ISummitEventDataStore providesSummitEventDataStore() {
         return new SummitEventDataStore();
+    }
+
+    @Provides
+    ISummitAttendeeRemoteDataStore providesSummitAttendeeRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
+        return new SummitAttendeeRemoteDataStore(httpTaskFactory, deserializer);
+    }
+
+    @Provides
+    ISummitAttendeeDataStore providesSummitAttendeeDataStore(ISummitAttendeeRemoteDataStore summitAttendeeRemoteDataStore) {
+        return new SummitAttendeeDataStore(summitAttendeeRemoteDataStore);
     }
 }

@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.graphics.Color;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.openstack.android.summit.R;
@@ -95,16 +96,24 @@ public class ScheduleItemView implements IScheduleItemView {
 
     @Override
     public void setScheduled(Boolean scheduled) {
-
+        ImageButton scheduledStatusImageButton = (ImageButton)view.findViewById(R.id.item_schedule_imagebutton_scheduled);
+        if (scheduled) {
+            scheduledStatusImageButton.setImageResource(R.drawable.checked_active);
+        }
+        else {
+            scheduledStatusImageButton.setImageResource(R.drawable.unchecked);
+        }
     }
 
     @Override
     public Boolean getIsScheduledStatusVisible() {
-        return null;
+        ImageButton scheduledStatusImageButton = (ImageButton)view.findViewById(R.id.item_schedule_imagebutton_scheduled);
+        return scheduledStatusImageButton.getVisibility() == View.VISIBLE;
     }
 
     @Override
     public void setIsScheduledStatusVisible(Boolean isScheduledStatusVisible) {
-
+        ImageButton scheduledStatusImageButton = (ImageButton)view.findViewById(R.id.item_schedule_imagebutton_scheduled);
+        scheduledStatusImageButton.setVisibility(isScheduledStatusVisible ? View.VISIBLE : View.INVISIBLE);
     }
 }

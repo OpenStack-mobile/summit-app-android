@@ -34,6 +34,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<T extends SummitEvent> extends 
         scheduleItemDTO.setCredentials(credentials);
         String summitTypeColor = source.getSummitTypes().size() == 1 ? source.getSummitTypes().first().getColor() : "";
         scheduleItemDTO.setSummitTypeColor(summitTypeColor);
+        scheduleItemDTO.setTrack(source.getPresentation() != null ? source.getPresentation().getTrack().getName() : null);
         return scheduleItemDTO;
     }
 

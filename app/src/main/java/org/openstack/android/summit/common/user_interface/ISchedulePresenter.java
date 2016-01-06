@@ -8,6 +8,9 @@ import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
  */
 public interface ISchedulePresenter<V extends ScheduleFragment, I extends IScheduleInteractor, W extends IScheduleWireframe> extends IPresenter<V> {
     void buildItem(IScheduleItemView scheduleItemView, int position);
+
     void reloadSchedule();
+
+    void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position);
 }
 

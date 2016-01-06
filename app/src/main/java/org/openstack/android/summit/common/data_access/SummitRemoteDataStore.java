@@ -37,7 +37,7 @@ public class SummitRemoteDataStore implements ISummitRemoteDataStore {
                         Summit summit = deserializer.deserialize(data, Summit.class);
                         delegate.onSuceedWithData(summit);
                     } catch (JSONException e) {
-                        Log.e(Constants.LOG_TAG,"", e);
+                        Log.e(Constants.LOG_TAG,"Error deserializing summit", e);
                         delegate.onError(e.getMessage());
                     }
                 }

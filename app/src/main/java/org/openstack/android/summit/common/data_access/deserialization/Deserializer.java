@@ -12,6 +12,8 @@ import org.openstack.android.summit.common.entities.SummitEvent;
 
 import javax.inject.Inject;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Claudio Redi on 11/4/2015.
  */
@@ -51,7 +53,7 @@ public class Deserializer implements IDeserializer {
     }
 
     @Override
-    public <T extends IEntity> T deserialize(String jsonString, Class<T> type) throws JSONException, IllegalArgumentException {
+    public <T extends RealmObject & IEntity> T deserialize(String jsonString, Class<T> type) throws JSONException, IllegalArgumentException {
 
         if (type == Feedback.class) {
             return (T)feedbackDeserializer.deserialize(jsonString);

@@ -30,15 +30,24 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
             String method = config.getMethod();
             if (method == HttpRequest.METHOD_GET) {
                 String body = config.getHttp().GET(config.getUrl());
-                taskResult.setSucceed(true);
+                taskResult.setBody(body);
+            }
+            else if (method == HttpRequest.METHOD_POST){
+                String body = config.getHttp().POST(config.getUrl());
+                taskResult.setBody(body);
+            }
+            else if (method == HttpRequest.METHOD_DELETE){
+                String body = config.getHttp().DELETE(config.getUrl());
                 taskResult.setBody(body);
             }
             else {
                 taskResult.setSucceed(false);
                 taskResult.setBody("Invalid http method");
             }
+            taskResult.setSucceed(true);
+
         } catch (IOException e) {
-            Log.e(Constants.LOG_TAG, "", e);
+            Log.e(Constants.LOG_TAG, "Error executing API request", e);
             taskResult.setSucceed(false);
             taskResult.setBody(e.getMessage());
         }

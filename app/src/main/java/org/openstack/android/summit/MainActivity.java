@@ -1,8 +1,10 @@
 package org.openstack.android.summit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
@@ -105,6 +108,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camara) {
+            menuItem = item;
             if (!securityManager.isLoggedIn()) {
                 securityManager.login(this);
             }
@@ -162,11 +166,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoggedIn() {
         menuItem.setTitle("Log out");
+
+        Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
+        // You can also include some extra data.
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
     }
 
     @Override
     public void onLoggedOut() {
+        menuItem.setTitle("Log in");
 
+        Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
+        // You can also include some extra data.
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
     }
 
     @Override

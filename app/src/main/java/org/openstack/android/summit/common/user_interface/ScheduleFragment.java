@@ -1,7 +1,11 @@
 package org.openstack.android.summit.common.user_interface;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +15,9 @@ import android.widget.ListView;
 
 import com.andressantibanez.ranger.Ranger;
 
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 
 import java.util.Date;
@@ -31,6 +37,12 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     Date startDate;
     Date endDate;
     protected View view;
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            presenter.onCreate(null);
+        }
+    };
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -39,6 +51,13 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.LOGGED_IN_EVENT);
+        intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
+
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+
         presenter.setView(this);
     }
 
@@ -55,6 +74,14 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
             }
         });
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        // This is somewhat like [[NSNotificationCenter defaultCenter] removeObserver:name:object:]
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
+        super.onDestroy();
     }
 
     @Override
@@ -98,23 +125,24 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_schedule, parent, false);
             }
 
+            final ScheduleItemView scheduleItemView = new ScheduleItemView(convertView);
+
             ImageButton scheduleStatus = (ImageButton)convertView.findViewById(R.id.item_schedule_imagebutton_scheduled);
             scheduleStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    presenter.toggleScheduleStatus(scheduleItemView, position);
                 }
             });
 
-            ScheduleItemView scheduleItem = new ScheduleItemView(convertView);
-            presenter.buildItem(scheduleItem, position);
+            presenter.buildItem(scheduleItemView, position);
 
             // Return the completed view to render on screen
             return convertView;

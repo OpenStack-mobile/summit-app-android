@@ -7,14 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.realm.Realm;
+import io.realm.RealmObject;
+
 /**
  * Created by Claudio Redi on 11/11/2015.
  */
 public class DeserializerStorage implements IDeserializerStorage {
     Map<Class, Map<Integer, IEntity>> deserializedEntityDictionary = new HashMap<Class, Map<Integer, IEntity>>();
+    Realm realm = Realm.getDefaultInstance();
 
     @Override
-    public <T extends IEntity> void add(T entity, Class<T> type) {
+    public <T extends RealmObject & IEntity> void add(T entity, Class<T> type) {
         if (!deserializedEntityDictionary.containsKey(type)) {
             deserializedEntityDictionary.put(type, new HashMap<Integer, IEntity>());
         }
@@ -22,16 +26,20 @@ public class DeserializerStorage implements IDeserializerStorage {
     }
 
     @Override
-    public <T extends IEntity> T get(int id, Class<T> type) {
+    public <T extends RealmObject & IEntity> T get(int id, Class<T> type) {
         T entity = null;
         if (deserializedEntityDictionary.containsKey(type) && deserializedEntityDictionary.get(type).containsKey(id)) {
             entity = (T)deserializedEntityDictionary.get(type).get(id);
+        }
+
+        if (entity == null) {
+            entity = realm.where(type).equalTo("id", id).findFirst();
         }
         return entity;
     }
 
     @Override
-    public <T extends IEntity> List<T> getAll(Class<T> type) {
+    public <T extends RealmObject & IEntity> List<T> getAll(Class<T> type) {
         List<T> list = new ArrayList<T>();
         if (deserializedEntityDictionary.containsKey(type)) {
             for (IEntity entity : deserializedEntityDictionary.get(type).values()) {
@@ -42,12 +50,12 @@ public class DeserializerStorage implements IDeserializerStorage {
     }
 
     @Override
-    public <T extends IEntity> Boolean exist(int entityId, Class<T> type) {
+    public <T extends RealmObject & IEntity> Boolean exist(int entityId, Class<T> type) {
         return deserializedEntityDictionary.containsKey(type) && deserializedEntityDictionary.get(type).containsKey(entityId);
     }
 
     @Override
-    public <T extends IEntity> Boolean exist(T entity, Class<T> type) {
+    public <T extends RealmObject & IEntity> Boolean exist(T entity, Class<T> type) {
         return exist(entity.getId(), type);
     }
 
