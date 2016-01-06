@@ -60,7 +60,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.+'
     compile 'org.modelmapper:modelmapper:0.+'
 
-    compile 'com.github.claudioredi:Ranger:ac3f14a'
+    compile 'com.github.claudioredi:Ranger:18de057'
 
     testCompile "org.mockito:mockito-core:2.0.5-beta"
     testCompile 'junit:junit:4.12'

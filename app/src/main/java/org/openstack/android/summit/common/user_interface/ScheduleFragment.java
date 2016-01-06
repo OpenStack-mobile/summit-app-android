@@ -132,6 +132,13 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_schedule, parent, false);
             }
 
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.showEventDetail(position);
+                }
+            });
+
             final ScheduleItemView scheduleItemView = new ScheduleItemView(convertView);
 
             ImageButton scheduleStatus = (ImageButton)convertView.findViewById(R.id.item_schedule_imagebutton_scheduled);

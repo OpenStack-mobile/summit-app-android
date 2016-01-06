@@ -105,7 +105,7 @@ public class DTOAssemblerTests {
         // Assert
         Assert.assertEquals(summitEvent.getId(), scheduleItemDTO.getId());
         Assert.assertEquals(summitEvent.getName(), scheduleItemDTO.getName());
-        Assert.assertEquals("05:00 AM / 06:00 AM", scheduleItemDTO.getTime());
+        Assert.assertEquals("05:00 am / 06:00 am", scheduleItemDTO.getTime());
         Assert.assertEquals("Wednesday 02 September 05:00 AM / 06:00 AM", scheduleItemDTO.getDateTime());
         Assert.assertEquals("Grand Prince International Convention Center & Hotels - PAMIR Building 3, Level 1F", scheduleItemDTO.getLocation());
         Assert.assertEquals("Sponsored by company 1, company 2", scheduleItemDTO.getSponsors());

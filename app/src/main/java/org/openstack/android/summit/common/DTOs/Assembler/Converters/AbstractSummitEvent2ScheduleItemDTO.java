@@ -85,7 +85,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<T extends SummitEvent> extends 
 
         String timeRange = String.format("%s / %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
 
-        return timeRange;
+        return timeRange.toLowerCase();
     }
 
     private String getCredentials(T summitEvent) {

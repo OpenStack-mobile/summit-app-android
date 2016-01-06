@@ -9,7 +9,12 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
+        android:background="#E5E5E5"
         android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc"></View>
         <com.andressantibanez.ranger.Ranger
             android:id="@+id/ranger_summit"
             android:layout_width="match_parent"
@@ -20,6 +25,10 @@
             app:selectedDayTextColor="#FFFFFF"
             app:selectedDayBackgroundColor="#F5A623"
             app:displayDayOfWeek="true"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc"></View>
         <ListView android:id="@+id/list_schedule"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"

@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 
@@ -18,7 +19,7 @@ public class ScheduleWireframe implements IScheduleWireframe {
     }
 
     @Override
-    public void showEventDetail(Activity context) {
+    public void showEventDetail(FragmentActivity context) {
         eventDetailWireframe.presentEventDetailView(context);
     }
 }

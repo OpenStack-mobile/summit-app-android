@@ -49,6 +49,8 @@ public class EventsFragment extends BaseFragment {
         getComponent().inject(this);
         presenter.setView(this);
         presenter.onCreate(savedInstanceState);
+
+        getActivity().setTitle("EVENTS");
     }
 
     @Override
