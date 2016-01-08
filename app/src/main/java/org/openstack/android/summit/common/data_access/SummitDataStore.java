@@ -50,7 +50,7 @@ public class SummitDataStore extends GenericDataStore implements IDataStoreOpera
 
                 @Override
                 public void onError(String message) {
-                    super.onError(message);
+                    delegate.onError(message);
                 }
             };
 

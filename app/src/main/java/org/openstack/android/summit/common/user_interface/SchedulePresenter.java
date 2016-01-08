@@ -58,6 +58,8 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
     }
 
     private void initialize(Bundle savedInstanceState) {
+        view.showActivityIndicator();
+
         InteractorAsyncOperationListener<SummitDTO> summitDTOIInteractorOperationListener = new InteractorAsyncOperationListener<SummitDTO>() {
             @Override
             public void onSuceedWithData(SummitDTO data) {
@@ -74,11 +76,13 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
                         endDate.getDayOfMonth()
                 );
                 reloadSchedule();
+                view.hideActivityIndicator();
             }
 
             @Override
             public void onError(String message) {
-                super.onError(message);
+                view.hideActivityIndicator();
+                view.showErrorMessage(message);
             }
         };
 

@@ -31,7 +31,8 @@ public class TokenManagerServiceAccount implements ITokenManager {
         if (token == "" || token == null) {
             TokenResponse tokenResponse = getOauth2AccessToken(Constants.TOKEN_SERVER_URL, ConfigServiceAccount.clientId, ConfigServiceAccount.clientSecret);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(TOKEN_SERVICE_ACCOUNT, tokenResponse.getAccessToken());
+            token = tokenResponse.getAccessToken();
+            editor.putString(TOKEN_SERVICE_ACCOUNT, token);
             editor.apply();
         }
 

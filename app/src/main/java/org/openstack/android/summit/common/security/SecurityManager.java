@@ -103,7 +103,7 @@ public class SecurityManager implements ISecurityManager {
         Account availableAccounts[] = accountManager.getAccountsByType(accountType);
 
         if (availableAccounts.length == 0) {
-            String token = accountManager.peekAuthToken(availableAccounts[0], Authenticator.TOKEN_TYPE_REFRESH);
+            String token = accountManager.peekAuthToken(availableAccounts[0], Authenticator.TOKEN_TYPE_ACCESS);
             if (TextUtils.isEmpty(token)) {
                 accountManager.invalidateAuthToken(accountType, token);
             }
