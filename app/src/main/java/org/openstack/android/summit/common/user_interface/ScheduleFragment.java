@@ -115,6 +115,8 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
     @Override
     public void reloadSchedule() {
+        Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        ranger.setVisibility(View.VISIBLE);
         scheduleListAdapter.notifyDataSetChanged();
     }
 

@@ -24,7 +24,8 @@
             app:dayTextColor="#4A4A4A"
             app:selectedDayTextColor="#FFFFFF"
             app:selectedDayBackgroundColor="#F5A623"
-            app:displayDayOfWeek="true"/>
+            app:displayDayOfWeek="true"
+            android:visibility="invisible"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

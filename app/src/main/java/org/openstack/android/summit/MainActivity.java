@@ -1,6 +1,7 @@
 package org.openstack.android.summit;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,10 @@ import org.openstack.android.summit.modules.events.IEventsWireframe;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.net.ssl.HostnameVerifier;
@@ -32,6 +37,9 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
+
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener {
@@ -43,6 +51,8 @@ public class MainActivity extends AppCompatActivity
     ISecurityManager securityManager;
 
     MenuItem menuItem;
+    private ScheduledFuture<?> activityIndicatorTask;
+    private ACProgressFlower progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +120,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camara) {
             menuItem = item;
             if (!securityManager.isLoggedIn()) {
+                showActivityIndicator();
                 securityManager.login(this);
             }
             else {
@@ -140,6 +151,61 @@ public class MainActivity extends AppCompatActivity
         return new ActivityModule(this);
     }
 
+    @Override
+    public void onLoggedIn() {
+        menuItem.setTitle("Log out");
+
+        Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
+        // You can also include some extra data.
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+        hideActivityIndicator();
+    }
+
+    @Override
+    public void onLoggedOut() {
+        menuItem.setTitle("Log in");
+
+        Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
+        // You can also include some extra data.
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+    }
+
+    @Override
+    public void onError(String message) {
+
+    }
+
+    public void showActivityIndicator() {
+
+        Runnable task = new Runnable() {
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog = new ACProgressFlower.Builder(MainActivity.this)
+                                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                                .themeColor(Color.WHITE)
+                                .text("Loading...")
+                                .fadeColor(Color.DKGRAY).build();
+                        progressDialog.show();
+                    }
+                });
+            }
+        };
+        ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
+        activityIndicatorTask = worker.schedule(task, 500, TimeUnit.MILLISECONDS);
+    }
+
+    public void hideActivityIndicator() {
+        if (!activityIndicatorTask.isDone()) {
+            activityIndicatorTask.cancel(true);
+        }
+        if (progressDialog != null) {
+            progressDialog.hide();
+        }
+    }
+
+    /* TODO: This should be gone before going live!!!!*/
     private void trustEveryone() {
         try {
             HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
@@ -163,26 +229,4 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onLoggedIn() {
-        menuItem.setTitle("Log out");
-
-        Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
-        // You can also include some extra data.
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-    }
-
-    @Override
-    public void onLoggedOut() {
-        menuItem.setTitle("Log in");
-
-        Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
-        // You can also include some extra data.
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-    }
-
-    @Override
-    public void onError(String message) {
-
-    }
 }

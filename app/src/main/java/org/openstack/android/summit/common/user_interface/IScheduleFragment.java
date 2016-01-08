@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 12/29/2015.
  */
-public interface IScheduleFragment {
+public interface IScheduleFragment extends IBaseFragment {
     void setStartAndEndDateWithParts(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay);
 
     List<ScheduleItemDTO> getEvents();
