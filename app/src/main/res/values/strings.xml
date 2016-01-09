@@ -1,11 +1,9 @@
 <resources>
+    <string name="navigation_drawer_open">Open menu</string>
+    <string name="navigation_drawer_close">Close menu</string>
     <string name="app_name">OpenStack</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_in">LOG IN</string>
+    <string name="log_out">LOG OUT</string>
+    <string name="search_placeholder">search events &amp; people...</string>
 </resources>

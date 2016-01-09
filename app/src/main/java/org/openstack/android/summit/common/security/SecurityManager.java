@@ -7,6 +7,7 @@ import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -68,6 +69,7 @@ public class SecurityManager implements ISecurityManager {
                     }, null);
         }
         else {
+
             IDataStoreOperationListener<Member> dataStoreOperationListener = new IDataStoreOperationListener<Member>() {
                 @Override
                 public void onSuceedWithData(Member data) {
@@ -102,10 +104,13 @@ public class SecurityManager implements ISecurityManager {
         final String accountType = context.getString(R.string.ACCOUNT_TYPE);
         Account availableAccounts[] = accountManager.getAccountsByType(accountType);
 
-        if (availableAccounts.length == 0) {
-            String token = accountManager.peekAuthToken(availableAccounts[0], Authenticator.TOKEN_TYPE_ACCESS);
-            if (TextUtils.isEmpty(token)) {
-                accountManager.invalidateAuthToken(accountType, token);
+        if (availableAccounts.length > 0) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                accountManager.removeAccountExplicitly(availableAccounts[0]);
+            }
+            else {
+                accountManager.removeAccount(availableAccounts[0], null, null);
             }
         }
         member = null;
