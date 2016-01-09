@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.*;
@@ -50,9 +53,9 @@ public class MainActivity extends AppCompatActivity
     @Inject
     ISecurityManager securityManager;
 
-    MenuItem menuItem;
     private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +65,27 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
+        LinearLayout headerView = (LinearLayout)navigationView.inflateHeaderView(R.layout.nav_header_main);
+        loginButton = (Button)headerView.findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!securityManager.isLoggedIn()) {
+                    showActivityIndicator();
+                    securityManager.login(MainActivity.this);
+                }
+                else {
+                    securityManager.logout();
+                }
+            }
+        });
 
         getApplicationComponent().inject(this);
         eventsWireframe.presentEventsView(this);
@@ -98,9 +115,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -117,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
+        /*if (id == R.id.nav_camara) {
             menuItem = item;
             if (!securityManager.isLoggedIn()) {
                 showActivityIndicator();
@@ -132,11 +146,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -153,17 +163,24 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoggedIn() {
-        menuItem.setTitle("Log out");
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(3).setVisible(true);
+
+        loginButton.setText(getResources().getText(R.string.log_out));
 
         Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
         // You can also include some extra data.
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
         hideActivityIndicator();
+
     }
 
     @Override
     public void onLoggedOut() {
-        menuItem.setTitle("Log in");
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(3).setVisible(false);
+
+        loginButton.setText(getResources().getText(R.string.log_in));
 
         Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
         // You can also include some extra data.
@@ -176,30 +193,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showActivityIndicator() {
-
-        Runnable task = new Runnable() {
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog = new ACProgressFlower.Builder(MainActivity.this)
-                                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                                .themeColor(Color.WHITE)
-                                .text("Loading...")
-                                .fadeColor(Color.DKGRAY).build();
-                        progressDialog.show();
-                    }
-                });
-            }
-        };
-        ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
-        activityIndicatorTask = worker.schedule(task, 500, TimeUnit.MILLISECONDS);
+         progressDialog = new ACProgressFlower.Builder(MainActivity.this)
+                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                 .themeColor(Color.WHITE)
+                 .text("Please wait...")
+                 .fadeColor(Color.DKGRAY).build();
+         progressDialog.show();
     }
 
     public void hideActivityIndicator() {
-        if (!activityIndicatorTask.isDone()) {
-            activityIndicatorTask.cancel(true);
-        }
         if (progressDialog != null) {
             progressDialog.hide();
         }

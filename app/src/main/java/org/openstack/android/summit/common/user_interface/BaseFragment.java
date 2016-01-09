@@ -24,6 +24,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public abstract class BaseFragment extends Fragment implements IBaseFragment {
     private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
+    private Boolean showActivityIndicator;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +49,19 @@ public abstract class BaseFragment extends Fragment implements IBaseFragment {
 
     @Override
     public void showActivityIndicator() {
-
+        showActivityIndicator = true;
         Runnable task = new Runnable() {
             public void run() {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (!showActivityIndicator) {
+                            return;
+                        }
                         progressDialog = new ACProgressFlower.Builder(getActivity())
                                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                                 .themeColor(Color.WHITE)
-                                .text("Loading...")
+                                .text("Please wait...")
                                 .fadeColor(Color.DKGRAY).build();
                         progressDialog.show();
                     }
@@ -70,9 +74,8 @@ public abstract class BaseFragment extends Fragment implements IBaseFragment {
 
     @Override
     public void hideActivityIndicator() {
-        if (!activityIndicatorTask.isDone()) {
-            activityIndicatorTask.cancel(true);
-        }
+        showActivityIndicator = false;
+
         if (progressDialog != null) {
             progressDialog.hide();
         }
