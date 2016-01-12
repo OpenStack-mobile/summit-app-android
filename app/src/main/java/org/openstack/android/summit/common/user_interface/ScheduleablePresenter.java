@@ -7,7 +7,7 @@ import org.openstack.android.summit.common.business_logic.InteractorAsyncOperati
 /**
  * Created by Claudio Redi on 1/5/2016.
  */
-public class ScheduleablePresenter {
+public class ScheduleablePresenter extends BasePresenter {
     public void toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleInteractor interactor) {
         Boolean isScheduled = interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId());
 

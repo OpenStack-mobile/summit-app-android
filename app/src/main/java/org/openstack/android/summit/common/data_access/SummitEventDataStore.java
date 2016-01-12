@@ -2,11 +2,16 @@ package org.openstack.android.summit.common.data_access;
 
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Member;
+import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -28,11 +33,37 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
             }
         }
 
+        if (levels != null) {
+            for (String level : levels) {
+                query = query.equalTo("presentation.level", level);
+            }
+        }
+
         return query.findAll();
     }
 
     public SummitEvent getByIdLocal(int id) {
         return getByIdLocal(id, SummitEvent.class);
+    }
+
+    @Override
+    public List<String> getPresentationLevelsLocal() {
+        ArrayList<String> levels = new ArrayList<>();
+        RealmResults<Presentation> presentations = realm.where(Presentation.class).findAll();
+        for (Presentation presentation : presentations) {
+            if (!levels.contains(presentation.getLevel())) {
+                levels.add(presentation.getLevel());
+            }
+        }
+
+        Collections.sort(levels);
+
+        // HACK: this is to return in a specific order (begginer - intermediate - advanced)
+        ArrayList<String> levelsSorted = new ArrayList<>();
+        levelsSorted.add(levels.get(1));
+        levelsSorted.add(levels.get(2));
+        levelsSorted.add(levels.get(0));
+        return levelsSorted;
     }
 
     /*public func getByFilterLocal(startDate: NSDate, endDate: NSDate, eventTypes: [Int]?, summitTypes: [Int]?, tracks: [Int]?, tags: [String]?, levels: [String]?)->[SummitEvent]{

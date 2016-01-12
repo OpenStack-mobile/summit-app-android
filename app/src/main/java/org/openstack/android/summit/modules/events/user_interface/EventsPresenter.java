@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.events.user_interface;
 
 import android.os.Bundle;
 
+import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 
 import javax.inject.Inject;
@@ -9,7 +10,7 @@ import javax.inject.Inject;
 /**
  * Created by claudio on 10/30/2015.
  */
-public class EventsPresenter implements IEventsPresenter {
+public class EventsPresenter extends BasePresenter implements IEventsPresenter {
 
     private EventsFragment view;
     private IEventsWireframe wireframe;
@@ -21,24 +22,5 @@ public class EventsPresenter implements IEventsPresenter {
 
     public void setView(EventsFragment view) {
         this.view = view;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

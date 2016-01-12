@@ -4,7 +4,12 @@
     tools:context="org.openstack.android.summit.modules.level_list.user_interface.LevelListFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="test" />
+    <ListView android:id="@+id/list_levels"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:background="#00222222"
+        android:drawSelectorOnTop="false"
+        android:listSelector="@android:color/transparent"/>
 
 </FrameLayout>
