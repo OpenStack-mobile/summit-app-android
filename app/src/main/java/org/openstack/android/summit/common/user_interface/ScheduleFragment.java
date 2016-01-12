@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.andressantibanez.ranger.Ranger;
 
@@ -100,6 +101,8 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         this.events = events;
         scheduleListAdapter.clear();
         scheduleListAdapter.addAll(events);
+        TextView listEmptyMessageTextView = (TextView)view.findViewById(R.id.list_empty_message);
+        listEmptyMessageTextView.setVisibility(events.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     @Override

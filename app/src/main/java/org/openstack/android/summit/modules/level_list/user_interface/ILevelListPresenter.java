@@ -1,6 +1,7 @@
 package org.openstack.android.summit.modules.level_list.user_interface;
 
 import org.openstack.android.summit.common.user_interface.IPresenter;
+import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
 import org.openstack.android.summit.common.user_interface.ScheduleItemView;
 
 /**
@@ -9,5 +10,5 @@ import org.openstack.android.summit.common.user_interface.ScheduleItemView;
 public interface ILevelListPresenter extends IPresenter<LevelListFragment> {
     void showLevelEvents(int position);
 
-    void buildItem(ILevelListItemView levelListItemView, int position);
+    void buildItem(ISimpleListItemView levelListItemView, int position);
 }

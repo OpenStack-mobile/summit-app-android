@@ -15,22 +15,27 @@ import org.openstack.android.summit.dagger.modules.LevelListModule;
 import org.openstack.android.summit.dagger.modules.LevelScheduleModule;
 import org.openstack.android.summit.dagger.modules.SecurityModule;
 import org.openstack.android.summit.dagger.modules.TrackListModule;
+import org.openstack.android.summit.dagger.modules.TrackScheduleModule;
 import org.openstack.android.summit.modules.events.user_interface.EventsFragment;
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralScheduleFragment;
 import org.openstack.android.summit.modules.general_schedule.user_interface.IGeneralScheduleFragment;
 import org.openstack.android.summit.modules.level_list.user_interface.ILevelListFragment;
 import org.openstack.android.summit.modules.level_list.user_interface.LevelListFragment;
 import org.openstack.android.summit.modules.level_schedule.user_interface.LevelScheduleFragment;
+import org.openstack.android.summit.modules.track_list.user_interface.TrackListFragment;
+import org.openstack.android.summit.modules.track_schedule.user_interface.TrackScheduleFragment;
 
 import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class } )
+@Component(modules = { ApplicationModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class } )
 public interface ApplicationComponent {
     void inject(MainActivity mainActivity);
     void inject(EventsFragment eventsFragment);
     void inject(GeneralScheduleFragment generalScheduleFragment);
     void inject(LevelListFragment levelListFragment);
     void inject(LevelScheduleFragment levelScheduleFragment);
+    void inject(TrackListFragment trackListFragment);
+    void inject(TrackScheduleFragment trackScheduleFragment);
 }

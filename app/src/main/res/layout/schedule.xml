@@ -25,6 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#cccccc"></View>
+    <TextView
+        android:id="@+id/list_empty_message"
+        android:text="No events for current day"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:textSize="15sp"/>
     <ListView android:id="@+id/list_schedule"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"

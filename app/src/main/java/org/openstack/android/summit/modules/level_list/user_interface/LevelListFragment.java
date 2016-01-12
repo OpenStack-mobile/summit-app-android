@@ -7,14 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
-import org.openstack.android.summit.common.user_interface.ScheduleItemView;
+import org.openstack.android.summit.common.user_interface.SimpleListItemView;
 
 import java.util.List;
 
@@ -79,7 +76,7 @@ public class LevelListFragment extends BaseFragment implements ILevelListFragmen
 
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_levels, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_simple_list, parent, false);
             }
 
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +86,7 @@ public class LevelListFragment extends BaseFragment implements ILevelListFragmen
                 }
             });
 
-            final LevelListItemView levelListItemView = new LevelListItemView(convertView);
+            final SimpleListItemView levelListItemView = new SimpleListItemView(convertView);
 
             presenter.buildItem(levelListItemView, position);
 

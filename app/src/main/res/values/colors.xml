@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="openStackDarkBlue">#14273D</color>
     <color name="openStackLightBlue">#214065</color>
+    <color name="white">#FFFFFF</color>
 </resources>

@@ -3,7 +3,6 @@
     android:layout_height="match_parent"
     tools:context="org.openstack.android.summit.modules.level_list.user_interface.LevelListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ListView android:id="@+id/list_levels"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

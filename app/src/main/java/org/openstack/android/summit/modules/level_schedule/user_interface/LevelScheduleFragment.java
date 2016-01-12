@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.openstack.android.summit.MainActivity;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.ScheduleFragment;
@@ -14,13 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 /**
  * Created by Claudio Redi on 1/11/2016.
  */
-public class LevelScheduleFragment extends ScheduleFragment<ILevelSchedulePresenter> {
+public class LevelScheduleFragment extends ScheduleFragment<ILevelSchedulePresenter> implements ILevelScheduleFragment {
     private String level;
 
     public LevelScheduleFragment() {
         // Required empty public constructor
     }
 
+    @Override
     public void setLevel(String level) {
         this.level = level;
     }
@@ -33,16 +35,6 @@ public class LevelScheduleFragment extends ScheduleFragment<ILevelSchedulePresen
 
         setHasOptionsMenu(true);
         getActivity().setTitle(level.toUpperCase());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: // This is the home/back button
-                break;
-        }
-
-        return false;
     }
 
     @Override
