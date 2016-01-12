@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.IPresenter;
+import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
 import org.openstack.android.summit.common.user_interface.ScheduleItemView;
 import org.openstack.android.summit.modules.level_list.ILevelListWireframe;
 import org.openstack.android.summit.modules.level_list.business_logic.ILevelListInteractor;
@@ -47,7 +48,7 @@ public class LevelListPresenter extends BasePresenter implements ILevelListPrese
     }
 
     @Override
-    public void buildItem(ILevelListItemView levelListItemView, int position) {
+    public void buildItem(ISimpleListItemView levelListItemView, int position) {
         String name = levels.get(position);
         levelListItemView.setName(name);
     }

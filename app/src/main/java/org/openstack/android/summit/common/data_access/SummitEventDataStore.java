@@ -39,6 +39,12 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
             }
         }
 
+        if (tracks != null) {
+            for (int trackId : tracks) {
+                query = query.equalTo("presentation.track.id", trackId);
+            }
+        }
+
         return query.findAll();
     }
 

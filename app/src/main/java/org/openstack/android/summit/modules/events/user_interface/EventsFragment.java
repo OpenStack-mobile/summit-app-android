@@ -1,9 +1,12 @@
 package org.openstack.android.summit.modules.events.user_interface;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.view.ViewGroup;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
+import org.openstack.android.summit.common.user_interface.SlidingTabLayout;
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralScheduleFragment;
 import org.openstack.android.summit.modules.level_list.user_interface.LevelListFragment;
 import org.openstack.android.summit.modules.track_list.user_interface.TrackListFragment;
@@ -57,10 +61,28 @@ public class EventsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_events_container, container, false);
+
+        SlidingTabLayout tabs = (SlidingTabLayout)view.findViewById(R.id.tabs);
+        tabs.setDistributeEvenly(true);
+        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+
+            @Override
+            public int getIndicatorColor(int position) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    return getResources().getColor(R.color.white, null);
+                }
+                else {
+                    return getResources().getColor(R.color.white);
+                }
+            }
+        });
+
         ViewPager eventsViewPager = (ViewPager)view.findViewById(R.id.events_pager);
         EventsPageAdapter eventsPageAdapter = new EventsPageAdapter(getChildFragmentManager());
         eventsViewPager.setAdapter(eventsPageAdapter);
         eventsViewPager.setCurrentItem(0);
+
+        tabs.setViewPager(eventsViewPager);
 
         return view;
     }
