@@ -12,6 +12,7 @@ import org.openstack.android.summit.modules.general_schedule.business_logic.Gene
 import org.openstack.android.summit.modules.general_schedule.business_logic.IGeneralScheduleInteractor;
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralScheduleFragment;
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralSchedulePresenter;
+import org.openstack.android.summit.modules.general_schedule.user_interface.IGeneralScheduleFragment;
 import org.openstack.android.summit.modules.general_schedule.user_interface.IGeneralSchedulePresenter;
 
 import dagger.Module;
@@ -29,17 +30,17 @@ public class GeneralScheduleModule {
     }
 
     @Provides
-    GeneralScheduleWireframe providesGeneralScheduleWireframe(IEventDetailWireframe eventDetailWireframe) {
+    IGeneralScheduleWireframe providesGeneralScheduleWireframe(IEventDetailWireframe eventDetailWireframe) {
         return new GeneralScheduleWireframe(eventDetailWireframe);
     }
 
     @Provides
-    GeneralScheduleInteractor providesGeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager) {
+    IGeneralScheduleInteractor providesGeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager) {
         return new GeneralScheduleInteractor(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager);
     }
 
     @Provides
-    GeneralSchedulePresenter providesGeneralSchedulePresenter(GeneralScheduleInteractor generalScheduleInteractor, GeneralScheduleWireframe generalScheduleWireframe) {
+    IGeneralSchedulePresenter providesGeneralSchedulePresenter(IGeneralScheduleInteractor generalScheduleInteractor, IGeneralScheduleWireframe generalScheduleWireframe) {
         return new GeneralSchedulePresenter(generalScheduleInteractor, generalScheduleWireframe);
     }
 }

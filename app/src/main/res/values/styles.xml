@@ -16,4 +16,12 @@
     <style name="AppTheme.Drawer">
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="moreImageView">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:src">@drawable/more</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
 </resources>

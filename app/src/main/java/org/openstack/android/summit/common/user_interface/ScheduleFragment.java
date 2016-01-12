@@ -31,7 +31,7 @@ import javax.inject.Inject;
 public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment implements IScheduleFragment {
 
     @Inject
-    P presenter;
+    protected P presenter;
     ScheduleListAdapter scheduleListAdapter;
     List<ScheduleItemDTO> events;
     Date startDate;

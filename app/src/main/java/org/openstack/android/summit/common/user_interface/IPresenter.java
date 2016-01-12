@@ -9,7 +9,7 @@ import org.openstack.android.summit.modules.events.user_interface.EventsFragment
 /**
  * Created by claudio on 11/3/2015.
  */
-public interface IPresenter<T extends BaseFragment> {
+public interface IPresenter<T extends IBaseFragment> {
     void setView(T view);
 
     /*

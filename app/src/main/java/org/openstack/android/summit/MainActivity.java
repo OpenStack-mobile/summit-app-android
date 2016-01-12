@@ -3,10 +3,8 @@ package org.openstack.android.summit;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,16 +21,12 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
-import org.openstack.android.summit.modules.event_detail.EventDetailWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.net.ssl.HostnameVerifier;
@@ -65,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -93,6 +87,14 @@ public class MainActivity extends AppCompatActivity
         trustEveryone();
 
         securityManager.setDelegate(this);
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                toggle.setDrawerIndicatorEnabled(getSupportFragmentManager().getBackStackEntryCount() == 0);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(getSupportFragmentManager().getBackStackEntryCount() > 0);
+            }
+        });
     }
 
     @Override
@@ -102,6 +104,11 @@ public class MainActivity extends AppCompatActivity
         if (!drawer.isDrawerOpen(GravityCompat.START) && getFragmentManager().getBackStackEntryCount() == 0) {
             super.onBackPressed();
         }
+
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            return;
+        }
+
         drawer.closeDrawer(GravityCompat.START);
         getFragmentManager().popBackStack();
     }

@@ -28,5 +28,9 @@ public class TrackListFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_track_list, container, false);
     }
 
-
+    @Override
+    public void onResume() {
+        getActivity().setTitle("EVENTS");
+        super.onResume();
+    }
 }

@@ -89,21 +89,6 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
         interactor.getActiveSummit(summitDTOIInteractorOperationListener);
     }
 
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
-
     public void buildItem(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
         scheduleItemView.setName(scheduleItemDTO.getName());
@@ -127,12 +112,12 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
         DateTime startDate = new DateTime(view.getSelectedDate()).withTime(0, 0, 0, 0).plus(offsetLocalTimeZone - summitTimeZoneOffset);
         DateTime endDate = new DateTime(view.getSelectedDate()).withTime(23, 59, 59, 999).plus(offsetLocalTimeZone - summitTimeZoneOffset);
 
-        dayEvents = getScheduledEvents(startDate, endDate, interactor);
+        dayEvents = getScheduleEvents(startDate, endDate, interactor);
         view.setEvents(dayEvents);
         view.reloadSchedule();
     }
 
-    private List<ScheduleItemDTO> getScheduledEvents(DateTime startDate, DateTime endDate, I interactor) {
+    protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, I interactor) {
         List<ScheduleItemDTO> events = interactor.getScheduleEvents(startDate.toDate(), endDate.toDate(), null, null, null, null, null);
         return events;
     }

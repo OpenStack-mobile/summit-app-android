@@ -12,7 +12,7 @@ import org.openstack.android.summit.common.user_interface.ScheduleFragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GeneralScheduleFragment extends ScheduleFragment<GeneralSchedulePresenter> {
+public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePresenter> implements IGeneralScheduleFragment {
 
     public GeneralScheduleFragment() {
         // Required empty public constructor
@@ -22,6 +22,12 @@ public class GeneralScheduleFragment extends ScheduleFragment<GeneralSchedulePre
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        getActivity().setTitle("EVENTS");
+        super.onResume();
     }
 
     @Override
