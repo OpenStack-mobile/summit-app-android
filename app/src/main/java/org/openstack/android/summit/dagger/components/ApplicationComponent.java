@@ -6,6 +6,7 @@ package org.openstack.android.summit.dagger.components;
 
 import org.openstack.android.summit.MainActivity;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
+import org.openstack.android.summit.dagger.modules.BaseModule;
 import org.openstack.android.summit.dagger.modules.DTOAssemblerModule;
 import org.openstack.android.summit.dagger.modules.DataAccessModule;
 import org.openstack.android.summit.dagger.modules.EventDetailModule;
@@ -32,7 +33,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class} )
+@Component(modules = { ApplicationModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class} )
 public interface ApplicationComponent {
     void inject(MainActivity mainActivity);
     void inject(EventsFragment eventsFragment);

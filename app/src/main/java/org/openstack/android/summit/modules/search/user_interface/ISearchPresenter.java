@@ -9,8 +9,6 @@ import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
  * Created by Claudio Redi on 1/14/2016.
  */
 public interface ISearchPresenter extends IBasePresenter<SearchFragment> {
-    void setSearchTerm(String searchTerm);
-
     void buildScheduleItem(IScheduleItemView scheduleItemView, int position);
 
     void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position);

@@ -20,7 +20,7 @@ public class SummitAttendee extends RealmObject implements IPerson {
     private String irc;
     private String email;
     private Integer memberId;
-    private TicketType ticketType;
+    private RealmList<TicketType> ticketTypes = new RealmList<>();
     private RealmList<SummitEvent> scheduledEvents = new RealmList<>();
     private RealmList<SummitEvent> bookmarkedEvents = new RealmList<>();
     private RealmList<Feedback> feedback = new RealmList<>();
@@ -115,14 +115,6 @@ public class SummitAttendee extends RealmObject implements IPerson {
         this.memberId = memberId;
     }
 
-    public TicketType getTicketType() {
-        return ticketType;
-    }
-
-    public void setTicketType(TicketType ticketType) {
-        this.ticketType = ticketType;
-    }
-
     public RealmList<SummitEvent> getScheduledEvents() {
         return scheduledEvents;
     }
@@ -145,5 +137,13 @@ public class SummitAttendee extends RealmObject implements IPerson {
 
     public void setFeedback(RealmList<Feedback> feedback) {
         this.feedback = feedback;
+    }
+
+    public RealmList<TicketType> getTicketTypes() {
+        return ticketTypes;
+    }
+
+    public void setTicketTypes(RealmList<TicketType> ticketTypes) {
+        this.ticketTypes = ticketTypes;
     }
 }
