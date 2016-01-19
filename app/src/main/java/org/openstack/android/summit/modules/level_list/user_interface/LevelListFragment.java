@@ -26,7 +26,6 @@ public class LevelListFragment extends BaseFragment implements ILevelListFragmen
     ILevelListPresenter presenter;
 
     private LevelListAdapter levelListAdapter;
-    private View view;
 
     public LevelListFragment() {
         // Required empty public constructor

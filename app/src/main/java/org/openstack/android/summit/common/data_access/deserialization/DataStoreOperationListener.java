@@ -2,6 +2,8 @@ package org.openstack.android.summit.common.data_access.deserialization;
 
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 
+import java.util.List;
+
 import io.realm.RealmObject;
 
 /**
@@ -9,12 +11,17 @@ import io.realm.RealmObject;
  */
 public abstract class DataStoreOperationListener<T extends RealmObject> implements IDataStoreOperationListener<T> {
     @Override
-    public void onSuceedWithData(T data) {
+    public void onSuceedWithDataCollection(List<T> data) {
 
     }
 
     @Override
-    public void onSucceed() {
+    public void onSuceedWithSingleData(T data) {
+
+    }
+
+    @Override
+    public void onSucceedWithoutData() {
 
     }
 

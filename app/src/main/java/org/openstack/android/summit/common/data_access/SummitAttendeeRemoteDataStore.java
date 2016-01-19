@@ -47,7 +47,7 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
         HttpTaskListener httpTaskListener = new HttpTaskListener() {
             @Override
             public void onSucceed(String data) {
-                dataStoreOperationListener.onSuceedWithData(finalSummitAttendee);
+                dataStoreOperationListener.onSuceedWithSingleData(finalSummitAttendee);
             }
 
             @Override

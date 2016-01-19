@@ -20,6 +20,8 @@ public class GenericDataStore implements IGenericDataStore {
 
     @Override
     public <T extends RealmObject> List<T> getaAllLocal(Class<T> type) {
+        //TODO: this is a hack for multithreading
+        Realm realm = Realm.getDefaultInstance();
         ArrayList<T> list = new ArrayList<>();
         RealmResults<T> result = realm.where(type).findAll();
         list.addAll(result.subList(0, result.size()));
@@ -34,7 +36,7 @@ public class GenericDataStore implements IGenericDataStore {
             realmEntity = realm.copyToRealmOrUpdate(entity);
             realm.commitTransaction();
             if (delegate != null) {
-                delegate.onSuceedWithData(realmEntity);
+                delegate.onSuceedWithSingleData(realmEntity);
             }
         }
         catch (Exception ex) {
@@ -49,7 +51,7 @@ public class GenericDataStore implements IGenericDataStore {
             realm.where(type).equalTo("id", id).findFirst().removeFromRealm();
             realm.commitTransaction();
             if (delegate != null) {
-                delegate.onSucceed();
+                delegate.onSucceedWithoutData();
             }
         }
         catch (Exception ex) {

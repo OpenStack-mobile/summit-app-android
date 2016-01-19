@@ -12,6 +12,7 @@ public class SummitAttendee extends RealmObject implements IPerson {
     private int id;
     private String firstName;
     private String lastName;
+    private String fullName;
     private String title;
     private String pictureUrl;
     private String bio;
@@ -46,6 +47,16 @@ public class SummitAttendee extends RealmObject implements IPerson {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public String getFullName() {
+        return fullName;
+    }
+
+    @Override
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getTitle() {

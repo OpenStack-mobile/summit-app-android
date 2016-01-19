@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.data_access.GenericDataStore;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -11,6 +12,7 @@ import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.ISummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.MemberDataStore;
 import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.PresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.SummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.SummitDataStore;
@@ -48,6 +50,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 
 /**
  * Created by Claudio Redi on 11/3/2015.
@@ -58,7 +61,7 @@ public class DataAccessModule {
     @Provides
     @Singleton
     IDeserializerStorage providesDeserializerStorage() {
-        return new DeserializerStorage();
+        return new DeserializerStorage(Realm.getDefaultInstance());
     }
 
     @Provides
@@ -178,5 +181,10 @@ public class DataAccessModule {
     @Provides
     ISummitAttendeeDataStore providesSummitAttendeeDataStore(ISummitAttendeeRemoteDataStore summitAttendeeRemoteDataStore) {
         return new SummitAttendeeDataStore(summitAttendeeRemoteDataStore);
+    }
+
+    @Provides
+    IPresentationSpeakerDataStore providesPresentationSpeakerDataStore() {
+        return new PresentationSpeakerDataStore();
     }
 }

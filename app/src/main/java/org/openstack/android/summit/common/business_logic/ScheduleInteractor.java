@@ -30,11 +30,10 @@ import javax.inject.Inject;
  */
 public class ScheduleInteractor extends ScheduleableInteractor implements IScheduleInteractor {
     private ISummitDataStore summitDataStore;
-    private IDTOAssembler dtoAssembler;
 
     @Inject
     public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager) {
-        super(summitEventDataStore, summitAttendeeDataStore, securityManager);
+        super(summitEventDataStore, summitAttendeeDataStore, dtoAssembler, securityManager);
         this.summitDataStore = summitDataStore;
         this.dtoAssembler = dtoAssembler;
     }
@@ -43,12 +42,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     public List<ScheduleItemDTO> getScheduleEvents(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> tracks, List<String> tags, List<String> levels) {
         List<SummitEvent> summitEvents = summitEventDataStore.getByFilterLocal(startDate, endDate, eventTypes, summitTypes, tracks, tags, levels);
 
-        ArrayList<ScheduleItemDTO> dtos = new ArrayList<>();
-        ScheduleItemDTO scheduleItemDTO;
-        for (SummitEvent event: summitEvents) {
-            scheduleItemDTO = dtoAssembler.createDTO(event, ScheduleItemDTO.class);
-            dtos.add(scheduleItemDTO);
-        }
+        List<ScheduleItemDTO> dtos = createDTOList(summitEvents, ScheduleItemDTO.class);
 
         return dtos;
     }
@@ -58,7 +52,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
         final IInteractorAsyncOperationListener<SummitDTO> innerDelegate = delegate;
         DataStoreOperationListener<Summit> dataStoreOperationListener = new DataStoreOperationListener<Summit>() {
             @Override
-            public void onSuceedWithData(Summit data) {
+            public void onSuceedWithSingleData(Summit data) {
                 if (innerDelegate != null) {
                     try{
                         SummitDTO summitDTO = dtoAssembler.createDTO(data, SummitDTO.class);
@@ -77,7 +71,6 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                 }
             }
         };
-        summitDataStore.setDelegate(dataStoreOperationListener);
-        summitDataStore.getActive();
+        summitDataStore.getActive(dataStoreOperationListener);
     }
 }

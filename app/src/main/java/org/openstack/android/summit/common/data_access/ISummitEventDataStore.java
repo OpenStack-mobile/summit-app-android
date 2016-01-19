@@ -14,4 +14,6 @@ public interface ISummitEventDataStore {
     SummitEvent getByIdLocal(int id);
 
     List<String> getPresentationLevelsLocal();
+
+    List<SummitEvent> getBySearchTerm(String searchTerm);
 }

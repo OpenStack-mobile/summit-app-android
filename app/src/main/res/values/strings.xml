@@ -6,4 +6,9 @@
     <string name="log_in">LOG IN</string>
     <string name="log_out">LOG OUT</string>
     <string name="search_placeholder">search events &amp; people...</string>
+    <string name="events">Events</string>
+    <string name="tracks">Tracks</string>
+    <string name="speakers">Speakers</string>
+    <string name="search">Search</string>
+    <string name="no_results">No results</string>
 </resources>

@@ -28,7 +28,6 @@ public class TrackListFragment extends BaseFragment implements ITrackListFragmen
     ITrackListPresenter presenter;
 
     private TrackListAdapter trackListAdapter;
-    private View view;
 
     public TrackListFragment() {
         // Required empty public constructor

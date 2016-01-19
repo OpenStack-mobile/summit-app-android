@@ -12,9 +12,8 @@ import io.realm.RealmObject;
 /**
  * Created by Claudio Redi on 11/17/2015.
  */
-public class SummitDataStore extends GenericDataStore implements IDataStoreOperationListener<Summit>,ISummitDataStore {
+public class SummitDataStore extends GenericDataStore implements ISummitDataStore {
     private ISummitRemoteDataStore summitRemoteDataStore;
-    private IDataStoreOperationListener<Summit> delegate;
 
     @Inject
     public SummitDataStore(ISummitRemoteDataStore summitRemoteDataStore) {
@@ -22,63 +21,39 @@ public class SummitDataStore extends GenericDataStore implements IDataStoreOpera
     }
 
     @Override
-    public void getActive() {
+    public void getActive(final IDataStoreOperationListener<Summit> dataStoreOperationListener) {
         List<Summit> summits = getaAllLocal(Summit.class);
 
         if (summits.size() > 0) {
-            if (delegate != null) {
-                delegate.onSuceedWithData(summits.get(0));
+            if (dataStoreOperationListener != null) {
+                dataStoreOperationListener.onSuceedWithSingleData(summits.get(0));
             }
         }
         else {
 
             DataStoreOperationListener<Summit> remoteDelegate = new DataStoreOperationListener<Summit>() {
                 @Override
-                public void onSuceedWithData(Summit data) {
+                public void onSuceedWithSingleData(Summit data) {
                     try{
                         realm.beginTransaction();
                         Summit realmEntity = realm.copyToRealmOrUpdate(data);
                         realm.commitTransaction();
-                        if (delegate != null) {
-                            delegate.onSuceedWithData(realmEntity);
+                        if (dataStoreOperationListener != null) {
+                            dataStoreOperationListener.onSuceedWithSingleData(realmEntity);
                         }
                     }
                     catch (Exception ex) {
-                        delegate.onError(ex.getMessage());
+                        dataStoreOperationListener.onError(ex.getMessage());
                     }
                 }
 
                 @Override
                 public void onError(String message) {
-                    delegate.onError(message);
+                    dataStoreOperationListener.onError(message);
                 }
             };
 
-            summitRemoteDataStore.setDelegate(remoteDelegate);
-            summitRemoteDataStore.getActive();
+            summitRemoteDataStore.getActive(remoteDelegate);
         }
-    }
-
-    @Override
-    public void onSuceedWithData(Summit data) {
-        delegate.onSuceedWithData(data);
-    }
-
-    @Override
-    public void onSucceed() {
-
-    }
-
-    @Override
-    public void onError(String message) {
-        delegate.onError(message);
-    }
-
-    public IDataStoreOperationListener<Summit> getDelegate() {
-        return delegate;
-    }
-
-    public void setDelegate(IDataStoreOperationListener<Summit> delegate) {
-        this.delegate = delegate;
     }
 }

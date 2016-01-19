@@ -3,6 +3,8 @@ package org.openstack.android.summit;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.components.DaggerApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
@@ -22,7 +24,10 @@ public class OpenStackSummitApplication extends Application {
         this.initializeInjector();
         RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext()).build();
         Realm.setDefaultConfiguration(config);
+
         context = getApplicationContext();
+
+        Fresco.initialize(context);
     }
 
     private void initializeInjector() {

@@ -11,6 +11,7 @@ public class PresentationSpeaker extends RealmObject implements IPerson {
     private int id;
     private String firstName;
     private String lastName;
+    private String fullName;
     private String title;
     private String pictureUrl;
     private String bio;
@@ -97,6 +98,14 @@ public class PresentationSpeaker extends RealmObject implements IPerson {
 
     public void setMemberId(Integer memberId) {
         this.memberId = memberId;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     // RealmList<Presentation> presentations;

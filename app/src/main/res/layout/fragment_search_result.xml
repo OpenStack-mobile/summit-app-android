@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <EditText
+        android:id="@+id/search_results_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingLeft="10dp"
+        android:background="@drawable/rounded_edittext"
+        android:textSize="14dp"
+        android:padding="5dp"
+        android:hint="@string/search_placeholder"
+        android:inputType="text"
+        android:imeOptions="actionDone"/>
+
+    <LinearLayout
+        android:id="@+id/search_results_subsection_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        style="@style/AppTheme.SearchSubsectionBar">
+        <Button
+            android:id="@+id/search_results_events_subsection_button"
+            style="@style/AppTheme.SearchSubsectionBar.Button" />
+        <Button
+            android:id="@+id/search_results_tracks_subsection_button"
+            style="@style/AppTheme.SearchSubsectionBar.Button"/>
+        <Button
+            android:id="@+id/search_results_speakers_subsection_button"
+            style="@style/AppTheme.SearchSubsectionBar.Button" />
+    </LinearLayout>
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/search_results_container_scroll"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/search_results_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/search_results_events_subsection_header"
+                style="@style/AppTheme.SubsectionHeader">
+                <TextView
+                    style="@style/AppTheme.SubsectionHeader.Text"
+                    android:text="@string/events"/>
+
+            </LinearLayout>
+            <com.linearlistview.LinearListView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/search_results_events_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                app:dividerThickness="1dp" />
+            <TextView
+                android:id="@+id/search_results_empty_message_events_text"
+                style="@style/AppTheme.EmptyTextSearch"
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                android:id="@+id/search_results_tracks_subsection_header"
+                style="@style/AppTheme.SubsectionHeader">
+                <TextView
+                    style="@style/AppTheme.SubsectionHeader.Text"
+                    android:text="@string/tracks"/>
+            </LinearLayout>
+            <com.linearlistview.LinearListView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/search_results_tracks_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                app:dividerThickness="1dp" />
+            <TextView
+                android:id="@+id/search_results_empty_message_tracks_text"
+                style="@style/AppTheme.EmptyTextSearch"
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                android:id="@+id/search_results_speakers_subsection_header"
+                style="@style/AppTheme.SubsectionHeader">
+                <TextView
+                    style="@style/AppTheme.SubsectionHeader.Text"
+                    android:text="@string/speakers"/>
+            </LinearLayout>
+            <com.linearlistview.LinearListView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/search_results_speakers_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:showDividers="middle|beginning|end"
+                app:dividerThickness="1dp" />
+            <TextView
+                android:id="@+id/search_results_empty_message_speakers_text"
+                style="@style/AppTheme.EmptyTextSearch"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
