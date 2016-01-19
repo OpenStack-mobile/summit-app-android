@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.user_interface;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import org.openstack.android.summit.MainActivity;
@@ -25,6 +26,7 @@ public abstract class BaseFragment extends Fragment implements IBaseFragment {
     private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
     private Boolean showActivityIndicator;
+    protected View view;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,11 @@ public abstract class BaseFragment extends Fragment implements IBaseFragment {
 
     @Override
     public void showActivityIndicator() {
+        showActivityIndicator(500);
+    }
+
+    @Override
+    public void showActivityIndicator(int delay) {
         showActivityIndicator = true;
         Runnable task = new Runnable() {
             public void run() {
@@ -69,7 +76,7 @@ public abstract class BaseFragment extends Fragment implements IBaseFragment {
             }
         };
         ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
-        activityIndicatorTask = worker.schedule(task, 500, TimeUnit.MILLISECONDS);
+        activityIndicatorTask = worker.schedule(task, delay, TimeUnit.MILLISECONDS);
     }
 
     @Override

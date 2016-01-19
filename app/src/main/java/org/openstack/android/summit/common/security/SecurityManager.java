@@ -22,6 +22,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
+import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.HttpTask;
@@ -48,6 +49,19 @@ public class SecurityManager implements ISecurityManager {
         this.httpTaskFactory = httpTaskFactory;
         this.memberDataStore = memberDataStore;
         this.session = session;
+
+        checkDataIntegrity();
+    }
+
+    private void checkDataIntegrity() {
+        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
+        final String accountType = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
+
+        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
+
+        if (accountManager.getAccountsByType(accountType).length > 0 && currentMemberId == 0) {
+            logout();
+        }
     }
 
     @Override
@@ -70,20 +84,15 @@ public class SecurityManager implements ISecurityManager {
         }
         else {
 
-            IDataStoreOperationListener<Member> dataStoreOperationListener = new IDataStoreOperationListener<Member>() {
+            IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
                 @Override
-                public void onSuceedWithData(Member data) {
+                public void onSuceedWithSingleData(Member data) {
                     member = data;
                     session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
 
                     if (delegate != null) {
                         delegate.onLoggedIn();
                     }
-                }
-
-                @Override
-                public void onSucceed() {
-
                 }
 
                 @Override
@@ -139,6 +148,11 @@ public class SecurityManager implements ISecurityManager {
     }
 
     public Boolean isLoggedIn() {
-        return member != null;
+        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
+        final String accountType = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
+
+        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
+
+        return accountManager.getAccountsByType(accountType).length > 0 && currentMemberId > 0;
     }
 }

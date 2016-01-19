@@ -5,11 +5,13 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.DTOs.Assembler.DTOAssembler;
+import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Presentation;
+import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
@@ -111,5 +113,28 @@ public class DTOAssemblerTests {
         Assert.assertEquals("Sponsored by company 1, company 2", scheduleItemDTO.getSponsors());
         Assert.assertEquals("Main Summit, Design Summit", scheduleItemDTO.getCredentials());
         Assert.assertEquals(track.getName(), scheduleItemDTO.getTrack());
+    }
+
+    @Test
+    public void createDTO_presentationSpeaker2PersonListItemDTO_createCorrectDTOInstance() {
+        // Arrange
+        DTOAssembler dtoAssembler = new DTOAssembler();
+        PresentationSpeaker presentationSpeaker = new PresentationSpeaker();
+        presentationSpeaker.setId(1);
+        presentationSpeaker.setFirstName("Aaron");
+        presentationSpeaker.setLastName("Delp");
+        presentationSpeaker.setTitle("Technical Solutions Director");
+        presentationSpeaker.setPictureUrl("https://pictureurl.com/picture.png");
+
+        // Act
+        PersonListItemDTO personListItemDTO = dtoAssembler.createDTO(presentationSpeaker, PersonListItemDTO.class);
+
+        // Assert
+        Assert.assertEquals(personListItemDTO.getId(), presentationSpeaker.getId());
+        Assert.assertEquals(personListItemDTO.getName(), presentationSpeaker.getFirstName() + " " + presentationSpeaker.getLastName());
+        Assert.assertEquals(personListItemDTO.getTitle(), presentationSpeaker.getTitle());
+        Assert.assertEquals(personListItemDTO.getPictureUrl(), presentationSpeaker.getPictureUrl());
+        Assert.assertTrue(personListItemDTO.getIsSpeaker());
+        Assert.assertFalse(personListItemDTO.getIsAttendee());
     }
 }

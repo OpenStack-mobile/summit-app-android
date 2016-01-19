@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.data_access;
 
+import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 
@@ -14,31 +15,25 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
     }
 
     @Override
-    public void getLoggedInMemberOrigin(IDataStoreOperationListener<Member> dataStoreOperationListener) {
+    public void getLoggedInMemberOrigin(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
 
-        final IDataStoreOperationListener<Member> finalDataStoreOperationListener = dataStoreOperationListener;
-        IDataStoreOperationListener<Member> remoteDataStoreOperationListener = new IDataStoreOperationListener<Member>() {
+        IDataStoreOperationListener<Member> remoteDataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
-            public void onSuceedWithData(Member data) {
+            public void onSuceedWithSingleData(Member data) {
                 try{
                     realm.beginTransaction();
                     Member realmEntity = realm.copyToRealmOrUpdate(data);
                     realm.commitTransaction();
-                    finalDataStoreOperationListener.onSuceedWithData(realmEntity);
+                    dataStoreOperationListener.onSuceedWithSingleData(realmEntity);
                 }
                 catch (Exception ex) {
-                    finalDataStoreOperationListener.onError(ex.getMessage());
+                    dataStoreOperationListener.onError(ex.getMessage());
                 }
-            }
-
-            @Override
-            public void onSucceed() {
-
             }
 
             @Override
             public void onError(String message) {
-                finalDataStoreOperationListener.onError(message);
+                dataStoreOperationListener.onError(message);
             }
         };
         memberRemoteDataStore.getLoggedInMember(remoteDataStoreOperationListener);

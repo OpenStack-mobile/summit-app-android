@@ -18,7 +18,6 @@ import org.openstack.android.summit.common.security.AccountType;
  */
 public class SummitRemoteDataStore implements ISummitRemoteDataStore {
     private IDeserializer deserializer;
-    private IDataStoreOperationListener<Summit> delegate;
     private IHttpTaskFactory httpTaskFactory;
 
     public SummitRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
@@ -27,7 +26,7 @@ public class SummitRemoteDataStore implements ISummitRemoteDataStore {
     }
 
     @Override
-    public void getActive() {
+    public void getActive(final IDataStoreOperationListener<Summit> dataStoreOperationListener) {
 
         try {
             HttpTaskListener httpTaskListener = new HttpTaskListener() {
@@ -35,31 +34,23 @@ public class SummitRemoteDataStore implements ISummitRemoteDataStore {
                 public void onSucceed(String data) {
                     try {
                         Summit summit = deserializer.deserialize(data, Summit.class);
-                        delegate.onSuceedWithData(summit);
+                        dataStoreOperationListener.onSuceedWithSingleData(summit);
                     } catch (JSONException e) {
                         Log.e(Constants.LOG_TAG,"Error deserializing summit", e);
-                        delegate.onError(e.getMessage());
+                        dataStoreOperationListener.onError(e.getMessage());
                     }
                 }
 
                 @Override
                 public void onError(String error) {
-                    delegate.onError(error);
+                    dataStoreOperationListener.onError(error);
                 }
             };
             String url = Constants.RESOURCE_SERVER_BASE_URL + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";
             HttpTask httpTask = httpTaskFactory.Create(AccountType.ServiceAccount, url, "GET", httpTaskListener);
             httpTask.execute();
         } catch (Exception e) {
-            delegate.onError(e.getMessage());
+            dataStoreOperationListener.onError(e.getMessage());
         }
-    }
-
-    public IDataStoreOperationListener<Summit> getDelegate() {
-        return delegate;
-    }
-
-    public void setDelegate(IDataStoreOperationListener<Summit> delegate) {
-        this.delegate = delegate;
     }
 }

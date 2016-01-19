@@ -14,6 +14,7 @@ public class PersonDeserializer extends BaseDeserializer implements IPersonDeser
         //person.setEmail(jsonObject.getString("email"));
         person.setFirstName(jsonObject.getString("first_name"));
         person.setLastName(jsonObject.getString("last_name"));
+        person.setFullName(person.getFirstName() + " " + person.getLastName());
         person.setBio(
                 !jsonObject.isNull("bio") ? jsonObject.getString("bio") : null
         );

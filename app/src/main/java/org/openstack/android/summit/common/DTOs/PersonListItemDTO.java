@@ -6,8 +6,8 @@ package org.openstack.android.summit.common.DTOs;
 public class PersonListItemDTO extends NamedDTO {
     private String title;
     private String pictureUrl;
-    private String isAttendee;
-    private String isSpeaker;
+    private Boolean isAttendee;
+    private Boolean isSpeaker;
 
     public String getTitle() {
         return title;
@@ -25,19 +25,19 @@ public class PersonListItemDTO extends NamedDTO {
         this.pictureUrl = pictureUrl;
     }
 
-    public String getIsAttendee() {
+    public Boolean getIsAttendee() {
         return isAttendee;
     }
 
-    public void setIsAttendee(String isAttendee) {
+    public void setIsAttendee(Boolean isAttendee) {
         this.isAttendee = isAttendee;
     }
 
-    public String getIsSpeaker() {
+    public Boolean getIsSpeaker() {
         return isSpeaker;
     }
 
-    public void setIsSpeaker(String isSpeaker) {
+    public void setIsSpeaker(Boolean isSpeaker) {
         this.isSpeaker = isSpeaker;
     }
 }

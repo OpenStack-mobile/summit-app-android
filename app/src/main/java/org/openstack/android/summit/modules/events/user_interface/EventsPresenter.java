@@ -10,17 +10,26 @@ import javax.inject.Inject;
 /**
  * Created by claudio on 10/30/2015.
  */
-public class EventsPresenter extends BasePresenter implements IEventsPresenter {
+public class EventsPresenter extends BasePresenter<EventsFragment, Void, IEventsWireframe> implements IEventsPresenter {
 
-    private EventsFragment view;
-    private IEventsWireframe wireframe;
+    private int selectedTabIndex;
+    private final String KEY_SELECTED_TAB_INDEX = "KEY_SELECTED_TAB_INDEX";
 
     @Inject
-    public EventsPresenter(IEventsWireframe wireframe) {
-        this.wireframe = wireframe;
+    public EventsPresenter(IEventsWireframe wireframe)
+    {
+        super(null, wireframe);
     }
 
-    public void setView(EventsFragment view) {
-        this.view = view;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_SELECTED_TAB_INDEX, selectedTabIndex);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            selectedTabIndex = savedInstanceState.getInt(KEY_SELECTED_TAB_INDEX);
+        }
     }
 }

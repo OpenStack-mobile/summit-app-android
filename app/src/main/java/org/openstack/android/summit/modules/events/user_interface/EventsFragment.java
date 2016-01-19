@@ -29,7 +29,7 @@ import javax.inject.Inject;
  * Use the {@link EventsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventsFragment extends BaseFragment {
+public class EventsFragment extends BaseFragment implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer {
 
     @Inject
     IEventsPresenter presenter;
@@ -42,6 +42,8 @@ public class EventsFragment extends BaseFragment {
 
     @Inject
     LevelListFragment levelListFragment;
+
+    private int selectedTabIndex;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -58,33 +60,51 @@ public class EventsFragment extends BaseFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        presenter.onSaveInstanceState(outState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_events_container, container, false);
 
         SlidingTabLayout tabs = (SlidingTabLayout)view.findViewById(R.id.tabs);
         tabs.setDistributeEvenly(true);
-        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-
-            @Override
-            public int getIndicatorColor(int position) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    return getResources().getColor(R.color.white, null);
-                }
-                else {
-                    return getResources().getColor(R.color.white);
-                }
-            }
-        });
+        tabs.setCustomTabColorizer(this);
+        tabs.setOnPageChangeListener(this);
 
         ViewPager eventsViewPager = (ViewPager)view.findViewById(R.id.events_pager);
         EventsPageAdapter eventsPageAdapter = new EventsPageAdapter(getChildFragmentManager());
         eventsViewPager.setAdapter(eventsPageAdapter);
-        eventsViewPager.setCurrentItem(0);
+        eventsViewPager.setCurrentItem(selectedTabIndex);
 
         tabs.setViewPager(eventsViewPager);
 
         return view;
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        selectedTabIndex = position;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
+    public int getIndicatorColor(int position) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return getResources().getColor(R.color.white, null);
+        } else {
+            return getResources().getColor(R.color.white);
+        }
     }
 
     private class EventsPageAdapter extends FragmentPagerAdapter {

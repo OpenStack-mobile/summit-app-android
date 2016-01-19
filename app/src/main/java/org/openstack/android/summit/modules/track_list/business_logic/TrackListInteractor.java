@@ -3,6 +3,7 @@ package org.openstack.android.summit.modules.track_list.business_logic;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
@@ -18,13 +19,13 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
-public class TrackListInteractor implements ITrackListInteractor {
+public class TrackListInteractor extends BaseInteractor implements ITrackListInteractor {
     private IDTOAssembler dtoAssembler;
     private IGenericDataStore genericDataStore;
 
     @Inject
     public TrackListInteractor(IDTOAssembler dtoAssembler, IGenericDataStore genericDataStore) {
-        this.dtoAssembler = dtoAssembler;
+        super(dtoAssembler);
         this.genericDataStore = genericDataStore;
     }
 
@@ -40,12 +41,7 @@ public class TrackListInteractor implements ITrackListInteractor {
 
         Collections.sort(tracks, comparator);
 
-        ArrayList<NamedDTO> dtos = new ArrayList<>();
-        NamedDTO namedDTO;
-        for (Track track: tracks) {
-            namedDTO = dtoAssembler.createDTO(track, NamedDTO.class);
-            dtos.add(namedDTO);
-        }
+        List<NamedDTO> dtos = createDTOList(tracks, NamedDTO.class);
 
         return dtos;
     }

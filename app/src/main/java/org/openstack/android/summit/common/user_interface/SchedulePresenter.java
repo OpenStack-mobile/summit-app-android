@@ -23,17 +23,18 @@ import java.util.TimeZone;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
-public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleInteractor, W extends IScheduleWireframe> extends ScheduleablePresenter implements ISchedulePresenter<V, I , W> {
-    protected V view;
-    protected I interactor;
-    protected W wireframe;
+public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleInteractor, W extends IScheduleWireframe> extends BasePresenter<V, I, W> implements ISchedulePresenter<V, I , W> {
     List<ScheduleItemDTO> dayEvents;
     Date selectedDate;
     int summitTimeZoneOffset;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
-    public SchedulePresenter(I interactor, W wireframe) {
-        this.interactor = interactor;
-        this.wireframe = wireframe;
+    private IScheduleItemViewBuilder scheduleItemViewBuilder;
+    private IScheduleablePresenter scheduleablePresenter;
+
+    public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder) {
+        super(interactor, wireframe);
+        this.scheduleablePresenter = scheduleablePresenter;
+        this.scheduleItemViewBuilder = scheduleItemViewBuilder;
         scheduleItemDTOIInteractorOperationListener = new InteractorAsyncOperationListener<ScheduleItemDTO>() {
             @Override
             public void onSuceedWithData(ScheduleItemDTO data) {
@@ -91,17 +92,12 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
 
     public void buildItem(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-        scheduleItemView.setName(scheduleItemDTO.getName());
-        scheduleItemView.setTime(scheduleItemDTO.getTime());
-        scheduleItemView.setSponsors(scheduleItemDTO.getSponsors());
-        scheduleItemView.setEventType(scheduleItemDTO.getEventType().toUpperCase());
-        scheduleItemView.setTrack(scheduleItemDTO.getTrack());
-        scheduleItemView.setIsScheduledStatusVisible(interactor.isMemberLoggedIn());
-        if (interactor.isMemberLoggedIn()) {
-            scheduleItemView.setScheduled(interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()));
-        }
-        String summitTypeColor = scheduleItemDTO.getSummitTypeColor() != "" ? scheduleItemDTO.getSummitTypeColor() : "#8A8A8A";
-        scheduleItemView.setSummitTypeColor(summitTypeColor);
+        scheduleItemViewBuilder.build(
+                scheduleItemView,
+                scheduleItemDTO,
+                interactor.isMemberLoggedIn(),
+                interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId())
+                );
     }
 
     public void reloadSchedule() {
@@ -124,7 +120,7 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
 
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-        toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor);
+        scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor);
     }
 
     @Override

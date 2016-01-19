@@ -5,6 +5,8 @@ import android.os.Bundle;
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
+import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
 import org.openstack.android.summit.modules.track_schedule.ITrackScheduleWireframe;
 import org.openstack.android.summit.modules.track_schedule.business_logic.ITrackScheduleInteractor;
@@ -20,8 +22,8 @@ import java.util.List;
 public class TrackSchedulePresenter extends SchedulePresenter<TrackScheduleFragment, ITrackScheduleInteractor, ITrackScheduleWireframe> implements ITrackSchedulePresenter {
     private NamedDTO track;
 
-    public TrackSchedulePresenter(ITrackScheduleInteractor interactor, ITrackScheduleWireframe wireframe) {
-        super(interactor, wireframe);
+    public TrackSchedulePresenter(ITrackScheduleInteractor interactor, ITrackScheduleWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder) {
+        super(interactor, wireframe, scheduleablePresenter, scheduleItemViewBuilder);
     }
 
     @Override

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
     <View
         android:layout_width="6dp"
         android:layout_height="match_parent"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/black"
         android:layout_marginRight="12dp">
     </View>
     <TextView
@@ -16,6 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="17dp"/>
-    <ImageView style="@style/MoreImageView" />
+        android:textSize="17dp"
+        android:text="Ex tantas verterem platonem duo"/>
+    <ImageView style="@style/AppTheme.MoreImageView" />
 </LinearLayout>

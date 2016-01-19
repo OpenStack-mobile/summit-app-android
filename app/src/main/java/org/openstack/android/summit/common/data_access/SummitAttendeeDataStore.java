@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.data_access;
 
+import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -15,25 +16,18 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     }
 
     @Override
-    public void addEventToMemberShedule(SummitAttendee summitAttendee, SummitEvent summitEvent, IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
-        final SummitEvent finalSummitEvent = summitEvent;
-        final IDataStoreOperationListener<SummitAttendee> finalDataStoreOperationListener = dataStoreOperationListener;
+    public void addEventToMemberShedule(SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
 
-        IDataStoreOperationListener<SummitAttendee> remomoteDataStoreOperationListener = new IDataStoreOperationListener<SummitAttendee>() {
+        IDataStoreOperationListener<SummitAttendee> remomoteDataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
-            public void onSuceedWithData(SummitAttendee data) {
-                addEventToMemberSheduleLocal(data, finalSummitEvent);
-                finalDataStoreOperationListener.onSucceed();
-            }
-
-            @Override
-            public void onSucceed() {
-
+            public void onSuceedWithSingleData(SummitAttendee data) {
+                addEventToMemberSheduleLocal(data, summitEvent);
+                dataStoreOperationListener.onSucceedWithoutData();
             }
 
             @Override
             public void onError(String message) {
-                finalDataStoreOperationListener.onError(message);
+                dataStoreOperationListener.onError(message);
             }
         };
         summitAttendeeRemoteDataStore.addEventToShedule(summitAttendee, summitEvent, remomoteDataStoreOperationListener);
@@ -47,25 +41,18 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     }
 
     @Override
-    public void removeEventFromMemberShedule(SummitAttendee summitAttendee, SummitEvent summitEvent, IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
-        final SummitEvent finalSummitEvent = summitEvent;
-        final IDataStoreOperationListener<SummitAttendee> finalDataStoreOperationListener = dataStoreOperationListener;
+    public void removeEventFromMemberShedule(SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
 
-        IDataStoreOperationListener<SummitAttendee> remomoteDataStoreOperationListener = new IDataStoreOperationListener<SummitAttendee>() {
+        IDataStoreOperationListener<SummitAttendee> remomoteDataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
-            public void onSuceedWithData(SummitAttendee data) {
-                removeEventFromMemberSheduleLocal(data, finalSummitEvent);
-                finalDataStoreOperationListener.onSucceed();
-            }
-
-            @Override
-            public void onSucceed() {
-
+            public void onSuceedWithSingleData(SummitAttendee data) {
+                removeEventFromMemberSheduleLocal(data, summitEvent);
+                dataStoreOperationListener.onSucceedWithoutData();
             }
 
             @Override
             public void onError(String message) {
-                finalDataStoreOperationListener.onError(message);
+                dataStoreOperationListener.onError(message);
             }
         };
         summitAttendeeRemoteDataStore.removeEventFromShedule(summitAttendee, summitEvent, remomoteDataStoreOperationListener);

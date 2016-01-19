@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import io.realm.Case;
+import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
@@ -70,6 +72,24 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
         levelsSorted.add(levels.get(2));
         levelsSorted.add(levels.get(0));
         return levelsSorted;
+    }
+
+    @Override
+    public List<SummitEvent> getBySearchTerm(String searchTerm) {
+        //TODO: this is a hack for multithreading
+        Realm realm = Realm.getDefaultInstance();
+        RealmQuery<SummitEvent> query = realm.where(SummitEvent.class)
+                .contains("name", searchTerm, Case.INSENSITIVE)
+                .or()
+                .contains("eventDescription", searchTerm, Case.INSENSITIVE)
+                .or()
+                .contains("eventType.name", searchTerm, Case.INSENSITIVE)
+                .or()
+                .contains("tags.name", searchTerm, Case.INSENSITIVE)
+                .or()
+                .contains("presentation.speakers.fullName", searchTerm, Case.INSENSITIVE);
+
+        return query.findAll();
     }
 
     /*public func getByFilterLocal(startDate: NSDate, endDate: NSDate, eventTypes: [Int]?, summitTypes: [Int]?, tracks: [Int]?, tags: [String]?, levels: [String]?)->[SummitEvent]{

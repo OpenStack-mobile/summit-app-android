@@ -5,6 +5,8 @@ import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
+import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.track_schedule.ITrackScheduleWireframe;
 import org.openstack.android.summit.modules.track_schedule.TrackScheduleWireframe;
@@ -38,7 +40,7 @@ public class TrackScheduleModule {
     }
 
     @Provides
-    ITrackSchedulePresenter providesTrackSchedulePresenter(ITrackScheduleInteractor trackScheduleInteractor, ITrackScheduleWireframe trackScheduleWireframe) {
-        return new TrackSchedulePresenter(trackScheduleInteractor, trackScheduleWireframe);
+    ITrackSchedulePresenter providesTrackSchedulePresenter(ITrackScheduleInteractor trackScheduleInteractor, ITrackScheduleWireframe trackScheduleWireframe, IScheduleablePresenter scheduleablePresenter) {
+        return new TrackSchedulePresenter(trackScheduleInteractor, trackScheduleWireframe, scheduleablePresenter, new ScheduleItemViewBuilder());
     }
 }

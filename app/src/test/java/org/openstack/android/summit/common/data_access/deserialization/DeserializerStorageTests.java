@@ -2,21 +2,47 @@ package org.openstack.android.summit.common.data_access.deserialization;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.openstack.android.summit.BuildConfig;
+import org.openstack.android.summit.common.data_access.MockSupport;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.List;
+
+import io.realm.Realm;
 
 /**
  * Created by Claudio Redi on 11/11/2015.
  */
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@PrepareForTest({Realm.class})
 public class DeserializerStorageTests {
+
+    Realm mockRealm;
+
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+
+    @Before
+    public void setup() {
+        mockRealm = MockSupport.mockRealm();
+    }
 
     @Test
     public void add_company_storageContainsAddedCompany() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage();
+        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);
@@ -33,7 +59,7 @@ public class DeserializerStorageTests {
     @Test
     public void add_companyAndEventType_storageContainsBothAddedEntities() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage();
+        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);
@@ -58,7 +84,7 @@ public class DeserializerStorageTests {
     @Test
     public void add_twoTimesSameCompany_storageContainsSingleCompany() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage();
+        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);
@@ -76,7 +102,7 @@ public class DeserializerStorageTests {
     @Test
     public void add_twoDifferentCompanies_storageContainsBothCompanies() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage();
+        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
         int companyId1 = 1;
         Company company1 = new Company();
         company1.setId(companyId1);
@@ -98,7 +124,7 @@ public class DeserializerStorageTests {
     @Test
     public void  exist_companyNotPresentOnStorage_returnsFalse() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage();
+        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);
@@ -113,7 +139,7 @@ public class DeserializerStorageTests {
     @Test
     public void  exist_companyPresentOnMemoryStorage_ReturnsTrue() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage();
+        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);
@@ -129,7 +155,7 @@ public class DeserializerStorageTests {
     @Test
     public void  clear_inMemoryStorageContainsOneCompany_inMemoryStorageIsEmpty() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage();
+        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);

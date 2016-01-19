@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,14 +15,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
+import org.openstack.android.summit.modules.search.ISearchWireframe;
+import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -45,6 +51,12 @@ public class MainActivity extends AppCompatActivity
     IEventsWireframe eventsWireframe;
 
     @Inject
+    ISpeakerListWireframe speakerListWireframe;
+
+    @Inject
+    ISearchWireframe searchWireframe;
+
+    @Inject
     ISecurityManager securityManager;
 
     private ScheduledFuture<?> activityIndicatorTask;
@@ -54,7 +66,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getApplicationComponent().inject(this);
+        trustEveryone();
+
+        if (savedInstanceState == null) {
+            eventsWireframe.presentEventsView(this);
+        }
+
         setContentView(R.layout.activity_main);
+
+        ActionBarSetup();
+        NavigationMenuSetup(savedInstanceState);
+
+        securityManager.setDelegate(this);
+    }
+
+    private void ActionBarSetup() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -62,6 +90,17 @@ public class MainActivity extends AppCompatActivity
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                toggle.setDrawerIndicatorEnabled(getSupportFragmentManager().getBackStackEntryCount() == 0);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(getSupportFragmentManager().getBackStackEntryCount() > 0);
+            }
+        });
+    }
+
+    private void NavigationMenuSetup(Bundle savedInstanceState) {
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -74,27 +113,31 @@ public class MainActivity extends AppCompatActivity
                 if (!securityManager.isLoggedIn()) {
                     showActivityIndicator();
                     securityManager.login(MainActivity.this);
-                }
-                else {
+                } else {
                     securityManager.logout();
                 }
             }
         });
 
-        getApplicationComponent().inject(this);
-        eventsWireframe.presentEventsView(this);
-
-        trustEveryone();
-
-        securityManager.setDelegate(this);
-
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+        EditText searchText = (EditText)headerView.findViewById(R.id.nav_header_search_edittext);
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onBackStackChanged() {
-                toggle.setDrawerIndicatorEnabled(getSupportFragmentManager().getBackStackEntryCount() == 0);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(getSupportFragmentManager().getBackStackEntryCount() > 0);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                String searchTerm = v.getText().toString();
+                if (actionId == EditorInfo.IME_ACTION_DONE && !searchTerm.isEmpty()) {
+                    searchWireframe.presentSearchView(searchTerm, MainActivity.this);
+                }
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                v.setText("");
+                return false;
             }
         });
+
+
+        if (securityManager.isLoggedIn()) {
+            onLoggedIn();
+        }
     }
 
     @Override
@@ -131,22 +174,11 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        /*if (id == R.id.nav_camara) {
-            menuItem = item;
-            if (!securityManager.isLoggedIn()) {
-                showActivityIndicator();
-                securityManager.login(this);
-            }
-            else {
-                securityManager.logout();
-            }
-        } else if (id == R.id.nav_gallery) {
-            //generalScheduleWireframe.presentGeneralScheduleView(this);
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        }*/
+        if (id == R.id.nav_events) {
+            eventsWireframe.presentEventsView(this);
+        } else if (id == R.id.nav_speakers) {
+            speakerListWireframe.presentSpeakersListView(this);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

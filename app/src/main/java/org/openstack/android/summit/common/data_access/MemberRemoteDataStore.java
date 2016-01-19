@@ -33,24 +33,23 @@ public class MemberRemoteDataStore implements IMemberRemoteDataStore {
     }
 
     @Override
-    public void getLoggedInMember(IDataStoreOperationListener<Member> dataStoreOperationListener) {
-        final IDataStoreOperationListener<Member> finalDataStoreOperationListener = dataStoreOperationListener;
+    public void getLoggedInMember(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
 
         HttpTaskListener httpTaskListener = new HttpTaskListener() {
             @Override
             public void onSucceed(String data) {
                 try {
                     Member member = deserializer.deserialize(data, Member.class);
-                    finalDataStoreOperationListener.onSuceedWithData(member);
+                    dataStoreOperationListener.onSuceedWithSingleData(member);
                 } catch (JSONException e) {
                     Log.e(Constants.LOG_TAG, "Error deserializing member", e);
-                    finalDataStoreOperationListener.onError(e.getMessage());
+                    dataStoreOperationListener.onError(e.getMessage());
                 }
             }
 
             @Override
             public void onError(String error) {
-                finalDataStoreOperationListener.onError(error);
+                dataStoreOperationListener.onError(error);
             }
         };
 

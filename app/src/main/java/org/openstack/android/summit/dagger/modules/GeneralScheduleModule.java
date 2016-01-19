@@ -5,6 +5,9 @@ import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
+import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
+import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.general_schedule.GeneralScheduleWireframe;
 import org.openstack.android.summit.modules.general_schedule.IGeneralScheduleWireframe;
@@ -40,7 +43,7 @@ public class GeneralScheduleModule {
     }
 
     @Provides
-    IGeneralSchedulePresenter providesGeneralSchedulePresenter(IGeneralScheduleInteractor generalScheduleInteractor, IGeneralScheduleWireframe generalScheduleWireframe) {
-        return new GeneralSchedulePresenter(generalScheduleInteractor, generalScheduleWireframe);
+    IGeneralSchedulePresenter providesGeneralSchedulePresenter(IGeneralScheduleInteractor generalScheduleInteractor, IGeneralScheduleWireframe generalScheduleWireframe, IScheduleablePresenter scheduleablePresenter) {
+        return new GeneralSchedulePresenter(generalScheduleInteractor, generalScheduleWireframe, scheduleablePresenter, new ScheduleItemViewBuilder());
     }
 }

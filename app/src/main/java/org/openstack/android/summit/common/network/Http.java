@@ -10,6 +10,7 @@ import org.openstack.android.summit.common.security.TokenGenerationException;
 
 import java.io.IOException;
 
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
@@ -54,7 +55,7 @@ public class Http implements IHttp {
         } else {
             int code = request.code();
 
-            if (doRetry && (code == HTTP_UNAUTHORIZED || code == HTTP_FORBIDDEN)) {
+            if (doRetry && (code == HTTP_UNAUTHORIZED || code == HTTP_FORBIDDEN || code == HTTP_BAD_REQUEST)) {
                 tokenManager.invalidateToken(token);
 
                 return makeRequest(method, url, tokenManager, false);

@@ -3,7 +3,6 @@ package org.openstack.android.summit.modules.level_list.user_interface;
 import android.os.Bundle;
 
 import org.openstack.android.summit.common.user_interface.BasePresenter;
-import org.openstack.android.summit.common.user_interface.IPresenter;
 import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
 import org.openstack.android.summit.common.user_interface.ScheduleItemView;
 import org.openstack.android.summit.modules.level_list.ILevelListWireframe;
@@ -16,23 +15,14 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/11/2016.
  */
-public class LevelListPresenter extends BasePresenter implements ILevelListPresenter {
+public class LevelListPresenter extends BasePresenter<LevelListFragment, ILevelListInteractor, ILevelListWireframe> implements ILevelListPresenter {
 
     @Inject
     public LevelListPresenter(ILevelListInteractor interactor, ILevelListWireframe wireframe) {
-        this.interactor = interactor;
-        this.wireframe = wireframe;
+        super(interactor, wireframe);
     }
 
-    private ILevelListWireframe wireframe;
-    private ILevelListInteractor interactor;
-    private LevelListFragment view;
     private List<String> levels;
-
-    @Override
-    public void setView(LevelListFragment view) {
-        this.view = view;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

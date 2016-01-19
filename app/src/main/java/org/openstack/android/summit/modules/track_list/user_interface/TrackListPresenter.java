@@ -15,23 +15,14 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
-public class TrackListPresenter extends BasePresenter implements ITrackListPresenter {
+public class TrackListPresenter extends BasePresenter<TrackListFragment, ITrackListInteractor, ITrackListWireframe> implements ITrackListPresenter {
 
     @Inject
     public TrackListPresenter(ITrackListInteractor interactor, ITrackListWireframe wireframe) {
-        this.interactor = interactor;
-        this.wireframe = wireframe;
+        super(interactor, wireframe);
     }
 
-    private ITrackListWireframe wireframe;
-    private ITrackListInteractor interactor;
-    private TrackListFragment view;
     private List<NamedDTO> tracks;
-
-    @Override
-    public void setView(TrackListFragment view) {
-        this.view = view;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

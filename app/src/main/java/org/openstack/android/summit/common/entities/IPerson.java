@@ -8,6 +8,8 @@ public interface IPerson extends IEntity {
     public void setFirstName(String firstName);
     public String getLastName();
     public void setLastName(String lastName);
+    public String getFullName();
+    public void setFullName(String fullName);
     public String getTitle();
     public void setTitle(String title);
     public String getPictureUrl();

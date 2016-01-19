@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 
@@ -14,8 +16,15 @@ import io.realm.RealmObject;
  * Created by Claudio Redi on 11/11/2015.
  */
 public class DeserializerStorage implements IDeserializerStorage {
+
+    @Inject
+    public DeserializerStorage(Realm realm) {
+        this.realm = realm;
+    }
+
+    Realm realm;
+
     Map<Class, Map<Integer, IEntity>> deserializedEntityDictionary = new HashMap<Class, Map<Integer, IEntity>>();
-    Realm realm = Realm.getDefaultInstance();
 
     @Override
     public <T extends RealmObject & IEntity> void add(T entity, Class<T> type) {
