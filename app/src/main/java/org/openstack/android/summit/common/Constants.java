@@ -11,4 +11,5 @@ public class Constants {
     static public final String CURRENT_MEMBER_ID = "CurrentMemberId";
     static public final String LOGGED_IN_EVENT = "logged-in-event";
     static public final String LOGGED_OUT_EVENT = "logged-out-event";
+    static public final String NAVIGATION_PARAMETER_SEARCH_TERM = "SearchTerm";
 }

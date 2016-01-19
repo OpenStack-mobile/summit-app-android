@@ -33,17 +33,17 @@ public class BasePresenter<V extends IBaseFragment, I, W> implements IBasePresen
     }
 
     @Override
-    public void resume() {
+    public void onResume() {
 
     }
 
     @Override
-    public void pause() {
+    public void onPause() {
 
     }
 
     @Override
-    public void destroy() {
+    public void onDestroy() {
 
     }
 }

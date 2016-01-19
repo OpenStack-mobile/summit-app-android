@@ -45,7 +45,6 @@ public class SearchFragment extends BaseFragment {
     @Inject
     ISearchPresenter presenter;
 
-    private String searchTerm;
     private ScheduleListAdapter scheduleListAdapter;
     private TrackListAdapter trackListAdapter;
     private SpeakerListAdapter speakerListAdapter;
@@ -56,8 +55,8 @@ public class SearchFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         getActivity().setTitle(getResources().getString(R.string.search).toUpperCase());
-        presenter.setSearchTerm(searchTerm);
         presenter.setView(this);
+        presenter.onCreate(savedInstanceState);
     }
 
     @Override
@@ -75,7 +74,6 @@ public class SearchFragment extends BaseFragment {
         });
 
         EditText searchText = (EditText)view.findViewById(R.id.search_results_edittext);
-        searchText.setText(searchTerm);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -117,11 +115,20 @@ public class SearchFragment extends BaseFragment {
             }
         });
 
-        presenter.onCreate(savedInstanceState);
-
         subsectionLinksSetup();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        presenter.onSaveInstanceState(outState);
     }
 
     private void subsectionLinksSetup() {
@@ -198,7 +205,8 @@ public class SearchFragment extends BaseFragment {
     }
 
     public void setSearchTerm(String searchTerm) {
-        this.searchTerm = searchTerm;
+        EditText searchText = (EditText)view.findViewById(R.id.search_results_edittext);
+        searchText.setText(searchTerm);
     }
 
     public void showNoResultsForEvents() {

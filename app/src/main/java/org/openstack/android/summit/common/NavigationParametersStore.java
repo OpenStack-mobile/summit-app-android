@@ -12,10 +12,11 @@ public class NavigationParametersStore implements INavigationParametersStore {
     private HashMap<String, Object> navigationParameterStore = new HashMap<>();
 
     @Override
-    public <T> T get(String key, Class<T> type) {
+    public <T> T pop(String key, Class<T> type) {
         Object value = null;
         if (navigationParameterStore.containsKey(key)) {
             value = navigationParameterStore.get(key);
+            navigationParameterStore.remove(key);
         }
         return value != null ? (T)value : null;
     }

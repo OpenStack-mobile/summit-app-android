@@ -16,6 +16,7 @@ public class SpeakerListWireframe implements ISpeakerListWireframe {
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
+                .addToBackStack(null)
                 .replace(R.id.frame_layout_content, speakerListFragment)
                 .commit();
     }

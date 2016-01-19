@@ -12,9 +12,9 @@ public interface IBasePresenter <T extends IBaseFragment> {
 
     void onCreate(Bundle savedInstanceState);
 
-    void resume();
+    void onResume();
 
-    void pause();
+    void onPause();
 
-    void destroy();
+    void onDestroy();
 }

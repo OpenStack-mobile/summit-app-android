@@ -43,6 +43,7 @@ import javax.net.ssl.X509TrustManager;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener {
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity
 
 
         if (securityManager.isLoggedIn()) {
-            onLoggedIn();
+            loggedInStatusSetUp();
         }
     }
 
@@ -195,16 +196,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoggedIn() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getMenu().getItem(3).setVisible(true);
-
-        loginButton.setText(getResources().getText(R.string.log_out));
+        loggedInStatusSetUp();
 
         Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
         // You can also include some extra data.
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
         hideActivityIndicator();
 
+    }
+
+    private void loggedInStatusSetUp() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(3).setVisible(true);
+
+        loginButton.setText(getResources().getText(R.string.log_out));
     }
 
     @Override
@@ -221,7 +226,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onError(String message) {
+        showErrorMessage(message);
+        hideActivityIndicator();
+    }
 
+    public void showErrorMessage(String message) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Oops...")
+                .setContentText(message)
+                .show();
     }
 
     public void showActivityIndicator() {

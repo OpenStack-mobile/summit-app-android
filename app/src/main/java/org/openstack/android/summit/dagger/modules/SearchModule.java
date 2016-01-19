@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
@@ -30,8 +31,8 @@ public class SearchModule {
     }
 
     @Provides
-    ISearchWireframe providesSearchWireframe(ITrackScheduleWireframe trackScheduleWireframe) {
-        return new SearchWireframe(trackScheduleWireframe);
+    ISearchWireframe providesSearchWireframe(ITrackScheduleWireframe trackScheduleWireframe, INavigationParametersStore navigationParametersStore) {
+        return new SearchWireframe(trackScheduleWireframe, navigationParametersStore);
     }
 
     @Provides

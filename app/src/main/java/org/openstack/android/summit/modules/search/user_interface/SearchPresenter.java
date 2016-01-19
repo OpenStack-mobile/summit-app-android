@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
@@ -31,6 +32,8 @@ public class SearchPresenter extends BasePresenter<SearchFragment, ISearchIntera
     private IScheduleItemViewBuilder scheduleItemViewBuilder;
     private IScheduleablePresenter scheduleablePresenter;
 
+    private final String KEY_SEARCH_TERM = "KEY_SEARCH_TERM";
+
     public SearchPresenter(ISearchInteractor interactor, ISearchWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder) {
         super(interactor, wireframe);
         this.scheduleablePresenter = scheduleablePresenter;
@@ -40,7 +43,24 @@ public class SearchPresenter extends BasePresenter<SearchFragment, ISearchIntera
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            searchTerm = savedInstanceState.getString(KEY_SEARCH_TERM);
+        }
+        else {
+            searchTerm = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_SEARCH_TERM, String.class);
+        }
+    }
+
+    @Override
+    public void onResume() {
         search(searchTerm);
+        view.setSearchTerm(searchTerm);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_SEARCH_TERM, searchTerm);
     }
 
     @Override
@@ -114,11 +134,6 @@ public class SearchPresenter extends BasePresenter<SearchFragment, ISearchIntera
     @Override
     public void showSpeakerProfile(int position) {
 
-    }
-
-    @Override
-    public void setSearchTerm(String searchTerm) {
-        this.searchTerm = searchTerm;
     }
 
     public void buildScheduleItem(IScheduleItemView scheduleItemView, int position) {

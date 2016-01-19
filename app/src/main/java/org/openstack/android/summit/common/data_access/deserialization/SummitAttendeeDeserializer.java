@@ -29,7 +29,7 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
     public SummitAttendee deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        String[] missedFields = validateRequiredFields(new String[] {"id", "first_name", "last_name", "ticket_type_id"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[] {"id", "first_name", "last_name", "tickets"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
 
         SummitAttendee summitAttendee = new SummitAttendee();
@@ -44,8 +44,14 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
             summitAttendee.getScheduledEvents().add(summitEvent);
         }
 
-        TicketType ticketType = deserializerStorage.get(jsonObject.getInt("ticket_type_id"), TicketType.class);
-        summitAttendee.setTicketType(ticketType);
+        TicketType ticketType;
+        int ticketTypeId;
+        JSONArray jsonArrayTicketTypes = jsonObject.getJSONArray("tickets");
+        for (int i = 0; i < jsonArrayTicketTypes.length(); i++) {
+            ticketTypeId = jsonArrayTicketTypes.getInt(i);
+            ticketType = deserializerStorage.get(ticketTypeId, TicketType.class);
+            summitAttendee.getTicketTypes().add(ticketType);
+        }
 
         Feedback feedback;
         JSONObject jsonObjectFeedback;
