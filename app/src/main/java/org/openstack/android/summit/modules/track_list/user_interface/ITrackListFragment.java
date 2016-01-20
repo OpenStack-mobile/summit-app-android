@@ -10,5 +10,4 @@ import java.util.List;
  */
 public interface ITrackListFragment extends IBaseFragment {
     void setTracks(List<NamedDTO> tracks);
-    void reloadData();
 }
