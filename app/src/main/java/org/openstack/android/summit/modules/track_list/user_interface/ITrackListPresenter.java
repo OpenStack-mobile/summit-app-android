@@ -13,4 +13,6 @@ public interface ITrackListPresenter extends IBasePresenter<TrackListFragment> {
     void showTrackEvents(int position);
 
     void buildItem(ISimpleListItemView trackListItemView, int position);
+
+    void reloadData();
 }

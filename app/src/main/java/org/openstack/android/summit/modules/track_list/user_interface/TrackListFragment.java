@@ -44,6 +44,23 @@ public class TrackListFragment extends BaseFragment implements ITrackListFragmen
     public void onResume() {
         getActivity().setTitle("EVENTS");
         super.onResume();
+        presenter.onResume();
+    }
+
+    // HACK: the tab container preload this tab on initial load, at that time data is not yet on local database so without this
+    // list show up empty on first load
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        // Make sure that we are currently visible
+        if (isVisible()) {
+            if (isVisibleToUser) {
+                if (presenter != null) {
+                    presenter.reloadData();
+                }
+            }
+        }
     }
 
     @Override
@@ -55,11 +72,6 @@ public class TrackListFragment extends BaseFragment implements ITrackListFragmen
         trackList.setAdapter(trackListAdapter);
         presenter.onCreate(savedInstanceState);
         return view;
-    }
-
-    @Override
-    public void reloadData() {
-        trackListAdapter.notifyDataSetChanged();
     }
 
     public void setTracks(List<NamedDTO> tracks) {

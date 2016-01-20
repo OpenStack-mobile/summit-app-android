@@ -26,9 +26,12 @@ public class TrackListPresenter extends BasePresenter<TrackListFragment, ITrackL
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        init();
+    }
+
+    private void init() {
         tracks = interactor.getTracks();
         view.setTracks(tracks);
-        view.reloadData();
     }
 
     @Override
@@ -41,5 +44,12 @@ public class TrackListPresenter extends BasePresenter<TrackListFragment, ITrackL
     public void buildItem(ISimpleListItemView trackListItemView, int position) {
         NamedDTO track = tracks.get(position);
         trackListItemView.setName(track.getName());
+    }
+
+    @Override
+    public void reloadData() {
+        if (tracks.size() == 0) {
+            init();
+        }
     }
 }
