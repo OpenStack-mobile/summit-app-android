@@ -15,6 +15,7 @@ import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.TicketType;
 import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 
@@ -32,6 +33,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
     ISummitEventDeserializer summitEventDeserializer;
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
     IDeserializerStorage deserializerStorage;
+    ITrackGroupDeserializer trackGroupDeserializer;
 
     @Inject
     public SummitDeserializer(IGenericDeserializer genericDeserializer,
@@ -39,12 +41,14 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                               IVenueRoomDeserializer venueRoomDeserializer,
                               ISummitEventDeserializer summitEventDeserializer,
                               IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+                              ITrackGroupDeserializer trackGroupDeserializer,
                               IDeserializerStorage deserializerStorage){
         this.genericDeserializer = genericDeserializer;
         this.venueDeserializer = venueDeserializer;
         this.venueRoomDeserializer = venueRoomDeserializer;
         this.summitEventDeserializer = summitEventDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
+        this.trackGroupDeserializer = trackGroupDeserializer;
         this.deserializerStorage = deserializerStorage;
     }
 
@@ -104,7 +108,19 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
             jsonObjectTrack = jsonArrayTracks.getJSONObject(i);
             track = genericDeserializer.deserialize(jsonObjectTrack.toString(), Track.class);
             deserializerStorage.add(track, Track.class);
-            summit.getTracks().add(track);
+        }
+
+        TrackGroup trackGroup;
+        JSONObject jsonObjectTrackGroup;
+        JSONArray jsonArrayTrackGroups = jsonObject.getJSONArray("track_groups");
+        for (int i = 0; i < jsonArrayTrackGroups.length(); i++) {
+            jsonObjectTrackGroup = jsonArrayTrackGroups.getJSONObject(i);
+            trackGroup = trackGroupDeserializer.deserialize(jsonObjectTrackGroup.toString());
+            deserializerStorage.add(trackGroup, TrackGroup.class);
+            summit.getTrackGroups().add(trackGroup);
+            for (Track child: trackGroup.getTracks()) {
+                child.setTrackGroup(trackGroup);
+            }
         }
 
         Venue venue;
