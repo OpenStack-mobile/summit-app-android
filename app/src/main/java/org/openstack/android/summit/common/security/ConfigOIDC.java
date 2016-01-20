@@ -22,7 +22,7 @@ public final class ConfigOIDC {
     // user to authorise us again every time the tokens expire. Some providers might have an
     // `offline` scope instead. If you get an `invalid_scope` error when trying to authorise the
     // app, try changing it to `offline`.
-    public static final String[] scopes = {"openid", "https://testresource-server.openstack.org/summits/read", "https://testresource-server.openstack.org/summits/write"};
+    public static final String[] scopes = {"openid", "offline_access", "https://testresource-server.openstack.org/summits/read", "https://testresource-server.openstack.org/summits/write"};
 
     public enum Flows
     {
