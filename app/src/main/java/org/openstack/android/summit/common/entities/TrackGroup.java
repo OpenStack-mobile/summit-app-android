@@ -1,12 +1,13 @@
 package org.openstack.android.summit.common.entities;
 
 import io.realm.RealmList;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Claudio Redi on 1/20/2016.
  */
-public class TrackGroup {
+public class TrackGroup extends RealmObject implements INamedEntity {
     @PrimaryKey
     private int id;
     private String name;

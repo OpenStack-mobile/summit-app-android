@@ -24,7 +24,7 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
     public TrackGroup deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        String[] missedFields = validateRequiredFields(new String[] {"id", "name", "description", "color", "categories"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[] {"id", "name", "description", "color", "tracks"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
 
         TrackGroup trackGroup = new TrackGroup();
@@ -35,7 +35,7 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
 
         Track track;
         int trackId;
-        JSONArray jsonArrayTracks = jsonObject.getJSONArray("categories");
+        JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
         for (int i = 0; i < jsonArrayTracks.length(); i++) {
             trackId = jsonArrayTracks.getInt(i);
             track = deserializerStorage.get(trackId, Track.class);

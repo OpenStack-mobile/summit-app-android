@@ -10,6 +10,7 @@ public class Track extends RealmObject implements INamedEntity {
     @PrimaryKey
     private int id;
     private String name;
+    private TrackGroup trackGroup;
 
     public int getId() {
         return id;
@@ -25,5 +26,13 @@ public class Track extends RealmObject implements INamedEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public TrackGroup getTrackGroup() {
+        return trackGroup;
+    }
+
+    public void setTrackGroup(TrackGroup trackGroup) {
+        this.trackGroup = trackGroup;
     }
 }
