@@ -17,6 +17,7 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by Claudio Redi on 12/20/2015.
@@ -47,7 +48,9 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
             }
         }
 
-        return query.findAll();
+        RealmResults<SummitEvent> results = query.findAll();
+        results.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
+        return results;
     }
 
     public SummitEvent getByIdLocal(int id) {
@@ -85,11 +88,13 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
                 .or()
                 .contains("eventType.name", searchTerm, Case.INSENSITIVE)
                 .or()
-                .contains("tags.name", searchTerm, Case.INSENSITIVE)
+                .contains("tags.tag", searchTerm, Case.INSENSITIVE)
                 .or()
                 .contains("presentation.speakers.fullName", searchTerm, Case.INSENSITIVE);
 
-        return query.findAll();
+        RealmResults<SummitEvent> results = query.findAll();
+        results.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
+        return results;
     }
 
     /*public func getByFilterLocal(startDate: NSDate, endDate: NSDate, eventTypes: [Int]?, summitTypes: [Int]?, tracks: [Int]?, tags: [String]?, levels: [String]?)->[SummitEvent]{

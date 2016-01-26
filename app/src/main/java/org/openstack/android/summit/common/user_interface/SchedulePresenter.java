@@ -90,8 +90,9 @@ public class SchedulePresenter<V extends IScheduleView, I extends IScheduleInter
                 scheduleItemView,
                 scheduleItemDTO,
                 interactor.isMemberLoggedIn(),
-                interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId())
-                );
+                interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
+                false
+        );
     }
 
     public void reloadSchedule() {

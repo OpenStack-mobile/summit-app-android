@@ -139,7 +139,8 @@ public class SearchPresenter extends BasePresenter<ISearchView, ISearchInteracto
                 scheduleItemView,
                 scheduleItemDTO,
                 interactor.isMemberLoggedIn(),
-                interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId())
+                interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
+                true
         );
     }
 
