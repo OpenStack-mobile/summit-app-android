@@ -12,7 +12,7 @@ public class ScheduleItemDTO extends NamedDTO {
     private String credentials;
     private String sponsors;
     private String eventType;
-    private String summitTypeColor;
+    private String color;
 
     public String getDateTime() {
         return dateTime;
@@ -70,11 +70,11 @@ public class ScheduleItemDTO extends NamedDTO {
         this.time = time;
     }
 
-    public String getSummitTypeColor() {
-        return summitTypeColor;
+    public String getColor(){
+        return color;
     }
 
-    public void setSummitTypeColor(String summitTypeColor) {
-        this.summitTypeColor = summitTypeColor;
+    public void setColor(String color) {
+        this.color = color;
     }
 }

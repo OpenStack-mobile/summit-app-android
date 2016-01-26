@@ -18,6 +18,7 @@ import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 import org.robolectric.RobolectricTestRunner;
@@ -82,9 +83,14 @@ public class DTOAssemblerTests {
         summitType2.setId(2);
         summitType2.setName("Design Summit");
 
+        TrackGroup trackGroup = new TrackGroup();
+        trackGroup.setId(11);
+        trackGroup.setColor("#564534");
+
         Track track = new Track();
         track.setId(1);
         track.setName("test track");
+        track.setTrackGroup(trackGroup);
 
         Presentation presentation = new Presentation();
         presentation.setId(2000);
@@ -103,6 +109,7 @@ public class DTOAssemblerTests {
         summitEvent.getSummitTypes().add(summitType1);
         summitEvent.getSummitTypes().add(summitType2);
         summitEvent.setPresentation(presentation);
+
         // Act
         ScheduleItemDTO scheduleItemDTO = dtoAssembler.createDTO(summitEvent, ScheduleItemDTO.class);
 
@@ -115,6 +122,7 @@ public class DTOAssemblerTests {
         Assert.assertEquals("Sponsored by company 1, company 2", scheduleItemDTO.getSponsors());
         Assert.assertEquals("Main Summit, Design Summit", scheduleItemDTO.getCredentials());
         Assert.assertEquals(track.getName(), scheduleItemDTO.getTrack());
+        Assert.assertEquals(trackGroup.getColor(), scheduleItemDTO.getColor());
     }
 
     @Test
@@ -173,9 +181,14 @@ public class DTOAssemblerTests {
         summitType2.setId(2);
         summitType2.setName("Design Summit");
 
+        TrackGroup trackGroup = new TrackGroup();
+        trackGroup.setId(11);
+        trackGroup.setColor("#564534");
+
         Track track = new Track();
         track.setId(1);
         track.setName("test track");
+        track.setTrackGroup(trackGroup);
 
         Tag tag1 = new Tag();
         tag1.setId(3);
@@ -235,5 +248,6 @@ public class DTOAssemblerTests {
         Assert.assertEquals(2, eventDetailDTO.getModerator().getId());
         Assert.assertTrue(eventDetailDTO.getFinished());
         Assert.assertFalse(eventDetailDTO.getAllowFeedback());
+        Assert.assertEquals(trackGroup.getColor(), eventDetailDTO.getColor());
     }
 }

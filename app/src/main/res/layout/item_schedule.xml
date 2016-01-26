@@ -5,7 +5,7 @@
     android:background="@android:color/white">
 
     <View
-        android:id="@+id/item_schedule_view_summit_type_color"
+        android:id="@+id/item_schedule_view_color"
         android:layout_width="6dp"
         android:layout_height="match_parent"
         android:background="@android:color/darker_gray"
