@@ -81,13 +81,16 @@ public class ScheduleItemView implements IScheduleItemView {
     }
 
     @Override
-    public void setSummitTypeColor(String color) {
+    public void setColor(String color) {
         if (color == null || color.length() == 0) {
             return;
         }
 
-        View summitTypeColorView = (View) view.findViewById(R.id.item_schedule_view_summit_type_color);
-        summitTypeColorView.setBackgroundColor(Color.parseColor(color));
+        View colorView = (View) view.findViewById(R.id.item_schedule_view_color);
+        colorView.setBackgroundColor(Color.parseColor(color));
+
+        TextView sponsorTextView = (TextView) view.findViewById(R.id.item_schedule_textview_sponsors);
+        sponsorTextView.setTextColor(Color.parseColor(color));
     }
 
     @Override

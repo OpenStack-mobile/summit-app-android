@@ -24,7 +24,7 @@ public interface IScheduleItemView extends IScheduleableView {
 
     void setTrack(String track);
 
-    void setSummitTypeColor(String color);
+    void setColor(String color);
 
     Boolean getIsScheduledStatusVisible();
 

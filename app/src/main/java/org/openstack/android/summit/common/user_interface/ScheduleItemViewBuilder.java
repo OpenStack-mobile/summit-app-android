@@ -17,7 +17,9 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         if (isMemberLoggedIn) {
             scheduleItemView.setScheduled(isEventScheduledByLoggedMember);
         }
-        String summitTypeColor = scheduleItemDTO.getSummitTypeColor() != "" ? scheduleItemDTO.getSummitTypeColor() : "#8A8A8A";
-        scheduleItemView.setSummitTypeColor(summitTypeColor);
+        String color = scheduleItemDTO.getColor() != null && scheduleItemDTO.getColor() != ""
+                ? scheduleItemDTO.getColor()
+                : "#8A8A8A";
+        scheduleItemView.setColor(color);
     }
 }
