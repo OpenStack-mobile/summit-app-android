@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 12/29/2015.
  */
-public interface IScheduleFragment extends IBaseFragment {
+public interface IScheduleView extends IBaseView {
     void setStartAndEndDateWithParts(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay);
 
     List<ScheduleItemDTO> getEvents();
@@ -16,8 +16,6 @@ public interface IScheduleFragment extends IBaseFragment {
     void setEvents(List<ScheduleItemDTO> events);
 
     Date getSelectedDate();
-
-    void setSelectedDate(Date date);
 
     void reloadSchedule();
 }

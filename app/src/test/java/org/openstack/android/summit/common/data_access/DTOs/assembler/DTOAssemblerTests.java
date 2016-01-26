@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.DTOs.Assembler.DTOAssembler;
+import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
@@ -15,6 +16,7 @@ import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
+import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
@@ -136,5 +138,102 @@ public class DTOAssemblerTests {
         Assert.assertEquals(personListItemDTO.getPictureUrl(), presentationSpeaker.getPictureUrl());
         Assert.assertTrue(personListItemDTO.getIsSpeaker());
         Assert.assertFalse(personListItemDTO.getIsAttendee());
+    }
+
+    @Test
+    public void createDTO_summitEvent2EventDetailDTO_createCorrectDTOInstance() {
+        // Arrange
+        DTOAssembler dtoAssembler = new DTOAssembler();
+        Summit summit = new Summit();
+        summit.setTimeZone("Asia/Tokyo");
+
+        Company company1 = new Company();
+        company1.setName("company 1");
+
+        Company company2 = new Company();
+        company2.setName("company 2");
+
+        EventType eventType = new EventType();
+        eventType.setName("Keynotes");
+
+        Venue venue = new Venue();
+        venue.setId(2);
+        venue.setName("Grand Prince International Convention Center & Hotels");
+
+        VenueRoom venueRoom = new VenueRoom();
+        venueRoom.setId(1);
+        venueRoom.setName("PAMIR Building 3, Level 1F");
+        venueRoom.setVenue(venue);
+
+        SummitType summitType1 = new SummitType();
+        summitType1.setId(1);
+        summitType1.setName("Main Summit");
+
+        SummitType summitType2 = new SummitType();
+        summitType2.setId(2);
+        summitType2.setName("Design Summit");
+
+        Track track = new Track();
+        track.setId(1);
+        track.setName("test track");
+
+        Tag tag1 = new Tag();
+        tag1.setId(3);
+        tag1.setTag("tag1");
+
+        Tag tag2 = new Tag();
+        tag2.setId(4);
+        tag2.setTag("tag2");
+
+        PresentationSpeaker presentationSpeaker1 = new PresentationSpeaker();
+        presentationSpeaker1.setId(1);
+        presentationSpeaker1.setFullName("Test Speaker");
+
+        PresentationSpeaker presentationSpeaker2 = new PresentationSpeaker();
+        presentationSpeaker2.setId(2);
+        presentationSpeaker2.setFullName("Test Moderator");
+
+        Presentation presentation = new Presentation();
+        presentation.setId(2000);
+        presentation.setTrack(track);
+        presentation.getSpeakers().add(presentationSpeaker1);
+        presentation.getSpeakers().add(presentationSpeaker2);
+        presentation.setModerator(presentationSpeaker2);
+
+        SummitEvent summitEvent = new SummitEvent();
+        summitEvent.setId(4);
+        summitEvent.setName("Registration Check-In");
+        summitEvent.setStart(new Date(1441137600L * 1000));
+        summitEvent.setEnd(new Date(1441141200L * 1000));
+        summitEvent.setSummit(summit);
+        summitEvent.getSponsors().add(company1);
+        summitEvent.getSponsors().add(company2);
+        summitEvent.setEventType(eventType);
+        summitEvent.setVenueRoom(venueRoom);
+        summitEvent.getSummitTypes().add(summitType1);
+        summitEvent.getSummitTypes().add(summitType2);
+        summitEvent.setPresentation(presentation);
+        summitEvent.getTags().add(tag1);
+        summitEvent.getTags().add(tag2);
+        summitEvent.setAllowFeedback(false);
+
+        // Act
+        EventDetailDTO eventDetailDTO = dtoAssembler.createDTO(summitEvent, EventDetailDTO.class);
+
+        // Assert
+        Assert.assertEquals(summitEvent.getId(), eventDetailDTO.getId());
+        Assert.assertEquals(summitEvent.getName(), eventDetailDTO.getName());
+        Assert.assertEquals("05:00 am / 06:00 am", eventDetailDTO.getTime());
+        Assert.assertEquals("Wednesday 02 September 05:00 AM / 06:00 AM", eventDetailDTO.getDateTime());
+        Assert.assertEquals("Grand Prince International Convention Center & Hotels - PAMIR Building 3, Level 1F", eventDetailDTO.getLocation());
+        Assert.assertEquals("Sponsored by company 1, company 2", eventDetailDTO.getSponsors());
+        Assert.assertEquals("Main Summit, Design Summit", eventDetailDTO.getCredentials());
+        Assert.assertEquals(track.getName(), eventDetailDTO.getTrack());
+        Assert.assertEquals("tag1, tag2", eventDetailDTO.getTags());
+        Assert.assertEquals(1, eventDetailDTO.getVenueRoomId());
+        Assert.assertEquals(2, eventDetailDTO.getSpeakers().size());
+        Assert.assertEquals(2, eventDetailDTO.getModerator().getId());
+        Assert.assertTrue(eventDetailDTO.getFinished());
+        Assert.assertFalse(eventDetailDTO.getAllowFeedback());
     }
 }

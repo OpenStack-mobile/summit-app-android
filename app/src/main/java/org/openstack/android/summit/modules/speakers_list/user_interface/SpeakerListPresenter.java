@@ -17,7 +17,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/13/2016.
  */
-public class SpeakerListPresenter extends BasePresenter<SpeakerListFragment, ISpeakerListInteractor, ISpeakerListWireframe> implements ISpeakerListPresenter {
+public class SpeakerListPresenter extends BasePresenter<ISpeakerListView, ISpeakerListInteractor, ISpeakerListWireframe> implements ISpeakerListPresenter {
 
     List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();
     private int page = 1;

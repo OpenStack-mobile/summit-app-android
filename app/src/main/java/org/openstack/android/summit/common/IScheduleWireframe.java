@@ -1,11 +1,10 @@
 package org.openstack.android.summit.common;
 
-import android.app.Activity;
-import android.support.v4.app.FragmentActivity;
+import org.openstack.android.summit.common.user_interface.IBaseView;
 
 /**
  * Created by Claudio Redi on 12/29/2015.
  */
-public interface IScheduleWireframe {
-    void showEventDetail(FragmentActivity context);
+public interface IScheduleWireframe extends IBaseWireframe {
+    void showEventDetail(int eventId, IBaseView context);
 }

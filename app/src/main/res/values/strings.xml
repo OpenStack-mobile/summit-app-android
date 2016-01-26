@@ -2,12 +2,15 @@
     <string name="navigation_drawer_open">Open menu</string>
     <string name="navigation_drawer_close">Close menu</string>
     <string name="app_name">OpenStack</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_scheduled_status">Scheduled</string>
     <string name="log_in">LOG IN</string>
     <string name="log_out">LOG OUT</string>
     <string name="search_placeholder">search events &amp; people...</string>
     <string name="events">Events</string>
+    <string name="event">Event</string>
     <string name="tracks">Tracks</string>
+    <string name="track">Track</string>
     <string name="speakers">Speakers</string>
     <string name="search">Search</string>
     <string name="no_results">No results</string>

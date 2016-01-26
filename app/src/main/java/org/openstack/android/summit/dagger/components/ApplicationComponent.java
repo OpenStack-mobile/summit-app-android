@@ -20,6 +20,7 @@ import org.openstack.android.summit.dagger.modules.SecurityModule;
 import org.openstack.android.summit.dagger.modules.SpeakerListModule;
 import org.openstack.android.summit.dagger.modules.TrackListModule;
 import org.openstack.android.summit.dagger.modules.TrackScheduleModule;
+import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
 import org.openstack.android.summit.modules.events.user_interface.EventsFragment;
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralScheduleFragment;
 import org.openstack.android.summit.modules.level_list.user_interface.LevelListFragment;
@@ -33,7 +34,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class} )
+@Component(modules = { ApplicationModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class} )
 public interface ApplicationComponent {
     void inject(MainActivity mainActivity);
     void inject(EventsFragment eventsFragment);
@@ -44,4 +45,5 @@ public interface ApplicationComponent {
     void inject(TrackScheduleFragment trackScheduleFragment);
     void inject(SpeakerListFragment speakerListFragment);
     void inject(SearchFragment searchFragment);
+    void inject(EventDetailFragment eventDetailFragment);
 }

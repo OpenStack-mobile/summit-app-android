@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common.user_interface;
 
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
 import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
@@ -11,51 +12,50 @@ import org.openstack.android.summit.common.business_logic.InteractorAsyncOperati
 public class ScheduleablePresenter implements IScheduleablePresenter {
 
     @Override
-    public void toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor) {
+    public void toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor, IInteractorAsyncOperationListener<Void> interactorOperationListener) {
         Boolean isScheduled = interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId());
 
         if (isScheduled) {
-            removeEventFromSchedule(scheduleItemDTO, scheduleableView, interactor);
+            removeEventFromSchedule(scheduleItemDTO, scheduleableView, interactor, interactorOperationListener);
         }
         else {
-            addEventToSchedule(scheduleItemDTO, scheduleableView, interactor);
+            addEventToSchedule(scheduleItemDTO, scheduleableView, interactor, interactorOperationListener);
         }
-
     }
 
-    private void removeEventFromSchedule(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor) {
+    private void removeEventFromSchedule(ScheduleItemDTO scheduleItemDTO, final IScheduleableView scheduleableView, IScheduleableInteractor interactor, final IInteractorAsyncOperationListener<Void> interactorOperationListener) {
         scheduleableView.setScheduled(false);
-        final IScheduleableView finalScheduleable = scheduleableView;
-        InteractorAsyncOperationListener<Void> interactorOperationListener = new InteractorAsyncOperationListener<Void>() {
+        InteractorAsyncOperationListener<Void> internalInteractorOperationListener = new InteractorAsyncOperationListener<Void>() {
             @Override
             public void onSuceedWithData(Void data) {
-
+                interactorOperationListener.onSucceed();
             }
 
             @Override
             public void onError(String message) {
-                finalScheduleable.setScheduled(!finalScheduleable.getScheduled());
+                scheduleableView.setScheduled(!scheduleableView.getScheduled());
+                interactorOperationListener.onError(message);
             }
         };
 
-        interactor.removeEventFromLoggedInMemberSchedule(scheduleItemDTO.getId(), interactorOperationListener);
+        interactor.removeEventFromLoggedInMemberSchedule(scheduleItemDTO.getId(), internalInteractorOperationListener);
     }
 
-    private void addEventToSchedule(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor) {
+    private void addEventToSchedule(ScheduleItemDTO scheduleItemDTO, final IScheduleableView scheduleableView, IScheduleableInteractor interactor, final IInteractorAsyncOperationListener<Void> interactorOperationListener) {
         scheduleableView.setScheduled(true);
-        final IScheduleableView finalScheduleable = scheduleableView;
-        InteractorAsyncOperationListener<Void> interactorOperationListener = new InteractorAsyncOperationListener<Void>() {
+        InteractorAsyncOperationListener<Void> internalInteractorOperationListener = new InteractorAsyncOperationListener<Void>() {
             @Override
             public void onSuceedWithData(Void data) {
-
+                interactorOperationListener.onSucceed();
             }
 
             @Override
             public void onError(String message) {
-                finalScheduleable.setScheduled(!finalScheduleable.getScheduled());
+                scheduleableView.setScheduled(!scheduleableView.getScheduled());
+                interactorOperationListener.onError(message);
             }
         };
 
-        interactor.addEventToLoggedInMemberSchedule(scheduleItemDTO.getId(), interactorOperationListener);
+        interactor.addEventToLoggedInMemberSchedule(scheduleItemDTO.getId(), internalInteractorOperationListener);
     }
 }

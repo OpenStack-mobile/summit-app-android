@@ -3,9 +3,7 @@ package org.openstack.android.summit.modules.general_schedule.user_interface;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
-import org.openstack.android.summit.modules.general_schedule.GeneralScheduleWireframe;
 import org.openstack.android.summit.modules.general_schedule.IGeneralScheduleWireframe;
-import org.openstack.android.summit.modules.general_schedule.business_logic.GeneralScheduleInteractor;
 import org.openstack.android.summit.modules.general_schedule.business_logic.IGeneralScheduleInteractor;
 
 /**

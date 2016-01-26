@@ -126,7 +126,8 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
                     accountManager.setAuthToken(account, TOKEN_TYPE_ID, tokenResponse.getIdToken());
                     accountManager.setAuthToken(account, TOKEN_TYPE_ACCESS, tokenResponse.getAccessToken());
-                    accountManager.setAuthToken(account, TOKEN_TYPE_REFRESH, tokenResponse.getRefreshToken());
+                    // For now I disable refresh_token rotate policy
+                    //accountManager.setAuthToken(account, TOKEN_TYPE_REFRESH, tokenResponse.getRefreshToken());
                 }catch (TokenResponseException e) {
                     if(e.getStatusCode() == HTTP_BAD_REQUEST && e.getContent().contains("invalid_grant")) {
                         // If the refresh token has expired, we need to launch an intent for the user

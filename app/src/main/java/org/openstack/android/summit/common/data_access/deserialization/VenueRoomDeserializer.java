@@ -32,7 +32,7 @@ public class VenueRoomDeserializer extends BaseDeserializer implements IVenueRoo
         VenueRoom venueRoom = new VenueRoom();
         venueRoom.setId(jsonObject.getInt("id"));
         venueRoom.setName(jsonObject.getString("name"));
-        venueRoom.setCapacity(jsonObject.getInt("Capacity"));
+        venueRoom.setCapacity(jsonObject.has("Capaciry") ? jsonObject.getInt("Capacity") : 0);
         venueRoom.setLocationDescription(jsonObject.getString("description"));
         int venueId = jsonObject.getInt("venue_id");
         Venue venue = deserializerStorage.get(venueId, Venue.class);

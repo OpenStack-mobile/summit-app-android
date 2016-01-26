@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
-import org.openstack.android.summit.common.user_interface.ScheduleItemView;
 import org.openstack.android.summit.modules.level_list.ILevelListWireframe;
 import org.openstack.android.summit.modules.level_list.business_logic.ILevelListInteractor;
 

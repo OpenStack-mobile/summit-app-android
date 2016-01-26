@@ -35,7 +35,6 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager) {
         super(summitEventDataStore, summitAttendeeDataStore, dtoAssembler, securityManager);
         this.summitDataStore = summitDataStore;
-        this.dtoAssembler = dtoAssembler;
     }
 
     @Override

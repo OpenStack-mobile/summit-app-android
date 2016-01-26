@@ -29,7 +29,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 12/29/2015.
  */
-public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment implements IScheduleFragment {
+public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment implements IScheduleView {
 
     @Inject
     protected P presenter;
@@ -65,7 +65,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
         scheduleListAdapter = new ScheduleListAdapter(getContext());
         scheduleList.setAdapter(scheduleListAdapter);
-        presenter.onCreate(savedInstanceState);
+
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         ranger.setDayViewOnClickListener(new Ranger.DayViewOnClickListener() {
             @Override
@@ -73,7 +73,15 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
                 presenter.reloadSchedule();
             }
         });
+
+        presenter.onCreate(savedInstanceState);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResume();
     }
 
     @Override
@@ -108,11 +116,6 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     public Date getSelectedDate() {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         return new Date(ranger.getSelectedDate());
-    }
-
-    @Override
-    public void setSelectedDate(Date date) {
-
     }
 
     @Override

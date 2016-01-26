@@ -11,9 +11,11 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private int venueRoomId;
     private String eventDescription;
     private String tags;
-    private List<PresentationSpeakerDTO> speakers = new ArrayList<PresentationSpeakerDTO>();
+    private List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();
     private Boolean finished;
     private Boolean allowFeedback;
+    private PersonListItemDTO moderator;
+    private String level;
 
     public int getVenueId() {
         return venueId;
@@ -47,11 +49,11 @@ public class EventDetailDTO extends ScheduleItemDTO {
         this.tags = tags;
     }
 
-    public List<PresentationSpeakerDTO> getSpeakers() {
+    public List<PersonListItemDTO> getSpeakers() {
         return speakers;
     }
 
-    public void setSpeakers(List<PresentationSpeakerDTO> speakers) {
+    public void setSpeakers(List<PersonListItemDTO> speakers) {
         this.speakers = speakers;
     }
 
@@ -69,5 +71,21 @@ public class EventDetailDTO extends ScheduleItemDTO {
 
     public void setAllowFeedback(Boolean allowFeedback) {
         this.allowFeedback = allowFeedback;
+    }
+
+    public PersonListItemDTO getModerator() {
+        return moderator;
+    }
+
+    public void setModerator(PersonListItemDTO moderator) {
+        this.moderator = moderator;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 }

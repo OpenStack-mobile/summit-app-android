@@ -22,7 +22,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TrackListFragment extends BaseFragment implements ITrackListFragment {
+public class TrackListFragment extends BaseFragment implements ITrackListView {
 
     @Inject
     ITrackListPresenter presenter;

@@ -20,7 +20,7 @@ public class TrackGroupTests {
     @Test
     public void deserialize_validJSONWithOneTrack_returnsCorrectInstance() throws JSONException {
         // Arrange
-        String jsonString = "{\"id\":2,\"name\":\"CIO / Business Leader\",\"color\":\"#0d37c3\",\"description\":\"track group description\",\"categories\":[\"2\"]}";
+        String jsonString = "{\"id\":2,\"name\":\"CIO / Business Leader\",\"color\":\"#0d37c3\",\"description\":\"track group description\",\"tracks\":[\"2\"]}";
 
         DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         int trackId = 2;
@@ -45,7 +45,7 @@ public class TrackGroupTests {
     @Test
     public void deserialize_validJSONWithNoTrack_returnsCorrectInstance() throws JSONException {
         // Arrange
-        String jsonString = "{\"id\":2,\"name\":\"CIO / Business Leader\",\"color\":\"#0d37c3\",\"description\":\"track group description\",\"categories\":[]}";
+        String jsonString = "{\"id\":2,\"name\":\"CIO / Business Leader\",\"color\":\"#0d37c3\",\"description\":\"track group description\",\"tracks\":[]}";
 
         DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         int trackId = 2;

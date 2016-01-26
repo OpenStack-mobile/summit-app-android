@@ -20,8 +20,8 @@ public class Venue extends RealmObject implements INamedEntity {
     private String lat;
     private String lng;
     private Boolean isInternal;
-    private RealmList<Image> maps;
-    private RealmList<VenueRoom> venueRooms;
+    private RealmList<Image> maps = new RealmList<>();
+    private RealmList<VenueRoom> venueRooms = new RealmList<>();
 
     public int getId() {
         return id;

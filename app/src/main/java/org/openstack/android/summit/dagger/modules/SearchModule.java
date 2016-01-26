@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataS
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
+import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
 import org.openstack.android.summit.modules.search.SearchWireframe;
 import org.openstack.android.summit.modules.search.business_logic.ISearchInteractor;
@@ -31,8 +32,8 @@ public class SearchModule {
     }
 
     @Provides
-    ISearchWireframe providesSearchWireframe(ITrackScheduleWireframe trackScheduleWireframe, INavigationParametersStore navigationParametersStore) {
-        return new SearchWireframe(trackScheduleWireframe, navigationParametersStore);
+    ISearchWireframe providesSearchWireframe(ITrackScheduleWireframe trackScheduleWireframe, IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
+        return new SearchWireframe(trackScheduleWireframe, eventDetailWireframe, navigationParametersStore);
     }
 
     @Provides
