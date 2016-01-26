@@ -45,7 +45,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         summitEvent.setAllowFeedback(jsonObject.getBoolean("allow_feedback"));
         summitEvent.setStart(new Date(jsonObject.getLong("start_date")*1000));
         summitEvent.setEnd(new Date(jsonObject.getLong("end_date")*1000));
-        summitEvent.setEventDescription(jsonObject.getString("description"));
+        summitEvent.setEventDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : "");
         EventType eventType = deserializerStorage.get(jsonObject.getInt("type_id"), EventType.class);
         summitEvent.setEventType(eventType);
 

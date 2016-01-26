@@ -20,7 +20,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LevelListFragment extends BaseFragment implements ILevelListFragment {
+public class LevelListFragment extends BaseFragment implements ILevelListView {
 
     @Inject
     ILevelListPresenter presenter;

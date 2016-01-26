@@ -3,7 +3,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="90dp"
-    android:background="@android:color/white">
+    android:background="@android:color/transparent">
 
 <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/item_person_list_pic"

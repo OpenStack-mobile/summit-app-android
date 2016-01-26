@@ -13,31 +13,30 @@ import org.openstack.android.summit.common.user_interface.ScheduleFragment;
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
-public class TrackScheduleFragment  extends ScheduleFragment<ITrackSchedulePresenter> implements ITrackScheduleFragment {
-    private NamedDTO track;
-
+public class TrackScheduleFragment extends ScheduleFragment<ITrackSchedulePresenter> implements ITrackScheduleView {
     public TrackScheduleFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void setTrack(NamedDTO track) {
-        this.track = track;
-    }
-
-    public void setTitle(String title) {
+    public void setTrack(String track) {
         TextView nameTextView = (TextView)view.findViewById(R.id.track_schedule_name);
-        nameTextView.setText(title);
+        nameTextView.setText(track);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
-        presenter.setTrack(track);
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-        getActivity().setTitle("TRACK");
+        setTitle(getResources().getString(R.string.track));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
     }
 
     @Override

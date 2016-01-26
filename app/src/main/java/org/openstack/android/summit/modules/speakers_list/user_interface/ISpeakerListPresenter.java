@@ -6,8 +6,8 @@ import org.openstack.android.summit.common.user_interface.PersonItemView;
 /**
  * Created by Claudio Redi on 1/13/2016.
  */
-public interface ISpeakerListPresenter extends IBasePresenter<SpeakerListFragment> {
-    void setView(SpeakerListFragment speakerListFragment);
+public interface ISpeakerListPresenter extends IBasePresenter<ISpeakerListView> {
+    void setView(ISpeakerListView speakerListFragment);
 
     void loadData();
 

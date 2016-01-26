@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
 import org.modelmapper.AbstractConverter;
+import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -15,10 +16,8 @@ import io.realm.SummitEventRealmProxy;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
-public class AbstractSummitEvent2ScheduleItemDTO<T extends SummitEvent> extends AbstractConverter<T, ScheduleItemDTO> {
-    protected ScheduleItemDTO convertInternal(T source) {
-        ScheduleItemDTO scheduleItemDTO = new ScheduleItemDTO();
-
+public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extends ScheduleItemDTO> extends AbstractConverter<S, T> {
+    protected void convertInternal(S source, ScheduleItemDTO scheduleItemDTO) {
         scheduleItemDTO.setId(source.getId());
         scheduleItemDTO.setName(source.getName());
         String time = getTime(source);
@@ -35,10 +34,9 @@ public class AbstractSummitEvent2ScheduleItemDTO<T extends SummitEvent> extends 
         String summitTypeColor = source.getSummitTypes().size() == 1 ? source.getSummitTypes().first().getColor() : "";
         scheduleItemDTO.setSummitTypeColor(summitTypeColor);
         scheduleItemDTO.setTrack(source.getPresentation() != null ? source.getPresentation().getTrack().getName() : null);
-        return scheduleItemDTO;
     }
 
-    private String getSponsors(T summitEvent) {
+    private String getSponsors(S summitEvent) {
         String sponsors = "";
 
         if (summitEvent.getSponsors().size() > 0) {
@@ -53,7 +51,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<T extends SummitEvent> extends 
         return sponsors;
     }
 
-    private String getLocation(T summitEvent) {
+    private String getLocation(S summitEvent) {
         String location = "";
         if (summitEvent.getVenueRoom() != null) {
             location = summitEvent.getVenueRoom().getVenue().getName() + " - " + summitEvent.getVenueRoom().getName();
@@ -64,7 +62,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<T extends SummitEvent> extends 
         return location;
     }
 
-    private String getDateTime(T summitEvent) {
+    private String getDateTime(S summitEvent) {
         DateFormat formatterFrom = new SimpleDateFormat("EEEE dd MMMM hh:mm a");
         formatterFrom.setTimeZone(TimeZone.getTimeZone(summitEvent.getSummit().getTimeZone()));
 
@@ -76,7 +74,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<T extends SummitEvent> extends 
         return timeRange;
     }
 
-    private String getTime(T summitEvent) {
+    private String getTime(S summitEvent) {
         DateFormat formatterFrom = new SimpleDateFormat("hh:mm a");
         formatterFrom.setTimeZone(TimeZone.getTimeZone(summitEvent.getSummit().getTimeZone()));
 
@@ -88,7 +86,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<T extends SummitEvent> extends 
         return timeRange.toLowerCase();
     }
 
-    private String getCredentials(T summitEvent) {
+    private String getCredentials(S summitEvent) {
         String credentials = "";
 
         if (summitEvent.getSummitTypes().size() > 0) {
@@ -103,7 +101,9 @@ public class AbstractSummitEvent2ScheduleItemDTO<T extends SummitEvent> extends 
     }
 
     @Override
-    protected ScheduleItemDTO convert(T source) {
-        return convertInternal(source);
+    protected T convert(S source) {
+        ScheduleItemDTO scheduleItemDTO = new ScheduleItemDTO();
+        convertInternal(source, scheduleItemDTO);
+        return (T)scheduleItemDTO;
     }
 }

@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.*;
+import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
@@ -46,7 +47,7 @@ import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener, IBaseView {
 
     @Inject
     IEventsWireframe eventsWireframe;
@@ -168,11 +169,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        //getMenuInflater().inflate(R.menu.main, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_filter) {
             return true;
         }
 
@@ -245,6 +253,16 @@ public class MainActivity extends AppCompatActivity
                 .setTitleText("Oops...")
                 .setContentText(message)
                 .show();
+    }
+
+    @Override
+    public void setTitle(String title) {
+        setTitle(title);
+    }
+
+    @Override
+    public void showActivityIndicator(int delay) {
+
     }
 
     public void showActivityIndicator() {

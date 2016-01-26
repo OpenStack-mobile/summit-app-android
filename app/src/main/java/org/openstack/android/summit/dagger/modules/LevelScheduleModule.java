@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
@@ -8,8 +9,6 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
-import org.openstack.android.summit.modules.level_list.ILevelListWireframe;
-import org.openstack.android.summit.modules.level_list.user_interface.ILevelListPresenter;
 import org.openstack.android.summit.modules.level_schedule.ILevelScheduleWireframe;
 import org.openstack.android.summit.modules.level_schedule.LevelScheduleWireframe;
 import org.openstack.android.summit.modules.level_schedule.business_logic.ILevelScheduleInteractor;
@@ -32,8 +31,8 @@ public class LevelScheduleModule {
     }
 
     @Provides
-    ILevelScheduleWireframe providesLevelScheduleWireframe(IEventDetailWireframe eventDetailWireframe) {
-        return new LevelScheduleWireframe(eventDetailWireframe);
+    ILevelScheduleWireframe providesLevelScheduleWireframe(IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
+        return new LevelScheduleWireframe(eventDetailWireframe, navigationParametersStore);
     }
 
     @Provides

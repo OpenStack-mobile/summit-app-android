@@ -15,7 +15,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
-public class TrackListPresenter extends BasePresenter<TrackListFragment, ITrackListInteractor, ITrackListWireframe> implements ITrackListPresenter {
+public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackListInteractor, ITrackListWireframe> implements ITrackListPresenter {
 
     @Inject
     public TrackListPresenter(ITrackListInteractor interactor, ITrackListWireframe wireframe) {
@@ -37,7 +37,7 @@ public class TrackListPresenter extends BasePresenter<TrackListFragment, ITrackL
     @Override
     public void showTrackEvents(int position) {
         NamedDTO track = tracks.get(position);
-        wireframe.showTrackSchedule(track, view.getActivity());
+        wireframe.showTrackSchedule(track, view);
     }
 
     @Override

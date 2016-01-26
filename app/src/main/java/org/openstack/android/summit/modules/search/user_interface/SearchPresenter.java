@@ -2,7 +2,6 @@ package org.openstack.android.summit.modules.search.user_interface;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
@@ -24,15 +23,13 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 1/14/2016.
  */
-public class SearchPresenter extends BasePresenter<SearchFragment, ISearchInteractor, ISearchWireframe> implements ISearchPresenter {
+public class SearchPresenter extends BasePresenter<ISearchView, ISearchInteractor, ISearchWireframe> implements ISearchPresenter {
     private String searchTerm;
     private List<ScheduleItemDTO> events;
     private List<NamedDTO> tracks;
     private List<PersonListItemDTO> speakers;
     private IScheduleItemViewBuilder scheduleItemViewBuilder;
     private IScheduleablePresenter scheduleablePresenter;
-
-    private final String KEY_SEARCH_TERM = "KEY_SEARCH_TERM";
 
     public SearchPresenter(ISearchInteractor interactor, ISearchWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder) {
         super(interactor, wireframe);
@@ -44,7 +41,7 @@ public class SearchPresenter extends BasePresenter<SearchFragment, ISearchIntera
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            searchTerm = savedInstanceState.getString(KEY_SEARCH_TERM);
+            searchTerm = savedInstanceState.getString(Constants.NAVIGATION_PARAMETER_SEARCH_TERM);
         }
         else {
             searchTerm = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_SEARCH_TERM, String.class);
@@ -60,7 +57,7 @@ public class SearchPresenter extends BasePresenter<SearchFragment, ISearchIntera
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_SEARCH_TERM, searchTerm);
+        outState.putString(Constants.NAVIGATION_PARAMETER_SEARCH_TERM, searchTerm);
     }
 
     @Override
@@ -76,7 +73,7 @@ public class SearchPresenter extends BasePresenter<SearchFragment, ISearchIntera
                 tracks = interactor.getTracksBySearchTerm(searchTerm);
                 speakers = interactor.getSpeakersBySearchTerm(searchTerm);
 
-                view.getActivity().runOnUiThread(new Runnable() {
+                view.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (events.size() > 0) {
@@ -112,7 +109,7 @@ public class SearchPresenter extends BasePresenter<SearchFragment, ISearchIntera
     @Override
     public void showTrackSchedule(int position) {
         NamedDTO track = tracks.get(position);
-        wireframe.showTrackSchedule(track, view.getActivity());
+        wireframe.showTrackSchedule(track, view);
     }
 
     @Override
@@ -149,11 +146,20 @@ public class SearchPresenter extends BasePresenter<SearchFragment, ISearchIntera
     @Override
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = events.get(position);
-        scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor);
+
+        IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
+            @Override
+            public void onError(String message) {
+                view.showErrorMessage(message);
+            }
+        };
+
+        scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor, interactorAsyncOperationListener);
     }
 
     @Override
     public void showEventDetail(int position) {
-
+        ScheduleItemDTO scheduleItemDTO = events.get(position);
+        wireframe.showEventDetail(scheduleItemDTO.getId(), view);
     }
 }

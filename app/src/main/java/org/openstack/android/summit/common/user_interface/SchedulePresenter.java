@@ -1,18 +1,12 @@
 package org.openstack.android.summit.common.user_interface;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 
 import org.joda.time.DateTime;
-import org.openstack.android.summit.OpenStackSummitApplication;
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.IScheduleWireframe;
+import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
 import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 
@@ -23,7 +17,7 @@ import java.util.TimeZone;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
-public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleInteractor, W extends IScheduleWireframe> extends BasePresenter<V, I, W> implements ISchedulePresenter<V, I , W> {
+public class SchedulePresenter<V extends IScheduleView, I extends IScheduleInteractor, W extends IScheduleWireframe> extends BasePresenter<V, I, W> implements ISchedulePresenter<V, I , W> {
     List<ScheduleItemDTO> dayEvents;
     Date selectedDate;
     int summitTimeZoneOffset;
@@ -55,10 +49,10 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        initialize(savedInstanceState);
+        initialize();
     }
 
-    private void initialize(Bundle savedInstanceState) {
+    private void initialize() {
         view.showActivityIndicator();
 
         InteractorAsyncOperationListener<SummitDTO> summitDTOIInteractorOperationListener = new InteractorAsyncOperationListener<SummitDTO>() {
@@ -120,12 +114,20 @@ public class SchedulePresenter<V extends ScheduleFragment, I extends IScheduleIn
 
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-        scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor);
+
+        IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
+            @Override
+            public void onError(String message) {
+                view.showErrorMessage(message);
+            }
+        };
+
+        scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor, interactorAsyncOperationListener);
     }
 
     @Override
     public void showEventDetail(int position) {
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-        wireframe.showEventDetail(view.getActivity());
+        wireframe.showEventDetail(scheduleItemDTO.getId(), view);
     }
 }

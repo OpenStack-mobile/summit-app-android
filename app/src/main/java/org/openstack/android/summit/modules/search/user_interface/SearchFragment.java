@@ -2,8 +2,6 @@ package org.openstack.android.summit.modules.search.user_interface;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,9 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -41,7 +36,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/14/2016.
  */
-public class SearchFragment extends BaseFragment {
+public class SearchFragment extends BaseFragment implements ISearchView {
     @Inject
     ISearchPresenter presenter;
 
@@ -54,7 +49,6 @@ public class SearchFragment extends BaseFragment {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
 
-        getActivity().setTitle(getResources().getString(R.string.search).toUpperCase());
         presenter.setView(this);
         presenter.onCreate(savedInstanceState);
     }
@@ -124,6 +118,7 @@ public class SearchFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         presenter.onResume();
+        setTitle(getResources().getString(R.string.search));
     }
 
     @Override
@@ -162,6 +157,7 @@ public class SearchFragment extends BaseFragment {
         });
     }
 
+    @Override
     public void showEvents(List<ScheduleItemDTO> events) {
         scheduleListAdapter.clear();
         scheduleListAdapter.addAll(events);
@@ -176,6 +172,7 @@ public class SearchFragment extends BaseFragment {
         eventsList.setVisibility(View.VISIBLE);
     }
 
+    @Override
     public void showTracks(List<NamedDTO> tracks) {
         trackListAdapter.clear();
         trackListAdapter.addAll(tracks);
@@ -190,6 +187,7 @@ public class SearchFragment extends BaseFragment {
         tracksList.setVisibility(View.VISIBLE);
     }
 
+    @Override
     public void showSpeakers(List<PersonListItemDTO> speakers) {
         speakerListAdapter.clear();
         speakerListAdapter.addAll(speakers);
@@ -204,11 +202,13 @@ public class SearchFragment extends BaseFragment {
         speakersList.setVisibility(View.VISIBLE);
     }
 
+    @Override
     public void setSearchTerm(String searchTerm) {
         EditText searchText = (EditText)view.findViewById(R.id.search_results_edittext);
         searchText.setText(searchTerm);
     }
 
+    @Override
     public void showNoResultsForEvents() {
         TextView noResultsText = (TextView)view.findViewById(R.id.search_results_empty_message_events_text);
         noResultsText.setVisibility(View.VISIBLE);
@@ -220,6 +220,7 @@ public class SearchFragment extends BaseFragment {
         eventsList.setVisibility(View.GONE);
     }
 
+    @Override
     public void showNoResultsForTracks() {
         TextView noResultsText = (TextView)view.findViewById(R.id.search_results_empty_message_tracks_text);
         noResultsText.setVisibility(View.VISIBLE);
@@ -231,6 +232,7 @@ public class SearchFragment extends BaseFragment {
         tracksList.setVisibility(View.GONE);
     }
 
+    @Override
     public void showNoResultsForSpeakers() {
         TextView noResultsText = (TextView)view.findViewById(R.id.search_results_empty_message_speakers_text);
         noResultsText.setVisibility(View.VISIBLE);

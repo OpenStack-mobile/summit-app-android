@@ -2,8 +2,6 @@ package org.openstack.android.summit.modules.level_list;
 
 import android.support.v4.app.FragmentActivity;
 
-import org.openstack.android.summit.modules.level_list.user_interface.ILevelListFragment;
-import org.openstack.android.summit.modules.level_list.user_interface.LevelListFragment;
 import org.openstack.android.summit.modules.level_schedule.ILevelScheduleWireframe;
 
 /**

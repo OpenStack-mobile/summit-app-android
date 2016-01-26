@@ -8,6 +8,5 @@ import org.openstack.android.summit.modules.track_schedule.business_logic.ITrack
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
-public interface ITrackSchedulePresenter extends ISchedulePresenter<TrackScheduleFragment, ITrackScheduleInteractor, ITrackScheduleWireframe> {
-    void setTrack(NamedDTO track);
+public interface ITrackSchedulePresenter extends ISchedulePresenter<ITrackScheduleView, ITrackScheduleInteractor, ITrackScheduleWireframe> {
 }

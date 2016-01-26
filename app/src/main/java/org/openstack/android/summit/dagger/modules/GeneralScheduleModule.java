@@ -1,11 +1,11 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.security.ISecurityManager;
-import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
@@ -15,7 +15,6 @@ import org.openstack.android.summit.modules.general_schedule.business_logic.Gene
 import org.openstack.android.summit.modules.general_schedule.business_logic.IGeneralScheduleInteractor;
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralScheduleFragment;
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralSchedulePresenter;
-import org.openstack.android.summit.modules.general_schedule.user_interface.IGeneralScheduleFragment;
 import org.openstack.android.summit.modules.general_schedule.user_interface.IGeneralSchedulePresenter;
 
 import dagger.Module;
@@ -33,8 +32,8 @@ public class GeneralScheduleModule {
     }
 
     @Provides
-    IGeneralScheduleWireframe providesGeneralScheduleWireframe(IEventDetailWireframe eventDetailWireframe) {
-        return new GeneralScheduleWireframe(eventDetailWireframe);
+    IGeneralScheduleWireframe providesGeneralScheduleWireframe(IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
+        return new GeneralScheduleWireframe(eventDetailWireframe, navigationParametersStore);
     }
 
     @Provides

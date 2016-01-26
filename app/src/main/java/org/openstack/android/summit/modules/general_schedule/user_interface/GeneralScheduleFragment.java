@@ -12,7 +12,7 @@ import org.openstack.android.summit.common.user_interface.ScheduleFragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePresenter> implements IGeneralScheduleFragment {
+public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePresenter> implements IGeneralScheduleView {
 
     public GeneralScheduleFragment() {
         // Required empty public constructor

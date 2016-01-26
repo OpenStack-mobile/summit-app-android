@@ -1,12 +1,11 @@
 package org.openstack.android.summit.modules.track_list;
 
-import android.support.v4.app.FragmentActivity;
-
 import org.openstack.android.summit.common.DTOs.NamedDTO;
+import org.openstack.android.summit.common.user_interface.IBaseView;
 
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
 public interface ITrackListWireframe {
-    void showTrackSchedule(NamedDTO namedDTO, FragmentActivity activity);
+    void showTrackSchedule(NamedDTO namedDTO, IBaseView activity);
 }

@@ -6,10 +6,10 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Claudio Redi on 11/4/2015.
  */
-public class Tag extends RealmObject implements INamedEntity {
+public class Tag extends RealmObject implements IEntity {
     @PrimaryKey
     private int id;
-    private String name;
+    private String tag;
 
     public int getId() {
         return id;
@@ -19,11 +19,11 @@ public class Tag extends RealmObject implements INamedEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTag() {
+        return tag;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTag(String name) {
+        this.tag = name;
     }
 }

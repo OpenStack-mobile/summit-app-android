@@ -12,4 +12,7 @@ public class Constants {
     static public final String LOGGED_IN_EVENT = "logged-in-event";
     static public final String LOGGED_OUT_EVENT = "logged-out-event";
     static public final String NAVIGATION_PARAMETER_SEARCH_TERM = "SearchTerm";
+    static public final String NAVIGATION_PARAMETER_EVENT_ID = "EventId";
+    public static final String NAVIGATION_PARAMETER_LEVEL = "Level";
+    public static final String NAVIGATION_PARAMETER_TRACK = "Track";
 }

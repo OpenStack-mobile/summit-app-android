@@ -3,11 +3,11 @@ package org.openstack.android.summit.common.user_interface;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Toast;
 
 import org.openstack.android.summit.MainActivity;
-import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
 import java.util.concurrent.Executors;
@@ -22,7 +22,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * Created by Claudio Redi on 11/3/2015.
  */
-public abstract class BaseFragment extends Fragment implements IBaseFragment {
+public abstract class BaseFragment extends Fragment implements IBaseView {
     private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
     private Boolean showActivityIndicator;
@@ -94,5 +94,20 @@ public abstract class BaseFragment extends Fragment implements IBaseFragment {
                 .setTitleText("Oops...")
                 .setContentText(message)
                 .show();
+    }
+
+    @Override
+    public FragmentManager getSupportFragmentManager() {
+        return getActivity().getSupportFragmentManager();
+    }
+
+    @Override
+    public void runOnUiThread(Runnable runnable) {
+        getActivity().runOnUiThread(runnable);
+    }
+
+    @Override
+    public void setTitle(String title) {
+        getActivity().setTitle(title.toUpperCase());
     }
 }

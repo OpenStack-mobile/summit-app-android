@@ -13,7 +13,6 @@ import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.InfiniteScrollListener;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,7 +20,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/13/2016.
  */
-public class SpeakerListFragment extends BaseFragment {
+public class SpeakerListFragment extends BaseFragment implements ISpeakerListView {
 
     @Inject
     protected ISpeakerListPresenter presenter;
@@ -56,6 +55,7 @@ public class SpeakerListFragment extends BaseFragment {
         return view;
     }
 
+    @Override
     public void setSpeakers(List<PersonListItemDTO> speakers) {
         speakerListAdapter.clear();
         speakerListAdapter.addAll(speakers);
