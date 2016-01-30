@@ -6,5 +6,7 @@ package org.openstack.android.summit.common;
 public interface INavigationParametersStore {
     <T> T pop(String key, Class<T> type);
 
+    <T> T get(String key, Class<T> type);
+
     void put(String key, Object value);
 }

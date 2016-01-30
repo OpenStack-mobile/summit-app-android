@@ -130,7 +130,8 @@ public class SearchPresenter extends BasePresenter<ISearchView, ISearchInteracto
 
     @Override
     public void showSpeakerProfile(int position) {
-
+        PersonListItemDTO speaker = speakers.get(position);
+        wireframe.showSpeakerProfile(speaker.getId(), view);
     }
 
     public void buildScheduleItem(IScheduleItemView scheduleItemView, int position) {

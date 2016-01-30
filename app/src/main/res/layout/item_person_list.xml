@@ -4,20 +4,19 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="90dp"
     android:background="@android:color/transparent">
-
-<com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/item_person_list_pic"
-        fresco:roundAsCircle="true"
-        fresco:roundingBorderWidth="1dp"
-        fresco:roundingBorderColor="@color/openStackLightGray"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        fresco:placeholderImage="@drawable/generic_user_avatar"
-        android:paddingLeft="10dp"
-        android:paddingRight="15dp"
-        fresco:actualImageScaleType="centerCrop"
-        android:layout_gravity="center"
-        />
+    <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/item_person_list_pic"
+            fresco:roundAsCircle="true"
+            fresco:roundingBorderWidth="1dp"
+            fresco:roundingBorderColor="@color/openStackLightGray"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            fresco:placeholderImage="@drawable/generic_user_avatar"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            fresco:actualImageScaleType="centerCrop"
+            android:layout_gravity="center"
+            />
 
     <LinearLayout
         android:layout_width="0dp"

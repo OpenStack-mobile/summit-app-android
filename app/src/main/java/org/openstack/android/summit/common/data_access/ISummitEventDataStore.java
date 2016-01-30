@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.data_access;
 
+import org.joda.time.DateTime;
+import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
 import java.util.Date;
@@ -16,4 +18,6 @@ public interface ISummitEventDataStore {
     List<String> getPresentationLevelsLocal();
 
     List<SummitEvent> getBySearchTerm(String searchTerm);
+
+    List<SummitEvent> getSpeakerEvents(int speakerId, Date startDate, Date endDate);
 }

@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.data_access;
 
+import org.joda.time.DateTime;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
@@ -94,6 +95,19 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
 
         RealmResults<SummitEvent> results = query.findAll();
         results.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
+        return results;
+    }
+
+    @Override
+    public List<SummitEvent> getSpeakerEvents(int speakerId, Date startDate, Date endDate) {
+        RealmQuery<SummitEvent> query = realm.where(SummitEvent.class)
+                .greaterThanOrEqualTo("start", startDate)
+                .lessThanOrEqualTo("end", endDate)
+                .equalTo("presentation.speakers.id", speakerId);
+
+        RealmResults<SummitEvent> results = query.findAll();
+        results.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
+
         return results;
     }
 

@@ -15,4 +15,6 @@ public class Constants {
     static public final String NAVIGATION_PARAMETER_EVENT_ID = "EventId";
     public static final String NAVIGATION_PARAMETER_LEVEL = "Level";
     public static final String NAVIGATION_PARAMETER_TRACK = "Track";
+    public static final String NAVIGATION_PARAMETER_IS_MY_PROFILE = "IsMyProfile";
+    public static final String NAVIGATION_PARAMETER_SPEAKER= "SpeakerId";
 }

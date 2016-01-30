@@ -12,6 +12,6 @@ public class BaseWireframe implements IBaseWireframe {
 
     @Override
     public <T> T getParameter(String key, Class<T> type) {
-        return navigationParametersStore.pop(key, type);
+        return navigationParametersStore.get(key, type);
     }
 }

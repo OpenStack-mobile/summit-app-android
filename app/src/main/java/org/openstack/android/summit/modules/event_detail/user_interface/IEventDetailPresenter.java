@@ -10,4 +10,6 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailFragme
     void buildSpeakerListItem(PersonItemView personItemView, int position);
 
     void toggleScheduleStatus();
+
+    void showSpeakerProfile(int position);
 }

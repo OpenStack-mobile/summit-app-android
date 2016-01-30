@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Presentation;
+import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
@@ -86,6 +87,11 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         if (jsonObject.has("track_id") && !jsonObject.isNull("track_id")) {
             Presentation presentation = presentationDeserializer.deserialize(jsonString);
             summitEvent.setPresentation(presentation);
+
+            // HACK: there is no linkingObjects on Realm Java
+            /*for (PresentationSpeaker presentationSpeaker: summitEvent.getPresentation().getSpeakers() ) {
+                presentationSpeaker.getPresentations().add(presentation);
+            }*/
         }
 
         Tag tag;

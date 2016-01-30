@@ -77,4 +77,10 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailFragment, IE
 
         scheduleablePresenter.toggleScheduledStatusForEvent(event, view, interactor, interactorAsyncOperationListener);
     }
+
+    @Override
+    public void showSpeakerProfile(int position) {
+        PersonListItemDTO speaker = event.getSpeakers().get(position);
+        wireframe.showSpeakerProfile(speaker.getId(), view);
+    }
 }

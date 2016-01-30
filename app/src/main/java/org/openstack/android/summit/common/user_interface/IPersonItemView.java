@@ -6,11 +6,7 @@ import android.net.Uri;
  * Created by Claudio Redi on 1/13/2016.
  */
 public interface IPersonItemView {
-    String getName();
-
     void setName(String name);
-
-    String getTitle();
 
     void setTitle(String title);
 

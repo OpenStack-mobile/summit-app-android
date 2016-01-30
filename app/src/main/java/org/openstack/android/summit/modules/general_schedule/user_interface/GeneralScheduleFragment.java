@@ -26,7 +26,7 @@ public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePr
 
     @Override
     public void onResume() {
-        getActivity().setTitle("EVENTS");
+        getActivity().setTitle(getResources().getString(R.string.events));
         super.onResume();
     }
 

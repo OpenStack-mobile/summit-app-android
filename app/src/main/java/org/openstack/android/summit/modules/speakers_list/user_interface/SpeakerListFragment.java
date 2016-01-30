@@ -79,7 +79,7 @@ public class SpeakerListFragment extends BaseFragment implements ISpeakerListVie
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //presenter.showEventDetail(position);
+                    presenter.showSpeakerProfile(position);
                 }
             });
 

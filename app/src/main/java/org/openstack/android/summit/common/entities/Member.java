@@ -9,15 +9,15 @@ import io.realm.annotations.PrimaryKey;
 public class Member extends RealmObject implements IEntity {
     @PrimaryKey
     private int id;
-    private PresentationSpeaker skeaperRole;
+    private PresentationSpeaker speakerRole;
     private SummitAttendee attendeeRole;
 
-    public PresentationSpeaker getSkeaperRole() {
-        return skeaperRole;
+    public PresentationSpeaker getSpeakerRole() {
+        return speakerRole;
     }
 
-    public void setSkeaperRole(PresentationSpeaker skeaperRole) {
-        this.skeaperRole = skeaperRole;
+    public void setSpeakerRole(PresentationSpeaker speakerRole) {
+        this.speakerRole = speakerRole;
     }
 
     public SummitAttendee getAttendeeRole() {

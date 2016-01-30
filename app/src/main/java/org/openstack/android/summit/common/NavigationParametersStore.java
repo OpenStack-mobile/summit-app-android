@@ -22,6 +22,15 @@ public class NavigationParametersStore implements INavigationParametersStore {
     }
 
     @Override
+    public <T> T get(String key, Class<T> type) {
+        Object value = null;
+        if (navigationParameterStore.containsKey(key)) {
+            value = navigationParameterStore.get(key);
+        }
+        return value != null ? (T)value : null;
+    }
+
+    @Override
     public void put(String key, Object value) {
         navigationParameterStore.put(key, value);
     }

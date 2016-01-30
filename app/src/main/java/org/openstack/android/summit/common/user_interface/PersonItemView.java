@@ -21,27 +21,15 @@ public class PersonItemView implements IPersonItemView {
     }
 
     @Override
-    public String getName() {
-        TextView nameTextView = (TextView) view.findViewById(R.id.item_person_list_name);
-        return nameTextView.getText().toString();
-    }
-
-    @Override
     public void setName(String name) {
         TextView nameTextView = (TextView) view.findViewById(R.id.item_person_list_name);
         nameTextView.setText(name);
     }
 
     @Override
-    public String getTitle() {
-        TextView titleTextView = (TextView) view.findViewById(R.id.item_person_list_title);
-        return titleTextView.getText().toString();
-    }
-
-    @Override
     public void setTitle(String title) {
-        TextView timeTextView = (TextView) view.findViewById(R.id.item_person_list_title);
-        timeTextView.setText(title);
+        TextView titleTextView = (TextView) view.findViewById(R.id.item_person_list_title);
+        titleTextView.setText(title);
     }
 
     @Override

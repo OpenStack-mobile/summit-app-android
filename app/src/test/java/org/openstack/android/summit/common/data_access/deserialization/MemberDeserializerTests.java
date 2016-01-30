@@ -41,7 +41,7 @@ public class MemberDeserializerTests {
         // Assert
         Assert.assertEquals(1, member.getId());
         Assert.assertEquals(summitAttendee, member.getAttendeeRole());
-        Assert.assertEquals(presentationSpeaker, member.getSkeaperRole());
+        Assert.assertEquals(presentationSpeaker, member.getSpeakerRole());
     }
 
     @Test
@@ -62,6 +62,6 @@ public class MemberDeserializerTests {
         // Assert
         Assert.assertEquals(1, member.getId());
         Assert.assertEquals(summitAttendee, member.getAttendeeRole());
-        Assert.assertNull(member.getSkeaperRole());
+        Assert.assertNull(member.getSpeakerRole());
     }
 }
