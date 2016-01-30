@@ -38,6 +38,12 @@ public class SpeakerListPresenter extends BasePresenter<ISpeakerListView, ISpeak
         return OBJECTS_PER_PAGE;
     }
 
+    @Override
+    public void showSpeakerProfile(int position) {
+        PersonListItemDTO speaker = speakers.get(position);
+        wireframe.showSpeakerProfile(speaker.getId(), view);
+    }
+
     public void loadData() {
         if (loadedAllSpeakers) {
             return;

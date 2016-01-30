@@ -73,12 +73,15 @@
         <item name="android:background">@drawable/search_subsection_links</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
-    <style name="AppTheme.IconedInformationBarContainer">
+    <style name="AppTheme.IconedInformationBarContainerNoBorder">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">70dp</item>
-        <item name="android:background">@drawable/bottom_bordered_control</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">25dp</item>
         <item name="android:paddingRight">10dp</item>
+    </style>
+    <style name="AppTheme.IconedInformationBarContainer" parent="AppTheme.IconedInformationBarContainerNoBorder">
+        <item name="android:layout_height">66dp</item>
+        <item name="android:background">@drawable/bottom_bordered_control</item>
     </style>
     <style name="AppTheme.IconedInformationBarImageView">
         <item name="android:layout_gravity">center_vertical</item>
@@ -99,7 +102,26 @@
     <style name="AppTheme.SponsorTextView">
         <item name="android:textSize">13sp</item>
         <item name="android:layout_marginTop">5dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
     </style>
-
+    <style name="AppTheme.MemberProfileDetailFieldContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">25dp</item>
+        <item name="android:paddingRight">25dp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="android:background">@color/openStackLightGray</item>
+    </style>
+    <style name="AppTheme.MemberProfileDetailFieldContainerIcon">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">25dp</item>
+        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+    <style name="AppTheme.MemberProfileDetailFieldContainerText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
 </resources>

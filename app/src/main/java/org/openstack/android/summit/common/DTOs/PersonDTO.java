@@ -6,6 +6,7 @@ package org.openstack.android.summit.common.DTOs;
 public class PersonDTO extends PersonListItemDTO  {
     private String bio;
     private String twitter;
+    private String irc;
 
     public String getBio() {
         return bio;
@@ -21,5 +22,13 @@ public class PersonDTO extends PersonListItemDTO  {
 
     public void setTwitter(String twitter) {
         this.twitter = twitter;
+    }
+
+    public String getIrc() {
+        return irc;
+    }
+
+    public void setIrc(String irc) {
+        this.irc = irc;
     }
 }

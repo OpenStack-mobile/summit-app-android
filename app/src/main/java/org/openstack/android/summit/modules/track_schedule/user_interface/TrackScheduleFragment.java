@@ -34,12 +34,6 @@ public class TrackScheduleFragment extends ScheduleFragment<ITrackSchedulePresen
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        presenter.onSaveInstanceState(outState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_track_schedule, container, false);
         this.view = view;

@@ -14,7 +14,7 @@ import org.openstack.android.summit.common.entities.Tag;
  */
 public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends PresentationSpeaker> extends AbstractSummitEvent2ScheduleItemDTO<E, EventDetailDTO> {
 
-    protected AbstractPresentationSpeaker2PersonListIemDTO<S> presentationSpeaker2PersonListIemDTO;
+    protected AbstractPresentationSpeaker2PersonListIemDTO<S, PersonListItemDTO> presentationSpeaker2PersonListIemDTO;
 
     @Override
     protected EventDetailDTO convert(E source) {
@@ -32,8 +32,8 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
 
             PersonListItemDTO speakerListItemDTO;
             for (PresentationSpeaker presentationSpeaker: source.getPresentation().getSpeakers()) {
-               speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)presentationSpeaker);
-               eventDetailDTO.getSpeakers().add(speakerListItemDTO);
+                speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)presentationSpeaker);
+                eventDetailDTO.getSpeakers().add(speakerListItemDTO);
             }
 
             if (source.getPresentation().getModerator() != null) {

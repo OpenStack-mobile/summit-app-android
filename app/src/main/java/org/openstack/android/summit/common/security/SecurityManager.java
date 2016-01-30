@@ -31,6 +31,8 @@ import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 
 import java.security.spec.InvalidParameterSpecException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -81,8 +83,7 @@ public class SecurityManager implements ISecurityManager {
                             login(context);
                         }
                     }, null);
-        }
-        else {
+        } else {
 
             IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
                 @Override
@@ -117,13 +118,12 @@ public class SecurityManager implements ISecurityManager {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 accountManager.removeAccountExplicitly(availableAccounts[0]);
-            }
-            else {
+            } else {
                 accountManager.removeAccount(availableAccounts[0], null, null);
             }
         }
         member = null;
-        session.setInt(Constants.CURRENT_MEMBER_ID,0);
+        session.setInt(Constants.CURRENT_MEMBER_ID, 0);
         if (delegate != null) {
             delegate.onLoggedOut();
         }
@@ -147,6 +147,7 @@ public class SecurityManager implements ISecurityManager {
         return member;
     }
 
+    @Override
     public Boolean isLoggedIn() {
         final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
         final String accountType = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
@@ -154,5 +155,22 @@ public class SecurityManager implements ISecurityManager {
         int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
 
         return accountManager.getAccountsByType(accountType).length > 0 && currentMemberId > 0;
+    }
+
+    public List<MemberRole> getLoggedInMemberRoles() {
+        if (!isLoggedIn()) {
+            return null;
+        }
+
+        List<MemberRole> roles = new ArrayList<>();
+        Member member = getCurrentMember();
+        if (member.getAttendeeRole() != null) {
+            roles.add(MemberRole.Attendee);
+        }
+        if (member.getSpeakerRole() != null) {
+            roles.add(MemberRole.Speaker);
+        }
+
+        return roles;
     }
 }

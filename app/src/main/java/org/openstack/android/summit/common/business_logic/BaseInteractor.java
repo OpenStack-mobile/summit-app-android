@@ -17,7 +17,7 @@ public class BaseInteractor {
         this.dtoAssembler = dtoAssembler;
     }
 
-    public <S extends IEntity, D> List<D> createDTOList(List<S> sourceList, Class<D> destinationType) {
+    protected <S extends IEntity, D> List<D> createDTOList(List<S> sourceList, Class<D> destinationType) {
         ArrayList<D> dtos = new ArrayList<>();
         D dto;
         for (S entity: sourceList) {

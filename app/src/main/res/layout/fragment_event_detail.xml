@@ -68,17 +68,6 @@
 
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/event_detail_tags_container"
-                style="@style/AppTheme.IconedInformationBarContainer">
-                <ImageView
-                    style="@style/AppTheme.IconedInformationBarImageView"
-                    android:src="@drawable/tags"/>
-                <TextView
-                    android:id="@+id/event_detail_tags"
-                    style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
-                    android:text="tag1, tag2, tag3"/>
-            </LinearLayout>
-            <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -90,7 +79,6 @@
                     android:paddingLeft="25dp"
                     android:paddingRight="25dp"
                     android:paddingTop="25dp"
-                    android:paddingBottom="10dp"
                     android:background="@android:color/transparent"
                     android:text="Mel te graecis menandri accusamus, meis putant imperdiet vis ut. Unum propriae volutpat no nam, tation everti assentior eos te. Eos an soluta repudiandae. Vel admodum adversarium ei, no est malis sadipscing intellegebat. Liber iudico lucilius ea his, vis stet periculis in, detraxit aliquando urbanitas has ea.
 Epicuri erroribus pertinacia nam at, ne ludus adversarium pro. Id eirmod epicuri torquatos mea, deleniti probatus sed te. Eu possit rationibus duo, novum euripidis necessitatibus cu usu. Has sonet adipisci cu, id minimum constituam pri.
@@ -102,6 +90,18 @@ Nulla erant noluisse te has. Ipsum volumus gloriatur cu cum, unum mundi eos no, 
                     style="@style/AppTheme.SponsorTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:id="@+id/event_detail_tags_container"
+                    android:paddingBottom="15dp"
+                    style="@style/AppTheme.IconedInformationBarContainerNoBorder">
+                    <ImageView
+                        style="@style/AppTheme.IconedInformationBarImageView"
+                        android:src="@drawable/tags"/>
+                    <TextView
+                        android:id="@+id/event_detail_tags"
+                        style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
+                        android:text="tag1, tag2, tag3"/>
+                </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/event_detail_credentials_container"

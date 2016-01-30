@@ -5,8 +5,8 @@ package org.openstack.android.summit.common.DTOs;
  */
 public class MemberDTO {
     private int id;
-    private PresentationSpeakerDTO speakerRole;
-    private SummitAttendeeDTO attendeeRole;
+    private PersonDTO speakerRole;
+    private PersonDTO attendeeRole;
 
     public int getId() {
         return id;
@@ -16,19 +16,19 @@ public class MemberDTO {
         this.id = id;
     }
 
-    public PresentationSpeakerDTO getSpeakerRole() {
+    public PersonDTO getSpeakerRole() {
         return speakerRole;
     }
 
-    public void setSpeakerRole(PresentationSpeakerDTO speakerRole) {
+    public void setSpeakerRole(PersonDTO speakerRole) {
         this.speakerRole = speakerRole;
     }
 
-    public SummitAttendeeDTO getAttendeeRole() {
+    public PersonDTO getAttendeeRole() {
         return attendeeRole;
     }
 
-    public void setAttendeeRole(SummitAttendeeDTO attendeeRole) {
+    public void setAttendeeRole(PersonDTO attendeeRole) {
         this.attendeeRole = attendeeRole;
     }
 }

@@ -2,18 +2,24 @@ package org.openstack.android.summit.common.data_access.DTOs.assembler;
 
 import junit.framework.Assert;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.DTOs.Assembler.DTOAssembler;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
+import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
+import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
@@ -22,6 +28,7 @@ import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import java.util.Date;
 
@@ -249,5 +256,37 @@ public class DTOAssemblerTests {
         Assert.assertTrue(eventDetailDTO.getFinished());
         Assert.assertFalse(eventDetailDTO.getAllowFeedback());
         Assert.assertEquals(trackGroup.getColor(), eventDetailDTO.getColor());
+    }
+
+    @Test
+    public void createDTO_feedback2FeedbackDTO_createCorrectDTOInstance() {
+        // Arrange
+        DTOAssembler dtoAssembler = new DTOAssembler();
+        SummitEvent summitEvent = new SummitEvent();
+        summitEvent.setId(4);
+        summitEvent.setName("Registration Check-In");
+
+        SummitAttendee summitAttendee = new SummitAttendee();
+        summitAttendee.setId(2);
+        summitAttendee.setFullName("Claudio Redi");
+
+        Feedback feedback = new Feedback();
+        feedback.setId(1);
+        feedback.setEvent(summitEvent);
+        feedback.setOwner(summitAttendee);
+        feedback.setDate(new Date(new Date().getTime() - 1000*60*1));
+        feedback.setRate(4);
+
+        // Act
+        FeedbackDTO feedbackDTO = dtoAssembler.createDTO(feedback, FeedbackDTO.class);
+
+        // Assert
+        Assert.assertEquals(feedback.getId(), feedbackDTO.getId());
+        Assert.assertEquals(feedback.getEvent().getId(), feedbackDTO.getEventId());
+        Assert.assertEquals(feedback.getEvent().getName(), feedbackDTO.getEventName());
+        Assert.assertEquals(feedback.getRate(), feedbackDTO.getRate());
+        Assert.assertEquals(feedback.getReview(), feedbackDTO.getReview());
+        Assert.assertEquals(feedback.getOwner().getFullName(), feedbackDTO.getOwner());
+        Assert.assertEquals("1 minute ago", feedbackDTO.getDate());
     }
 }

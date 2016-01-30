@@ -32,7 +32,7 @@ public class MemberDeserializer implements IMemberDeserializer {
         if (jsonObject.has("speaker")) {
             JSONObject speakerJSONObject = jsonObject.getJSONObject("speaker");
             PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(speakerJSONObject.toString());
-            member.setSkeaperRole(presentationSpeaker);
+            member.setSpeakerRole(presentationSpeaker);
         }
         return member;
     }

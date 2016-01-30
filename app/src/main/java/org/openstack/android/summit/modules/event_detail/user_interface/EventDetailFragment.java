@@ -166,6 +166,12 @@ public class EventDetailFragment extends BaseFragment implements IEventDetailFra
 
         LinearListView speakerList = (LinearListView)view.findViewById(R.id.event_detail_list_speakers);
         speakerList.setVisibility(speakers.size() > 0 ? View.VISIBLE : View.GONE);
+        speakerList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(LinearListView parent, View view, int position, long id) {
+                presenter.showSpeakerProfile(position);
+            }
+        });
     }
 
     @Override
@@ -217,13 +223,6 @@ public class EventDetailFragment extends BaseFragment implements IEventDetailFra
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_person_list, parent, false);
             }
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //presenter.showEventDetail(position);
-                }
-            });
 
             final PersonItemView personItemView = new PersonItemView(convertView);
 

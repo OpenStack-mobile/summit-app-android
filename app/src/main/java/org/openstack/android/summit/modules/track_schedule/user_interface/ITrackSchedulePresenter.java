@@ -8,5 +8,5 @@ import org.openstack.android.summit.modules.track_schedule.business_logic.ITrack
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
-public interface ITrackSchedulePresenter extends ISchedulePresenter<ITrackScheduleView, ITrackScheduleInteractor, ITrackScheduleWireframe> {
+public interface ITrackSchedulePresenter extends ISchedulePresenter<ITrackScheduleView> {
 }

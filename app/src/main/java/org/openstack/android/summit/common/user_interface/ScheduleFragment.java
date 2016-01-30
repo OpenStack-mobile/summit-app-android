@@ -85,6 +85,12 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDestroy() {
         // Unregister since the activity is about to be closed.
         // This is somewhat like [[NSNotificationCenter defaultCenter] removeObserver:name:object:]

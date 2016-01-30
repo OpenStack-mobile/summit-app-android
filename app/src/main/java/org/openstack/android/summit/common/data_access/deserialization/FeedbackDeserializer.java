@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitAttendee;
+import org.openstack.android.summit.common.entities.SummitEvent;
 
 import java.util.Date;
 
@@ -44,6 +45,7 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
         }
 
         feedback.setOwner(deserializerStorage.get(ownwerId, SummitAttendee.class));
+        feedback.setEvent(deserializerStorage.get(jsonObject.getInt("event_id"), SummitEvent.class));
 
         if(!deserializerStorage.exist(feedback, Feedback.class)) {
             deserializerStorage.add(feedback, Feedback.class);

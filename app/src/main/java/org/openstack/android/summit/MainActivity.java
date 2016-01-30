@@ -27,6 +27,7 @@ import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
+import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity
 
     @Inject
     ISpeakerListWireframe speakerListWireframe;
+
+    @Inject
+    IMemberProfileWireframe memberProfileWireframe;
 
     @Inject
     ISearchWireframe searchWireframe;
@@ -197,6 +201,9 @@ public class MainActivity extends AppCompatActivity
             eventsWireframe.presentEventsView(this);
         } else if (id == R.id.nav_speakers) {
             speakerListWireframe.presentSpeakersListView(this);
+        }
+        else if (id == R.id.nav_my_profile) {
+            memberProfileWireframe.presentMyProfileView(this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

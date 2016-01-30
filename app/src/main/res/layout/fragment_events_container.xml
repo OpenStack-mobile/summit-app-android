@@ -24,22 +24,3 @@
 
 
 </LinearLayout>
-
-
-<!--<?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.view.ViewPager
-    android:id="@+id/events_pager"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <android.support.v4.view.PagerTabStrip
-        android:id="@+id/pager_header"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:paddingBottom="25dp"
-        android:background="@color/openStackDarkBlue"
-        android:textAppearance="@style/PagerTabStripText"/>
-
-    <SlidingTabLayout></SlidingTabLayout>
-</android.support.v4.view.ViewPager>-->

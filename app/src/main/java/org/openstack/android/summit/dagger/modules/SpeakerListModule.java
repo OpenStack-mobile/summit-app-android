@@ -1,7 +1,9 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.speakers_list.SpeakerListWireframe;
 import org.openstack.android.summit.modules.speakers_list.business_logic.ISpeakerListInteractor;
@@ -24,8 +26,8 @@ public class SpeakerListModule {
     }
 
     @Provides
-    ISpeakerListWireframe providesSpeakerListWireframe() {
-        return new SpeakerListWireframe();
+    ISpeakerListWireframe providesSpeakerListWireframe(IMemberProfileWireframe memberProfileWireframe, INavigationParametersStore navigationParametersStore) {
+        return new SpeakerListWireframe(memberProfileWireframe, navigationParametersStore);
     }
 
     @Provides

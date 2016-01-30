@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.entities;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -19,6 +20,7 @@ public class PresentationSpeaker extends RealmObject implements IPerson {
     private String irc;
     private String email;
     private Integer memberId;
+    private RealmList<Presentation> presentations = new RealmList<>();
 
     public int getId() {
         return id;
@@ -108,9 +110,11 @@ public class PresentationSpeaker extends RealmObject implements IPerson {
         this.fullName = fullName;
     }
 
-    // RealmList<Presentation> presentations;
+    public RealmList<Presentation> getPresentations() {
+        return presentations;
+    }
 
-    /*public var presentations: [Presentation] {
-        return linkingObjects(Presentation.self, forProperty: "speakers")
-    }*/
+    public void setPresentations(RealmList<Presentation> presentations) {
+        this.presentations = presentations;
+    }
 }

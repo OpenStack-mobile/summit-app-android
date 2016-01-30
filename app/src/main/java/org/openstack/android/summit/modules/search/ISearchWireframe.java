@@ -13,4 +13,6 @@ public interface ISearchWireframe extends IBaseWireframe, IScheduleWireframe {
     void presentSearchView(String searchTerm, IBaseView context);
 
     void showTrackSchedule(NamedDTO track, IBaseView context);
+
+    void showSpeakerProfile(int speakerId, IBaseView context);
 }

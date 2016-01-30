@@ -14,4 +14,6 @@ public interface ISpeakerListPresenter extends IBasePresenter<ISpeakerListView> 
     void buildItem(PersonItemView personItemView, int position);
 
     int getObjectsPerPage();
+
+    void showSpeakerProfile(int position);
 }

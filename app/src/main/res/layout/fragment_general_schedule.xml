@@ -7,4 +7,5 @@
     tools:context="org.openstack.android.summit.modules.events.user_interface.EventsFragment">
 
     <include layout="@layout/schedule"></include>
+
 </FrameLayout>

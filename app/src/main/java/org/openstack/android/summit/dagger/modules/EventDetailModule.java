@@ -14,6 +14,7 @@ import org.openstack.android.summit.modules.event_detail.business_logic.IEventDe
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailPresenter;
 import org.openstack.android.summit.modules.event_detail.user_interface.IEventDetailPresenter;
+import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 
 import dagger.Module;
 import dagger.Provides;
@@ -39,7 +40,7 @@ public class EventDetailModule {
     }
 
     @Provides
-    IEventDetailWireframe providesEventDetailWireframe(INavigationParametersStore navigationParametersStore) {
-        return new EventDetailWireframe(navigationParametersStore);
+    IEventDetailWireframe providesEventDetailWireframe(IMemberProfileWireframe memberProfileWireframe, INavigationParametersStore navigationParametersStore) {
+        return new EventDetailWireframe(memberProfileWireframe, navigationParametersStore);
     }
 }

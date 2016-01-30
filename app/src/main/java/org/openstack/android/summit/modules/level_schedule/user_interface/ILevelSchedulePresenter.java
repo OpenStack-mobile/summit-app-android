@@ -7,5 +7,5 @@ import org.openstack.android.summit.modules.level_schedule.business_logic.ILevel
 /**
  * Created by Claudio Redi on 1/11/2016.
  */
-public interface ILevelSchedulePresenter extends ISchedulePresenter<ILevelScheduleView, ILevelScheduleInteractor, ILevelScheduleWireframe> {
+public interface ILevelSchedulePresenter extends ISchedulePresenter<ILevelScheduleView> {
 }

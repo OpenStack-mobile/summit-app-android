@@ -10,6 +10,7 @@ import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.ScheduleWireframe;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
+import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.search.user_interface.SearchFragment;
 import org.openstack.android.summit.modules.track_schedule.ITrackScheduleWireframe;
 
@@ -21,11 +22,13 @@ import javax.inject.Inject;
 public class SearchWireframe extends ScheduleWireframe implements ISearchWireframe {
 
     private ITrackScheduleWireframe trackScheduleWireframe;
+    private IMemberProfileWireframe memberProfileWireframe;
 
     @Inject
-    public SearchWireframe(ITrackScheduleWireframe trackScheduleWireframe, IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
+    public SearchWireframe(IMemberProfileWireframe memberProfileWireframe, ITrackScheduleWireframe trackScheduleWireframe, IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
         super(eventDetailWireframe, navigationParametersStore);
         this.trackScheduleWireframe = trackScheduleWireframe;
+        this.memberProfileWireframe = memberProfileWireframe;
     }
 
     @Override
@@ -43,5 +46,10 @@ public class SearchWireframe extends ScheduleWireframe implements ISearchWirefra
     @Override
     public void showTrackSchedule(NamedDTO track, IBaseView context) {
         trackScheduleWireframe.presentTrackScheduleView(track, context);
+    }
+
+    @Override
+    public void showSpeakerProfile(int speakerId, IBaseView context) {
+        memberProfileWireframe.presentOtherSpeakerProfileView(speakerId, context);
     }
 }
