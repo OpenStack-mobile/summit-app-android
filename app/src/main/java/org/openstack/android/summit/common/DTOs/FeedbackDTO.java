@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.DTOs;
 
+import java.util.Date;
+
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
@@ -7,7 +9,8 @@ public class FeedbackDTO {
     private int id = 0;
     private int rate = 0;
     private String review;
-    private String date;
+    private Date date;
+    private String timeAgo;
     private String owner;
     private String eventName;
     private int eventId;
@@ -36,12 +39,12 @@ public class FeedbackDTO {
         this.review = review;
     }
 
-    public String getDate() {
-        return date;
+    public String getTimeAgo() {
+        return timeAgo;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTimeAgo(String timeAgo) {
+        this.timeAgo = timeAgo;
     }
 
     public String getOwner() {
@@ -66,5 +69,13 @@ public class FeedbackDTO {
 
     public void setEventId(int eventId) {
         this.eventId = eventId;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

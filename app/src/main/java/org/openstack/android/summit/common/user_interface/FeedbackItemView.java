@@ -26,6 +26,7 @@ public class FeedbackItemView implements IFeedbackItemView {
     public void setEventTitle(String eventTitle) {
         TextView eventTitleTextView = (TextView) view.findViewById(R.id.item_feedback_event_title);
         eventTitleTextView.setText(eventTitle);
+        eventTitleTextView.setVisibility(eventTitle != null && !eventTitle.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -57,6 +58,7 @@ public class FeedbackItemView implements IFeedbackItemView {
     public void setOwner(String owner) {
         TextView ownerTextView = (TextView) view.findViewById(R.id.item_feedback_owner);
         ownerTextView.setText(owner);
+        ownerTextView.setVisibility(owner != null && !owner.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     @Override

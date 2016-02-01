@@ -2,61 +2,66 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="25dp"
-    android:paddingRight="25dp">
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/item_feedback_rate_1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/star_ligth_grey"/>
-        <ImageView
-            android:id="@+id/item_feedback_rate_2"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/star_ligth_grey"/>
-        <ImageView
-            android:id="@+id/item_feedback_rate_3"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/star_ligth_grey"/>
-        <ImageView
-            android:id="@+id/item_feedback_rate_4"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/star_ligth_grey"/>
-        <ImageView
-            android:id="@+id/item_feedback_rate_5"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/star_ligth_grey"/>
-    </LinearLayout>
-    <TextView
-        android:id="@+id/item_feedback_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/openStackGray"
-        android:text="2 days ago"/>
     <TextView
         android:id="@+id/item_feedback_event_title"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registration checkin"/>
-
-    <TextView
-        android:id="@+id/item_feedback_owner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:text="Registration checkin"
         android:textStyle="bold"
-        android:text="Claudio Redi"/>
+        android:visibility="gone"/>
+    <LinearLayout
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_gravity="center"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/item_feedback_rate_1"
+                style="@style/AppTheme.StarRate"/>
+            <ImageView
+                android:id="@+id/item_feedback_rate_2"
+                style="@style/AppTheme.StarRate"/>
+            <ImageView
+                android:id="@+id/item_feedback_rate_3"
+                style="@style/AppTheme.StarRate"/>
+            <ImageView
+                android:id="@+id/item_feedback_rate_4"
+                style="@style/AppTheme.StarRate"/>
+            <ImageView
+                android:id="@+id/item_feedback_rate_5"
+                style="@style/AppTheme.StarRate"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/item_feedback_owner"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:text="Claudio Redi"
+            android:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/item_feedback_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/openStackGray"
+            android:layout_gravity="center"
+            android:text="2 days ago"/>
+    </LinearLayout>
     <TextView
         android:id="@+id/item_feedback_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mel te graecis menandri accusamus, meis putant imperdiet vis ut. Unum propriae volutpat no nam, tation everti assentior eos te. Eos an soluta repudiandae. Vel admodum adversarium ei, no est malis sadipscing intellegebat. Liber iudico lucilius ea his, vis stet periculis in, detraxit aliquando urbanitas has ea.
-Epicuri erroribus pertinacia nam at, ne ludus adversarium pro"/>
+        android:text="Mel te graecis menandri accusamus, meis putant imperdiet vis ut. Unum propriae volutpat no nam, tation everti assentior eos te. Eos an soluta repudiandae. Vel admodum adversarium ei, no est malis sadipscing intellegebat. Liber iudico lucilius ea his, vis stet periculis in, detraxit aliquando urbanitas has ea."/>
 </LinearLayout>

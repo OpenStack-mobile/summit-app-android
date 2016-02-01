@@ -5,14 +5,17 @@ import junit.framework.Assert;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.DTOAssembler;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
+import org.openstack.android.summit.common.data_access.MockSupport;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Feedback;
@@ -27,6 +30,7 @@ import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
@@ -37,6 +41,12 @@ import java.util.Date;
  */
 @RunWith(RobolectricTestRunner.class)
 public class DTOAssemblerTests {
+
+    @Before
+    public void setup() {
+        OpenStackSummitApplication.context = RuntimeEnvironment.application;
+    }
+
     @Test
     public void createDTO_summit2SummitDTO_createCorrectDTOInstance() {
         // Arrange
@@ -287,6 +297,33 @@ public class DTOAssemblerTests {
         Assert.assertEquals(feedback.getRate(), feedbackDTO.getRate());
         Assert.assertEquals(feedback.getReview(), feedbackDTO.getReview());
         Assert.assertEquals(feedback.getOwner().getFullName(), feedbackDTO.getOwner());
-        Assert.assertEquals("1 minute ago", feedbackDTO.getDate());
+        Assert.assertEquals("1 min ago", feedbackDTO.getTimeAgo());
+        Assert.assertEquals(feedback.getDate(), feedbackDTO.getDate());
+    }
+
+    @Test
+    public void createDTO_feedbackFromOneDayAgo2FeedbackDTO_createCorrectTimeAgo() {
+        // Arrange
+        DTOAssembler dtoAssembler = new DTOAssembler();
+        SummitEvent summitEvent = new SummitEvent();
+        summitEvent.setId(4);
+        summitEvent.setName("Registration Check-In");
+
+        SummitAttendee summitAttendee = new SummitAttendee();
+        summitAttendee.setId(2);
+        summitAttendee.setFullName("Claudio Redi");
+
+        Feedback feedback = new Feedback();
+        feedback.setId(1);
+        feedback.setEvent(summitEvent);
+        feedback.setOwner(summitAttendee);
+        feedback.setDate(new Date(new Date().getTime() - 1000*60*60*24));
+        feedback.setRate(4);
+
+        // Act
+        FeedbackDTO feedbackDTO = dtoAssembler.createDTO(feedback, FeedbackDTO.class);
+
+        // Assert
+        Assert.assertEquals("yesterday", feedbackDTO.getTimeAgo());
     }
 }
