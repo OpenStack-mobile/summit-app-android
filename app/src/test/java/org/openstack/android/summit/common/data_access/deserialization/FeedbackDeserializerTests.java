@@ -22,7 +22,7 @@ public class FeedbackDeserializerTests {
     @Test
     public void deserialize_validJSON_returnsCorrectInstance() throws Exception {
         // Arrange
-        String jsonString = "{\"id\":1,\"rate\":5,\"review\":\"test review\",\"owner_id\":2,\"created_date\": 1447686387,\"event_id\":1}";
+        String jsonString = "{\"id\":1,\"rate\":5,\"note\":\"test review\",\"owner_id\":2,\"created_date\": 1447686387,\"event_id\":1}";
 
         DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         SummitAttendee summitAttendee = new SummitAttendee();

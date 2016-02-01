@@ -124,4 +124,9 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+    <style name="AppTheme.StarRate">
+        <item name="android:layout_width">17dp</item>
+        <item name="android:layout_height">17dp</item>
+        <item name="android:src">@drawable/star_ligth_grey</item>
+    </style>
 </resources>

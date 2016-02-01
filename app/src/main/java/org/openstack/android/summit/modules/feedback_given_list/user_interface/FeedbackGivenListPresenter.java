@@ -30,9 +30,8 @@ public class FeedbackGivenListPresenter extends BasePresenter<IFeedbackGivenList
     @Override
     public void buildItem(IFeedbackItemView feedbackItemView, int position) {
         FeedbackDTO feedback = feedbackList.get(position);
-        feedbackItemView.setDate(feedback.getDate());
+        feedbackItemView.setDate(feedback.getTimeAgo());
         feedbackItemView.setEventTitle(feedback.getEventName());
-        feedbackItemView.setOwner(feedback.getOwner());
         feedbackItemView.setRate(feedback.getRate());
         feedbackItemView.setReview(feedback.getReview());
     }

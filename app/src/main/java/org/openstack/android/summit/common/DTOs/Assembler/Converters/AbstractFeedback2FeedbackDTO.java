@@ -19,11 +19,12 @@ public class AbstractFeedback2FeedbackDTO<S extends Feedback> extends AbstractCo
         feedbackDTO.setOwner(source.getOwner().getFullName());
         feedbackDTO.setEventName(source.getEvent().getName());
         feedbackDTO.setEventId(source.getEvent().getId());
-        feedbackDTO.setDate(getDate(source));
+        feedbackDTO.setTimeAgo(getTimeAgo(source));
+        feedbackDTO.setDate(source.getDate());
         return feedbackDTO;
     }
 
-    private String getDate(S source) {
+    private String getTimeAgo(S source) {
         return DateUtils.getRelativeTimeSpanString(
                 source.getDate().getTime(),
                 System.currentTimeMillis(),

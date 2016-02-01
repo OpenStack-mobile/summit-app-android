@@ -32,9 +32,9 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
         feedback.setId(jsonObject.getInt("id"));
         feedback.setRate(jsonObject.getInt("rate"));
         feedback.setReview(
-                !jsonObject.isNull("review") ? jsonObject.getString("review") : null
+                !jsonObject.isNull("note") ? jsonObject.getString("note") : null
         );
-        feedback.setDate(new Date(jsonObject.getInt("created_date")));
+        feedback.setDate(new Date(jsonObject.getInt("created_date")*1000L));
 
         int ownwerId;
         if (jsonObject.has("atendee_id")){
