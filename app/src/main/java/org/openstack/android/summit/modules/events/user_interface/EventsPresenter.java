@@ -32,4 +32,9 @@ public class EventsPresenter extends BasePresenter<EventsFragment, Void, IEvents
             selectedTabIndex = savedInstanceState.getInt(KEY_SELECTED_TAB_INDEX);
         }
     }
+
+    @Override
+    public void showFilterView() {
+        wireframe.showFilterView(view);
+    }
 }

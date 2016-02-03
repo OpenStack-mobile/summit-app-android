@@ -90,6 +90,7 @@ public class SummitEventDeserializerTests {
         Assert.assertEquals(1, summitEvent.getSponsors().size());
         Assert.assertEquals(company, summitEvent.getSponsors().get(0));
         Assert.assertEquals(presentation, summitEvent.getPresentation());
+        Assert.assertEquals(4189, summitEvent.getPresentation().getSummitEvent().getId());
     }
 
     @Test

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 1/22/2016.
  */
-public interface IEventDetailFragment extends IBaseView, IScheduleableView {
+public interface IEventDetailView extends IBaseView, IScheduleableView {
     void setName(String name);
 
     void setTrack(String track);

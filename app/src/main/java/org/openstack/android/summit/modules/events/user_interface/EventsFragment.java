@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -54,7 +57,28 @@ public class EventsFragment extends BaseFragment implements ViewPager.OnPageChan
         presenter.setView(this);
         presenter.onCreate(savedInstanceState);
 
-        getActivity().setTitle("EVENTS");
+        getActivity().setTitle(getResources().getString(R.string.events));
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_filter) {
+            presenter.showFilterView();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

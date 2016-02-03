@@ -2,7 +2,6 @@ package org.openstack.android.summit.modules.event_detail.user_interface;
 
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.linearlistview.LinearListView;
@@ -22,7 +20,6 @@ import com.linearlistview.LinearListView;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
-import org.openstack.android.summit.common.user_interface.IScheduleableView;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
 
 import java.util.List;
@@ -32,7 +29,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventDetailFragment extends BaseFragment implements IEventDetailFragment {
+public class EventDetailFragment extends BaseFragment implements IEventDetailView {
 
     @Inject
     IEventDetailPresenter presenter;
@@ -95,6 +92,11 @@ public class EventDetailFragment extends BaseFragment implements IEventDetailFra
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
+    }
 
     @Override
     public void setName(String name) {

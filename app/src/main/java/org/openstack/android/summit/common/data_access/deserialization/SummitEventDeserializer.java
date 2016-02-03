@@ -88,10 +88,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             Presentation presentation = presentationDeserializer.deserialize(jsonString);
             summitEvent.setPresentation(presentation);
 
-            // HACK: there is no linkingObjects on Realm Java
-            /*for (PresentationSpeaker presentationSpeaker: summitEvent.getPresentation().getSpeakers() ) {
-                presentationSpeaker.getPresentations().add(presentation);
-            }*/
+            presentation.setSummitEvent(summitEvent);
         }
 
         Tag tag;

@@ -6,7 +6,7 @@ import org.openstack.android.summit.common.user_interface.PersonItemView;
 /**
  * Created by Claudio Redi on 1/21/2016.
  */
-public interface IEventDetailPresenter extends IBasePresenter<IEventDetailFragment> {
+public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> {
     void buildSpeakerListItem(PersonItemView personItemView, int position);
 
     void toggleScheduleStatus();
