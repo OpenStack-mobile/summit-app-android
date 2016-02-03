@@ -17,7 +17,7 @@ import java.util.TimeZone;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
-public class SchedulePresenter<V extends IScheduleView, I extends IScheduleInteractor, W extends IScheduleWireframe> extends BasePresenter<V, I, W> implements ISchedulePresenter<V> {
+public abstract class SchedulePresenter<V extends IScheduleView, I extends IScheduleInteractor, W extends IScheduleWireframe> extends BasePresenter<V, I, W> implements ISchedulePresenter<V> {
     List<ScheduleItemDTO> dayEvents;
     Date selectedDate;
     int summitTimeZoneOffset;
@@ -108,10 +108,7 @@ public class SchedulePresenter<V extends IScheduleView, I extends IScheduleInter
         view.reloadSchedule();
     }
 
-    protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, I interactor) {
-        List<ScheduleItemDTO> events = interactor.getScheduleEvents(startDate.toDate(), endDate.toDate(), null, null, null, null, null);
-        return events;
-    }
+    protected abstract List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, I interactor);
 
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);

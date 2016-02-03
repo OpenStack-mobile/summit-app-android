@@ -14,6 +14,7 @@ public class Presentation extends RealmObject implements IEntity {
     private Track track;
     private RealmList<PresentationSpeaker> speakers = new RealmList<>();
     private PresentationSpeaker moderator;
+    private SummitEvent summitEvent;
 
     public int getId() {
         return id;
@@ -53,5 +54,13 @@ public class Presentation extends RealmObject implements IEntity {
 
     public void setModerator(PresentationSpeaker moderator) {
         this.moderator = moderator;
+    }
+
+    public SummitEvent getSummitEvent() {
+        return summitEvent;
+    }
+
+    public void setSummitEvent(SummitEvent summitEvent) {
+        this.summitEvent = summitEvent;
     }
 }

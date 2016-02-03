@@ -5,12 +5,9 @@ import android.support.v4.app.FragmentManager;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.INavigationParametersStore;
-import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
-import org.openstack.android.summit.modules.event_detail.user_interface.IEventDetailFragment;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 
 import javax.inject.Inject;

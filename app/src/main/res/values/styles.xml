@@ -34,7 +34,7 @@
 
     <style name="AppTheme.SubsectionHeader">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_height">42dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:background">@color/openStackLightGray</item>
@@ -43,9 +43,9 @@
     <style name="AppTheme.SubsectionHeader.Text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingLeft">15dp</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -125,8 +125,16 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
     <style name="AppTheme.StarRate">
-        <item name="android:layout_width">17dp</item>
-        <item name="android:layout_height">17dp</item>
+        <item name="android:layout_width">15dp</item>
+        <item name="android:layout_height">15dp</item>
+        <item name="android:layout_marginRight">2dp</item>
         <item name="android:src">@drawable/star_ligth_grey</item>
+    </style>
+
+    <style name="AppTheme.FilterSectionList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:showDividers">none</item>
     </style>
 </resources>

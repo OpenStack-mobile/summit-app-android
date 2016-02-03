@@ -14,4 +14,9 @@
     <string name="speakers">Speakers</string>
     <string name="search">Search</string>
     <string name="no_results">No results</string>
+    <string name="summit_types">Summit Types</string>
+    <string name="track_groups">Track Groups</string>
+    <string name="event_types">Event Types</string>
+    <string name="levels">Levels</string>
+    <string name="filter">Filter</string>
 </resources>

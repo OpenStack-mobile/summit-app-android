@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <EditText
@@ -55,7 +56,6 @@
 
             </LinearLayout>
             <com.linearlistview.LinearListView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/search_results_events_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +76,6 @@
                     android:text="@string/tracks"/>
             </LinearLayout>
             <com.linearlistview.LinearListView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/search_results_tracks_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +96,6 @@
                     android:text="@string/speakers"/>
             </LinearLayout>
             <com.linearlistview.LinearListView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/search_results_speakers_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

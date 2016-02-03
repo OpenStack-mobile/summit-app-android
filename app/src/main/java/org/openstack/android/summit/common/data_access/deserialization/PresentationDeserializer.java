@@ -42,7 +42,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         for (int i = 0; i < jsonArraySpeakers.length(); i++) {
             speakerId = jsonArraySpeakers.getInt(i);
             presentationSpeaker = deserializerStorage.get(speakerId, PresentationSpeaker.class);
-
+            presentationSpeaker.getPresentations().add(presentation);
             presentation.getSpeakers().add(presentationSpeaker);
         }
 

@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
@@ -42,7 +43,7 @@ public class GeneralScheduleModule {
     }
 
     @Provides
-    IGeneralSchedulePresenter providesGeneralSchedulePresenter(IGeneralScheduleInteractor generalScheduleInteractor, IGeneralScheduleWireframe generalScheduleWireframe, IScheduleablePresenter scheduleablePresenter) {
-        return new GeneralSchedulePresenter(generalScheduleInteractor, generalScheduleWireframe, scheduleablePresenter, new ScheduleItemViewBuilder());
+    IGeneralSchedulePresenter providesGeneralSchedulePresenter(IGeneralScheduleInteractor generalScheduleInteractor, IGeneralScheduleWireframe generalScheduleWireframe, IScheduleablePresenter scheduleablePresenter, IScheduleFilter scheduleFilter) {
+        return new GeneralSchedulePresenter(generalScheduleInteractor, generalScheduleWireframe, scheduleablePresenter, new ScheduleItemViewBuilder(), scheduleFilter);
     }
 }

@@ -55,4 +55,12 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
 
         super.onCreate(savedInstanceState);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, isMyProfile);
+        if (!isMyProfile) {
+            outState.putInt(Constants.NAVIGATION_PARAMETER_SPEAKER, speakerId);
+        }
+    }
 }

@@ -19,7 +19,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/21/2016.
  */
-public class EventDetailPresenter extends BasePresenter<IEventDetailFragment, IEventDetailInteractor, IEventDetailWireframe> implements IEventDetailPresenter {
+public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEventDetailInteractor, IEventDetailWireframe> implements IEventDetailPresenter {
 
     private int eventId;
     private EventDetailDTO event;
@@ -54,6 +54,12 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailFragment, IE
         view.setScheduled(interactor.isEventScheduledByLoggedMember(eventId));
         view.setIsScheduledStatusVisible(interactor.isMemberLoggedIn());
         view.setTags(event.getTags());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Constants.NAVIGATION_PARAMETER_EVENT_ID, eventId);
     }
 
     @Override

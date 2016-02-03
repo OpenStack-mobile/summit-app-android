@@ -356,5 +356,4 @@ public class SearchFragment extends BaseFragment implements ISearchView {
             return super.getCount();
         };
     }
-
 }
