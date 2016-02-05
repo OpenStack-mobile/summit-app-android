@@ -1,9 +1,9 @@
 package org.openstack.android.summit.common.user_interface;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.openstack.android.summit.R;
@@ -13,15 +13,10 @@ import org.openstack.android.summit.R;
  */
 public class ScheduleItemView implements IScheduleItemView {
     private View view;
+    private boolean scheduled;
 
     public ScheduleItemView(View view) {
         this.view = view;
-    }
-
-    @Override
-    public String getName() {
-        TextView nameTextView = (TextView) view.findViewById(R.id.item_schedule_textview_name);
-        return nameTextView.getText().toString();
     }
 
     @Override
@@ -31,21 +26,9 @@ public class ScheduleItemView implements IScheduleItemView {
     }
 
     @Override
-    public String getTime() {
-        TextView timeTextView = (TextView) view.findViewById(R.id.item_schedule_textview_time);
-        return timeTextView.getText().toString();
-    }
-
-    @Override
     public void setTime(String time) {
         TextView timeTextView = (TextView) view.findViewById(R.id.item_schedule_textview_time);
         timeTextView.setText(time);
-    }
-
-    @Override
-    public String getSponsors() {
-        TextView sponsorsTextView = (TextView) view.findViewById(R.id.item_schedule_textview_sponsors);
-        return sponsorsTextView.getText().toString();
     }
 
     @Override
@@ -56,21 +39,9 @@ public class ScheduleItemView implements IScheduleItemView {
     }
 
     @Override
-    public String getEventType() {
-        TextView eventTypeTextView = (TextView) view.findViewById(R.id.item_schedule_textview_event_type);
-        return eventTypeTextView.getText().toString();
-    }
-
-    @Override
     public void setEventType(String eventType) {
         TextView eventTypeTextView = (TextView) view.findViewById(R.id.item_schedule_textview_event_type);
         eventTypeTextView.setText(eventType);
-    }
-
-    @Override
-    public String getTrack() {
-        TextView trackTextView = (TextView) view.findViewById(R.id.item_schedule_textview_track);
-        return trackTextView.getText().toString();
     }
 
     @Override
@@ -81,25 +52,36 @@ public class ScheduleItemView implements IScheduleItemView {
     }
 
     @Override
+    public void setLocation(String location) {
+        TextView locationTextView = (TextView) view.findViewById(R.id.item_schedule_textview_location);
+        locationTextView.setText(location);
+        ((LinearLayout)locationTextView.getParent()).setVisibility(location == null || location.length() == 0 ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
     public void setColor(String color) {
+        View colorView = view.findViewById(R.id.item_schedule_view_color);
+
         if (color == null || color.length() == 0) {
-            return;
+            colorView.setVisibility(View.INVISIBLE);
         }
+        else {
+            colorView.setVisibility(View.VISIBLE);
+            colorView.setBackgroundColor(Color.parseColor(color));
 
-        View colorView = (View) view.findViewById(R.id.item_schedule_view_color);
-        colorView.setBackgroundColor(Color.parseColor(color));
-
-        TextView sponsorTextView = (TextView) view.findViewById(R.id.item_schedule_textview_sponsors);
-        sponsorTextView.setTextColor(Color.parseColor(color));
+            TextView trackTextView = (TextView) view.findViewById(R.id.item_schedule_textview_track);
+            trackTextView.setTextColor(Color.parseColor(color));
+        }
     }
 
     @Override
     public Boolean getScheduled() {
-        return true;
+        return scheduled;
     }
 
     @Override
     public void setScheduled(Boolean scheduled) {
+        this.scheduled = scheduled;
         ImageButton scheduledStatusImageButton = (ImageButton)view.findViewById(R.id.item_schedule_imagebutton_scheduled);
         if (scheduled) {
             scheduledStatusImageButton.setImageResource(R.drawable.checked_active);
@@ -107,12 +89,6 @@ public class ScheduleItemView implements IScheduleItemView {
         else {
             scheduledStatusImageButton.setImageResource(R.drawable.unchecked);
         }
-    }
-
-    @Override
-    public Boolean getIsScheduledStatusVisible() {
-        ImageButton scheduledStatusImageButton = (ImageButton)view.findViewById(R.id.item_schedule_imagebutton_scheduled);
-        return scheduledStatusImageButton.getVisibility() == View.VISIBLE;
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.openstack.android.summit.modules.track_list.business_logic;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.common.DTOs.TrackDTO;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -30,7 +31,7 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
     }
 
     @Override
-    public List<NamedDTO> getTracks(List<Integer> trackGroups) {
+    public List<TrackDTO> getTracks(List<Integer> trackGroups) {
         List<Track> tracks = genericDataStore.getaAllLocal(Track.class);
         ArrayList<Track> filteredTracks = new ArrayList<>();
 
@@ -52,7 +53,7 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
 
         Collections.sort(tracks, comparator);
 
-        List<NamedDTO> dtos = createDTOList(tracks, NamedDTO.class);
+        List<TrackDTO> dtos = createDTOList(tracks, TrackDTO.class);
 
         return dtos;
     }

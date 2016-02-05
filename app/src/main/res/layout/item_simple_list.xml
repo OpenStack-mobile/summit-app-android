@@ -4,10 +4,12 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
     <View
+        android:id="@+id/item_simple_list_view_color"
         android:layout_width="6dp"
         android:layout_height="match_parent"
         android:background="@android:color/black"
-        android:layout_marginRight="12dp">
+        android:layout_marginRight="12dp"
+        android:visibility="invisible">
     </View>
     <TextView
         android:id="@+id/item_simple_list_name"

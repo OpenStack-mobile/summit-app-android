@@ -103,6 +103,7 @@
     <style name="AppTheme.SponsorTextView">
         <item name="android:textSize">13sp</item>
         <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textColor">@color/openStackGray</item>
     </style>
     <style name="AppTheme.MemberProfileDetailFieldContainer">
         <item name="android:layout_width">match_parent</item>
