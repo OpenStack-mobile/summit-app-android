@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import me.kaede.tagview.OnTagDeleteListener;
 import me.kaede.tagview.Tag;
 import me.kaede.tagview.TagView;
 
@@ -106,6 +107,15 @@ public class GeneralScheduleFilterFragment extends BaseFragment implements IGene
                 presenter.addTag(tagText);
             }
         });
+
+        TagView tagView = (TagView)view.findViewById(R.id.filter_tags_list);
+        tagView.setOnTagDeleteListener(new OnTagDeleteListener() {
+            @Override
+            public void onTagDeleted(Tag tag, int i) {
+                presenter.removeTag(tag.text);
+            }
+        });
+
         presenter.onCreate(savedInstanceState);
 
         return view;

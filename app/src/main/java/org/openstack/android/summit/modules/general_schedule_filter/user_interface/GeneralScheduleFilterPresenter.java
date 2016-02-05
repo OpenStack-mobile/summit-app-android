@@ -97,8 +97,8 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
         view.showLevels(levels);
         view.bindTags(tags);
 
-        for (Object tagText: scheduleFilter.getSelections().get(FilterSectionType.Tag)){
-            view.addTag((String)tagText);
+        for (Object tag: scheduleFilter.getSelections().get(FilterSectionType.Tag)){
+            view.addTag((String)tag);
         }
     }
 
@@ -231,13 +231,31 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
     }
 
     @Override
-    public void addTag(String tagText) {
-        if (tagText == "" || scheduleFilter.getSelections().get(FilterSectionType.Tag).contains(tagText)) {
+    public void addTag(String tag) {
+        if (tag == "" || scheduleFilter.getSelections().get(FilterSectionType.Tag).contains(tag)) {
             return;
         }
 
-        scheduleFilter.getSelections().get(FilterSectionType.Tag).add(tagText);
-        view.addTag(tagText);
+        scheduleFilter.getSelections().get(FilterSectionType.Tag).add(tag);
+        view.addTag(tag);
+    }
+
+    @Override
+    public void removeTag(String tagToDelete) {
+        int filterItemPosition = 0;
+        boolean found = false;
+        String tag = "";
+        while(!found) {
+            tag = (String)scheduleFilter.getSelections().get(FilterSectionType.Tag).get(filterItemPosition);
+            if (tag == tagToDelete) {
+                found = true;
+            }
+            else {
+                filterItemPosition++;
+            }
+        }
+
+        scheduleFilter.getSelections().get(FilterSectionType.Tag).remove(filterItemPosition);
     }
 
     public void toggleSelection(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, FilterSection filterSection, int position){

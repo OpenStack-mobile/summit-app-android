@@ -19,7 +19,8 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         }
         String color = scheduleItemDTO.getColor() != null && scheduleItemDTO.getColor() != ""
                 ? scheduleItemDTO.getColor()
-                : "#8A8A8A";
+                : "";
         scheduleItemView.setColor(color);
+        scheduleItemView.setLocation(scheduleItemDTO.getLocation());
     }
 }

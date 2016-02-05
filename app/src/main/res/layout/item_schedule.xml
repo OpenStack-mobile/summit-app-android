@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="10dp"
                     android:layout_width="match_parent"
@@ -42,14 +42,13 @@
 
                     <TextView android:id="@+id/item_schedule_textview_time"
                         android:textSize="12sp"
-                        android:textColor="#4A4A4A"
+                        android:textColor="@color/openStackDarkGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/item_schedule_imageview_time"/>
+                        android:layout_centerVertical="true" />
 
-                </RelativeLayout>
+                </LinearLayout>
 
                 <TextView android:id="@+id/item_schedule_textview_name"
                     android:textSize="17sp"
@@ -71,13 +70,33 @@
                 android:src="@drawable/unchecked" />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/item_schedule_imageview_location"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/map"/>
+
+            <TextView android:id="@+id/item_schedule_textview_location"
+                android:textSize="12sp"
+                android:textColor="@color/openStackDarkGray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true" />
+
+        </LinearLayout>
 
         <TextView android:id="@+id/item_schedule_textview_sponsors"
-            android:textColor="@android:color/black"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_marginTop="5dp"
-            style="@style/AppTheme.SponsorTextView"
-            android:layout_height="wrap_content"/>
+            style="@style/AppTheme.SponsorTextView" />
 
         <LinearLayout
             android:layout_width="fill_parent"

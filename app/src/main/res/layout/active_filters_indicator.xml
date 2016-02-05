@@ -3,8 +3,8 @@
     android:id="@+id/active_filters_indicator"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
     android:background="@color/activeFilters"
@@ -12,6 +12,7 @@
     <TextView
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:textSize="13dp"
         android:textColor="@android:color/black"
         android:layout_height="wrap_content"
         android:text="CLEAR ACTIVE FILTERS"/>
@@ -19,6 +20,6 @@
         android:layout_width="15dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:textSize="16dp"
+        android:textSize="15dp"
         android:text="X"/>
 </LinearLayout>

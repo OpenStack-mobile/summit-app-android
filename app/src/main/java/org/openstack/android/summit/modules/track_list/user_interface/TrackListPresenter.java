@@ -3,6 +3,7 @@ package org.openstack.android.summit.modules.track_list.user_interface;
 import android.os.Bundle;
 
 import org.openstack.android.summit.common.DTOs.NamedDTO;
+import org.openstack.android.summit.common.DTOs.TrackDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
@@ -26,7 +27,7 @@ public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackList
         this.scheduleFilter = scheduleFilter;
     }
 
-    private List<NamedDTO> tracks;
+    private List<TrackDTO> tracks;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,8 +48,9 @@ public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackList
 
     @Override
     public void buildItem(ISimpleListItemView trackListItemView, int position) {
-        NamedDTO track = tracks.get(position);
+        TrackDTO track = tracks.get(position);
         trackListItemView.setName(track.getName());
+        trackListItemView.setColor(track.getTrackGroup() != null ? track.getTrackGroup().getColor() : null);
     }
 
     @Override

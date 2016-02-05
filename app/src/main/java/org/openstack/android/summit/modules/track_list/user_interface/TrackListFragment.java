@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
+import org.openstack.android.summit.common.DTOs.TrackDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.SimpleListItemView;
 
@@ -74,12 +75,12 @@ public class TrackListFragment extends BaseFragment implements ITrackListView {
         return view;
     }
 
-    public void setTracks(List<NamedDTO> tracks) {
+    public void setTracks(List<TrackDTO> tracks) {
         trackListAdapter.clear();
         trackListAdapter.addAll(tracks);
     }
 
-    private class TrackListAdapter extends ArrayAdapter<NamedDTO> {
+    private class TrackListAdapter extends ArrayAdapter<TrackDTO> {
 
         public TrackListAdapter(Context context) {
             super(context, 0);

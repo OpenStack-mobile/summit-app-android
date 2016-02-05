@@ -15,10 +15,10 @@
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:scrollbarSize="1dp"
-        app:daysContainerBackgroundColor="#E5E5E5"
-        app:dayTextColor="#4A4A4A"
-        app:selectedDayTextColor="#FFFFFF"
-        app:selectedDayBackgroundColor="#F5A623"
+        app:daysContainerBackgroundColor="@color/openStackLightGray"
+        app:dayTextColor="@color/openStackDarkGray"
+        app:selectedDayTextColor="@color/white"
+        app:selectedDayBackgroundColor="@color/openStackDarkGray"
         app:displayDayOfWeek="true"
         android:visibility="invisible"/>
     <View
