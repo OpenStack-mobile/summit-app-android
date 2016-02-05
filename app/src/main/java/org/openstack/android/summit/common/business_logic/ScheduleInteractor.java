@@ -38,8 +38,8 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     }
 
     @Override
-    public List<ScheduleItemDTO> getScheduleEvents(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> tracks, List<String> tags, List<String> levels) {
-        List<SummitEvent> summitEvents = summitEventDataStore.getByFilterLocal(startDate, endDate, eventTypes, summitTypes, tracks, tags, levels);
+    public List<ScheduleItemDTO> getScheduleEvents(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
+        List<SummitEvent> summitEvents = summitEventDataStore.getByFilterLocal(startDate, endDate, eventTypes, summitTypes, trackGroups, tracks, tags, levels);
 
         List<ScheduleItemDTO> dtos = createDTOList(summitEvents, ScheduleItemDTO.class);
 

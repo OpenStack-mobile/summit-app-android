@@ -2,6 +2,9 @@ package org.openstack.android.summit.modules.general_schedule_filter.user_interf
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
+
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
 
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
@@ -11,6 +14,7 @@ import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.business_logic.IGeneralScheduleFilterInteractor;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,10 +24,12 @@ import java.util.Objects;
  */
 public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralScheduleFilterView, IGeneralScheduleFilterInteractor, IGeneralScheduleFilterWireframe> implements IGeneralScheduleFilterPresenter {
     private IScheduleFilter scheduleFilter;
-    List<NamedDTO> summitTypes;
-    List<NamedDTO> eventTypes;
-    List<String> levels;
-    List<TrackGroupDTO> trackGroups;
+    private List<NamedDTO> summitTypes;
+    private List<NamedDTO> eventTypes;
+    private List<String> levels;
+    private List<TrackGroupDTO> trackGroups;
+    private List<String> tags;
+    private final String KEY_SELECTED_TAGS = "KEY_SELECTED_TAGS";
 
     public GeneralScheduleFilterPresenter(IGeneralScheduleFilterInteractor interactor, IGeneralScheduleFilterWireframe wireframe, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe);
@@ -33,10 +39,12 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         summitTypes = interactor.getSummitTypes();
         eventTypes = interactor.getEventTypes();
         levels = interactor.getLevels();
         trackGroups = interactor.getTrackGroups();
+        tags = interactor.getTags();
 
         if (scheduleFilter.getFilterSections().size() == 0) {
 
@@ -87,6 +95,11 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
         view.showEventTypes(eventTypes);
         view.showTrackGroups(trackGroups);
         view.showLevels(levels);
+        view.bindTags(tags);
+
+        for (Object tagText: scheduleFilter.getSelections().get(FilterSectionType.Tag)){
+            view.addTag((String)tagText);
+        }
     }
 
     private FilterSectionItem createSectionItem(int id, String name, FilterSectionType type) {
@@ -120,24 +133,25 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
         return false;
     }
 
-    private void buildFilterItem(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, FilterSection filterSection, int position) {
+    private void buildFilterItem(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, boolean showCircle, FilterSection filterSection, int position) {
         FilterSectionItem filterItem = filterSection.getItems().get(position);
         boolean isItemSelected = isItemSelected(filterSection.getType(), filterItem.getId());
         item.setText(filterItem.getName());
         item.setIsSelected(isItemSelected);
-        item.setColor(isItemSelected ? selectedColor : unselectedColor);
+        item.setCircleColor(isItemSelected ? selectedColor : unselectedColor);
+        item.setShowCircle(showCircle);
     }
 
     @Override
     public void buildSummitTypeFilterItem(GeneralScheduleFilterItemView item, int position) {
         FilterSection filterSection = scheduleFilter.getFilterSections().get(0);
-        buildFilterItem(item, Color.WHITE, Color.LTGRAY, filterSection, position);
+        buildFilterItem(item, Color.WHITE, Color.RED, false, filterSection, position);
     }
 
     @Override
     public void buildEventTypeFilterItem(GeneralScheduleFilterItemView item, int position) {
         FilterSection filterSection = scheduleFilter.getFilterSections().get(1);
-        buildFilterItem(item,Color.WHITE, Color.LTGRAY, filterSection, position);
+        buildFilterItem(item,Color.WHITE, Color.RED, false, filterSection, position);
     }
 
     @Override
@@ -147,6 +161,7 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
 
         item.setText(filterItem.getName());
         item.setIsSelected(isItemSelected(filterSection.getType(), filterItem.getName()));
+        item.setShowCircle(false);
     }
 
     @Override
@@ -157,6 +172,7 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
                 item,
                 Color.parseColor(trackGroupDTO.getColor()),
                 Color.parseColor(trackGroupDTO.getColor()),
+                true,
                 filterSection,
                 position);
     }
@@ -194,12 +210,10 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
 
             scheduleFilter.getSelections().get(filterSection.getType()).remove(filterItemPosition);
             item.setIsSelected(false);
-            item.setColor(Color.LTGRAY);
         }
         else {
             scheduleFilter.getSelections().get(filterSection.getType()).add(filterItem.getName());
             item.setIsSelected(true);
-            item.setColor(Color.WHITE);
         }
     }
 
@@ -215,7 +229,17 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
                 position
         );
     }
-    
+
+    @Override
+    public void addTag(String tagText) {
+        if (tagText == "" || scheduleFilter.getSelections().get(FilterSectionType.Tag).contains(tagText)) {
+            return;
+        }
+
+        scheduleFilter.getSelections().get(FilterSectionType.Tag).add(tagText);
+        view.addTag(tagText);
+    }
+
     public void toggleSelection(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, FilterSection filterSection, int position){
         FilterSectionItem filterItem = filterSection.getItems().get(position);
 
@@ -235,12 +259,10 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
 
             scheduleFilter.getSelections().get(filterSection.getType()).remove(filterItemPosition);
             item.setIsSelected(false);
-            item.setColor(unselectedColor);
         }
         else {
             scheduleFilter.getSelections().get(filterSection.getType()).add(filterItem.getId());
             item.setIsSelected(true);
-            item.setColor(selectedColor);
         }
     }
 }

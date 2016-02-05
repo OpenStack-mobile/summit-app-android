@@ -71,6 +71,10 @@ dependencies {
     // HACK to get rid of an error related to realm https://github.com/realm/realm-java/issues/1963
     compile 'io.reactivex:rxjava:1.1.0'
 
+    // Tags
+    compile 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
+
+
     testCompile "org.mockito:mockito-core:2.0.5-beta"
     testCompile 'junit:junit:4.12'
     testCompile "org.robolectric:robolectric:3.0"

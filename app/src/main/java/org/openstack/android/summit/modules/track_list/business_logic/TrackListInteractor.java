@@ -30,8 +30,19 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
     }
 
     @Override
-    public List<NamedDTO> getTracks() {
+    public List<NamedDTO> getTracks(List<Integer> trackGroups) {
         List<Track> tracks = genericDataStore.getaAllLocal(Track.class);
+        ArrayList<Track> filteredTracks = new ArrayList<>();
+
+        if (trackGroups != null && trackGroups.size() > 0) {
+            for(Track track: tracks) {
+                if (track.getTrackGroup() != null && trackGroups.contains(track.getTrackGroup().getId())) {
+                    filteredTracks.add(track);
+                }
+            }
+            tracks = filteredTracks;
+        }
+
         Comparator<Track> comparator = new Comparator<Track>() {
             @Override
             public int compare(Track c1, Track c2) {

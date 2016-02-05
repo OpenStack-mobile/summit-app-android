@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -10,6 +11,7 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
+import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.track_schedule.ITrackScheduleWireframe;
 import org.openstack.android.summit.modules.track_schedule.TrackScheduleWireframe;
 import org.openstack.android.summit.modules.track_schedule.business_logic.ITrackScheduleInteractor;
@@ -32,8 +34,8 @@ public class TrackScheduleModule {
     }
 
     @Provides
-    ITrackScheduleWireframe providesTrackScheduleWireframe(IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
-        return new TrackScheduleWireframe(eventDetailWireframe, navigationParametersStore);
+    ITrackScheduleWireframe providesTrackScheduleWireframe(IEventDetailWireframe eventDetailWireframe,IGeneralScheduleFilterWireframe generalScheduleFilterWireframe, INavigationParametersStore navigationParametersStore) {
+        return new TrackScheduleWireframe(eventDetailWireframe, generalScheduleFilterWireframe, navigationParametersStore);
     }
 
     @Provides
@@ -42,7 +44,7 @@ public class TrackScheduleModule {
     }
 
     @Provides
-    ITrackSchedulePresenter providesTrackSchedulePresenter(ITrackScheduleInteractor trackScheduleInteractor, ITrackScheduleWireframe trackScheduleWireframe, IScheduleablePresenter scheduleablePresenter) {
-        return new TrackSchedulePresenter(trackScheduleInteractor, trackScheduleWireframe, scheduleablePresenter, new ScheduleItemViewBuilder());
+    ITrackSchedulePresenter providesTrackSchedulePresenter(ITrackScheduleInteractor trackScheduleInteractor, ITrackScheduleWireframe trackScheduleWireframe, IScheduleablePresenter scheduleablePresenter, IScheduleFilter scheduleFilter) {
+        return new TrackSchedulePresenter(trackScheduleInteractor, trackScheduleWireframe, scheduleablePresenter, new ScheduleItemViewBuilder(), scheduleFilter);
     }
 }

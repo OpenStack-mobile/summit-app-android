@@ -7,15 +7,20 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.ScheduleWireframe;
+import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
+import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.level_schedule.user_interface.LevelScheduleFragment;
 
 /**
  * Created by Claudio Redi on 1/11/2016.
  */
 public class LevelScheduleWireframe extends ScheduleWireframe implements ILevelScheduleWireframe {
-    public LevelScheduleWireframe(IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
+    private IGeneralScheduleFilterWireframe generalScheduleFilterWireframe;
+
+    public LevelScheduleWireframe(IEventDetailWireframe eventDetailWireframe, IGeneralScheduleFilterWireframe generalScheduleFilterWireframe, INavigationParametersStore navigationParametersStore) {
         super(eventDetailWireframe, navigationParametersStore);
+        this.generalScheduleFilterWireframe = generalScheduleFilterWireframe;
     }
 
     @Override
@@ -29,5 +34,10 @@ public class LevelScheduleWireframe extends ScheduleWireframe implements ILevelS
                 .addToBackStack(null)
                 .commit();
 
+    }
+
+    @Override
+    public void showFilterView(IBaseView view) {
+        generalScheduleFilterWireframe.presentGeneralScheduleFilterView(view);
     }
 }

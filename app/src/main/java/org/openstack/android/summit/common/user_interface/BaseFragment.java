@@ -1,10 +1,13 @@
 package org.openstack.android.summit.common.user_interface;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import org.openstack.android.summit.MainActivity;
@@ -109,5 +112,13 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
     @Override
     public void setTitle(String title) {
         getActivity().setTitle(title.toUpperCase());
+    }
+
+    protected void hideKeyboard(Activity activity) {
+        View v = activity.getWindow().getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
     }
 }

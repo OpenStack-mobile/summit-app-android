@@ -19,4 +19,8 @@ public interface IScheduleFilter {
     List<FilterSection> getFilterSections();
 
     void setFilterSections(List<FilterSection> filterSections);
+
+    boolean hasActiveFilters();
+
+    void clearActiveFilters();
 }

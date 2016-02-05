@@ -8,7 +8,7 @@ public interface IGeneralScheduleFilterItemView {
 
     void setIsSelected(boolean isSelected);
 
-    void setColor(int color);
+    void setCircleColor(int color);
 
     void setShowCircle(boolean showCircle);
 }

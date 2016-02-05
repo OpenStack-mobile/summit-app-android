@@ -9,8 +9,10 @@ import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.SummitType;
+import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.TrackGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +52,16 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
     public List<TrackGroupDTO> getTrackGroups() {
         List<TrackGroup> trackGroups = genericDataStore.getaAllLocal(TrackGroup.class);
         List<TrackGroupDTO> dtos = createDTOList(trackGroups, TrackGroupDTO.class);
+        return dtos;
+    }
+
+    @Override
+    public List<String> getTags() {
+        List<Tag> tags = genericDataStore.getaAllLocal(Tag.class);
+        List<String> dtos = new ArrayList<>();
+        for (Tag tag: tags) {
+            dtos.add(tag.getTag());
+        }
         return dtos;
     }
 }

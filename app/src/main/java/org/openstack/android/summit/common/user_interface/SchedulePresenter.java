@@ -5,6 +5,7 @@ import android.os.Bundle;
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.IScheduleWireframe;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
@@ -21,14 +22,17 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     List<ScheduleItemDTO> dayEvents;
     Date selectedDate;
     int summitTimeZoneOffset;
+    protected IScheduleFilter scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
     private IScheduleItemViewBuilder scheduleItemViewBuilder;
     private IScheduleablePresenter scheduleablePresenter;
 
-    public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder) {
+
+    public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe);
         this.scheduleablePresenter = scheduleablePresenter;
         this.scheduleItemViewBuilder = scheduleItemViewBuilder;
+        this.scheduleFilter = scheduleFilter;
         scheduleItemDTOIInteractorOperationListener = new InteractorAsyncOperationListener<ScheduleItemDTO>() {
             @Override
             public void onSuceedWithData(ScheduleItemDTO data) {

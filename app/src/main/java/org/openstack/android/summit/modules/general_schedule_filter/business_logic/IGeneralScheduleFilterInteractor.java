@@ -16,4 +16,7 @@ public interface IGeneralScheduleFilterInteractor {
     List<String> getLevels();
 
     List<TrackGroupDTO> getTrackGroups();
+
+    List<String> getTags();
+
 }

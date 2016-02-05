@@ -9,5 +9,5 @@ import java.util.List;
  * Created by Claudio Redi on 1/12/2016.
  */
 public interface ITrackListInteractor {
-    List<NamedDTO> getTracks();
+    List<NamedDTO> getTracks(List<Integer> trackGroups);
 }

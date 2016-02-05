@@ -26,27 +26,90 @@ import io.realm.Sort;
 public class SummitEventDataStore extends GenericDataStore implements ISummitEventDataStore {
 
     @Override
-    public List<SummitEvent> getByFilterLocal(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> tracks, List<String> tags, List<String> levels) {
+    public List<SummitEvent> getByFilterLocal(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
         RealmQuery<SummitEvent> query = realm.where(SummitEvent.class)
                 .greaterThanOrEqualTo("start", startDate)
                 .lessThanOrEqualTo("end", endDate);
 
+        boolean isFirst;
+
+        isFirst = true;
         if (eventTypes != null) {
+            query.beginGroup();
             for (int eventTypeId : eventTypes) {
-               query = query.equalTo("eventType.id", eventTypeId);
+                if (!isFirst) {
+                    query = query.or();
+                }
+                query = query.equalTo("eventType.id", eventTypeId);
+                isFirst = false;
             }
+            query.endGroup();
         }
 
+        isFirst = true;
+        if (tags != null) {
+            query.beginGroup();
+            for (String tag : tags) {
+                if (!isFirst) {
+                    query = query.or();
+                }
+                query = query.equalTo("tags.tag", tag);
+                isFirst = false;
+            }
+            query.endGroup();
+        }
+
+
+        isFirst = true;
+        if (summitTypes != null) {
+            query.beginGroup();
+            for (int summitTypeId : summitTypes) {
+                if (!isFirst) {
+                    query = query.or();
+                }
+                query = query.equalTo("summitTypes.id", summitTypeId);
+                isFirst = false;
+            }
+            query.endGroup();
+        }
+
+        isFirst = true;
         if (levels != null) {
+            query.beginGroup();
             for (String level : levels) {
+                if (!isFirst) {
+                    query = query.or();
+                }
                 query = query.equalTo("presentation.level", level);
+                isFirst = false;
             }
+            query.endGroup();
         }
 
+        isFirst = true;
         if (tracks != null) {
+            query.beginGroup();
             for (int trackId : tracks) {
+                if (!isFirst) {
+                    query = query.or();
+                }
                 query = query.equalTo("presentation.track.id", trackId);
+                isFirst = false;
             }
+            query.endGroup();
+        }
+
+        isFirst = true;
+        if (trackGroups != null) {
+            query.beginGroup();
+            for (int trackGroupId : trackGroups) {
+                if (!isFirst) {
+                    query = query.or();
+                }
+                query = query.equalTo("presentation.track.trackGroup.id", trackGroupId);
+                isFirst = false;
+            }
+            query.endGroup();
         }
 
         RealmResults<SummitEvent> results = query.findAll();

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
@@ -21,8 +22,8 @@ import java.util.List;
 public class SpeakerPresentationsPresenter  extends SchedulePresenter<ISpeakerPresentationsView, ISpeakerPresentationsInteractor, ISpeakerPresentationsWireframe> implements ISpeakerPresentationsPresenter {
     private int speakerId;
 
-    public SpeakerPresentationsPresenter(ISpeakerPresentationsInteractor interactor, ISpeakerPresentationsWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder) {
-        super(interactor, wireframe, scheduleablePresenter, scheduleItemViewBuilder);
+    public SpeakerPresentationsPresenter(ISpeakerPresentationsInteractor interactor, ISpeakerPresentationsWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
+        super(interactor, wireframe, scheduleablePresenter, scheduleItemViewBuilder, scheduleFilter);
     }
 
     @Override

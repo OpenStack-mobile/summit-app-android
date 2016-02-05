@@ -40,7 +40,7 @@ public class LevelListFragment extends BaseFragment implements ILevelListView {
 
     @Override
     public void onResume() {
-        getActivity().setTitle("EVENTS");
+        setTitle(getResources().getString(R.string.events));
         super.onResume();
     }
 

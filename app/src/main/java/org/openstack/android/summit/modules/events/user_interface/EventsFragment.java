@@ -1,5 +1,8 @@
 package org.openstack.android.summit.modules.events.user_interface;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
@@ -45,6 +49,8 @@ public class EventsFragment extends BaseFragment implements ViewPager.OnPageChan
     LevelListFragment levelListFragment;
 
     private int selectedTabIndex;
+    private Menu menu;
+    private boolean showActiveFilterIndicator;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -55,9 +61,8 @@ public class EventsFragment extends BaseFragment implements ViewPager.OnPageChan
         super.onCreate(savedInstanceState);
         getComponent().inject(this);
         presenter.setView(this);
-        presenter.onCreate(savedInstanceState);
 
-        getActivity().setTitle(getResources().getString(R.string.events));
+        setTitle(getResources().getString(R.string.events));
 
         setHasOptionsMenu(true);
     }
@@ -66,6 +71,25 @@ public class EventsFragment extends BaseFragment implements ViewPager.OnPageChan
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.main, menu);
+
+        MenuItem filterItem = menu.findItem(R.id.action_filter);
+        Drawable newIcon = filterItem.getIcon();
+        int color;
+        if (showActiveFilterIndicator) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                color = view.getResources().getColor(R.color.activeFilters, null);
+            }
+            else {
+                color = view.getResources().getColor(R.color.activeFilters);
+            }
+        }
+        else {
+            color = Color.WHITE;
+        }
+
+        newIcon.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        filterItem.setIcon(newIcon);
+
     }
 
     @Override
@@ -89,7 +113,7 @@ public class EventsFragment extends BaseFragment implements ViewPager.OnPageChan
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_events_container, container, false);
+        view = inflater.inflate(R.layout.fragment_events_container, container, false);
 
         SlidingTabLayout tabs = (SlidingTabLayout)view.findViewById(R.id.tabs);
         tabs.setDistributeEvenly(true);
@@ -102,6 +126,16 @@ public class EventsFragment extends BaseFragment implements ViewPager.OnPageChan
         eventsViewPager.setCurrentItem(selectedTabIndex);
 
         tabs.setViewPager(eventsViewPager);
+
+        LinearLayout activeFiltersIndicator = (LinearLayout)view.findViewById(R.id.active_filters_indicator);
+        activeFiltersIndicator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.clearFilters();
+            }
+        });
+
+        presenter.onCreate(savedInstanceState);
 
         return view;
     }
@@ -127,6 +161,13 @@ public class EventsFragment extends BaseFragment implements ViewPager.OnPageChan
         } else {
             return getResources().getColor(R.color.white);
         }
+    }
+
+    @Override
+    public void setShowActiveFilterIndicator(boolean showActiveFilterIndicator) {
+        LinearLayout activeFiltersIndicator = (LinearLayout)view.findViewById(R.id.active_filters_indicator);
+        activeFiltersIndicator.setVisibility(showActiveFilterIndicator ? View.VISIBLE : View.GONE);
+        this.showActiveFilterIndicator = showActiveFilterIndicator;
     }
 
     private class EventsPageAdapter extends FragmentPagerAdapter {

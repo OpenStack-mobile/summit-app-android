@@ -1,5 +1,6 @@
 package org.openstack.android.summit.dagger.modules;
 
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.events.EventsWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
@@ -28,8 +29,8 @@ public class EventsModule {
     }
 
     @Provides
-    IEventsPresenter providesEventsPresenter(IEventsWireframe eventsWireframe) {
-        return new EventsPresenter(eventsWireframe);
+    IEventsPresenter providesEventsPresenter(IEventsWireframe eventsWireframe, IScheduleFilter scheduleFilter) {
+        return new EventsPresenter(eventsWireframe, scheduleFilter);
     }
 }
 
