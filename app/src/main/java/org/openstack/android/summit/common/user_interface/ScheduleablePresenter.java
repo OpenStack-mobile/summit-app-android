@@ -10,9 +10,15 @@ import org.openstack.android.summit.common.business_logic.InteractorAsyncOperati
  * Created by Claudio Redi on 1/5/2016.
  */
 public class ScheduleablePresenter implements IScheduleablePresenter {
+    private boolean ongoingOperation;
 
     @Override
     public void toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor, IInteractorAsyncOperationListener<Void> interactorOperationListener) {
+        if (ongoingOperation) {
+            return;
+        }
+
+        ongoingOperation = true;
         Boolean isScheduled = interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId());
 
         if (isScheduled) {
@@ -27,14 +33,16 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
         scheduleableView.setScheduled(false);
         InteractorAsyncOperationListener<Void> internalInteractorOperationListener = new InteractorAsyncOperationListener<Void>() {
             @Override
-            public void onSuceedWithData(Void data) {
+            public void onSucceed() {
                 interactorOperationListener.onSucceed();
+                ongoingOperation = false;
             }
 
             @Override
             public void onError(String message) {
                 scheduleableView.setScheduled(!scheduleableView.getScheduled());
                 interactorOperationListener.onError(message);
+                ongoingOperation = false;
             }
         };
 
@@ -45,14 +53,16 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
         scheduleableView.setScheduled(true);
         InteractorAsyncOperationListener<Void> internalInteractorOperationListener = new InteractorAsyncOperationListener<Void>() {
             @Override
-            public void onSuceedWithData(Void data) {
+            public void onSucceed() {
                 interactorOperationListener.onSucceed();
+                ongoingOperation = false;
             }
 
             @Override
             public void onError(String message) {
                 scheduleableView.setScheduled(!scheduleableView.getScheduled());
                 interactorOperationListener.onError(message);
+                ongoingOperation = false;
             }
         };
 

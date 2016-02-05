@@ -1,11 +1,11 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_general_schedule"
     tools:context="org.openstack.android.summit.modules.events.user_interface.EventsFragment">
+    <!-- Adding layout_height and layout_width here is a hack to avoid active filter indicator to dissapear -->
+    <include layout="@layout/schedule" android:layout_height="match_parent" android:layout_width="match_parent"></include>
 
-    <include layout="@layout/schedule"></include>
-
-</FrameLayout>
+</LinearLayout>

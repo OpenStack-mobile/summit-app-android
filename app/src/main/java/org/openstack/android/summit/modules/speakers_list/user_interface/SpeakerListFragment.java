@@ -35,8 +35,13 @@ public class SpeakerListFragment extends BaseFragment implements ISpeakerListVie
         super.onCreate(savedInstanceState);
         getComponent().inject(this);
         presenter.setView(this);
+    }
 
-        getActivity().setTitle("SPEAKERS");
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResume();
+        setTitle(getResources().getString(R.string.speakers));
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

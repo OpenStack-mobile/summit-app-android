@@ -55,7 +55,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                 if (innerDelegate != null) {
                     try{
                         SummitDTO summitDTO = dtoAssembler.createDTO(data, SummitDTO.class);
-                        innerDelegate.onSuceedWithData(summitDTO);
+                        innerDelegate.onSucceedWithData(summitDTO);
                     } catch (Exception e) {
                         Log.e(Constants.LOG_TAG, "Error getting active summit", e);
                         innerDelegate.onError(e.getMessage());

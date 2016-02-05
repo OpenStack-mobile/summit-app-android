@@ -35,6 +35,11 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
         SummitEvent summitEvent = summitEventDataStore.getByIdLocal(eventId);
         IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
+            public void onSucceedWithoutData() {
+                interactorAsyncOperationListener.onSucceed();
+            }
+
+            @Override
             public void onError(String message) {
                 interactorAsyncOperationListener.onError(message);
             }
@@ -48,6 +53,11 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
         Member loggedInMember = securityManager.getCurrentMember();
         SummitEvent summitEvent = summitEventDataStore.getByIdLocal(eventId);
         IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
+            @Override
+            public void onSucceedWithoutData() {
+                interactorAsyncOperationListener.onSucceed();
+            }
+
             @Override
             public void onError(String message) {
                 interactorAsyncOperationListener.onError(message);
