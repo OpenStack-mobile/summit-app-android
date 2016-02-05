@@ -1,5 +1,6 @@
 package org.openstack.android.summit.dagger.modules;
 
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.modules.level_list.ILevelListWireframe;
 import org.openstack.android.summit.modules.level_list.LevelListWireframe;
@@ -34,7 +35,7 @@ public class LevelListModule {
     }
 
     @Provides
-    ILevelListPresenter providesLevelListPresenter(ILevelListInteractor levelListInteractor, ILevelListWireframe levelListWireframe) {
-        return new LevelListPresenter(levelListInteractor, levelListWireframe);
+    ILevelListPresenter providesLevelListPresenter(ILevelListInteractor levelListInteractor, ILevelListWireframe levelListWireframe, IScheduleFilter scheduleFilter) {
+        return new LevelListPresenter(levelListInteractor, levelListWireframe, scheduleFilter);
     }
 }

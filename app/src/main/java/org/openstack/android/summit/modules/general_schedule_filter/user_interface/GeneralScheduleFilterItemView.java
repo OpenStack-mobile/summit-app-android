@@ -1,6 +1,8 @@
 package org.openstack.android.summit.modules.general_schedule_filter.user_interface;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.view.View;
@@ -36,19 +38,23 @@ public class GeneralScheduleFilterItemView implements IGeneralScheduleFilterItem
         TextView textView = (TextView) view.findViewById(R.id.item_filter_text);
         if (isSelected) {
             textView.setTypeface(null, Typeface.BOLD);
+            textView.setTextColor(Color.WHITE);
         }
         else {
             textView.setTypeface(null, Typeface.NORMAL);
+            textView.setTextColor(Color.GRAY);
         }
     }
 
     @Override
-    public void setColor(int color) {
-        TextView textView = (TextView) view.findViewById(R.id.item_filter_text);
-        textView.setTextColor(color);
+    public void setCircleColor(int color) {
+        View circle = view.findViewById(R.id.item_filter_circle);
+        circle.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY));
     }
 
     @Override
     public void setShowCircle(boolean showCircle) {
+        View circle = view.findViewById(R.id.item_filter_circle);
+        circle.setVisibility(showCircle ? View.VISIBLE : View.GONE);
     }
 }

@@ -4,6 +4,12 @@
     android:layout_height="wrap_content"
     android:background="@color/openStackDarkBlue"
     android:padding="13dp">
+    <View
+        android:id="@+id/item_filter_circle"
+        android:layout_height="25dp"
+        android:layout_width="25dp"
+        android:background="@drawable/solid_circle">
+    </View>
     <TextView
         android:id="@+id/item_filter_text"
         android:layout_width="0dp"

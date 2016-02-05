@@ -6,4 +6,5 @@ import org.openstack.android.summit.common.user_interface.IScheduleView;
  * Created by Claudio Redi on 1/12/2016.
  */
 public interface ILevelScheduleView extends IScheduleView {
+    void setShowActiveFilterIndicator(boolean showActiveFilterIndicator);
 }

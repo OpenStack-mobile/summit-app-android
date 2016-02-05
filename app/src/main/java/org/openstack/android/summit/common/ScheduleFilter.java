@@ -52,4 +52,24 @@ public class ScheduleFilter implements IScheduleFilter {
     public void setFilterSections(List<FilterSection> filterSections) {
         this.filterSections = filterSections;
     }
+
+    @Override
+    public boolean hasActiveFilters() {
+        boolean hasActiveFilters = false;
+        for (List<Object> values : selections.values()) {
+            if (values.size() > 0) {
+                hasActiveFilters = true;
+                break;
+            }
+        }
+
+        return hasActiveFilters;
+    }
+
+    @Override
+    public void clearActiveFilters() {
+        for (List<Object> values : selections.values()) {
+            values.clear();
+        }
+    }
 }

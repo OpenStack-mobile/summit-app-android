@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,6 +12,42 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <LinearLayout style="@style/AppTheme.SubsectionHeader">
+                <TextView
+                    style="@style/AppTheme.SubsectionHeader.Text"
+                    android:text="@string/tags"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="@color/openStackDarkBlue"
+                android:padding="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/filter_tags_autocomplete"
+                    android:singleLine="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/openStackGray"
+                    android:hint="Filter terms"
+                    style="@style/AutoCompleteTextViewAppTheme" />
+                <me.kaede.tagview.TagView
+                    android:id="@+id/filter_tags_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:lineMargin="5dp"
+                    app:tagMargin="3dp"
+                    app:textPaddingBottom="6dp"
+                    app:textPaddingLeft="10dp"
+                    app:textPaddingRight="10dp"
+                    app:textPaddingTop="6dp">
+                </me.kaede.tagview.TagView>
+            </LinearLayout>
+
             <LinearLayout style="@style/AppTheme.SubsectionHeader">
                 <TextView
                     style="@style/AppTheme.SubsectionHeader.Text"

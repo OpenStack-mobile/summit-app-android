@@ -22,4 +22,6 @@ public interface IGeneralScheduleFilterPresenter extends IBasePresenter<IGeneral
     void toggleSelectionLevel(IGeneralScheduleFilterItemView item, int position);
 
     void toggleSelectionTrackGroup(IGeneralScheduleFilterItemView item, int position);
+
+    void addTag(String tagText);
 }

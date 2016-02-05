@@ -19,4 +19,5 @@
     <string name="event_types">Event Types</string>
     <string name="levels">Levels</string>
     <string name="filter">Filter</string>
+    <string name="tags">Tags</string>
 </resources>

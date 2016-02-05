@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.modules.track_list.ITrackListWireframe;
 import org.openstack.android.summit.modules.track_list.TrackListWireframe;
@@ -35,7 +36,7 @@ public class TrackListModule {
     }
 
     @Provides
-    ITrackListPresenter providesTrackListPresenter(ITrackListInteractor trackListInteractor, ITrackListWireframe trackListWireframe) {
-        return new TrackListPresenter(trackListInteractor, trackListWireframe);
+    ITrackListPresenter providesTrackListPresenter(ITrackListInteractor trackListInteractor, ITrackListWireframe trackListWireframe, IScheduleFilter scheduleFilter) {
+        return new TrackListPresenter(trackListInteractor, trackListWireframe, scheduleFilter);
     }    
 }

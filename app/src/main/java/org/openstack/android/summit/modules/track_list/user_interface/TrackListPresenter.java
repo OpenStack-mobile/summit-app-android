@@ -3,8 +3,10 @@ package org.openstack.android.summit.modules.track_list.user_interface;
 import android.os.Bundle;
 
 import org.openstack.android.summit.common.DTOs.NamedDTO;
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
+import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
 import org.openstack.android.summit.modules.track_list.ITrackListWireframe;
 import org.openstack.android.summit.modules.track_list.business_logic.ITrackListInteractor;
 
@@ -16,10 +18,12 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 1/12/2016.
  */
 public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackListInteractor, ITrackListWireframe> implements ITrackListPresenter {
+    private IScheduleFilter scheduleFilter;
 
     @Inject
-    public TrackListPresenter(ITrackListInteractor interactor, ITrackListWireframe wireframe) {
+    public TrackListPresenter(ITrackListInteractor interactor, ITrackListWireframe wireframe, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe);
+        this.scheduleFilter = scheduleFilter;
     }
 
     private List<NamedDTO> tracks;
@@ -30,7 +34,8 @@ public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackList
     }
 
     private void init() {
-        tracks = interactor.getTracks();
+        List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
+        tracks = interactor.getTracks(filtersOnTrackGroups);
         view.setTracks(tracks);
     }
 

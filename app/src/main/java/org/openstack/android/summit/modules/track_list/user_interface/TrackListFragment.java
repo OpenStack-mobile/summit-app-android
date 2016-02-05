@@ -42,7 +42,7 @@ public class TrackListFragment extends BaseFragment implements ITrackListView {
 
     @Override
     public void onResume() {
-        getActivity().setTitle("EVENTS");
+        setTitle(getResources().getString(R.string.events));
         super.onResume();
         presenter.onResume();
     }

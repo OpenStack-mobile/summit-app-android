@@ -8,4 +8,6 @@ import org.openstack.android.summit.common.user_interface.IScheduleView;
  */
 public interface ITrackScheduleView extends IScheduleView {
     void setTrack(String title);
+
+    void setShowActiveFilterIndicator(boolean showActiveFilterIndicator);
 }

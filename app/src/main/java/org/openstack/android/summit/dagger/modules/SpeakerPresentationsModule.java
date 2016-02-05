@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
@@ -41,7 +42,7 @@ public class SpeakerPresentationsModule {
     }
 
     @Provides
-    ISpeakerPresentationsPresenter providesSpeakerPresentationsPresenter(ISpeakerPresentationsInteractor interactor, ISpeakerPresentationsWireframe wireframe, IScheduleablePresenter scheduleablePresenter) {
-        return new SpeakerPresentationsPresenter(interactor, wireframe, scheduleablePresenter, new ScheduleItemViewBuilder());
+    ISpeakerPresentationsPresenter providesSpeakerPresentationsPresenter(ISpeakerPresentationsInteractor interactor, ISpeakerPresentationsWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleFilter scheduleFilter) {
+        return new SpeakerPresentationsPresenter(interactor, wireframe, scheduleablePresenter, new ScheduleItemViewBuilder(), scheduleFilter);
     }
 }

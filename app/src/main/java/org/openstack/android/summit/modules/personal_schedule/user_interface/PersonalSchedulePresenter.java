@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.personal_schedule.user_interface;
 
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
@@ -17,8 +18,8 @@ import java.util.List;
  */
 public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalScheduleView, IPersonalScheduleInteractor, IPersonalScheduleWireframe> implements IPersonalSchedulePresenter {
 
-    public PersonalSchedulePresenter(IPersonalScheduleInteractor interactor, IPersonalScheduleWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder) {
-        super(interactor, wireframe, scheduleablePresenter, scheduleItemViewBuilder);
+    public PersonalSchedulePresenter(IPersonalScheduleInteractor interactor, IPersonalScheduleWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
+        super(interactor, wireframe, scheduleablePresenter, scheduleItemViewBuilder, scheduleFilter);
     }
 
     @Override

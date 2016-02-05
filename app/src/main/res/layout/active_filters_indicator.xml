@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/active_filters_indicator"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:background="@color/activeFilters"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:textColor="@android:color/black"
+        android:layout_height="wrap_content"
+        android:text="CLEAR ACTIVE FILTERS"/>
+    <TextView
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:text="X"/>
+</LinearLayout>

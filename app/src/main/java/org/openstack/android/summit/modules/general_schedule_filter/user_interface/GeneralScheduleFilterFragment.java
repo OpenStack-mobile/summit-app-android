@@ -1,11 +1,15 @@
 package org.openstack.android.summit.modules.general_schedule_filter.user_interface;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 
 import com.linearlistview.LinearListView;
@@ -21,6 +25,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import me.kaede.tagview.Tag;
+import me.kaede.tagview.TagView;
+
 /**
  * Created by Claudio Redi on 2/1/2016.
  */
@@ -32,6 +39,7 @@ public class GeneralScheduleFilterFragment extends BaseFragment implements IGene
     private TrackGroupListAdapter trackGroupListAdapter;
     private EventTypeListAdapter eventTypeListAdapter;
     private LevelListAdapter levelListAdapter;
+    private ArrayAdapter<String> tagsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,9 +97,43 @@ public class GeneralScheduleFilterFragment extends BaseFragment implements IGene
             }
         });
 
+        AutoCompleteTextView tagsTextView = (AutoCompleteTextView)view.findViewById(R.id.filter_tags_autocomplete);
+        tagsTextView.setThreshold(2);
+        tagsTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String tagText = (String)parent.getItemAtPosition(position);
+                presenter.addTag(tagText);
+            }
+        });
         presenter.onCreate(savedInstanceState);
 
         return view;
+    }
+
+    public void addTag(String tagText) {
+        AutoCompleteTextView tagsTextView = (AutoCompleteTextView)view.findViewById(R.id.filter_tags_autocomplete);
+        TagView tagView = (TagView)view.findViewById(R.id.filter_tags_list);
+        Tag tag = new Tag(tagText);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            tag.layoutBorderColor = view.getResources().getColor(R.color.openStackGray, null);
+        }
+        else {
+            tag.layoutBorderColor = view.getResources().getColor(R.color.openStackGray);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            tag.layoutColor = view.getResources().getColor(R.color.openStackLightBlue, null);
+        }
+        else {
+            tag.layoutColor = view.getResources().getColor(R.color.openStackLightBlue);
+        }
+
+        tag.layoutBorderSize = 1;
+        tag.isDeletable = true;
+        tagView.addTag(tag);
+
+        tagsTextView.setText("");
     }
 
     @Override
@@ -99,6 +141,12 @@ public class GeneralScheduleFilterFragment extends BaseFragment implements IGene
         super.onResume();
         presenter.onResume();
         setTitle(getResources().getString(R.string.filter));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        hideKeyboard(getActivity());
     }
 
     @Override
@@ -128,6 +176,13 @@ public class GeneralScheduleFilterFragment extends BaseFragment implements IGene
     public void showLevels(List<String> levels) {
         levelListAdapter.clear();
         levelListAdapter.addAll(levels);
+    }
+
+    @Override
+    public void bindTags(List<String> tags) {
+        AutoCompleteTextView tagsTextView = (AutoCompleteTextView)view.findViewById(R.id.filter_tags_autocomplete);
+        tagsAdapter = new ArrayAdapter<String>(this.getActivity(),android.R.layout.simple_list_item_1, tags);
+        tagsTextView.setAdapter(tagsAdapter);
     }
 
     private class SummitTypeListAdapter extends ArrayAdapter<NamedDTO> {
