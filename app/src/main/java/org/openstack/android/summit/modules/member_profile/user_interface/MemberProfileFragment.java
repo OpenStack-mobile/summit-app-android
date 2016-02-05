@@ -55,8 +55,13 @@ public class MemberProfileFragment extends BaseFragment implements ViewPager.OnP
         getComponent().inject(this);
         presenter.setView(this);
         presenter.onCreate(savedInstanceState);
+    }
 
-        getActivity().setTitle("PROFILE");
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResume();
+        setTitle(getResources().getString(R.string.profile));
     }
 
     @Override

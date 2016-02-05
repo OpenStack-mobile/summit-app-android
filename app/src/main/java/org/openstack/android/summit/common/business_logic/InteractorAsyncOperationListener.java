@@ -5,7 +5,7 @@ package org.openstack.android.summit.common.business_logic;
  */
 public abstract class InteractorAsyncOperationListener<T> implements IInteractorAsyncOperationListener<T> {
     @Override
-    public void onSuceedWithData(T data) {}
+    public void onSucceedWithData(T data) {}
 
     @Override
     public void onSucceed() {}

@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    <include layout="@layout/active_filters_indicator"></include>
     <org.openstack.android.summit.common.user_interface.SlidingTabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
@@ -21,6 +20,6 @@
         android:layout_weight="1">
 
     </android.support.v4.view.ViewPager>
-
+    <include layout="@layout/active_filters_indicator"></include>
 
 </LinearLayout>

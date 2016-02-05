@@ -11,7 +11,7 @@ import io.realm.RealmObject;
  */
 public abstract class DataStoreOperationListener<T extends RealmObject> implements IDataStoreOperationListener<T> {
     @Override
-    public void onSuceedWithDataCollection(List<T> data) {
+    public void onSucceedWithDataCollection(List<T> data) {
 
     }
 

@@ -26,7 +26,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
     private IScheduleItemViewBuilder scheduleItemViewBuilder;
     private IScheduleablePresenter scheduleablePresenter;
-
+    private boolean isFirstTime = true;
 
     public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe);
@@ -35,8 +35,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         this.scheduleFilter = scheduleFilter;
         scheduleItemDTOIInteractorOperationListener = new InteractorAsyncOperationListener<ScheduleItemDTO>() {
             @Override
-            public void onSuceedWithData(ScheduleItemDTO data) {
-                super.onSuceedWithData(data);
+            public void onSucceedWithData(ScheduleItemDTO data) {
+                super.onSucceedWithData(data);
             }
 
             @Override
@@ -53,27 +53,33 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        initialize();
+        super.onCreate(savedInstanceState);
     }
 
-    private void initialize() {
+    @Override
+    public void onResume() {
+        super.onResume();
         view.showActivityIndicator();
 
         InteractorAsyncOperationListener<SummitDTO> summitDTOIInteractorOperationListener = new InteractorAsyncOperationListener<SummitDTO>() {
             @Override
-            public void onSuceedWithData(SummitDTO data) {
-                summitTimeZoneOffset = TimeZone.getTimeZone(data.getTimeZone()).getOffset(new Date().getTime());
-                DateTime startDate = new DateTime(data.getStartDate()).plus(summitTimeZoneOffset).withTime(0, 0, 0, 0);
-                DateTime endDate = new DateTime(data.getEndDate()).plus(summitTimeZoneOffset).withTime(23, 59, 59, 999);
+            public void onSucceedWithData(SummitDTO data) {
+                // HACK: without checking is it's first time, ranger is recreated and I lost previous day selection. Ideally this should be improved
+                if (isFirstTime) {
+                    summitTimeZoneOffset = TimeZone.getTimeZone(data.getTimeZone()).getOffset(new Date().getTime());
+                    DateTime startDate = new DateTime(data.getStartDate()).plus(summitTimeZoneOffset).withTime(0, 0, 0, 0);
+                    DateTime endDate = new DateTime(data.getEndDate()).plus(summitTimeZoneOffset).withTime(23, 59, 59, 999);
 
-                view.setStartAndEndDateWithParts(
-                        startDate.getYear(),
-                        startDate.getMonthOfYear(),
-                        startDate.getDayOfMonth(),
-                        endDate.getYear(),
-                        endDate.getMonthOfYear(),
-                        endDate.getDayOfMonth()
-                );
+                    view.setStartAndEndDateWithParts(
+                            startDate.getYear(),
+                            startDate.getMonthOfYear(),
+                            startDate.getDayOfMonth(),
+                            endDate.getYear(),
+                            endDate.getMonthOfYear(),
+                            endDate.getDayOfMonth()
+                    );
+                }
+                isFirstTime = false;
                 reloadSchedule();
                 view.hideActivityIndicator();
             }

@@ -10,6 +10,7 @@
     <TextView
         android:id="@+id/item_feedback_event_title"
         android:textSize="18sp"
+        android:textColor="@android:color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Registration checkin"

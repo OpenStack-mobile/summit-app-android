@@ -58,8 +58,7 @@ public class EventDetailFragment extends BaseFragment implements IEventDetailVie
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_event_detail, container, false);
         LinearListView speakerList = (LinearListView)view.findViewById(R.id.event_detail_list_speakers);
@@ -178,7 +177,7 @@ public class EventDetailFragment extends BaseFragment implements IEventDetailVie
 
     @Override
     public void setIsScheduledStatusVisible(Boolean isScheduledStatusVisible) {
-        if (menu != null) {
+        if (menu != null && menu.findItem(R.id.action_scheduled_status) != null) {
             setIsScheduledStatusVisibleInternal(isScheduledStatusVisible);
         }
         else {
@@ -188,7 +187,7 @@ public class EventDetailFragment extends BaseFragment implements IEventDetailVie
 
     @Override
     public void setScheduled(Boolean scheduled) {
-        if (menu != null) {
+        if (menu != null && menu.findItem(R.id.action_scheduled_status) != null) {
             setScheduledInternal(scheduled);
         }
         else {
