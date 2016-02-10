@@ -13,6 +13,7 @@ import org.openstack.android.summit.common.data_access.IDataStoreOperationListen
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
@@ -30,11 +31,13 @@ import javax.inject.Inject;
  */
 public class ScheduleInteractor extends ScheduleableInteractor implements IScheduleInteractor {
     private ISummitDataStore summitDataStore;
+    private IDataUpdatePoller dataUpdatePoller;
 
     @Inject
-    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager) {
+    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller) {
         super(summitEventDataStore, summitAttendeeDataStore, dtoAssembler, securityManager);
         this.summitDataStore = summitDataStore;
+        this.dataUpdatePoller = dataUpdatePoller;
     }
 
     @Override
@@ -47,26 +50,27 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     }
 
     @Override
-    public void getActiveSummit(IInteractorAsyncOperationListener<SummitDTO> delegate) {
-        final IInteractorAsyncOperationListener<SummitDTO> innerDelegate = delegate;
+    public void getActiveSummit(final IInteractorAsyncOperationListener<SummitDTO> delegate) {
         DataStoreOperationListener<Summit> dataStoreOperationListener = new DataStoreOperationListener<Summit>() {
             @Override
             public void onSuceedWithSingleData(Summit data) {
-                if (innerDelegate != null) {
+                if (delegate != null) {
                     try{
+                        dataUpdatePoller.startPollingIfNotPollingAlready();
+
                         SummitDTO summitDTO = dtoAssembler.createDTO(data, SummitDTO.class);
-                        innerDelegate.onSucceedWithData(summitDTO);
+                        delegate.onSucceedWithData(summitDTO);
                     } catch (Exception e) {
                         Log.e(Constants.LOG_TAG, "Error getting active summit", e);
-                        innerDelegate.onError(e.getMessage());
+                        delegate.onError(e.getMessage());
                     }
                 }
             }
 
             @Override
             public void onError(String message) {
-                if (innerDelegate != null) {
-                    innerDelegate.onError(message);
+                if (delegate != null) {
+                    delegate.onError(message);
                 }
             }
         };

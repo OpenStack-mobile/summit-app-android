@@ -20,7 +20,8 @@ public class GenericDataStore implements IGenericDataStore {
 
     @Override
     public <T extends RealmObject> List<T> getaAllLocal(Class<T> type) {
-        //TODO: this is a hack for multithreading
+        //HACK: this is a for multithreading. To avoid error: " Realm access from incorrect thread. Realm objects can only be accessed on the thread they were created."
+        // Check if this is causing considerable memory usage increase
         Realm realm = Realm.getDefaultInstance();
         ArrayList<T> list = new ArrayList<>();
         RealmResults<T> result = realm.where(type).findAll();
@@ -29,7 +30,7 @@ public class GenericDataStore implements IGenericDataStore {
     }
 
     @Override
-    public <T extends RealmObject> void SaveOrUpdate(final T entity, IDataStoreOperationListener<T> delegate, Class<T> type) {
+    public <T extends RealmObject> void saveOrUpdate(final T entity, IDataStoreOperationListener<T> delegate, Class<T> type) {
         T realmEntity;
         try{
             realm.beginTransaction();

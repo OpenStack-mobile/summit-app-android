@@ -1,6 +1,8 @@
 package org.openstack.android.summit.dagger.modules;
 
+import org.openstack.android.summit.common.data_access.DataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.GenericDataStore;
+import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
@@ -18,10 +20,22 @@ import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataS
 import org.openstack.android.summit.common.data_access.SummitDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventDataStore;
 import org.openstack.android.summit.common.data_access.SummitRemoteDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
+import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
+import org.openstack.android.summit.common.data_access.data_polling.DataUpdateProcessor;
+import org.openstack.android.summit.common.data_access.data_polling.DataUpdateStrategy;
+import org.openstack.android.summit.common.data_access.data_polling.DataUpdateStrategyFactory;
+import org.openstack.android.summit.common.data_access.data_polling.IClassResolver;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateProcessor;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateStrategyFactory;
+import org.openstack.android.summit.common.data_access.data_polling.MyScheduleDataUpdateStrategy;
+import org.openstack.android.summit.common.data_access.deserialization.DataUpdateDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.Deserializer;
 import org.openstack.android.summit.common.data_access.deserialization.DeserializerStorage;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.GenericDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.IDataUpdateDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializerStorage;
 import org.openstack.android.summit.common.data_access.deserialization.IFeedbackDeserializer;
@@ -47,6 +61,9 @@ import org.openstack.android.summit.common.data_access.deserialization.TrackGrou
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
+import org.openstack.android.summit.common.network.IReachability;
+import org.openstack.android.summit.common.network.Reachability;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 import javax.inject.Singleton;
 
@@ -140,7 +157,8 @@ public class DataAccessModule {
                                        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                                        ISummitAttendeeDeserializer summitAttendeeDeserializer,
                                        ISummitDeserializer summitDeserializer,
-                                       ISummitEventDeserializer summitEventDeserializer) {
+                                       ISummitEventDeserializer summitEventDeserializer,
+                                       IDataUpdateDeserializer dataUpdateDeserializer) {
         return new Deserializer(genericDeserializer,
                 feedbackDeserializer,
                 memberDeserializer,
@@ -148,7 +166,13 @@ public class DataAccessModule {
                 presentationSpeakerDeserializer,
                 summitAttendeeDeserializer,
                 summitDeserializer,
-                summitEventDeserializer);
+                summitEventDeserializer,
+                dataUpdateDeserializer);
+    }
+
+    @Provides
+    IDataUpdateDeserializer providesDataUpdateDeserializer(IGenericDeserializer genericDeserializer, IPresentationSpeakerDeserializer presentationSpeakerDeserializer, ISummitEventDeserializer summitEventDeserializer) {
+        return new DataUpdateDeserializer(new ClassResolver(), genericDeserializer, presentationSpeakerDeserializer, summitEventDeserializer);
     }
 
     @Provides
@@ -194,5 +218,26 @@ public class DataAccessModule {
     @Provides
     IPresentationSpeakerDataStore providesPresentationSpeakerDataStore() {
         return new PresentationSpeakerDataStore();
+    }
+
+    @Provides
+    IDataUpdateDataStore providesDataUpdateDataStore() {
+        return new DataUpdateDataStore();
+    }
+
+    @Provides
+    IDataUpdateStrategyFactory providesDataUpdateStrategyFactory(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISecurityManager securityManager) {
+        return new DataUpdateStrategyFactory(new DataUpdateStrategy(genericDataStore), new MyScheduleDataUpdateStrategy(genericDataStore, summitAttendeeDataStore, securityManager));
+    }
+
+    @Provides
+    IDataUpdateProcessor providesDataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore) {
+        return new DataUpdateProcessor(deserializer, dataUpdateStrategyFactory, dataUpdateDataStore);
+    }
+
+    @Provides
+    @Singleton
+    IDataUpdatePoller providesDataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore) {
+        return new DataUpdatePoller(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, new Reachability());
     }
 }

@@ -100,14 +100,19 @@ public class DTOAssemblerTests {
         summitType2.setId(2);
         summitType2.setName("Design Summit");
 
-        TrackGroup trackGroup = new TrackGroup();
-        trackGroup.setId(11);
-        trackGroup.setColor("#564534");
+        TrackGroup trackGroup1 = new TrackGroup();
+        trackGroup1.setId(11);
+        trackGroup1.setColor("#564534");
+
+        TrackGroup trackGroup2 = new TrackGroup();
+        trackGroup2.setId(11);
+        trackGroup2.setColor("#564534");
 
         Track track = new Track();
         track.setId(1);
         track.setName("test track");
-        track.setTrackGroup(trackGroup);
+        track.getTrackGroups().add(trackGroup1);
+        track.getTrackGroups().add(trackGroup2);
 
         Presentation presentation = new Presentation();
         presentation.setId(2000);
@@ -139,7 +144,7 @@ public class DTOAssemblerTests {
         Assert.assertEquals("Sponsored by company 1, company 2", scheduleItemDTO.getSponsors());
         Assert.assertEquals("Main Summit, Design Summit", scheduleItemDTO.getCredentials());
         Assert.assertEquals(track.getName(), scheduleItemDTO.getTrack());
-        Assert.assertEquals(trackGroup.getColor(), scheduleItemDTO.getColor());
+        Assert.assertEquals(trackGroup1.getColor(), scheduleItemDTO.getColor());
     }
 
     @Test
@@ -205,7 +210,7 @@ public class DTOAssemblerTests {
         Track track = new Track();
         track.setId(1);
         track.setName("test track");
-        track.setTrackGroup(trackGroup);
+        track.getTrackGroups().add(trackGroup);
 
         Tag tag1 = new Tag();
         tag1.setId(3);

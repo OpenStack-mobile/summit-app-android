@@ -13,11 +13,14 @@ import org.openstack.android.summit.modules.general_schedule_filter.user_interfa
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by Claudio Redi on 12/21/2015.
  */
 public class GeneralSchedulePresenter extends SchedulePresenter<GeneralScheduleFragment, IGeneralScheduleInteractor, IGeneralScheduleWireframe> implements IGeneralSchedulePresenter {
 
+    @Inject
     public GeneralSchedulePresenter(IGeneralScheduleInteractor interactor, IGeneralScheduleWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe, scheduleablePresenter, scheduleItemViewBuilder, scheduleFilter);
     }

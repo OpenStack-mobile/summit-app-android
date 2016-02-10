@@ -24,7 +24,7 @@ public class HttpTaskFactory implements IHttpTaskFactory {
     }
 
     @Override
-    public HttpTask Create(AccountType type, String url, String method, HttpTaskListener delegate) throws InvalidParameterSpecException {
+    public HttpTask create(AccountType type, String url, String method, HttpTaskListener delegate) throws InvalidParameterSpecException {
         ITokenManager tokenManager;
         if (type == AccountType.OIDC) {
             tokenManager = tokenManagerFactory.Create(TokenManagerFactory.TokenManagerType.OIDC);

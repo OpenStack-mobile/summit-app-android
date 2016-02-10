@@ -18,7 +18,7 @@ import io.realm.RealmConfiguration;
 public class OpenStackSummitApplication extends Application {
     private ApplicationComponent applicationComponent;
     public static Context context;
-
+    
     @Override public void onCreate() {
         super.onCreate();
         this.initializeInjector();
