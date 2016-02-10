@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.entities.TrackGroup;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +38,7 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
 
         if (trackGroups != null && trackGroups.size() > 0) {
             for(Track track: tracks) {
-                if (track.getTrackGroup() != null && trackGroups.contains(track.getTrackGroup().getId())) {
+                if (trackMatchFilter(track, trackGroups)) {
                     filteredTracks.add(track);
                 }
             }
@@ -56,5 +57,17 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
         List<TrackDTO> dtos = createDTOList(tracks, TrackDTO.class);
 
         return dtos;
+    }
+
+    private boolean trackMatchFilter(Track track, List<Integer> trackGroupIds) {
+        boolean isMatch = false;
+        if (track.getTrackGroups().size() > 0) {
+            for(TrackGroup trackGroup: track.getTrackGroups()) {
+                if (trackGroupIds.contains(trackGroup.getId())) {
+                    return true;
+                }
+            }
+        }
+        return isMatch;
     }
 }

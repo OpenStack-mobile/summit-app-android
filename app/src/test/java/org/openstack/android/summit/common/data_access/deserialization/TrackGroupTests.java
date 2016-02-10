@@ -38,8 +38,6 @@ public class TrackGroupTests {
         Assert.assertEquals("CIO / Business Leader", trackGroup.getName());
         Assert.assertEquals("track group description", trackGroup.getDescription());
         Assert.assertEquals("#0d37c3", trackGroup.getColor());
-        Assert.assertEquals(1, trackGroup.getTracks().size());
-        Assert.assertEquals(2, trackGroup.getTracks().get(0).getId());
     }
 
     @Test
@@ -63,6 +61,5 @@ public class TrackGroupTests {
         Assert.assertEquals("CIO / Business Leader", trackGroup.getName());
         Assert.assertEquals("track group description", trackGroup.getDescription());
         Assert.assertEquals("#0d37c3", trackGroup.getColor());
-        Assert.assertEquals(0, trackGroup.getTracks().size());
     }
 }

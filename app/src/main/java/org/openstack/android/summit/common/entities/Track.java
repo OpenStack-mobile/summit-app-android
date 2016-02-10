@@ -1,5 +1,8 @@
 package org.openstack.android.summit.common.entities;
 
+import java.util.List;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -10,7 +13,7 @@ public class Track extends RealmObject implements INamedEntity {
     @PrimaryKey
     private int id;
     private String name;
-    private TrackGroup trackGroup;
+    private RealmList<TrackGroup> trackGroups = new RealmList<>();
 
     public int getId() {
         return id;
@@ -28,11 +31,11 @@ public class Track extends RealmObject implements INamedEntity {
         this.name = name;
     }
 
-    public TrackGroup getTrackGroup() {
-        return trackGroup;
+    public RealmList<TrackGroup> getTrackGroups() {
+        return trackGroups;
     }
 
-    public void setTrackGroup(TrackGroup trackGroup) {
-        this.trackGroup = trackGroup;
+    public void setTrackGroups(RealmList<TrackGroup> trackGroup) {
+        this.trackGroups = trackGroup;
     }
 }

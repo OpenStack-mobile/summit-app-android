@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.common.data_access.MockSupport;
 import org.openstack.android.summit.common.entities.Company;
@@ -19,6 +20,12 @@ import org.robolectric.annotation.Config;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by Claudio Redi on 11/11/2015.
@@ -26,7 +33,7 @@ import io.realm.Realm;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
-@PrepareForTest({Realm.class})
+@PrepareForTest({Realm.class, RealmResults.class})
 public class DeserializerStorageTests {
 
     Realm mockRealm;
@@ -126,6 +133,12 @@ public class DeserializerStorageTests {
         //Arrange
         IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
         int companyId = 1;
+        long count = 0;
+        RealmQuery<Company> mockQuery = MockSupport.mockRealmQuery();
+        when(mockRealm.where(Company.class)).thenReturn(mockQuery);
+        when(mockQuery.equalTo(any(String.class), eq(companyId))).thenReturn(mockQuery);
+        when(mockQuery.count()).thenReturn(count);
+
         Company company = new Company();
         company.setId(companyId);
 
@@ -157,6 +170,11 @@ public class DeserializerStorageTests {
         //Arrange
         IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
         int companyId = 1;
+        RealmQuery<Company> mockQuery = MockSupport.mockRealmQuery();
+        RealmResults<Company> mockResults = MockSupport.mockRealmResults();
+        when(mockRealm.where(Company.class)).thenReturn(mockQuery);
+        when(mockQuery.findAll()).thenReturn(mockResults);
+
         Company company = new Company();
         company.setId(companyId);
 

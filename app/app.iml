@@ -110,8 +110,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="google-http-client-android-1.21.0" level="project" />
     <orderEntry type="library" exported="" name="guava-jdk5-17.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="asm-commons-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="powermock-reflect-1.6.2" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-commons-5.0.1" level="project" />
     <orderEntry type="library" exported="" name="google-api-client-android-1.21.0" level="project" />
     <orderEntry type="library" exported="" name="fbcore-0.9.0" level="project" />
     <orderEntry type="library" exported="" name="http-request-5.6" level="project" />

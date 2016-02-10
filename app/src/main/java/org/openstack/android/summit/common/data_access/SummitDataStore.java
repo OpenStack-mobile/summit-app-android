@@ -56,4 +56,10 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
             summitRemoteDataStore.getActive(remoteDelegate);
         }
     }
+
+    @Override
+    public Summit getActiveLocal() {
+        List<Summit> summits = getaAllLocal(Summit.class);
+        return summits.size() > 0 ? summits.get(0) : null;
+    }
 }

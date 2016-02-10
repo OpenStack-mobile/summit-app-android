@@ -7,6 +7,7 @@ import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
@@ -14,6 +15,7 @@ import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,8 +46,8 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         summitEvent.setId(jsonObject.getInt("id"));
         summitEvent.setName(jsonObject.getString("title"));
         summitEvent.setAllowFeedback(jsonObject.getBoolean("allow_feedback"));
-        summitEvent.setStart(new Date(jsonObject.getLong("start_date")*1000));
-        summitEvent.setEnd(new Date(jsonObject.getLong("end_date")*1000));
+        summitEvent.setStart(new Date(jsonObject.getLong("start_date")*1000L));
+        summitEvent.setEnd(new Date(jsonObject.getLong("end_date")*1000L));
         summitEvent.setEventDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : "");
         EventType eventType = deserializerStorage.get(jsonObject.getInt("type_id"), EventType.class);
         summitEvent.setEventType(eventType);
@@ -63,8 +65,14 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         int sponsorId;
         JSONArray jsonArraySponsors = jsonObject.getJSONArray("sponsors");
         for (int i = 0; i < jsonArraySponsors.length(); i++) {
-            sponsorId = jsonArraySponsors.getInt(i);
-            company = deserializerStorage.get(sponsorId, Company.class);
+
+            sponsorId = jsonArraySponsors.optInt(i);
+            if (sponsorId > 0) {
+                company = deserializerStorage.get(sponsorId, Company.class);
+            }
+            else {
+                company = genericDeserializer.deserialize(jsonArraySponsors.getJSONObject(i).toString(), Company.class);
+            }
             summitEvent.getSponsors().add(company);
         }
 
@@ -99,6 +107,9 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             tag = genericDeserializer.deserialize(jsonObjectTag.toString(), Tag.class);
             summitEvent.getTags().add(tag);
         }
+
+        List<Summit> summitList = deserializerStorage.getAll(Summit.class);
+        summitEvent.setSummit(summitList.get(0));
 
         deserializerStorage.add(summitEvent, SummitEvent.class);
 

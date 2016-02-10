@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.entities;
 
+import org.openstack.android.summit.common.data_access.data_polling.DataOperation;
+
 import java.util.Date;
 
 import io.realm.RealmObject;
@@ -10,18 +12,14 @@ import io.realm.annotations.PrimaryKey;
  * Created by Claudio Redi on 11/4/2015.
  */
 
-enum DataOperation {
-    Insert,
-    Update,
-    Delete
-}
-
-public class DataUpdate extends RealmObject {
+public class DataUpdate extends RealmObject implements IEntity {
     @PrimaryKey
     private int id;
     private int operation;
     private Date date;
     private String entityClassName;
+    @Ignore
+    private Class entityType;
     @Ignore
     private RealmObject entity;
 
@@ -63,5 +61,13 @@ public class DataUpdate extends RealmObject {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Class getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(Class entityType) {
+        this.entityType = entityType;
     }
 }

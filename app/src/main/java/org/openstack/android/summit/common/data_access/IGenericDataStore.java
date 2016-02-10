@@ -12,7 +12,7 @@ public interface IGenericDataStore {
 
     <T extends RealmObject> List<T> getaAllLocal(Class<T> type);
 
-    <T extends RealmObject> void SaveOrUpdate(T entity, IDataStoreOperationListener<T> delegate, Class<T> type);
+    <T extends RealmObject> void saveOrUpdate(T entity, IDataStoreOperationListener<T> delegate, Class<T> type);
 
     <T extends RealmObject> void delete(int id, IDataStoreOperationListener<T> delegate, Class<T> type);
 }

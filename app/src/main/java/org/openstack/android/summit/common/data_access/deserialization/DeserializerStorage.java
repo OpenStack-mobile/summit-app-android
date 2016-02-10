@@ -55,12 +55,17 @@ public class DeserializerStorage implements IDeserializerStorage {
                 list.add((T)entity);
             }
         }
+        else {
+            list = realm.where(type).findAll();
+        }
         return list;
     }
 
     @Override
     public <T extends RealmObject & IEntity> Boolean exist(int entityId, Class<T> type) {
-        return deserializedEntityDictionary.containsKey(type) && deserializedEntityDictionary.get(type).containsKey(entityId);
+        return (deserializedEntityDictionary.containsKey(type) &&
+                deserializedEntityDictionary.get(type).containsKey(entityId)) ||
+                realm.where(type).equalTo("id", entityId).count() > 0;
     }
 
     @Override

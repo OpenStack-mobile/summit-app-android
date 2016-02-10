@@ -1,6 +1,9 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.IEntity;
 import org.openstack.android.summit.common.entities.Member;
@@ -9,6 +12,9 @@ import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -27,6 +33,7 @@ public class Deserializer implements IDeserializer {
     ISummitAttendeeDeserializer summitAttendeeDeserializer;
     ISummitDeserializer summitDeserializer;
     ISummitEventDeserializer summitEventDeserializer;
+    IDataUpdateDeserializer dataUpdateDeserializer;
 
     public Deserializer()
     {
@@ -40,7 +47,8 @@ public class Deserializer implements IDeserializer {
                         IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                         ISummitAttendeeDeserializer summitAttendeeDeserializer,
                         ISummitDeserializer summitDeserializer,
-                        ISummitEventDeserializer summitEventDeserializer)
+                        ISummitEventDeserializer summitEventDeserializer,
+                        IDataUpdateDeserializer dataUpdateDeserializer)
     {
         this.genericDeserializer = genericDeserializer;
         this.feedbackDeserializer = feedbackDeserializer;
@@ -50,6 +58,7 @@ public class Deserializer implements IDeserializer {
         this.summitAttendeeDeserializer = summitAttendeeDeserializer;
         this.summitDeserializer = summitDeserializer;
         this.summitEventDeserializer = summitEventDeserializer;
+        this.dataUpdateDeserializer = dataUpdateDeserializer;
     }
 
     @Override
@@ -76,8 +85,22 @@ public class Deserializer implements IDeserializer {
         if (type == SummitEvent.class) {
             return (T)summitEventDeserializer.deserialize(jsonString);
         }
+        if (type == DataUpdate.class) {
+            return (T)dataUpdateDeserializer.deserialize(jsonString);
+        }
         else {
             return genericDeserializer.deserialize(jsonString, type);
         }
+    }
+
+    public <T extends RealmObject & IEntity> List<T> deserializeList(String jsonString, Class<T> type) throws JSONException, IllegalArgumentException {
+        JSONArray jsonArray = new JSONArray(jsonString);
+        JSONObject jsonObject;
+        List<T> list = new ArrayList<>();
+        for(int i = 0; i < jsonArray.length(); i++) {
+            jsonObject = jsonArray.getJSONObject(i);
+            list.add(deserialize(jsonObject.toString(), type));
+        }
+        return list;
     }
 }

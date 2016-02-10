@@ -8,12 +8,15 @@ import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Presentation;
+import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 import org.robolectric.RobolectricTestRunner;
+
+import java.util.ArrayList;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -66,6 +69,12 @@ public class SummitEventDeserializerTests {
         Presentation presentation = new Presentation();
         presentation.setId(presentationId);
         when(presentationDeserializerMock.deserialize(eq(jsonString))).thenReturn(presentation);
+
+        Summit summit = new Summit();
+        summit.setId(1);
+        ArrayList<Summit> summits = new ArrayList<>();
+        summits.add(summit);
+        when(deserializerStorageMock.getAll(Summit.class)).thenReturn(summits);
 
         SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, deserializerStorageMock);
 
@@ -128,6 +137,12 @@ public class SummitEventDeserializerTests {
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
 
         SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, deserializerStorageMock);
+
+        Summit summit = new Summit();
+        summit.setId(1);
+        ArrayList<Summit> summits = new ArrayList<>();
+        summits.add(summit);
+        when(deserializerStorageMock.getAll(Summit.class)).thenReturn(summits);
 
         // Act
         SummitEvent summitEvent = summitEventDeserializer.deserialize(jsonString);
@@ -209,6 +224,12 @@ public class SummitEventDeserializerTests {
         Tag tag = new Tag();
         tag.setId(tagId);
         when(genericDeserializerMock.deserialize(eq("{\"id\":19,\"tag\":\"test_tag\"}"), eq(Tag.class))).thenReturn(tag);
+
+        Summit summit = new Summit();
+        summit.setId(1);
+        ArrayList<Summit> summits = new ArrayList<>();
+        summits.add(summit);
+        when(deserializerStorageMock.getAll(Summit.class)).thenReturn(summits);
 
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
 

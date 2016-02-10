@@ -58,7 +58,7 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
                 String.format("/api/v1/summits/current/attendees/%s/schedule/%s", summitAttendee.getId(), summitEvent.getId());
         HttpTask httpTask = null;
         try {
-            httpTask = httpTaskFactory.Create(AccountType.OIDC, url, httpMethod, httpTaskListener);
+            httpTask = httpTaskFactory.create(AccountType.OIDC, url, httpMethod, httpTaskListener);
         } catch (InvalidParameterSpecException e) {
             e.printStackTrace();
         }

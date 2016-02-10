@@ -8,4 +8,6 @@ import org.openstack.android.summit.common.entities.Summit;
  */
 public interface ISummitDataStore {
     void getActive(IDataStoreOperationListener<Summit> dataStoreOperationListener);
+
+    Summit getActiveLocal();
 }

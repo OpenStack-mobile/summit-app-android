@@ -40,7 +40,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            presenter.onCreate(null);
+            presenter.onResume();
         }
     };
 
