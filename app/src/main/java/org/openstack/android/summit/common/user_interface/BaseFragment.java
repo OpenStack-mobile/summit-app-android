@@ -3,10 +3,13 @@ package org.openstack.android.summit.common.user_interface;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -18,6 +21,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -25,14 +30,36 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * Created by Claudio Redi on 11/3/2015.
  */
-public abstract class BaseFragment extends Fragment implements IBaseView {
+public abstract class BaseFragment<P extends IBasePresenter> extends Fragment implements IBaseView {
     private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
     private Boolean showActivityIndicator;
     protected View view;
+    @Inject
+    protected P presenter;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter.setView(this);
+        presenter.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        presenter.onCreateView(savedInstanceState);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.onPause();
     }
 
     /**
@@ -84,11 +111,17 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
 
     @Override
     public void hideActivityIndicator() {
-        showActivityIndicator = false;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showActivityIndicator=false;
 
-        if (progressDialog != null) {
-            progressDialog.hide();
-        }
+                if(progressDialog!=null)
+                {
+                    progressDialog.hide();
+                }
+            }
+        });
     }
 
     @Override

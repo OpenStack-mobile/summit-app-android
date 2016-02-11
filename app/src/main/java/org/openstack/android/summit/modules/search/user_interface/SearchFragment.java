@@ -36,9 +36,9 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/14/2016.
  */
-public class SearchFragment extends BaseFragment implements ISearchView {
-    @Inject
-    ISearchPresenter presenter;
+public class SearchFragment extends BaseFragment<ISearchPresenter> implements ISearchView {
+    /*@Inject
+    ISearchPresenter presenter;*/
 
     private ScheduleListAdapter scheduleListAdapter;
     private TrackListAdapter trackListAdapter;
@@ -48,9 +48,6 @@ public class SearchFragment extends BaseFragment implements ISearchView {
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
-
-        presenter.setView(this);
-        presenter.onCreate(savedInstanceState);
     }
 
     @Override
@@ -117,7 +114,6 @@ public class SearchFragment extends BaseFragment implements ISearchView {
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onResume();
         setTitle(getResources().getString(R.string.search));
     }
 

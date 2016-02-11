@@ -34,10 +34,7 @@ import javax.inject.Inject;
  * Use the {@link EventsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventsFragment extends BaseFragment implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IEventsView {
-
-    @Inject
-    IEventsPresenter presenter;
+public class EventsFragment extends BaseFragment<IEventsPresenter> implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IEventsView {
 
     @Inject
     GeneralScheduleFragment generalScheduleFragment;
@@ -58,12 +55,9 @@ public class EventsFragment extends BaseFragment implements ViewPager.OnPageChan
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         getComponent().inject(this);
-        presenter.setView(this);
-
+        super.onCreate(savedInstanceState);
         setTitle(getResources().getString(R.string.events));
-
         setHasOptionsMenu(true);
     }
 
@@ -135,7 +129,7 @@ public class EventsFragment extends BaseFragment implements ViewPager.OnPageChan
             }
         });
 
-        presenter.onCreate(savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
 
         return view;
     }

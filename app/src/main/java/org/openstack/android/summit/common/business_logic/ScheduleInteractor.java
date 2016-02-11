@@ -31,7 +31,6 @@ import javax.inject.Inject;
  */
 public class ScheduleInteractor extends ScheduleableInteractor implements IScheduleInteractor {
     private ISummitDataStore summitDataStore;
-    private IDataUpdatePoller dataUpdatePoller;
 
     @Inject
     public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller) {
@@ -56,8 +55,6 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
             public void onSuceedWithSingleData(Summit data) {
                 if (delegate != null) {
                     try{
-                        dataUpdatePoller.startPollingIfNotPollingAlready();
-
                         SummitDTO summitDTO = dtoAssembler.createDTO(data, SummitDTO.class);
                         delegate.onSucceedWithData(summitDTO);
                     } catch (Exception e) {

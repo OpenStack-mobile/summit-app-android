@@ -23,10 +23,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TrackListFragment extends BaseFragment implements ITrackListView {
-
-    @Inject
-    ITrackListPresenter presenter;
+public class TrackListFragment extends BaseFragment<ITrackListPresenter> implements ITrackListView {
 
     private TrackListAdapter trackListAdapter;
 
@@ -37,7 +34,6 @@ public class TrackListFragment extends BaseFragment implements ITrackListView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
-        presenter.setView(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -45,7 +41,6 @@ public class TrackListFragment extends BaseFragment implements ITrackListView {
     public void onResume() {
         setTitle(getResources().getString(R.string.events));
         super.onResume();
-        presenter.onResume();
     }
 
     // HACK: the tab container preload this tab on initial load, at that time data is not yet on local database so without this
@@ -71,7 +66,7 @@ public class TrackListFragment extends BaseFragment implements ITrackListView {
         ListView trackList = (ListView)view.findViewById(R.id.list_levels);
         trackListAdapter = new TrackListAdapter(getContext());
         trackList.setAdapter(trackListAdapter);
-        presenter.onCreate(savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 

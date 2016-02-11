@@ -28,7 +28,7 @@ public class LevelListPresenter extends BasePresenter<LevelListFragment, ILevelL
     private List<String> levels;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreateView(Bundle savedInstanceState) {
         List<String> filtersOnLevels = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
         levels = filtersOnLevels != null && filtersOnLevels.size() > 0 ? filtersOnLevels : interactor.getLevels();
         view.setLevels(levels);

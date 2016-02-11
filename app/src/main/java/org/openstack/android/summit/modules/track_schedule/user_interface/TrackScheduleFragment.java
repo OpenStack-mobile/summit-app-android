@@ -39,7 +39,6 @@ public class TrackScheduleFragment extends ScheduleFragment<ITrackSchedulePresen
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
     }
 

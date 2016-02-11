@@ -26,10 +26,10 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/26/2016.
  */
-public class MemberProfileFragment extends BaseFragment implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IMemberProfileView {
+public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter> implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IMemberProfileView {
 
-    @Inject
-    IMemberProfilePresenter presenter;
+    /*@Inject
+    IMemberProfilePresenter presenter;*/
 
     @Inject
     PersonalScheduleFragment personalScheduleFragment;
@@ -51,16 +51,13 @@ public class MemberProfileFragment extends BaseFragment implements ViewPager.OnP
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         getComponent().inject(this);
-        presenter.setView(this);
-        presenter.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onResume();
         setTitle(getResources().getString(R.string.profile));
     }
 

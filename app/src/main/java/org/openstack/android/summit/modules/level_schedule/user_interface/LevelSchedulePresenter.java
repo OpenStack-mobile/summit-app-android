@@ -27,7 +27,7 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreateView(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             level = savedInstanceState.getString(Constants.NAVIGATION_PARAMETER_LEVEL);
         }
@@ -35,7 +35,7 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
             level = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_LEVEL, String.class);
         }
         view.setShowActiveFilterIndicator(scheduleFilter.hasActiveFilters());
-        super.onCreate(savedInstanceState);
+        super.onCreateView(savedInstanceState);
     }
 
     @Override

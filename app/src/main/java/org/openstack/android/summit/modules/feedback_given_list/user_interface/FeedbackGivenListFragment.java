@@ -28,10 +28,8 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/27/2016.
  */
-public class FeedbackGivenListFragment extends BaseFragment implements IFeedbackGivenListView {
+public class FeedbackGivenListFragment extends BaseFragment<IFeedbackGivenListPresenter> implements IFeedbackGivenListView {
 
-    @Inject
-    protected IFeedbackGivenListPresenter presenter;
     FeedbackGivenListAdapter feedbackGivenListAdapter;
 
     public FeedbackGivenListFragment() {
@@ -40,9 +38,8 @@ public class FeedbackGivenListFragment extends BaseFragment implements IFeedback
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         getComponent().inject(this);
-        presenter.setView(this);
+        super.onCreate(savedInstanceState);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +48,7 @@ public class FeedbackGivenListFragment extends BaseFragment implements IFeedback
         ListView speakerList = (ListView)view.findViewById(R.id.list_feedback);
         feedbackGivenListAdapter = new FeedbackGivenListAdapter(getContext());
         speakerList.setAdapter(feedbackGivenListAdapter);
-        presenter.onCreate(savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 

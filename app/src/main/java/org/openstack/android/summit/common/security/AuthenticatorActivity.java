@@ -175,36 +175,42 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected Boolean doInBackground(String... args) {
-            String fragmentPart = args[0];
+            try {
+                String fragmentPart = args[0];
 
-            Uri tokenExtrationUrl = new Uri.Builder().encodedQuery(fragmentPart).build();
-            String accessToken = tokenExtrationUrl.getQueryParameter("access_token");
-            String idToken = tokenExtrationUrl.getQueryParameter("id_token");
-            String tokenType = tokenExtrationUrl.getQueryParameter("token_type");
-            String expiresInString = tokenExtrationUrl.getQueryParameter("expires_in");
-            Long expiresIn = (!TextUtils.isEmpty(expiresInString)) ? Long.decode(expiresInString) : null;
+                Uri tokenExtrationUrl = new Uri.Builder().encodedQuery(fragmentPart).build();
+                String accessToken = tokenExtrationUrl.getQueryParameter("access_token");
+                String idToken = tokenExtrationUrl.getQueryParameter("id_token");
+                String tokenType = tokenExtrationUrl.getQueryParameter("token_type");
+                String expiresInString = tokenExtrationUrl.getQueryParameter("expires_in");
+                Long expiresIn = (!TextUtils.isEmpty(expiresInString)) ? Long.decode(expiresInString) : null;
 
-            String scope = tokenExtrationUrl.getQueryParameter("scope");
+                String scope = tokenExtrationUrl.getQueryParameter("scope");
 
-            if (TextUtils.isEmpty(accessToken) || TextUtils.isEmpty(idToken) || TextUtils.isEmpty(tokenType) || expiresIn == null) {
-                return false;
-            }
-            else {
-                Log.i(TAG, "AuthToken : " + accessToken);
-
-                IdTokenResponse response = new IdTokenResponse();
-                response.setAccessToken(accessToken);
-                response.setIdToken(idToken);
-                response.setTokenType(tokenType);
-                response.setExpiresInSeconds(expiresIn);
-                response.setScope(scope);
-                response.setFactory(new GsonFactory());
-
-                if (isNewAccount) {
-                    createAccount(response);
-                } else {
-                    setTokens(response);
+                if (TextUtils.isEmpty(accessToken) || TextUtils.isEmpty(idToken) || TextUtils.isEmpty(tokenType) || expiresIn == null) {
+                    return false;
                 }
+                else {
+                    Log.i(TAG, "AuthToken : " + accessToken);
+
+                    IdTokenResponse response = new IdTokenResponse();
+                    response.setAccessToken(accessToken);
+                    response.setIdToken(idToken);
+                    response.setTokenType(tokenType);
+                    response.setExpiresInSeconds(expiresIn);
+                    response.setScope(scope);
+                    response.setFactory(new GsonFactory());
+
+                    if (isNewAccount) {
+                        createAccount(response);
+                    } else {
+                        setTokens(response);
+                    }
+                }
+            }
+            catch(Exception e) {
+                Log.e(Constants.LOG_TAG, "Error executing API request", e);
+                return false;
             }
 
             return true;
@@ -234,37 +240,43 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private class RequestIdTokenFromFragmentPartTask extends AsyncTask<String, Void, Boolean> {
         @Override
         protected Boolean doInBackground(String... args) {
-            String fragmentPart = args[0];
+            try {
+                String fragmentPart = args[0];
 
-            Uri tokenExtrationUrl = new Uri.Builder().encodedQuery(fragmentPart).build();
-            String idToken = tokenExtrationUrl.getQueryParameter("id_token");
-            String authCode = tokenExtrationUrl.getQueryParameter("code");
+                Uri tokenExtrationUrl = new Uri.Builder().encodedQuery(fragmentPart).build();
+                String idToken = tokenExtrationUrl.getQueryParameter("id_token");
+                String authCode = tokenExtrationUrl.getQueryParameter("code");
 
-            if (TextUtils.isEmpty(idToken) || TextUtils.isEmpty(authCode)) {
-                return false;
-            }
-            else {
-                IdTokenResponse response;
-
-                Log.i(TAG, "Requesting access_token with AuthCode : " + authCode);
-
-                try {
-                    response = OIDCUtils.requestTokens(Constants.TOKEN_SERVER_URL,
-                            ConfigOIDC.redirectUrl,
-                            ConfigOIDC.clientId,
-                            ConfigOIDC.clientSecret,
-                            authCode);
-                } catch (IOException e) {
-                    Log.e(TAG, "Could not get response.");
-                    e.printStackTrace();
+                if (TextUtils.isEmpty(idToken) || TextUtils.isEmpty(authCode)) {
                     return false;
                 }
+                else {
+                    IdTokenResponse response;
 
-                if (isNewAccount) {
-                    createAccount(response);
-                } else {
-                    setTokens(response);
+                    Log.i(TAG, "Requesting access_token with AuthCode : " + authCode);
+
+                    try {
+                        response = OIDCUtils.requestTokens(Constants.TOKEN_SERVER_URL,
+                                ConfigOIDC.redirectUrl,
+                                ConfigOIDC.clientId,
+                                ConfigOIDC.clientSecret,
+                                authCode);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Could not get response.");
+                        e.printStackTrace();
+                        return false;
+                    }
+
+                    if (isNewAccount) {
+                        createAccount(response);
+                    } else {
+                        setTokens(response);
+                    }
                 }
+            }
+            catch (Exception e) {
+                Log.e(Constants.LOG_TAG, "Error executing API request", e);
+                return false;
             }
 
             return true;
@@ -294,27 +306,33 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private class RequestIdTokenTask extends AsyncTask<String, Void, Boolean> {
         @Override
         protected Boolean doInBackground(String... args) {
-            String authToken = args[0];
-            IdTokenResponse response;
+            try{
+                String authToken = args[0];
+                IdTokenResponse response;
 
-            Log.d(TAG, "Requesting ID token.");
+                Log.d(TAG, "Requesting ID token.");
 
-            try {
-                response = OIDCUtils.requestTokens(Constants.TOKEN_SERVER_URL,
-                        ConfigOIDC.redirectUrl,
-                        ConfigOIDC.clientId,
-                        ConfigOIDC.clientSecret,
-                        authToken);
-            } catch (IOException e) {
-                Log.e(TAG, "Could not get response.");
-                e.printStackTrace();
-                return false;
+                try {
+                    response = OIDCUtils.requestTokens(Constants.TOKEN_SERVER_URL,
+                            ConfigOIDC.redirectUrl,
+                            ConfigOIDC.clientId,
+                            ConfigOIDC.clientSecret,
+                            authToken);
+                } catch (IOException e) {
+                    Log.e(TAG, "Could not get response.");
+                    e.printStackTrace();
+                    return false;
+                }
+
+                if (isNewAccount) {
+                    createAccount(response);
+                } else {
+                    setTokens(response);
+                }
             }
-
-            if (isNewAccount) {
-                createAccount(response);
-            } else {
-                setTokens(response);
+            catch (Exception e) {
+                Log.e(Constants.LOG_TAG, "Error executing API request", e);
+                return false;
             }
 
             return true;

@@ -46,7 +46,7 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
             }
             taskResult.setSucceed(true);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(Constants.LOG_TAG, "Error executing API request", e);
             taskResult.setSucceed(false);
             taskResult.setBody(e.getMessage());

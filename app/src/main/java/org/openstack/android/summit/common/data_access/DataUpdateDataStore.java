@@ -13,6 +13,6 @@ public class DataUpdateDataStore extends GenericDataStore implements IDataUpdate
     public int getLatestDataUpdate() {
         Realm realm = Realm.getDefaultInstance();
         Number latestId = realm.where(DataUpdate.class).max("id");
-        return latestId.intValue();
+        return latestId != null ? latestId.intValue() : 0;
     }
 }

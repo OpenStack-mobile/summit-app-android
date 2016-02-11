@@ -1,5 +1,6 @@
 package org.openstack.android.summit.dagger.modules;
 
+import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.modules.level_list.ILevelListWireframe;
@@ -30,8 +31,8 @@ public class LevelListModule {
     }
 
     @Provides
-    ILevelListInteractor providesLevelListInteractor(ISummitEventDataStore summitEventDataStore) {
-        return new LevelListInteractor(summitEventDataStore);
+    ILevelListInteractor providesLevelListInteractor(ISummitEventDataStore summitEventDataStore, IDTOAssembler dtoAssembler) {
+        return new LevelListInteractor(summitEventDataStore, dtoAssembler);
     }
 
     @Provides

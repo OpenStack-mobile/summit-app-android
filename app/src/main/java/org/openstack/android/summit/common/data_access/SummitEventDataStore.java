@@ -106,7 +106,7 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
                 if (!isFirst) {
                     query = query.or();
                 }
-                query = query.equalTo("presentation.track.trackGroup.id", trackGroupId);
+                query = query.equalTo("presentation.track.trackGroups.id", trackGroupId);
                 isFirst = false;
             }
             query.endGroup();

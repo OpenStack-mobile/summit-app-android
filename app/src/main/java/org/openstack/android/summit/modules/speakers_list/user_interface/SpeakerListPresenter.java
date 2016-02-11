@@ -30,7 +30,7 @@ public class SpeakerListPresenter extends BasePresenter<ISpeakerListView, ISpeak
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreateView(Bundle savedInstanceState) {
         loadData();
     }
 

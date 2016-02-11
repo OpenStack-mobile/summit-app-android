@@ -27,7 +27,7 @@ public class SpeakerPresentationsPresenter  extends SchedulePresenter<ISpeakerPr
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreateView(Bundle savedInstanceState) {
         boolean isMyProfile;
         if (savedInstanceState != null) {
             isMyProfile = savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE);

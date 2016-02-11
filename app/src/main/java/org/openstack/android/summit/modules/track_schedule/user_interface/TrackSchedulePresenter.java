@@ -29,7 +29,7 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreateView(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             trackId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_TRACK);
         }
@@ -41,7 +41,7 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
         view.setTrack(track.getName());
         view.setShowActiveFilterIndicator(scheduleFilter.hasActiveFilters());
 
-        super.onCreate(savedInstanceState);
+        super.onCreateView(savedInstanceState);
     }
 
     @Override

@@ -32,9 +32,7 @@ import me.kaede.tagview.TagView;
 /**
  * Created by Claudio Redi on 2/1/2016.
  */
-public class GeneralScheduleFilterFragment extends BaseFragment implements IGeneralScheduleFilterView {
-    @Inject
-    IGeneralScheduleFilterPresenter presenter;
+public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralScheduleFilterPresenter> implements IGeneralScheduleFilterView {
 
     private SummitTypeListAdapter summitTypeListAdapter;
     private TrackGroupListAdapter trackGroupListAdapter;
@@ -46,8 +44,6 @@ public class GeneralScheduleFilterFragment extends BaseFragment implements IGene
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
-
-        presenter.setView(this);
     }
 
     @Override
@@ -116,7 +112,7 @@ public class GeneralScheduleFilterFragment extends BaseFragment implements IGene
             }
         });
 
-        presenter.onCreate(savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
 
         return view;
     }

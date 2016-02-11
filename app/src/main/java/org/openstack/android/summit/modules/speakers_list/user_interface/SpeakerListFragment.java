@@ -20,10 +20,8 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/13/2016.
  */
-public class SpeakerListFragment extends BaseFragment implements ISpeakerListView {
+public class SpeakerListFragment extends BaseFragment<ISpeakerListPresenter> implements ISpeakerListView {
 
-    @Inject
-    protected ISpeakerListPresenter presenter;
     SpeakerListAdapter speakerListAdapter;
 
     public SpeakerListFragment() {
@@ -32,15 +30,13 @@ public class SpeakerListFragment extends BaseFragment implements ISpeakerListVie
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         getComponent().inject(this);
-        presenter.setView(this);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onResume();
         setTitle(getResources().getString(R.string.speakers));
     }
 
@@ -56,7 +52,7 @@ public class SpeakerListFragment extends BaseFragment implements ISpeakerListVie
                 presenter.loadData();
             }
         });
-        presenter.onCreate(savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 
