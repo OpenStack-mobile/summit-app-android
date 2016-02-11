@@ -158,6 +158,8 @@ public class DataUpdatePoller implements IDataUpdatePoller {
     }
 
     public void stop() {
-        scheduledFuture.cancel(true);
+        if (!scheduledFuture.isCancelled()) {
+            scheduledFuture.cancel(true);
+        }
     }
 }

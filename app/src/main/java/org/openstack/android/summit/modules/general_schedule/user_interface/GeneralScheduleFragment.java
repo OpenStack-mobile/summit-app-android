@@ -32,8 +32,7 @@ public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePr
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_general_schedule, container, false);
-        this.view = view;
+        view = inflater.inflate(R.layout.fragment_general_schedule, container, false);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 }

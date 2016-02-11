@@ -20,10 +20,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/26/2016.
  */
-public class MemberProfileDetailFragment extends BaseFragment implements IMemberProfileDetailView {
-
-    @Inject
-    IMemberProfileDetailPresenter presenter;
+public class MemberProfileDetailFragment extends BaseFragment<IMemberProfileDetailPresenter> implements IMemberProfileDetailView {
 
     public MemberProfileDetailFragment() {
         // Required empty public constructor
@@ -33,9 +30,7 @@ public class MemberProfileDetailFragment extends BaseFragment implements IMember
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
-        presenter.setView(this);
     }
 
     @Override
@@ -48,7 +43,7 @@ public class MemberProfileDetailFragment extends BaseFragment implements IMember
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_member_profile_detail, container, false);
         this.view = view;
-        presenter.onCreate(savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 

@@ -29,10 +29,8 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventDetailFragment extends BaseFragment implements IEventDetailView {
+public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> implements IEventDetailView {
 
-    @Inject
-    IEventDetailPresenter presenter;
     private SpeakerListAdapter speakerListAdapter;
     private View view;
     private Menu menu;
@@ -45,9 +43,8 @@ public class EventDetailFragment extends BaseFragment implements IEventDetailVie
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         getComponent().inject(this);
-        presenter.setView(this);
+        super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
@@ -65,7 +62,7 @@ public class EventDetailFragment extends BaseFragment implements IEventDetailVie
         speakerListAdapter = new SpeakerListAdapter(getContext());
         speakerList.setAdapter(speakerListAdapter);
 
-        presenter.onCreate(savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 

@@ -23,21 +23,23 @@ import io.realm.RealmObject;
  */
 public class DataUpdateDeserializer implements IDataUpdateDeserializer {
     IClassResolver classResolver;
-    IDeserializer deserializer;
     IGenericDeserializer genericDeserializer;
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
     ISummitEventDeserializer summitEventDeserializer;
+    IDeserializerStorage deserializerStorage;
 
     @Inject
     public DataUpdateDeserializer(IClassResolver classResolver,
                         IGenericDeserializer genericDeserializer,
                         IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
-                        ISummitEventDeserializer summitEventDeserializer)
+                        ISummitEventDeserializer summitEventDeserializer,
+                        IDeserializerStorage deserializerStorage)
     {
         this.classResolver = classResolver;
         this.genericDeserializer = genericDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
         this.summitEventDeserializer = summitEventDeserializer;
+        this.deserializerStorage = deserializerStorage;
     }
 
     @Override
@@ -55,7 +57,9 @@ public class DataUpdateDeserializer implements IDataUpdateDeserializer {
             } catch (ClassNotFoundException e) {
                 throw new JSONException(String.format("It wasn't possible to desirialize json for className %s"));
             }
-            RealmObject entity = deserialize(jsonObject.get("entity").toString(), type);
+            RealmObject entity = !operationType.equals("DELETE") && !className.equals("MySchedule")
+                    ? deserialize(jsonObject.get("entity").toString(), type )
+                    : deserializerStorage.get(jsonObject.getInt("entity_id"), type);
 
             dataUpdate.setEntityType(type);
             dataUpdate.setEntityClassName(className);

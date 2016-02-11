@@ -31,14 +31,7 @@ public class LevelScheduleFragment extends ScheduleFragment<ILevelSchedulePresen
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onResume();
     }
 
     @Override

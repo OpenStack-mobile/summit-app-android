@@ -37,7 +37,7 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreateView(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         summitTypes = interactor.getSummitTypes();

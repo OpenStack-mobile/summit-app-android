@@ -20,10 +20,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LevelListFragment extends BaseFragment implements ILevelListView {
-
-    @Inject
-    ILevelListPresenter presenter;
+public class LevelListFragment extends BaseFragment<ILevelListPresenter> implements ILevelListView {
 
     private LevelListAdapter levelListAdapter;
 
@@ -34,7 +31,6 @@ public class LevelListFragment extends BaseFragment implements ILevelListView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
-        presenter.setView(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -51,7 +47,7 @@ public class LevelListFragment extends BaseFragment implements ILevelListView {
         ListView levelList = (ListView)view.findViewById(R.id.list_levels);
         levelListAdapter = new LevelListAdapter(getContext());
         levelList.setAdapter(levelListAdapter);
-        presenter.onCreate(savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 

@@ -29,10 +29,10 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 12/29/2015.
  */
-public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment implements IScheduleView {
+public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment<P> implements IScheduleView {
 
-    @Inject
-    protected P presenter;
+    /*@Inject
+    protected P presenter;*/
     ScheduleListAdapter scheduleListAdapter;
     List<ScheduleItemDTO> events;
     Date startDate;
@@ -74,14 +74,13 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
             }
         });
 
-        presenter.onCreate(savedInstanceState);
+        presenter.onCreateView(savedInstanceState);
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onResume();
     }
 
     @Override

@@ -4,11 +4,11 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_events" android:icon="@drawable/events"
             android:title="EVENTS" />
-        <item android:id="@+id/nav_speakers" android:icon="@drawable/speakers"
+        <item android:id="@+id/nav_speakers" android:icon="@drawable/people"
             android:title="SPEAKERS" />
         <item android:id="@+id/nav_venues" android:icon="@drawable/venues"
             android:title="VENUES" />
-        <item android:id="@+id/nav_my_profile" android:icon="@drawable/my_profile"
+        <item android:id="@+id/nav_my_profile" android:icon="@drawable/my_summit"
             android:title="MY PROFILE" android:visible="false" />
     </group>
 

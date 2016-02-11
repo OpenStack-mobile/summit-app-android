@@ -32,8 +32,8 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreateView(Bundle savedInstanceState) {
+        super.onCreateView(savedInstanceState);
         if (savedInstanceState != null) {
             eventId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_ID);
         }

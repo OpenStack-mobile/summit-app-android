@@ -30,7 +30,7 @@ public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackList
     private List<TrackDTO> tracks;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreateView(Bundle savedInstanceState) {
         init();
     }
 

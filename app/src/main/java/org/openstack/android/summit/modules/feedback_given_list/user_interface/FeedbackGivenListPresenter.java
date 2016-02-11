@@ -22,7 +22,7 @@ public class FeedbackGivenListPresenter extends BasePresenter<IFeedbackGivenList
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreateView(Bundle savedInstanceState) {
         feedbackList = interactor.getFeedbackGivenByCurrentUser();
         view.setFeedbackList(feedbackList);
     }

@@ -1,9 +1,12 @@
 package org.openstack.android.summit.dagger.modules;
 
+import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.events.EventsWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
+import org.openstack.android.summit.modules.events.business_logic.EventsInteractor;
+import org.openstack.android.summit.modules.events.business_logic.IEventsInteractor;
 import org.openstack.android.summit.modules.events.user_interface.EventsFragment;
 import org.openstack.android.summit.modules.events.user_interface.EventsPresenter;
 import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
@@ -29,8 +32,13 @@ public class EventsModule {
     }
 
     @Provides
-    IEventsPresenter providesEventsPresenter(IEventsWireframe eventsWireframe, IScheduleFilter scheduleFilter) {
-        return new EventsPresenter(eventsWireframe, scheduleFilter);
+    IEventsInteractor providesEventsInteractor(IDTOAssembler dtoAssembler) {
+        return new EventsInteractor(dtoAssembler);
+    }
+
+    @Provides
+    IEventsPresenter providesEventsPresenter(IEventsInteractor eventsInteractor, IEventsWireframe eventsWireframe, IScheduleFilter scheduleFilter) {
+        return new EventsPresenter(eventsInteractor, eventsWireframe, scheduleFilter);
     }
 }
 

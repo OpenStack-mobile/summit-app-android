@@ -2,10 +2,12 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.os.Bundle;
 
+import org.openstack.android.summit.common.business_logic.IBaseInteractor;
+
 /**
  * Created by Claudio Redi on 1/11/2016.
  */
-public class BasePresenter<V extends IBaseView, I, W> implements IBasePresenter<V> {
+public class BasePresenter<V extends IBaseView, I extends IBaseInteractor, W> implements IBasePresenter<V> {
     protected V view;
     protected I interactor;
     protected W wireframe;
@@ -21,6 +23,11 @@ public class BasePresenter<V extends IBaseView, I, W> implements IBasePresenter<
     }
 
     @Override
+    public void onCreateView(Bundle savedInstanceState) {
+
+    }
+
+    @Override
     public void setView(V view) {
         this.view = view;
     }
@@ -32,12 +39,12 @@ public class BasePresenter<V extends IBaseView, I, W> implements IBasePresenter<
 
     @Override
     public void onResume() {
-
+        interactor.startPollingIfNotPollingAlready();
     }
 
     @Override
     public void onPause() {
-
+        interactor.stopPolling();
     }
 
     @Override

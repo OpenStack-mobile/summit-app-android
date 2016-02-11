@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.data_access.data_polling;
 
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
+import org.openstack.android.summit.common.entities.IEntity;
 
 /**
  * Created by Claudio Redi on 2/8/2016.
@@ -23,7 +24,11 @@ public class DataUpdateStrategy implements IDataUpdateStrategy {
                 break;
             case DataOperation.Delete:
                 if (dataUpdate.getEntity() != null) {
-                    //genericDataStore.delete(dataUpdate.getEntity().get, null);
+                    genericDataStore.delete(
+                            ((IEntity)dataUpdate.getEntity()).getId(),
+                            null,
+                            dataUpdate.getEntityType()
+                    );
                 }
         }
     }

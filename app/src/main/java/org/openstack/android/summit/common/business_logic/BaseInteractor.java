@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.business_logic;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.IEntity;
+import org.openstack.android.summit.common.network.IReachability;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +13,13 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/13/2016.
  */
-public class BaseInteractor {
+public class BaseInteractor implements IBaseInteractor {
 
     @Inject
     IDataUpdatePoller dataUpdatePoller;
+
+    @Inject
+    IReachability reachability;
 
     protected IDTOAssembler dtoAssembler;
 
@@ -33,5 +37,19 @@ public class BaseInteractor {
 
         return dtos;
 
+    }
+
+    @Override
+    public void stopPolling() {
+        if (dataUpdatePoller != null) {
+            dataUpdatePoller.stop();
+        }
+    }
+
+    @Override
+    public void startPollingIfNotPollingAlready() {
+        if (dataUpdatePoller != null) {
+            dataUpdatePoller.startPollingIfNotPollingAlready();
+        }
     }
 }

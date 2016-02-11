@@ -5,22 +5,23 @@ import android.os.Bundle;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
+import org.openstack.android.summit.modules.events.business_logic.IEventsInteractor;
 
 import javax.inject.Inject;
 
 /**
  * Created by claudio on 10/30/2015.
  */
-public class EventsPresenter extends BasePresenter<IEventsView, Void, IEventsWireframe> implements IEventsPresenter {
+public class EventsPresenter extends BasePresenter<IEventsView, IEventsInteractor, IEventsWireframe> implements IEventsPresenter {
 
     private int selectedTabIndex;
     private final String KEY_SELECTED_TAB_INDEX = "KEY_SELECTED_TAB_INDEX";
     private IScheduleFilter scheduleFilter;
 
     @Inject
-    public EventsPresenter(IEventsWireframe wireframe, IScheduleFilter scheduleFilter)
+    public EventsPresenter(IEventsInteractor eventsInteractor, IEventsWireframe wireframe, IScheduleFilter scheduleFilter)
     {
-        super(null, wireframe);
+        super(eventsInteractor, wireframe);
         this.scheduleFilter = scheduleFilter;
     }
 
@@ -30,7 +31,7 @@ public class EventsPresenter extends BasePresenter<IEventsView, Void, IEventsWir
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreateView(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             selectedTabIndex = savedInstanceState.getInt(KEY_SELECTED_TAB_INDEX);
         }

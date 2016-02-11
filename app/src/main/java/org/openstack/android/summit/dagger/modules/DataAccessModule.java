@@ -171,8 +171,8 @@ public class DataAccessModule {
     }
 
     @Provides
-    IDataUpdateDeserializer providesDataUpdateDeserializer(IGenericDeserializer genericDeserializer, IPresentationSpeakerDeserializer presentationSpeakerDeserializer, ISummitEventDeserializer summitEventDeserializer) {
-        return new DataUpdateDeserializer(new ClassResolver(), genericDeserializer, presentationSpeakerDeserializer, summitEventDeserializer);
+    IDataUpdateDeserializer providesDataUpdateDeserializer(IGenericDeserializer genericDeserializer, IPresentationSpeakerDeserializer presentationSpeakerDeserializer, ISummitEventDeserializer summitEventDeserializer, IDeserializerStorage deserializerStorage) {
+        return new DataUpdateDeserializer(new ClassResolver(), genericDeserializer, presentationSpeakerDeserializer, summitEventDeserializer, deserializerStorage);
     }
 
     @Provides
