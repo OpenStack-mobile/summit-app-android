@@ -23,7 +23,7 @@ public class SpeakerListWireframe extends BaseWireframe implements ISpeakerListW
     }
 
     @Override
-    public void presentSpeakersListView(FragmentActivity context) {
+    public void presentSpeakersListView(IBaseView context) {
         SpeakerListFragment speakerListFragment = new SpeakerListFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager

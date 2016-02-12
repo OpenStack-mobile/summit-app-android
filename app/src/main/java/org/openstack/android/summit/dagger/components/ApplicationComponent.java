@@ -4,7 +4,9 @@ package org.openstack.android.summit.dagger.components;
  * Created by claudio on 11/3/2015.
  */
 
-import org.openstack.android.summit.MainActivity;
+import org.openstack.android.summit.dagger.modules.ActivityModule;
+import org.openstack.android.summit.dagger.modules.MainActivityModule;
+import org.openstack.android.summit.modules.main_activity.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
 import org.openstack.android.summit.dagger.modules.BaseModule;
 import org.openstack.android.summit.dagger.modules.DTOAssemblerModule;
@@ -26,6 +28,10 @@ import org.openstack.android.summit.dagger.modules.SpeakerListModule;
 import org.openstack.android.summit.dagger.modules.SpeakerPresentationsModule;
 import org.openstack.android.summit.dagger.modules.TrackListModule;
 import org.openstack.android.summit.dagger.modules.TrackScheduleModule;
+import org.openstack.android.summit.dagger.modules.VenueDetailModule;
+import org.openstack.android.summit.dagger.modules.VenueListModule;
+import org.openstack.android.summit.dagger.modules.VenuesMapModule;
+import org.openstack.android.summit.dagger.modules.VenuesModule;
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
 import org.openstack.android.summit.modules.events.user_interface.EventsFragment;
 import org.openstack.android.summit.modules.feedback_given_list.user_interface.FeedbackGivenListFragment;
@@ -41,12 +47,15 @@ import org.openstack.android.summit.modules.speaker_presentations.user_interface
 import org.openstack.android.summit.modules.speakers_list.user_interface.SpeakerListFragment;
 import org.openstack.android.summit.modules.track_list.user_interface.TrackListFragment;
 import org.openstack.android.summit.modules.track_schedule.user_interface.TrackScheduleFragment;
+import org.openstack.android.summit.modules.venue_list.user_interface.VenueListFragment;
+import org.openstack.android.summit.modules.venues.user_interface.VenuesFragment;
+import org.openstack.android.summit.modules.venues_map.user_interface.VenuesMapFragment;
 
 import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class} )
+@Component(modules = { ApplicationModule.class, MainActivityModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class} )
 public interface ApplicationComponent {
     void inject(MainActivity mainActivity);
     void inject(EventsFragment eventsFragment);
@@ -64,4 +73,8 @@ public interface ApplicationComponent {
     void inject(SpeakerPresentationsFragment speakerPresentationsFragment);
     void inject(FeedbackGivenListFragment feedbackGivenListFragment);
     void inject(GeneralScheduleFilterFragment generalScheduleFilterFragment);
+    void inject(VenuesFragment venuesFragment);
+    void inject(VenueListFragment venueListFragment);
+    void inject(VenuesMapFragment venuesMapFragment);
+    void inject(VenueDetailModule venueDetailModule);
 }

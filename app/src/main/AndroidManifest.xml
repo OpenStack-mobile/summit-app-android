@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         android:name="org.openstack.android.summit.OpenStackSummitApplication">
         <activity
-            android:name="org.openstack.android.summit.MainActivity"
+            android:name=".modules.main_activity.user_interface.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize">
@@ -41,6 +41,14 @@
             <meta-data android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBuKidQyxC54_w57nvv9yBy_RCgZcsYI4Q"/>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

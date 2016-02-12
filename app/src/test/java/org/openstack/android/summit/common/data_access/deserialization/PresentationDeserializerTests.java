@@ -39,7 +39,9 @@ public class PresentationDeserializerTests {
         presentationSpeaker1.setId(speakerId2);
         when(deserializerStorageMock.get(speakerId2, PresentationSpeaker.class)).thenReturn(presentationSpeaker2);
 
-        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(deserializerStorageMock);
+        PresentationSpeakerDeserializer presentationSpeakerDeserializerMock = mock(PresentationSpeakerDeserializer.class);
+
+        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(presentationSpeakerDeserializerMock, deserializerStorageMock);
 
         // Act
         Presentation presentation = presentationDeserializer.deserialize(jsonString);
@@ -58,8 +60,10 @@ public class PresentationDeserializerTests {
         String jsonString = "{}";
 
         DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
+        PresentationSpeakerDeserializer presentationSpeakerDeserializerMock = mock(PresentationSpeakerDeserializer.class);
 
-        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(deserializerStorageMock);
+        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(presentationSpeakerDeserializerMock, deserializerStorageMock);
+
         String exceptionMessage = "";
         int exceptionCount = 0;
         int expectedExceptionCount = 1;
@@ -98,7 +102,9 @@ public class PresentationDeserializerTests {
         presentationSpeaker1.setId(speakerId2);
         when(deserializerStorageMock.get(speakerId2, PresentationSpeaker.class)).thenReturn(presentationSpeaker2);
 
-        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(deserializerStorageMock);
+        PresentationSpeakerDeserializer presentationSpeakerDeserializerMock = mock(PresentationSpeakerDeserializer.class);
+
+        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(presentationSpeakerDeserializerMock, deserializerStorageMock);
 
         // Act
         Presentation presentation = presentationDeserializer.deserialize(jsonString);

@@ -2,6 +2,7 @@ package org.openstack.android.summit;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 
@@ -38,5 +39,11 @@ public class OpenStackSummitApplication extends Application {
 
     public ApplicationComponent getApplicationComponent() {
         return this.applicationComponent;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }
