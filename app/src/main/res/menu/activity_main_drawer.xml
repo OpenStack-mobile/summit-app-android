@@ -8,7 +8,7 @@
             android:title="SPEAKERS" />
         <item android:id="@+id/nav_venues" android:icon="@drawable/venues"
             android:title="VENUES" />
-        <item android:id="@+id/nav_my_profile" android:icon="@drawable/my_summit"
+        <item android:id="@+id/nav_my_profile" android:icon="@drawable/profile"
             android:title="MY PROFILE" android:visible="false" />
     </group>
 

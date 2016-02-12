@@ -115,8 +115,8 @@ public class DataAccessModule {
     }
 
     @Provides
-    IPresentationDeserializer providesPresentationDeserializer(IDeserializerStorage deserializerStorage) {
-        return new PresentationDeserializer(deserializerStorage);
+    IPresentationDeserializer providesPresentationDeserializer(IPresentationSpeakerDeserializer presentationSpeakerDeserializer, IDeserializerStorage deserializerStorage) {
+        return new PresentationDeserializer(presentationSpeakerDeserializer, deserializerStorage);
     }
 
     @Provides

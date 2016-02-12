@@ -9,7 +9,7 @@ import org.openstack.android.summit.modules.speakers_list.user_interface.ISpeake
  * Created by Claudio Redi on 1/13/2016.
  */
 public interface ISpeakerListWireframe {
-    void presentSpeakersListView(FragmentActivity context);
+    void presentSpeakersListView(IBaseView context);
 
     void showSpeakerProfile(int speakerId, IBaseView context);
 }

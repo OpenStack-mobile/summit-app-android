@@ -14,9 +14,10 @@ import javax.inject.Inject;
  */
 public class PresentationDeserializer extends BaseDeserializer implements IPresentationDeserializer {
     IDeserializerStorage deserializerStorage;
+    IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
 
     @Inject
-    public PresentationDeserializer(IDeserializerStorage deserializerStorage){
+    public PresentationDeserializer(IPresentationSpeakerDeserializer presentationSpeakerDeserializer, IDeserializerStorage deserializerStorage){
         this.deserializerStorage = deserializerStorage;
     }
 
@@ -40,6 +41,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         int speakerId;
         JSONArray jsonArraySpeakers = jsonObject.getJSONArray("speakers");
         for (int i = 0; i < jsonArraySpeakers.length(); i++) {
+            //TODO: on data updates speaker comes complete!
             speakerId = jsonArraySpeakers.getInt(i);
             presentationSpeaker = deserializerStorage.get(speakerId, PresentationSpeaker.class);
             presentationSpeaker.getPresentations().add(presentation);

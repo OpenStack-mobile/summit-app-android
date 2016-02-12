@@ -31,7 +31,12 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
     @Override
     public void presentMyProfileView(IBaseView context) {
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, true);
-        presentMemberProfileView(context);
+        MemberProfileFragment memberProfileFragment = new MemberProfileFragment();
+        FragmentManager fragmentManager = context.getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.frame_layout_content, memberProfileFragment)
+                .commit();
     }
 
     private void presentMemberProfileView(IBaseView context) {

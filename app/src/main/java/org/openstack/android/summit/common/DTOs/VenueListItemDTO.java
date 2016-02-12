@@ -3,23 +3,23 @@ package org.openstack.android.summit.common.DTOs;
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
-public class VenueListItemDTO {
-    private double lat;
-    private double lng;
+public class VenueListItemDTO extends NamedDTO {
+    private String lat;
+    private String lng;
 
-    public double getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(double lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 
-    public double getLng() {
+    public String getLng() {
         return lng;
     }
 
-    public void setLng(double lng) {
+    public void setLng(String lng) {
         this.lng = lng;
     }
 }

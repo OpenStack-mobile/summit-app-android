@@ -1,4 +1,4 @@
-package org.openstack.android.summit;
+package org.openstack.android.summit.modules.main_activity.user_interface;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -22,15 +21,17 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.*;
-import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
+import org.openstack.android.summit.modules.venues.IVenuesWireframe;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -49,19 +50,10 @@ import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener, IBaseView {
+        implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener, IMainView {
 
     @Inject
-    IEventsWireframe eventsWireframe;
-
-    @Inject
-    ISpeakerListWireframe speakerListWireframe;
-
-    @Inject
-    IMemberProfileWireframe memberProfileWireframe;
-
-    @Inject
-    ISearchWireframe searchWireframe;
+    IMainActivityPresenter presenter;
 
     @Inject
     ISecurityManager securityManager;
@@ -76,11 +68,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         getApplicationComponent().inject(this);
-        trustEveryone();
-
-        if (savedInstanceState == null) {
-            eventsWireframe.presentEventsView(this);
-        }
+        presenter.setView(this);
+        presenter.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
@@ -153,7 +142,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 String searchTerm = v.getText().toString();
                 if (actionId == EditorInfo.IME_ACTION_DONE && !searchTerm.isEmpty()) {
-                    searchWireframe.presentSearchView(searchTerm, MainActivity.this);
+                    presenter.showSearchView(searchTerm);
                 }
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
@@ -191,12 +180,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_events) {
-            eventsWireframe.presentEventsView(this);
+            presenter.showEventsView();
         } else if (id == R.id.nav_speakers) {
-            speakerListWireframe.presentSpeakersListView(this);
-        }
-        else if (id == R.id.nav_my_profile) {
-            memberProfileWireframe.presentMyProfileView(this);
+            presenter.showSpeakerListView();
+        } else if (id == R.id.nav_venues) {
+            presenter.showVenuesView();
+        } else if (id == R.id.nav_my_profile) {
+            presenter.showMyProfileView();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -279,29 +269,4 @@ public class MainActivity extends AppCompatActivity
             progressDialog.hide();
         }
     }
-
-    /* TODO: This should be gone before going live!!!!*/
-    private void trustEveryone() {
-        try {
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-            SSLContext context = SSLContext.getInstance("TLS");
-            context.init(null, new X509TrustManager[]{new X509TrustManager(){
-                public void checkClientTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {}
-                public void checkServerTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {}
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }}}, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(
-                    context.getSocketFactory());
-        } catch (Exception e) { // should never happen
-            e.printStackTrace();
-        }
-    }
-
 }

@@ -3,7 +3,6 @@ package org.openstack.android.summit.common.user_interface;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import org.openstack.android.summit.MainActivity;
+import org.openstack.android.summit.modules.main_activity.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
 import java.util.concurrent.Executors;

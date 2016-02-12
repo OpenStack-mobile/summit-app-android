@@ -11,14 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.TrackDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.SimpleListItemView;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.

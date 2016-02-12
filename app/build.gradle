@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -73,6 +74,11 @@ dependencies {
 
     // Tags
     compile 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
+
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
+
+    // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION:
+    compile 'com.android.support:multidex:1.0.0'
 
 
     testCompile "org.mockito:mockito-core:2.0.5-beta"
