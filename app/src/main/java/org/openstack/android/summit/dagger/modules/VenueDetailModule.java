@@ -10,6 +10,7 @@ import org.openstack.android.summit.modules.venue_detail.business_logic.VenueDet
 import org.openstack.android.summit.modules.venue_detail.user_interface.IVenueDetailPresenter;
 import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailFragment;
 import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailPresenter;
+import org.openstack.android.summit.modules.venue_map.IVenueMapWireframe;
 import org.openstack.android.summit.modules.venues_map.IVenuesMapWireframe;
 
 import dagger.Module;
@@ -26,8 +27,8 @@ public class VenueDetailModule {
     }
 
     @Provides
-    IVenueDetailWireframe providesVenueDetailWireframe(IVenuesMapWireframe venuesMapWireframe, INavigationParametersStore navigationParametersStore) {
-        return new VenueDetailWireframe(venuesMapWireframe, navigationParametersStore);
+    IVenueDetailWireframe providesVenueDetailWireframe(IVenueMapWireframe venueMapWireframe, INavigationParametersStore navigationParametersStore) {
+        return new VenueDetailWireframe(venueMapWireframe, navigationParametersStore);
     }
 
     @Provides

@@ -3,6 +3,7 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
 import org.openstack.android.summit.modules.venues_map.IVenuesMapWireframe;
 import org.openstack.android.summit.modules.venues_map.VenuesMapWireframe;
 import org.openstack.android.summit.modules.venues_map.business_logic.IVenuesMapInteractor;
@@ -18,15 +19,15 @@ import dagger.Provides;
  * Created by Claudio Redi on 2/11/2016.
  */
 @Module
-public class VenuesMapModule{
+public class VenuesMapModule {
     @Provides
     VenuesMapFragment providesVenuesMapFragment() {
         return new VenuesMapFragment();
     }
 
     @Provides
-    IVenuesMapWireframe providesVenuesMapWireframe(INavigationParametersStore navigationParametersStore) {
-        return new VenuesMapWireframe(navigationParametersStore);
+    IVenuesMapWireframe providesVenuesMapWireframe(IVenueDetailWireframe venueDetailWireframe, INavigationParametersStore navigationParametersStore) {
+        return new VenuesMapWireframe(venueDetailWireframe, navigationParametersStore);
     }
 
     @Provides

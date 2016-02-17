@@ -44,7 +44,6 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
     private VenueRoomsAdapter venueRoomsAdapter;
     private MapView map;
     private VenueListItemDTO venue;
-    private SlidePagerAdapter pagerAdapter;
 
     public VenueDetailFragment() {
         // Required empty public constructor
@@ -103,7 +102,6 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
         map.onCreate(savedInstanceState);
         map.getMapAsync(this);
 
-        pagerAdapter = new SlidePagerAdapter(getSupportFragmentManager());
 
         LinearLayout locationLayout = (LinearLayout)view.findViewById(R.id.venue_location_container);
         locationLayout.setOnClickListener(new View.OnClickListener() {
@@ -112,28 +110,6 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
                 presenter.showToMapIfApplies();
             }
         });
-
-        ViewPager pager = (ViewPager) view.findViewById(R.id.venue_gallery_pager);
-        pager.setAdapter(pagerAdapter);
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        CirclePageIndicator pageIndicator = (CirclePageIndicator) view.findViewById(R.id.venue_gallery_indicator);
-        pageIndicator.setViewPager(pager);
 
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -178,8 +154,13 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
 
     @Override
     public void setMaps(List<String> maps) {
+        SlidePagerAdapter pagerAdapter = new SlidePagerAdapter(getChildFragmentManager());
+        ViewPager pager = (ViewPager) view.findViewById(R.id.venue_gallery_pager);
+        pager.setAdapter(pagerAdapter);
         pagerAdapter.addAll(maps);
         pagerAdapter.notifyDataSetChanged();
+        CirclePageIndicator pageIndicator = (CirclePageIndicator) view.findViewById(R.id.venue_gallery_indicator);
+        pageIndicator.setViewPager(pager);
     }
 
     @Override
