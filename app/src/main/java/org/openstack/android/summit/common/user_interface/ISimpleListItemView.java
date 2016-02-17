@@ -7,4 +7,6 @@ public interface ISimpleListItemView {
     void setName(String name);
 
     void setColor(String color);
+
+    void allowNavigation(boolean allow);
 }

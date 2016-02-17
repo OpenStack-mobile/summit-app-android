@@ -1,6 +1,5 @@
-package org.openstack.android.summit.modules.main_activity;
+package org.openstack.android.summit.modules.main;
 
-import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
@@ -8,12 +7,10 @@ import org.openstack.android.summit.modules.search.ISearchWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.venues.IVenuesWireframe;
 
-import javax.inject.Inject;
-
 /**
  * Created by Claudio Redi on 2/12/2016.
  */
-public class MainActivityWireframe implements IMainActivityWireframe {
+public class MainWireframe implements IMainWireframe {
     IEventsWireframe eventsWireframe;
 
     ISpeakerListWireframe speakerListWireframe;
@@ -24,7 +21,7 @@ public class MainActivityWireframe implements IMainActivityWireframe {
 
     IVenuesWireframe venuesWireframe;
 
-    public MainActivityWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe) {
+    public MainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe) {
         this.eventsWireframe = eventsWireframe;
         this.speakerListWireframe = speakerListWireframe;
         this.memberProfileWireframe = memberProfileWireframe;

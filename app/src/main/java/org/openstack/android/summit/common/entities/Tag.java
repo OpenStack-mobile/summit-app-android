@@ -9,6 +9,7 @@ import io.realm.annotations.PrimaryKey;
 public class Tag extends RealmObject implements IEntity {
     @PrimaryKey
     private int id;
+
     private String tag;
 
     public int getId() {

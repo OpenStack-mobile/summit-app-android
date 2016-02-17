@@ -1,6 +1,9 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
+import android.util.Log;
+
 import org.modelmapper.AbstractConverter;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
@@ -17,13 +20,21 @@ public class AbstractMember2MemberDTO<S extends Member, A extends SummitAttendee
     @Override
     protected MemberDTO convert(S source) {
         MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setId(source.getId());
-        if (source.getAttendeeRole() != null) {
-            memberDTO.setAttendeeRole(abstractSummitAttendee2PersonDTO.convert((A)source.getAttendeeRole()));
+
+        try {
+            memberDTO.setId(source.getId());
+            if (source.getAttendeeRole() != null) {
+                memberDTO.setAttendeeRole(abstractSummitAttendee2PersonDTO.convert((A)source.getAttendeeRole()));
+            }
+            if (source.getSpeakerRole() != null) {
+                memberDTO.setSpeakerRole(abstractPresentationSpeaker2PersonDTO.convert((P)source.getSpeakerRole()));
+            }
         }
-        if (source.getSpeakerRole() != null) {
-            memberDTO.setSpeakerRole(abstractPresentationSpeaker2PersonDTO.convert((P)source.getSpeakerRole()));
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            throw e;
         }
+
         return memberDTO;
     }
 }

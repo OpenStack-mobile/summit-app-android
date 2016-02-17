@@ -1,8 +1,9 @@
-package org.openstack.android.summit.modules.main_activity.user_interface;
+package org.openstack.android.summit.modules.main.user_interface;
 
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,32 +19,21 @@ import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
-import org.openstack.android.summit.modules.events.IEventsWireframe;
-import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
-import org.openstack.android.summit.modules.search.ISearchWireframe;
-import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
-import org.openstack.android.summit.modules.venues.IVenuesWireframe;
 
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.concurrent.ScheduledFuture;
 
 import javax.inject.Inject;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.X509TrustManager;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
@@ -53,14 +43,17 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener, IMainView {
 
     @Inject
-    IMainActivityPresenter presenter;
+    IMainPresenter presenter;
 
     @Inject
+    // TODO: this should be moved to interactor. It's necessary to know how to deal with the Activiy parameter on login
     ISecurityManager securityManager;
 
     private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
     private Button loginButton;
+    private TextView memberNameTextView;
+    private SimpleDraweeView memberProfileImageView;
     private ActionBarDrawerToggle toggle;
 
     @Override
@@ -80,9 +73,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        hideActivityIndicator();
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
+        presenter.onConfigurationChanged(newConfig);
         setupNavigationIcons();
+    }
+
+    public void toggleMenuLogo(boolean show) {
+        ImageView footerLogo = (ImageView)findViewById(R.id.footer_logo);
+        footerLogo.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void ActionBarSetup() {
@@ -136,6 +142,9 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        memberNameTextView = (TextView)headerView.findViewById(R.id.member_name_textview);
+        memberProfileImageView = (SimpleDraweeView)headerView.findViewById(R.id.member_profile_pic_imageview);
+
         EditText searchText = (EditText)headerView.findViewById(R.id.nav_header_search_edittext);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -153,7 +162,7 @@ public class MainActivity extends AppCompatActivity
 
 
         if (securityManager.isLoggedIn()) {
-            loggedInStatusSetUp();
+            presenter.onLoggedIn();
         }
     }
 
@@ -202,22 +211,30 @@ public class MainActivity extends AppCompatActivity
         return new ActivityModule(this);
     }
 
-    @Override
-    public void onLoggedIn() {
-        loggedInStatusSetUp();
-
-        Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
-        // You can also include some extra data.
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-        hideActivityIndicator();
-
+    public void setLoginButtonText(String text) {
+        loginButton.setText(text);
     }
 
-    private void loggedInStatusSetUp() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getMenu().getItem(3).setVisible(true);
+    @Override
+    public void setMemberName(String text) {
+        memberNameTextView.setText(text);
+    }
 
-        loginButton.setText(getResources().getText(R.string.log_out));
+    @Override
+    public void setProfilePic(Uri uri) {
+        memberProfileImageView.setImageURI(uri);
+    }
+
+    public void toggleMyProfileMenuItem(boolean show) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(3).setVisible(show);
+    }
+
+    @Override
+    public void onLoggedIn() {
+        presenter.onLoggedIn();
+
+        hideActivityIndicator();
     }
 
     @Override
@@ -225,11 +242,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.getMenu().getItem(3).setVisible(false);
 
-        loginButton.setText(getResources().getText(R.string.log_in));
-
-        Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
-        // You can also include some extra data.
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+        presenter.onLoggedOut();
     }
 
     @Override

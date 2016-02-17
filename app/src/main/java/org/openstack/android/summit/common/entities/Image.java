@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.entities;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import io.realm.RealmObject;
 
 /**
@@ -7,7 +9,7 @@ import io.realm.RealmObject;
  */
 public class Image extends RealmObject implements IEntity {
     private int id;
-    private String url;
+    private String imageUrl;
 
     public int getId() {
         return id;
@@ -17,11 +19,13 @@ public class Image extends RealmObject implements IEntity {
         this.id = id;
     }
 
-    public String getUrl() {
-        return url;
+    @JSONField(name="image_url")
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    @JSONField(name="image_url")
+    public void setImageUrl(String url) {
+        this.imageUrl = url;
     }
 }

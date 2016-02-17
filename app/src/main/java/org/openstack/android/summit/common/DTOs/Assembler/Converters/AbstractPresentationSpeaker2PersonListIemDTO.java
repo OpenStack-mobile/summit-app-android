@@ -1,6 +1,9 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
+import android.util.Log;
+
 import org.modelmapper.AbstractConverter;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.entities.IPerson;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
@@ -22,7 +25,13 @@ public class AbstractPresentationSpeaker2PersonListIemDTO<S extends Presentation
     @Override
     protected T convert(S source) {
         PersonListItemDTO personListItemDTO = new PersonListItemDTO();
-        convertInternal(source, personListItemDTO);
+        try {
+            convertInternal(source, personListItemDTO);
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            throw e;
+        }
         return (T)personListItemDTO;
     }
 }

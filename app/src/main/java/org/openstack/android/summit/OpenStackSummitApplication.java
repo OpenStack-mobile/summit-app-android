@@ -23,7 +23,9 @@ public class OpenStackSummitApplication extends Application {
     @Override public void onCreate() {
         super.onCreate();
         this.initializeInjector();
-        RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext()).build();
+        RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
+                .deleteRealmIfMigrationNeeded()
+                .build();
         Realm.setDefaultConfiguration(config);
 
         context = getApplicationContext();

@@ -1,8 +1,10 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import org.modelmapper.AbstractConverter;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.entities.Feedback;
 
@@ -13,14 +15,20 @@ public class AbstractFeedback2FeedbackDTO<S extends Feedback> extends AbstractCo
     @Override
     protected FeedbackDTO convert(S source) {
         FeedbackDTO feedbackDTO = new FeedbackDTO();
-        feedbackDTO.setId(source.getId());
-        feedbackDTO.setRate(source.getRate());
-        feedbackDTO.setReview(source.getReview());
-        feedbackDTO.setOwner(source.getOwner().getFullName());
-        feedbackDTO.setEventName(source.getEvent().getName());
-        feedbackDTO.setEventId(source.getEvent().getId());
-        feedbackDTO.setTimeAgo(getTimeAgo(source));
-        feedbackDTO.setDate(source.getDate());
+        try {
+            feedbackDTO.setId(source.getId());
+            feedbackDTO.setRate(source.getRate());
+            feedbackDTO.setReview(source.getReview());
+            feedbackDTO.setOwner(source.getOwner().getFullName());
+            feedbackDTO.setEventName(source.getEvent().getName());
+            feedbackDTO.setEventId(source.getEvent().getId());
+            feedbackDTO.setTimeAgo(getTimeAgo(source));
+            feedbackDTO.setDate(source.getDate());
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            throw e;
+        }
         return feedbackDTO;
     }
 

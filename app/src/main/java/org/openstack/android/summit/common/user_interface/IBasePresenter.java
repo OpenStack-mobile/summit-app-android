@@ -2,6 +2,8 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.os.Bundle;
 
+import org.openstack.android.summit.modules.venue_list.user_interface.VenueListItemView;
+
 /**
  * Created by Claudio Redi on 1/13/2016.
  */

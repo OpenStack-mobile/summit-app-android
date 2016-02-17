@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import org.openstack.android.summit.modules.main_activity.user_interface.MainActivity;
+import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
 import java.util.concurrent.Executors;
@@ -113,10 +113,9 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                showActivityIndicator=false;
+                showActivityIndicator = false;
 
-                if(progressDialog!=null)
-                {
+                if (progressDialog != null) {
                     progressDialog.hide();
                 }
             }

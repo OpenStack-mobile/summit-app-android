@@ -1,6 +1,9 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
+import android.util.Log;
+
 import org.modelmapper.AbstractConverter;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.entities.Company;
@@ -106,7 +109,13 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
     @Override
     protected T convert(S source) {
         ScheduleItemDTO scheduleItemDTO = new ScheduleItemDTO();
-        convertInternal(source, scheduleItemDTO);
+        try {
+            convertInternal(source, scheduleItemDTO);
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            throw e;
+        }
         return (T)scheduleItemDTO;
     }
 }

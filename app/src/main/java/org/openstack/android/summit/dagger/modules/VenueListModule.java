@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
 import org.openstack.android.summit.modules.venue_list.IVenueListWireframe;
 import org.openstack.android.summit.modules.venue_list.VenueListWireframe;
 import org.openstack.android.summit.modules.venue_list.business_logic.IVenueListInteractor;
@@ -24,8 +25,8 @@ public class VenueListModule {
     }
 
     @Provides
-    IVenueListWireframe providesVenueListWireframe() {
-        return new VenueListWireframe();
+    IVenueListWireframe providesVenueListWireframe(IVenueDetailWireframe venueDetailWireframe) {
+        return new VenueListWireframe(venueDetailWireframe);
     }
 
     @Provides

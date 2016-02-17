@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.modules.venues_map.IVenuesMapWireframe;
 import org.openstack.android.summit.modules.venues_map.VenuesMapWireframe;
@@ -24,8 +25,8 @@ public class VenuesMapModule{
     }
 
     @Provides
-    IVenuesMapWireframe providesVenuesMapWireframe() {
-        return new VenuesMapWireframe();
+    IVenuesMapWireframe providesVenuesMapWireframe(INavigationParametersStore navigationParametersStore) {
+        return new VenuesMapWireframe(navigationParametersStore);
     }
 
     @Provides

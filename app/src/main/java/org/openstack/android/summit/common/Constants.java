@@ -17,4 +17,5 @@ public class Constants {
     public static final String NAVIGATION_PARAMETER_TRACK = "Track";
     public static final String NAVIGATION_PARAMETER_IS_MY_PROFILE = "IsMyProfile";
     public static final String NAVIGATION_PARAMETER_SPEAKER= "SpeakerId";
+    public static final String NAVIGATION_PARAMETER_VENUE = "VenueId";
 }

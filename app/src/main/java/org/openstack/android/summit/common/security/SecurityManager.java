@@ -68,7 +68,7 @@ public class SecurityManager implements ISecurityManager {
 
     @Override
     public void login(final Activity context) {
-        final AccountManager accountManager = AccountManager.get(context);
+        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
         final String accountType = context.getString(R.string.ACCOUNT_TYPE);
 
         if (accountManager.getAccountsByType(accountType).length == 0) {

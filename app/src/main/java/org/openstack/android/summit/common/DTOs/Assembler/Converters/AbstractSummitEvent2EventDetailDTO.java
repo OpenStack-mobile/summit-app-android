@@ -1,8 +1,11 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
+import android.util.Log;
+
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
 
 import org.modelmapper.AbstractConverter;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
@@ -19,27 +22,34 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
     @Override
     protected EventDetailDTO convert(E source) {
         EventDetailDTO eventDetailDTO = new EventDetailDTO();
-        convertInternal(source, eventDetailDTO);
-        eventDetailDTO.setVenueId(source.getVenue() != null ? source.getVenue().getId() : 0);
-        eventDetailDTO.setVenueRoomId(source.getVenueRoom() != null ? source.getVenueRoom().getId() : 0);
-        eventDetailDTO.setAllowFeedback(source.getAllowFeedback());
-        eventDetailDTO.setFinished(getFinished(source));
-        eventDetailDTO.setTags(getTags(source));
-        eventDetailDTO.setEventDescription(source.getEventDescription());
-        if (source.getPresentation() != null) {
-            eventDetailDTO.setTrack(source.getPresentation().getTrack().getName());
-            eventDetailDTO.setLevel(source.getPresentation().getLevel() + " Level");
 
-            PersonListItemDTO speakerListItemDTO;
-            for (PresentationSpeaker presentationSpeaker: source.getPresentation().getSpeakers()) {
-                speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)presentationSpeaker);
-                eventDetailDTO.getSpeakers().add(speakerListItemDTO);
-            }
+        try {
+            convertInternal(source, eventDetailDTO);
+            eventDetailDTO.setVenueId(source.getVenue() != null ? source.getVenue().getId() : 0);
+            eventDetailDTO.setVenueRoomId(source.getVenueRoom() != null ? source.getVenueRoom().getId() : 0);
+            eventDetailDTO.setAllowFeedback(source.getAllowFeedback());
+            eventDetailDTO.setFinished(getFinished(source));
+            eventDetailDTO.setTags(getTags(source));
+            eventDetailDTO.setEventDescription(source.getEventDescription());
+            if (source.getPresentation() != null) {
+                eventDetailDTO.setTrack(source.getPresentation().getTrack().getName());
+                eventDetailDTO.setLevel(source.getPresentation().getLevel() + " Level");
 
-            if (source.getPresentation().getModerator() != null) {
-                speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)source.getPresentation().getModerator());
-                eventDetailDTO.setModerator(speakerListItemDTO);
+                PersonListItemDTO speakerListItemDTO;
+                for (PresentationSpeaker presentationSpeaker: source.getPresentation().getSpeakers()) {
+                    speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)presentationSpeaker);
+                    eventDetailDTO.getSpeakers().add(speakerListItemDTO);
+                }
+
+                if (source.getPresentation().getModerator() != null) {
+                    speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)source.getPresentation().getModerator());
+                    eventDetailDTO.setModerator(speakerListItemDTO);
+                }
             }
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            throw e;
         }
 
         return eventDetailDTO;
