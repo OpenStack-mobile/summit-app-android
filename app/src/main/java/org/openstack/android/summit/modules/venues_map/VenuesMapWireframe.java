@@ -6,8 +6,10 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.VenueDTO;
+import org.openstack.android.summit.common.DTOs.VenueListItemDTO;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
+import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
 import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailFragment;
 import org.openstack.android.summit.modules.venues_map.user_interface.VenuesMapFragment;
 
@@ -15,8 +17,11 @@ import org.openstack.android.summit.modules.venues_map.user_interface.VenuesMapF
  * Created by Claudio Redi on 2/11/2016.
  */
 public class VenuesMapWireframe extends BaseWireframe implements IVenuesMapWireframe {
-    public VenuesMapWireframe(INavigationParametersStore navigationParametersStore) {
+    IVenueDetailWireframe venueDetailWireframe;
+
+    public VenuesMapWireframe(IVenueDetailWireframe venueDetailWireframe, INavigationParametersStore navigationParametersStore) {
         super(navigationParametersStore);
+        this.venueDetailWireframe = venueDetailWireframe;
     }
 
     @Override
@@ -29,5 +34,10 @@ public class VenuesMapWireframe extends BaseWireframe implements IVenuesMapWiref
                 .replace(R.id.frame_layout_content, venuesMapFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void showVenueDetailView(VenueListItemDTO venue, IBaseView view) {
+        venueDetailWireframe.presentVenueDetailView(venue, view);
     }
 }

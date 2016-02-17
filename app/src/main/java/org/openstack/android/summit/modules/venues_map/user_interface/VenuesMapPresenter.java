@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class VenuesMapPresenter extends BasePresenter<IVenuesMapView, IVenuesMapInteractor, IVenuesMapWireframe> implements IVenuesMapPresenter {
     List<VenueListItemDTO> venues;
-    Integer venueId;
 
     public VenuesMapPresenter(IVenuesMapInteractor interactor, IVenuesMapWireframe wireframe) {
         super(interactor, wireframe);
@@ -24,22 +23,18 @@ public class VenuesMapPresenter extends BasePresenter<IVenuesMapView, IVenuesMap
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            venueId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE);
-        }
-        else {
-            venueId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
-        }
-
-        if (venueId != null) {
-            venues = new ArrayList<>();
-            venues.add(interactor.getVenue(venueId));
-        }
-        else {
-            venues = interactor.getVenues();
-        }
+        venues = interactor.getVenues();
         view.addMarkers(venues);
 
         super.onCreateView(savedInstanceState);
+    }
+
+    @Override
+    public void showVenueDetail(int venueId) {
+        for (VenueListItemDTO venue: venues) {
+            if (venue.getId() == venueId) {
+                wireframe.showVenueDetailView(venue, view);
+            }
+        }
     }
 }

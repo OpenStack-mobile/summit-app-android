@@ -22,6 +22,8 @@ import org.openstack.android.summit.common.DTOs.VenueListItemDTO;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -92,13 +94,23 @@ public class VenuesMapFragment extends BaseFragment<IVenuesMapPresenter> impleme
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         LatLng latLng;
         Marker marker;
+        final HashMap<String, Integer> markersDictionary = new HashMap<>();
         for (VenueListItemDTO venue: venues) {
             latLng = new LatLng(new Double(venue.getLat()), new Double(venue.getLng()));
             marker = googleMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .title(venue.getName()));
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map));
-            marker.showInfoWindow();
+            markersDictionary.put(marker.getId(), venue.getId());
+
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    int venueId = markersDictionary.get(marker.getId());
+                    presenter.showVenueDetail(venueId);
+                    return true;
+                }
+            });
 
             builder.include(latLng);
         }

@@ -9,20 +9,18 @@ import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.VenueDTO;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
-import org.openstack.android.summit.modules.track_schedule.user_interface.TrackScheduleFragment;
 import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailFragment;
-import org.openstack.android.summit.modules.venues_map.IVenuesMapWireframe;
-import org.openstack.android.summit.modules.venues_map.VenuesMapWireframe;
+import org.openstack.android.summit.modules.venue_map.IVenueMapWireframe;
 
 /**
  * Created by Claudio Redi on 2/12/2016.
  */
 public class VenueDetailWireframe extends BaseWireframe implements IVenueDetailWireframe {
-    IVenuesMapWireframe venuesMapWireframe;
+    IVenueMapWireframe venueMapWireframe;
 
-    public VenueDetailWireframe(IVenuesMapWireframe venuesMapWireframe, INavigationParametersStore navigationParametersStore) {
+    public VenueDetailWireframe(IVenueMapWireframe venueMapWireframe, INavigationParametersStore navigationParametersStore) {
         super(navigationParametersStore);
-        this.venuesMapWireframe = venuesMapWireframe;
+        this.venueMapWireframe = venueMapWireframe;
     }
 
     public void presentVenueDetailView(NamedDTO venue, IBaseView context) {
@@ -37,6 +35,6 @@ public class VenueDetailWireframe extends BaseWireframe implements IVenueDetailW
     }
 
     public void showVenueMapView(VenueDTO venueDTO, IBaseView context) {
-        venuesMapWireframe.presentVenueMapView(venueDTO, context);
+        venueMapWireframe.presentVenueMapView(venueDTO, context);
     }
 }
