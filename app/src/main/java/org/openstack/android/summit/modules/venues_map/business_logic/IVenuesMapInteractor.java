@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface IVenuesMapInteractor extends IBaseInteractor {
     List<VenueListItemDTO> getVenues();
+
+    VenueListItemDTO getVenue(int venueId);
 }

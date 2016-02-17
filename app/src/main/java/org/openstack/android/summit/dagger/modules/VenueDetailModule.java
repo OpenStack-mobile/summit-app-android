@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
 import org.openstack.android.summit.modules.venue_detail.VenueDetailWireframe;
@@ -9,6 +10,7 @@ import org.openstack.android.summit.modules.venue_detail.business_logic.VenueDet
 import org.openstack.android.summit.modules.venue_detail.user_interface.IVenueDetailPresenter;
 import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailFragment;
 import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailPresenter;
+import org.openstack.android.summit.modules.venues_map.IVenuesMapWireframe;
 
 import dagger.Module;
 import dagger.Provides;
@@ -24,13 +26,13 @@ public class VenueDetailModule {
     }
 
     @Provides
-    IVenueDetailWireframe providesVenueDetailWireframe() {
-        return new VenueDetailWireframe();
+    IVenueDetailWireframe providesVenueDetailWireframe(IVenuesMapWireframe venuesMapWireframe, INavigationParametersStore navigationParametersStore) {
+        return new VenueDetailWireframe(venuesMapWireframe, navigationParametersStore);
     }
 
     @Provides
-    IVenueDetailInteractor providesVenueDetailInteractor(IDTOAssembler dtoAssembler) {
-        return new VenueDetailInteractor(dtoAssembler);
+    IVenueDetailInteractor providesVenueDetailInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler) {
+        return new VenueDetailInteractor(genericDataStore, dtoAssembler);
     }
 
     @Provides

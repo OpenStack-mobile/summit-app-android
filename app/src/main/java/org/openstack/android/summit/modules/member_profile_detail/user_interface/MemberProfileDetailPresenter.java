@@ -50,7 +50,9 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
         view.setBio(person.getBio());
         view.setTwitter(person.getTwitter());
         view.setIrc(person.getIrc());
-        Uri uri = Uri.parse(person.getPictureUrl().replace("https", "http"));
+        Uri uri = person.getPictureUrl() != null && !person.getPictureUrl().isEmpty()
+            ? Uri.parse(person.getPictureUrl().replace("https", "http"))
+            : null;
         view.setPictureUri(uri);
 
         super.onCreate(savedInstanceState);

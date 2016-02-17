@@ -37,10 +37,10 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
         venue.setLat(jsonObject.getString("lat"));
         venue.setLng(jsonObject.getString("lng"));
         venue.setAddress(jsonObject.getString("address_1"));
-        venue.setCity(jsonObject.getString("city"));
-        venue.setState(jsonObject.getString("state"));
-        venue.setZipCode(jsonObject.getString("zip_code"));
-        venue.setCountry(jsonObject.getString("country"));
+        venue.setCity(!jsonObject.isNull("city") ? jsonObject.getString("city") : null);
+        venue.setState(!jsonObject.isNull("state") ? jsonObject.getString("state") : null);
+        venue.setZipCode(!jsonObject.isNull("zip_code") ? jsonObject.getString("zip_code") : null);
+        venue.setCountry(!jsonObject.isNull("country") ? jsonObject.getString("country") : null);
         venue.setIsInternal(jsonObject.getString("location_type") == "Internal");
 
         Image map;

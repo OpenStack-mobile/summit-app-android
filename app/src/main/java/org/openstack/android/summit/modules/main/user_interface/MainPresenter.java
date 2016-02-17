@@ -1,12 +1,18 @@
-package org.openstack.android.summit.modules.main_activity.user_interface;
+package org.openstack.android.summit.modules.main.user_interface;
 
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 
-import org.openstack.android.summit.common.security.ISecurityManagerListener;
+import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
-import org.openstack.android.summit.common.user_interface.IBaseView;
-import org.openstack.android.summit.modules.main_activity.IMainActivityWireframe;
-import org.openstack.android.summit.modules.main_activity.business_logic.IMainActivityInteractor;
+import org.openstack.android.summit.modules.main.IMainWireframe;
+import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -21,8 +27,8 @@ import javax.net.ssl.X509TrustManager;
 /**
  * Created by Claudio Redi on 2/12/2016.
  */
-public class MainActivityPresenter extends BasePresenter<IMainView, IMainActivityInteractor, IMainActivityWireframe> implements IMainActivityPresenter {
-    public MainActivityPresenter(IMainActivityInteractor interactor, IMainActivityWireframe wireframe) {
+public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMainWireframe> implements IMainPresenter {
+    public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe) {
         super(interactor, wireframe);
     }
 
@@ -80,4 +86,33 @@ public class MainActivityPresenter extends BasePresenter<IMainView, IMainActivit
         wireframe.showVenuesView(view);
     }
 
+    @Override
+    public void onLoggedOut() {
+        Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
+        // You can also include some extra data.
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+
+        view.setMemberName("");
+        view.setLoginButtonText(view.getResources().getText(R.string.log_in).toString());
+        view.toggleMyProfileMenuItem(false);
+        view.setProfilePic(null);
+    }
+
+    @Override
+    public void onLoggedIn() {
+        Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
+        // You can also include some extra data.
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+        String currentMemberName = interactor.getCurrentMemberName();
+        Uri currentMemberProfilePicUri = interactor.getCurrentMemberProfilePictureUri();
+        view.setMemberName(currentMemberName);
+        view.setLoginButtonText(view.getResources().getText(R.string.log_out).toString());
+        view.toggleMyProfileMenuItem(true);
+        view.setProfilePic(currentMemberProfilePicUri);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        view.toggleMenuLogo(newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE);
+    }
 }

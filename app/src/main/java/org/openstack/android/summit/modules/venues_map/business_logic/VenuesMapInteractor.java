@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.venues_map.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
+import org.openstack.android.summit.common.DTOs.VenueDTO;
 import org.openstack.android.summit.common.DTOs.VenueListItemDTO;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
@@ -26,5 +27,12 @@ public class VenuesMapInteractor extends BaseInteractor implements IVenuesMapInt
         List<VenueListItemDTO> dtos = createDTOList(venues, VenueListItemDTO.class);
         return dtos;
 
+    }
+
+    @Override
+    public VenueListItemDTO getVenue(int venueId) {
+        Venue venue = genericDataStore.getByIdLocal(venueId, Venue.class);
+        VenueDTO dto = dtoAssembler.createDTO(venue, VenueDTO.class);
+        return dto;
     }
 }

@@ -21,7 +21,6 @@ public class Venue extends RealmObject implements INamedEntity {
     private String lng;
     private Boolean isInternal;
     private RealmList<Image> maps = new RealmList<>();
-    private RealmList<VenueRoom> venueRooms = new RealmList<>();
 
     public int getId() {
         return id;
@@ -117,13 +116,5 @@ public class Venue extends RealmObject implements INamedEntity {
 
     public void setMaps(RealmList<Image> maps) {
         this.maps = maps;
-    }
-
-    public RealmList<VenueRoom> getVenueRooms() {
-        return venueRooms;
-    }
-
-    public void setVenueRooms(RealmList<VenueRoom> venueRooms) {
-        this.venueRooms = venueRooms;
     }
 }

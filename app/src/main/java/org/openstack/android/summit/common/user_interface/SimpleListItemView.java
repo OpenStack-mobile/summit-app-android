@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.graphics.Color;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.openstack.android.summit.R;
@@ -32,5 +33,10 @@ public class SimpleListItemView implements ISimpleListItemView {
             colorView.setVisibility(View.VISIBLE);
             colorView.setBackgroundColor(Color.parseColor(color));
         }
+    }
+
+    public void allowNavigation(boolean allow) {
+        ImageView navigationImage = (ImageView)view.findViewById(R.id.item_simple_list_navigation);
+        navigationImage.setVisibility(allow ? View.VISIBLE : View.GONE);
     }
 }

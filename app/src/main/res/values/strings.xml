@@ -22,4 +22,6 @@
     <string name="tags">Tags</string>
     <string name="profile">Profile</string>
     <string name="venues">Venues</string>
+    <string name="rooms">Rooms</string>
+    <string name="venue">Venue</string>
 </resources>

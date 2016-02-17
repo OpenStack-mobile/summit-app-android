@@ -1,6 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:background="@color/openStackDarkBlue"
+            android:gravity="center_horizontal">
+            <TextView
+                android:id="@+id/venue_name_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TESTING"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:layout_gravity="center"
+                android:textStyle="bold"></TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/venue_location_container"
+            style="@style/AppTheme.IconedInformationBarContainer">
+            <ImageView
+                style="@style/AppTheme.IconedInformationBarImageView"
+                android:src="@drawable/map"/>
+            <TextView
+                android:id="@+id/venue_location_textview"
+                style="@style/AppTheme.IconedInformationBarTextView"
+                android:text="Grand Prince International Convention Center &amp; Hotels"/>
+            <ImageView
+                android:id="@+id/venue_map_navigation_image"
+                style="@style/AppTheme.MoreImageView" />
 
-</LinearLayout>
+        </LinearLayout>
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/venue_map"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/venue_gallery"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:visibility="gone">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/venue_gallery_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <com.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/venue_gallery_indicator"
+                android:padding="5dip"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                app:fillColor="#000"
+                app:pageColor="#AAA"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/venue_rooms_subsection_header"
+            style="@style/AppTheme.SubsectionHeader">
+            <TextView
+                style="@style/AppTheme.SubsectionHeader.Text"
+                android:text="@string/rooms"/>
+        </LinearLayout>
+        <com.linearlistview.LinearListView
+            android:id="@+id/venue_rooms_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            app:dividerThickness="1dp" />
+    </LinearLayout>
+</ScrollView>

@@ -78,7 +78,6 @@ public class DataUpdatePoller implements IDataUpdatePoller {
                     catch (Exception ex) {
                         Log.e(Constants.LOG_TAG, "There was an error processing updates from server: " + ex.getMessage(), ex);
                     }
-
                 }
 
                 @Override
