@@ -35,6 +35,11 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         SummitAttendee summitAttendee = new SummitAttendee();
         personDeserializer.deserialize(summitAttendee, jsonObject);
 
+        // added here so it's available on child deserialization
+        if(!deserializerStorage.exist(summitAttendee, SummitAttendee.class)) {
+            deserializerStorage.add(summitAttendee, SummitAttendee.class);
+        }
+
         SummitEvent summitEvent;
         int summitEventId;
         JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
@@ -60,10 +65,6 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
             jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
             feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());
             summitAttendee.getFeedback().add(feedback);
-        }
-
-        if(!deserializerStorage.exist(summitAttendee, SummitAttendee.class)) {
-            deserializerStorage.add(summitAttendee, SummitAttendee.class);
         }
 
         return summitAttendee;

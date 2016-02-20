@@ -41,7 +41,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
     public static final String TOKEN_TYPE_ID = "org.openstack.android.summit.TOKEN_TYPE_ID";
     public static final String TOKEN_TYPE_ACCESS = "org.openstack.android.summit.TOKEN_TYPE_ACCESS";
-    public static final String TOKEN_TYPE_REFRESH = "com.lnikkila.oidcsample.TOKEN_TYPE_REFRESH";
+    public static final String TOKEN_TYPE_REFRESH = "org.openstack.android.summit.TOKEN_TYPE_REFRESH";
 
     public Authenticator(Context context) {
         super(context);

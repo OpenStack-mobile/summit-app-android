@@ -4,6 +4,7 @@
     <string name="app_name">OpenStack</string>
     <string name="action_filter">Filter</string>
     <string name="action_scheduled_status">Scheduled</string>
+    <string name="action_create_feedback">Feedback</string>
     <string name="log_in">LOG IN</string>
     <string name="log_out">LOG OUT</string>
     <string name="search_placeholder">search events &amp; people...</string>
@@ -24,4 +25,7 @@
     <string name="venues">Venues</string>
     <string name="rooms">Rooms</string>
     <string name="venue">Venue</string>
+    <string name="feedback">Feedback</string>
+    <string name="send">Send</string>
+    <string name="load_more">Load More</string>
 </resources>

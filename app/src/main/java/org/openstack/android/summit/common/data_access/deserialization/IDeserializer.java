@@ -13,4 +13,5 @@ import io.realm.RealmObject;
 public interface IDeserializer {
     <T extends RealmObject & IEntity> T deserialize(String jsonString, Class<T> type) throws JSONException, IllegalArgumentException;
     <T extends RealmObject & IEntity> List<T> deserializeList(String jsonString, Class<T> type) throws JSONException, IllegalArgumentException;
+    <T extends RealmObject & IEntity> List<T> deserializePage(String jsonString, Class<T> type) throws JSONException, IllegalArgumentException;
 }

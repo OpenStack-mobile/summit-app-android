@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common.data_access;
 
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
+import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -65,95 +66,24 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
         realm.commitTransaction();
     }
 
-/*    public func removeEventFromMemberShedule(attendee: SummitAttendee, event: SummitEvent, completionBlock : (SummitAttendee?, NSError?) -> Void) {
-        summitAttendeeRemoteDataStore.removeEventFromShedule(attendee, event: event) { error in
-            var innerError = error
-
-            defer { completionBlock(attendee, innerError) }
-
-            if error != nil {
-                return
+    @Override
+    public void addFeedback(final SummitAttendee attendee, Feedback feedback, final IDataStoreOperationListener dataStoreOperationListener) {
+        IDataStoreOperationListener<Feedback> remoteDataStoreOperationListener = new DataStoreOperationListener<Feedback>() {
+            @Override
+            public void onSuceedWithSingleData(Feedback data) {
+                super.onSuceedWithSingleData(data);
+                realm.beginTransaction();
+                attendee.getFeedback().add(data);
+                realm.commitTransaction();
+                dataStoreOperationListener.onSuceedWithSingleData(data);
             }
 
-            do {
-                try self.removeEventFromMemberSheduleLocal(attendee, event: event)
+            @Override
+            public void onError(String message) {
+                super.onError(message);
+                dataStoreOperationListener.onError(message);
             }
-            catch {
-                innerError = NSError(domain: "There was an error removing event from member schedule", code: 1001, userInfo: nil)
-            }
-        }
-    }*/
-
-    /*    public override init() {
-        super.init()
+        };
+        summitAttendeeRemoteDataStore.addFeedback(attendee, feedback, remoteDataStoreOperationListener);
     }
-
-    public init(summitAttendeeRemoteDataStore: ISummitAttendeeRemoteDataStore) {
-        self.summitAttendeeRemoteDataStore = summitAttendeeRemoteDataStore
-    }
-
-    var summitAttendeeRemoteDataStore: ISummitAttendeeRemoteDataStore!
-
-    public func addFeedback(attendee: SummitAttendee, feedback: Feedback, completionBlock : (Feedback?, NSError?)->Void) {
-        summitAttendeeRemoteDataStore.addFeedback(attendee, feedback: feedback) {(feedback, error) in
-            if (error != nil) {
-                completionBlock(nil, error)
-                return
-            }
-
-            try! self.realm.write{
-                attendee.feedback.append(feedback!)
-            }
-            completionBlock(feedback, error)
-        }
-    }
-
-    public func addEventToMemberShedule(attendee: SummitAttendee, event: SummitEvent, completionBlock : (SummitAttendee?, NSError?) -> Void) {
-        summitAttendeeRemoteDataStore.addEventToShedule(attendee, event: event) { error in
-
-            if error != nil {
-                return
-            }
-
-            self.addEventToMemberSheduleLocal(attendee, event: event)
-
-            completionBlock(attendee, error)
-        }
-    }
-
-    public func removeEventFromMemberShedule(attendee: SummitAttendee, event: SummitEvent, completionBlock : (SummitAttendee?, NSError?) -> Void) {
-        summitAttendeeRemoteDataStore.removeEventFromShedule(attendee, event: event) { error in
-            var innerError = error
-
-            defer { completionBlock(attendee, innerError) }
-
-            if error != nil {
-                return
-            }
-
-            do {
-                try self.removeEventFromMemberSheduleLocal(attendee, event: event)
-            }
-            catch {
-                innerError = NSError(domain: "There was an error removing event from member schedule", code: 1001, userInfo: nil)
-            }
-        }
-    }
-
-    public func addEventToMemberSheduleLocal(attendee: SummitAttendee, event: SummitEvent) {
-
-        try! self.realm.write {
-            attendee.scheduledEvents.append(event)
-        }
-    }
-
-    public func removeEventFromMemberSheduleLocal(attendee: SummitAttendee, event: SummitEvent) throws {
-
-        try! self.realm.write {
-            let index = attendee.scheduledEvents.indexOf("id = %@", event.id)
-            if (index != nil) {
-                attendee.scheduledEvents.removeAtIndex(index!)
-            }
-        }
-    }*/
 }

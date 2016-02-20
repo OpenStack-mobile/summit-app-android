@@ -7,6 +7,6 @@ import java.io.IOException;
  */
 public interface IHttp {
     String GET(String url) throws IOException;
-    String POST(String url) throws IOException;
+    String POST(String url,  String contentType, String content) throws IOException;
     String DELETE(String url) throws IOException;
 }

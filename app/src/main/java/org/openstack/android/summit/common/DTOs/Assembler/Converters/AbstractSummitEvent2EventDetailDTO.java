@@ -31,6 +31,7 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             eventDetailDTO.setFinished(getFinished(source));
             eventDetailDTO.setTags(getTags(source));
             eventDetailDTO.setEventDescription(source.getEventDescription());
+            eventDetailDTO.setAverageRate(source.getAverageRate());
             if (source.getPresentation() != null) {
                 eventDetailDTO.setTrack(source.getPresentation().getTrack().getName());
                 eventDetailDTO.setLevel(source.getPresentation().getLevel() + " Level");

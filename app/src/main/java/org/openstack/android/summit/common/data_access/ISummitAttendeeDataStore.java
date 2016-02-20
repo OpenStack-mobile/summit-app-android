@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.data_access;
 
+import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
@@ -14,4 +15,6 @@ public interface ISummitAttendeeDataStore {
     void removeEventFromMemberShedule(SummitAttendee summitAttendee, SummitEvent summitEvent, IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener);
 
     void removeEventFromMemberSheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent);
+
+    void addFeedback(SummitAttendee attendee, Feedback feedback, IDataStoreOperationListener dataStoreOperationListener);
 }

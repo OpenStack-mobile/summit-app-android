@@ -154,7 +154,11 @@ public class SecurityManager implements ISecurityManager {
 
         int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
 
-        return accountManager.getAccountsByType(accountType).length > 0 && currentMemberId > 0;
+        if (currentMemberId > 0) {
+            member = memberDataStore.getByIdLocal(currentMemberId);
+        }
+
+        return accountManager.getAccountsByType(accountType).length > 0 && currentMemberId > 0 && member != null;
     }
 
     public List<MemberRole> getLoggedInMemberRoles() {

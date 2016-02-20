@@ -83,6 +83,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:showDividers="middle"
+            android:divider="@color/openStackLightGray"
             app:dividerThickness="1dp" />
     </LinearLayout>
 </ScrollView>

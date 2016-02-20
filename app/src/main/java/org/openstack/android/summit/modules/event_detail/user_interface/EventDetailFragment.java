@@ -12,16 +12,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.linearlistview.LinearListView;
 
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
+import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
+import org.w3c.dom.Text;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,10 +38,12 @@ import javax.inject.Inject;
 public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> implements IEventDetailView {
 
     private SpeakerListAdapter speakerListAdapter;
+    private FeedbackListAdapter feedbackListAdapter;
     private View view;
     private Menu menu;
-    private Boolean scheduled;
-    private Boolean isScheduledStatusVisible;
+    private boolean scheduled;
+    private boolean isScheduledStatusVisible;
+    private boolean allowNewFeedback;
 
     public EventDetailFragment() {
         // Required empty public constructor
@@ -58,9 +66,21 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_event_detail, container, false);
-        LinearListView speakerList = (LinearListView)view.findViewById(R.id.event_detail_list_speakers);
+        LinearListView speakerList = (LinearListView)view.findViewById(R.id.event_detail_speakers_list);
         speakerListAdapter = new SpeakerListAdapter(getContext());
         speakerList.setAdapter(speakerListAdapter);
+
+        LinearListView feedbackList = (LinearListView)view.findViewById(R.id.event_detail_feedback_list);
+        feedbackListAdapter = new FeedbackListAdapter(getContext());
+        feedbackList.setAdapter(feedbackListAdapter);
+
+        Button loadMoreFeedbackButton = (Button)view.findViewById(R.id.event_detail_load_more_feedback_button);
+        loadMoreFeedbackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.loadFeedback();
+            }
+        });
 
         super.onCreateView(inflater, container, savedInstanceState);
         return view;
@@ -73,6 +93,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         this.menu = menu;
         setScheduledInternal(scheduled);
         setIsScheduledStatusVisibleInternal(isScheduledStatusVisible);
+        setAllowNewFeedback(allowNewFeedback);
     }
 
     @Override
@@ -84,8 +105,11 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
             presenter.toggleScheduleStatus();
             return true;
         }
+        else if (id == R.id.action_create_feedback) {
+            presenter.showFeedbackEdit();
+        }
 
-        return super.onOptionsItemSelected(item);
+            return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -162,7 +186,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         speakerListAdapter.addAll(speakers);
         speakerListAdapter.notifyDataSetChanged();
 
-        LinearListView speakerList = (LinearListView)view.findViewById(R.id.event_detail_list_speakers);
+        LinearListView speakerList = (LinearListView)view.findViewById(R.id.event_detail_speakers_list);
         speakerList.setVisibility(speakers.size() > 0 ? View.VISIBLE : View.GONE);
         speakerList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
             @Override
@@ -180,6 +204,21 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         else {
             this.isScheduledStatusVisible = isScheduledStatusVisible;
         }
+    }
+
+    @Override
+    public void setAllowNewFeedback(boolean allowNewFeedback) {
+        if (menu != null && menu.findItem(R.id.action_scheduled_status) != null) {
+            setIAllowNewFeedbackInternal(allowNewFeedback);
+        }
+        else {
+            this.allowNewFeedback = allowNewFeedback;
+        }
+    }
+
+    private void setIAllowNewFeedbackInternal(boolean allowNewFeedback) {
+        menu.findItem(R.id.action_create_feedback).setVisible(allowNewFeedback);
+        this.allowNewFeedback = allowNewFeedback;
     }
 
     @Override
@@ -208,6 +247,114 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         this.isScheduledStatusVisible = isScheduledStatusVisible;
     }
 
+    @Override
+    public void setAverageRate(int rate) {
+        LinearLayout averageFeedbackLayout = (LinearLayout)view.findViewById(R.id.event_avg_feedback_rate);
+
+        if (rate == 0) {
+            averageFeedbackLayout.setVisibility(View.GONE);
+            return;
+        }
+
+        averageFeedbackLayout.setVisibility(View.VISIBLE);
+        ImageView rate1 = (ImageView)view.findViewById(R.id.event_avg_feedback_rate_1);
+        ImageView rate2 = (ImageView)view.findViewById(R.id.event_avg_feedback_rate_2);
+        ImageView rate3 = (ImageView)view.findViewById(R.id.event_avg_feedback_rate_3);
+        ImageView rate4 = (ImageView)view.findViewById(R.id.event_avg_feedback_rate_4);
+        ImageView rate5 = (ImageView)view.findViewById(R.id.event_avg_feedback_rate_5);
+
+        if (rate >= 1) {
+            rate1.setImageResource(R.drawable.star_color);
+        }
+        if (rate >= 2) {
+            rate2.setImageResource(R.drawable.star_color);
+        }
+        if (rate >= 3) {
+            rate3.setImageResource(R.drawable.star_color);
+        }
+        if (rate >= 4) {
+            rate4.setImageResource(R.drawable.star_color);
+        }
+        if (rate >= 5) {
+            rate5.setImageResource(R.drawable.star_color);
+        }
+    }
+
+    @Override
+    public void setMyFeedbackRate(int rate) {
+        ImageView rate1 = (ImageView)view.findViewById(R.id.item_feedback_rate_1);
+        ImageView rate2 = (ImageView)view.findViewById(R.id.item_feedback_rate_2);
+        ImageView rate3 = (ImageView)view.findViewById(R.id.item_feedback_rate_3);
+        ImageView rate4 = (ImageView)view.findViewById(R.id.item_feedback_rate_4);
+        ImageView rate5 = (ImageView)view.findViewById(R.id.item_feedback_rate_5);
+
+        if (rate >= 1) {
+            rate1.setImageResource(R.drawable.star_color);
+        }
+        if (rate >= 2) {
+            rate2.setImageResource(R.drawable.star_color);
+        }
+        if (rate >= 3) {
+            rate3.setImageResource(R.drawable.star_color);
+        }
+        if (rate >= 4) {
+            rate4.setImageResource(R.drawable.star_color);
+        }
+        if (rate >= 5) {
+            rate5.setImageResource(R.drawable.star_color);
+        }
+    }
+
+    @Override
+    public void setMyFeedbackReview(String review) {
+        TextView reviewText = (TextView)view.findViewById(R.id.item_feedback_review);
+        reviewText.setText(review);
+    }
+
+    @Override
+    public void setMyFeedbackDate(String date) {
+        TextView dateText = (TextView)view.findViewById(R.id.item_feedback_date);
+        dateText.setText(date);
+    }
+
+    @Override
+    public void setMyFeedbackOwner(String owner) {
+        TextView ownerText = (TextView)view.findViewById(R.id.item_feedback_owner);
+        ownerText.setText(owner);
+    }
+
+    @Override
+    public void hasMyFeedback(boolean hasMyFeedback) {
+        LinearLayout myFeedbackLayout = (LinearLayout)view.findViewById(R.id.event_detail_my_feedback);
+        myFeedbackLayout.setVisibility(hasMyFeedback ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showFeedbackActivityIndicator() {
+
+    }
+
+    @Override
+    public void hideFeedbackActivityIndicator() {
+
+    }
+
+    @Override
+    public void setOtherPeopleFeedback(List<FeedbackDTO> feedback) {
+        feedbackListAdapter.clear();
+        feedbackListAdapter.addAll(feedback);
+        feedbackListAdapter.notifyDataSetChanged();
+
+        LinearListView feedbackList = (LinearListView)view.findViewById(R.id.event_detail_feedback_list);
+        feedbackList.setVisibility(feedback.size() > 0 ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void toggleLoadMore(boolean show) {
+        Button loadMoreButton = (Button)view.findViewById(R.id.event_detail_load_more_feedback_button);
+        loadMoreButton.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
     private class SpeakerListAdapter extends ArrayAdapter<PersonListItemDTO> {
 
         public SpeakerListAdapter(Context context) {
@@ -225,6 +372,34 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
             final PersonItemView personItemView = new PersonItemView(convertView);
 
             presenter.buildSpeakerListItem(personItemView, position);
+
+            // Return the completed view to render on screen
+            return convertView;
+        }
+
+        @Override
+        public int getCount() {
+            return super.getCount();
+        };
+    }
+
+    private class FeedbackListAdapter extends ArrayAdapter<FeedbackDTO> {
+
+        public FeedbackListAdapter(Context context) {
+            super(context, 0);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_feedback_list, parent, false);
+            }
+
+            final FeedbackItemView feedbackItemView = new FeedbackItemView(convertView);
+
+            presenter.buildFeedbackListItem(feedbackItemView, position);
 
             // Return the completed view to render on screen
             return convertView;

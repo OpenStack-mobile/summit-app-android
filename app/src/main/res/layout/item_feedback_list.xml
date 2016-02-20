@@ -27,19 +27,19 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/item_feedback_rate_1"
-                style="@style/AppTheme.StarRate"/>
+                style="@style/AppTheme.SmallStarRate"/>
             <ImageView
                 android:id="@+id/item_feedback_rate_2"
-                style="@style/AppTheme.StarRate"/>
+                style="@style/AppTheme.SmallStarRate"/>
             <ImageView
                 android:id="@+id/item_feedback_rate_3"
-                style="@style/AppTheme.StarRate"/>
+                style="@style/AppTheme.SmallStarRate"/>
             <ImageView
                 android:id="@+id/item_feedback_rate_4"
-                style="@style/AppTheme.StarRate"/>
+                style="@style/AppTheme.SmallStarRate"/>
             <ImageView
                 android:id="@+id/item_feedback_rate_5"
-                style="@style/AppTheme.StarRate"/>
+                style="@style/AppTheme.SmallStarRate"/>
         </LinearLayout>
         <TextView
             android:id="@+id/item_feedback_owner"
@@ -48,8 +48,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:layout_gravity="center"
-            android:text="Claudio Redi"
-            android:visibility="gone"/>
+            android:text="Claudio Redi" />
 
         <TextView
             android:id="@+id/item_feedback_date"

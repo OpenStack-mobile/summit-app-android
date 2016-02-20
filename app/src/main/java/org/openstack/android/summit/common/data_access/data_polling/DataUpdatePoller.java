@@ -89,8 +89,8 @@ public class DataUpdatePoller implements IDataUpdatePoller {
             HttpTask httpTask = null;
             try {
                 httpTask = securityManager.isLoggedIn()
-                        ? httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, taskListener)
-                        : httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, taskListener);
+                        ? httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, taskListener)
+                        : httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, taskListener);
             } catch (InvalidParameterSpecException e) {
                 Log.d(Constants.LOG_TAG, e.getMessage(), e);
             }

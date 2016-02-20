@@ -74,7 +74,7 @@ public class OIDCUtils {
 
         // An optional request parameter that asks the server to provide a touch-enabled interface.
         // Who knows, maybe the server is nice enough to make some changes.
-        request.set("display", "touch");
+        //request.set("display", "touch");
 
         return request.build();
     }
@@ -116,7 +116,7 @@ public class OIDCUtils {
 
         // An optional request parameter that asks the server to provide a touch-enabled interface.
         // Who knows, maybe the server is nice enough to make some changes.
-        request.set("display", "touch");
+        //request.set("display", "touch");
 
         return request.build();
     }
@@ -150,7 +150,7 @@ public class OIDCUtils {
 
         // An optional request parameter that asks the server to provide a touch-enabled interface.
         // Who knows, maybe the server is nice enough to make some changes.
-        request.set("display", "touch");
+        //request.set("display", "touch");
 
         return request.build();
     }
