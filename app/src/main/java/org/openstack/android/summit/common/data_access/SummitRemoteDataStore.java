@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
+import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskConfig;
@@ -27,7 +28,6 @@ public class SummitRemoteDataStore implements ISummitRemoteDataStore {
 
     @Override
     public void getActive(final IDataStoreOperationListener<Summit> dataStoreOperationListener) {
-
         try {
             HttpTaskListener httpTaskListener = new HttpTaskListener() {
                 @Override
@@ -47,10 +47,11 @@ public class SummitRemoteDataStore implements ISummitRemoteDataStore {
                 }
             };
             String url = Constants.RESOURCE_SERVER_BASE_URL + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";
-            HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, "GET", httpTaskListener);
+            HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, "GET", null, null, httpTaskListener);
             httpTask.execute();
         } catch (Exception e) {
             dataStoreOperationListener.onError(e.getMessage());
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
     }
 }

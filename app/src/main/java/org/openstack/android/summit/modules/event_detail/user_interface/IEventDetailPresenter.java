@@ -1,5 +1,6 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
+import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.IBasePresenter;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
 
@@ -12,4 +13,10 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> 
     void toggleScheduleStatus();
 
     void showSpeakerProfile(int position);
+
+    void showFeedbackEdit();
+
+    void buildFeedbackListItem(FeedbackItemView feedbackItemView, int position);
+
+    void loadFeedback();
 }

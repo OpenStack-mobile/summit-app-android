@@ -56,7 +56,7 @@ public class MemberRemoteDataStore implements IMemberRemoteDataStore {
         String url = Constants.RESOURCE_SERVER_BASE_URL + "/api/v1/summits/current/attendees/me?expand=speaker,feedback";
         HttpTask httpTask = null;
         try {
-            httpTask = httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, httpTaskListener);
+            httpTask = httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
         } catch (InvalidParameterSpecException e) {
             e.printStackTrace();
         }

@@ -17,8 +17,7 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
     IDeserializerStorage deserializerStorage;
 
     @Inject
-    public FeedbackDeserializer(IDeserializerStorage deserializerStorage)
-    {
+    public FeedbackDeserializer(IDeserializerStorage deserializerStorage) {
         this.deserializerStorage = deserializerStorage;
     }
 
@@ -39,12 +38,23 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
         int ownwerId;
         if (jsonObject.has("atendee_id")){
             ownwerId = jsonObject.getInt("atendee_id");
+            feedback.setOwner(deserializerStorage.get(ownwerId, SummitAttendee.class));
+        }
+        else if (jsonObject.has("owner_id")) {
+            ownwerId = jsonObject.getInt("owner_id");
+            feedback.setOwner(deserializerStorage.get(ownwerId, SummitAttendee.class));
+        }
+        else if (jsonObject.has("owner")) {
+            SummitAttendee summitAttendee = new SummitAttendee();
+            JSONObject jsonObjectAttendee = jsonObject.getJSONObject("owner");
+            summitAttendee.setId(jsonObjectAttendee.getInt("id"));
+            summitAttendee.setFullName(jsonObjectAttendee.getString("first_name") + " " + jsonObjectAttendee.getString("last_name"));
+            feedback.setOwner(summitAttendee);
         }
         else {
-            ownwerId = jsonObject.getInt("owner_id");
+            throw new JSONException(String.format("Can't deserialize owner for feedback with id %d", feedback.getId()));
         }
 
-        feedback.setOwner(deserializerStorage.get(ownwerId, SummitAttendee.class));
         feedback.setEvent(deserializerStorage.get(jsonObject.getInt("event_id"), SummitEvent.class));
 
         if(!deserializerStorage.exist(feedback, Feedback.class)) {

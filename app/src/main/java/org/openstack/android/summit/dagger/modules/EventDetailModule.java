@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.NavigationParametersStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.modules.event_detail.EventDetailWireframe;
@@ -14,6 +15,7 @@ import org.openstack.android.summit.modules.event_detail.business_logic.IEventDe
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailPresenter;
 import org.openstack.android.summit.modules.event_detail.user_interface.IEventDetailPresenter;
+import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 
 import dagger.Module;
@@ -36,11 +38,11 @@ public class EventDetailModule {
 
     @Provides
     IEventDetailInteractor providesEventDetailInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager) {
-        return new EventDetailInteractor(summitEventDataStore, summitAttendeeDataStore, dtoAssembler, securityManager);
+        return new EventDetailInteractor(summitEventDataStore, summitAttendeeDataStore, new Reachability(), dtoAssembler, securityManager);
     }
 
     @Provides
-    IEventDetailWireframe providesEventDetailWireframe(IMemberProfileWireframe memberProfileWireframe, INavigationParametersStore navigationParametersStore) {
-        return new EventDetailWireframe(memberProfileWireframe, navigationParametersStore);
+    IEventDetailWireframe providesEventDetailWireframe(IMemberProfileWireframe memberProfileWireframe, IFeedbackEditWireframe feedbackEditWireframe,INavigationParametersStore navigationParametersStore) {
+        return new EventDetailWireframe(memberProfileWireframe, feedbackEditWireframe, navigationParametersStore);
     }
 }

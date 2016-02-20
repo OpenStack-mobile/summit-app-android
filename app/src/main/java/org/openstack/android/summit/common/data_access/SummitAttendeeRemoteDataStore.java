@@ -3,10 +3,13 @@ package org.openstack.android.summit.common.data_access;
 import android.util.Log;
 
 import com.github.kevinsawicki.http.HttpRequest;
+import com.google.api.client.http.HttpMethods;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
+import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.network.HttpTask;
@@ -41,6 +44,40 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
         addOrRemoveEventFromSchedule(summitAttendee, summitEvent, dataStoreOperationListener, HttpRequest.METHOD_DELETE);
     }
 
+    @Override
+    public void addFeedback(SummitAttendee attendee, final Feedback feedback, final IDataStoreOperationListener<Feedback> dataStoreOperationListener) {
+        HttpTaskListener httpTaskListener = new HttpTaskListener() {
+            @Override
+            public void onSucceed(String data) {
+                feedback.setId(Integer.parseInt(data));
+                dataStoreOperationListener.onSuceedWithSingleData(feedback);
+            }
+
+            @Override
+            public void onError(String error) {
+                dataStoreOperationListener.onError(error);
+            }
+        };
+
+        String jsonString = String.format("{\"rate\":%d, \"note\":%s, \"attendee_id\":%d}", feedback.getRate(), JSONObject.quote(feedback.getReview()), feedback.getOwner().getId());
+
+        String url = Constants.RESOURCE_SERVER_BASE_URL +
+                String.format("/api/v1/summits/current/events/%s/feedback", feedback.getEvent().getId());
+        HttpTask httpTask = null;
+        try {
+            httpTask = httpTaskFactory.create(
+                    AccountType.OIDC,
+                    url,
+                    HttpRequest.METHOD_POST,
+                    HttpRequest.CONTENT_TYPE_JSON,
+                    jsonString,
+                    httpTaskListener);
+        } catch (InvalidParameterSpecException e) {
+            e.printStackTrace();
+        }
+        httpTask.execute();
+    }
+
     private void addOrRemoveEventFromSchedule(final SummitAttendee summitAttendee, SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener, String httpMethod) {
         HttpTaskListener httpTaskListener = new HttpTaskListener() {
             @Override
@@ -58,9 +95,10 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
                 String.format("/api/v1/summits/current/attendees/%s/schedule/%s", summitAttendee.getId(), summitEvent.getId());
         HttpTask httpTask = null;
         try {
-            httpTask = httpTaskFactory.create(AccountType.OIDC, url, httpMethod, httpTaskListener);
-        } catch (InvalidParameterSpecException e) {
-            e.printStackTrace();
+            httpTask = httpTaskFactory.create(AccountType.OIDC, url, null, null, httpMethod, httpTaskListener);
+        } catch (Exception e) {
+            dataStoreOperationListener.onError(e.getMessage());
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
         httpTask.execute();
     }

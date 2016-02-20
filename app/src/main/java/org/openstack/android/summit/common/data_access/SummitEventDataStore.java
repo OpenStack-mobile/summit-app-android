@@ -1,7 +1,9 @@
 package org.openstack.android.summit.common.data_access;
 
 import org.joda.time.DateTime;
+import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.EventType;
+import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.Summit;
@@ -24,6 +26,12 @@ import io.realm.Sort;
  * Created by Claudio Redi on 12/20/2015.
  */
 public class SummitEventDataStore extends GenericDataStore implements ISummitEventDataStore {
+
+    ISummitEventRemoteDataStore summitEventRemoteDataStore;
+
+    public SummitEventDataStore(ISummitEventRemoteDataStore summitEventRemoteDataStore) {
+        this.summitEventRemoteDataStore = summitEventRemoteDataStore;
+    }
 
     @Override
     public List<SummitEvent> getByFilterLocal(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
@@ -172,34 +180,22 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
         return results;
     }
 
-    /*public func getByFilterLocal(startDate: NSDate, endDate: NSDate, eventTypes: [Int]?, summitTypes: [Int]?, tracks: [Int]?, tags: [String]?, levels: [String]?)->[SummitEvent]{
-        var events = realm.objects(SummitEvent).filter("start >= %@ and end <= %@", startDate, endDate).sorted("start")
-        if (eventTypes != nil && eventTypes!.count > 0) {
-            events = events.filter("eventType.id in %@", eventTypes!)
-        }
-        if (tracks != nil && tracks!.count > 0) {
-            events = events.filter("presentation.track.id in %@", tracks!)
-        }
-        if (levels != nil && levels!.count > 0) {
-            events = events.filter("presentation.level in %@", levels!)
-        }
-
-        if (summitTypes != nil && summitTypes!.count > 0) {
-            for summitTypeId in summitTypes! {
-                    events = events.filter("ANY summitTypes.id = %@", summitTypeId)
+    @Override
+    public void getFeedbackOrigin(int eventId, int page, int objectsPerPage, final IDataStoreOperationListener<Feedback> dataStoreOperationListener) {
+        IDataStoreOperationListener<Feedback> remoteDataStoreOperationListener = new DataStoreOperationListener<Feedback>() {
+            @Override
+            public void onSucceedWithDataCollection(List<Feedback> data) {
+                super.onSucceedWithDataCollection(data);
+                dataStoreOperationListener.onSucceedWithDataCollection(data);
             }
-        }
 
-        if (tags != nil && tags!.count > 0) {
-            var tagsFilter = ""
-            var separator = ""
-            for tag in tags! {
-                    tagsFilter += "\(separator)ANY tags.name = '\(tag)'"
-                    separator = " OR "
+            @Override
+            public void onError(String message) {
+                super.onError(message);
+                dataStoreOperationListener.onError(message);
             }
-            events = events.filter(tagsFilter)
-        }
+        };
 
-        return events.map{$0}
-    }  */
+        summitEventRemoteDataStore.getFeedback(eventId, page, objectsPerPage, remoteDataStoreOperationListener);
+    }
 }

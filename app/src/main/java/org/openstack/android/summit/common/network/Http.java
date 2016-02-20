@@ -25,20 +25,20 @@ public class Http implements IHttp {
 
     @Override
     public String GET(String url) throws IOException {
-        return makeRequest(HttpRequest.METHOD_GET, url, getTokenManager(), true);
+        return makeRequest(HttpRequest.METHOD_GET, url, null, null, getTokenManager(), true);
     }
 
     @Override
-    public String POST(String url) throws IOException {
-        return makeRequest(HttpRequest.METHOD_POST, url, getTokenManager(), true);
+    public String POST(String url, String contentType, String content) throws IOException {
+        return makeRequest(HttpRequest.METHOD_POST, url, contentType, content, getTokenManager(), true);
     }
 
     @Override
     public String DELETE(String url) throws IOException {
-        return makeRequest(HttpRequest.METHOD_DELETE, url, getTokenManager(), true);
+        return makeRequest(HttpRequest.METHOD_DELETE, url, null, null, getTokenManager(), true);
     }
 
-    protected String makeRequest(String method, String url, ITokenManager tokenManager, boolean doRetry) throws IOException {
+    protected String makeRequest(String method, String url, String contentType, String content, ITokenManager tokenManager, boolean doRetry) throws IOException {
 
         String token = null;
         try {
@@ -50,6 +50,10 @@ public class Http implements IHttp {
         HttpRequest request = new HttpRequest(url, method);
         request = prepareApiRequest(request, token);
 
+        if (content != null && !content.isEmpty()) {
+            request.contentType(contentType).send(content);
+        }
+
         if (request.ok() || request.code() == HTTP_CREATED || request.code() == HTTP_NO_CONTENT) {
             return request.body();
         } else {
@@ -58,7 +62,7 @@ public class Http implements IHttp {
             if (doRetry && (code == HTTP_UNAUTHORIZED || code == HTTP_FORBIDDEN || code == HTTP_BAD_REQUEST)) {
                 tokenManager.invalidateToken(token);
 
-                return makeRequest(method, url, tokenManager, false);
+                return makeRequest(method, url, contentType, content, tokenManager, false);
             } else {
                 // An unrecoverable error or the renewed token didn't work either
                 throw new IOException(request.code() + " " + request.message());

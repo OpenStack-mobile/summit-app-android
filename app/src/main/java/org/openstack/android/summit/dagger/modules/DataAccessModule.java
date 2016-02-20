@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.MemberDataStore;
 import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
@@ -19,6 +20,7 @@ import org.openstack.android.summit.common.data_access.SummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.SummitDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventDataStore;
+import org.openstack.android.summit.common.data_access.SummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.SummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
@@ -201,8 +203,13 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitEventDataStore providesSummitEventDataStore() {
-        return new SummitEventDataStore();
+    ISummitEventDataStore providesSummitEventDataStore(ISummitEventRemoteDataStore summitEventRemoteDataStore) {
+        return new SummitEventDataStore(summitEventRemoteDataStore);
+    }
+
+    @Provides
+    ISummitEventRemoteDataStore providesSummitEventRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
+        return new SummitEventRemoteDataStore(httpTaskFactory, deserializer);
     }
 
     @Provides

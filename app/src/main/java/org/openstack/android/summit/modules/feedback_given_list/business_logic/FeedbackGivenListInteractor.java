@@ -25,7 +25,6 @@ public class FeedbackGivenListInteractor extends BaseInteractor implements IFeed
     @Override
     public List<FeedbackDTO> getFeedbackGivenByCurrentUser() {
         Member member = securityManager.getCurrentMember();
-        List<Feedback> feedbackSorted = member.getAttendeeRole().getFeedback();
         List<FeedbackDTO> dtos = createDTOList(member.getAttendeeRole().getFeedback(), FeedbackDTO.class);
         Collections.sort(dtos, new CustomComparator());
         return dtos;

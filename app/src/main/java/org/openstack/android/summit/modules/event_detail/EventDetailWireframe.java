@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
+import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 
 import javax.inject.Inject;
@@ -17,11 +18,13 @@ import javax.inject.Inject;
  */
 public class EventDetailWireframe extends BaseWireframe implements IEventDetailWireframe {
     private IMemberProfileWireframe memberProfileWireframe;
+    private IFeedbackEditWireframe feedbackEditWireframe;
 
     @Inject
-    public EventDetailWireframe(IMemberProfileWireframe memberProfileWireframe,INavigationParametersStore navigationParametersStore) {
+    public EventDetailWireframe(IMemberProfileWireframe memberProfileWireframe, IFeedbackEditWireframe feedbackEditWireframe, INavigationParametersStore navigationParametersStore) {
         super(navigationParametersStore);
         this.memberProfileWireframe = memberProfileWireframe;
+        this.feedbackEditWireframe = feedbackEditWireframe;
     }
 
     @Override
@@ -39,5 +42,10 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
     @Override
     public void showSpeakerProfile(int speakerId, IBaseView context) {
         memberProfileWireframe.presentOtherSpeakerProfileView(speakerId, context);
+    }
+
+    @Override
+    public void showFeedbackEditView(int eventId, IBaseView view) {
+        feedbackEditWireframe.presentFeedbackEditView(eventId, view);
     }
 }

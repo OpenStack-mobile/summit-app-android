@@ -16,6 +16,7 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private Boolean allowFeedback;
     private PersonListItemDTO moderator;
     private String level;
+    private Double averageRate;
 
     public int getVenueId() {
         return venueId;
@@ -87,5 +88,13 @@ public class EventDetailDTO extends ScheduleItemDTO {
 
     public void setLevel(String level) {
         this.level = level;
+    }
+
+    public Double getAverageRate() {
+        return averageRate;
+    }
+
+    public void setAverageRate(Double averageRate) {
+        this.averageRate = averageRate;
     }
 }

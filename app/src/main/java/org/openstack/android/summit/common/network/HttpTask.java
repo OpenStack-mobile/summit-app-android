@@ -33,7 +33,7 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
                 taskResult.setBody(body);
             }
             else if (method == HttpRequest.METHOD_POST){
-                String body = config.getHttp().POST(config.getUrl());
+                String body = config.getHttp().POST(config.getUrl(), config.getContentType(), config.getContent());
                 taskResult.setBody(body);
             }
             else if (method == HttpRequest.METHOD_DELETE){

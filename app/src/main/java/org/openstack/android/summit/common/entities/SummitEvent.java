@@ -17,6 +17,7 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     private Date end;
     private String eventDescription;
     private Boolean allowFeedback;
+    private double averageRate;
     private EventType eventType;
     private RealmList<SummitType> summitTypes = new RealmList<>();
     private RealmList<Company> sponsors = new RealmList<>();
@@ -138,7 +139,11 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
         this.summit = summit;
     }
 
-    /*public var summit: Summit {
-        return linkingObjects(Summit.self, forProperty: "events").first!
-    }*/
+    public double getAverageRate() {
+        return averageRate;
+    }
+
+    public void setAverageRate(double averageRate) {
+        this.averageRate = averageRate;
+    }
 }

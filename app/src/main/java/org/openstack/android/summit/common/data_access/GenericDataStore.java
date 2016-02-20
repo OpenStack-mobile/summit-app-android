@@ -15,6 +15,9 @@ public class GenericDataStore implements IGenericDataStore {
 
     @Override
     public <T extends RealmObject> T getByIdLocal(int id, Class<T> type) {
+        //HACK: this is a for multithreading. To avoid error: " Realm access from incorrect thread. Realm objects can only be accessed on the thread they were created."
+        // Check if this is causing considerable memory usage increase
+        Realm realm = Realm.getDefaultInstance();
         return realm.where(type).equalTo("id", id).findFirst();
     }
 

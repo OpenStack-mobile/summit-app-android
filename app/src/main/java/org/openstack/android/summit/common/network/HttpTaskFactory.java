@@ -24,7 +24,7 @@ public class HttpTaskFactory implements IHttpTaskFactory {
     }
 
     @Override
-    public HttpTask create(AccountType type, String url, String method, HttpTaskListener delegate) throws InvalidParameterSpecException {
+    public HttpTask create(AccountType type, String url, String method, String contentType, String content, HttpTaskListener delegate) throws InvalidParameterSpecException {
         ITokenManager tokenManager;
         if (type == AccountType.OIDC) {
             tokenManager = tokenManagerFactory.Create(TokenManagerFactory.TokenManagerType.OIDC);
@@ -39,6 +39,8 @@ public class HttpTaskFactory implements IHttpTaskFactory {
         HttpTaskConfig httpTaskConfig = new HttpTaskConfig();
         httpTaskConfig.setUrl(url);
         httpTaskConfig.setMethod(method);
+        httpTaskConfig.setContentType(contentType);
+        httpTaskConfig.setContent(content);
         httpTaskConfig.setDelegate(delegate);
         httpTaskConfig.setHttp(httpFactory.create(tokenManager));
         HttpTask httpTask = new HttpTask(httpTaskConfig);
