@@ -1,5 +1,11 @@
 package org.openstack.android.summit.common.data_access;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
+import org.openstack.android.summit.common.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +49,10 @@ public class GenericDataStore implements IGenericDataStore {
                 delegate.onSuceedWithSingleData(realmEntity);
             }
         }
-        catch (Exception ex) {
-            delegate.onError(ex.getMessage());
+        catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            delegate.onError(e.getMessage());
         }
     }
 
@@ -58,8 +66,10 @@ public class GenericDataStore implements IGenericDataStore {
                 delegate.onSucceedWithoutData();
             }
         }
-        catch (Exception ex) {
-            delegate.onError(ex.getMessage());
+        catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            delegate.onError(e.getMessage());
         }
     }
 }

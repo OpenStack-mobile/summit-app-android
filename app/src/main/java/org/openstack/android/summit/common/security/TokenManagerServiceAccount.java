@@ -2,7 +2,9 @@ package org.openstack.android.summit.common.security;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.api.client.auth.oauth2.TokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -61,7 +63,8 @@ public class TokenManagerServiceAccount implements ITokenManager {
         try {
             tokenResponse = tokenRequest.execute();
         } catch (IOException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
 
         return tokenResponse;

@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
 
 import org.openstack.android.summit.common.Constants;
@@ -47,6 +48,7 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
             taskResult.setSucceed(true);
 
         } catch (Exception e) {
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, "Error executing API request", e);
             taskResult.setSucceed(false);
             taskResult.setBody(e.getMessage());

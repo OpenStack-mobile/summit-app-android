@@ -2,6 +2,8 @@ package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.VenueDTO;
@@ -26,6 +28,7 @@ public class AbstractVenue2VenueDTO <S extends Venue> extends AbstractConverter<
             venueDTO.setLng(source.getLng());
             venueDTO.setMaps(getMaps(source));
         } catch (Exception e) {
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             throw e;
         }

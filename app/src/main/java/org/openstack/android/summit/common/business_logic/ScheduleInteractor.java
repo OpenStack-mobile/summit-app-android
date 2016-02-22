@@ -9,6 +9,8 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
+import org.openstack.android.summit.common.IPushNotificationsManager;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -31,12 +33,17 @@ import javax.inject.Inject;
  */
 public class ScheduleInteractor extends ScheduleableInteractor implements IScheduleInteractor {
     private ISummitDataStore summitDataStore;
+    private IPushNotificationsManager pushNotificationsManager;
+    private ISession session;
+    private final String PUSH_NOTIFICATIONS_SUBSCRIBED_KEY = "PUSH_NOTIFICATIONS_SUBSCRIBED_KEY";
 
     @Inject
-    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller) {
+    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller, IPushNotificationsManager pushNotificationsManager, ISession session) {
         super(summitEventDataStore, summitAttendeeDataStore, dtoAssembler, securityManager);
         this.summitDataStore = summitDataStore;
         this.dataUpdatePoller = dataUpdatePoller;
+        this.pushNotificationsManager = pushNotificationsManager;
+        this.session = session;
     }
 
     @Override
@@ -46,6 +53,21 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
         List<ScheduleItemDTO> dtos = createDTOList(summitEvents, ScheduleItemDTO.class);
 
         return dtos;
+    }
+
+    @Override
+    public void subscribeToPushChannelsUsingContextIfNotDoneAlready() {
+        Summit summit = summitDataStore.getActiveLocal();
+        if (summit != null && session.getString(PUSH_NOTIFICATIONS_SUBSCRIBED_KEY) == null) {
+            if (securityManager.isLoggedIn()) {
+                Member member = securityManager.getCurrentMember();
+                pushNotificationsManager.subscribeMember(member, summit);
+            }
+            else {
+                pushNotificationsManager.subscribeAnonymous(summit);
+            }
+            session.setString(PUSH_NOTIFICATIONS_SUBSCRIBED_KEY,"YES");
+        }
     }
 
     @Override

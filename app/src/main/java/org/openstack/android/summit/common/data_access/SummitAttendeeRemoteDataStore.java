@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.data_access;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.api.client.http.HttpMethods;
 
@@ -73,7 +74,8 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
                     jsonString,
                     httpTaskListener);
         } catch (InvalidParameterSpecException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
         httpTask.execute();
     }
@@ -97,8 +99,9 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
         try {
             httpTask = httpTaskFactory.create(AccountType.OIDC, url, null, null, httpMethod, httpTaskListener);
         } catch (Exception e) {
-            dataStoreOperationListener.onError(e.getMessage());
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            dataStoreOperationListener.onError(e.getMessage());
         }
         httpTask.execute();
     }

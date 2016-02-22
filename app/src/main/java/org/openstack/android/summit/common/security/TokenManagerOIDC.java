@@ -8,6 +8,8 @@ import android.accounts.OperationCanceledException;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -27,6 +29,7 @@ public class TokenManagerOIDC implements ITokenManager {
         try {
             token = futureManager.getResult().getString(AccountManager.KEY_AUTHTOKEN);
         } catch (Exception e) {
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG,"Error getting token", e);
             throw new TokenGenerationException(e);
         }

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 
@@ -151,6 +152,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 }
                 catch (IOException e) {
                     // There's not much we can do if we get here
+                    Crashlytics.logException(e);
                     Log.e(TAG, "Couldn't get new tokens.", e);
                 }
 
