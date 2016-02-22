@@ -3,6 +3,8 @@ package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
@@ -26,6 +28,7 @@ public class AbstractFeedback2FeedbackDTO<S extends Feedback> extends AbstractCo
             feedbackDTO.setDate(source.getDate());
         }
         catch (Exception e) {
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             throw e;
         }

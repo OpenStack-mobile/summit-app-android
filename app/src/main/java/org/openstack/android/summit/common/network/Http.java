@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.network;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
 
 import org.openstack.android.summit.common.Constants;
@@ -44,6 +45,7 @@ public class Http implements IHttp {
         try {
             token = tokenManager.getToken();
         } catch (TokenGenerationException e) {
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, "Error getting token", e);
         }
         // Prepare an API request using the token

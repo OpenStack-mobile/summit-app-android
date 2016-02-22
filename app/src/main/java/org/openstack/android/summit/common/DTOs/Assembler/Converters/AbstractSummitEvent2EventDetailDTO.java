@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
 
 import org.modelmapper.AbstractConverter;
@@ -49,6 +50,7 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             }
         }
         catch (Exception e) {
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             throw e;
         }

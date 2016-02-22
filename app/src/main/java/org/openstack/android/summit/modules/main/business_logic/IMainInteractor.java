@@ -12,4 +12,8 @@ public interface IMainInteractor extends IBaseInteractor {
     String getCurrentMemberName();
 
     Uri getCurrentMemberProfilePictureUri();
+
+    void subscribeLoggedInMemberToPushNotifications();
+
+    void subscribeAnonymousToPushNotifications();
 }

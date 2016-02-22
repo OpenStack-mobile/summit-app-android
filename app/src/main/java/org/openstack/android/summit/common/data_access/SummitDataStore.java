@@ -1,5 +1,10 @@
 package org.openstack.android.summit.common.data_access;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Summit;
 
@@ -42,8 +47,10 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
                             dataStoreOperationListener.onSuceedWithSingleData(realmEntity);
                         }
                     }
-                    catch (Exception ex) {
-                        dataStoreOperationListener.onError(ex.getMessage());
+                    catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.e(Constants.LOG_TAG, e.getMessage(), e);
+                        dataStoreOperationListener.onError(e.getMessage());
                     }
                 }
 

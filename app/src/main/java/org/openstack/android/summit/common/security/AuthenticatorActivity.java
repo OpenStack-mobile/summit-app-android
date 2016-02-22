@@ -17,6 +17,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 import com.google.api.client.json.gson.GsonFactory;
 
@@ -209,6 +210,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 }
             }
             catch(Exception e) {
+                Crashlytics.logException(e);
                 Log.e(Constants.LOG_TAG, "Error executing API request", e);
                 return false;
             }
@@ -275,6 +277,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 }
             }
             catch (Exception e) {
+                Crashlytics.logException(e);
                 Log.e(Constants.LOG_TAG, "Error executing API request", e);
                 return false;
             }
@@ -319,8 +322,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                             ConfigOIDC.clientSecret,
                             authToken);
                 } catch (IOException e) {
+                    Crashlytics.logException(e);
                     Log.e(TAG, "Could not get response.");
-                    e.printStackTrace();
                     return false;
                 }
 
@@ -331,6 +334,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 }
             }
             catch (Exception e) {
+                Crashlytics.logException(e);
                 Log.e(Constants.LOG_TAG, "Error executing API request", e);
                 return false;
             }
@@ -380,8 +384,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         try {
             accountId = response.parseIdToken().getPayload().getSubject();
         } catch (IOException e) {
+            Crashlytics.logException(e);
             Log.e(TAG, "Could not get ID Token subject.");
-            e.printStackTrace();
         }
 
         account = new Account(String.format("%s (%s)", accountName, accountId), accountType);

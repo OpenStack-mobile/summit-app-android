@@ -96,6 +96,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         view.setLoginButtonText(view.getResources().getText(R.string.log_in).toString());
         view.toggleMyProfileMenuItem(false);
         view.setProfilePic(null);
+        interactor.subscribeAnonymousToPushNotifications();
     }
 
     @Override
@@ -109,6 +110,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         view.setLoginButtonText(view.getResources().getText(R.string.log_out).toString());
         view.toggleMyProfileMenuItem(true);
         view.setProfilePic(currentMemberProfilePicUri);
+        interactor.subscribeLoggedInMemberToPushNotifications();
     }
 
     @Override

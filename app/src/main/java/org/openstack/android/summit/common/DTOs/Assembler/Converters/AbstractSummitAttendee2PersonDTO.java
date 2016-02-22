@@ -2,6 +2,8 @@ package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.PersonDTO;
@@ -28,6 +30,7 @@ public class AbstractSummitAttendee2PersonDTO<S extends SummitAttendee> extends 
             personDTO.setIrc(source.getIrc());
         }
         catch (Exception e) {
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             throw e;
         }

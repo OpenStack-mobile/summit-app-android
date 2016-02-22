@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.data_access;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
 
 import org.json.JSONException;
@@ -42,6 +43,7 @@ public class MemberRemoteDataStore implements IMemberRemoteDataStore {
                     Member member = deserializer.deserialize(data, Member.class);
                     dataStoreOperationListener.onSuceedWithSingleData(member);
                 } catch (JSONException e) {
+                    Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, "Error deserializing member", e);
                     dataStoreOperationListener.onError(e.getMessage());
                 }
@@ -58,7 +60,8 @@ public class MemberRemoteDataStore implements IMemberRemoteDataStore {
         try {
             httpTask = httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
         } catch (InvalidParameterSpecException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
         httpTask.execute();
     }

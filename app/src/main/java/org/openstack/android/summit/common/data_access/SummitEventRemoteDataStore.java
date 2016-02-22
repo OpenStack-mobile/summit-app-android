@@ -2,6 +2,8 @@ package org.openstack.android.summit.common.data_access;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONException;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
@@ -37,6 +39,7 @@ public class SummitEventRemoteDataStore implements ISummitEventRemoteDataStore {
                         List<Feedback> feedbackList = deserializer.deserializePage(data, Feedback.class);
                         dataStoreOperationListener.onSucceedWithDataCollection(feedbackList);
                     } catch (JSONException e) {
+                        Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG, "Error deserializing feedback", e);
                         dataStoreOperationListener.onError(e.getMessage());
                     }
@@ -52,8 +55,9 @@ public class SummitEventRemoteDataStore implements ISummitEventRemoteDataStore {
             HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, "GET", null, null, httpTaskListener);
             httpTask.execute();
         } catch (Exception e) {
-            dataStoreOperationListener.onError(e.getMessage());
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            dataStoreOperationListener.onError(e.getMessage());
         }
     }
 }

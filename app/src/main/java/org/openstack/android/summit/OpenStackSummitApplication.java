@@ -4,8 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.parse.Parse;
+import com.parse.ParseInstallation;
 
+import io.fabric.sdk.android.Fabric;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.components.DaggerApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
@@ -22,6 +26,7 @@ public class OpenStackSummitApplication extends Application {
     
     @Override public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         this.initializeInjector();
         RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
                 .deleteRealmIfMigrationNeeded()
@@ -31,6 +36,9 @@ public class OpenStackSummitApplication extends Application {
         context = getApplicationContext();
 
         Fresco.initialize(context);
+
+        Parse.initialize(this);
+        ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 
     private void initializeInjector() {

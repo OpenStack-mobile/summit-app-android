@@ -2,6 +2,8 @@ package org.openstack.android.summit.modules.track_schedule.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
+import org.openstack.android.summit.common.IPushNotificationsManager;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
@@ -20,8 +22,8 @@ public class TrackScheduleInteractor extends ScheduleInteractor implements ITrac
     private IGenericDataStore genericDataStore;
 
     @Inject
-    public TrackScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller) {
-        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, dataUpdatePoller);
+    public TrackScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller, IPushNotificationsManager pushNotificationsManager, ISession session) {
+        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, dataUpdatePoller, pushNotificationsManager, session);
         this.genericDataStore = genericDataStore;
     }
 

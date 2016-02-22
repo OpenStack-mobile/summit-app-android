@@ -2,7 +2,9 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.IPushNotificationsManager;
 import org.openstack.android.summit.common.IScheduleFilter;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
@@ -33,8 +35,8 @@ public class SpeakerPresentationsModule {
     }
 
     @Provides
-    ISpeakerPresentationsInteractor providesSpeakerPresentationsInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller) {
-        return new SpeakerPresentationsInteractor(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, dataUpdatePoller);
+    ISpeakerPresentationsInteractor providesSpeakerPresentationsInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller, IPushNotificationsManager pushNotificationsManager, ISession session) {
+        return new SpeakerPresentationsInteractor(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, dataUpdatePoller, pushNotificationsManager, session);
     }
 
     @Provides
