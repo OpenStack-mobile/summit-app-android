@@ -115,6 +115,6 @@ public class VenuesMapFragment extends BaseFragment<IVenuesMapPresenter> impleme
             builder.include(latLng);
         }
         LatLngBounds bounds = builder.build();
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300), 10, null);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100), 10, null);
     }
 }

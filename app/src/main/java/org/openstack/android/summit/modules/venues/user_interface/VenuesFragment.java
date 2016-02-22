@@ -41,10 +41,15 @@ public class VenuesFragment extends BaseFragment<IVenuesPresenter> implements Vi
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
-        setTitle(getResources().getString(R.string.venues));
         setHasOptionsMenu(true);
     }
-    
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setTitle(getResources().getString(R.string.venues));
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         presenter.onSaveInstanceState(outState);
