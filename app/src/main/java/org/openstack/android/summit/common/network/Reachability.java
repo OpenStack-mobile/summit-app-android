@@ -43,7 +43,7 @@ public class Reachability implements IReachability {
      */
     public boolean isNetworkingAvailable(Context context) {
         NetworkInfo info = getActiveNetworkInfo(context);
-        return (info.isAvailable() && info.isConnected());
+        return info != null && info.isAvailable() && info.isConnected();
     }
 
 }

@@ -18,4 +18,6 @@ public interface IScheduleView extends IBaseView {
     Date getSelectedDate();
 
     void reloadSchedule();
+
+    void toggleNoConnectivityMessage(boolean show);
 }

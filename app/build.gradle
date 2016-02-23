@@ -15,6 +15,11 @@ repositories {
 }
 
 android {
+    dexOptions {
+        javaMaxHeapSize "4g" //specify the heap size for the dex process
+        preDexLibraries = false
+    }
+
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
@@ -90,7 +95,9 @@ dependencies {
     compile 'com.github.frankiesardo:linearlistview:1.0.1@aar'
 
     // HACK to get rid of an error related to realm https://github.com/realm/realm-java/issues/1963
-    compile 'io.reactivex:rxjava:1.1.0'
+    compile ('io.reactivex:rxjava:1.1.0') {
+        exclude module: 'rx.internal.operators'
+    }
 
     // page indicator
     compile 'com.githang:viewpagerindicator:2.4.2@aar'
@@ -105,8 +112,8 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
 
-    // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION:
-    //compile 'com.android.support:multidex:1.0.0'
+    // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION: due oo many method references: (max is 65536)
+    compile 'com.android.support:multidex:1.0.0'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;

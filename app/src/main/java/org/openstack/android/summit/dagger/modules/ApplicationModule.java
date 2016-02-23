@@ -9,6 +9,8 @@ import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.PushNotificationsManager;
 import org.openstack.android.summit.common.ScheduleFilter;
 import org.openstack.android.summit.common.Session;
+import org.openstack.android.summit.common.network.IReachability;
+import org.openstack.android.summit.common.network.Reachability;
 
 import javax.inject.Singleton;
 
@@ -46,8 +48,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    IPushNotificationsManager pushNotificationsManager() {
+    IPushNotificationsManager providesPushNotificationsManager() {
         return new PushNotificationsManager();
     }
-
 }

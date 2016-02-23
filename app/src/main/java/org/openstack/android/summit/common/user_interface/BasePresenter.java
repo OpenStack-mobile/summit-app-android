@@ -39,12 +39,16 @@ public class BasePresenter<V extends IBaseView, I extends IBaseInteractor, W> im
 
     @Override
     public void onResume() {
-        interactor.startPollingIfNotPollingAlready();
+        if (interactor != null) {
+            interactor.startPollingIfNotPollingAlready();
+        }
     }
 
     @Override
     public void onPause() {
-        interactor.stopPolling();
+        if (interactor != null) {
+            interactor.stopPolling();
+        }
     }
 
     @Override

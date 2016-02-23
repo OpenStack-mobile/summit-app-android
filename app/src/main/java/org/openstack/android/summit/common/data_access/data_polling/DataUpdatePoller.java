@@ -55,9 +55,9 @@ public class DataUpdatePoller implements IDataUpdatePoller {
     @Override
     public void pollServer() {
         try {
-        /*if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-            return;
-        }*/
+            if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
+                return;
+            }
 
             Log.d(Constants.LOG_TAG, "Polling server for data updates");
 
@@ -157,8 +157,9 @@ public class DataUpdatePoller implements IDataUpdatePoller {
     }
 
     public void stop() {
-        if (!scheduledFuture.isCancelled()) {
+        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
             scheduledFuture.cancel(true);
+            scheduledFuture = null;
         }
     }
 }

@@ -247,4 +247,10 @@ public class DataAccessModule {
     IDataUpdatePoller providesDataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore) {
         return new DataUpdatePoller(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, new Reachability());
     }
+
+    @Provides
+    @Singleton
+    IReachability providesReachability() {
+        return new Reachability();
+    }
 }
