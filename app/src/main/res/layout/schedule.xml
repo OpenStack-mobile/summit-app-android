@@ -7,25 +7,24 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#cccccc"></View>
-    <com.andressantibanez.ranger.Ranger
-        android:id="@+id/ranger_summit"
-        android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:scrollbarSize="1dp"
-        app:daysContainerBackgroundColor="@color/openStackLightGray"
-        app:dayTextColor="@color/openStackDarkGray"
-        app:selectedDayTextColor="@color/white"
-        app:selectedDayBackgroundColor="@color/openStackDarkGray"
-        app:displayDayOfWeek="true"
-        android:visibility="invisible"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#cccccc"></View>
+    <LinearLayout
+        android:id="@+id/ranger_container"
+        android:divider="@color/openStackLightGray"
+        android:showDividers="beginning|end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible">
+        <com.andressantibanez.ranger.Ranger
+            android:id="@+id/ranger_summit"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:scrollbarSize="1dp"
+            app:daysContainerBackgroundColor="@color/openStackLightGray"
+            app:dayTextColor="@color/openStackDarkGray"
+            app:selectedDayTextColor="@color/white"
+            app:selectedDayBackgroundColor="@color/openStackDarkGray"
+            app:displayDayOfWeek="true" />
+    </LinearLayout>
     <TextView
         android:id="@+id/list_empty_message"
         android:text="No events for current day"
@@ -41,4 +40,21 @@
         android:background="#00222222"
         android:drawSelectorOnTop="false"
         android:listSelector="@android:color/transparent"/>
+
+    <LinearLayout
+        android:id="@+id/no_connectivity_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_data_message"/>
+        <Button
+            android:id="@+id/retry_button"
+            style="@style/AppTheme.Button"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="@string/retry"/>
+    </LinearLayout>
 </LinearLayout>

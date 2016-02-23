@@ -1,5 +1,8 @@
 package org.openstack.android.summit.common.business_logic;
 
+import android.content.Context;
+
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.IEntity;
@@ -16,10 +19,10 @@ import javax.inject.Inject;
 public class BaseInteractor implements IBaseInteractor {
 
     @Inject
-    IDataUpdatePoller dataUpdatePoller;
+    IReachability reachability;
 
     @Inject
-    IReachability reachability;
+    IDataUpdatePoller dataUpdatePoller;
 
     protected IDTOAssembler dtoAssembler;
 
@@ -36,7 +39,10 @@ public class BaseInteractor implements IBaseInteractor {
         }
 
         return dtos;
+    }
 
+    public boolean isNetworkingAvailable() {
+        return true;//reachability.isNetworkingAvailable(OpenStackSummitApplication.context);
     }
 
     @Override

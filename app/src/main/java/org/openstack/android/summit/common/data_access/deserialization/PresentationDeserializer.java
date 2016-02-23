@@ -19,6 +19,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
     @Inject
     public PresentationDeserializer(IPresentationSpeakerDeserializer presentationSpeakerDeserializer, IDeserializerStorage deserializerStorage){
         this.deserializerStorage = deserializerStorage;
+        this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
     }
 
     @Override
@@ -30,6 +31,11 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
 
         Presentation presentation = new Presentation();
         presentation.setId(jsonObject.getInt("id"));
+
+        if(!deserializerStorage.exist(presentation, Presentation.class)) {
+            deserializerStorage.add(presentation, Presentation.class);
+        }
+
         presentation.setLevel(
                 !jsonObject.isNull("level") ? jsonObject.getString("level") : null
         );
@@ -41,10 +47,14 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         int speakerId;
         JSONArray jsonArraySpeakers = jsonObject.getJSONArray("speakers");
         for (int i = 0; i < jsonArraySpeakers.length(); i++) {
-            //TODO: on data updates speaker comes complete!
-            speakerId = jsonArraySpeakers.getInt(i);
-            presentationSpeaker = deserializerStorage.get(speakerId, PresentationSpeaker.class);
-            presentationSpeaker.getPresentations().add(presentation);
+            speakerId = jsonArraySpeakers.optInt(i);
+            if (speakerId > 0) {
+                presentationSpeaker = deserializerStorage.get(speakerId, PresentationSpeaker.class);
+            }
+            else {
+                //on data updates speaker comes complete!
+                presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonArraySpeakers.getJSONObject(i).toString());
+            }
             presentation.getSpeakers().add(presentationSpeaker);
         }
 

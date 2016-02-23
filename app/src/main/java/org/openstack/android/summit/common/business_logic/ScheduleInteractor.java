@@ -71,6 +71,11 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     }
 
     @Override
+    public boolean isDataLoaded() {
+        return summitDataStore.getActiveLocal() != null;
+    }
+
+    @Override
     public void getActiveSummit(final IInteractorAsyncOperationListener<SummitDTO> delegate) {
         DataStoreOperationListener<Summit> dataStoreOperationListener = new DataStoreOperationListener<Summit>() {
             @Override
