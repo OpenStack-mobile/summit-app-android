@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
     <!--
       GET_ACCOUNTS is only required for GCM on devices running Android lower than
       4.0.4. You may leave out this permission if you are targetting 4.0.4+.
@@ -21,6 +22,17 @@
     <permission android:protectionLevel="signature"
         android:name="com.parse.starter.permission.C2D_MESSAGE" />
     <uses-permission android:name="org.openstack.android.summit.permission.C2D_MESSAGE" />
+
+    <!-- Required for UXTesting -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-feature android:name="android.hardware.camera"  android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.front" android:required="false" />
 
     <application
         tools:replace="android:icon"
@@ -91,6 +103,8 @@
                 <category android:name="org.openstack.android.summit" />
             </intent-filter>
         </receiver>
+        <!-- Required for UXTesting -->
+        <service android:enabled="true" android:name="io.uxtesting.UXTestingService" />
 
     </application>
 
