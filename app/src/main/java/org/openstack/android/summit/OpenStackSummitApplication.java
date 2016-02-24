@@ -16,6 +16,7 @@ import org.openstack.android.summit.dagger.modules.ApplicationModule;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.uxtesting.UXTesting;
 
 /**
  * Created by claudio on 11/3/2015.
@@ -39,6 +40,8 @@ public class OpenStackSummitApplication extends Application {
 
         Parse.initialize(this);
         ParseInstallation.getCurrentInstallation().saveInBackground();
+
+        UXTesting.Init(this, "lUMy9RUlm4cQqQeG_1oc_g");
     }
 
     private void initializeInjector() {
