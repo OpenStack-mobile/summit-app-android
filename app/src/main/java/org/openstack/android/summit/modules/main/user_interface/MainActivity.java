@@ -259,6 +259,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void showInfoMessage(String message) {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Info")
+                .setContentText(message)
+                .show();
+    }
+
+    @Override
     public void setTitle(String title) {
         setTitle(title);
     }

@@ -22,4 +22,6 @@ public interface IBaseView {
     void setTitle(String title);
 
     Resources getResources();
+
+    void showInfoMessage(String message);
 }

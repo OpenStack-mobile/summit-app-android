@@ -110,6 +110,7 @@ public class EventsFragment extends BaseFragment<IEventsPresenter> implements Vi
         view = inflater.inflate(R.layout.fragment_events_container, container, false);
 
         SlidingTabLayout tabs = (SlidingTabLayout)view.findViewById(R.id.tabs);
+
         tabs.setDistributeEvenly(true);
         tabs.setCustomTabColorizer(this);
         tabs.setOnPageChangeListener(this);

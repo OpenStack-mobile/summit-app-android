@@ -143,9 +143,11 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
 
         // HACK: this is to return in a specific order (begginer - intermediate - advanced)
         ArrayList<String> levelsSorted = new ArrayList<>();
-        levelsSorted.add(levels.get(1));
-        levelsSorted.add(levels.get(2));
-        levelsSorted.add(levels.get(0));
+        if (levels.size() > 0) {
+            levelsSorted.add(levels.get(1));
+            levelsSorted.add(levels.get(2));
+            levelsSorted.add(levels.get(0));
+        }
         return levelsSorted;
     }
 

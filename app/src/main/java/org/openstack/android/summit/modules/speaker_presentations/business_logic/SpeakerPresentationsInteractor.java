@@ -21,8 +21,8 @@ import java.util.List;
  * Created by Claudio Redi on 1/27/2016.
  */
 public class SpeakerPresentationsInteractor extends ScheduleInteractor implements ISpeakerPresentationsInteractor {
-    public SpeakerPresentationsInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller, IPushNotificationsManager pushNotificationsManager, ISession session) {
-        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, dataUpdatePoller, pushNotificationsManager, session);
+    public SpeakerPresentationsInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IDataUpdatePoller dataUpdatePoller) {
+        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, dataUpdatePoller);
     }
 
     @Override

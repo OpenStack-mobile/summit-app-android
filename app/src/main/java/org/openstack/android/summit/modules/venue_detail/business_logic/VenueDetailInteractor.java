@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.DTOs.VenueDTO;
 import org.openstack.android.summit.common.DTOs.VenueRoomDTO;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 
@@ -17,8 +18,8 @@ import java.util.List;
 public class VenueDetailInteractor extends BaseInteractor implements IVenueDetailInteractor {
     IGenericDataStore genericDataStore;
 
-    public VenueDetailInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public VenueDetailInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
+        super(dtoAssembler, dataUpdatePoller);
         this.genericDataStore = genericDataStore;
     }
 

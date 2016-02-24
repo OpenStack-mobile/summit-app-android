@@ -131,6 +131,16 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
     }
 
     @Override
+    public void showInfoMessage(String message) {
+        new SweetAlertDialog(this.getActivity(), SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Info")
+                .setContentText(message)
+                .show();
+    }
+
+
+
+    @Override
     public FragmentManager getSupportFragmentManager() {
         return getActivity().getSupportFragmentManager();
     }

@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -36,8 +37,8 @@ public class FeedbackEditModule {
     }
 
     @Provides
-    IFeedbackEditInteractor providesFeedbackEditInteractor(ISummitAttendeeDataStore summitAttendeeDataStore, IGenericDataStore genericDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler) {
-        return new FeedbackEditInteractor(summitAttendeeDataStore, genericDataStore, securityManager, new Reachability(), dtoAssembler);
+    IFeedbackEditInteractor providesFeedbackEditInteractor(ISummitAttendeeDataStore summitAttendeeDataStore, IGenericDataStore genericDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
+        return new FeedbackEditInteractor(summitAttendeeDataStore, genericDataStore, securityManager, new Reachability(), dtoAssembler, dataUpdatePoller);
     }
 
     @Provides
