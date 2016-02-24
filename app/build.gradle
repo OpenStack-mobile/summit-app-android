@@ -35,6 +35,13 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            // Settings for Crashlytics Beta Distribution
+            ext.betaDistributionReleaseNotes="Release Notes for this build."
+            ext.betaDistributionEmails="claudioredi@gmail.com, darran.kelinske@gmail.com, " +
+                    "gabriel.cutrini@gmail.com, jimmy@openstack.org, jp@tipit.net, " +
+                    "lauren@openstack.org"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
