@@ -61,10 +61,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         super.onResume();
         view.showActivityIndicator();
 
-        if(!interactor.isDataLoaded() && !interactor.isNetworkingAvailable()) {
-            view.toggleNoConnectivityMessage(false);
-        }
-
         InteractorAsyncOperationListener<SummitDTO> summitDTOIInteractorOperationListener = new InteractorAsyncOperationListener<SummitDTO>() {
             @Override
             public void onSucceedWithData(SummitDTO data) {
@@ -87,17 +83,20 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
                 reloadSchedule();
                 view.hideActivityIndicator();
                 interactor.subscribeToPushChannelsUsingContextIfNotDoneAlready();
-                view.toggleNoConnectivityMessage(true);
             }
 
             @Override
             public void onError(String message) {
-                view.hideActivityIndicator();
-                view.showErrorMessage(message);
+                onFailedInitialLoad(message);
             }
         };
 
         interactor.getActiveSummit(summitDTOIInteractorOperationListener);
+    }
+
+    protected void onFailedInitialLoad(String message) {
+        view.hideActivityIndicator();
+        view.showErrorMessage(message);
     }
 
     public void buildItem(IScheduleItemView scheduleItemView, int position) {

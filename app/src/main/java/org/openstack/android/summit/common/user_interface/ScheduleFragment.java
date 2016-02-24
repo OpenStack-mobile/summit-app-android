@@ -102,11 +102,6 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         ranger.setStartAndEndDateWithParts(startYear, startMonth, startDay, endYear, endMonth, endDay);
     }
 
-    public void toggleNoConnectivityMessage(boolean show) {
-        LinearLayout noConnectivityLayout = (LinearLayout)view.findViewById(R.id.no_connectivity_container);
-        noConnectivityLayout.setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
     @Override
     public List<ScheduleItemDTO> getEvents() {
         return events;

@@ -3,6 +3,7 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
 import org.openstack.android.summit.modules.venue_detail.VenueDetailWireframe;
 import org.openstack.android.summit.modules.venue_detail.business_logic.IVenueDetailInteractor;
@@ -32,8 +33,8 @@ public class VenueDetailModule {
     }
 
     @Provides
-    IVenueDetailInteractor providesVenueDetailInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler) {
-        return new VenueDetailInteractor(genericDataStore, dtoAssembler);
+    IVenueDetailInteractor providesVenueDetailInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
+        return new VenueDetailInteractor(genericDataStore, dtoAssembler, dataUpdatePoller);
     }
 
     @Provides

@@ -9,6 +9,4 @@ public interface IBaseInteractor {
     void stopPolling();
 
     void startPollingIfNotPollingAlready();
-
-    boolean isNetworkingAvailable();
 }

@@ -18,15 +18,11 @@ import javax.inject.Inject;
  */
 public class BaseInteractor implements IBaseInteractor {
 
-    @Inject
-    IReachability reachability;
-
-    @Inject
-    IDataUpdatePoller dataUpdatePoller;
+    protected IDataUpdatePoller dataUpdatePoller;
 
     protected IDTOAssembler dtoAssembler;
 
-    public BaseInteractor(IDTOAssembler dtoAssembler) {
+    public BaseInteractor(IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
         this.dtoAssembler = dtoAssembler;
     }
 
@@ -39,10 +35,6 @@ public class BaseInteractor implements IBaseInteractor {
         }
 
         return dtos;
-    }
-
-    public boolean isNetworkingAvailable() {
-        return true;//reachability.isNetworkingAvailable(OpenStackSummitApplication.context);
     }
 
     @Override

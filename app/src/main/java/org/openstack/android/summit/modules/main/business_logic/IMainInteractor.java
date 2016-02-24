@@ -16,4 +16,8 @@ public interface IMainInteractor extends IBaseInteractor {
     void subscribeLoggedInMemberToPushNotifications();
 
     void subscribeAnonymousToPushNotifications();
+
+    boolean isDataLoaded();
+
+    boolean isNetworkingAvailable();
 }

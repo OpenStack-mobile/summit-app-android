@@ -2,12 +2,15 @@ package org.openstack.android.summit.modules.main.business_logic;
 
 import android.net.Uri;
 
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.IPushNotificationsManager;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 /**
@@ -17,12 +20,14 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     private ISecurityManager securityManager;
     private IPushNotificationsManager pushNotificationsManager;
     private ISummitDataStore summitDataStore;
+    private IReachability reachability;
 
-    public MainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public MainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability, IDataUpdatePoller dataUpdatePoller) {
+        super(dtoAssembler, dataUpdatePoller);
         this.summitDataStore = summitDataStore;
         this.securityManager = securityManager;
         this.pushNotificationsManager = pushNotificationsManager;
+        this.reachability = reachability;
     }
 
     @Override
@@ -55,5 +60,15 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
             Summit summit = summitDataStore.getActiveLocal();
             pushNotificationsManager.subscribeAnonymous(summit);
         }
+    }
+
+    @Override
+    public boolean isDataLoaded() {
+        return summitDataStore.getActiveLocal() != null;
+    }
+
+    @Override
+    public boolean isNetworkingAvailable() {
+        return reachability.isNetworkingAvailable(OpenStackSummitApplication.context);
     }
 }

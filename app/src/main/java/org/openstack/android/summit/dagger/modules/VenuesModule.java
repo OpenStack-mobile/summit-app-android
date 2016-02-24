@@ -40,8 +40,8 @@ public class VenuesModule {
     }
 
     @Provides
-    IVenuesInteractor providesVenuesInteractor(IDTOAssembler dtoAssembler) {
-        return new VenuesInteractor(dtoAssembler);
+    IVenuesInteractor providesVenuesInteractor(IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
+        return new VenuesInteractor(dtoAssembler, dataUpdatePoller);
     }
 
     @Provides

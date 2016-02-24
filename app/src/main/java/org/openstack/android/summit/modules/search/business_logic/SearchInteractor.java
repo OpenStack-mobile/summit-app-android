@@ -10,6 +10,7 @@ import org.openstack.android.summit.common.business_logic.IScheduleableInteracto
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -28,8 +29,8 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     IGenericDataStore genericDataStore;
     IPresentationSpeakerDataStore presentationSpeakerDataStore;
 
-    public SearchInteractor(IScheduleableInteractor scheduleableInteractor, ISummitEventDataStore summitEventDataStore, IGenericDataStore genericDataStore, IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public SearchInteractor(IScheduleableInteractor scheduleableInteractor, ISummitEventDataStore summitEventDataStore, IGenericDataStore genericDataStore, IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
+        super(dtoAssembler, dataUpdatePoller);
         this.scheduleableInteractor = scheduleableInteractor;
         this.summitEventDataStore = summitEventDataStore;
         this.genericDataStore = genericDataStore;
