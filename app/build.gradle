@@ -12,6 +12,9 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 android {
@@ -32,6 +35,13 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            // Settings for Crashlytics Beta Distribution
+            ext.betaDistributionReleaseNotes="Release Notes for this build."
+            ext.betaDistributionEmails="claudioredi@gmail.com, darran.kelinske@gmail.com, " +
+                    "gabriel.cutrini@gmail.com, jimmy@openstack.org, jp@tipit.net, " +
+                    "lauren@openstack.org"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -131,4 +141,7 @@ dependencies {
     testCompile "org.powermock:powermock-classloading-xstream:1.6.2"
 
     androidTestCompile 'junit:junit:4.12'
+
+    // UXTesting
+    compile (name:'uxtesting_sdk_1.1.4', ext:'aar')
 }

@@ -38,6 +38,7 @@ import javax.inject.Inject;
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.uxtesting.UXTesting;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener, IMainView {
@@ -289,5 +290,18 @@ public class MainActivity extends AppCompatActivity
         if (progressDialog != null) {
             progressDialog.hide();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UXTesting.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults)  {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        UXTesting.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
