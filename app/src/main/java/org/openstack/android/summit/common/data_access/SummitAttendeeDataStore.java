@@ -1,7 +1,13 @@
 package org.openstack.android.summit.common.data_access;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
+import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -37,8 +43,14 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     @Override
     public void addEventToMemberSheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
         realm.beginTransaction();
-        summitAttendee.getScheduledEvents().add(summitEvent);
-        realm.commitTransaction();
+        try {
+            summitAttendee.getScheduledEvents().add(summitEvent);
+            realm.commitTransaction();
+        }
+        catch (Exception e) {
+            realm.cancelTransaction();
+            throw e;
+        }
     }
 
     @Override
@@ -62,8 +74,14 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     @Override
     public void removeEventFromMemberSheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
         realm.beginTransaction();
-        summitAttendee.getScheduledEvents().remove(summitEvent);
-        realm.commitTransaction();
+        try{
+            summitAttendee.getScheduledEvents().remove(summitEvent);
+            realm.commitTransaction();
+        }
+        catch (Exception e) {
+            realm.commitTransaction();
+            throw e;
+        }
     }
 
     @Override
@@ -72,9 +90,17 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
             @Override
             public void onSuceedWithSingleData(Feedback data) {
                 super.onSuceedWithSingleData(data);
+
                 realm.beginTransaction();
-                attendee.getFeedback().add(data);
-                realm.commitTransaction();
+                try {
+                    attendee.getFeedback().add(data);
+                    realm.commitTransaction();
+                }
+                catch (Exception e) {
+                    realm.cancelTransaction();
+                    throw e;
+                }
+
                 dataStoreOperationListener.onSuceedWithSingleData(data);
             }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
@@ -26,7 +27,15 @@ public class OpenStackSummitApplication extends Application {
     
     @Override public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(
+                this,
+                new Crashlytics.Builder()
+                    .core(new CrashlyticsCore.Builder()
+                        .disabled(BuildConfig.DEBUG)
+                        .build())
+                    .build()
+        );
+
         this.initializeInjector();
         RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
                 .deleteRealmIfMigrationNeeded()

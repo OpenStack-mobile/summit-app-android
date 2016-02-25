@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.data_access.data_polling;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.util.Log;
 
 import com.github.kevinsawicki.http.HttpRequest;
@@ -9,6 +10,7 @@ import com.google.api.client.http.HttpMethods;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
@@ -30,26 +32,29 @@ import java.util.concurrent.TimeUnit;
  * Created by Claudio Redi on 2/5/2016.
  */
 public class DataUpdatePoller implements IDataUpdatePoller {
-    private int pollingInterval = 30;
+    private int pollingInterval = 30*1000;
     private ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
-    private ScheduledFuture<?> scheduledFuture;
     private ISecurityManager securityManager;
     private IHttpTaskFactory httpTaskFactory;
     private IDataUpdateProcessor dataUpdateProcessor;
     private IDataUpdateDataStore dataUpdateDataStore;
     private ISummitDataStore summitDataStore;
     private IReachability reachability;
+    private ISession session;
     private int fromDate;
     private String KEY_SET_FROM_DATE = "KEY_SET_FROM_DATE";
     private String url;
+    private Handler handler;
+    private Runnable dataUpdatePoller;
 
-    public DataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, IReachability reachability) {
+    public DataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, IReachability reachability, ISession session) {
         this.securityManager = securityManager;
         this.httpTaskFactory = httpTaskFactory;
         this.dataUpdateProcessor = dataUpdateProcessor;
         this.dataUpdateDataStore = dataUpdateDataStore;
         this.summitDataStore = summitDataStore;
         this.reachability = reachability;
+        this.session = session;
     }
 
     @Override
@@ -86,15 +91,13 @@ public class DataUpdatePoller implements IDataUpdatePoller {
                 }
             };
 
-            HttpTask httpTask = null;
-            try {
-                httpTask = securityManager.isLoggedIn()
-                        ? httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, taskListener)
-                        : httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, taskListener);
-            } catch (InvalidParameterSpecException e) {
-                Log.d(Constants.LOG_TAG, e.getMessage(), e);
-            }
+            HttpTask httpTask = securityManager.isLoggedIn()
+                    ? httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, taskListener)
+                    : httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, taskListener);
             httpTask.execute();
+        }
+        catch (InvalidParameterSpecException e) {
+            Log.d(Constants.LOG_TAG, e.getMessage(), e);
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
@@ -104,15 +107,22 @@ public class DataUpdatePoller implements IDataUpdatePoller {
 
     public void startPollingIfNotPollingAlready() {
         try {
-            if (scheduledFuture != null) {
+            if (dataUpdatePoller != null) {
                 return;
             }
-            ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
-            scheduledFuture = scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+
+            handler = new Handler();
+            dataUpdatePoller = new Runnable() {
+                @Override
                 public void run() {
-                    pollServer();
+                    try {
+                        pollServer();
+                    } finally {
+                        handler.postDelayed(dataUpdatePoller, pollingInterval);
+                    }
                 }
-            }, 0, pollingInterval, TimeUnit.SECONDS);
+            };
+            dataUpdatePoller.run();
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
@@ -121,15 +131,11 @@ public class DataUpdatePoller implements IDataUpdatePoller {
     }
 
     private long getFromDate() {
-        SharedPreferences preferences = OpenStackSummitApplication.context.getSharedPreferences(Constants.LOG_TAG, Context.MODE_PRIVATE);
-        return preferences.getLong(KEY_SET_FROM_DATE, 0);
+        return session.getLong(KEY_SET_FROM_DATE);
     }
 
     private void setFromDate(long fromDate) {
-        SharedPreferences preferences = OpenStackSummitApplication.context.getSharedPreferences(Constants.LOG_TAG, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(KEY_SET_FROM_DATE, fromDate);
-        editor.apply();
+        session.setLong(KEY_SET_FROM_DATE, fromDate);
     }
 
     public String getUrl() {
@@ -157,9 +163,22 @@ public class DataUpdatePoller implements IDataUpdatePoller {
     }
 
     public void stop() {
-        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
-            scheduledFuture.cancel(true);
-            scheduledFuture = null;
+        if (handler != null) {
+            handler.removeCallbacks(dataUpdatePoller);
+            handler = null;
+            dataUpdatePoller = null;
+        }
+    }
+
+    @Override
+    public void clearDataIfTruncateEventExist() {
+        DataUpdate dataUpdate = dataUpdateDataStore.getTruncateDataUpdate();
+        if (dataUpdate != null) {
+            dataUpdateDataStore.clearDataLocal();
+            setFromDate(0L);
+            if (securityManager.isLoggedIn()) {
+                securityManager.logout();
+            }
         }
     }
 }

@@ -35,6 +35,9 @@ public class GeneralSchedulePresenter extends SchedulePresenter<GeneralScheduleF
 
         view.toggleNoConnectivityMessage(false);
         view.toggleEventList(true);
+
+        interactor.checkForClearDataEvents();
+
         super.onResume();
     }
 

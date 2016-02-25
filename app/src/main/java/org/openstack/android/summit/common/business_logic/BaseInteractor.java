@@ -24,6 +24,7 @@ public class BaseInteractor implements IBaseInteractor {
 
     public BaseInteractor(IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
         this.dtoAssembler = dtoAssembler;
+        this.dataUpdatePoller = dataUpdatePoller;
     }
 
     protected <S extends IEntity, D> List<D> createDTOList(List<S> sourceList, Class<D> destinationType) {

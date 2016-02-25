@@ -15,4 +15,6 @@ public interface IGeneralScheduleInteractor extends IScheduleInteractor {
     boolean isDataLoaded();
 
     boolean isNetworkingAvailable();
+
+    void checkForClearDataEvents();
 }

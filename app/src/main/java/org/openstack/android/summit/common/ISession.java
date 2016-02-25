@@ -8,7 +8,11 @@ public interface ISession {
 
     void setInt(String key, int value);
 
+    void setLong(String key, long value);
+
     String getString(String key);
 
     void setString(String key, String value);
+
+    long getLong(String key_set_from_date);
 }
