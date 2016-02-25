@@ -9,4 +9,6 @@ public interface IDataUpdatePoller {
     void startPollingIfNotPollingAlready();
 
     void stop();
+
+    void clearDataIfTruncateEventExist();
 }

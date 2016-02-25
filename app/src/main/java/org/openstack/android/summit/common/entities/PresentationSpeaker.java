@@ -20,7 +20,6 @@ public class PresentationSpeaker extends RealmObject implements IPerson {
     private String irc;
     private String email;
     private Integer memberId;
-    private RealmList<Presentation> presentations = new RealmList<>();
 
     public int getId() {
         return id;
@@ -108,13 +107,5 @@ public class PresentationSpeaker extends RealmObject implements IPerson {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public RealmList<Presentation> getPresentations() {
-        return presentations;
-    }
-
-    public void setPresentations(RealmList<Presentation> presentations) {
-        this.presentations = presentations;
     }
 }

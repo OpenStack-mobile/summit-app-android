@@ -12,4 +12,9 @@ import java.util.List;
  * Created by Claudio Redi on 12/21/2015.
  */
 public interface IGeneralScheduleInteractor extends IScheduleInteractor {
+    boolean isDataLoaded();
+
+    boolean isNetworkingAvailable();
+
+    void checkForClearDataEvents();
 }

@@ -123,6 +123,12 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         interactor.getFeedbackForEvent(eventId, feedbackPage, feedbackObjectsPerPage, interactorAsyncOperationListener);
     }
 
+    @Override
+    public void showVenueDetail() {
+
+        wireframe.showEventDetailView(event.getVenueId(), view);
+    }
+
     private boolean getAllowNewFeedback() {
         boolean allowFeedback = event.getAllowFeedback() &&
                 event.getFinished() &&

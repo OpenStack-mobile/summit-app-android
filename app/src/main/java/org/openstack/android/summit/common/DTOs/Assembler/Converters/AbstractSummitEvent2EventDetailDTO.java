@@ -26,8 +26,13 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
 
         try {
             convertInternal(source, eventDetailDTO);
-            eventDetailDTO.setVenueId(source.getVenue() != null ? source.getVenue().getId() : 0);
-            eventDetailDTO.setVenueRoomId(source.getVenueRoom() != null ? source.getVenueRoom().getId() : 0);
+            if (source.getVenue() != null) {
+                eventDetailDTO.setVenueId(source.getVenue().getId());
+            }
+            else if (source.getVenueRoom() != null) {
+                eventDetailDTO.setVenueId(source.getVenueRoom().getVenue().getId());
+                eventDetailDTO.setVenueRoomId(source.getVenueRoom().getId());
+            }
             eventDetailDTO.setAllowFeedback(source.getAllowFeedback());
             eventDetailDTO.setFinished(getFinished(source));
             eventDetailDTO.setTags(getTags(source));

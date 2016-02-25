@@ -87,12 +87,16 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
             @Override
             public void onError(String message) {
-                view.hideActivityIndicator();
-                view.showErrorMessage(message);
+                onFailedInitialLoad(message);
             }
         };
 
         interactor.getActiveSummit(summitDTOIInteractorOperationListener);
+    }
+
+    protected void onFailedInitialLoad(String message) {
+        view.hideActivityIndicator();
+        view.showErrorMessage(message);
     }
 
     public void buildItem(IScheduleItemView scheduleItemView, int position) {

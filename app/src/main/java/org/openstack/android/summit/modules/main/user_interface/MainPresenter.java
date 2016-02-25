@@ -71,18 +71,38 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     public void showMyProfileView() {
+        if(!interactor.isDataLoaded()) {
+            view.showInfoMessage("No summit data available");
+            return;
+        }
+
         wireframe.showMyProfileView(view);
     }
 
     public void showSpeakerListView() {
+        if(!interactor.isDataLoaded()) {
+            view.showInfoMessage("No summit data available");
+            return;
+        }
+
         wireframe.showSpeakerListView(view);
     }
 
     public void showSearchView(String searchTerm) {
+        if(!interactor.isDataLoaded()) {
+            view.showInfoMessage("No summit data available");
+            return;
+        }
+
         wireframe.showSearchView(searchTerm, view);
     }
 
     public void showVenuesView() {
+        if(!interactor.isDataLoaded()) {
+            view.showInfoMessage("No summit data available");
+            return;
+        }
+
         wireframe.showVenuesView(view);
     }
 

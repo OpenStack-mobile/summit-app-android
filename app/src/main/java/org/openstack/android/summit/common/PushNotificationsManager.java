@@ -18,6 +18,9 @@ import javax.inject.Inject;
 public class PushNotificationsManager implements IPushNotificationsManager {
 
     public void subscribeMember(Member member, Summit summit) {
+        if (summit == null) {
+            return;
+        }
         ArrayList<String> channels = new ArrayList<>();
         channels.add(String.format("su_%d", summit.getId()));
         channels.add(String.format("me_%d", member.getId()));
@@ -31,6 +34,9 @@ public class PushNotificationsManager implements IPushNotificationsManager {
     }
 
     public void subscribeAnonymous(Summit summit) {
+        if (summit == null) {
+            return;
+        }
         ArrayList<String> channels = new ArrayList<>();
         channels.add(String.format("su_%d", summit.getId()));
         ParseInstallation.getCurrentInstallation().put("channels", channels);

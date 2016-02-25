@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,8 +32,6 @@ import javax.inject.Inject;
  */
 public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment<P> implements IScheduleView {
 
-    /*@Inject
-    protected P presenter;*/
     ScheduleListAdapter scheduleListAdapter;
     List<ScheduleItemDTO> events;
     Date startDate;
@@ -126,7 +125,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     @Override
     public void reloadSchedule() {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
-        ranger.setVisibility(View.VISIBLE);
+        ((LinearLayout)ranger.getParent()).setVisibility(View.VISIBLE);
         scheduleListAdapter.notifyDataSetChanged();
     }
 

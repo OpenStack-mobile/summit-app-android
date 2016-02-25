@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.events.user_interface;
 
 import android.os.Bundle;
 
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
@@ -41,6 +42,11 @@ public class EventsPresenter extends BasePresenter<IEventsView, IEventsInteracto
 
     @Override
     public void showFilterView() {
+        if(!interactor.isDataLoaded()) {
+            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data));
+            return;
+        }
+
         wireframe.showFilterView(view);
     }
 

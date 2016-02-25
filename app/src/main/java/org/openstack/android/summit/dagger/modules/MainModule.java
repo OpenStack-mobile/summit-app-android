@@ -3,6 +3,8 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.IPushNotificationsManager;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.main.IMainWireframe;
@@ -30,8 +32,8 @@ public class MainModule {
     }
 
     @Provides
-    IMainInteractor providesMainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler) {
-        return new MainInteractor(summitDataStore, securityManager, pushNotificationsManager, dtoAssembler);
+    IMainInteractor providesMainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability, IDataUpdatePoller dataUpdatePoller) {
+        return new MainInteractor(summitDataStore, securityManager, pushNotificationsManager, dtoAssembler, reachability, dataUpdatePoller);
     }
 
     @Provides

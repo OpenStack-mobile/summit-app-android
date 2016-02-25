@@ -20,6 +20,7 @@ import javax.inject.Inject;
  */
 public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackListInteractor, ITrackListWireframe> implements ITrackListPresenter {
     private IScheduleFilter scheduleFilter;
+    private List<TrackDTO> tracks;
 
     @Inject
     public TrackListPresenter(ITrackListInteractor interactor, ITrackListWireframe wireframe, IScheduleFilter scheduleFilter) {
@@ -27,7 +28,10 @@ public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackList
         this.scheduleFilter = scheduleFilter;
     }
 
-    private List<TrackDTO> tracks;
+    @Override
+    public void onPause() {
+        //empty, to avoid calling stop polling. This is because tab strip causes some issues with that
+    }
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {

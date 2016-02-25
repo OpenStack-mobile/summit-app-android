@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
@@ -16,6 +17,7 @@ import org.openstack.android.summit.dagger.modules.ApplicationModule;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.uxtesting.UXTesting;
 
 /**
  * Created by claudio on 11/3/2015.
@@ -26,7 +28,15 @@ public class OpenStackSummitApplication extends Application {
     
     @Override public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(
+                this,
+                new Crashlytics.Builder()
+                    .core(new CrashlyticsCore.Builder()
+                        .disabled(BuildConfig.DEBUG)
+                        .build())
+                    .build()
+        );
+
         this.initializeInjector();
         RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
                 .deleteRealmIfMigrationNeeded()
@@ -39,6 +49,8 @@ public class OpenStackSummitApplication extends Application {
 
         Parse.initialize(this);
         ParseInstallation.getCurrentInstallation().saveInBackground();
+
+        UXTesting.Init(this, "lUMy9RUlm4cQqQeG_1oc_g");
     }
 
     private void initializeInjector() {

@@ -5,11 +5,13 @@ import android.support.v4.app.FragmentManager;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
 import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
+import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
 
 import javax.inject.Inject;
 
@@ -19,12 +21,14 @@ import javax.inject.Inject;
 public class EventDetailWireframe extends BaseWireframe implements IEventDetailWireframe {
     private IMemberProfileWireframe memberProfileWireframe;
     private IFeedbackEditWireframe feedbackEditWireframe;
+    private IVenueDetailWireframe venueDetailWireframe;
 
     @Inject
-    public EventDetailWireframe(IMemberProfileWireframe memberProfileWireframe, IFeedbackEditWireframe feedbackEditWireframe, INavigationParametersStore navigationParametersStore) {
+    public EventDetailWireframe(IMemberProfileWireframe memberProfileWireframe, IFeedbackEditWireframe feedbackEditWireframe, INavigationParametersStore navigationParametersStore, IVenueDetailWireframe venueDetailWireframe) {
         super(navigationParametersStore);
         this.memberProfileWireframe = memberProfileWireframe;
         this.feedbackEditWireframe = feedbackEditWireframe;
+        this.venueDetailWireframe = venueDetailWireframe;
     }
 
     @Override
@@ -47,5 +51,12 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
     @Override
     public void showFeedbackEditView(int eventId, IBaseView view) {
         feedbackEditWireframe.presentFeedbackEditView(eventId, view);
+    }
+
+    @Override
+    public void showEventDetailView(int venueId, IBaseView view) {
+        NamedDTO venue = new NamedDTO();
+        venue.setId(venueId);
+        venueDetailWireframe.presentVenueDetailView(venue, view);
     }
 }

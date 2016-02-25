@@ -1,5 +1,6 @@
 package org.openstack.android.summit.dagger.modules;
 
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.DataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.GenericDataStore;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
@@ -244,7 +245,13 @@ public class DataAccessModule {
 
     @Provides
     @Singleton
-    IDataUpdatePoller providesDataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore) {
-        return new DataUpdatePoller(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, new Reachability());
+    IDataUpdatePoller providesDataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, ISession session) {
+        return new DataUpdatePoller(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, new Reachability(), session);
+    }
+
+    @Provides
+    @Singleton
+    IReachability providesReachability() {
+        return new Reachability();
     }
 }

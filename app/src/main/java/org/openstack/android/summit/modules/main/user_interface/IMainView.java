@@ -9,8 +9,14 @@ import org.openstack.android.summit.common.user_interface.IBaseView;
  */
 public interface IMainView extends IBaseView {
     void setLoginButtonText(String text);
+
     void setMemberName(String text);
+
     void setProfilePic(Uri uri);
+
     void toggleMyProfileMenuItem(boolean show);
+
     void toggleMenuLogo(boolean show);
+
+    void showInfoMessage(String message);
 }

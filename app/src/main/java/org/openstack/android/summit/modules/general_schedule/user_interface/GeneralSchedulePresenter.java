@@ -26,6 +26,29 @@ public class GeneralSchedulePresenter extends SchedulePresenter<GeneralScheduleF
     }
 
     @Override
+    public void onResume() {
+        if(!interactor.isDataLoaded() && !interactor.isNetworkingAvailable()) {
+            view.toggleNoConnectivityMessage(true);
+            view.toggleEventList(false);
+            return;
+        }
+
+        view.toggleNoConnectivityMessage(false);
+        view.toggleEventList(true);
+
+        interactor.checkForClearDataEvents();
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onFailedInitialLoad(String message) {
+        super.onFailedInitialLoad(message);
+        view.toggleNoConnectivityMessage(true);
+        view.toggleEventList(false);
+    }
+
+    @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IGeneralScheduleInteractor interactor) {
         List<Integer> filtersOnEventTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
         List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);

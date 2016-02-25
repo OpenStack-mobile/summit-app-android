@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 
 import java.util.List;
@@ -15,8 +16,8 @@ public class SpeakerListInteractor extends BaseInteractor implements ISpeakerLis
     IPresentationSpeakerDataStore presentationSpeakerDataStore;
     IDTOAssembler dtoAssembler;
 
-    public SpeakerListInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public SpeakerListInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
+        super(dtoAssembler, dataUpdatePoller);
         this.presentationSpeakerDataStore = presentationSpeakerDataStore;
         dtoAssembler = dtoAssembler;
     }

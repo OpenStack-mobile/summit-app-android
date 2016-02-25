@@ -15,4 +15,6 @@ public interface IGenericDataStore {
     <T extends RealmObject> void saveOrUpdate(T entity, IDataStoreOperationListener<T> delegate, Class<T> type);
 
     <T extends RealmObject> void delete(int id, IDataStoreOperationListener<T> delegate, Class<T> type);
+
+    void clearDataLocal();
 }

@@ -7,4 +7,8 @@ import org.openstack.android.summit.common.entities.DataUpdate;
  */
 public interface IDataUpdateDataStore extends IGenericDataStore {
     int getLatestDataUpdate();
+
+    DataUpdate getTruncateDataUpdate();
+
+    void deleteDataUpdate(DataUpdate dataUpdate);
 }

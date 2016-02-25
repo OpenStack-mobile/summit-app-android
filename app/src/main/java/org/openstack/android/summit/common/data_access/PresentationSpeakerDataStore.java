@@ -23,9 +23,7 @@ public class PresentationSpeakerDataStore extends GenericDataStore implements IP
         RealmQuery<PresentationSpeaker> query = realm.where(PresentationSpeaker.class);
 
         if (searchTerm != null && !searchTerm.isEmpty()) {
-            query.contains("fullName", searchTerm, Case.INSENSITIVE)
-                    .or()
-                    .contains("presentations.summitEvent.name", searchTerm, Case.INSENSITIVE);
+            query.contains("fullName", searchTerm, Case.INSENSITIVE);
         }
 
         RealmResults<PresentationSpeaker> results = query.findAll();
