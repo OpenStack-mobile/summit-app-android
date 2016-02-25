@@ -48,6 +48,7 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
                         }
                     }
                     catch (Exception e) {
+                        realm.cancelTransaction();
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG, e.getMessage(), e);
                         dataStoreOperationListener.onError(e.getMessage());

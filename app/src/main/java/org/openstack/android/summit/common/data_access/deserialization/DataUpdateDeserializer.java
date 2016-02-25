@@ -49,7 +49,7 @@ public class DataUpdateDeserializer implements IDataUpdateDeserializer {
         dataUpdate.setId(jsonObject.getInt("id"));
         String operationType = jsonObject.getString("type");
 
-        if (operationType != "TRUNCATE") {
+        if (!operationType.equals("TRUNCATE")) {
             String className = jsonObject.getString("class_name");
             Class type = null;
             try {

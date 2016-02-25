@@ -32,6 +32,7 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
                     dataStoreOperationListener.onSuceedWithSingleData(realmEntity);
                 }
                 catch (Exception e) {
+                    realm.cancelTransaction();
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, e.getMessage(), e);
                     dataStoreOperationListener.onError(e.getMessage());

@@ -82,6 +82,14 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
             }
         });
 
+        LinearLayout locationLayout = (LinearLayout)view.findViewById(R.id.event_detail_place_container);
+        locationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.showVenueDetail();
+            }
+        });
+
         super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }

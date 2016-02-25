@@ -32,7 +32,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public abstract class BaseFragment<P extends IBasePresenter> extends Fragment implements IBaseView {
     private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
-    private Boolean showActivityIndicator;
+    private boolean showActivityIndicator;
+    private boolean isActivityIndicatorVisible;
     protected View view;
     @Inject
     protected P presenter;
@@ -85,6 +86,12 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
     @Override
     public void showActivityIndicator(int delay) {
+        if (isActivityIndicatorVisible) {
+            return;
+        }
+
+        isActivityIndicatorVisible = true;
+
         showActivityIndicator = true;
         Runnable task = new Runnable() {
             public void run() {
@@ -114,9 +121,11 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
             @Override
             public void run() {
                 showActivityIndicator = false;
+                isActivityIndicatorVisible = false;
 
                 if (progressDialog != null) {
                     progressDialog.hide();
+                    progressDialog = null;
                 }
             }
         });

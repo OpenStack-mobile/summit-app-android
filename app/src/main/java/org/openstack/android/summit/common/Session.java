@@ -24,6 +24,20 @@ public class Session implements ISession {
     }
 
     @Override
+    public void setLong(String key, long value) {
+        SharedPreferences preferences = OpenStackSummitApplication.context.getSharedPreferences(Constants.LOG_TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(key, value);
+        editor.apply();
+    }
+
+    @Override
+    public long getLong(String key) {
+        SharedPreferences preferences = OpenStackSummitApplication.context.getSharedPreferences(Constants.LOG_TAG, Context.MODE_PRIVATE);
+        return preferences.getLong(key, 0L);
+    }
+
+    @Override
     public String getString(String key) {
         SharedPreferences preferences = OpenStackSummitApplication.context.getSharedPreferences(Constants.LOG_TAG, Context.MODE_PRIVATE);
         return preferences.getString(key, null);

@@ -13,4 +13,6 @@ public interface IEventDetailWireframe extends IBaseWireframe {
     void showSpeakerProfile(int speakerId, IBaseView view);
 
     void showFeedbackEditView(int eventId, IBaseView view);
+
+    void showEventDetailView(int venueId, IBaseView view);
 }

@@ -36,6 +36,11 @@ public class LevelListPresenter extends BasePresenter<LevelListFragment, ILevelL
     }
 
     @Override
+    public void onPause() {
+        //empty, to avoid calling stop polling. This is because tab strip causes some issues with that
+    }
+
+    @Override
     public void showLevelEvents(int position) {
         String level = levels.get(position);
         wireframe.showLevelSchedule(level, view.getActivity());

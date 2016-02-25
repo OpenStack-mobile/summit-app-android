@@ -19,4 +19,6 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> 
     void buildFeedbackListItem(FeedbackItemView feedbackItemView, int position);
 
     void loadFeedback();
+
+    void showVenueDetail();
 }
