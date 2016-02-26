@@ -19,6 +19,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.realm.Sort;
+
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
@@ -34,7 +36,7 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
 
     @Override
     public List<TrackDTO> getTracks(List<Integer> trackGroups) {
-        List<Track> tracks = genericDataStore.getaAllLocal(Track.class);
+        List<Track> tracks = genericDataStore.getAllLocal(Track.class, new String[] { "name" }, new Sort[] { Sort.ASCENDING });
         ArrayList<Track> filteredTracks = new ArrayList<>();
 
         if (trackGroups != null && trackGroups.size() > 0) {
@@ -45,15 +47,6 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
             }
             tracks = filteredTracks;
         }
-
-        Comparator<Track> comparator = new Comparator<Track>() {
-            @Override
-            public int compare(Track c1, Track c2) {
-                return c1.getName().compareTo(c2.getName());
-            }
-        };
-
-        Collections.sort(tracks, comparator);
 
         List<TrackDTO> dtos = createDTOList(tracks, TrackDTO.class);
 

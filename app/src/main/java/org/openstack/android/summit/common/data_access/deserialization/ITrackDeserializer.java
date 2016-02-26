@@ -8,4 +8,8 @@ import org.openstack.android.summit.common.entities.Track;
  */
 public interface ITrackDeserializer {
     Track deserialize(String jsonString) throws JSONException;
+
+    boolean getShouldDeserializeTrackGroups();
+
+    void setShouldDeserializeTrackGroups(boolean shouldDeserializeTrackGroups);
 }

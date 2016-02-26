@@ -22,7 +22,7 @@ public class VenueListInteractor extends BaseInteractor implements IVenueListInt
 
     @Override
     public List<NamedDTO> getVenues() {
-        List<Venue> venues = genericDataStore.getaAllLocal(Venue.class);
+        List<Venue> venues = genericDataStore.getAllLocal(Venue.class);
         List<NamedDTO> dtos = createDTOList(venues, NamedDTO.class);
         return dtos;
     }

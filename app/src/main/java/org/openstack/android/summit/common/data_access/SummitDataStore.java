@@ -27,7 +27,7 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
 
     @Override
     public void getActive(final IDataStoreOperationListener<Summit> dataStoreOperationListener) {
-        List<Summit> summits = getaAllLocal(Summit.class);
+        List<Summit> summits = getAllLocal(Summit.class);
 
         if (summits.size() > 0) {
             if (dataStoreOperationListener != null) {
@@ -67,7 +67,7 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
 
     @Override
     public Summit getActiveLocal() {
-        List<Summit> summits = getaAllLocal(Summit.class);
+        List<Summit> summits = getAllLocal(Summit.class);
         return summits.size() > 0 ? summits.get(0) : null;
     }
 }
