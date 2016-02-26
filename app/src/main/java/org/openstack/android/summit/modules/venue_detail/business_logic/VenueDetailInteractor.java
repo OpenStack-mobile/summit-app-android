@@ -32,7 +32,7 @@ public class VenueDetailInteractor extends BaseInteractor implements IVenueDetai
 
     @Override
     public List<VenueRoomDTO> getVenueRooms(int venueId) {
-        List<VenueRoom> venueRooms = genericDataStore.getaAllLocal(VenueRoom.class);
+        List<VenueRoom> venueRooms = genericDataStore.getAllLocal(VenueRoom.class);
         List<VenueRoom> filteredVenueRooms = new ArrayList<>();
         for (VenueRoom venueRoom: venueRooms) {
             if (venueRoom.getVenue().getId() == venueId) {

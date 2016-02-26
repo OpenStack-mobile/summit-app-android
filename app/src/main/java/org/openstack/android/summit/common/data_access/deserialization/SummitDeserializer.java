@@ -34,6 +34,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
     IDeserializerStorage deserializerStorage;
     ITrackGroupDeserializer trackGroupDeserializer;
+    ITrackDeserializer trackDeserializer;
 
     @Inject
     public SummitDeserializer(IGenericDeserializer genericDeserializer,
@@ -42,6 +43,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                               ISummitEventDeserializer summitEventDeserializer,
                               IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                               ITrackGroupDeserializer trackGroupDeserializer,
+                              ITrackDeserializer trackDeserializer,
                               IDeserializerStorage deserializerStorage){
         this.genericDeserializer = genericDeserializer;
         this.venueDeserializer = venueDeserializer;
@@ -49,6 +51,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         this.summitEventDeserializer = summitEventDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
         this.trackGroupDeserializer = trackGroupDeserializer;
+        this.trackDeserializer = trackDeserializer;
         this.deserializerStorage = deserializerStorage;
     }
 
@@ -99,10 +102,11 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         }
 
         JSONObject jsonObjectTrack;
+        trackDeserializer.setShouldDeserializeTrackGroups(false);
         JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
         for (int i = 0; i < jsonArrayTracks.length(); i++) {
             jsonObjectTrack = jsonArrayTracks.getJSONObject(i);
-            genericDeserializer.deserialize(jsonObjectTrack.toString(), Track.class);
+            trackDeserializer.deserialize(jsonObjectTrack.toString());
         }
 
         TrackGroup trackGroup;

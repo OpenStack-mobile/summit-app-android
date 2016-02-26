@@ -8,7 +8,7 @@ import org.openstack.android.summit.common.entities.IEntity;
  * Created by Claudio Redi on 2/8/2016.
  */
 public class DataUpdateStrategy implements IDataUpdateStrategy {
-    private IGenericDataStore genericDataStore;
+    protected IGenericDataStore genericDataStore;
 
 
     public DataUpdateStrategy(IGenericDataStore genericDataStore) {
