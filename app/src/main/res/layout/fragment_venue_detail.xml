@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_height="wrap_content">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -12,7 +11,7 @@
         android:background="@android:color/transparent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="wrap_content"
             android:background="@color/openStackDarkBlue"
             android:gravity="center_horizontal">
             <TextView
@@ -21,9 +20,11 @@
                 android:layout_height="wrap_content"
                 android:text="TESTING"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:paddingRight="15dp"
-                android:paddingLeft="15dp"
+                android:textSize="18sp"
+                android:paddingRight="30dp"
+                android:paddingLeft="30dp"
+                android:paddingTop="30dp"
+                android:paddingBottom="30dp"
                 android:layout_gravity="center"
                 android:textAlignment="center"
                 android:textStyle="bold"></TextView>
@@ -48,21 +49,41 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:visibility="gone"/>
-
         <LinearLayout
-            android:id="@+id/venue_gallery"
+            android:id="@+id/venue_images_gallery"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:visibility="gone">
 
             <android.support.v4.view.ViewPager
-                android:id="@+id/venue_gallery_pager"
+                android:id="@+id/venue_images_gallery_pager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
             <com.viewpagerindicator.CirclePageIndicator
-                android:id="@+id/venue_gallery_indicator"
+                android:id="@+id/venue_images_gallery_indicator"
+                android:padding="5dip"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                app:fillColor="#000"
+                app:pageColor="#AAA"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/venue_maps_gallery"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:visibility="gone">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/venue_maps_gallery_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <com.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/venue_maps_gallery_indicator"
                 android:padding="5dip"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
@@ -70,20 +91,6 @@
                 app:pageColor="#AAA"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/venue_rooms_subsection_header"
-            style="@style/AppTheme.SubsectionHeader">
-            <TextView
-                style="@style/AppTheme.SubsectionHeader.Text"
-                android:text="@string/rooms"/>
-        </LinearLayout>
-        <com.linearlistview.LinearListView
-            android:id="@+id/venue_rooms_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:showDividers="middle"
-            android:divider="@color/openStackLightGray"
-            app:dividerThickness="1dp" />
+
     </LinearLayout>
 </ScrollView>

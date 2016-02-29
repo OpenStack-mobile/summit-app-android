@@ -118,12 +118,14 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
             summit.getTrackGroups().add(trackGroup);
         }
 
+        Venue venue;
         JSONObject jsonObjectVenue;
         JSONArray jsonArrayVenues = jsonObject.getJSONArray("locations");
         for (int i = 0; i < jsonArrayVenues.length(); i++) {
             jsonObjectVenue = jsonArrayVenues.getJSONObject(i);
             if (isVenue(jsonObjectVenue)) {
-                venueDeserializer.deserialize(jsonObjectVenue.toString());
+                venue = venueDeserializer.deserialize(jsonObjectVenue.toString());
+                summit.getVenues().add(venue);
             }
         }
 
@@ -163,7 +165,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
     }
 
     private boolean isVenue(JSONObject jsonObjectVenue) throws JSONException {
-        return jsonObjectVenue.getString("class_name").equals("SummitVenue");
+        return jsonObjectVenue.getString("class_name").equals("SummitVenue") || jsonObjectVenue.getString("class_name").equals("SummitExternalLocation");
     }
 
     private boolean isVenueRoom(JSONObject jsonObjectVenueRoom) throws JSONException {

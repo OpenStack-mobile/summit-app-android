@@ -11,4 +11,6 @@
     <color name="openStackOrange">#F5A623</color>
     <color name="white">#FFFFFF</color>
     <color name="activeFilters">#F8E71C</color>
+    <color name="translucent">#70000000</color>
+
 </resources>

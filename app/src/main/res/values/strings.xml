@@ -31,4 +31,5 @@
     <string name="no_data_message">There was a problem loading summit information. If there is no internet connection active, please wait until any is available and click "retry" to load information.</string>
     <string name="retry">Retry</string>
     <string name="no_summit_data">Can\'t perform operation until summit information is available</string>
+    <string name="external_venues">External Venues</string>
 </resources>

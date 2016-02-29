@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+
+import com.linearlistview.LinearListView;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.DTOs.NamedDTO;
-import org.openstack.android.summit.common.DTOs.TrackDTO;
+import org.openstack.android.summit.common.DTOs.VenueDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
-import org.openstack.android.summit.common.user_interface.SimpleListItemView;
 
 import java.util.List;
 
@@ -21,7 +21,8 @@ import java.util.List;
  */
 public class VenueListFragment extends BaseFragment<IVenueListPresenter> implements IVenueListView  {
 
-    private VenueListAdapter venueListAdapter;
+    private InternalVenueListAdapter internalVenueListAdapter;
+    private ExternalVenueListAdapter externalVenueListAdapter;
 
     public VenueListFragment() {
         // Required empty public constructor
@@ -35,30 +36,56 @@ public class VenueListFragment extends BaseFragment<IVenueListPresenter> impleme
 
     @Override
     public void onResume() {
-        setTitle(getResources().getString(R.string.events));
         super.onResume();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_level_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_venue_list, container, false);
         this.view = view;
-        ListView venueList = (ListView)view.findViewById(R.id.list_levels);
-        venueListAdapter = new VenueListAdapter(getContext());
-        venueList.setAdapter(venueListAdapter);
+
+        LinearListView internalVenueList = (LinearListView)view.findViewById(R.id.venues_internal_list);
+        internalVenueList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(LinearListView parent, View view, int position, long id) {
+                presenter.showInternalVenueDetail(position);
+            }
+        });
+        internalVenueListAdapter = new InternalVenueListAdapter(getContext());
+        internalVenueList.setAdapter(internalVenueListAdapter);
+
+        LinearListView externalVenueList = (LinearListView)view.findViewById(R.id.venues_external_list);
+        externalVenueList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(LinearListView parent, View view, int position, long id) {
+                presenter.showExternalVenueDetail(position);
+            }
+        });
+        externalVenueListAdapter = new ExternalVenueListAdapter(getContext());
+        externalVenueList.setAdapter(externalVenueListAdapter);
+
         super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 
     @Override
-    public void setVenues(List<NamedDTO> venues) {
-        venueListAdapter.clear();
-        venueListAdapter.addAll(venues);
+    public void setInternalVenues(List<VenueDTO> venues) {
+        internalVenueListAdapter.clear();
+        internalVenueListAdapter.addAll(venues);
     }
 
-    private class VenueListAdapter extends ArrayAdapter<NamedDTO> {
+    @Override
+    public void setExternalVenues(List<VenueDTO> venues) {
+        externalVenueListAdapter.clear();
+        externalVenueListAdapter.addAll(venues);
 
-        public VenueListAdapter(Context context) {
+        LinearLayout externalSubsectionHeader = (LinearLayout)view.findViewById(R.id.venue_list_external_venues_subsection_header);
+        externalSubsectionHeader.setVisibility(venues.size() > 0 ? View.VISIBLE : View.GONE);
+    }
+
+    private class InternalVenueListAdapter extends ArrayAdapter<VenueDTO> {
+
+        public InternalVenueListAdapter(Context context) {
             super(context, 0);
         }
 
@@ -67,19 +94,40 @@ public class VenueListFragment extends BaseFragment<IVenueListPresenter> impleme
 
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_venue_list, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_internal_venue_list, parent, false);
             }
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    presenter.showVenueDetail(position);
-                }
-            });
 
             final VenueListItemView venueListItemView = new VenueListItemView(convertView);
 
-            presenter.buildItem(venueListItemView, position);
+            presenter.buildInternalVenueItem(venueListItemView, position);
+
+            // Return the completed view to render on screen
+            return convertView;
+        }
+
+        @Override
+        public int getCount() {
+            return super.getCount();
+        };
+    }
+
+    private class ExternalVenueListAdapter extends ArrayAdapter<VenueDTO> {
+
+        public ExternalVenueListAdapter(Context context) {
+            super(context, 0);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_external_venue_list, parent, false);
+            }
+
+            final VenueListItemView venueListItemView = new VenueListItemView(convertView);
+
+            presenter.buildExternalVenueItem(venueListItemView, position);
 
             // Return the completed view to render on screen
             return convertView;
