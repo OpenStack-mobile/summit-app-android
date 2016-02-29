@@ -1,8 +1,10 @@
 package org.openstack.android.summit.modules.venue_list.user_interface;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import org.openstack.android.summit.common.DTOs.NamedDTO;
+import org.openstack.android.summit.common.DTOs.VenueDTO;
 import org.openstack.android.summit.common.DTOs.VenueListItemDTO;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.SimpleListItemView;
@@ -15,7 +17,8 @@ import java.util.List;
  * Created by Claudio Redi on 2/11/2016.
  */
 public class VenueListPresenter extends BasePresenter<IVenueListView, IVenueListInteractor, IVenueListWireframe> implements IVenueListPresenter {
-    List<NamedDTO> venues;
+    List<VenueDTO> internalVenues;
+    List<VenueDTO> externalVenues;
 
     public VenueListPresenter(IVenueListInteractor interactor, IVenueListWireframe wireframe) {
         super(interactor, wireframe);
@@ -24,19 +27,41 @@ public class VenueListPresenter extends BasePresenter<IVenueListView, IVenueList
     @Override
     public void onCreateView(Bundle savedInstanceState) {
         super.onCreateView(savedInstanceState);
-        venues = interactor.getVenues();
-        view.setVenues(venues);
+        internalVenues = interactor.getInternalVenues();
+        externalVenues = interactor.getExternalVenues();
+        view.setInternalVenues(internalVenues);
+        view.setExternalVenues(externalVenues);
     }
 
     @Override
-    public void showVenueDetail(int position) {
-        NamedDTO venue = venues.get(position);
+    public void showInternalVenueDetail(int position) {
+        NamedDTO venue = internalVenues.get(position);
         wireframe.showVenueDetail(venue, view);
     }
 
     @Override
-    public void buildItem(IVenueListItemView venueListItemView, int position) {
-        NamedDTO venue = venues.get(position);
+    public void buildInternalVenueItem(IVenueListItemView venueListItemView, int position) {
+        VenueDTO venue = internalVenues.get(position);
         venueListItemView.setName(venue.getName());
+        venueListItemView.setAddress(venue.getAddress());
+        String imageUrl = venue.getImages().size() > 0 ? venue.getImages().get(0) : null;
+
+        if (imageUrl != null) {
+            Uri uri = Uri.parse(imageUrl.replace("https", "http"));
+            venueListItemView.setPictureUri(uri);
+        }
+    }
+
+    @Override
+    public void showExternalVenueDetail(int position) {
+        NamedDTO venue = externalVenues.get(position);
+        wireframe.showVenueDetail(venue, view);
+    }
+
+    @Override
+    public void buildExternalVenueItem(IVenueListItemView venueListItemView, int position) {
+        VenueDTO venue = externalVenues.get(position);
+        venueListItemView.setName(venue.getName());
+        venueListItemView.setAddress(venue.getAddress());
     }
 }

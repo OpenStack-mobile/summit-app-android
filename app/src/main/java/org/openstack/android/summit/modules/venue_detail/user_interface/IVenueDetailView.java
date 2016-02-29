@@ -12,17 +12,19 @@ import java.util.List;
 public interface IVenueDetailView extends IBaseView {
     void setVenueName(String name);
 
-    void setVenueRooms(List<VenueRoomDTO> rooms);
-
     void setLocation(String address);
 
     void setMarker(VenueListItemDTO venue);
 
     void setMaps(List<String> maps);
 
+    void setImages(List<String> images);
+
     void toggleMap(boolean visible);
 
-    void toggleGallery(boolean visible);
+    void toggleMapsGallery(boolean visible);
+
+    void toggleImagesGallery(boolean visible);
 
     void toggleMapNavigation(boolean visible);
 }

@@ -9,6 +9,7 @@ import java.util.List;
 public class VenueDTO extends VenueListItemDTO {
     private String address;
     private List<String> maps;
+    private List<String> images;
 
     public String getAddress() {
         return address;
@@ -24,5 +25,13 @@ public class VenueDTO extends VenueListItemDTO {
 
     public void setMaps(List<String> maps) {
         this.maps = maps;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 }

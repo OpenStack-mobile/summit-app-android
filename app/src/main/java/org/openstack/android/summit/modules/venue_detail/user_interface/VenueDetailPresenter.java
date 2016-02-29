@@ -36,19 +36,21 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
             venueId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
         }
         venue = interactor.getVenue(venueId);
-        venueRooms = interactor.getVenueRooms(venueId);
         view.setVenueName(venue.getName());
         view.setLocation(venue.getAddress());
-        view.setVenueRooms(venueRooms);
+
+        view.toggleImagesGallery(venue.getImages().size() > 0);
+        if (venue.getImages().size() > 0) {
+            view.setImages(venue.getImages());
+        }
+
+        view.toggleMapNavigation(venue.getMaps().size() > 0);
+        view.toggleMapsGallery(venue.getMaps().size() > 0);
+        view.toggleMap(venue.getMaps().size() == 0);
+
         if (venue.getMaps().size() > 0) {
-            view.toggleMapNavigation(true);
-            view.toggleGallery(true);
-            view.toggleMap(false);
             view.setMaps(venue.getMaps());
         } else {
-            view.toggleMapNavigation(false);
-            view.toggleGallery(false);
-            view.toggleMap(true);
             view.setMarker(venue);
         }
     }

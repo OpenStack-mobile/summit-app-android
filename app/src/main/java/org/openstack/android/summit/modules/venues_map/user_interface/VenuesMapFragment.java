@@ -41,7 +41,6 @@ public class VenuesMapFragment extends BaseFragment<IVenuesMapPresenter> impleme
 
     @Override
     public void onResume() {
-        setTitle(getResources().getString(R.string.venue));
         super.onResume();
         map.onResume();
     }

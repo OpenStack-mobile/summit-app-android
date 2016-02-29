@@ -7,7 +7,11 @@ import org.openstack.android.summit.common.user_interface.SimpleListItemView;
  * Created by Claudio Redi on 2/11/2016.
  */
 public interface IVenueListPresenter extends IBasePresenter<IVenueListView> {
-    void showVenueDetail(int position);
+    void showInternalVenueDetail(int position);
 
-    void buildItem(IVenueListItemView venueListItemView, int position);
+    void buildInternalVenueItem(IVenueListItemView venueListItemView, int position);
+
+    void showExternalVenueDetail(int position);
+
+    void buildExternalVenueItem(IVenueListItemView venueListItemView, int position);
 }

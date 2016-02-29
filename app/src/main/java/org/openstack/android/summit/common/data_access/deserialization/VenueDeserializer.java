@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.data_access.deserialization;
 
 import android.text.TextUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Image;
@@ -41,14 +42,24 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
         venue.setState(!jsonObject.isNull("state") ? jsonObject.getString("state") : null);
         venue.setZipCode(!jsonObject.isNull("zip_code") ? jsonObject.getString("zip_code") : null);
         venue.setCountry(!jsonObject.isNull("country") ? jsonObject.getString("country") : null);
-        venue.setIsInternal(jsonObject.getString("location_type") == "Internal");
+        venue.setIsInternal(jsonObject.getString("class_name").equals("SummitVenue"));
 
         Image map;
         JSONObject jsonObjectMap;
-        for (int i = 0; i < jsonObject.getJSONArray("maps").length(); i++) {
-            jsonObjectMap = jsonObject.getJSONArray("maps").getJSONObject(i);
+        JSONArray jsonArrayMap = jsonObject.getJSONArray("maps");
+        for (int i = 0; i < jsonArrayMap.length(); i++) {
+            jsonObjectMap = jsonArrayMap.getJSONObject(i);
             map = genericDeserializer.deserialize(jsonObjectMap.toString(), Image.class);
             venue.getMaps().add(map);
+        }
+
+        Image image;
+        JSONObject jsonObjectImage;
+        JSONArray jsonArrayImages = jsonObject.getJSONArray("images");
+        for (int i = 0; i < jsonArrayImages.length(); i++) {
+            jsonObjectImage = jsonArrayImages.getJSONObject(i);
+            image = genericDeserializer.deserialize(jsonObjectImage.toString(), Image.class);
+            venue.getImages().add(image);
         }
 
         if(!deserializerStorage.exist(venue, Venue.class)) {
