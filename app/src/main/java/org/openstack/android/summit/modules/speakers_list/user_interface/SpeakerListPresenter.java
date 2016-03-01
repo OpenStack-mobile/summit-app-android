@@ -31,6 +31,7 @@ public class SpeakerListPresenter extends BasePresenter<ISpeakerListView, ISpeak
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
+        loadedAllSpeakers = false;
         loadData();
     }
 

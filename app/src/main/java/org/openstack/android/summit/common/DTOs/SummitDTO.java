@@ -9,6 +9,7 @@ public class SummitDTO extends NamedDTO {
     private Date startDate;
     private Date endDate;
     private String timeZone;
+    private Date startShowingVenuesDate;
 
     public Date getStartDate() {
         return startDate;
@@ -32,5 +33,13 @@ public class SummitDTO extends NamedDTO {
 
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
+    }
+
+    public Date getStartShowingVenuesDate() {
+        return startShowingVenuesDate;
+    }
+
+    public void setStartShowingVenuesDate(Date startShowingVenuesDate) {
+        this.startShowingVenuesDate = startShowingVenuesDate;
     }
 }

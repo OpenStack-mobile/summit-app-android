@@ -17,6 +17,7 @@ public class Summit extends RealmObject implements INamedEntity {
     private Date endDate;
     private String timeZone;
     private Date initialDataLoadDate;
+    private Date startShowingVenuesDate;
     private RealmList<SummitType> types = new RealmList<>();
     private RealmList<TicketType> ticketTypes = new RealmList<>();
     private RealmList<Venue> venues = new RealmList<>();
@@ -117,5 +118,13 @@ public class Summit extends RealmObject implements INamedEntity {
 
     public void setEventTypes(RealmList<EventType> eventTypes) {
         this.eventTypes = eventTypes;
+    }
+
+    public Date getStartShowingVenuesDate() {
+        return startShowingVenuesDate;
+    }
+
+    public void setStartShowingVenuesDate(Date startShowingVenuesDate) {
+        this.startShowingVenuesDate = startShowingVenuesDate;
     }
 }

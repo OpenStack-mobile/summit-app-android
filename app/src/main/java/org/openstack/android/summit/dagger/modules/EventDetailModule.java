@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.NavigationParametersStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.Reachability;
@@ -39,8 +40,8 @@ public class EventDetailModule {
     }
 
     @Provides
-    IEventDetailInteractor providesEventDetailInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller) {
-        return new EventDetailInteractor(summitEventDataStore, summitAttendeeDataStore, new Reachability(), dtoAssembler, securityManager, dataUpdatePoller);
+    IEventDetailInteractor providesEventDetailInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller) {
+        return new EventDetailInteractor(summitEventDataStore, summitAttendeeDataStore, summitDataStore, new Reachability(), dtoAssembler, securityManager, dataUpdatePoller);
     }
 
     @Provides
