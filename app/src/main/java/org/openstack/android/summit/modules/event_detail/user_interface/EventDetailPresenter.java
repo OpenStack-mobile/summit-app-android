@@ -124,7 +124,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
                 super.onError(message);
                 loadingFeedback = false;
                 view.hideFeedbackActivityIndicator();
-                view.showErrorMessage(message);
+                view.showFeedbackErrorMessage(message);
             }
         };
 

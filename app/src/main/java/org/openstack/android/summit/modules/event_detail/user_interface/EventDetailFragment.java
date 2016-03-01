@@ -90,6 +90,9 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
             }
         });
 
+        TextView feedbackErrorTextView = (TextView)view.findViewById(R.id.event_detail_error_loading_feedback_text);
+        ((LinearLayout)feedbackErrorTextView.getParent()).setVisibility(View.GONE);
+
         super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
@@ -361,6 +364,13 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     public void toggleLoadMore(boolean show) {
         Button loadMoreButton = (Button)view.findViewById(R.id.event_detail_load_more_feedback_button);
         loadMoreButton.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showFeedbackErrorMessage(String message) {
+        TextView feedbackErrorTextView = (TextView)view.findViewById(R.id.event_detail_error_loading_feedback_text);
+        feedbackErrorTextView.setText(message);
+        ((LinearLayout)feedbackErrorTextView.getParent()).setVisibility(View.VISIBLE);
     }
 
     private class SpeakerListAdapter extends ArrayAdapter<PersonListItemDTO> {

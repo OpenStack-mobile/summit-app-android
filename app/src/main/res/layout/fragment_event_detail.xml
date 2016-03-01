@@ -69,10 +69,10 @@
 
             </LinearLayout>
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bottom_bordered_control">
+                android:background="@drawable/bottom_bordered_control"
+                android:orientation="vertical">
                 <TextView
                     android:id="@+id/event_detail_description"
                     android:layout_width="match_parent"
@@ -188,6 +188,23 @@ Nulla erant noluisse te has. Ipsum volumus gloriatur cu cum, unum mundi eos no, 
                 android:background="@android:color/white"
                 android:visibility="gone">
                 <include layout="@layout/item_feedback_list"></include>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/event_detail_error_loading_feedback_container"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:background="#FF3322"
+                android:visibility="gone"
+                style="@style/AppTheme.IconedInformationBarContainerNoBorder">
+                <ImageView
+                    style="@style/AppTheme.IconedInformationBarImageView"
+                    android:src="@drawable/warning"
+                    android:tint="@color/white"/>
+                <TextView
+                    android:id="@+id/event_detail_error_loading_feedback_text"
+                    style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
+                    android:textColor="@android:color/white"
+                    android:text="There was a problem loading feedback"/>
             </LinearLayout>
 
             <com.linearlistview.LinearListView
