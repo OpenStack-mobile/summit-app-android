@@ -58,6 +58,11 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     }
 
     @Override
+    public boolean shouldShowVenues() {
+        return scheduleableInteractor.shouldShowVenues();
+    }
+
+    @Override
     public List<ScheduleItemDTO> getEventsBySearchTerm(String searchTerm) {
         List<SummitEvent> events = summitEventDataStore.getBySearchTerm(searchTerm);
         List<ScheduleItemDTO> dtos = createDTOList(events, ScheduleItemDTO.class);

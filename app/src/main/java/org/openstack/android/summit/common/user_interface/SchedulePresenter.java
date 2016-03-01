@@ -106,7 +106,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
                 scheduleItemDTO,
                 interactor.isMemberLoggedIn(),
                 interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
-                false
+                false,
+                interactor.shouldShowVenues()
         );
     }
 

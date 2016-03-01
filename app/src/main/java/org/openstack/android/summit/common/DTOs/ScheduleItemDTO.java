@@ -8,6 +8,7 @@ public class ScheduleItemDTO extends NamedDTO {
     private String time;
     private String dateTime;
     private String location;
+    private String room;
     private String track;
     private String credentials;
     private String sponsors;
@@ -76,5 +77,13 @@ public class ScheduleItemDTO extends NamedDTO {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
     }
 }

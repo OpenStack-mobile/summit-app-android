@@ -9,10 +9,12 @@ import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
+import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,12 +24,14 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     protected ISecurityManager securityManager;
     protected ISummitEventDataStore summitEventDataStore;
     protected ISummitAttendeeDataStore summitAttendeeDataStore;
+    protected ISummitDataStore summitDataStore;
 
-    public ScheduleableInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller) {
+    public ScheduleableInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller) {
         super(dtoAssembler, dataUpdatePoller);
         this.securityManager = securityManager;
         this.summitEventDataStore = summitEventDataStore;
         this.summitAttendeeDataStore = summitAttendeeDataStore;
+        this.summitDataStore = summitDataStore;
     }
 
     @Override
@@ -90,5 +94,11 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     @Override
     public Boolean isMemberLoggedIn() {
         return securityManager.isLoggedIn();
+    }
+
+    @Override
+    public boolean shouldShowVenues() {
+        Summit summit = summitDataStore.getActiveLocal();
+        return summit.getStartShowingVenuesDate().getTime() < new Date().getTime();
     }
 }

@@ -32,14 +32,13 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 11/18/2015.
  */
 public class ScheduleInteractor extends ScheduleableInteractor implements IScheduleInteractor {
-    protected ISummitDataStore summitDataStore;
     private IPushNotificationsManager pushNotificationsManager;
     private ISession session;
     private final String PUSH_NOTIFICATIONS_SUBSCRIBED_KEY = "PUSH_NOTIFICATIONS_SUBSCRIBED_KEY";
 
     @Inject
     public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IDataUpdatePoller dataUpdatePoller) {
-        super(summitEventDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, dataUpdatePoller);
+        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, dataUpdatePoller);
         this.summitDataStore = summitDataStore;
         this.pushNotificationsManager = pushNotificationsManager;
         this.session = session;

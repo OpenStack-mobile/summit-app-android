@@ -66,44 +66,38 @@ public class SearchPresenter extends BasePresenter<ISearchView, ISearchInteracto
 
         this.searchTerm = searchTerm;
 
-        Thread thread = new Thread(new Runnable() {
+        Runnable searchRunnable = new Runnable() {
             @Override
             public void run() {
                 events = interactor.getEventsBySearchTerm(searchTerm);
                 tracks = interactor.getTracksBySearchTerm(searchTerm);
                 speakers = interactor.getSpeakersBySearchTerm(searchTerm);
 
-                view.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (events.size() > 0) {
-                            view.showEvents(events);
-                        }
-                        else {
-                            view.showNoResultsForEvents();
-                        }
+                if (events.size() > 0) {
+                    view.showEvents(events);
+                }
+                else {
+                    view.showNoResultsForEvents();
+                }
 
-                        if (tracks.size() > 0) {
-                            view.showTracks(tracks);
-                        }
-                        else {
-                            view.showNoResultsForTracks();
-                        }
+                if (tracks.size() > 0) {
+                    view.showTracks(tracks);
+                }
+                else {
+                    view.showNoResultsForTracks();
+                }
 
-                        if (speakers.size() > 0) {
-                            view.showSpeakers(speakers);
-                        }
-                        else {
-                            view.showNoResultsForSpeakers();
-                        }
+                if (speakers.size() > 0) {
+                    view.showSpeakers(speakers);
+                }
+                else {
+                    view.showNoResultsForSpeakers();
+                }
 
-                        view.hideActivityIndicator();
-                    }
-                });
+                view.hideActivityIndicator();
             }
-        });
-
-        thread.start();
+        };
+        searchRunnable.run();
     }
 
     @Override
@@ -141,7 +135,8 @@ public class SearchPresenter extends BasePresenter<ISearchView, ISearchInteracto
                 scheduleItemDTO,
                 interactor.isMemberLoggedIn(),
                 interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
-                true
+                true,
+                interactor.shouldShowVenues()
         );
     }
 
