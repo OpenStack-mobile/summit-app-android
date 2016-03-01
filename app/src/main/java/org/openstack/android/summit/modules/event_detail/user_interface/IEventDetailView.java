@@ -59,4 +59,6 @@ public interface IEventDetailView extends IBaseView, IScheduleableView {
     void setOtherPeopleFeedback(List<FeedbackDTO> feedback);
 
     void toggleLoadMore(boolean show);
+
+    void showFeedbackErrorMessage(String message);
 }
