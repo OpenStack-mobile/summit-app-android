@@ -46,7 +46,11 @@ public class SpeakerPresentationsInteractor extends ScheduleInteractor implement
         List<SummitEvent> events;
 
         while(startDate.isBefore(endDate)) {
-            events = summitEventDataStore.getSpeakerEvents(speakerId, startDate.toDate(), endDate.toDate());
+            events = summitEventDataStore.getSpeakerEvents(
+                    speakerId,
+                    startDate.withTime(0, 0, 0, 0).toDate(),
+                    startDate.withTime(23, 59, 59, 999).toDate()
+            );
             if (events.size() == 0) {
                 inactiveDates.add(startDate);
             }
