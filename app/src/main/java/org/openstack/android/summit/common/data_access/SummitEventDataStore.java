@@ -67,7 +67,6 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
             query.endGroup();
         }
 
-
         isFirst = true;
         if (summitTypes != null) {
             query.beginGroup();
