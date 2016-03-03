@@ -74,7 +74,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
                     DateTime startDate = new DateTime(data.getStartDate(), summitTimeZone).withTime(0, 0, 0, 0);
                     DateTime endDate = new DateTime(data.getEndDate(), summitTimeZone).withTime(23, 59, 59, 999);
 
-                    List<DateTime> inactiveDates = hasToCheckDisabledDates ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
+                    List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
                     view.setStartAndEndDateWithInactiveDates(startDate, endDate, inactiveDates);
                 }
                 isFirstTime = false;

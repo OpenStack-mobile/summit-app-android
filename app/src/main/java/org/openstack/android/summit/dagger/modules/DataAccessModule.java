@@ -33,12 +33,10 @@ import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateP
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateProcessor;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateStrategyFactory;
 import org.openstack.android.summit.common.data_access.data_polling.MyScheduleDataUpdateStrategy;
-import org.openstack.android.summit.common.data_access.deserialization.DataUpdateDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.Deserializer;
 import org.openstack.android.summit.common.data_access.deserialization.DeserializerStorage;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.GenericDeserializer;
-import org.openstack.android.summit.common.data_access.deserialization.IDataUpdateDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializerStorage;
 import org.openstack.android.summit.common.data_access.deserialization.IFeedbackDeserializer;
@@ -168,8 +166,7 @@ public class DataAccessModule {
                                        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                                        ISummitAttendeeDeserializer summitAttendeeDeserializer,
                                        ISummitDeserializer summitDeserializer,
-                                       ISummitEventDeserializer summitEventDeserializer,
-                                       IDataUpdateDeserializer dataUpdateDeserializer) {
+                                       ISummitEventDeserializer summitEventDeserializer) {
         return new Deserializer(genericDeserializer,
                 feedbackDeserializer,
                 memberDeserializer,
@@ -177,13 +174,7 @@ public class DataAccessModule {
                 presentationSpeakerDeserializer,
                 summitAttendeeDeserializer,
                 summitDeserializer,
-                summitEventDeserializer,
-                dataUpdateDeserializer);
-    }
-
-    @Provides
-    IDataUpdateDeserializer providesDataUpdateDeserializer(IGenericDeserializer genericDeserializer, IPresentationSpeakerDeserializer presentationSpeakerDeserializer, ISummitEventDeserializer summitEventDeserializer, IDeserializerStorage deserializerStorage) {
-        return new DataUpdateDeserializer(new ClassResolver(), genericDeserializer, presentationSpeakerDeserializer, summitEventDeserializer, deserializerStorage);
+                summitEventDeserializer);
     }
 
     @Provides
@@ -247,8 +238,8 @@ public class DataAccessModule {
     }
 
     @Provides
-    IDataUpdateProcessor providesDataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore) {
-        return new DataUpdateProcessor(deserializer, dataUpdateStrategyFactory, dataUpdateDataStore);
+    IDataUpdateProcessor providesDataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore, IDeserializerStorage deserializerStorage) {
+        return new DataUpdateProcessor(deserializer, dataUpdateStrategyFactory, dataUpdateDataStore, new ClassResolver(), deserializerStorage);
     }
 
     @Provides
