@@ -12,9 +12,13 @@ public class PersonDeserializer extends BaseDeserializer implements IPersonDeser
     public void deserialize(IPerson person, JSONObject jsonObject) throws JSONException {
         person.setId(jsonObject.getInt("id"));
         //person.setEmail(jsonObject.getString("email"));
-        person.setFirstName(jsonObject.getString("first_name"));
-        person.setLastName(jsonObject.getString("last_name"));
-        person.setFullName(person.getFirstName() + " " + person.getLastName());
+        person.setFirstName(
+                !jsonObject.isNull("first_name") ? jsonObject.getString("first_name") : null
+        );
+        person.setLastName(
+                !jsonObject.isNull("last_name") ? jsonObject.getString("last_name") : null
+        );
+        person.setFullName(getFullName(person));
         person.setBio(
                 !jsonObject.isNull("bio") ? jsonObject.getString("bio") : null
         );
@@ -34,5 +38,19 @@ public class PersonDeserializer extends BaseDeserializer implements IPersonDeser
         person.setTwitter(
                 !jsonObject.isNull("twitter") ? jsonObject.getString("twitter") : null
         );
+    }
+
+    private String getFullName(IPerson person) {
+        String fullName = null;
+        if (person.getFirstName() != null && person.getLastName() != null) {
+            fullName = person.getFirstName() + " " + person.getLastName();
+        }
+        else if (person.getFirstName() != null){
+            fullName = person.getFirstName();
+        }
+        else  if (person.getLastName() != null){
+            fullName = person.getLastName();
+        }
+        return fullName;
     }
 }
