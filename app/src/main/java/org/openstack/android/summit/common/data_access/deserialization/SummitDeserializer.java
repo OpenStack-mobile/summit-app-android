@@ -181,8 +181,8 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         summit.setId(jsonObject.getInt("id"));
         summit.setName(jsonObject.getString("name"));
 
-        summit.setStartDate(summit.getEvents().first().getStart());
-        summit.setEndDate(summit.getEvents().last().getEnd());
+        summit.setStartDate(new Date(jsonObject.getInt("start_date") * 1000L));
+        summit.setEndDate(new Date(jsonObject.getInt("end_date") * 1000L));
         summit.setTimeZone(jsonObject.getJSONObject("time_zone").getString("name"));
         summit.setInitialDataLoadDate(new Date(jsonObject.getInt("timestamp") * 1000L));
         summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date")*1000L));

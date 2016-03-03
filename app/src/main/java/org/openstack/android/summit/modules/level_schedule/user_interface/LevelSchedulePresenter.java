@@ -101,7 +101,7 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
                 filtersOnTrackGroups,
                 null,
                 filtersOnTags,
-                levels);
+                filtersOnLevels);
 
         return inactiveDates;
     }
@@ -114,6 +114,6 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
     @Override
     public void clearFilters() {
         scheduleFilter.clearActiveFilters();
-        onCreate(null);
+        onCreateView(null);
     }
 }

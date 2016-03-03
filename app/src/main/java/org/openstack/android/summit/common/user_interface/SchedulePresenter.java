@@ -69,14 +69,14 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             @Override
             public void onSucceedWithData(SummitDTO data) {
                 // HACK: without checking is it's first time, ranger is recreated and I lost previous day selection. Ideally this should be improved
-                if (isFirstTime) {
+                //if (isFirstTime) {
                     DateTimeZone summitTimeZone = DateTimeZone.forID(data.getTimeZone());
                     DateTime startDate = new DateTime(data.getStartDate(), summitTimeZone).withTime(0, 0, 0, 0);
                     DateTime endDate = new DateTime(data.getEndDate(), summitTimeZone).withTime(23, 59, 59, 999);
 
                     List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
                     view.setStartAndEndDateWithInactiveDates(startDate, endDate, inactiveDates);
-                }
+                //}
                 isFirstTime = false;
                 reloadSchedule();
                 view.hideActivityIndicator();
