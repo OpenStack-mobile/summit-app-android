@@ -6,6 +6,6 @@ import org.openstack.android.summit.common.entities.DataUpdate;
 /**
  * Created by Claudio Redi on 2/8/2016.
  */
-public interface IDataUpdateDeserializer {
+/*public interface IDataUpdateDeserializer {
     DataUpdate deserialize(String jsonString) throws JSONException;
-}
+}*/

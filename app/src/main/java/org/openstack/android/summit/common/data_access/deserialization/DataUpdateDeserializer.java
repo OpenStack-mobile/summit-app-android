@@ -21,11 +21,12 @@ import io.realm.RealmObject;
 /**
  * Created by Claudio Redi on 11/11/2015.
  */
-public class DataUpdateDeserializer implements IDataUpdateDeserializer {
+/*public class DataUpdateDeserializer implements IDataUpdateDeserializer {
     IClassResolver classResolver;
     IGenericDeserializer genericDeserializer;
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
     ISummitEventDeserializer summitEventDeserializer;
+    ISummitDeserializer summitDeserializer;
     IDeserializerStorage deserializerStorage;
 
     @Inject
@@ -33,12 +34,14 @@ public class DataUpdateDeserializer implements IDataUpdateDeserializer {
                         IGenericDeserializer genericDeserializer,
                         IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                         ISummitEventDeserializer summitEventDeserializer,
+                        ISummitDeserializer summitDeserializer,
                         IDeserializerStorage deserializerStorage)
     {
         this.classResolver = classResolver;
         this.genericDeserializer = genericDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
         this.summitEventDeserializer = summitEventDeserializer;
+        this.summitDeserializer = summitDeserializer;
         this.deserializerStorage = deserializerStorage;
     }
 
@@ -91,8 +94,12 @@ public class DataUpdateDeserializer implements IDataUpdateDeserializer {
         if (type == SummitEvent.class) {
             return (T)summitEventDeserializer.deserialize(jsonString);
         }
+        if (type == Summit.class) {
+            return (T)summitEventDeserializer.deserialize(jsonString);
+        }
         else {
             return genericDeserializer.deserialize(jsonString, type);
         }
     }
 }
+*/
