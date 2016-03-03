@@ -14,4 +14,6 @@ public interface ISpeakerPresentationsInteractor extends IScheduleInteractor {
     int getCurrentMemberSpeakerId();
 
     List<ScheduleItemDTO> getSpeakerPresentations(int speakerId, Date startDate, Date endDate);
+
+    List<DateTime> getSpeakerPresentationScheduleDatesWithoutEvents(int speakerId, DateTime startDate, DateTime endDate);
 }

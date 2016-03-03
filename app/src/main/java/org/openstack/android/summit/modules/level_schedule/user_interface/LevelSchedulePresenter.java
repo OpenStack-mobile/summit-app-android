@@ -78,6 +78,33 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
         return summitEvents;
     }
 
+    @Override
+    protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
+        List<Integer> filtersOnEventTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
+        List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
+        List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
+        List<String> filtersOnLevels = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String> filtersOnTags = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+
+        if (filtersOnLevels != null && filtersOnLevels.size() > 0 && !filtersOnLevels.contains(level)) {
+            return new ArrayList<>();
+        }
+
+        ArrayList<String> levels = new ArrayList<>();
+        levels.add(level);
+
+        List<DateTime> inactiveDates = interactor.getDatesWithoutEvents(
+                startDate,
+                endDate,
+                filtersOnEventTypes,
+                filtersOnSummitTypes,
+                filtersOnTrackGroups,
+                null,
+                filtersOnTags,
+                levels);
+
+        return inactiveDates;
+    }
 
     @Override
     public void showFilterView() {

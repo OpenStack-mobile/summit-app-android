@@ -23,6 +23,7 @@ public class GeneralSchedulePresenter extends SchedulePresenter<GeneralScheduleF
     @Inject
     public GeneralSchedulePresenter(IGeneralScheduleInteractor interactor, IGeneralScheduleWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe, scheduleablePresenter, scheduleItemViewBuilder, scheduleFilter);
+        hasToCheckDisabledDates = false;
     }
 
     @Override
