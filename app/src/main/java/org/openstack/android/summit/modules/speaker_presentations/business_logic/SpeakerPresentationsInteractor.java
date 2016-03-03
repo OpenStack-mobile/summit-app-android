@@ -11,9 +11,11 @@ import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.Member;
+import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -36,5 +38,21 @@ public class SpeakerPresentationsInteractor extends ScheduleInteractor implement
         List<SummitEvent> speakerEvents = summitEventDataStore.getSpeakerEvents(speakerId, startDate, endDate);
         List<ScheduleItemDTO> dtos = createDTOList(speakerEvents, ScheduleItemDTO.class);
         return dtos;
+    }
+
+    @Override
+    public List<DateTime> getSpeakerPresentationScheduleDatesWithoutEvents(int speakerId, DateTime startDate, DateTime endDate) {
+        ArrayList<DateTime> inactiveDates = new ArrayList<>();
+        List<SummitEvent> events;
+
+        while(startDate.isBefore(endDate)) {
+            events = summitEventDataStore.getSpeakerEvents(speakerId, startDate.toDate(), endDate.toDate());
+            if (events.size() == 0) {
+                inactiveDates.add(startDate);
+            }
+            startDate = startDate.plusDays(1);
+        }
+
+        return inactiveDates;
     }
 }

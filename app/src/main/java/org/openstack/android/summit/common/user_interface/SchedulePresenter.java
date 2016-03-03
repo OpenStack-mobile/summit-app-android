@@ -3,6 +3,8 @@ package org.openstack.android.summit.common.user_interface;
 import android.os.Bundle;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
@@ -10,7 +12,9 @@ import org.openstack.android.summit.common.IScheduleWireframe;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
 import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
+import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -20,13 +24,13 @@ import java.util.TimeZone;
  */
 public abstract class SchedulePresenter<V extends IScheduleView, I extends IScheduleInteractor, W extends IScheduleWireframe> extends BasePresenter<V, I, W> implements ISchedulePresenter<V> {
     List<ScheduleItemDTO> dayEvents;
-    Date selectedDate;
     int summitTimeZoneOffset;
     protected IScheduleFilter scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
     private IScheduleItemViewBuilder scheduleItemViewBuilder;
     private IScheduleablePresenter scheduleablePresenter;
     private boolean isFirstTime = true;
+    protected boolean hasToCheckDisabledDates = true;
 
     public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe);
@@ -66,18 +70,12 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             public void onSucceedWithData(SummitDTO data) {
                 // HACK: without checking is it's first time, ranger is recreated and I lost previous day selection. Ideally this should be improved
                 if (isFirstTime) {
-                    summitTimeZoneOffset = TimeZone.getTimeZone(data.getTimeZone()).getOffset(new Date().getTime());
-                    DateTime startDate = new DateTime(data.getStartDate()).plus(summitTimeZoneOffset).withTime(0, 0, 0, 0);
-                    DateTime endDate = new DateTime(data.getEndDate()).plus(summitTimeZoneOffset).withTime(23, 59, 59, 999);
+                    DateTimeZone summitTimeZone = DateTimeZone.forID(data.getTimeZone());
+                    DateTime startDate = new DateTime(data.getStartDate(), summitTimeZone).withTime(0, 0, 0, 0);
+                    DateTime endDate = new DateTime(data.getEndDate(), summitTimeZone).withTime(23, 59, 59, 999);
 
-                    view.setStartAndEndDateWithParts(
-                            startDate.getYear(),
-                            startDate.getMonthOfYear(),
-                            startDate.getDayOfMonth(),
-                            endDate.getYear(),
-                            endDate.getMonthOfYear(),
-                            endDate.getDayOfMonth()
-                    );
+                    List<DateTime> inactiveDates = hasToCheckDisabledDates ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
+                    view.setStartAndEndDateWithInactiveDates(startDate, endDate, inactiveDates);
                 }
                 isFirstTime = false;
                 reloadSchedule();
@@ -92,6 +90,26 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         };
 
         interactor.getActiveSummit(summitDTOIInteractorOperationListener);
+    }
+
+    protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
+        List<Integer> filtersOnEventTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
+        List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
+        List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
+        List<String> filtersOnLevels = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String> filtersOnTags = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+
+        List<DateTime> inactiveDates = interactor.getDatesWithoutEvents(
+                startDate,
+                endDate,
+                filtersOnEventTypes,
+                filtersOnSummitTypes,
+                filtersOnTrackGroups,
+                null,
+                filtersOnTags,
+                filtersOnLevels);
+
+        return inactiveDates;
     }
 
     protected void onFailedInitialLoad(String message) {
@@ -112,12 +130,10 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     public void reloadSchedule() {
-        selectedDate = view.getSelectedDate();
+        DateTime selectedDate = view.getSelectedDate();
 
-        int offsetLocalTimeZone  = TimeZone.getDefault().getOffset(new Date().getTime());
-
-        DateTime startDate = new DateTime(view.getSelectedDate()).withTime(0, 0, 0, 0).plus(offsetLocalTimeZone - summitTimeZoneOffset);
-        DateTime endDate = new DateTime(view.getSelectedDate()).withTime(23, 59, 59, 999).plus(offsetLocalTimeZone - summitTimeZoneOffset);
+        DateTime startDate = selectedDate.withTime(0, 0, 0, 0);
+        DateTime endDate = selectedDate.withTime(23, 59, 59, 999);
 
         dayEvents = getScheduleEvents(startDate, endDate, interactor);
         view.setEvents(dayEvents);

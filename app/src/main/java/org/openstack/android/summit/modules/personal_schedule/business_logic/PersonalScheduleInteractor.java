@@ -1,5 +1,6 @@
 package org.openstack.android.summit.modules.personal_schedule.business_logic;
 
+import org.joda.time.DateTime;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IPushNotificationsManager;
@@ -11,8 +12,11 @@ import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.Member;
+import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,9 +29,31 @@ public class PersonalScheduleInteractor extends ScheduleInteractor implements IP
     }
 
     @Override
-    public List<ScheduleItemDTO> getCurrentMemberScheduledEvents() {
+    public List<ScheduleItemDTO> getCurrentMemberScheduledEvents(Date startDate, Date endDate) {
         Member member = securityManager.getCurrentMember();
-        List<ScheduleItemDTO> dtos = createDTOList(member.getAttendeeRole().getScheduledEvents(), ScheduleItemDTO.class);
+        List<SummitEvent> events = member.getAttendeeRole().getScheduledEvents()
+                .where()
+                .greaterThanOrEqualTo("start", startDate)
+                .lessThanOrEqualTo("end", endDate)
+                .findAll();
+
+        List<ScheduleItemDTO> dtos = createDTOList(events, ScheduleItemDTO.class);
         return dtos;
+    }
+
+    @Override
+    public List<DateTime> getCurrentMemberScheduleDatesWithoutEvents(DateTime startDate, DateTime endDate) {
+        ArrayList<DateTime> inactiveDates = new ArrayList<>();
+        List<ScheduleItemDTO> events;
+
+        while(startDate.isBefore(endDate)) {
+            events = getCurrentMemberScheduledEvents(startDate.withTime(0, 0, 0, 0).toDate(), startDate.withTime(23, 59, 59, 999).toDate());
+            if (events.size() == 0) {
+                inactiveDates.add(startDate);
+            }
+            startDate = startDate.plusDays(1);
+        }
+
+        return inactiveDates;
     }
 }
