@@ -21,6 +21,7 @@ public class PresentationSpeakerDataStore extends GenericDataStore implements IP
         //TODO: this is a hack for multithreading
         Realm realm = Realm.getDefaultInstance();
         RealmQuery<PresentationSpeaker> query = realm.where(PresentationSpeaker.class);
+        query.isNotNull("fullName");
 
         if (searchTerm != null && !searchTerm.isEmpty()) {
             query.contains("fullName", searchTerm, Case.INSENSITIVE);

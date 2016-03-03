@@ -25,7 +25,7 @@ public class PresentationSpeakerDeserializer extends BaseDeserializer implements
     public PresentationSpeaker deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        String[] missedFields = validateRequiredFields(new String[] {"id", "first_name", "last_name"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
 
         PresentationSpeaker presentationSpeaker = new PresentationSpeaker();
