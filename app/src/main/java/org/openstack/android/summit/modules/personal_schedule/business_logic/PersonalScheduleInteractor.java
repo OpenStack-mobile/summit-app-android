@@ -47,7 +47,10 @@ public class PersonalScheduleInteractor extends ScheduleInteractor implements IP
         List<ScheduleItemDTO> events;
 
         while(startDate.isBefore(endDate)) {
-            events = getCurrentMemberScheduledEvents(startDate.withTime(0, 0, 0, 0).toDate(), startDate.withTime(23, 59, 59, 999).toDate());
+            events = getCurrentMemberScheduledEvents(
+                    startDate.withTime(0, 0, 0, 0).toDate(),
+                    startDate.withTime(23, 59, 59, 999).toDate()
+            );
             if (events.size() == 0) {
                 inactiveDates.add(startDate);
             }
