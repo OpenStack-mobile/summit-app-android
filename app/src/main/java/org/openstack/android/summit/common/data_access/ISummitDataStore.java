@@ -10,4 +10,6 @@ public interface ISummitDataStore {
     void getActive(IDataStoreOperationListener<Summit> dataStoreOperationListener);
 
     Summit getActiveLocal();
+
+    void updateActiveSummitFromDataUpdate(Summit dataUpdateEntity);
 }

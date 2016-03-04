@@ -6,10 +6,12 @@ package org.openstack.android.summit.common.data_access.data_polling;
 public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
     IDataUpdateStrategy genericDataUpdateProcessStrategy;
     IDataUpdateStrategy myScheduleDataUpdateStrategy;
+    IDataUpdateStrategy summitDataUpdateStrategy;
 
-    public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy) {
+    public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy, IDataUpdateStrategy summitDataUpdateStrategy) {
         this.genericDataUpdateProcessStrategy = genericDataUpdateProcessStrategy;
         this.myScheduleDataUpdateStrategy = myScheduleDataUpdateStrategy;
+        this.summitDataUpdateStrategy = summitDataUpdateStrategy;
     }
 
     @Override
@@ -19,6 +21,9 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
         switch (className) {
             case "MySchedule":
                 dataUpdateProcessStrategy = myScheduleDataUpdateStrategy;
+                break;
+            case "Summit":
+                dataUpdateProcessStrategy = summitDataUpdateStrategy;
                 break;
             default:
                 dataUpdateProcessStrategy = genericDataUpdateProcessStrategy;
