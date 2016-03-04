@@ -156,7 +156,9 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         PersonListItemDTO personListItemDTO = event.getSpeakers().get(position);
         personItemView.setName(personListItemDTO.getName());
         personItemView.setTitle(personListItemDTO.getTitle());
-
+        personItemView.setIsModerator(
+                event.getModerator() != null && personListItemDTO.getId() == event.getModerator().getId()
+        );
         Uri uri = Uri.parse(personListItemDTO.getPictureUrl().replace("https", "http"));
         personItemView.setPictureUri(uri);
     }

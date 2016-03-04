@@ -26,7 +26,12 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:layout_gravity="center">
-
+        <TextView
+            android:id="@+id/item_person_moderator_indicator"
+            android:textAllCaps="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/moderator"/>
         <TextView
             android:id="@+id/item_person_list_name"
             android:layout_width="wrap_content"
