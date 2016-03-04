@@ -55,6 +55,7 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
                 track = trackDeserializer.deserialize(jsonArrayTracks.getJSONObject(i).toString());
             }
             track.getTrackGroups().add(trackGroup);
+            trackGroup.getTracks().add(track);
         }
 
         return trackGroup;

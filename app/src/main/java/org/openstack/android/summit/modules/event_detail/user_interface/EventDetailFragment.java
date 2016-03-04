@@ -195,7 +195,6 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     public void setSpeakers(List<PersonListItemDTO> speakers) {
         speakerListAdapter.clear();
         speakerListAdapter.addAll(speakers);
-        speakerListAdapter.notifyDataSetChanged();
 
         LinearListView speakerList = (LinearListView)view.findViewById(R.id.event_detail_speakers_list);
         speakerList.setVisibility(speakers.size() > 0 ? View.VISIBLE : View.GONE);

@@ -58,6 +58,11 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
             presentation.getSpeakers().add(presentationSpeaker);
         }
 
+        if (!jsonObject.isNull("moderator_speaker_id")) {
+            presentationSpeaker = deserializerStorage.get(jsonObject.getInt("moderator_speaker_id"), PresentationSpeaker.class);
+            presentation.setModerator(presentationSpeaker);
+        }
+
         return presentation;
     }
 }

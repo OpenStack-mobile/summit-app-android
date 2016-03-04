@@ -37,4 +37,9 @@ public class PersonItemView implements IPersonItemView {
         SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.item_person_list_pic);
         draweeView.setImageURI(pictureUri);
     }
+
+    public void setIsModerator(boolean isModerator) {
+        TextView moderatorIndicatorTextView = (TextView) view.findViewById(R.id.item_person_moderator_indicator);
+        moderatorIndicatorTextView.setVisibility(isModerator ? View.VISIBLE : View.GONE);
+    }
 }

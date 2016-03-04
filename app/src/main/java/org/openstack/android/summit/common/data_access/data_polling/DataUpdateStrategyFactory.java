@@ -7,11 +7,13 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
     IDataUpdateStrategy genericDataUpdateProcessStrategy;
     IDataUpdateStrategy myScheduleDataUpdateStrategy;
     IDataUpdateStrategy summitDataUpdateStrategy;
+    IDataUpdateStrategy trackGroupDataUpdateStrategy;
 
-    public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy, IDataUpdateStrategy summitDataUpdateStrategy) {
+    public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy, IDataUpdateStrategy summitDataUpdateStrategy, IDataUpdateStrategy trackGroupDataUpdateStrategy) {
         this.genericDataUpdateProcessStrategy = genericDataUpdateProcessStrategy;
         this.myScheduleDataUpdateStrategy = myScheduleDataUpdateStrategy;
         this.summitDataUpdateStrategy = summitDataUpdateStrategy;
+        this.trackGroupDataUpdateStrategy = trackGroupDataUpdateStrategy;
     }
 
     @Override
@@ -24,6 +26,9 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
                 break;
             case "Summit":
                 dataUpdateProcessStrategy = summitDataUpdateStrategy;
+                break;
+            case "PresentationCategoryGroup":
+                dataUpdateProcessStrategy = trackGroupDataUpdateStrategy;
                 break;
             default:
                 dataUpdateProcessStrategy = genericDataUpdateProcessStrategy;

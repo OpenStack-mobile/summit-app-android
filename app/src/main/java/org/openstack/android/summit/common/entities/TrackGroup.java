@@ -15,6 +15,7 @@ public class TrackGroup extends RealmObject implements INamedEntity {
     private String name;
     private String description;
     private String color;
+    private RealmList<Track> tracks = new RealmList<>();
 
     public int getId() {
         return id;
@@ -46,5 +47,13 @@ public class TrackGroup extends RealmObject implements INamedEntity {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public RealmList<Track> getTracks() {
+        return tracks;
+    }
+
+    public void setTracks(RealmList<Track> tracks) {
+        this.tracks = tracks;
     }
 }
