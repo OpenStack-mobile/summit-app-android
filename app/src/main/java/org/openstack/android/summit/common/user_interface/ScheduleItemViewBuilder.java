@@ -7,7 +7,7 @@ import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
  */
 public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
     @Override
-    public void build(IScheduleItemView scheduleItemView, ScheduleItemDTO scheduleItemDTO, Boolean isMemberLoggedIn, Boolean isEventScheduledByLoggedMember, boolean useFullDate) {
+    public void build(IScheduleItemView scheduleItemView, ScheduleItemDTO scheduleItemDTO, Boolean isMemberLoggedIn, Boolean isEventScheduledByLoggedMember, boolean useFullDate, boolean showVenues) {
         scheduleItemView.setName(scheduleItemDTO.getName());
         scheduleItemView.setTime(useFullDate ? scheduleItemDTO.getDateTime() : scheduleItemDTO.getTime());
         scheduleItemView.setSponsors(scheduleItemDTO.getSponsors());
@@ -21,6 +21,14 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
                 ? scheduleItemDTO.getColor()
                 : "";
         scheduleItemView.setColor(color);
-        scheduleItemView.setLocation(scheduleItemDTO.getLocation());
+
+        if (showVenues) {
+            scheduleItemView.setLocation(scheduleItemDTO.getLocation());
+        }
+        else {
+            String stringToRemove = " - " + scheduleItemDTO.getRoom();
+            String locationWithoutRoom =  scheduleItemDTO.getLocation().replace(stringToRemove, "");
+            scheduleItemView.setLocation(locationWithoutRoom);
+        }
     }
 }

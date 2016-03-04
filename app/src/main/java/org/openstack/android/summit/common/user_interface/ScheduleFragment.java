@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.andressantibanez.ranger.Ranger;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -68,7 +70,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         ranger.setDayViewOnClickListener(new Ranger.DayViewOnClickListener() {
             @Override
-            public void onDaySelected(long date) {
+            public void onDaySelected(DateTime date) {
                 presenter.reloadSchedule();
             }
         });
@@ -103,6 +105,12 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     }
 
     @Override
+    public void setStartAndEndDateWithInactiveDates(DateTime startDate, DateTime endDate, List<DateTime> disabledDates) {
+        Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        ranger.setStartAndEndDateWithDisabledDates(startDate, endDate, disabledDates);
+    }
+
+    @Override
     public List<ScheduleItemDTO> getEvents() {
         return events;
     }
@@ -117,9 +125,9 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     }
 
     @Override
-    public Date getSelectedDate() {
+    public DateTime getSelectedDate() {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
-        return new Date(ranger.getSelectedDate());
+        return ranger.getSelectedDate();
     }
 
     @Override

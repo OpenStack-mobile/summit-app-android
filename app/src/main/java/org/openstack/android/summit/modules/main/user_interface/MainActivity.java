@@ -27,6 +27,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.network.IReachability;
+import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
@@ -49,6 +51,9 @@ public class MainActivity extends AppCompatActivity
     @Inject
     // TODO: this should be moved to interactor. It's necessary to know how to deal with the Activiy parameter on login
     ISecurityManager securityManager;
+
+    @Inject
+    IReachability reachability;
 
     private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
@@ -134,6 +139,10 @@ public class MainActivity extends AppCompatActivity
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!reachability.isNetworkingAvailable(MainActivity.this)) {
+                    showErrorMessage(getResources().getString(R.string.login_disallowed));
+                    return;
+                }
                 if (!securityManager.isLoggedIn()) {
                     showActivityIndicator();
                     securityManager.login(MainActivity.this);

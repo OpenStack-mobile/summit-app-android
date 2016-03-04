@@ -24,7 +24,13 @@ public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalSchedu
 
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IPersonalScheduleInteractor interactor) {
-        List<ScheduleItemDTO> events = interactor.getCurrentMemberScheduledEvents();
+        List<ScheduleItemDTO> events = interactor.getCurrentMemberScheduledEvents(startDate.toDate(), endDate.toDate());
         return events;
+    }
+
+    @Override
+    protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
+        List<DateTime> inactiveDates = interactor.getCurrentMemberScheduleDatesWithoutEvents(startDate, endDate);
+        return inactiveDates;
     }
 }

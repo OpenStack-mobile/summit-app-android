@@ -5,6 +5,7 @@ import android.util.Log;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.entities.TrackGroup;
 
 /**
  * Created by Claudio Redi on 2/8/2016.
@@ -17,6 +18,10 @@ public class ClassResolver implements IClassResolver {
 
         if (className.equals("PresentationCategory")) {
             type = Track.class;
+        }
+
+        if (className.equals("PresentationCategoryGroup")) {
+            type = TrackGroup.class;
         }
 
         if (className.equals("MySchedule") || className.equals("Presentation")) {

@@ -30,6 +30,7 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by Claudio Redi on 11/17/2015.
@@ -43,11 +44,16 @@ public class GenericDataStore implements IGenericDataStore {
     }
 
     @Override
-    public <T extends RealmObject> List<T> getaAllLocal(Class<T> type) {
-        ArrayList<T> list = new ArrayList<>();
+    public <T extends RealmObject> List<T> getAllLocal(Class<T> type) {
         RealmResults<T> result = realm.where(type).findAll();
-        list.addAll(result.subList(0, result.size()));
-        return list;
+        return result;
+    }
+
+    @Override
+    public <T extends RealmObject> List<T> getAllLocal(Class<T> type, String fieldNames[], Sort sortOrders[]) {
+        RealmResults<T> result = realm.where(type).findAll();
+        result.sort(fieldNames, sortOrders);
+        return result;
     }
 
     @Override

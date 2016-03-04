@@ -58,7 +58,6 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setName(event.getName());
         view.setTrack(event.getTrack());
         view.setDate(event.getDateTime());
-        view.setLocation(event.getLocation());
         view.setDescription(event.getEventDescription());
         view.setCredentials(event.getCredentials());
         view.setLevel(event.getLevel());
@@ -70,6 +69,15 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setAverageRate((int) Math.round(event.getAverageRate()));
         view.setTags(event.getTags());
         view.hasMyFeedback(myFeedbackForEvent != null);
+
+        if (interactor.shouldShowVenues()) {
+            view.setLocation(event.getLocation());
+        }
+        else {
+            String stringToRemove = " - " + event.getRoom();
+            String locationWithoutRoom =  event.getLocation().replace(stringToRemove, "");
+            view.setLocation(locationWithoutRoom);
+        }
 
         if (myFeedbackForEvent != null) {
             view.setMyFeedbackRate(myFeedbackForEvent.getRate());
@@ -116,7 +124,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
                 super.onError(message);
                 loadingFeedback = false;
                 view.hideFeedbackActivityIndicator();
-                view.showErrorMessage(message);
+                view.showFeedbackErrorMessage(message);
             }
         };
 
@@ -125,7 +133,6 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public void showVenueDetail() {
-
         wireframe.showEventDetailView(event.getVenueId(), view);
     }
 

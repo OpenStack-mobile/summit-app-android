@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <ListView android:id="@+id/list_venues"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:background="#00222222"
-        android:drawSelectorOnTop="false"
-        android:listSelector="@android:color/transparent"/>
+        <com.linearlistview.LinearListView android:id="@+id/venues_internal_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:showDividers="middle|beginning"
+            android:divider="@android:color/white"
+            app:dividerThickness="2dp"/>
+        <LinearLayout
+            android:id="@+id/venue_list_external_venues_subsection_header"
+            style="@style/AppTheme.SubsectionHeader">
+            <TextView
+                style="@style/AppTheme.SubsectionHeader.Text"
+                android:textAllCaps="true"
+                android:text="@string/external_venues"/>
+        </LinearLayout>
+        <com.linearlistview.LinearListView android:id="@+id/venues_external_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:showDividers="middle|end"
+            android:divider="@android:color/white"
+            app:dividerThickness="2dp"/>
+    </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

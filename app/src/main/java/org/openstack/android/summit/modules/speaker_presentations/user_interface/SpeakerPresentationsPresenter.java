@@ -57,4 +57,11 @@ public class SpeakerPresentationsPresenter  extends SchedulePresenter<ISpeakerPr
         List<ScheduleItemDTO> events = interactor.getSpeakerPresentations(speakerId, startDate.toDate(), endDate.toDate());
         return events;
     }
+
+    @Override
+    protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
+        List<DateTime> inactiveDates = interactor.getSpeakerPresentationScheduleDatesWithoutEvents(speakerId, startDate, endDate);
+        return inactiveDates;
+    }
+
 }

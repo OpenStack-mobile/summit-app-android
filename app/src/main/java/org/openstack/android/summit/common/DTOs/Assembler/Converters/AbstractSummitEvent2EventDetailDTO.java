@@ -44,8 +44,10 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
 
                 PersonListItemDTO speakerListItemDTO;
                 for (PresentationSpeaker presentationSpeaker: source.getPresentation().getSpeakers()) {
-                    speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)presentationSpeaker);
-                    eventDetailDTO.getSpeakers().add(speakerListItemDTO);
+                    if (presentationSpeaker.getFullName()!= null && !presentationSpeaker.getFullName().isEmpty()){
+                        speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)presentationSpeaker);
+                        eventDetailDTO.getSpeakers().add(speakerListItemDTO);
+                    }
                 }
 
                 if (source.getPresentation().getModerator() != null) {

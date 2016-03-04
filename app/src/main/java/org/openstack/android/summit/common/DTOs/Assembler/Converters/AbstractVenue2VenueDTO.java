@@ -27,12 +27,21 @@ public class AbstractVenue2VenueDTO <S extends Venue> extends AbstractConverter<
             venueDTO.setLat(source.getLat());
             venueDTO.setLng(source.getLng());
             venueDTO.setMaps(getMaps(source));
+            venueDTO.setImages(getImages(source));
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             throw e;
         }
         return venueDTO;
+    }
+
+    private List<String> getImages(S source) {
+        ArrayList<String> images = new ArrayList<>();
+        for (Image image: source.getImages()) {
+            images.add(image.getImageUrl());
+        }
+        return images;
     }
 
     private List<String> getMaps(S source) {

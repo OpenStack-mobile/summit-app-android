@@ -41,7 +41,6 @@ import java.util.List;
  * Created by Claudio Redi on 2/12/2016.
  */
 public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> implements IVenueDetailView, OnMapReadyCallback {
-    private VenueRoomsAdapter venueRoomsAdapter;
     private MapView map;
     private VenueListItemDTO venue;
 
@@ -94,9 +93,6 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_venue_detail, container, false);
         this.view = view;
-        LinearListView venueList = (LinearListView)view.findViewById(R.id.venue_rooms_list);
-        venueRoomsAdapter = new VenueRoomsAdapter(getContext());
-        venueList.setAdapter(venueRoomsAdapter);
 
         map = (MapView)view.findViewById(R.id.venue_map);
         map.onCreate(savedInstanceState);
@@ -120,9 +116,16 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
         map.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    public void toggleGallery(boolean visible) {
-        LinearLayout gallery = (LinearLayout) view.findViewById(R.id.venue_gallery);
-        gallery.setVisibility(visible ? View.VISIBLE : View.GONE);
+    @Override
+    public void toggleMapsGallery(boolean visible) {
+        LinearLayout mapsGallery = (LinearLayout) view.findViewById(R.id.venue_maps_gallery);
+        mapsGallery.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void toggleImagesGallery(boolean visible) {
+        LinearLayout imagesGallery = (LinearLayout) view.findViewById(R.id.venue_images_gallery);
+        imagesGallery.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public void toggleMapNavigation(boolean visible) {
@@ -134,12 +137,6 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
     public void setVenueName(String name) {
         TextView venueName = (TextView)view.findViewById(R.id.venue_name_textview);
         venueName.setText(name);
-    }
-
-    @Override
-    public void setVenueRooms(List<VenueRoomDTO> rooms) {
-        venueRoomsAdapter.clear();
-        venueRoomsAdapter.addAll(rooms);
     }
 
     @Override
@@ -155,11 +152,22 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
     @Override
     public void setMaps(List<String> maps) {
         SlidePagerAdapter pagerAdapter = new SlidePagerAdapter(getChildFragmentManager());
-        ViewPager pager = (ViewPager) view.findViewById(R.id.venue_gallery_pager);
+        ViewPager pager = (ViewPager) view.findViewById(R.id.venue_maps_gallery_pager);
         pager.setAdapter(pagerAdapter);
         pagerAdapter.addAll(maps);
         pagerAdapter.notifyDataSetChanged();
-        CirclePageIndicator pageIndicator = (CirclePageIndicator) view.findViewById(R.id.venue_gallery_indicator);
+        CirclePageIndicator pageIndicator = (CirclePageIndicator) view.findViewById(R.id.venue_maps_gallery_indicator);
+        pageIndicator.setViewPager(pager);
+    }
+
+    @Override
+    public void setImages(List<String> maps) {
+        SlidePagerAdapter pagerAdapter = new SlidePagerAdapter(getChildFragmentManager());
+        ViewPager pager = (ViewPager) view.findViewById(R.id.venue_images_gallery_pager);
+        pager.setAdapter(pagerAdapter);
+        pagerAdapter.addAll(maps);
+        pagerAdapter.notifyDataSetChanged();
+        CirclePageIndicator pageIndicator = (CirclePageIndicator) view.findViewById(R.id.venue_images_gallery_indicator);
         pageIndicator.setViewPager(pager);
     }
 
@@ -177,33 +185,5 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
 
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15), 10, null);
         }
-    }
-
-    private class VenueRoomsAdapter extends ArrayAdapter<VenueRoomDTO> {
-
-        public VenueRoomsAdapter(Context context) {
-            super(context, 0);
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_simple_list, parent, false);
-            }
-
-            final SimpleListItemView venueRoomListItem = new SimpleListItemView(convertView);
-
-            presenter.buildItem(venueRoomListItem, position);
-
-            // Return the completed view to render on screen
-            return convertView;
-        }
-
-        @Override
-        public int getCount() {
-            return super.getCount();
-        };
     }
 }

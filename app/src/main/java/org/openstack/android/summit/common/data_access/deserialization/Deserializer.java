@@ -33,7 +33,6 @@ public class Deserializer implements IDeserializer {
     ISummitAttendeeDeserializer summitAttendeeDeserializer;
     ISummitDeserializer summitDeserializer;
     ISummitEventDeserializer summitEventDeserializer;
-    IDataUpdateDeserializer dataUpdateDeserializer;
 
     public Deserializer()
     {
@@ -47,8 +46,7 @@ public class Deserializer implements IDeserializer {
                         IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                         ISummitAttendeeDeserializer summitAttendeeDeserializer,
                         ISummitDeserializer summitDeserializer,
-                        ISummitEventDeserializer summitEventDeserializer,
-                        IDataUpdateDeserializer dataUpdateDeserializer)
+                        ISummitEventDeserializer summitEventDeserializer)
     {
         this.genericDeserializer = genericDeserializer;
         this.feedbackDeserializer = feedbackDeserializer;
@@ -58,7 +56,6 @@ public class Deserializer implements IDeserializer {
         this.summitAttendeeDeserializer = summitAttendeeDeserializer;
         this.summitDeserializer = summitDeserializer;
         this.summitEventDeserializer = summitEventDeserializer;
-        this.dataUpdateDeserializer = dataUpdateDeserializer;
     }
 
     @Override
@@ -67,26 +64,23 @@ public class Deserializer implements IDeserializer {
         if (type == Feedback.class) {
             return (T)feedbackDeserializer.deserialize(jsonString);
         }
-        if (type == Member.class) {
+        else if (type == Member.class) {
             return (T)memberDeserializer.deserialize(jsonString);
         }
-        if (type == Presentation.class) {
+        else if (type == Presentation.class) {
             return (T)presentationDeserializer.deserialize(jsonString);
         }
-        if (type == PresentationSpeaker.class) {
+        else if (type == PresentationSpeaker.class) {
             return (T)presentationSpeakerDeserializer.deserialize(jsonString);
         }
-        if (type == SummitAttendee.class) {
+        else if (type == SummitAttendee.class) {
             return (T)summitAttendeeDeserializer.deserialize(jsonString);
         }
-        if (type == Summit.class) {
+        else if (type == Summit.class) {
             return (T)summitDeserializer.deserialize(jsonString);
         }
-        if (type == SummitEvent.class) {
+        else if (type == SummitEvent.class) {
             return (T)summitEventDeserializer.deserialize(jsonString);
-        }
-        if (type == DataUpdate.class) {
-            return (T)dataUpdateDeserializer.deserialize(jsonString);
         }
         else {
             return genericDeserializer.deserialize(jsonString, type);

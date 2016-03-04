@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.api.client.util.store.DataStore;
 
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
@@ -25,6 +26,7 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 
@@ -32,14 +34,13 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 11/18/2015.
  */
 public class ScheduleInteractor extends ScheduleableInteractor implements IScheduleInteractor {
-    protected ISummitDataStore summitDataStore;
     private IPushNotificationsManager pushNotificationsManager;
     private ISession session;
     private final String PUSH_NOTIFICATIONS_SUBSCRIBED_KEY = "PUSH_NOTIFICATIONS_SUBSCRIBED_KEY";
 
     @Inject
     public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IDataUpdatePoller dataUpdatePoller) {
-        super(summitEventDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, dataUpdatePoller);
+        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, dataUpdatePoller);
         this.summitDataStore = summitDataStore;
         this.pushNotificationsManager = pushNotificationsManager;
         this.session = session;
@@ -68,6 +69,31 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
             session.setString(PUSH_NOTIFICATIONS_SUBSCRIBED_KEY,"YES");
         }
     }
+
+    @Override
+    public List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
+        ArrayList<DateTime> inactiveDates = new ArrayList<>();
+        List<SummitEvent> events;
+
+        while(startDate.isBefore(endDate)) {
+           events = summitEventDataStore.getByFilterLocal(
+                    startDate.withTime(0, 0, 0, 0).toDate(),
+                    startDate.withTime(23, 59, 59, 999).toDate(),
+                    eventTypes,
+                    summitTypes,
+                    trackGroups,
+                    tracks,
+                    tags,
+                    levels);
+            if (events.size() == 0) {
+                inactiveDates.add(startDate);
+            }
+            startDate = startDate.plusDays(1);
+        }
+
+        return inactiveDates;
+    }
+
 
     @Override
     public void getActiveSummit(final IInteractorAsyncOperationListener<SummitDTO> delegate) {

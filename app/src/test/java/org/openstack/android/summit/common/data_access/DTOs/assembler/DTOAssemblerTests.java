@@ -53,9 +53,10 @@ public class DTOAssemblerTests {
         DTOAssembler dtoAssembler = new DTOAssembler();
         Summit summit = new Summit();
         summit.setName("Tokio");
-        summit.setStartDate(new Date(1447825312L*1000));
-        summit.setEndDate(new Date(1447855312L*1000));
+        summit.setStartDate(new Date(1447825312L * 1000));
+        summit.setEndDate(new Date(1447855312L * 1000));
         summit.setTimeZone("CST");
+        summit.setStartShowingVenuesDate(new Date(1447815312L * 1000));
 
         // Act
         SummitDTO summitDTO = dtoAssembler.createDTO(summit, SummitDTO.class);
@@ -65,6 +66,7 @@ public class DTOAssemblerTests {
         Assert.assertEquals(summitDTO.getStartDate().getTime(), summit.getStartDate().getTime());
         Assert.assertEquals(summitDTO.getEndDate().getTime(), summit.getEndDate().getTime());
         Assert.assertEquals(summitDTO.getTimeZone(), summit.getTimeZone());
+        Assert.assertEquals(summitDTO.getStartShowingVenuesDate(), summit.getStartShowingVenuesDate());
     }
 
     @Test
@@ -142,6 +144,7 @@ public class DTOAssemblerTests {
         Assert.assertEquals("Wednesday 02 September 05:00 AM / 06:00 AM", scheduleItemDTO.getDateTime());
         Assert.assertEquals("Grand Prince International Convention Center & Hotels - PAMIR Building 3, Level 1F", scheduleItemDTO.getLocation());
         Assert.assertEquals("Sponsored by company 1, company 2", scheduleItemDTO.getSponsors());
+        Assert.assertEquals("PAMIR Building 3, Level 1F", scheduleItemDTO.getRoom());
         Assert.assertEquals("Main Summit, Design Summit", scheduleItemDTO.getCredentials());
         Assert.assertEquals(track.getName(), scheduleItemDTO.getTrack());
         Assert.assertEquals(trackGroup1.getColor(), scheduleItemDTO.getColor());

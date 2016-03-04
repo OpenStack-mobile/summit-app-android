@@ -58,6 +58,11 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     }
 
     @Override
+    public boolean shouldShowVenues() {
+        return scheduleableInteractor.shouldShowVenues();
+    }
+
+    @Override
     public List<ScheduleItemDTO> getEventsBySearchTerm(String searchTerm) {
         List<SummitEvent> events = summitEventDataStore.getBySearchTerm(searchTerm);
         List<ScheduleItemDTO> dtos = createDTOList(events, ScheduleItemDTO.class);
@@ -66,7 +71,7 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
 
     @Override
     public List<NamedDTO> getTracksBySearchTerm(String searchTerm) {
-        List<Track> tracks = genericDataStore.getaAllLocal(Track.class);
+        List<Track> tracks = genericDataStore.getAllLocal(Track.class);
         ArrayList<Track> tracksMatchingSearchTerm = new ArrayList<>();
 
         for(Track track: tracks) {

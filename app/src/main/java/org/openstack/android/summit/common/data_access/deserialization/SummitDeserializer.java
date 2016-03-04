@@ -34,6 +34,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
     IDeserializerStorage deserializerStorage;
     ITrackGroupDeserializer trackGroupDeserializer;
+    ITrackDeserializer trackDeserializer;
 
     @Inject
     public SummitDeserializer(IGenericDeserializer genericDeserializer,
@@ -42,6 +43,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                               ISummitEventDeserializer summitEventDeserializer,
                               IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                               ITrackGroupDeserializer trackGroupDeserializer,
+                              ITrackDeserializer trackDeserializer,
                               IDeserializerStorage deserializerStorage){
         this.genericDeserializer = genericDeserializer;
         this.venueDeserializer = venueDeserializer;
@@ -49,117 +51,147 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         this.summitEventDeserializer = summitEventDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
         this.trackGroupDeserializer = trackGroupDeserializer;
+        this.trackDeserializer = trackDeserializer;
         this.deserializerStorage = deserializerStorage;
     }
 
     @Override
     public Summit deserialize(String jsonString) throws JSONException {
-        Summit summit = new Summit();
-        deserializerStorage.add(summit, Summit.class); // added here so it's available on child deserialization
 
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        String[] missedFields = validateRequiredFields(new String[] {"id", "name", "start_date", "end_date", "time_zone", "sponsors", "summit_types", "ticket_types", "event_types", "tracks", "locations", "speakers", "schedule"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[] {"id", "name", "start_date", "end_date", "time_zone", "start_showing_venues_date"/* Summit data updates comes without these,"sponsors", "summit_types", "ticket_types", "event_types", "tracks", "locations", "speakers", "schedule"*/},  jsonObject);
         if (missedFields.length > 0) {
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
 
-        JSONObject jsonObjectSponsor;
-        JSONArray jsonArraySponsors = jsonObject.getJSONArray("sponsors");
-        for (int i = 0; i < jsonArraySponsors.length(); i++) {
-            jsonObjectSponsor = jsonArraySponsors.getJSONObject(i);
-            genericDeserializer.deserialize(jsonObjectSponsor.toString(), Company.class);
+        int summitId = jsonObject.getInt("id");
+        Summit summit;
+        if (deserializerStorage.exist(summitId, Summit.class)) {
+            summit = deserializerStorage.get(summitId, Summit.class);
+        }
+        else {
+            summit = new Summit();
+            deserializerStorage.add(summit, Summit.class); // added here so it's available on child deserialization
         }
 
-        SummitType summitType;
-        JSONObject jsonObjectSummitType;
-        JSONArray jsonArraySummitTypes = jsonObject.getJSONArray("summit_types");
-        for (int i = 0; i < jsonArraySummitTypes.length(); i++) {
-            jsonObjectSummitType = jsonArraySummitTypes.getJSONObject(i);
-            summitType = genericDeserializer.deserialize(jsonObjectSummitType.toString(), SummitType.class);
-            summit.getTypes().add(summitType);
-        }
-
-        TicketType ticketType;
-        JSONObject jsonObjectTicketType;
-        JSONArray jsonArrayTicketTypes = jsonObject.getJSONArray("ticket_types");
-        for (int i = 0; i < jsonArrayTicketTypes.length(); i++) {
-            jsonObjectTicketType = jsonArrayTicketTypes.getJSONObject(i);
-            ticketType = genericDeserializer.deserialize(jsonObjectTicketType.toString(), TicketType.class);
-            summit.getTicketTypes().add(ticketType);
-        }
-
-        EventType eventType;
-        JSONObject jsonObjectEventType;
-        JSONArray jsonArrayEventTypes = jsonObject.getJSONArray("event_types");
-        for (int i = 0; i < jsonArrayEventTypes.length(); i++) {
-            jsonObjectEventType = jsonArrayEventTypes.getJSONObject(i);
-            eventType = genericDeserializer.deserialize(jsonObjectEventType.toString(), EventType.class);
-            summit.getEventTypes().add(eventType);
-        }
-
-        JSONObject jsonObjectTrack;
-        JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
-        for (int i = 0; i < jsonArrayTracks.length(); i++) {
-            jsonObjectTrack = jsonArrayTracks.getJSONObject(i);
-            genericDeserializer.deserialize(jsonObjectTrack.toString(), Track.class);
-        }
-
-        TrackGroup trackGroup;
-        JSONObject jsonObjectTrackGroup;
-        JSONArray jsonArrayTrackGroups = jsonObject.getJSONArray("track_groups");
-        for (int i = 0; i < jsonArrayTrackGroups.length(); i++) {
-            jsonObjectTrackGroup = jsonArrayTrackGroups.getJSONObject(i);
-            trackGroup = trackGroupDeserializer.deserialize(jsonObjectTrackGroup.toString());
-            summit.getTrackGroups().add(trackGroup);
-        }
-
-        JSONObject jsonObjectVenue;
-        JSONArray jsonArrayVenues = jsonObject.getJSONArray("locations");
-        for (int i = 0; i < jsonArrayVenues.length(); i++) {
-            jsonObjectVenue = jsonArrayVenues.getJSONObject(i);
-            if (isVenue(jsonObjectVenue)) {
-                venueDeserializer.deserialize(jsonObjectVenue.toString());
+        if (jsonObject.has("sponsors")) {
+            JSONObject jsonObjectSponsor;
+            JSONArray jsonArraySponsors = jsonObject.getJSONArray("sponsors");
+            for (int i = 0; i < jsonArraySponsors.length(); i++) {
+                jsonObjectSponsor = jsonArraySponsors.getJSONObject(i);
+                genericDeserializer.deserialize(jsonObjectSponsor.toString(), Company.class);
             }
         }
 
-        JSONObject jsonObjectVenueRoom;
-        JSONArray jsonArrayVenueRooms = jsonObject.getJSONArray("locations");
-        for (int i = 0; i < jsonArrayVenueRooms.length(); i++) {
-            jsonObjectVenueRoom = jsonArrayVenueRooms.getJSONObject(i);
-            if (isVenueRoom(jsonObjectVenueRoom)) {
-                venueRoomDeserializer.deserialize(jsonObjectVenueRoom.toString());
+        if (jsonObject.has("summit_types")) {
+            SummitType summitType;
+            JSONObject jsonObjectSummitType;
+            JSONArray jsonArraySummitTypes = jsonObject.getJSONArray("summit_types");
+            for (int i = 0; i < jsonArraySummitTypes.length(); i++) {
+                jsonObjectSummitType = jsonArraySummitTypes.getJSONObject(i);
+                summitType = genericDeserializer.deserialize(jsonObjectSummitType.toString(), SummitType.class);
+                summit.getTypes().add(summitType);
             }
         }
 
-        JSONObject jsonObjectPresentationSpeaker;
-        JSONArray jsonArrayPresentationSpeakers = jsonObject.getJSONArray("speakers");
-        for (int i = 0; i < jsonArrayPresentationSpeakers.length(); i++) {
-            jsonObjectPresentationSpeaker = jsonArrayPresentationSpeakers.getJSONObject(i);
-            presentationSpeakerDeserializer.deserialize(jsonObjectPresentationSpeaker.toString());
+        if (jsonObject.has("ticket_types")) {
+            TicketType ticketType;
+            JSONObject jsonObjectTicketType;
+            JSONArray jsonArrayTicketTypes = jsonObject.getJSONArray("ticket_types");
+            for (int i = 0; i < jsonArrayTicketTypes.length(); i++) {
+                jsonObjectTicketType = jsonArrayTicketTypes.getJSONObject(i);
+                ticketType = genericDeserializer.deserialize(jsonObjectTicketType.toString(), TicketType.class);
+                summit.getTicketTypes().add(ticketType);
+            }
         }
 
-        SummitEvent summitEvent;
-        JSONObject jsonObjectSummitEvent;
-        JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
-        for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
-            jsonObjectSummitEvent = jsonArraySummitEvents.getJSONObject(i);
-            summitEvent = summitEventDeserializer.deserialize(jsonObjectSummitEvent.toString());
-            summit.getEvents().add(summitEvent);
+        if (jsonObject.has("event_types")) {
+            EventType eventType;
+            JSONObject jsonObjectEventType;
+            JSONArray jsonArrayEventTypes = jsonObject.getJSONArray("event_types");
+            for (int i = 0; i < jsonArrayEventTypes.length(); i++) {
+                jsonObjectEventType = jsonArrayEventTypes.getJSONObject(i);
+                eventType = genericDeserializer.deserialize(jsonObjectEventType.toString(), EventType.class);
+                summit.getEventTypes().add(eventType);
+            }
+        }
+
+        if (jsonObject.has("tracks")) {
+            JSONObject jsonObjectTrack;
+            trackDeserializer.setShouldDeserializeTrackGroups(false);
+            JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
+            for (int i = 0; i < jsonArrayTracks.length(); i++) {
+                jsonObjectTrack = jsonArrayTracks.getJSONObject(i);
+                trackDeserializer.deserialize(jsonObjectTrack.toString());
+            }
+        }
+
+        if (jsonObject.has("track_groups")) {
+            TrackGroup trackGroup;
+            JSONObject jsonObjectTrackGroup;
+            JSONArray jsonArrayTrackGroups = jsonObject.getJSONArray("track_groups");
+            for (int i = 0; i < jsonArrayTrackGroups.length(); i++) {
+                jsonObjectTrackGroup = jsonArrayTrackGroups.getJSONObject(i);
+                trackGroup = trackGroupDeserializer.deserialize(jsonObjectTrackGroup.toString());
+                summit.getTrackGroups().add(trackGroup);
+            }
+        }
+
+        if (jsonObject.has("locations")) {
+            Venue venue;
+            JSONObject jsonObjectVenue;
+            JSONArray jsonArrayVenues = jsonObject.getJSONArray("locations");
+            for (int i = 0; i < jsonArrayVenues.length(); i++) {
+                jsonObjectVenue = jsonArrayVenues.getJSONObject(i);
+                if (isVenue(jsonObjectVenue)) {
+                    venue = venueDeserializer.deserialize(jsonObjectVenue.toString());
+                    summit.getVenues().add(venue);
+                }
+            }
+
+            JSONObject jsonObjectVenueRoom;
+            JSONArray jsonArrayVenueRooms = jsonObject.getJSONArray("locations");
+            for (int i = 0; i < jsonArrayVenueRooms.length(); i++) {
+                jsonObjectVenueRoom = jsonArrayVenueRooms.getJSONObject(i);
+                if (isVenueRoom(jsonObjectVenueRoom)) {
+                    venueRoomDeserializer.deserialize(jsonObjectVenueRoom.toString());
+                }
+            }
+        }
+
+        if (jsonObject.has("locations")) {
+            JSONObject jsonObjectPresentationSpeaker;
+            JSONArray jsonArrayPresentationSpeakers = jsonObject.getJSONArray("speakers");
+            for (int i = 0; i < jsonArrayPresentationSpeakers.length(); i++) {
+                jsonObjectPresentationSpeaker = jsonArrayPresentationSpeakers.getJSONObject(i);
+                presentationSpeakerDeserializer.deserialize(jsonObjectPresentationSpeaker.toString());
+            }
+
+            SummitEvent summitEvent;
+            JSONObject jsonObjectSummitEvent;
+            JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
+            for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
+                jsonObjectSummitEvent = jsonArraySummitEvents.getJSONObject(i);
+                summitEvent = summitEventDeserializer.deserialize(jsonObjectSummitEvent.toString());
+                summit.getEvents().add(summitEvent);
+            }
         }
 
         summit.setId(jsonObject.getInt("id"));
         summit.setName(jsonObject.getString("name"));
-        summit.setStartDate(summit.getEvents().first().getStart());
-        summit.setEndDate(summit.getEvents().last().getEnd());
+
+        summit.setStartDate(new Date(jsonObject.getInt("start_date") * 1000L));
+        summit.setEndDate(new Date(jsonObject.getInt("end_date") * 1000L));
         summit.setTimeZone(jsonObject.getJSONObject("time_zone").getString("name"));
-        summit.setInitialDataLoadDate(new Date(jsonObject.getInt("timestamp")*1000L));
+        summit.setInitialDataLoadDate(new Date(jsonObject.getInt("timestamp") * 1000L));
+        summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date")*1000L));
 
         return summit;
     }
 
     private boolean isVenue(JSONObject jsonObjectVenue) throws JSONException {
-        return jsonObjectVenue.getString("class_name").equals("SummitVenue");
+        return jsonObjectVenue.getString("class_name").equals("SummitVenue") || jsonObjectVenue.getString("class_name").equals("SummitExternalLocation");
     }
 
     private boolean isVenueRoom(JSONObject jsonObjectVenueRoom) throws JSONException {

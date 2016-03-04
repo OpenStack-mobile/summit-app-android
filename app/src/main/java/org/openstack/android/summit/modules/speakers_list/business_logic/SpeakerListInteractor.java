@@ -14,12 +14,10 @@ import java.util.List;
  */
 public class SpeakerListInteractor extends BaseInteractor implements ISpeakerListInteractor {
     IPresentationSpeakerDataStore presentationSpeakerDataStore;
-    IDTOAssembler dtoAssembler;
 
     public SpeakerListInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
         super(dtoAssembler, dataUpdatePoller);
         this.presentationSpeakerDataStore = presentationSpeakerDataStore;
-        dtoAssembler = dtoAssembler;
     }
 
     @Override
