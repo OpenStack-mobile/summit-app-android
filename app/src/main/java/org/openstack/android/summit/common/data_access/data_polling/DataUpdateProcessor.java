@@ -27,7 +27,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
         this.dataUpdateStrategyFactory = dataUpdateStrategyFactory;
         this.dataUpdateDataStore = dataUpdateDataStore;
         this.classResolver = classResolver;
-        this.dataUpdateDataStore = dataUpdateDataStore;
+        this.deserializerStorage = deserializerStorage;
     }
 
     @Override
