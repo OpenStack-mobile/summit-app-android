@@ -33,6 +33,7 @@ import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateP
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateProcessor;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateStrategyFactory;
 import org.openstack.android.summit.common.data_access.data_polling.MyScheduleDataUpdateStrategy;
+import org.openstack.android.summit.common.data_access.data_polling.SummitDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.deserialization.Deserializer;
 import org.openstack.android.summit.common.data_access.deserialization.DeserializerStorage;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
@@ -233,8 +234,12 @@ public class DataAccessModule {
     }
 
     @Provides
-    IDataUpdateStrategyFactory providesDataUpdateStrategyFactory(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISecurityManager securityManager) {
-        return new DataUpdateStrategyFactory(new DataUpdateStrategy(genericDataStore), new MyScheduleDataUpdateStrategy(genericDataStore, summitAttendeeDataStore, securityManager));
+    IDataUpdateStrategyFactory providesDataUpdateStrategyFactory(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, ISecurityManager securityManager) {
+        return new DataUpdateStrategyFactory(
+                new DataUpdateStrategy(genericDataStore),
+                new MyScheduleDataUpdateStrategy(genericDataStore, summitAttendeeDataStore, securityManager),
+                new SummitDataUpdateStrategy(genericDataStore, summitDataStore)
+        );
     }
 
     @Provides

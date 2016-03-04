@@ -65,15 +65,8 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
 
-        int summitId = jsonObject.getInt("id");
-        Summit summit;
-        if (deserializerStorage.exist(summitId, Summit.class)) {
-            summit = deserializerStorage.get(summitId, Summit.class);
-        }
-        else {
-            summit = new Summit();
-            deserializerStorage.add(summit, Summit.class); // added here so it's available on child deserialization
-        }
+        Summit summit = new Summit();
+        deserializerStorage.add(summit, Summit.class); // added here so it's available on child deserialization
 
         if (jsonObject.has("sponsors")) {
             JSONObject jsonObjectSponsor;
@@ -184,7 +177,9 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         summit.setStartDate(new Date(jsonObject.getInt("start_date") * 1000L));
         summit.setEndDate(new Date(jsonObject.getInt("end_date") * 1000L));
         summit.setTimeZone(jsonObject.getJSONObject("time_zone").getString("name"));
-        summit.setInitialDataLoadDate(new Date(jsonObject.getInt("timestamp") * 1000L));
+        summit.setInitialDataLoadDate(
+                jsonObject.has("timestamp") ? new Date(jsonObject.getInt("timestamp") * 1000L) : null
+        );
         summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date")*1000L));
 
         return summit;
