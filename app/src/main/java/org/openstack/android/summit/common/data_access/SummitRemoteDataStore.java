@@ -19,7 +19,7 @@ import org.openstack.android.summit.common.security.AccountType;
 /**
  * Created by Claudio Redi on 11/17/2015.
  */
-public class SummitRemoteDataStore implements ISummitRemoteDataStore {
+public class SummitRemoteDataStore extends BaseRemoteDataStore implements ISummitRemoteDataStore {
     private IDeserializer deserializer;
     private IHttpTaskFactory httpTaskFactory;
 
@@ -49,7 +49,7 @@ public class SummitRemoteDataStore implements ISummitRemoteDataStore {
                     dataStoreOperationListener.onError(error);
                 }
             };
-            String url = Constants.RESOURCE_SERVER_BASE_URL + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";
+            String url = getResourceServerUrl() + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";
             HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, "GET", null, null, httpTaskListener);
             httpTask.execute();
         } catch (Exception e) {

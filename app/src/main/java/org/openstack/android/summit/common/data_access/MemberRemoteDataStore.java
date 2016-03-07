@@ -23,7 +23,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 12/16/2015.
  */
-public class MemberRemoteDataStore implements IMemberRemoteDataStore {
+public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMemberRemoteDataStore {
     private IDeserializer deserializer;
     private IHttpTaskFactory httpTaskFactory;
 
@@ -55,7 +55,7 @@ public class MemberRemoteDataStore implements IMemberRemoteDataStore {
             }
         };
 
-        String url = Constants.RESOURCE_SERVER_BASE_URL + "/api/v1/summits/current/attendees/me?expand=speaker,feedback";
+        String url = getResourceServerUrl() + "/api/v1/summits/current/attendees/me?expand=speaker,feedback";
         HttpTask httpTask = null;
         try {
             httpTask = httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
