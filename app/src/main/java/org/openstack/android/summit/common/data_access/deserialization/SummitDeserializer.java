@@ -111,12 +111,14 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         }
 
         if (jsonObject.has("tracks")) {
+            Track track;
             JSONObject jsonObjectTrack;
             trackDeserializer.setShouldDeserializeTrackGroups(false);
             JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
             for (int i = 0; i < jsonArrayTracks.length(); i++) {
                 jsonObjectTrack = jsonArrayTracks.getJSONObject(i);
-                trackDeserializer.deserialize(jsonObjectTrack.toString());
+                track = trackDeserializer.deserialize(jsonObjectTrack.toString());
+                summit.getTracks().add(track);
             }
         }
 
