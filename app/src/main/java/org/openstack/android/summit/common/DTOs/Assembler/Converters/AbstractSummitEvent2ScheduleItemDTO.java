@@ -37,9 +37,13 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         scheduleItemDTO.setSponsors(sponsors);
         String credentials = getCredentials(source);
         scheduleItemDTO.setCredentials(credentials);
-        scheduleItemDTO.setTrack(source.getPresentation() != null ? source.getPresentation().getTrack().getName() : null);
+        scheduleItemDTO.setTrack(
+                source.getPresentation() != null && source.getPresentation().getTrack() != null
+                        ? source.getPresentation().getTrack().getName()
+                        : null
+        );
 
-        if (source.getPresentation() != null && source.getPresentation().getTrack().getTrackGroups().size() > 0) {
+        if (source.getPresentation() != null && source.getPresentation().getTrack() != null && source.getPresentation().getTrack().getTrackGroups().size() > 0) {
             String color = source.getPresentation().getTrack().getTrackGroups().get(0).getColor();
             scheduleItemDTO.setColor(color);
         }
