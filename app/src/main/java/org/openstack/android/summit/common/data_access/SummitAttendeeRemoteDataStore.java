@@ -25,7 +25,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/5/2016.
  */
-public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataStore {
+public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implements ISummitAttendeeRemoteDataStore {
     private IDeserializer deserializer;
     private IHttpTaskFactory httpTaskFactory;
 
@@ -62,7 +62,7 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
 
         String jsonString = String.format("{\"rate\":%d, \"note\":%s, \"attendee_id\":%d}", feedback.getRate(), JSONObject.quote(feedback.getReview()), feedback.getOwner().getId());
 
-        String url = Constants.RESOURCE_SERVER_BASE_URL +
+        String url = getResourceServerUrl() +
                 String.format("/api/v1/summits/current/events/%s/feedback", feedback.getEvent().getId());
         HttpTask httpTask = null;
         try {
@@ -93,7 +93,7 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
             }
         };
 
-        String url = Constants.RESOURCE_SERVER_BASE_URL +
+        String url = getResourceServerUrl() +
                 String.format("/api/v1/summits/current/attendees/%s/schedule/%s", summitAttendee.getId(), summitEvent.getId());
         HttpTask httpTask = null;
         try {

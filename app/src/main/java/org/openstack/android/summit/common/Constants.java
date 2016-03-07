@@ -5,9 +5,12 @@ package org.openstack.android.summit.common;
  */
 public class Constants {
     static public final String LOG_TAG = "OpenStackSummit";
-    static public final String TOKEN_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/token";
-    static public final String AUTHORIZATION_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/auth";
-    static public final String RESOURCE_SERVER_BASE_URL = "https://testresource-server.openstack.org";
+    static public final String TEST_TOKEN_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/token";
+    static public final String PRODUCTION_TOKEN_SERVER_URL = "https://openstackid.openstack.org/oauth2/token";
+    static public final String TEST_AUTHORIZATION_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/auth";
+    static public final String TEST_RESOURCE_SERVER_BASE_URL = "https://testresource-server.openstack.org";
+    static public final String PRODUCTION_AUTHORIZATION_SERVER_URL = "https://openstackid.openstack.org/oauth2/auth";
+    static public final String PRODUCTION_RESOURCE_SERVER_BASE_URL = "https://openstackid-resources.openstack.org";
     static public final String CURRENT_MEMBER_ID = "CurrentMemberId";
     static public final String LOGGED_IN_EVENT = "logged-in-event";
     static public final String LOGGED_OUT_EVENT = "logged-out-event";

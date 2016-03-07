@@ -15,6 +15,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 
+import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.common.Constants;
 
 import java.io.IOException;
@@ -117,10 +118,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 IdTokenResponse tokenResponse;
 
                 try {
-                    tokenResponse = OIDCUtils.refreshTokens(Constants.TOKEN_SERVER_URL,
-                            ConfigOIDC.clientId,
-                            ConfigOIDC.clientSecret,
-                            ConfigOIDC.scopes,
+                    tokenResponse = OIDCUtils.refreshTokens(getTokenServerUrl(),
+                            getClientID(),
+                            getClientSecret(),
+                            ConfigOIDC.SCOPES,
                             refreshToken);
 
                     Log.d(TAG, "Got new tokens.");
@@ -181,23 +182,23 @@ public class Authenticator extends AbstractAccountAuthenticator {
         // Generate a new authorisation URL
         String authUrl;
 
-        switch (ConfigOIDC.flowType) {
+        switch (ConfigOIDC.FLOW_TYPE) {
             case AuthorizationCode :
-                authUrl = OIDCUtils.codeFlowAuthenticationUrl(Constants.AUTHORIZATION_SERVER_URL,
-                        ConfigOIDC.clientId, ConfigOIDC.redirectUrl, ConfigOIDC.scopes);
+                authUrl = OIDCUtils.codeFlowAuthenticationUrl(getAuthorizationServerUrl(),
+                        getClientID(), ConfigOIDC.REDIRECT_URL, ConfigOIDC.SCOPES);
                 break;
             case Implicit:
-                authUrl = OIDCUtils.implicitFlowAuthenticationUrl(Constants.AUTHORIZATION_SERVER_URL,
-                        ConfigOIDC.clientId, ConfigOIDC.redirectUrl, ConfigOIDC.scopes);
+                authUrl = OIDCUtils.implicitFlowAuthenticationUrl(getAuthorizationServerUrl(),
+                        getClientID(), ConfigOIDC.REDIRECT_URL, ConfigOIDC.SCOPES);
                 break;
             case Hybrid:
-                authUrl = OIDCUtils.hybridFlowAuthenticationUrl(Constants.AUTHORIZATION_SERVER_URL,
-                        ConfigOIDC.clientId, ConfigOIDC.redirectUrl, ConfigOIDC.scopes);
+                authUrl = OIDCUtils.hybridFlowAuthenticationUrl(getAuthorizationServerUrl(),
+                        getClientID(), ConfigOIDC.REDIRECT_URL, ConfigOIDC.SCOPES);
                 break;
             default:
                 Log.d(TAG, "Requesting unsupported flowType! Using CodeFlow instead");
-                authUrl = OIDCUtils.codeFlowAuthenticationUrl(Constants.AUTHORIZATION_SERVER_URL,
-                        ConfigOIDC.clientId, ConfigOIDC.redirectUrl, ConfigOIDC.scopes);
+                authUrl = OIDCUtils.codeFlowAuthenticationUrl(getAuthorizationServerUrl(),
+                        getClientID(), ConfigOIDC.REDIRECT_URL, ConfigOIDC.SCOPES);
                 break;
         }
 
@@ -236,6 +237,50 @@ public class Authenticator extends AbstractAccountAuthenticator {
                                     String authTokenType, Bundle options)
             throws NetworkErrorException {
         return null;
+    }
+
+    private String getClientID() {
+        String resourceServerUrl = "";
+        if (BuildConfig.DEBUG) {
+            resourceServerUrl = ConfigOIDC.TEST_CLIENT_ID;
+        }
+        else {
+            resourceServerUrl = ConfigOIDC.PRODUCTION_CLIENT_ID;
+        }
+        return resourceServerUrl;
+    }
+
+    private String getClientSecret() {
+        String resourceServerUrl = "";
+        if (BuildConfig.DEBUG) {
+            resourceServerUrl = ConfigOIDC.TEST_CLIENT_SECRET;
+        }
+        else {
+            resourceServerUrl = ConfigOIDC.PRODUCTION_CLIENT_SECRET;
+        }
+        return resourceServerUrl;
+    }
+
+    private String getAuthorizationServerUrl() {
+        String resourceServerUrl = "";
+        if (BuildConfig.DEBUG) {
+            resourceServerUrl = Constants.TEST_AUTHORIZATION_SERVER_URL;
+        }
+        else {
+            resourceServerUrl = Constants.PRODUCTION_AUTHORIZATION_SERVER_URL;
+        }
+        return resourceServerUrl;
+    }
+
+    private String getTokenServerUrl() {
+        String resourceServerUrl = "";
+        if (BuildConfig.DEBUG) {
+            resourceServerUrl = Constants.TEST_TOKEN_SERVER_URL;
+        }
+        else {
+            resourceServerUrl = Constants.PRODUCTION_TOKEN_SERVER_URL;
+        }
+        return resourceServerUrl;
     }
 }
 

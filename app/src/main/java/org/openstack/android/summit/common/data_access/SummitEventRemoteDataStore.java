@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 2/19/2016.
  */
-public class SummitEventRemoteDataStore implements ISummitEventRemoteDataStore {
+public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements ISummitEventRemoteDataStore {
     private IDeserializer deserializer;
     private IHttpTaskFactory httpTaskFactory;
 
@@ -50,7 +50,7 @@ public class SummitEventRemoteDataStore implements ISummitEventRemoteDataStore {
                     dataStoreOperationListener.onError(error);
                 }
             };
-            String url = Constants.RESOURCE_SERVER_BASE_URL +
+            String url = getResourceServerUrl() +
                     String.format("/api/v1/summits/current/events/%d/feedback?expand=owner&page=%d&per_page=%d", eventId, page, objectsPerPage);
             HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, "GET", null, null, httpTaskListener);
             httpTask.execute();
