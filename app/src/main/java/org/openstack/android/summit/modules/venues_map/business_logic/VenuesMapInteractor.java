@@ -9,6 +9,7 @@ import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.Venue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,10 +24,15 @@ public class VenuesMapInteractor extends BaseInteractor implements IVenuesMapInt
     }
 
     @Override
-    public List<VenueListItemDTO> getVenues() {
+    public List<VenueListItemDTO> getInternalVenuesWithCoordinates() {
         List<Venue> venues = genericDataStore.getAllLocal(Venue.class);
-        List<VenueListItemDTO> dtos = createDTOList(venues, VenueListItemDTO.class);
+        List<Venue> venuesWithCoordinates = new ArrayList<>();
+        for (Venue venue: venues) {
+            if (venue.getIsInternal() && venue.getLat() != null && !venue.getLat().isEmpty() && venue.getLng() != null && !venue.getLat().isEmpty()) {
+                venuesWithCoordinates.add(venue);
+            }
+        }
+        List<VenueListItemDTO> dtos = createDTOList(venuesWithCoordinates, VenueListItemDTO.class);
         return dtos;
-
     }
 }

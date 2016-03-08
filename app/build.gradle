@@ -31,7 +31,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "0.2"
+        versionName "0.4"
         multiDexEnabled true
     }
     buildTypes {
@@ -93,7 +93,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.+'
     compile 'org.modelmapper:modelmapper:0.+'
 
-    compile 'com.github.claudioredi:Ranger:0de5528'
+    compile 'com.github.claudioredi:Ranger:2b42ac3'
 
     // progress indicator
     compile 'cc.cloudist.acplibrary:library:1.2.1'

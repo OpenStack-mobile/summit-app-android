@@ -3,6 +3,8 @@ package org.openstack.android.summit.common.data_access;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import io.realm.RealmList;
@@ -19,8 +21,29 @@ public class TrackGroupDataStore extends GenericDataStore implements ITrackGroup
     }
 
     @Override
-    public List<Track> getTracks(int id) {
-        RealmResults<Track> tracks = realm.where(Track.class).equalTo("trackGroups.id", id).findAll();
+    public List<Track> getTracks(int trackGroupId) {
+        RealmResults<Track> tracks = realm.where(Track.class).equalTo("trackGroups.id", trackGroupId).findAll();
         return tracks;
+    }
+
+    @Override
+    public void removeTrackGroupFromTracksLocal(int trackGroupId) {
+        TrackGroup trackGroup = realm.where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
+        if (trackGroup != null) {
+            List<Track> results = getTracks(trackGroupId);
+            try {
+                List<Track> tracks = new ArrayList<>();
+                tracks.addAll(results);
+                realm.beginTransaction();
+                for (Track track : tracks) {
+                    track.getTrackGroups().remove(trackGroup);
+                }
+                realm.commitTransaction();
+            }
+            catch (Exception e) {
+                realm.cancelTransaction();
+                throw e;
+            }
+        }
     }
 }

@@ -1,8 +1,13 @@
 package org.openstack.android.summit.common.data_access.data_polling;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializerStorage;
@@ -27,23 +32,30 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
         this.dataUpdateStrategyFactory = dataUpdateStrategyFactory;
         this.dataUpdateDataStore = dataUpdateDataStore;
         this.classResolver = classResolver;
-        this.dataUpdateDataStore = dataUpdateDataStore;
+        this.deserializerStorage = deserializerStorage;
     }
 
     @Override
     public void process(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
-        JSONObject jsonObject;
+        JSONObject jsonObject = null;
         DataUpdate dataUpdate;
         for(int i = 0; i < jsonArray.length(); i++) {
-            jsonObject = jsonArray.getJSONObject(i);
-            dataUpdate = deserialize(jsonObject.toString());
-            IDataUpdateStrategy dataUpdateStrategy;
-            if (dataUpdate.getEntity() != null) {
-                dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate.getEntityClassName());
-                dataUpdateStrategy.process(dataUpdate);
+            try {
+                jsonObject = jsonArray.getJSONObject(i);
+                dataUpdate = deserialize(jsonObject.toString());
+                IDataUpdateStrategy dataUpdateStrategy;
+                if (dataUpdate.getEntity() != null) {
+                    dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate.getEntityClassName());
+                    dataUpdateStrategy.process(dataUpdate);
+                }
+                dataUpdateDataStore.saveOrUpdate(dataUpdate, null, DataUpdate.class);
             }
-            dataUpdateDataStore.saveOrUpdate(dataUpdate, null, DataUpdate.class);
+            catch (Exception e) {
+                String errorMessage = jsonObject != null ? String.format("There was an error processing this data update: %s", jsonObject.toString()) : "";
+                Crashlytics.logException(new Exception(errorMessage, e));
+                Log.e(Constants.LOG_TAG, errorMessage, e);
+            }
         }
     }
 
@@ -55,19 +67,21 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
 
         if (!operationType.equals("TRUNCATE")) {
             String className = jsonObject.getString("class_name");
-            Class type = null;
-            try {
-                type = classResolver.fromName(className);
-            } catch (ClassNotFoundException e) {
-                throw new JSONException(String.format("It wasn't possible to desirialize json for className %s"));
-            }
-            RealmObject entity = !operationType.equals("DELETE") && !className.equals("MySchedule")
-                    ? deserializer.deserialize(jsonObject.get("entity").toString(), type )
-                    : deserializerStorage.get(jsonObject.getInt("entity_id"), type);
+            if (!isClassNameKnownIgnored(className)) {
+                Class type = null;
+                try {
+                    type = classResolver.fromName(className);
+                } catch (ClassNotFoundException e) {
+                    throw new JSONException(String.format("It wasn't possible to deserialize json for className %s", className));
+                }
+                RealmObject entity = !operationType.equals("DELETE") && !className.equals("MySchedule")
+                        ? deserializer.deserialize(jsonObject.get("entity").toString(), type )
+                        : deserializerStorage.get(jsonObject.getInt("entity_id"), type);
 
-            dataUpdate.setEntityType(type);
+                dataUpdate.setEntityType(type);
+                dataUpdate.setEntity(entity);
+            }
             dataUpdate.setEntityClassName(className);
-            dataUpdate.setEntity(entity);
         }
 
         switch (operationType) {
@@ -85,5 +99,9 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
                 break;
         }
         return dataUpdate;
+    }
+
+    private boolean isClassNameKnownIgnored(String className) {
+        return className == "PresentationVideo";
     }
 }

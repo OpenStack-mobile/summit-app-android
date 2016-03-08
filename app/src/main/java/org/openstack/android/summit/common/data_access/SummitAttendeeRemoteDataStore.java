@@ -25,7 +25,7 @@ import javax.inject.Inject;
 /**
  * Created by Claudio Redi on 1/5/2016.
  */
-public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataStore {
+public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implements ISummitAttendeeRemoteDataStore {
     private IDeserializer deserializer;
     private IHttpTaskFactory httpTaskFactory;
 
@@ -55,14 +55,14 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
             }
 
             @Override
-            public void onError(String error) {
-                dataStoreOperationListener.onError(error);
+            public void onError(Throwable error) {
+                dataStoreOperationListener.onError(error.getMessage());
             }
         };
 
         String jsonString = String.format("{\"rate\":%d, \"note\":%s, \"attendee_id\":%d}", feedback.getRate(), JSONObject.quote(feedback.getReview()), feedback.getOwner().getId());
 
-        String url = Constants.RESOURCE_SERVER_BASE_URL +
+        String url = getResourceServerUrl() +
                 String.format("/api/v1/summits/current/events/%s/feedback", feedback.getEvent().getId());
         HttpTask httpTask = null;
         try {
@@ -88,16 +88,16 @@ public class SummitAttendeeRemoteDataStore implements ISummitAttendeeRemoteDataS
             }
 
             @Override
-            public void onError(String error) {
-                dataStoreOperationListener.onError(error);
+            public void onError(Throwable error) {
+                dataStoreOperationListener.onError(error.getMessage());
             }
         };
 
-        String url = Constants.RESOURCE_SERVER_BASE_URL +
+        String url = getResourceServerUrl() +
                 String.format("/api/v1/summits/current/attendees/%s/schedule/%s", summitAttendee.getId(), summitEvent.getId());
         HttpTask httpTask = null;
         try {
-            httpTask = httpTaskFactory.create(AccountType.OIDC, url, null, null, httpMethod, httpTaskListener);
+            httpTask = httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_POST, null, httpMethod, httpTaskListener);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);

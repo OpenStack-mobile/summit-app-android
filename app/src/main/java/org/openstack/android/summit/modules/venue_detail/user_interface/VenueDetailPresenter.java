@@ -46,13 +46,17 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
 
         view.toggleMapNavigation(venue.getMaps().size() > 0);
         view.toggleMapsGallery(venue.getMaps().size() > 0);
-        view.toggleMap(venue.getMaps().size() == 0);
+        view.toggleMap(venue.getMaps().size() == 0 && isVenueGeoLocated(venue));
 
         if (venue.getMaps().size() > 0) {
             view.setMaps(venue.getMaps());
-        } else {
+        } else if (isVenueGeoLocated(venue)) {
             view.setMarker(venue);
         }
+    }
+
+    private boolean isVenueGeoLocated(VenueDTO venue) {
+        return venue.getLat() != null && !venue.getLat().isEmpty() && venue.getLng() != null && !venue.getLat().isEmpty();
     }
 
     @Override

@@ -27,21 +27,37 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
     public Venue deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        String[] missedFields = validateRequiredFields(new String[] {"id", "lat", "lng", "address_1", "location_type"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[] {"id", "name", "location_type"},  jsonObject);
         if (missedFields.length > 0) {
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
         Venue venue = new Venue();
         venue.setId(jsonObject.getInt("id"));
         venue.setName(jsonObject.getString("name"));
-        venue.setLocationDescription(jsonObject.getString("description"));
-        venue.setLat(jsonObject.getString("lat"));
-        venue.setLng(jsonObject.getString("lng"));
-        venue.setAddress(jsonObject.getString("address_1"));
-        venue.setCity(!jsonObject.isNull("city") ? jsonObject.getString("city") : null);
-        venue.setState(!jsonObject.isNull("state") ? jsonObject.getString("state") : null);
-        venue.setZipCode(!jsonObject.isNull("zip_code") ? jsonObject.getString("zip_code") : null);
-        venue.setCountry(!jsonObject.isNull("country") ? jsonObject.getString("country") : null);
+        venue.setLocationDescription(
+                !jsonObject.isNull("description") ? jsonObject.getString("description") : null
+        );
+        venue.setLat(
+                !jsonObject.isNull("lat") ? jsonObject.getString("lat") : null
+        );
+        venue.setLng(
+                !jsonObject.isNull("lng") ? jsonObject.getString("lng") : null
+        );
+        venue.setAddress(
+                !jsonObject.isNull("address_1") ? jsonObject.getString("address_1") : null
+        );
+        venue.setCity(
+                !jsonObject.isNull("city") ? jsonObject.getString("city") : null
+        );
+        venue.setState(
+                !jsonObject.isNull("state") ? jsonObject.getString("state") : null
+        );
+        venue.setZipCode(
+                !jsonObject.isNull("zip_code") ? jsonObject.getString("zip_code") : null
+        );
+        venue.setCountry(
+                !jsonObject.isNull("country") ? jsonObject.getString("country") : null
+        );
         venue.setIsInternal(jsonObject.getString("class_name").equals("SummitVenue"));
 
         Image map;

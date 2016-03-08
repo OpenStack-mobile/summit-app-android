@@ -21,6 +21,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 import com.google.api.client.json.gson.GsonFactory;
 
+import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 
@@ -117,13 +118,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         showErrorDialog(String.format("Error code: %s\n\n%s", error,
                                 errorDescription));
                     }
-                } else if(urlString.startsWith(ConfigOIDC.redirectUrl)){
+                } else if(urlString.startsWith(Constants.ConfigOIDC.REDIRECT_URL)){
                     // We won't need to keep loading anymore. This also prevents errors when using
                     // redirect URLs that don't have real protocols (like app://) that are just
                     // used for identification purposes in native apps.
                     view.stopLoading();
 
-                    switch (ConfigOIDC.flowType) {
+                    switch (Constants.ConfigOIDC.FLOW_TYPE) {
                         case Implicit: {
                             if (!TextUtils.isEmpty(extractedFragment)) {
                                 CreateIdTokenFromFragmentPartTask task = new CreateIdTokenFromFragmentPartTask();
@@ -258,10 +259,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     Log.i(TAG, "Requesting access_token with AuthCode : " + authCode);
 
                     try {
-                        response = OIDCUtils.requestTokens(Constants.TOKEN_SERVER_URL,
-                                ConfigOIDC.redirectUrl,
-                                ConfigOIDC.clientId,
-                                ConfigOIDC.clientSecret,
+                        response = OIDCUtils.requestTokens(getTokenServerUrl(),
+                                Constants.ConfigOIDC.REDIRECT_URL,
+                                getClientID(),
+                                getClientSecret(),
                                 authCode);
                     } catch (IOException e) {
                         Log.e(TAG, "Could not get response.");
@@ -316,10 +317,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 Log.d(TAG, "Requesting ID token.");
 
                 try {
-                    response = OIDCUtils.requestTokens(Constants.TOKEN_SERVER_URL,
-                            ConfigOIDC.redirectUrl,
-                            ConfigOIDC.clientId,
-                            ConfigOIDC.clientSecret,
+                    response = OIDCUtils.requestTokens(getTokenServerUrl(),
+                            Constants.ConfigOIDC.REDIRECT_URL,
+                            getClientID(),
+                            getClientSecret(),
                             authToken);
                 } catch (IOException e) {
                     Crashlytics.logException(e);
@@ -421,5 +422,39 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 .create()
                 .show();
     }
+
+    private String getClientID() {
+        String value = "";
+        if (BuildConfig.DEBUG) {
+            value = Constants.ConfigOIDC.TEST_CLIENT_ID;
+        }
+        else {
+            value = Constants.ConfigOIDC.PRODUCTION_CLIENT_ID;
+        }
+        return value;
+    }
+
+    private String getClientSecret() {
+        String resourceServerUrl = "";
+        if (BuildConfig.DEBUG) {
+            resourceServerUrl = Constants.ConfigOIDC.TEST_CLIENT_SECRET;
+        }
+        else {
+            resourceServerUrl = Constants.ConfigOIDC.PRODUCTION_CLIENT_SECRET;
+        }
+        return resourceServerUrl;
+    }
+
+    private String getTokenServerUrl() {
+        String value = "";
+        if (BuildConfig.DEBUG) {
+            value = Constants.TEST_TOKEN_SERVER_URL;
+        }
+        else {
+            value = Constants.PRODUCTION_TOKEN_SERVER_URL;
+        }
+        return value;
+    }
+
 }
 

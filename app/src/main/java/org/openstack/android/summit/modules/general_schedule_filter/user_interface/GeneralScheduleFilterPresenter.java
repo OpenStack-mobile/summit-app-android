@@ -47,50 +47,54 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
         tags = interactor.getTags();
 
         if (scheduleFilter.getFilterSections().size() == 0) {
-
             scheduleFilter.getSelections().put(FilterSectionType.SummitType, new ArrayList<>());
-            FilterSection filterSection = new FilterSection();
-            filterSection.setType(FilterSectionType.SummitType);
-            filterSection.setName("Summit Type");
-            FilterSectionItem filterSectionItem;
-            for (NamedDTO summitType : summitTypes) {
-                filterSectionItem = createSectionItem(summitType.getId(), summitType.getName(), filterSection.getType());
-                filterSection.getItems().add(filterSectionItem);
-            }
-            scheduleFilter.getFilterSections().add(filterSection);
-
             scheduleFilter.getSelections().put(FilterSectionType.EventType, new ArrayList<>());
-            filterSection = new FilterSection();
-            filterSection.setType(FilterSectionType.EventType);
-            filterSection.setName("Event Type");
-            for (NamedDTO eventType : eventTypes) {
-                filterSectionItem = createSectionItem(eventType.getId(), eventType.getName(), filterSection.getType());
-                filterSection.getItems().add(filterSectionItem);
-            }
-            scheduleFilter.getFilterSections().add(filterSection);
-
             scheduleFilter.getSelections().put(FilterSectionType.Level, new ArrayList<>());
-            filterSection = new FilterSection();
-            filterSection.setType(FilterSectionType.Level);
-            filterSection.setName("Levels");
-            for (String level : levels) {
-                filterSectionItem = createSectionItem(0, level, filterSection.getType());
-                filterSection.getItems().add(filterSectionItem);
-            }
-            scheduleFilter.getFilterSections().add(filterSection);
-
             scheduleFilter.getSelections().put(FilterSectionType.TrackGroup, new ArrayList<>());
-            filterSection = new FilterSection();
-            filterSection.setType(FilterSectionType.TrackGroup);
-            filterSection.setName("Track Groups");
-            for (NamedDTO trackGroup : trackGroups) {
-                filterSectionItem = createSectionItem(trackGroup.getId(), trackGroup.getName(), filterSection.getType());
-                filterSection.getItems().add(filterSectionItem);
-            }
-            scheduleFilter.getFilterSections().add(filterSection);
-
-            scheduleFilter.getSelections().put(FilterSectionType.Tag, new ArrayList<>());
         }
+
+        scheduleFilter.getFilterSections().clear();
+
+        scheduleFilter.getSelections().put(FilterSectionType.SummitType, new ArrayList<>());
+        FilterSection filterSection = new FilterSection();
+        filterSection.setType(FilterSectionType.SummitType);
+        filterSection.setName("Summit Type");
+        FilterSectionItem filterSectionItem;
+        for (NamedDTO summitType : summitTypes) {
+            filterSectionItem = createSectionItem(summitType.getId(), summitType.getName(), filterSection.getType());
+            filterSection.getItems().add(filterSectionItem);
+        }
+        scheduleFilter.getFilterSections().add(filterSection);
+
+        filterSection = new FilterSection();
+        filterSection.setType(FilterSectionType.EventType);
+        filterSection.setName("Event Type");
+        for (NamedDTO eventType : eventTypes) {
+            filterSectionItem = createSectionItem(eventType.getId(), eventType.getName(), filterSection.getType());
+            filterSection.getItems().add(filterSectionItem);
+        }
+        scheduleFilter.getFilterSections().add(filterSection);
+
+        filterSection = new FilterSection();
+        filterSection.setType(FilterSectionType.Level);
+        filterSection.setName("Levels");
+        for (String level : levels) {
+            filterSectionItem = createSectionItem(0, level, filterSection.getType());
+            filterSection.getItems().add(filterSectionItem);
+        }
+        scheduleFilter.getFilterSections().add(filterSection);
+
+        filterSection = new FilterSection();
+        filterSection.setType(FilterSectionType.TrackGroup);
+        filterSection.setName("Track Groups");
+        for (NamedDTO trackGroup : trackGroups) {
+            filterSectionItem = createSectionItem(trackGroup.getId(), trackGroup.getName(), filterSection.getType());
+            filterSection.getItems().add(filterSectionItem);
+        }
+        scheduleFilter.getFilterSections().add(filterSection);
+
+        scheduleFilter.getSelections().put(FilterSectionType.Tag, new ArrayList<>());
+
         view.showSummitTypes(summitTypes);
         view.showEventTypes(eventTypes);
         view.showTrackGroups(trackGroups);

@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.api.client.http.HttpMethods;
 
+import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
@@ -15,6 +17,7 @@ import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.network.AuthorizationException;
 import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
@@ -33,7 +36,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class DataUpdatePoller implements IDataUpdatePoller {
     private int pollingInterval = 30*1000;
-    private ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
     private ISecurityManager securityManager;
     private IHttpTaskFactory httpTaskFactory;
     private IDataUpdateProcessor dataUpdateProcessor;
@@ -80,14 +82,19 @@ public class DataUpdatePoller implements IDataUpdatePoller {
                     try {
                         dataUpdateProcessor.process(data);
                     }
-                    catch (Exception ex) {
-                        Log.e(Constants.LOG_TAG, "There was an error processing updates from server: " + ex.getMessage(), ex);
+                    catch (Exception e) {
+                        String errorMessage = String.format("There was an error processing these updates from server: : %s", data);
+                        Crashlytics.logException(new Exception(errorMessage, e));
+                        Log.e(Constants.LOG_TAG, errorMessage, e);
                     }
                 }
 
                 @Override
-                public void onError(String error) {
-                    Log.d(Constants.LOG_TAG, String.format("Error polling server for data updates: %s", error));
+                public void onError(Throwable error) {
+                    if (error instanceof AuthorizationException){
+                        securityManager.handleIllegalState();
+                    }
+                    Log.d(Constants.LOG_TAG, String.format("Error polling server for data updates: %s", error.getMessage()));
                 }
             };
 
@@ -142,7 +149,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
         String url = null;
         int latestDataUpdateId = dataUpdateDataStore.getLatestDataUpdate();
         if (latestDataUpdateId > 0) {
-            url = String.format("%s%s%d", Constants.RESOURCE_SERVER_BASE_URL, "/api/v1/summits/current/entity-events?last_event_id=", latestDataUpdateId);
+            url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?last_event_id=", latestDataUpdateId);
         }
         else {
             long fromDate = getFromDate();
@@ -155,7 +162,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
             }
 
             if (fromDate != 0) {
-                url = String.format("%s%s%d", Constants.RESOURCE_SERVER_BASE_URL, "/api/v1/summits/current/entity-events?from_date=", fromDate);
+                url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?from_date=", fromDate);
             }
         }
 
@@ -180,5 +187,16 @@ public class DataUpdatePoller implements IDataUpdatePoller {
                 securityManager.logout();
             }
         }
+    }
+
+    private String getResourceServerUrl() {
+        String resourceServerUrl = "";
+        if (BuildConfig.DEBUG) {
+            resourceServerUrl = Constants.TEST_RESOURCE_SERVER_BASE_URL;
+        }
+        else {
+            resourceServerUrl = Constants.PRODUCTION_RESOURCE_SERVER_BASE_URL;
+        }
+        return resourceServerUrl;
     }
 }

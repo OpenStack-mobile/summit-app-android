@@ -11,5 +11,7 @@ import java.util.List;
 public interface ITrackGroupDataStore extends IGenericDataStore {
     List<TrackGroup> getTrackGroupsForTrack(String trackName);
 
-    List<Track> getTracks(int id);
+    List<Track> getTracks(int trackGroupId);
+
+    void removeTrackGroupFromTracksLocal(int trackGroupId);
 }

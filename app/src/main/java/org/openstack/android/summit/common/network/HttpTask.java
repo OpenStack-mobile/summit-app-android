@@ -32,26 +32,29 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
             if (method == HttpRequest.METHOD_GET) {
                 String body = config.getHttp().GET(config.getUrl());
                 taskResult.setBody(body);
+                taskResult.setSucceed(true);
             }
             else if (method == HttpRequest.METHOD_POST){
                 String body = config.getHttp().POST(config.getUrl(), config.getContentType(), config.getContent());
                 taskResult.setBody(body);
+                taskResult.setSucceed(true);
             }
             else if (method == HttpRequest.METHOD_DELETE){
                 String body = config.getHttp().DELETE(config.getUrl());
                 taskResult.setBody(body);
+                taskResult.setSucceed(true);
             }
             else {
                 taskResult.setSucceed(false);
                 taskResult.setBody("Invalid http method");
             }
-            taskResult.setSucceed(true);
 
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, "Error executing API request", e);
             taskResult.setSucceed(false);
             taskResult.setBody(e.getMessage());
+            taskResult.setError(e);
         }
 
         return taskResult;
@@ -67,7 +70,7 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
                 config.getDelegate().onSucceed(result.getBody());
             }
             else {
-                config.getDelegate().onError(result.getBody());
+                config.getDelegate().onError(result.getError());
             }
         }
     }

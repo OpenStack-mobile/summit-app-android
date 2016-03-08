@@ -12,6 +12,7 @@ import com.google.api.client.http.BasicAuthentication;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.json.gson.GsonFactory;
 
+import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 
@@ -26,12 +27,18 @@ public class TokenManagerServiceAccount implements ITokenManager {
     public final String TOKEN_SERVICE_ACCOUNT = "token_service_account";
 
     @Override
-    public String getToken() {
+    public String getToken() throws TokenGenerationException {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(OpenStackSummitApplication.context);
         String token = settings.getString(TOKEN_SERVICE_ACCOUNT, "");
 
         if (token == "" || token == null) {
-            TokenResponse tokenResponse = getOauth2AccessToken(Constants.TOKEN_SERVER_URL, ConfigServiceAccount.clientId, ConfigServiceAccount.clientSecret);
+
+            TokenResponse tokenResponse = null;
+            try {
+                tokenResponse = getOauth2AccessToken(getTokenServerUrl(), getClientID(), getClientSecret());
+            } catch (IOException e) {
+                throw new TokenGenerationException(e);
+            }
             SharedPreferences.Editor editor = settings.edit();
             token = tokenResponse.getAccessToken();
             editor.putString(TOKEN_SERVICE_ACCOUNT, token);
@@ -49,7 +56,7 @@ public class TokenManagerServiceAccount implements ITokenManager {
         editor.apply();
     }
 
-    private TokenResponse getOauth2AccessToken(String accessTokenURL, String clientId, String clientSecret) {
+    private TokenResponse getOauth2AccessToken(String accessTokenURL, String clientId, String clientSecret) throws IOException {
         String accessTokenURLWithClientCredentialsGrantTypeQueryParam = accessTokenURL + "?grant_type=client_credentials";
 
         TokenRequest tokenRequest = new TokenRequest(
@@ -58,15 +65,53 @@ public class TokenManagerServiceAccount implements ITokenManager {
                 new GenericUrl(accessTokenURLWithClientCredentialsGrantTypeQueryParam),
                 "client_credentials");
         tokenRequest.setClientAuthentication(new BasicAuthentication(clientId, clientSecret));
-        tokenRequest.setScopes(new ArrayList<>(Arrays.asList(ConfigOIDC.scopes)));
-        TokenResponse tokenResponse = null;
-        try {
-            tokenResponse = tokenRequest.execute();
-        } catch (IOException e) {
-            Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG, e.getMessage(), e);
-        }
+        tokenRequest.setScopes(new ArrayList<>(Arrays.asList(getScopes())));
+        TokenResponse tokenResponse = tokenRequest.execute();
 
         return tokenResponse;
+    }
+
+    private String getClientID() {
+        String value = "";
+        if (BuildConfig.DEBUG) {
+            value = Constants.ConfigServiceAccount.TEST_CLIENT_ID;
+        }
+        else {
+            value = Constants.ConfigServiceAccount.PRODUCTION_CLIENT_ID;
+        }
+        return value;
+    }
+
+    private String getClientSecret() {
+        String value = "";
+        if (BuildConfig.DEBUG) {
+            value = Constants.ConfigServiceAccount.TEST_CLIENT_SECRET;
+        }
+        else {
+            value = Constants.ConfigServiceAccount.PRODUCTION_CLIENT_SECRET;
+        }
+        return value;
+    }
+
+    private String getTokenServerUrl() {
+        String value = "";
+        if (BuildConfig.DEBUG) {
+            value = Constants.TEST_TOKEN_SERVER_URL;
+        }
+        else {
+            value = Constants.PRODUCTION_TOKEN_SERVER_URL;
+        }
+        return value;
+    }
+
+    private String[] getScopes() {
+        String[] value = null;
+        if (BuildConfig.DEBUG) {
+            value = Constants.ConfigServiceAccount.TEST_SCOPES;
+        }
+        else {
+            value = Constants.ConfigServiceAccount.PRODUCTION_SCOPES;
+        }
+        return value;
     }
 }

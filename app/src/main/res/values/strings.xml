@@ -33,4 +33,6 @@
     <string name="no_summit_data">Can\'t perform operation until summit information is available</string>
     <string name="external_venues">External Venues</string>
     <string name="login_disallowed">There is no network connectivity. Login can\'t be performed</string>
+    <string name="moderator">Moderator</string>
+    <string name="not_summit_attendee">You\'re not a summit attendee. You have to be registered as summit attendee in order to login</string>
 </resources>

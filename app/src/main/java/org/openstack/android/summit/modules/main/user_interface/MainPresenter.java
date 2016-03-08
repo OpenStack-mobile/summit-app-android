@@ -108,10 +108,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     @Override
     public void onLoggedOut() {
-        Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
-        // You can also include some extra data.
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-
         view.setMemberName("");
         view.setLoginButtonText(view.getResources().getText(R.string.log_in).toString());
         view.toggleMyProfileMenuItem(false);
@@ -121,9 +117,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     @Override
     public void onLoggedIn() {
-        Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
-        // You can also include some extra data.
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
         String currentMemberName = interactor.getCurrentMemberName();
         Uri currentMemberProfilePicUri = interactor.getCurrentMemberProfilePictureUri();
         view.setMemberName(currentMemberName);

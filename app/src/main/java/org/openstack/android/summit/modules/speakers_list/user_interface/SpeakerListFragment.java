@@ -60,7 +60,6 @@ public class SpeakerListFragment extends BaseFragment<ISpeakerListPresenter> imp
     public void setSpeakers(List<PersonListItemDTO> speakers) {
         speakerListAdapter.clear();
         speakerListAdapter.addAll(speakers);
-        speakerListAdapter.notifyDataSetChanged();
     }
 
     private class SpeakerListAdapter extends ArrayAdapter<PersonListItemDTO> {

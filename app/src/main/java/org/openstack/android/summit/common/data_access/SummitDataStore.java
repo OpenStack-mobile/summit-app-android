@@ -70,4 +70,22 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
         List<Summit> summits = getAllLocal(Summit.class);
         return summits.size() > 0 ? summits.get(0) : null;
     }
+
+    @Override
+    public void updateActiveSummitFromDataUpdate(Summit dataUpdateEntity) {
+        try{
+            realm.beginTransaction();
+            Summit summit = realm.where(Summit.class).findFirst();
+            summit.setName(dataUpdateEntity.getName());
+            summit.setStartShowingVenuesDate(dataUpdateEntity.getStartShowingVenuesDate());
+            summit.setStartDate(dataUpdateEntity.getStartDate());
+            summit.setEndDate(dataUpdateEntity.getEndDate());
+            realm.commitTransaction();
+        }
+        catch (Exception e) {
+            realm.cancelTransaction();
+            Crashlytics.logException(e);
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+        }
+    }
 }

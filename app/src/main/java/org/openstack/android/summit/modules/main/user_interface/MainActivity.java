@@ -1,6 +1,9 @@
 package org.openstack.android.summit.modules.main.user_interface;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
@@ -27,13 +30,11 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.network.IReachability;
-import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
-
-import java.util.concurrent.ScheduledFuture;
 
 import javax.inject.Inject;
 
@@ -55,12 +56,23 @@ public class MainActivity extends AppCompatActivity
     @Inject
     IReachability reachability;
 
-    private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
     private Button loginButton;
     private TextView memberNameTextView;
     private SimpleDraweeView memberProfileImageView;
     private ActionBarDrawerToggle toggle;
+    private boolean userClickedLogout;
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == Constants.LOGGED_OUT_EVENT && !userClickedLogout) {
+                showInfoMessage("Your login session expired");
+                onLoggedOut();
+            }
+            userClickedLogout = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +88,27 @@ public class MainActivity extends AppCompatActivity
         NavigationMenuSetup(savedInstanceState);
 
         securityManager.setDelegate(this);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
+
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+
+        securityManager.init();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         hideActivityIndicator();
+    }
+
+    @Override
+    public void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        // This is somewhat like [[NSNotificationCenter defaultCenter] removeObserver:name:object:]
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
+        super.onDestroy();
     }
 
     @Override
@@ -147,6 +174,7 @@ public class MainActivity extends AppCompatActivity
                     showActivityIndicator();
                     securityManager.login(MainActivity.this);
                 } else {
+                    userClickedLogout = true;
                     securityManager.logout();
                 }
             }

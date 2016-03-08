@@ -25,21 +25,21 @@ public class Http implements IHttp {
     }
 
     @Override
-    public String GET(String url) throws IOException {
+    public String GET(String url) throws IOException, AuthorizationException {
         return makeRequest(HttpRequest.METHOD_GET, url, null, null, getTokenManager(), true);
     }
 
     @Override
-    public String POST(String url, String contentType, String content) throws IOException {
+    public String POST(String url, String contentType, String content) throws IOException, AuthorizationException {
         return makeRequest(HttpRequest.METHOD_POST, url, contentType, content, getTokenManager(), true);
     }
 
     @Override
-    public String DELETE(String url) throws IOException {
+    public String DELETE(String url) throws IOException, AuthorizationException {
         return makeRequest(HttpRequest.METHOD_DELETE, url, null, null, getTokenManager(), true);
     }
 
-    protected String makeRequest(String method, String url, String contentType, String content, ITokenManager tokenManager, boolean doRetry) throws IOException {
+    protected String makeRequest(String method, String url, String contentType, String content, ITokenManager tokenManager, boolean doRetry) throws IOException, AuthorizationException {
 
         String token = null;
         try {
@@ -47,6 +47,11 @@ public class Http implements IHttp {
         } catch (TokenGenerationException e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, "Error getting token", e);
+            throw new AuthorizationException(e);
+        }
+
+        if (token == null) {
+            throw new AuthorizationException("Token is null");
         }
         // Prepare an API request using the token
         HttpRequest request = new HttpRequest(url, method);
