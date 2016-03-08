@@ -36,7 +36,7 @@ public class SecurityModule {
 
     @Provides
     @Singleton
-    ISecurityManager providesSecurityManager(IHttpTaskFactory httpTaskFactory, IMemberDataStore memberDataStore, ISession session) {
-        return new SecurityManager(httpTaskFactory, memberDataStore, session);
+    ISecurityManager providesSecurityManager(IMemberDataStore memberDataStore, ISession session) {
+        return new SecurityManager(new TokenManagerOIDC(), memberDataStore, session);
     }
 }

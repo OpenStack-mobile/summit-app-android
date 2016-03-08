@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.api.client.http.HttpMethods;
 
@@ -81,15 +82,17 @@ public class DataUpdatePoller implements IDataUpdatePoller {
                     try {
                         dataUpdateProcessor.process(data);
                     }
-                    catch (Exception ex) {
-                        Log.e(Constants.LOG_TAG, "There was an error processing updates from server: " + ex.getMessage(), ex);
+                    catch (Exception e) {
+                        String errorMessage = String.format("There was an error processing these updates from server: : %s", data);
+                        Crashlytics.logException(new Exception(errorMessage, e));
+                        Log.e(Constants.LOG_TAG, errorMessage, e);
                     }
                 }
 
                 @Override
                 public void onError(Throwable error) {
-                    if (error instanceof AuthorizationException && securityManager.isLoggedIn()){
-                        securityManager.logout();
+                    if (error instanceof AuthorizationException){
+                        securityManager.handleIllegalState();
                     }
                     Log.d(Constants.LOG_TAG, String.format("Error polling server for data updates: %s", error.getMessage()));
                 }

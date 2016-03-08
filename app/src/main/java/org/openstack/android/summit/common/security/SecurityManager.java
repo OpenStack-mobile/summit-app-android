@@ -7,9 +7,13 @@ import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
@@ -19,6 +23,8 @@ import org.openstack.android.summit.common.data_access.IDataStoreOperationListen
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
+import org.openstack.android.summit.common.network.AuthorizationException;
+import org.openstack.android.summit.common.network.HttpTaskResult;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 
 import java.util.ArrayList;
@@ -30,28 +36,58 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 12/7/2015.
  */
 public class SecurityManager implements ISecurityManager {
-    private IHttpTaskFactory httpTaskFactory;
     private IMemberDataStore memberDataStore;
     private Member member;
     private ISecurityManagerListener delegate;
     private ISession session;
+    private ITokenManager tokenManager;
 
     @Inject
-    public SecurityManager(IHttpTaskFactory httpTaskFactory, final IMemberDataStore memberDataStore, final ISession session) {
-        this.httpTaskFactory = httpTaskFactory;
+    public SecurityManager(ITokenManager tokenManager, final IMemberDataStore memberDataStore, final ISession session) {
         this.memberDataStore = memberDataStore;
         this.session = session;
-
-        checkDataIntegrity();
+        this.tokenManager = tokenManager;
     }
 
-    private void checkDataIntegrity() {
-        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-        final String accountType = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
+    private void checkForIllegalState() {
+        AsyncTask<Void, Void, String> checkTask = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String token = null;
+                try {
+                    token = tokenManager.getToken();
+                } catch (TokenGenerationException e) {
+                    Crashlytics.logException(e);
+                    Log.e(Constants.LOG_TAG,e.getMessage(), e);
+                }
+                return token;
+            }
 
-        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
+            @Override
+            protected void onPostExecute(String token) {
+                final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
+                final String accountType = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
 
-        if (accountManager.getAccountsByType(accountType).length > 0 && currentMemberId == 0) {
+                int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
+                Account[] accounts = accountManager.getAccountsByType(accountType);
+                if (accounts.length > 0) {
+                    if ((token != null && currentMemberId == 0) ||
+                            (token == null && currentMemberId != 0)) {
+                        logout(false);
+                    }
+                }
+            }
+        };
+        checkTask.execute();
+    }
+
+    public void init() {
+        checkForIllegalState();
+    }
+
+    @Override
+    public void handleIllegalState() {
+        if (isLoggedIn()){
             logout();
         }
     }
@@ -103,6 +139,10 @@ public class SecurityManager implements ISecurityManager {
 
     @Override
     public void logout() {
+        logout(true);
+    }
+
+    private void logout(boolean sendNotification) {
         Context context = OpenStackSummitApplication.context;
         final AccountManager accountManager = AccountManager.get(context);
         final String accountType = context.getString(R.string.ACCOUNT_TYPE);
@@ -119,8 +159,10 @@ public class SecurityManager implements ISecurityManager {
         member = null;
         session.setInt(Constants.CURRENT_MEMBER_ID, 0);
 
-        Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+        if (sendNotification) {
+            Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
+            LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+        }
 
         if (delegate != null) {
             delegate.onLoggedOut();

@@ -3,11 +3,13 @@ package org.openstack.android.summit.modules.main.user_interface;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -86,12 +88,27 @@ public class MainActivity extends AppCompatActivity
         NavigationMenuSetup(savedInstanceState);
 
         securityManager.setDelegate(this);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
+
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+
+        securityManager.init();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         hideActivityIndicator();
+    }
+
+    @Override
+    public void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        // This is somewhat like [[NSNotificationCenter defaultCenter] removeObserver:name:object:]
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
+        super.onDestroy();
     }
 
     @Override

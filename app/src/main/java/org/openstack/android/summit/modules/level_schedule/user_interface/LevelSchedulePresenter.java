@@ -101,7 +101,7 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
                 filtersOnTrackGroups,
                 null,
                 filtersOnTags,
-                filtersOnLevels);
+                levels);
 
         return inactiveDates;
     }
