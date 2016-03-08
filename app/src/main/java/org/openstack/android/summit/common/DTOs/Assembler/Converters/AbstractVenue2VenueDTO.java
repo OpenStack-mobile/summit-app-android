@@ -53,8 +53,13 @@ public class AbstractVenue2VenueDTO <S extends Venue> extends AbstractConverter<
     }
 
     private String getAddress(S venue) {
-        String fullAddress = venue.getAddress();
-        String separator = ", ";
+
+        String separator = "";
+        String fullAddress = "";
+        if (venue.getAddress() != null && !venue.getAddress().isEmpty()) {
+            fullAddress = venue.getAddress();
+            separator = ", ";
+        }
 
         if (venue.getCity() != null && !venue.getCity().isEmpty()) {
             fullAddress += String.format("%s%s", separator, venue.getCity());

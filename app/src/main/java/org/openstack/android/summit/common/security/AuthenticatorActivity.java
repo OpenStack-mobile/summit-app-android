@@ -118,13 +118,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         showErrorDialog(String.format("Error code: %s\n\n%s", error,
                                 errorDescription));
                     }
-                } else if(urlString.startsWith(ConfigOIDC.REDIRECT_URL)){
+                } else if(urlString.startsWith(Constants.ConfigOIDC.REDIRECT_URL)){
                     // We won't need to keep loading anymore. This also prevents errors when using
                     // redirect URLs that don't have real protocols (like app://) that are just
                     // used for identification purposes in native apps.
                     view.stopLoading();
 
-                    switch (ConfigOIDC.FLOW_TYPE) {
+                    switch (Constants.ConfigOIDC.FLOW_TYPE) {
                         case Implicit: {
                             if (!TextUtils.isEmpty(extractedFragment)) {
                                 CreateIdTokenFromFragmentPartTask task = new CreateIdTokenFromFragmentPartTask();
@@ -260,7 +260,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
                     try {
                         response = OIDCUtils.requestTokens(getTokenServerUrl(),
-                                ConfigOIDC.REDIRECT_URL,
+                                Constants.ConfigOIDC.REDIRECT_URL,
                                 getClientID(),
                                 getClientSecret(),
                                 authCode);
@@ -318,7 +318,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
                 try {
                     response = OIDCUtils.requestTokens(getTokenServerUrl(),
-                            ConfigOIDC.REDIRECT_URL,
+                            Constants.ConfigOIDC.REDIRECT_URL,
                             getClientID(),
                             getClientSecret(),
                             authToken);
@@ -426,10 +426,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private String getClientID() {
         String value = "";
         if (BuildConfig.DEBUG) {
-            value = ConfigOIDC.TEST_CLIENT_ID;
+            value = Constants.ConfigOIDC.TEST_CLIENT_ID;
         }
         else {
-            value = ConfigOIDC.PRODUCTION_CLIENT_ID;
+            value = Constants.ConfigOIDC.PRODUCTION_CLIENT_ID;
         }
         return value;
     }
@@ -437,10 +437,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private String getClientSecret() {
         String resourceServerUrl = "";
         if (BuildConfig.DEBUG) {
-            resourceServerUrl = ConfigOIDC.TEST_CLIENT_SECRET;
+            resourceServerUrl = Constants.ConfigOIDC.TEST_CLIENT_SECRET;
         }
         else {
-            resourceServerUrl = ConfigOIDC.PRODUCTION_CLIENT_SECRET;
+            resourceServerUrl = Constants.ConfigOIDC.PRODUCTION_CLIENT_SECRET;
         }
         return resourceServerUrl;
     }

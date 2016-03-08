@@ -52,6 +52,7 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
             Log.e(Constants.LOG_TAG, "Error executing API request", e);
             taskResult.setSucceed(false);
             taskResult.setBody(e.getMessage());
+            taskResult.setError(e);
         }
 
         return taskResult;
@@ -67,7 +68,7 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
                 config.getDelegate().onSucceed(result.getBody());
             }
             else {
-                config.getDelegate().onError(result.getBody());
+                config.getDelegate().onError(result.getError());
             }
         }
     }

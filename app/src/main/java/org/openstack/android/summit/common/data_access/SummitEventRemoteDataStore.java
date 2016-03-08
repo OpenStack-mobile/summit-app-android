@@ -46,8 +46,8 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                 }
 
                 @Override
-                public void onError(String error) {
-                    dataStoreOperationListener.onError(error);
+                public void onError(Throwable error) {
+                    dataStoreOperationListener.onError(error.getMessage());
                 }
             };
             String url = getResourceServerUrl() +

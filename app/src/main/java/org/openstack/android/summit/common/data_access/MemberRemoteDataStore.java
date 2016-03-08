@@ -50,8 +50,8 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             }
 
             @Override
-            public void onError(String error) {
-                dataStoreOperationListener.onError(error);
+            public void onError(Throwable error) {
+                dataStoreOperationListener.onError(error.getMessage());
             }
         };
 

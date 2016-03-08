@@ -24,16 +24,15 @@ public class VenuesMapInteractor extends BaseInteractor implements IVenuesMapInt
     }
 
     @Override
-    public List<VenueListItemDTO> getVenuesWithCoordinates() {
+    public List<VenueListItemDTO> getInternalVenuesWithCoordinates() {
         List<Venue> venues = genericDataStore.getAllLocal(Venue.class);
         List<Venue> venuesWithCoordinates = new ArrayList<>();
         for (Venue venue: venues) {
-            if (venue.getLat() != null && !venue.getLat().isEmpty() && venue.getLng() != null && !venue.getLat().isEmpty()) {
+            if (venue.getIsInternal() && venue.getLat() != null && !venue.getLat().isEmpty() && venue.getLng() != null && !venue.getLat().isEmpty()) {
                 venuesWithCoordinates.add(venue);
             }
         }
-        List<VenueListItemDTO> dtos = createDTOList(venues, VenueListItemDTO.class);
+        List<VenueListItemDTO> dtos = createDTOList(venuesWithCoordinates, VenueListItemDTO.class);
         return dtos;
-
     }
 }

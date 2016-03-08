@@ -16,6 +16,7 @@ import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.network.AuthorizationException;
 import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
@@ -86,8 +87,11 @@ public class DataUpdatePoller implements IDataUpdatePoller {
                 }
 
                 @Override
-                public void onError(String error) {
-                    Log.d(Constants.LOG_TAG, String.format("Error polling server for data updates: %s", error));
+                public void onError(Throwable error) {
+                    if (error instanceof AuthorizationException && securityManager.isLoggedIn()){
+                        securityManager.logout();
+                    }
+                    Log.d(Constants.LOG_TAG, String.format("Error polling server for data updates: %s", error.getMessage()));
                 }
             };
 

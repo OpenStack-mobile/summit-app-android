@@ -45,8 +45,8 @@ public class SummitRemoteDataStore extends BaseRemoteDataStore implements ISummi
                 }
 
                 @Override
-                public void onError(String error) {
-                    dataStoreOperationListener.onError(error);
+                public void onError(Throwable error) {
+                    dataStoreOperationListener.onError(error.getMessage());
                 }
             };
             String url = getResourceServerUrl() + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";

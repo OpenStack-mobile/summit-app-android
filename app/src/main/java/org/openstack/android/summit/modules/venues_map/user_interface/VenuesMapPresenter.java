@@ -23,7 +23,7 @@ public class VenuesMapPresenter extends BasePresenter<IVenuesMapView, IVenuesMap
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
-        venues = interactor.getVenuesWithCoordinates();
+        venues = interactor.getInternalVenuesWithCoordinates();
         view.addMarkers(venues);
 
         super.onCreateView(savedInstanceState);

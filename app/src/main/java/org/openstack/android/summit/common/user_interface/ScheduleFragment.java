@@ -36,8 +36,6 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
     ScheduleListAdapter scheduleListAdapter;
     List<ScheduleItemDTO> events;
-    Date startDate;
-    Date endDate;
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -24,7 +24,6 @@ import java.util.TimeZone;
  */
 public abstract class SchedulePresenter<V extends IScheduleView, I extends IScheduleInteractor, W extends IScheduleWireframe> extends BasePresenter<V, I, W> implements ISchedulePresenter<V> {
     List<ScheduleItemDTO> dayEvents;
-    int summitTimeZoneOffset;
     protected IScheduleFilter scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
     private IScheduleItemViewBuilder scheduleItemViewBuilder;
