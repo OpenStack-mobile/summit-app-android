@@ -121,7 +121,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
                     tokenResponse = OIDCUtils.refreshTokens(getTokenServerUrl(),
                             getClientID(),
                             getClientSecret(),
-                            ConfigOIDC.SCOPES,
+                            getScopes(),
                             refreshToken);
 
                     Log.d(TAG, "Got new tokens.");
@@ -185,20 +185,20 @@ public class Authenticator extends AbstractAccountAuthenticator {
         switch (ConfigOIDC.FLOW_TYPE) {
             case AuthorizationCode :
                 authUrl = OIDCUtils.codeFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), ConfigOIDC.REDIRECT_URL, ConfigOIDC.SCOPES);
+                        getClientID(), ConfigOIDC.REDIRECT_URL, getScopes());
                 break;
             case Implicit:
                 authUrl = OIDCUtils.implicitFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), ConfigOIDC.REDIRECT_URL, ConfigOIDC.SCOPES);
+                        getClientID(), ConfigOIDC.REDIRECT_URL, getScopes());
                 break;
             case Hybrid:
                 authUrl = OIDCUtils.hybridFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), ConfigOIDC.REDIRECT_URL, ConfigOIDC.SCOPES);
+                        getClientID(), ConfigOIDC.REDIRECT_URL, getScopes());
                 break;
             default:
                 Log.d(TAG, "Requesting unsupported flowType! Using CodeFlow instead");
                 authUrl = OIDCUtils.codeFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), ConfigOIDC.REDIRECT_URL, ConfigOIDC.SCOPES);
+                        getClientID(), ConfigOIDC.REDIRECT_URL, getScopes());
                 break;
         }
 
@@ -240,47 +240,57 @@ public class Authenticator extends AbstractAccountAuthenticator {
     }
 
     private String getClientID() {
-        String resourceServerUrl = "";
+        String value = "";
         if (BuildConfig.DEBUG) {
-            resourceServerUrl = ConfigOIDC.TEST_CLIENT_ID;
+            value = ConfigOIDC.TEST_CLIENT_ID;
         }
         else {
-            resourceServerUrl = ConfigOIDC.PRODUCTION_CLIENT_ID;
+            value = ConfigOIDC.PRODUCTION_CLIENT_ID;
         }
-        return resourceServerUrl;
+        return value;
     }
 
     private String getClientSecret() {
-        String resourceServerUrl = "";
+        String value = "";
         if (BuildConfig.DEBUG) {
-            resourceServerUrl = ConfigOIDC.TEST_CLIENT_SECRET;
+            value = ConfigOIDC.TEST_CLIENT_SECRET;
         }
         else {
-            resourceServerUrl = ConfigOIDC.PRODUCTION_CLIENT_SECRET;
+            value = ConfigOIDC.PRODUCTION_CLIENT_SECRET;
         }
-        return resourceServerUrl;
+        return value;
     }
 
     private String getAuthorizationServerUrl() {
-        String resourceServerUrl = "";
+        String value = "";
         if (BuildConfig.DEBUG) {
-            resourceServerUrl = Constants.TEST_AUTHORIZATION_SERVER_URL;
+            value = Constants.TEST_AUTHORIZATION_SERVER_URL;
         }
         else {
-            resourceServerUrl = Constants.PRODUCTION_AUTHORIZATION_SERVER_URL;
+            value = Constants.PRODUCTION_AUTHORIZATION_SERVER_URL;
         }
-        return resourceServerUrl;
+        return value;
     }
 
     private String getTokenServerUrl() {
-        String resourceServerUrl = "";
+        String value = "";
         if (BuildConfig.DEBUG) {
-            resourceServerUrl = Constants.TEST_TOKEN_SERVER_URL;
+            value = Constants.TEST_TOKEN_SERVER_URL;
         }
         else {
-            resourceServerUrl = Constants.PRODUCTION_TOKEN_SERVER_URL;
+            value = Constants.PRODUCTION_TOKEN_SERVER_URL;
         }
-        return resourceServerUrl;
+        return value;
+    }
+
+    private String[] getScopes() {
+        String[] value = null;
+        if (BuildConfig.DEBUG) {
+            value = Constants.TEST_SCOPES;
+        }
+        else {
+            value = Constants.PRODUCTION_SCOPES;
+        }
+        return value;
     }
 }
-

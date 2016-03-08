@@ -424,14 +424,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private String getClientID() {
-        String resourceServerUrl = "";
+        String value = "";
         if (BuildConfig.DEBUG) {
-            resourceServerUrl = ConfigOIDC.TEST_CLIENT_ID;
+            value = ConfigOIDC.TEST_CLIENT_ID;
         }
         else {
-            resourceServerUrl = ConfigOIDC.PRODUCTION_CLIENT_ID;
+            value = ConfigOIDC.PRODUCTION_CLIENT_ID;
         }
-        return resourceServerUrl;
+        return value;
     }
 
     private String getClientSecret() {
@@ -446,14 +446,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private String getTokenServerUrl() {
-        String resourceServerUrl = "";
+        String value = "";
         if (BuildConfig.DEBUG) {
-            resourceServerUrl = Constants.TEST_TOKEN_SERVER_URL;
+            value = Constants.TEST_TOKEN_SERVER_URL;
         }
         else {
-            resourceServerUrl = Constants.PRODUCTION_TOKEN_SERVER_URL;
+            value = Constants.PRODUCTION_TOKEN_SERVER_URL;
         }
-        return resourceServerUrl;
+        return value;
     }
 
 }
