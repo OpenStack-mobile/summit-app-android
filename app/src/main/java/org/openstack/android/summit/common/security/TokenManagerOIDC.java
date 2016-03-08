@@ -24,14 +24,16 @@ public class TokenManagerOIDC implements ITokenManager {
     public String getToken() throws TokenGenerationException {
         final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
         Account account = getOIDCAccount();
-        AccountManagerFuture<Bundle> futureManager = accountManager.getAuthToken(account, Authenticator.TOKEN_TYPE_ACCESS, null, true, null, null);
         String token = null;
-        try {
-            token = futureManager.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG,"Error getting token", e);
-            throw new TokenGenerationException(e);
+        if (account != null) {
+            AccountManagerFuture<Bundle> futureManager = accountManager.getAuthToken(account, Authenticator.TOKEN_TYPE_ACCESS, null, true, null, null);
+            try {
+                token = futureManager.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.e(Constants.LOG_TAG,"Error getting token", e);
+                throw new TokenGenerationException(e);
+            }
         }
         return token;
     }
@@ -47,7 +49,7 @@ public class TokenManagerOIDC implements ITokenManager {
         final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
         final String accountType = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
         Account availableAccounts[] = accountManager.getAccountsByType(accountType);
-        Account account = availableAccounts[0];
+        Account account = availableAccounts.length > 0 ? availableAccounts[0] : null;
         return account;
     }
 }

@@ -44,7 +44,7 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
                 !jsonObject.isNull("lng") ? jsonObject.getString("lng") : null
         );
         venue.setAddress(
-                jsonObject.isNull("address_1") ? jsonObject.getString("address_1") : null
+                !jsonObject.isNull("address_1") ? jsonObject.getString("address_1") : null
         );
         venue.setCity(
                 !jsonObject.isNull("city") ? jsonObject.getString("city") : null

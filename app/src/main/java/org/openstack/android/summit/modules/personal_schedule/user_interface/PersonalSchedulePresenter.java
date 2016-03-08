@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.user_interface.SchedulePresenter;
 import org.openstack.android.summit.modules.personal_schedule.IPersonalScheduleWireframe;
 import org.openstack.android.summit.modules.personal_schedule.business_logic.IPersonalScheduleInteractor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,13 +25,25 @@ public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalSchedu
 
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IPersonalScheduleInteractor interactor) {
-        List<ScheduleItemDTO> events = interactor.getCurrentMemberScheduledEvents(startDate.toDate(), endDate.toDate());
+        List<ScheduleItemDTO> events = null;
+        if (interactor.isMemberLoggedIn()) {
+            events = interactor.getCurrentMemberScheduledEvents(startDate.toDate(), endDate.toDate());
+        }
+        else {
+            events = new ArrayList<>();
+        }
         return events;
     }
 
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
-        List<DateTime> inactiveDates = interactor.getCurrentMemberScheduleDatesWithoutEvents(startDate, endDate);
+        List<DateTime> inactiveDates = null;
+        if (interactor.isMemberLoggedIn()) {
+            inactiveDates = interactor.getCurrentMemberScheduleDatesWithoutEvents(startDate, endDate);
+        }
+        else {
+            inactiveDates = new ArrayList<>();
+        }
         return inactiveDates;
     }
 }

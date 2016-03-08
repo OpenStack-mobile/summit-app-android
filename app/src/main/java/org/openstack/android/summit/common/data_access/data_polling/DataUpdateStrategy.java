@@ -17,19 +17,16 @@ public class DataUpdateStrategy implements IDataUpdateStrategy {
 
     @Override
     public void process(DataUpdate dataUpdate) {
-        switch (dataUpdate.getOperation()) {
-            case DataOperation.Insert:
-            case DataOperation.Update:
-                genericDataStore.saveOrUpdate(dataUpdate.getEntity(), null, dataUpdate.getEntityType());
-                break;
-            case DataOperation.Delete:
-                if (dataUpdate.getEntity() != null) {
-                    genericDataStore.delete(
-                            ((IEntity)dataUpdate.getEntity()).getId(),
-                            null,
-                            dataUpdate.getEntityType()
-                    );
-                }
+        if (dataUpdate.getEntity() != null && dataUpdate.getEntityType() != null) {
+            switch (dataUpdate.getOperation()) {
+                case DataOperation.Insert:
+                case DataOperation.Update:
+                    genericDataStore.saveOrUpdate(dataUpdate.getEntity(), null, dataUpdate.getEntityType());
+                    break;
+                case DataOperation.Delete:
+                    int entityId = ((IEntity) dataUpdate.getEntity()).getId();
+                    genericDataStore.delete(entityId, null, dataUpdate.getEntityType());
+            }
         }
     }
 }
