@@ -19,12 +19,6 @@ public final class ConfigOIDC {
     // same URL that is registered with your provider.
     public static final String REDIRECT_URL = "org.openstack.android.summit://oauthCallback";
 
-    // The `offline_access` scope enables us to request Refresh Tokens, so we don't have to ask the
-    // user to authorise us again every time the tokens expire. Some providers might have an
-    // `offline` scope instead. If you get an `invalid_scope` error when trying to authorise the
-    // app, try changing it to `offline`.
-    public static final String[] SCOPES = {"openid", "offline_access", "https://testresource-server.openstack.org/summits/read", "https://testresource-server.openstack.org/summits/write"};
-
     public enum Flows
     {
         AuthorizationCode,  //http://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth

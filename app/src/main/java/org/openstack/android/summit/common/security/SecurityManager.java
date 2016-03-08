@@ -98,8 +98,9 @@ public class SecurityManager implements ISecurityManager {
 
                 @Override
                 public void onError(String message) {
+                    String userFriendlyError = !message.startsWith("404") ? message : context.getResources().getString(R.string.not_summit_attendee);
                     if (delegate != null) {
-                        delegate.onError(message);
+                        delegate.onError(userFriendlyError);
                     }
                 }
             };
