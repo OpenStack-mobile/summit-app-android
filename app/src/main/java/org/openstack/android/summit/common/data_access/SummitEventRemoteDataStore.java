@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.data_access;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.github.kevinsawicki.http.HttpRequest;
 
 import org.json.JSONException;
 import org.openstack.android.summit.common.Constants;
@@ -52,7 +53,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
             };
             String url = getResourceServerUrl() +
                     String.format("/api/v1/summits/current/events/%d/feedback?expand=owner&page=%d&per_page=%d", eventId, page, objectsPerPage);
-            HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, "GET", null, null, httpTaskListener);
+            HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
             httpTask.execute();
         } catch (Exception e) {
             Crashlytics.logException(e);
