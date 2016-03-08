@@ -74,10 +74,10 @@ public class TokenManagerServiceAccount implements ITokenManager {
     private String getClientID() {
         String value = "";
         if (BuildConfig.DEBUG) {
-            value = ConfigServiceAccount.TEST_CLIENT_ID;
+            value = Constants.ConfigServiceAccount.TEST_CLIENT_ID;
         }
         else {
-            value = ConfigServiceAccount.PRODUCTION_CLIENT_ID;
+            value = Constants.ConfigServiceAccount.PRODUCTION_CLIENT_ID;
         }
         return value;
     }
@@ -85,10 +85,10 @@ public class TokenManagerServiceAccount implements ITokenManager {
     private String getClientSecret() {
         String value = "";
         if (BuildConfig.DEBUG) {
-            value = ConfigServiceAccount.TEST_CLIENT_SECRET;
+            value = Constants.ConfigServiceAccount.TEST_CLIENT_SECRET;
         }
         else {
-            value = ConfigServiceAccount.PRODUCTION_CLIENT_SECRET;
+            value = Constants.ConfigServiceAccount.PRODUCTION_CLIENT_SECRET;
         }
         return value;
     }
@@ -107,10 +107,10 @@ public class TokenManagerServiceAccount implements ITokenManager {
     private String[] getScopes() {
         String[] value = null;
         if (BuildConfig.DEBUG) {
-            value = Constants.TEST_SCOPES;
+            value = Constants.ConfigServiceAccount.TEST_SCOPES;
         }
         else {
-            value = Constants.PRODUCTION_SCOPES;
+            value = Constants.ConfigServiceAccount.PRODUCTION_SCOPES;
         }
         return value;
     }

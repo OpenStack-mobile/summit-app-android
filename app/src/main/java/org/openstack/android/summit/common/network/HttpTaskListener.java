@@ -5,5 +5,5 @@ package org.openstack.android.summit.common.network;
  */
 public interface HttpTaskListener {
     void onSucceed(String data);
-    void onError(String error);
+    void onError(Throwable error);
 }

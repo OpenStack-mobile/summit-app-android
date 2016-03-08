@@ -182,23 +182,23 @@ public class Authenticator extends AbstractAccountAuthenticator {
         // Generate a new authorisation URL
         String authUrl;
 
-        switch (ConfigOIDC.FLOW_TYPE) {
+        switch (Constants.ConfigOIDC.FLOW_TYPE) {
             case AuthorizationCode :
                 authUrl = OIDCUtils.codeFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), ConfigOIDC.REDIRECT_URL, getScopes());
+                        getClientID(), Constants.ConfigOIDC.REDIRECT_URL, getScopes());
                 break;
             case Implicit:
                 authUrl = OIDCUtils.implicitFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), ConfigOIDC.REDIRECT_URL, getScopes());
+                        getClientID(), Constants.ConfigOIDC.REDIRECT_URL, getScopes());
                 break;
             case Hybrid:
                 authUrl = OIDCUtils.hybridFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), ConfigOIDC.REDIRECT_URL, getScopes());
+                        getClientID(), Constants.ConfigOIDC.REDIRECT_URL, getScopes());
                 break;
             default:
                 Log.d(TAG, "Requesting unsupported flowType! Using CodeFlow instead");
                 authUrl = OIDCUtils.codeFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), ConfigOIDC.REDIRECT_URL, getScopes());
+                        getClientID(), Constants.ConfigOIDC.REDIRECT_URL, getScopes());
                 break;
         }
 
@@ -242,10 +242,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
     private String getClientID() {
         String value = "";
         if (BuildConfig.DEBUG) {
-            value = ConfigOIDC.TEST_CLIENT_ID;
+            value = Constants.ConfigOIDC.TEST_CLIENT_ID;
         }
         else {
-            value = ConfigOIDC.PRODUCTION_CLIENT_ID;
+            value = Constants.ConfigOIDC.PRODUCTION_CLIENT_ID;
         }
         return value;
     }
@@ -253,10 +253,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
     private String getClientSecret() {
         String value = "";
         if (BuildConfig.DEBUG) {
-            value = ConfigOIDC.TEST_CLIENT_SECRET;
+            value = Constants.ConfigOIDC.TEST_CLIENT_SECRET;
         }
         else {
-            value = ConfigOIDC.PRODUCTION_CLIENT_SECRET;
+            value = Constants.ConfigOIDC.PRODUCTION_CLIENT_SECRET;
         }
         return value;
     }
@@ -286,10 +286,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
     private String[] getScopes() {
         String[] value = null;
         if (BuildConfig.DEBUG) {
-            value = Constants.TEST_SCOPES;
+            value = Constants.ConfigOIDC.TEST_SCOPES;
         }
         else {
-            value = Constants.PRODUCTION_SCOPES;
+            value = Constants.ConfigOIDC.PRODUCTION_SCOPES;
         }
         return value;
     }

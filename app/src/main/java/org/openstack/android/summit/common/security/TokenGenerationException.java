@@ -7,4 +7,12 @@ public class TokenGenerationException extends Exception {
     public TokenGenerationException(Throwable throwable){
         super(throwable);
     }
+
+    public TokenGenerationException(String detailMessage, Throwable throwable){
+        super(detailMessage, throwable);
+    }
+
+    public TokenGenerationException(String detailMessage){
+        super(detailMessage);
+    }
 }

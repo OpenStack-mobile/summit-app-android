@@ -6,6 +6,7 @@ package org.openstack.android.summit.common.network;
 public class HttpTaskResult {
     private Boolean succeed;
     private String body;
+    private Throwable error;
 
     public Boolean getSucceed() {
         return succeed;
@@ -21,5 +22,13 @@ public class HttpTaskResult {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public Throwable getError() {
+        return error;
+    }
+
+    public void setError(Throwable error) {
+        this.error = error;
     }
 }

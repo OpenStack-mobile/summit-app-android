@@ -55,8 +55,8 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
             }
 
             @Override
-            public void onError(String error) {
-                dataStoreOperationListener.onError(error);
+            public void onError(Throwable error) {
+                dataStoreOperationListener.onError(error.getMessage());
             }
         };
 
@@ -88,8 +88,8 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
             }
 
             @Override
-            public void onError(String error) {
-                dataStoreOperationListener.onError(error);
+            public void onError(Throwable error) {
+                dataStoreOperationListener.onError(error.getMessage());
             }
         };
 

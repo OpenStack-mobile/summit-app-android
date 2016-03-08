@@ -59,7 +59,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
             try {
                 type = classResolver.fromName(className);
             } catch (ClassNotFoundException e) {
-                throw new JSONException(String.format("It wasn't possible to desirialize json for className %s"));
+                throw new JSONException(String.format("It wasn't possible to desirialize json for className %s", className));
             }
             RealmObject entity = !operationType.equals("DELETE") && !className.equals("MySchedule")
                     ? deserializer.deserialize(jsonObject.get("entity").toString(), type )

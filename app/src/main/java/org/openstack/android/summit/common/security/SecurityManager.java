@@ -10,12 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.util.Log;
 
-import com.github.kevinsawicki.http.HttpRequest;
-
-import org.json.JSONException;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -24,13 +19,8 @@ import org.openstack.android.summit.common.data_access.IDataStoreOperationListen
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.network.HttpTask;
-import org.openstack.android.summit.common.network.HttpTaskConfig;
-import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 
-import java.security.spec.InvalidParameterSpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,6 +81,9 @@ public class SecurityManager implements ISecurityManager {
                     member = data;
                     session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
 
+                    Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
+                    LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+
                     if (delegate != null) {
                         delegate.onLoggedIn();
                     }
@@ -125,6 +118,10 @@ public class SecurityManager implements ISecurityManager {
         }
         member = null;
         session.setInt(Constants.CURRENT_MEMBER_ID, 0);
+
+        Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+
         if (delegate != null) {
             delegate.onLoggedOut();
         }
