@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.SlidingTabLayout;
@@ -27,10 +29,6 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 1/26/2016.
  */
 public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter> implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IMemberProfileView {
-
-    /*@Inject
-    IMemberProfilePresenter presenter;*/
-
     @Inject
     PersonalScheduleFragment personalScheduleFragment;
 
@@ -84,6 +82,12 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         tabs.setViewPager(eventsViewPager);
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     @Override

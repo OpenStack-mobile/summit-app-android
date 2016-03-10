@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     private SimpleDraweeView memberProfileImageView;
     private ActionBarDrawerToggle toggle;
     private boolean userClickedLogout;
+    private int selectedMenuItemId;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -224,15 +225,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        selectedMenuItemId = item.getItemId();
 
-        if (id == R.id.nav_events) {
+        if (selectedMenuItemId == R.id.nav_events) {
             presenter.showEventsView();
-        } else if (id == R.id.nav_speakers) {
+        } else if (selectedMenuItemId == R.id.nav_speakers) {
             presenter.showSpeakerListView();
-        } else if (id == R.id.nav_venues) {
+        } else if (selectedMenuItemId == R.id.nav_venues) {
             presenter.showVenuesView();
-        } else if (id == R.id.nav_my_profile) {
+        } else if (selectedMenuItemId == R.id.nav_my_profile) {
             presenter.showMyProfileView();
         }
 
@@ -279,6 +280,9 @@ public class MainActivity extends AppCompatActivity
     public void onLoggedOut() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.getMenu().getItem(3).setVisible(false);
+        if (selectedMenuItemId == R.id.nav_my_profile) {
+            navigationView.getMenu().getItem(0).setChecked(true);
+        }
 
         presenter.onLoggedOut();
     }

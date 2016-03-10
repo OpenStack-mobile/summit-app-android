@@ -1,10 +1,17 @@
 package org.openstack.android.summit.common.user_interface;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
+import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
@@ -30,9 +37,16 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     private IScheduleablePresenter scheduleablePresenter;
     private boolean isFirstTime = true;
     protected boolean hasToCheckDisabledDates = true;
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            onResume();
+        }
+    };
 
     public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe);
+
         this.scheduleablePresenter = scheduleablePresenter;
         this.scheduleItemViewBuilder = scheduleItemViewBuilder;
         this.scheduleFilter = scheduleFilter;
@@ -56,6 +70,12 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.LOGGED_IN_EVENT);
+        intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+
+
         super.onCreate(savedInstanceState);
     }
 
@@ -90,6 +110,12 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         };
 
         interactor.getActiveSummit(summitDTOIInteractorOperationListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
     }
 
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
