@@ -75,7 +75,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
 
-
         super.onCreate(savedInstanceState);
     }
 
@@ -158,12 +157,14 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     public void reloadSchedule() {
         DateTime selectedDate = view.getSelectedDate();
 
-        DateTime startDate = selectedDate.withTime(0, 0, 0, 0);
-        DateTime endDate = selectedDate.withTime(23, 59, 59, 999);
+        if (selectedDate != null) {
+            DateTime startDate = selectedDate.withTime(0, 0, 0, 0);
+            DateTime endDate = selectedDate.withTime(23, 59, 59, 999);
 
-        dayEvents = getScheduleEvents(startDate, endDate, interactor);
-        view.setEvents(dayEvents);
-        view.reloadSchedule();
+            dayEvents = getScheduleEvents(startDate, endDate, interactor);
+            view.setEvents(dayEvents);
+            view.reloadSchedule();
+        }
     }
 
     protected abstract List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, I interactor);
