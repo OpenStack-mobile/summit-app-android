@@ -62,6 +62,7 @@ public class SpeakerListPresenter extends BasePresenter<ISpeakerListView, ISpeak
         PersonListItemDTO personListItemDTO = speakers.get(position);
         personItemView.setName(personListItemDTO.getName());
         personItemView.setTitle(personListItemDTO.getTitle());
+        personItemView.setIsModerator(false);
 
         Uri uri = Uri.parse(personListItemDTO.getPictureUrl().replace("https", "http"));
         personItemView.setPictureUri(uri);

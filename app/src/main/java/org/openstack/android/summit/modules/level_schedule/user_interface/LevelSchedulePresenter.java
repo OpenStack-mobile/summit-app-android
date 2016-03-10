@@ -115,5 +115,6 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
     public void clearFilters() {
         scheduleFilter.clearActiveFilters();
         onCreateView(null);
+        onResume();
     }
 }

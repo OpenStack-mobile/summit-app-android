@@ -51,11 +51,11 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
             scheduleFilter.getSelections().put(FilterSectionType.EventType, new ArrayList<>());
             scheduleFilter.getSelections().put(FilterSectionType.Level, new ArrayList<>());
             scheduleFilter.getSelections().put(FilterSectionType.TrackGroup, new ArrayList<>());
+            scheduleFilter.getSelections().put(FilterSectionType.Tag, new ArrayList<>());
         }
 
         scheduleFilter.getFilterSections().clear();
 
-        scheduleFilter.getSelections().put(FilterSectionType.SummitType, new ArrayList<>());
         FilterSection filterSection = new FilterSection();
         filterSection.setType(FilterSectionType.SummitType);
         filterSection.setName("Summit Type");
@@ -92,8 +92,6 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
             filterSection.getItems().add(filterSectionItem);
         }
         scheduleFilter.getFilterSections().add(filterSection);
-
-        scheduleFilter.getSelections().put(FilterSectionType.Tag, new ArrayList<>());
 
         view.showSummitTypes(summitTypes);
         view.showEventTypes(eventTypes);

@@ -103,7 +103,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     }
 
     @Override
-    public void setStartAndEndDateWithInactiveDates(DateTime startDate, DateTime endDate, List<DateTime> disabledDates) {
+    public void setStartAndEndDateWithDisabledDates(DateTime startDate, DateTime endDate, List<DateTime> disabledDates) {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         ranger.setStartAndEndDateWithDisabledDates(startDate, endDate, disabledDates);
     }
@@ -133,6 +133,14 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         ((LinearLayout)ranger.getParent()).setVisibility(View.VISIBLE);
         scheduleListAdapter.notifyDataSetChanged();
+        ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
+        scheduleList.setSelectionAfterHeaderView();
+    }
+
+    @Override
+    public void setDisabledDates(List<DateTime> disabledDates) {
+        Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        ranger.setDisabledDates(disabledDates);
     }
 
     private class ScheduleListAdapter extends ArrayAdapter<ScheduleItemDTO> {

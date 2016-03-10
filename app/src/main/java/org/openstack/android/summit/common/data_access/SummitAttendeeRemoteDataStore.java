@@ -97,7 +97,7 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
                 String.format("/api/v1/summits/current/attendees/%s/schedule/%s", summitAttendee.getId(), summitEvent.getId());
         HttpTask httpTask = null;
         try {
-            httpTask = httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_POST, null, httpMethod, httpTaskListener);
+            httpTask = httpTaskFactory.create(AccountType.OIDC, url, httpMethod, null, httpMethod, httpTaskListener);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
