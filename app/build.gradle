@@ -93,7 +93,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.+'
     compile 'org.modelmapper:modelmapper:0.+'
 
-    compile 'com.github.claudioredi:Ranger:bc479cf'
+    compile 'com.github.claudioredi:Ranger:8274351'
 
     // progress indicator
     compile 'cc.cloudist.acplibrary:library:1.2.1'
