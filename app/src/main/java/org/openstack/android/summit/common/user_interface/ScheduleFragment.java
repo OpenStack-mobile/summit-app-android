@@ -36,12 +36,6 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
     ScheduleListAdapter scheduleListAdapter;
     List<ScheduleItemDTO> events;
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            presenter.onResume();
-        }
-    };
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -50,12 +44,6 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.LOGGED_IN_EVENT);
-        intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
-
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
 
         presenter.setView(this);
     }
@@ -92,8 +80,8 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     public void onDestroy() {
         // Unregister since the activity is about to be closed.
         // This is somewhat like [[NSNotificationCenter defaultCenter] removeObserver:name:object:]
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
         super.onDestroy();
+        presenter.onDestroy();
     }
 
     @Override
@@ -103,7 +91,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     }
 
     @Override
-    public void setStartAndEndDateWithInactiveDates(DateTime startDate, DateTime endDate, List<DateTime> disabledDates) {
+    public void setStartAndEndDateWithDisabledDates(DateTime startDate, DateTime endDate, List<DateTime> disabledDates) {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         ranger.setStartAndEndDateWithDisabledDates(startDate, endDate, disabledDates);
     }
@@ -133,6 +121,14 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         ((LinearLayout)ranger.getParent()).setVisibility(View.VISIBLE);
         scheduleListAdapter.notifyDataSetChanged();
+        ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
+        scheduleList.setSelectionAfterHeaderView();
+    }
+
+    @Override
+    public void setDisabledDates(List<DateTime> disabledDates) {
+        Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        ranger.setDisabledDates(disabledDates);
     }
 
     private class ScheduleListAdapter extends ArrayAdapter<ScheduleItemDTO> {

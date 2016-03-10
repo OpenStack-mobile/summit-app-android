@@ -455,6 +455,5 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         }
         return value;
     }
-
 }
 

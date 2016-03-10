@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
+import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.member_profile.user_interface.MemberProfileFragment;
 
 import javax.inject.Inject;
@@ -16,9 +17,12 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 1/26/2016.
  */
 public class MemberProfileWireframe extends BaseWireframe implements IMemberProfileWireframe {
+    IEventsWireframe eventsWireframe;
+
     @Inject
-    public MemberProfileWireframe(INavigationParametersStore navigationParametersStore) {
+    public MemberProfileWireframe(INavigationParametersStore navigationParametersStore, IEventsWireframe eventsWireframe) {
         super(navigationParametersStore);
+        this.eventsWireframe = eventsWireframe;
     }
 
     @Override
@@ -47,5 +51,9 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
                 .replace(R.id.frame_layout_content, memberProfileFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void showEventsView(IBaseView context) {
+        eventsWireframe.presentEventsView(context);
     }
 }

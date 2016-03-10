@@ -33,15 +33,21 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     @Override
     public String getCurrentMemberName() {
         Member member = securityManager.getCurrentMember();
-        String fullName = member.getSpeakerRole() != null ? member.getSpeakerRole().getFullName() : member.getAttendeeRole().getFullName();
+        String fullName = "";
+        if (member != null) {
+            fullName = member.getSpeakerRole() != null ? member.getSpeakerRole().getFullName() : member.getAttendeeRole().getFullName();
+        }
         return fullName;
     }
 
     @Override
     public Uri getCurrentMemberProfilePictureUri() {
         Member member = securityManager.getCurrentMember();
-        String profilePicUrl = member.getSpeakerRole() != null ? member.getSpeakerRole().getPictureUrl() : member.getAttendeeRole().getPictureUrl();
-        Uri uri = profilePicUrl != null && !profilePicUrl.isEmpty() ? Uri.parse(profilePicUrl) : null;
+        Uri uri = null;
+        if (member != null) {
+            String profilePicUrl = member.getSpeakerRole() != null ? member.getSpeakerRole().getPictureUrl() : member.getAttendeeRole().getPictureUrl();
+            uri = profilePicUrl != null && !profilePicUrl.isEmpty() ? Uri.parse(profilePicUrl) : null;
+        }
         return uri;
     }
 

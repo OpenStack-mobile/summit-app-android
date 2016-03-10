@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.business_logic;
 
+import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
@@ -56,6 +58,10 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     @Override
     public void removeEventFromLoggedInMemberSchedule(int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
         Member loggedInMember = securityManager.getCurrentMember();
+        if (loggedInMember == null) {
+            interactorAsyncOperationListener.onError(OpenStackSummitApplication.context.getResources().getString(R.string.no_logged_in_user));
+            return;
+        }
         SummitEvent summitEvent = summitEventDataStore.getByIdLocal(eventId);
         IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override

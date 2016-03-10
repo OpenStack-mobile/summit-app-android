@@ -28,7 +28,7 @@ public class VenuesMapInteractor extends BaseInteractor implements IVenuesMapInt
         List<Venue> venues = genericDataStore.getAllLocal(Venue.class);
         List<Venue> venuesWithCoordinates = new ArrayList<>();
         for (Venue venue: venues) {
-            if (venue.getIsInternal() && venue.getLat() != null && !venue.getLat().isEmpty() && venue.getLng() != null && !venue.getLat().isEmpty()) {
+            if (venue.getIsInternal() && venue.getLat() != null && !venue.getLat().isEmpty() && venue.getLng() != null && !venue.getLng().isEmpty()) {
                 venuesWithCoordinates.add(venue);
             }
         }

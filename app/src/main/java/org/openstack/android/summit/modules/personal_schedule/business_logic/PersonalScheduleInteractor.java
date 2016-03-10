@@ -31,13 +31,19 @@ public class PersonalScheduleInteractor extends ScheduleInteractor implements IP
     @Override
     public List<ScheduleItemDTO> getCurrentMemberScheduledEvents(Date startDate, Date endDate) {
         Member member = securityManager.getCurrentMember();
-        List<SummitEvent> events = member.getAttendeeRole().getScheduledEvents()
-                .where()
-                .greaterThanOrEqualTo("start", startDate)
-                .lessThanOrEqualTo("end", endDate)
-                .findAll();
+        List<ScheduleItemDTO> dtos;
+        if (member != null) {
+            List<SummitEvent> events = member.getAttendeeRole().getScheduledEvents()
+                    .where()
+                    .greaterThanOrEqualTo("start", startDate)
+                    .lessThanOrEqualTo("end", endDate)
+                    .findAll();
 
-        List<ScheduleItemDTO> dtos = createDTOList(events, ScheduleItemDTO.class);
+            dtos = createDTOList(events, ScheduleItemDTO.class);
+        }
+        else {
+            dtos = new ArrayList<>();
+        }
         return dtos;
     }
 

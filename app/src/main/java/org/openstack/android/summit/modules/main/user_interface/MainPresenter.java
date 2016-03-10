@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -35,6 +36,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         trustEveryone();
 
         if (savedInstanceState == null) {
@@ -44,6 +46,10 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     /* TODO: This should be gone before going live!!!!*/
     private void trustEveryone() {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
+
         try {
             HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
                 public boolean verify(String hostname, SSLSession session) {
@@ -72,7 +78,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     public void showMyProfileView() {
         if(!interactor.isDataLoaded()) {
-            view.showInfoMessage("No summit data available");
+            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
 
@@ -81,7 +87,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     public void showSpeakerListView() {
         if(!interactor.isDataLoaded()) {
-            view.showInfoMessage("No summit data available");
+            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
 
@@ -90,7 +96,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     public void showSearchView(String searchTerm) {
         if(!interactor.isDataLoaded()) {
-            view.showInfoMessage("No summit data available");
+            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
 
@@ -99,7 +105,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     public void showVenuesView() {
         if(!interactor.isDataLoaded()) {
-            view.showInfoMessage("No summit data available");
+            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
 

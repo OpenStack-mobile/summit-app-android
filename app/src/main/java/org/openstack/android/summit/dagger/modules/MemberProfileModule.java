@@ -6,6 +6,7 @@ import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
+import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.member_profile.MemberProfileWireframe;
 import org.openstack.android.summit.modules.member_profile.business_logic.IMemberProfileInteractor;
@@ -28,8 +29,8 @@ public class MemberProfileModule {
     }
 
     @Provides
-    IMemberProfileWireframe providesMemberProfileWireframe(INavigationParametersStore navigationParametersStore) {
-        return new MemberProfileWireframe(navigationParametersStore);
+    IMemberProfileWireframe providesMemberProfileWireframe(INavigationParametersStore navigationParametersStore, IEventsWireframe eventsWireframe) {
+        return new MemberProfileWireframe(navigationParametersStore, eventsWireframe);
     }
 
     @Provides

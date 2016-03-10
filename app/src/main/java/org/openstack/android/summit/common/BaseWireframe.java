@@ -14,4 +14,5 @@ public class BaseWireframe implements IBaseWireframe {
     public <T> T getParameter(String key, Class<T> type) {
         return navigationParametersStore.get(key, type);
     }
+
 }

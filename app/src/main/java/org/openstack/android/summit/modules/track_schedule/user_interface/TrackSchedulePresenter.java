@@ -109,5 +109,6 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
     public void clearFilters() {
         scheduleFilter.clearActiveFilters();
         onCreateView(null);
+        onResume();
     }
 }

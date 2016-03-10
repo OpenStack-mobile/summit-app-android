@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -26,9 +27,15 @@ public class FeedbackGivenListInteractor extends BaseInteractor implements IFeed
     @Override
     public List<FeedbackDTO> getFeedbackGivenByCurrentUser() {
         Member member = securityManager.getCurrentMember();
-        List<FeedbackDTO> dtos = createDTOList(member.getAttendeeRole().getFeedback(), FeedbackDTO.class);
-        Collections.sort(dtos, new CustomComparator());
-        return dtos;
+        List<FeedbackDTO> dtos;
+        if (member != null) {
+            dtos = createDTOList(member.getAttendeeRole().getFeedback(), FeedbackDTO.class);
+            Collections.sort(dtos, new CustomComparator());
+            return dtos;
+        }
+        else {
+            return new ArrayList<>();
+        }
     }
 
     public class CustomComparator implements Comparator<FeedbackDTO> {

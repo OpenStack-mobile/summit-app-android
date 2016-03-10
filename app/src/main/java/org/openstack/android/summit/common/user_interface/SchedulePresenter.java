@@ -1,10 +1,17 @@
 package org.openstack.android.summit.common.user_interface;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
+import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
@@ -30,9 +37,16 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     private IScheduleablePresenter scheduleablePresenter;
     private boolean isFirstTime = true;
     protected boolean hasToCheckDisabledDates = true;
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            onResume();
+        }
+    };
 
     public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe);
+
         this.scheduleablePresenter = scheduleablePresenter;
         this.scheduleItemViewBuilder = scheduleItemViewBuilder;
         this.scheduleFilter = scheduleFilter;
@@ -56,6 +70,11 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.LOGGED_IN_EVENT);
+        intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -67,15 +86,16 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         InteractorAsyncOperationListener<SummitDTO> summitDTOIInteractorOperationListener = new InteractorAsyncOperationListener<SummitDTO>() {
             @Override
             public void onSucceedWithData(SummitDTO data) {
-                // HACK: without checking is it's first time, ranger is recreated and I lost previous day selection. Ideally this should be improved
-                //if (isFirstTime) {
-                    DateTimeZone summitTimeZone = DateTimeZone.forID(data.getTimeZone());
-                    DateTime startDate = new DateTime(data.getStartDate(), summitTimeZone).withTime(0, 0, 0, 0);
-                    DateTime endDate = new DateTime(data.getEndDate(), summitTimeZone).withTime(23, 59, 59, 999);
-
-                    List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
-                    view.setStartAndEndDateWithInactiveDates(startDate, endDate, inactiveDates);
-                //}
+                DateTimeZone summitTimeZone = DateTimeZone.forID(data.getTimeZone());
+                DateTime startDate = new DateTime(data.getStartDate(), summitTimeZone).withTime(0, 0, 0, 0);
+                DateTime endDate = new DateTime(data.getEndDate(), summitTimeZone).withTime(23, 59, 59, 999);
+                List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
+                if (isFirstTime) {
+                    view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
+                }
+                else {
+                    view.setDisabledDates(inactiveDates);
+                }
                 isFirstTime = false;
                 reloadSchedule();
                 view.hideActivityIndicator();
@@ -89,6 +109,12 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         };
 
         interactor.getActiveSummit(summitDTOIInteractorOperationListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
     }
 
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
@@ -131,12 +157,14 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     public void reloadSchedule() {
         DateTime selectedDate = view.getSelectedDate();
 
-        DateTime startDate = selectedDate.withTime(0, 0, 0, 0);
-        DateTime endDate = selectedDate.withTime(23, 59, 59, 999);
+        if (selectedDate != null) {
+            DateTime startDate = selectedDate.withTime(0, 0, 0, 0);
+            DateTime endDate = selectedDate.withTime(23, 59, 59, 999);
 
-        dayEvents = getScheduleEvents(startDate, endDate, interactor);
-        view.setEvents(dayEvents);
-        view.reloadSchedule();
+            dayEvents = getScheduleEvents(startDate, endDate, interactor);
+            view.setEvents(dayEvents);
+            view.reloadSchedule();
+        }
     }
 
     protected abstract List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, I interactor);
