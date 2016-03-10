@@ -13,7 +13,9 @@ import java.util.List;
 public interface IScheduleView extends IBaseView {
     void setStartAndEndDateWithParts(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay);
 
-    void setStartAndEndDateWithInactiveDates(DateTime startDate, DateTime endDate, List<DateTime> disabledDates);
+    void setStartAndEndDateWithDisabledDates(DateTime startDate, DateTime endDate, List<DateTime> disabledDates);
+
+    void setDisabledDates(List<DateTime> disabledDates);
 
     List<ScheduleItemDTO> getEvents();
 
@@ -22,4 +24,5 @@ public interface IScheduleView extends IBaseView {
     DateTime getSelectedDate();
 
     void reloadSchedule();
+
 }

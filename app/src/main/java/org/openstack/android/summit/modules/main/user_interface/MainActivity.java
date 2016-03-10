@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity
          progressDialog = new ACProgressFlower.Builder(MainActivity.this)
                  .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                  .themeColor(Color.WHITE)
-                 .text("Please wait...")
+                 .text(getResources().getString(R.string.please_wait))
                  .fadeColor(Color.DKGRAY).build();
          progressDialog.show();
     }

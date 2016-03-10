@@ -27,7 +27,10 @@ public class MemberProfileInteractor extends BaseInteractor implements IMemberPr
     @Override
     public MemberDTO getCurrentMember() {
         Member member = securityManager.getCurrentMember();
-        MemberDTO dto = dtoAssembler.createDTO(member, MemberDTO.class);
+        MemberDTO dto = null;
+        if (member != null) {
+            dto = dtoAssembler.createDTO(member, MemberDTO.class);
+        }
         return dto;
     }
 

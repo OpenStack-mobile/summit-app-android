@@ -61,6 +61,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
 
     @Override
     public void pollServer() {
+
         try {
             if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
                 return;

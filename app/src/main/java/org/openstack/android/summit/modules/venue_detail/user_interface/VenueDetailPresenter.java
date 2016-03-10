@@ -56,7 +56,7 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
     }
 
     private boolean isVenueGeoLocated(VenueDTO venue) {
-        return venue.getLat() != null && !venue.getLat().isEmpty() && venue.getLng() != null && !venue.getLat().isEmpty();
+        return venue.getLat() != null && !venue.getLat().isEmpty() && venue.getLng() != null && !venue.getLng().isEmpty();
     }
 
     @Override

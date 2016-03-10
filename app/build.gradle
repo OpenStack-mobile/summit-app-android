@@ -30,7 +30,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
+        versionCode 2
         versionName "0.4"
         multiDexEnabled true
     }
@@ -93,7 +93,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.+'
     compile 'org.modelmapper:modelmapper:0.+'
 
-    compile 'com.github.claudioredi:Ranger:2b42ac3'
+    compile 'com.github.claudioredi:Ranger:bc479cf'
 
     // progress indicator
     compile 'cc.cloudist.acplibrary:library:1.2.1'
