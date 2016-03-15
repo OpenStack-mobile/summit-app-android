@@ -172,7 +172,9 @@ public class DataAccessModule {
                                        ISummitDeserializer summitDeserializer,
                                        ISummitEventDeserializer summitEventDeserializer,
                                        ITrackGroupDeserializer trackGroupDeserializer,
-                                       ITrackDeserializer trackDeserializer)
+                                       ITrackDeserializer trackDeserializer,
+                                       IVenueRoomDeserializer venueRoomDeserializer,
+                                       IVenueDeserializer venueDeserializer)
     {
         return new Deserializer(genericDeserializer,
                 feedbackDeserializer,
@@ -183,7 +185,9 @@ public class DataAccessModule {
                 summitDeserializer,
                 summitEventDeserializer,
                 trackGroupDeserializer,
-                trackDeserializer);
+                trackDeserializer,
+                venueRoomDeserializer,
+                venueDeserializer);
     }
 
     @Provides

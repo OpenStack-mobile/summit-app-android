@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.data_access.data_polling;
 import android.util.Log;
 
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.entities.Image;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
@@ -22,6 +23,14 @@ public class ClassResolver implements IClassResolver {
 
         if (className.equals("PresentationCategoryGroup")) {
             type = TrackGroup.class;
+        }
+
+        if (className.equals("SummitLocationMap")) {
+            type = Image.class;
+        }
+
+        if (className.equals("SummitLocationImage")) {
+            type = Image.class;
         }
 
         if (className.equals("MySchedule") || className.equals("Presentation")) {
