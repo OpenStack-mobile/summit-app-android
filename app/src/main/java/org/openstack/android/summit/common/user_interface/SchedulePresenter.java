@@ -30,11 +30,11 @@ import java.util.TimeZone;
  * Created by Claudio Redi on 12/28/2015.
  */
 public abstract class SchedulePresenter<V extends IScheduleView, I extends IScheduleInteractor, W extends IScheduleWireframe> extends BasePresenter<V, I, W> implements ISchedulePresenter<V> {
-    List<ScheduleItemDTO> dayEvents;
+    protected List<ScheduleItemDTO> dayEvents;
     protected IScheduleFilter scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
     private IScheduleItemViewBuilder scheduleItemViewBuilder;
-    private IScheduleablePresenter scheduleablePresenter;
+    protected IScheduleablePresenter scheduleablePresenter;
     private boolean isFirstTime = true;
     protected boolean hasToCheckDisabledDates = true;
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
