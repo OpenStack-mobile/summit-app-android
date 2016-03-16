@@ -3,8 +3,11 @@ package org.openstack.android.summit.modules.personal_schedule.user_interface;
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
+import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
+import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
+import org.openstack.android.summit.common.user_interface.IScheduleItemView;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
@@ -45,5 +48,27 @@ public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalSchedu
             inactiveDates = new ArrayList<>();
         }
         return inactiveDates;
+    }
+
+    @Override
+    public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
+        view.showActivityIndicator(0);
+        ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
+
+        IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
+            @Override
+            public void onError(String message) {
+                view.hideActivityIndicator();
+                view.showErrorMessage(message);
+            }
+
+            @Override
+            public void onSucceed() {
+                view.hideActivityIndicator();
+                reloadSchedule();
+            }
+        };
+
+        scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor, interactorAsyncOperationListener);
     }
 }
