@@ -21,6 +21,7 @@ public class Summit extends RealmObject implements INamedEntity {
     private RealmList<SummitType> types = new RealmList<>();
     private RealmList<TicketType> ticketTypes = new RealmList<>();
     private RealmList<Venue> venues = new RealmList<>();
+    private RealmList<VenueRoom> venueRooms = new RealmList<>();
     private RealmList<SummitEvent> events = new RealmList<>();
     private RealmList<TrackGroup> trackGroups = new RealmList<>();
     private RealmList<Track> tracks = new RealmList<>();
@@ -135,5 +136,13 @@ public class Summit extends RealmObject implements INamedEntity {
 
     public void setTracks(RealmList<Track> tracks) {
         this.tracks = tracks;
+    }
+
+    public RealmList<VenueRoom> getVenueRooms() {
+        return venueRooms;
+    }
+
+    public void setVenueRooms(RealmList<VenueRoom> venueRooms) {
+        this.venueRooms = venueRooms;
     }
 }
