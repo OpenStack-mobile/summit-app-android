@@ -38,4 +38,6 @@
     <string name="no_summit_data_available">No summit data available</string>
     <string name="please_wait">Please wait...</string>
     <string name="no_logged_in_user">There is no logged in user. Operation can\'t be performed</string>
+    <string name="no_events">No events for current day</string>
+    <string name="no_feedback">You provided no feedback yet</string>
 </resources>
