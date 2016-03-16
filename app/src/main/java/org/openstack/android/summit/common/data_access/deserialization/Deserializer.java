@@ -136,5 +136,4 @@ public class Deserializer implements IDeserializer {
         }
         return list;
     }
-
 }
