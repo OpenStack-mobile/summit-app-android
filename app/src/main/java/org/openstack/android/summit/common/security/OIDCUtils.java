@@ -65,7 +65,7 @@ public class OIDCUtils {
         if (scopesList.contains("offline_access")) {
             // If the list of scopes includes the special `offline_access` scope that enables issuing
             // of Refresh Tokens, we need to ask for consent by including this parameter.
-            request.set("prompt", "consent");
+            request.set("prompt", "login+consent");
         } else {
             // Tell the server to ask for login details again. This ensures that in case of multiple
             // accounts, the user won't accidentally authorise the wrong one.
@@ -107,7 +107,7 @@ public class OIDCUtils {
         if (scopesList.contains("offline_access")) {
             // If the list of scopes includes the special `offline_access` scope that enables issuing
             // of Refresh Tokens, we need to ask for consent by including this parameter.
-            request.set("prompt", "consent");
+            request.set("prompt", "login+consent");
         } else {
             // Tell the server to ask for login details again. This ensures that in case of multiple
             // accounts, the user won't accidentally authorise the wrong one.
@@ -141,7 +141,7 @@ public class OIDCUtils {
         if (scopesList.contains("offline_access")) {
             // If the list of scopes includes the special `offline_access` scope that enables issuing
             // of Refresh Tokens, we need to ask for consent by including this parameter.
-            request.set("prompt", "consent");
+            request.set("prompt", "login+consent");
         } else {
             // Tell the server to ask for login details again. This ensures that in case of multiple
             // accounts, the user won't accidentally authorise the wrong one.
