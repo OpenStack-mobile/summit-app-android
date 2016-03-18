@@ -68,9 +68,12 @@ public class GenericDataStore implements IGenericDataStore {
             }
         }
         catch (Exception e) {
+            realm.cancelTransaction();
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
-            delegate.onError(e.getMessage());
+            if (delegate != null) {
+                delegate.onError(e.getMessage());
+            }
         }
     }
 
