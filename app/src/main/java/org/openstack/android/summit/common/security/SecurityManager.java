@@ -127,7 +127,14 @@ public class SecurityManager implements ISecurityManager {
 
                 @Override
                 public void onError(String message) {
-                    String userFriendlyError = !message.startsWith("404") ? message : context.getResources().getString(R.string.not_summit_attendee);
+                    String userFriendlyError = "";
+                    if (message.startsWith("404")) {
+                        userFriendlyError = context.getResources().getString(R.string.not_summit_attendee);
+                        logout(false);
+                    }
+                    else {
+                        userFriendlyError = message;
+                    }
                     if (delegate != null) {
                         delegate.onError(userFriendlyError);
                     }
@@ -162,10 +169,10 @@ public class SecurityManager implements ISecurityManager {
         if (sendNotification) {
             Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
             LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-        }
 
-        if (delegate != null) {
-            delegate.onLoggedOut();
+            if (delegate != null) {
+                delegate.onLoggedOut();
+            }
         }
     }
 

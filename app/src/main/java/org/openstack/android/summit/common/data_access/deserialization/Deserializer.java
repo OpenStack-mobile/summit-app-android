@@ -14,6 +14,8 @@ import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
+import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.entities.VenueRoom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,8 @@ public class Deserializer implements IDeserializer {
     ISummitEventDeserializer summitEventDeserializer;
     ITrackGroupDeserializer trackGroupDeserializer;
     ITrackDeserializer trackDeserializer;
+    IVenueRoomDeserializer venueRoomDeserializer;
+    IVenueDeserializer venueDeserializer;
 
     public Deserializer()
     {
@@ -52,7 +56,9 @@ public class Deserializer implements IDeserializer {
                         ISummitDeserializer summitDeserializer,
                         ISummitEventDeserializer summitEventDeserializer,
                         ITrackGroupDeserializer trackGroupDeserializer,
-                        ITrackDeserializer trackDeserializer)
+                        ITrackDeserializer trackDeserializer,
+                        IVenueRoomDeserializer venueRoomDeserializer,
+                        IVenueDeserializer venueDeserializer)
     {
         this.genericDeserializer = genericDeserializer;
         this.feedbackDeserializer = feedbackDeserializer;
@@ -64,6 +70,8 @@ public class Deserializer implements IDeserializer {
         this.summitEventDeserializer = summitEventDeserializer;
         this.trackGroupDeserializer = trackGroupDeserializer;
         this.trackDeserializer = trackDeserializer;
+        this.venueDeserializer = venueDeserializer;
+        this.venueRoomDeserializer = venueRoomDeserializer;
     }
 
     @Override
@@ -96,6 +104,12 @@ public class Deserializer implements IDeserializer {
         else if (type == Track.class) {
             return (T)trackDeserializer.deserialize(jsonString);
         }
+        else if (type == Venue.class) {
+            return (T)venueDeserializer.deserialize(jsonString);
+        }
+        else if (type == VenueRoom.class) {
+            return (T)venueRoomDeserializer.deserialize(jsonString);
+        }
         else {
             return genericDeserializer.deserialize(jsonString, type);
         }
@@ -122,5 +136,4 @@ public class Deserializer implements IDeserializer {
         }
         return list;
     }
-
 }

@@ -46,7 +46,9 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
             summitEventId = jsonArraySummitEvents.getInt(i);
             summitEvent = deserializerStorage.get(summitEventId, SummitEvent.class);
-            summitAttendee.getScheduledEvents().add(summitEvent);
+            if (summitEvent != null) {
+                summitAttendee.getScheduledEvents().add(summitEvent);
+            }
         }
 
         TicketType ticketType;

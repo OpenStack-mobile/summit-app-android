@@ -33,6 +33,8 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
         TrackGroup trackGroup = new TrackGroup();
         deserializerStorage.add(trackGroup, TrackGroup.class); // added here so it's available on child deserialization
 
+        trackDeserializer.setShouldDeserializeTrackGroups(false);
+
         trackGroup.setId(jsonObject.getInt("id"));
         trackGroup.setName(jsonObject.getString("name"));
         trackGroup.setDescription(jsonObject.getString("description"));

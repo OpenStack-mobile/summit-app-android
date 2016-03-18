@@ -27,7 +27,7 @@
     </LinearLayout>
     <TextView
         android:id="@+id/list_empty_message"
-        android:text="No events for current day"
+        android:text="@string/no_events"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"

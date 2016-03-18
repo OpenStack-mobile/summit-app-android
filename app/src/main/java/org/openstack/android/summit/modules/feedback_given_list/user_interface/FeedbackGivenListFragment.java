@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
@@ -57,6 +58,9 @@ public class FeedbackGivenListFragment extends BaseFragment<IFeedbackGivenListPr
         feedbackGivenListAdapter.clear();
         feedbackGivenListAdapter.addAll(feedbackList);
         feedbackGivenListAdapter.notifyDataSetChanged();
+
+        TextView listEmptyMessageTextView = (TextView)view.findViewById(R.id.list_feedback_empty_message);
+        listEmptyMessageTextView.setVisibility(feedbackList.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     private class FeedbackGivenListAdapter extends ArrayAdapter<FeedbackDTO> {

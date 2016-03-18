@@ -202,7 +202,7 @@ public class GeneralScheduleFilterPresenter extends BasePresenter<IGeneralSchedu
             String level;
             while(!found) {
                 level = (String)scheduleFilter.getSelections().get(filterSection.getType()).get(filterItemPosition);
-                if (level == filterItem.getName()) {
+                if (level.equals(filterItem.getName())) {
                     found = true;
                 }
                 else {

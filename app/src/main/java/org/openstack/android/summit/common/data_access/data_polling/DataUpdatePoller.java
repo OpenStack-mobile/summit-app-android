@@ -43,9 +43,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
     private ISummitDataStore summitDataStore;
     private IReachability reachability;
     private ISession session;
-    private int fromDate;
     private String KEY_SET_FROM_DATE = "KEY_SET_FROM_DATE";
-    private String url;
     private Handler handler;
     private Runnable dataUpdatePoller;
 
