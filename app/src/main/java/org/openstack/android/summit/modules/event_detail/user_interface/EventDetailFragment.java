@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -147,6 +148,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         TextView descriptionTextView = (TextView)view.findViewById(R.id.event_detail_description);
         descriptionTextView.setVisibility(description != null && !description.isEmpty() ? View.VISIBLE : View.GONE);
         descriptionTextView.setText(description != null && !description.isEmpty() ? Html.fromHtml(description) : "");
+        descriptionTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
