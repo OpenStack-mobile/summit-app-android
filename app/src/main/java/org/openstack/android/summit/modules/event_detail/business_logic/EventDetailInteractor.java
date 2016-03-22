@@ -59,7 +59,7 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
     @Override
     public void getFeedbackForEvent(int eventId, int page, int objectsPerPage, final IInteractorAsyncOperationListener<List<FeedbackDTO>> interactorAsyncOperationListener) {
         if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-            String error = "There is no network connectivity. Can't load event feedback";
+            String error = "There is no network connectivity. Unable to load event feedback.";
             interactorAsyncOperationListener.onError(error);
             return;
         }
