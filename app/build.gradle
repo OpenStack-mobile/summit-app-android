@@ -141,7 +141,4 @@ dependencies {
     testCompile "org.powermock:powermock-classloading-xstream:1.6.2"
 
     androidTestCompile 'junit:junit:4.12'
-
-    // UXTesting
-    compile (name:'uxtesting_sdk_1.1.4', ext:'aar')
 }
