@@ -8,6 +8,10 @@ import org.openstack.android.summit.modules.member_profile_detail.user_interface
  */
 public interface IMemberProfilePresenter extends IBasePresenter<IMemberProfileView> {
     boolean getIsMyPofile();
+
     boolean getIsAttendee();
+
     boolean getIsSpeaker();
+
+    boolean showOrderConfirm();
 }

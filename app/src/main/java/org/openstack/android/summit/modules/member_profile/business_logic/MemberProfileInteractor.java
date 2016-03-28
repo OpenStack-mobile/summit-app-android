@@ -40,4 +40,9 @@ public class MemberProfileInteractor extends BaseInteractor implements IMemberPr
         PersonDTO dto = dtoAssembler.createDTO(presentationSpeaker, PersonDTO.class);
         return dto;
     }
+
+    @Override
+    public boolean isLoggedInButNotRegisteredAttendee() {
+        return false;
+    }
 }

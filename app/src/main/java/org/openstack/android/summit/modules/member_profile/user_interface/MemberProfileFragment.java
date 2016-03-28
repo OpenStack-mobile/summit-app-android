@@ -18,6 +18,7 @@ import org.openstack.android.summit.common.user_interface.SlidingTabLayout;
 import org.openstack.android.summit.modules.feedback_given_list.user_interface.FeedbackGivenListFragment;
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralScheduleFragment;
 import org.openstack.android.summit.modules.level_list.user_interface.LevelListFragment;
+import org.openstack.android.summit.modules.member_order_confirm.user_interface.MemberOrderConfirmFragment;
 import org.openstack.android.summit.modules.member_profile_detail.user_interface.MemberProfileDetailFragment;
 import org.openstack.android.summit.modules.personal_schedule.user_interface.PersonalScheduleFragment;
 import org.openstack.android.summit.modules.speaker_presentations.user_interface.SpeakerPresentationsFragment;
@@ -40,6 +41,9 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
 
     @Inject
     SpeakerPresentationsFragment speakerPresentationsFragment;
+
+    @Inject
+    MemberOrderConfirmFragment memberOrderConfirmFragment;
 
     private int selectedTabIndex;
 
@@ -209,41 +213,56 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         }
 
         private Fragment getItemForOtherProfileAsSpeaker(int i) {
-            switch (i) {
-                case 0:
-                    return memberProfileDetailFragment;
-                case 1:
-                    return speakerPresentationsFragment;
-                default:
-                    return null;
+            if (presenter.showOrderConfirm()) {
+                return memberOrderConfirmFragment;
+            }
+            else {
+                switch (i) {
+                    case 0:
+                        return memberProfileDetailFragment;
+                    case 1:
+                        return speakerPresentationsFragment;
+                    default:
+                        return null;
+                }
             }
         }
 
         private Fragment getItemForMyProfileAsAttendee(int i) {
-            switch (i) {
-                case 0:
-                    return personalScheduleFragment;
-                case 1:
-                    return memberProfileDetailFragment;
-                case 2:
-                    return feedbackGivenListFragment;
-                default:
-                    return null;
+            if (presenter.showOrderConfirm()) {
+                return memberOrderConfirmFragment;
+            }
+            else {
+                switch (i) {
+                    case 0:
+                        return personalScheduleFragment;
+                    case 1:
+                        return memberProfileDetailFragment;
+                    case 2:
+                        return feedbackGivenListFragment;
+                    default:
+                        return null;
+                }
             }
         }
 
         private Fragment getItemForMyProfileAsSpeaker(int i) {
-            switch (i) {
-                case 0:
-                    return personalScheduleFragment;
-                case 1:
-                    return memberProfileDetailFragment;
-                case 2:
-                    return feedbackGivenListFragment;
-                case 3:
-                    return speakerPresentationsFragment;
-                default:
-                    return null;
+            if (presenter.showOrderConfirm()) {
+                return memberOrderConfirmFragment;
+            }
+            else {
+                switch (i) {
+                    case 0:
+                        return personalScheduleFragment;
+                    case 1:
+                        return memberProfileDetailFragment;
+                    case 2:
+                        return feedbackGivenListFragment;
+                    case 3:
+                        return speakerPresentationsFragment;
+                    default:
+                        return null;
+                }
             }
         }
     }
