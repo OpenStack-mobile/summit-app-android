@@ -23,4 +23,6 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
     void onLoggedIn();
 
     void onConfigurationChanged(Configuration newConfig);
+
+    boolean isSummitDataLoaded();
 }
