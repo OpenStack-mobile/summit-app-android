@@ -36,7 +36,7 @@ import io.realm.Sort;
  * Created by Claudio Redi on 11/17/2015.
  */
 public class GenericDataStore implements IGenericDataStore {
-    Realm realm = Realm.getDefaultInstance();
+    public Realm realm = Realm.getDefaultInstance();
 
     @Override
     public <T extends RealmObject> T getByIdLocal(int id, Class<T> type) {

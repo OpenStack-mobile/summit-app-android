@@ -8,12 +8,14 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
     IDataUpdateStrategy myScheduleDataUpdateStrategy;
     IDataUpdateStrategy summitDataUpdateStrategy;
     IDataUpdateStrategy trackGroupDataUpdateStrategy;
+    IDataUpdateStrategy venueImageDataUpdateStrategy;
 
-    public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy, IDataUpdateStrategy summitDataUpdateStrategy, IDataUpdateStrategy trackGroupDataUpdateStrategy) {
+    public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy, IDataUpdateStrategy summitDataUpdateStrategy, IDataUpdateStrategy trackGroupDataUpdateStrategy, IDataUpdateStrategy venueImageDataUpdateStrategy) {
         this.genericDataUpdateProcessStrategy = genericDataUpdateProcessStrategy;
         this.myScheduleDataUpdateStrategy = myScheduleDataUpdateStrategy;
         this.summitDataUpdateStrategy = summitDataUpdateStrategy;
         this.trackGroupDataUpdateStrategy = trackGroupDataUpdateStrategy;
+        this.venueImageDataUpdateStrategy = venueImageDataUpdateStrategy;
     }
 
     @Override
@@ -29,6 +31,10 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
                 break;
             case "PresentationCategoryGroup":
                 dataUpdateProcessStrategy = trackGroupDataUpdateStrategy;
+                break;
+            case "SummitLocationImage":
+            case "SummitLocationMap":
+                dataUpdateProcessStrategy = venueImageDataUpdateStrategy;
                 break;
             default:
                 dataUpdateProcessStrategy = genericDataUpdateProcessStrategy;

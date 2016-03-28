@@ -79,7 +79,7 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
             realm.commitTransaction();
         }
         catch (Exception e) {
-            realm.commitTransaction();
+            realm.cancelTransaction();
             throw e;
         }
     }
