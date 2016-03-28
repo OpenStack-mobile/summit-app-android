@@ -49,26 +49,6 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:visibility="gone"/>
-        <LinearLayout
-            android:id="@+id/venue_images_gallery"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:visibility="gone">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/venue_images_gallery_pager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-            <com.viewpagerindicator.CirclePageIndicator
-                android:id="@+id/venue_images_gallery_indicator"
-                android:padding="5dip"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                app:fillColor="#000"
-                app:pageColor="#AAA"/>
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/venue_maps_gallery"
@@ -90,6 +70,27 @@
                 app:fillColor="#000"
                 app:pageColor="#AAA"
                 />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/venue_images_gallery"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:visibility="gone">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/venue_images_gallery_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <com.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/venue_images_gallery_indicator"
+                android:padding="5dip"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                app:fillColor="#000"
+                app:pageColor="#AAA"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -18,7 +18,7 @@ public class TrackGroupDataUpdateStrategy extends DataUpdateStrategy {
     }
 
     @Override
-    public void process(DataUpdate dataUpdate) {
+    public void process(DataUpdate dataUpdate) throws DataUpdateException {
         int trackGroupId = ((TrackGroup)dataUpdate.getEntity()).getId();
         trackGroupDataStore.removeTrackGroupFromTracksLocal(trackGroupId);
         super.process(dataUpdate);

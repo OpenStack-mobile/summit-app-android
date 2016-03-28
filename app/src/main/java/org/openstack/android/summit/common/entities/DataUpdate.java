@@ -1,6 +1,6 @@
 package org.openstack.android.summit.common.entities;
 
-import org.openstack.android.summit.common.data_access.data_polling.DataOperation;
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -22,6 +22,8 @@ public class DataUpdate extends RealmObject implements IEntity {
     private Class entityType;
     @Ignore
     private RealmObject entity;
+    @Ignore
+    private JSONObject originalJSON;
 
     public int getOperation() {
         return operation;
@@ -69,5 +71,13 @@ public class DataUpdate extends RealmObject implements IEntity {
 
     public void setEntityType(Class entityType) {
         this.entityType = entityType;
+    }
+
+    public JSONObject getOriginalJSON() {
+        return originalJSON;
+    }
+
+    public void setOriginalJSON(JSONObject originalJSON) {
+        this.originalJSON = originalJSON;
     }
 }

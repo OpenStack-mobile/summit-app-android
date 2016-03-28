@@ -39,7 +39,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
     public void process(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
         JSONObject jsonObject = null;
-        DataUpdate dataUpdate;
+        DataUpdate dataUpdate = null;
         for(int i = 0; i < jsonArray.length(); i++) {
             try {
                 jsonObject = jsonArray.getJSONObject(i);
@@ -49,12 +49,16 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
                     dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate.getEntityClassName());
                     dataUpdateStrategy.process(dataUpdate);
                 }
-                dataUpdateDataStore.saveOrUpdate(dataUpdate, null, DataUpdate.class);
             }
             catch (Exception e) {
                 String errorMessage = jsonObject != null ? String.format("There was an error processing this data update: %s", jsonObject.toString()) : "";
                 Crashlytics.logException(new Exception(errorMessage, e));
                 Log.e(Constants.LOG_TAG, errorMessage, e);
+            }
+            finally {
+                if (dataUpdate != null) {
+                    dataUpdateDataStore.saveOrUpdate(dataUpdate, null, DataUpdate.class);
+                }
             }
         }
     }
@@ -63,8 +67,9 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
         JSONObject jsonObject = new JSONObject(jsonString);
         DataUpdate dataUpdate = new DataUpdate();
         dataUpdate.setId(jsonObject.getInt("id"));
+        dataUpdate.setOriginalJSON(jsonObject);
         String operationType = jsonObject.getString("type");
-
+        
         if (!operationType.equals("TRUNCATE")) {
             String className = jsonObject.getString("class_name");
             if (!isClassNameKnownIgnored(className)) {
