@@ -136,4 +136,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onConfigurationChanged(Configuration newConfig) {
         view.toggleMenuLogo(newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE);
     }
+
+    @Override
+    public boolean isSummitDataLoaded() {
+        return interactor.isDataLoaded();
+    }
 }
