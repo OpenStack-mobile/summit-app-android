@@ -324,7 +324,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                             authToken);
                 } catch (IOException e) {
                     Crashlytics.logException(e);
-                    Log.e(TAG, "Could not get response.");
+                    Log.e(TAG, e.getMessage(), e);
                     return false;
                 }
 

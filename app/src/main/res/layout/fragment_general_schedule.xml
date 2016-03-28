@@ -24,8 +24,7 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/warning"
-            android:tint="@color/openStackDarkGray"/>
+            android:src="@drawable/alert_big"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_marginTop="20dp"

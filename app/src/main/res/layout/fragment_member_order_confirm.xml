@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@color/openStackYellow"
+        android:text="@string/dont_forget_to_link_ticket"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="16dp"
+        android:textColor="@color/openStackLightBlue"
+        android:text="@string/are_you_summit_attendee" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="16dp"
+        android:textColor="@color/openStackLightBlue"
+        android:text="Add your order # to unlock features only available for registered summit attendees"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:padding="10dp"
+        android:hint="Eventbrite Order #"/>
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="40dp"></Spinner>
+</LinearLayout>

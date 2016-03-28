@@ -98,4 +98,9 @@ public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IM
     public boolean getIsSpeaker() {
         return isMyProfile ? myProfile.getSpeakerRole() != null : true;
     }
+
+    @Override
+    public boolean showOrderConfirm() {
+        return interactor.isLoggedInButNotRegisteredAttendee();
+    }
 }
