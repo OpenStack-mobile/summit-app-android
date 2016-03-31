@@ -26,8 +26,7 @@
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:background="@color/openStackYellow"
-        android:text="@string/dont_forget_to_link_ticket"
-        android:elevation="4dp"/>
+        android:text="@string/dont_forget_to_link_ticket" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +45,7 @@
         android:layout_marginBottom="20dp"
         android:textSize="16dp"
         android:textColor="@color/openStackLightBlue"
-        android:text="Add your order # to unlock features only available for registered summit attendees" />
+        android:text="@string/eventbrite_add_order_number" />
     <EditText
         android:id="@+id/member_order_confirm_number_text"
         android:layout_width="match_parent"
@@ -56,7 +55,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginBottom="20dp"
         android:singleLine="true"
-        android:hint="Eventbrite Order #"/>
+        android:hint="@string/eventbrite_order_number"/>
 
     <TextView
         android:id="@+id/member_order_confirm_multiple_mathes_text"
