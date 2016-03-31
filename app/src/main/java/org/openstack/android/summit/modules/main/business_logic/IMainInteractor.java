@@ -20,4 +20,6 @@ public interface IMainInteractor extends IBaseInteractor {
     boolean isDataLoaded();
 
     boolean isNetworkingAvailable();
+
+    boolean isLoggedInAndConfirmedAttendee();
 }

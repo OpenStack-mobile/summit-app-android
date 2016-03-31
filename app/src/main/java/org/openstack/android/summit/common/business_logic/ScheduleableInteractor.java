@@ -80,6 +80,10 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
 
     @Override
     public Boolean isEventScheduledByLoggedMember(int eventId) {
+        if (!securityManager.isLoggedInAndConfirmedAttendee()) {
+            return false;
+        }
+
         Member loggedInMember = securityManager.getCurrentMember();
 
         if (loggedInMember == null) {
@@ -98,8 +102,8 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     }
 
     @Override
-    public Boolean isMemberLoggedIn() {
-        return securityManager.isLoggedIn();
+    public Boolean isMemberLoggedInConfirmedAttendee() {
+        return securityManager.isLoggedInAndConfirmedAttendee();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.openstack.android.summit.modules.main;
 
 import org.openstack.android.summit.common.user_interface.IBaseView;
+import org.openstack.android.summit.modules.main.user_interface.IMainView;
 
 /**
  * Created by Claudio Redi on 2/12/2016.
@@ -15,4 +16,6 @@ public interface IMainWireframe {
     void showSearchView(String searchTerm, IBaseView context);
 
     void showVenuesView(IBaseView context);
+
+    void showMemberOrderConfirmView(IBaseView view);
 }

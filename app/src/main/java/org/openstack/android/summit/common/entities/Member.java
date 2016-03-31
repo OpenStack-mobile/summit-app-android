@@ -9,6 +9,8 @@ import io.realm.annotations.PrimaryKey;
 public class Member extends RealmObject implements IEntity {
     @PrimaryKey
     private int id;
+    private String fullName;
+    private String pictureUrl;
     private PresentationSpeaker speakerRole;
     private SummitAttendee attendeeRole;
 
@@ -36,5 +38,21 @@ public class Member extends RealmObject implements IEntity {
     @Override
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

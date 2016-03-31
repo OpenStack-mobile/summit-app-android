@@ -4,6 +4,7 @@
     <string name="app_name">OpenStack</string>
     <string name="action_filter">Filter</string>
     <string name="action_scheduled_status">Scheduled</string>
+    <string name="action_send">Send</string>
     <string name="action_create_feedback">Feedback</string>
     <string name="log_in">LOG IN</string>
     <string name="log_out">LOG OUT</string>
@@ -28,7 +29,7 @@
     <string name="feedback">Feedback</string>
     <string name="send">Send</string>
     <string name="load_more">Load More</string>
-    <string name="no_data_message">There was a problem loading summit information. If there is no internet connection active, please wait until any is available and click "retry" to load information.</string>
+    <string name="no_data_message">There was a problem loading summit information. If there is no internet connection active, please wait until it is available and click "retry" to load information.</string>
     <string name="retry">Retry</string>
     <string name="no_summit_data">Can\'t perform operation until summit information is available</string>
     <string name="external_venues">External Venues</string>
@@ -41,4 +42,11 @@
     <string name="no_logged_in_user">There is no logged in user. Operation can\'t be performed</string>
     <string name="no_events">No events for current day</string>
     <string name="no_feedback">You provided no feedback yet</string>
+    <string name="are_you_summit_attendee">Are you a summit attendee?</string>
+    <string name="dont_forget_to_link_ticket">Don\'t forget to add your Eventbrite order #!</string>
+    <string name="order_not_found">Order wasn\'t found. Please verify that you provided correct order # and try again.</string>
+    <string name="eventbrite_order_confirmation">Eventbrite Order Confirmation</string>
+    <string name="eventbrite_order_already_in_use">It seems your order was already confirmed with a different user. A same order # can\'t be confirmed more than once.</string>
+    <string name="eventbrite_multiple_matches">Multiple tickets are assigned to provided order #. Please pick your name from the list to finish confirmation process</string>
+    <string name="eventbrite_order_confirm">Ticket Order Confirm</string>
 </resources>

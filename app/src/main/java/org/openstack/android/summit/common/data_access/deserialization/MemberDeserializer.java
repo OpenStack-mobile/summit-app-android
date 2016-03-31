@@ -1,7 +1,10 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
+import com.alibaba.fastjson.JSON;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openstack.android.summit.common.entities.IPerson;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitAttendee;
@@ -25,9 +28,14 @@ public class MemberDeserializer implements IMemberDeserializer {
     public Member deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
         Member member = new Member();
-        member.setId(jsonObject.getInt("id"));
-        SummitAttendee summitAttendee = summitAttendeeDeserializer.deserialize(jsonString);
-        member.setAttendeeRole(summitAttendee);
+        member.setId(jsonObject.optInt("id"));
+        member.setFullName(jsonObject.has("name") ? jsonObject.optString("name") : getFullName(jsonObject));
+        member.setPictureUrl(jsonObject.optString("picture"));
+
+        if (jsonObject.has("member_id")) {
+            SummitAttendee summitAttendee = summitAttendeeDeserializer.deserialize(jsonString);
+            member.setAttendeeRole(summitAttendee);
+        }
 
         if (jsonObject.has("speaker")) {
             JSONObject speakerJSONObject = jsonObject.getJSONObject("speaker");
@@ -35,5 +43,22 @@ public class MemberDeserializer implements IMemberDeserializer {
             member.setSpeakerRole(presentationSpeaker);
         }
         return member;
+    }
+
+    private String getFullName(JSONObject jsonObject) {
+        String fullName = null;
+        String firstName = jsonObject.optString("first_name");
+        String lastName = jsonObject.optString("last_name");
+        
+        if (firstName != null && lastName != null) {
+            fullName = firstName + " " + lastName;
+        }
+        else if (firstName != null){
+            fullName = firstName;
+        }
+        else  if (lastName != null){
+            fullName = lastName;
+        }
+        return fullName;
     }
 }
