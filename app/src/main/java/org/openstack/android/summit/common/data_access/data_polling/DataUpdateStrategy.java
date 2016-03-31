@@ -16,7 +16,7 @@ public class DataUpdateStrategy implements IDataUpdateStrategy {
     }
 
     @Override
-    public void process(DataUpdate dataUpdate) {
+    public void process(DataUpdate dataUpdate) throws DataUpdateException {
         if (dataUpdate.getEntity() != null && dataUpdate.getEntityType() != null) {
             switch (dataUpdate.getOperation()) {
                 case DataOperation.Insert:

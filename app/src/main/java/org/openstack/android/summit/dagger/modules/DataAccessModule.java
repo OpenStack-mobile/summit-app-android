@@ -15,6 +15,7 @@ import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
+import org.openstack.android.summit.common.data_access.IVenueDataStore;
 import org.openstack.android.summit.common.data_access.MemberDataStore;
 import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.PresentationSpeakerDataStore;
@@ -25,6 +26,7 @@ import org.openstack.android.summit.common.data_access.SummitEventDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.SummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.TrackGroupDataStore;
+import org.openstack.android.summit.common.data_access.VenueDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdateProcessor;
@@ -36,6 +38,7 @@ import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateP
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateStrategyFactory;
 import org.openstack.android.summit.common.data_access.data_polling.MyScheduleDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.SummitDataUpdateStrategy;
+import org.openstack.android.summit.common.data_access.data_polling.SummitVenueImageDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.TrackGroupDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.deserialization.Deserializer;
 import org.openstack.android.summit.common.data_access.deserialization.DeserializerStorage;
@@ -258,12 +261,18 @@ public class DataAccessModule {
     }
 
     @Provides
-    IDataUpdateStrategyFactory providesDataUpdateStrategyFactory(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, ITrackGroupDataStore trackGroupDataStore, ISecurityManager securityManager) {
+    IVenueDataStore providesVenueDataStore() {
+        return new VenueDataStore();
+    }
+
+    @Provides
+    IDataUpdateStrategyFactory providesDataUpdateStrategyFactory(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, ITrackGroupDataStore trackGroupDataStore, IVenueDataStore venueDataStore, ISecurityManager securityManager) {
         return new DataUpdateStrategyFactory(
                 new DataUpdateStrategy(genericDataStore),
                 new MyScheduleDataUpdateStrategy(genericDataStore, summitAttendeeDataStore, securityManager),
                 new SummitDataUpdateStrategy(genericDataStore, summitDataStore),
-                new TrackGroupDataUpdateStrategy(genericDataStore, trackGroupDataStore)
+                new TrackGroupDataUpdateStrategy(genericDataStore, trackGroupDataStore),
+                new SummitVenueImageDataUpdateStrategy(genericDataStore, venueDataStore)
         );
     }
 

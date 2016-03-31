@@ -143,6 +143,11 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         view.toggleMenuLogo(newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE);
     }
 
+<<<<<<< HEAD
+    @Override
+    public boolean isSummitDataLoaded() {
+        return interactor.isDataLoaded();
+=======
     private void trustEveryone() {
         if (!BuildConfig.DEBUG) {
             return;
@@ -168,5 +173,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         } catch (Exception e) { // should never happen
             e.printStackTrace();
         }
+>>>>>>> ft-order-confirm
     }
 }

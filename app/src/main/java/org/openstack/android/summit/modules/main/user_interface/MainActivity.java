@@ -166,9 +166,15 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if (!reachability.isNetworkingAvailable(MainActivity.this)) {
-                    showErrorMessage(getResources().getString(R.string.login_disallowed));
+                    showErrorMessage(getResources().getString(R.string.login_disallowed_no_connectivity));
                     return;
                 }
+
+                if (!presenter.isSummitDataLoaded()) {
+                    showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
+                    return;
+                }
+
                 if (!securityManager.isLoggedIn()) {
                     showActivityIndicator();
                     securityManager.login(MainActivity.this);
