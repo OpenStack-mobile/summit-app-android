@@ -53,8 +53,8 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     }
 
     @Override
-    public Boolean isMemberLoggedIn() {
-        return scheduleableInteractor.isMemberLoggedIn();
+    public Boolean isMemberLoggedInConfirmedAttendee() {
+        return scheduleableInteractor.isMemberLoggedInConfirmedAttendee();
     }
 
     @Override

@@ -42,7 +42,7 @@ public class MemberProfileInteractor extends BaseInteractor implements IMemberPr
     }
 
     @Override
-    public boolean isLoggedInButNotRegisteredAttendee() {
-        return false;
+    public boolean isLoggedInAndConfirmedAttendee() {
+        return securityManager.isLoggedInAndConfirmedAttendee();
     }
 }

@@ -8,13 +8,14 @@ public class Constants {
     static public final String TEST_TOKEN_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/token";
     static public final String TEST_AUTHORIZATION_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/auth";
     static public final String TEST_RESOURCE_SERVER_BASE_URL = "https://testresource-server.openstack.org";
-    static public final String TEST_USER_INFO_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/userinfo";
+    static public final String TEST_USER_INFO_SERVER_URL = "https://testopenstackid.openstack.org/api/v1/users/me";
     static public final String PRODUCTION_TOKEN_SERVER_URL = "https://openstackid.org/oauth2/token";
     static public final String PRODUCTION_AUTHORIZATION_SERVER_URL = "https://openstackid.org/oauth2/auth";
     static public final String PRODUCTION_RESOURCE_SERVER_BASE_URL = "https://openstackid-resources.openstack.org";
-    static public final String PRODUCTION_USER_INFO_SERVER_URL = "https://openstackid.org/oauth2/userinfo";
+    static public final String PRODUCTION_USER_INFO_SERVER_URL = "https://openstackid.org/api/v1/users/me";
 
     static public final String CURRENT_MEMBER_ID = "CurrentMemberId";
+    static public final String CURRENT_MEMBER_NAME = "CurrentMemberName";
     static public final String LOGGED_IN_EVENT = "logged-in-event";
     static public final String LOGGED_OUT_EVENT = "logged-out-event";
     static public final String NAVIGATION_PARAMETER_SEARCH_TERM = "SearchTerm";
@@ -75,7 +76,23 @@ public class Constants {
         // user to authorise us again every time the tokens expire. Some providers might have an
         // `offline` scope instead. If you get an `invalid_scope` error when trying to authorise the
         // app, try changing it to `offline`.
-        public static final String[] TEST_SCOPES = {"openid", "offline_access", "https://testresource-server.openstack.org/summits/read", "https://testresource-server.openstack.org/summits/write"};
-        public static final String[] PRODUCTION_SCOPES = {"openid", "offline_access", "https://openstackid-resources.openstack.org/summits/read", "https://openstackid-resources.openstack.org/summits/write"};
+        public static final String[] TEST_SCOPES = {
+                "openid",
+                "offline_access",
+                "profile",
+                "https://testresource-server.openstack.org/summits/read",
+                "https://testresource-server.openstack.org/summits/write",
+                "https://testresource-server.openstack.org/summits/read-external-orders",
+                "https://testresource-server.openstack.org/summits/confirm-external-orders"
+        };
+        public static final String[] PRODUCTION_SCOPES = {
+                "openid",
+                "offline_access",
+                "profile",
+                "https://openstackid-resources.openstack.org/summits/read",
+                "https://openstackid-resources.openstack.org/summits/write",
+                "https://openstackid-resources.openstack.org/summits/read-external-orders",
+                "https://openstackid-resources.openstack.org/summits/confirm-external-orders"
+        };
     }
 }

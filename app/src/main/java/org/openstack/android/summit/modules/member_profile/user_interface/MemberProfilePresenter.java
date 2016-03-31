@@ -24,15 +24,8 @@ import java.util.List;
 public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IMemberProfileInteractor, IMemberProfileWireframe> implements IMemberProfilePresenter {
     private int speakerId;
     private boolean isMyProfile;
-    private List<MemberRole> roles;
     private MemberDTO myProfile;
     private PersonDTO speaker;
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            wireframe.showEventsView(view);
-        }
-    };
 
     public MemberProfilePresenter(IMemberProfileInteractor interactor, IMemberProfileWireframe wireframe) {
         super(interactor, wireframe);
@@ -41,11 +34,6 @@ public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.LOGGED_IN_EVENT);
-        intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
 
         if (savedInstanceState != null) {
             isMyProfile = savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE);
@@ -79,12 +67,6 @@ public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IM
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
-    }
-
-    @Override
     public boolean getIsMyPofile() {
         return isMyProfile;
     }
@@ -101,6 +83,6 @@ public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IM
 
     @Override
     public boolean showOrderConfirm() {
-        return interactor.isLoggedInButNotRegisteredAttendee();
+        return !interactor.isLoggedInAndConfirmedAttendee();
     }
 }

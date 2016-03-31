@@ -12,7 +12,7 @@ public interface IScheduleableInteractor extends IBaseInteractor  {
 
     Boolean isEventScheduledByLoggedMember(int eventId);
 
-    Boolean isMemberLoggedIn();
+    Boolean isMemberLoggedInConfirmedAttendee();
 
     boolean shouldShowVenues();
 }

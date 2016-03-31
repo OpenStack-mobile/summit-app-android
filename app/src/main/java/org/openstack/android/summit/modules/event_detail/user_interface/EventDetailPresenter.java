@@ -64,7 +64,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setSponsors(event.getSponsors());
         view.setSpeakers(event.getSpeakers());
         view.setScheduled(interactor.isEventScheduledByLoggedMember(eventId));
-        view.setIsScheduledStatusVisible(interactor.isMemberLoggedIn());
+        view.setIsScheduledStatusVisible(interactor.isMemberLoggedInConfirmedAttendee());
         view.setAllowNewFeedback(getAllowNewFeedback());
         view.setAverageRate((int) Math.round(event.getAverageRate()));
         view.setTags(event.getTags());
@@ -139,7 +139,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     private boolean getAllowNewFeedback() {
         boolean allowFeedback = event.getAllowFeedback() &&
                 event.getFinished() &&
-                interactor.isMemberLoggedIn() &&
+                interactor.isMemberLoggedInConfirmedAttendee() &&
                 myFeedbackForEvent == null;
 
         return allowFeedback;

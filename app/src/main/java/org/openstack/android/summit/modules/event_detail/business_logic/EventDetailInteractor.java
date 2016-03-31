@@ -43,10 +43,11 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
     }
 
     public FeedbackDTO getMyFeedbackForEvent(int eventId) {
+
         FeedbackDTO dto = null;
         Member currentMember = securityManager.getCurrentMember();
 
-        if (currentMember != null) {
+        if (securityManager.isLoggedInAndConfirmedAttendee() && currentMember != null) {
 
             Feedback feedback = currentMember.getAttendeeRole().getFeedback().where().equalTo("event.id", eventId).findFirst();
             if (feedback != null) {

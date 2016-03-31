@@ -29,7 +29,7 @@ public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalSchedu
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IPersonalScheduleInteractor interactor) {
         List<ScheduleItemDTO> events = null;
-        if (interactor.isMemberLoggedIn()) {
+        if (interactor.isMemberLoggedInConfirmedAttendee()) {
             events = interactor.getCurrentMemberScheduledEvents(startDate.toDate(), endDate.toDate());
         }
         else {
@@ -41,7 +41,7 @@ public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalSchedu
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
         List<DateTime> inactiveDates = null;
-        if (interactor.isMemberLoggedIn()) {
+        if (interactor.isMemberLoggedInConfirmedAttendee()) {
             inactiveDates = interactor.getCurrentMemberScheduleDatesWithoutEvents(startDate, endDate);
         }
         else {

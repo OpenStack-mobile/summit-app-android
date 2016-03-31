@@ -12,5 +12,5 @@ public interface IMemberProfileInteractor extends IBaseInteractor {
 
     PersonDTO getPresentationSpeaker(int speakerId);
 
-    boolean isLoggedInButNotRegisteredAttendee();
+    boolean isLoggedInAndConfirmedAttendee();
 }
