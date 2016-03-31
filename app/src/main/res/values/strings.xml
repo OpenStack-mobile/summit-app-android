@@ -49,4 +49,6 @@
     <string name="eventbrite_order_already_in_use">It seems your order was already confirmed with a different user. A same order # can\'t be confirmed more than once.</string>
     <string name="eventbrite_multiple_matches">Multiple tickets are assigned to provided order #. Please pick your name from the list to finish confirmation process</string>
     <string name="eventbrite_order_confirm">Ticket Order Confirm</string>
+    <string name="eventbrite_add_order_number">Add your order # to unlock features only available for registered summit attendees</string>
+    <string name="eventbrite_order_number">Eventbrite Order #</string>
 </resources>
