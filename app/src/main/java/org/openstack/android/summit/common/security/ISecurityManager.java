@@ -23,4 +23,8 @@ public interface ISecurityManager {
     void setDelegate(ISecurityManagerListener delegate);
 
     Member getCurrentMember();
+
+    boolean isLoggedInAndConfirmedAttendee();
+
+    void linkAttendeeIfExist();
 }

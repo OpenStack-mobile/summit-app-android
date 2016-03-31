@@ -71,10 +71,10 @@ public class EventsFragment extends BaseFragment<IEventsPresenter> implements Vi
         int color;
         if (showActiveFilterIndicator) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                color = view.getResources().getColor(R.color.activeFilters, null);
+                color = view.getResources().getColor(R.color.openStackYellow, null);
             }
             else {
-                color = view.getResources().getColor(R.color.activeFilters);
+                color = view.getResources().getColor(R.color.openStackYellow);
             }
         }
         else {

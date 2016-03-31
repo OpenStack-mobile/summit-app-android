@@ -29,7 +29,7 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
     public SummitAttendee deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        String[] missedFields = validateRequiredFields(new String[] {"id", "first_name", "last_name", "tickets"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
 
         SummitAttendee summitAttendee = new SummitAttendee();

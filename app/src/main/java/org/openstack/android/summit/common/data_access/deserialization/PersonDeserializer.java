@@ -11,7 +11,6 @@ public class PersonDeserializer extends BaseDeserializer implements IPersonDeser
     @Override
     public void deserialize(IPerson person, JSONObject jsonObject) throws JSONException {
         person.setId(jsonObject.getInt("id"));
-        //person.setEmail(jsonObject.getString("email"));
         person.setFirstName(
                 !jsonObject.isNull("first_name") ? jsonObject.getString("first_name") : null
         );

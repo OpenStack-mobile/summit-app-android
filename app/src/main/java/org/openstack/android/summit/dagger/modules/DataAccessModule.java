@@ -49,6 +49,7 @@ import org.openstack.android.summit.common.data_access.deserialization.IDeserial
 import org.openstack.android.summit.common.data_access.deserialization.IFeedbackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IGenericDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IMemberDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.INonConfirmedSummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPersonDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationSpeakerDeserializer;
@@ -60,6 +61,7 @@ import org.openstack.android.summit.common.data_access.deserialization.ITrackGro
 import org.openstack.android.summit.common.data_access.deserialization.IVenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IVenueRoomDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.MemberDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.NonConfirmedSummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PersonDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSpeakerDeserializer;
@@ -166,6 +168,11 @@ public class DataAccessModule {
     }
 
     @Provides
+    INonConfirmedSummitAttendeeDeserializer providesNonConfirmedSummitAttendeeDeserializer() {
+        return new NonConfirmedSummitAttendeeDeserializer();
+    }
+
+    @Provides
     IDeserializer providesDeserializer(IGenericDeserializer genericDeserializer,
                                        IFeedbackDeserializer feedbackDeserializer,
                                        IMemberDeserializer memberDeserializer,
@@ -204,8 +211,8 @@ public class DataAccessModule {
     }
 
     @Provides
-    IMemberRemoteDataStore providesMemberRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
-        return new MemberRemoteDataStore(httpTaskFactory, deserializer);
+    IMemberRemoteDataStore providesMemberRemoteDataStore(INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,  IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
+        return new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, httpTaskFactory, deserializer);
     }
 
     @Provides
