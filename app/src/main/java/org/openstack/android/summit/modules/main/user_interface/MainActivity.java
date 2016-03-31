@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
 
+        securityManager.init();
         ActionBarSetup();
         NavigationMenuSetup(savedInstanceState);
 
@@ -93,8 +94,6 @@ public class MainActivity extends AppCompatActivity
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
 
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
-
-        securityManager.init();
     }
 
     @Override
@@ -293,7 +292,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showErrorMessage(String message) {
-        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Oops...")
                 .setContentText(message)
                 .show();
@@ -305,6 +304,17 @@ public class MainActivity extends AppCompatActivity
                 .setTitleText("Info")
                 .setContentText(message)
                 .show();
+    }
+
+    @Override
+    public void toggleMenu(boolean show) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (show) {
+            drawer.openDrawer(GravityCompat.START);
+        }
+        else {
+            drawer.closeDrawer(GravityCompat.START);
+        }
     }
 
     @Override

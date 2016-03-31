@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -24,6 +25,8 @@ import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.network.AuthorizationException;
+import org.openstack.android.summit.common.network.HttpTask;
+import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.HttpTaskResult;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 
@@ -31,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.fabric.sdk.android.services.network.HttpMethod;
 
 /**
  * Created by Claudio Redi on 12/7/2015.
@@ -41,6 +46,7 @@ public class SecurityManager implements ISecurityManager {
     private ISecurityManagerListener delegate;
     private ISession session;
     private ITokenManager tokenManager;
+    private final int LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID = -1;
 
     @Inject
     public SecurityManager(ITokenManager tokenManager, final IMemberDataStore memberDataStore, final ISession session) {
@@ -71,8 +77,7 @@ public class SecurityManager implements ISecurityManager {
                 int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
                 Account[] accounts = accountManager.getAccountsByType(accountType);
                 if (accounts.length > 0) {
-                    if ((token != null && currentMemberId == 0) ||
-                            (token == null && currentMemberId != 0)) {
+                    if ((token != null && currentMemberId == 0) || (token == null && currentMemberId != 0)) {
                         logout(false);
                     }
                 }
@@ -82,6 +87,12 @@ public class SecurityManager implements ISecurityManager {
     }
 
     public void init() {
+        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
+        if (currentMemberId == LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID && member == null) {
+            member = new Member();
+            member.setId(currentMemberId);
+            member.setFullName(session.getString(Constants.CURRENT_MEMBER_NAME));
+        }
         checkForIllegalState();
     }
 
@@ -110,38 +121,67 @@ public class SecurityManager implements ISecurityManager {
                         }
                     }, null);
         } else {
-
-            IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
-                @Override
-                public void onSuceedWithSingleData(Member data) {
-                    member = data;
-                    session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
-
-                    Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
-                    LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-
-                    if (delegate != null) {
-                        delegate.onLoggedIn();
-                    }
-                }
-
-                @Override
-                public void onError(String message) {
-                    String userFriendlyError = "";
-                    if (message.startsWith("404")) {
-                        userFriendlyError = context.getResources().getString(R.string.not_summit_attendee);
-                        logout(false);
-                    }
-                    else {
-                        userFriendlyError = message;
-                    }
-                    if (delegate != null) {
-                        delegate.onError(userFriendlyError);
-                    }
-                }
-            };
-            memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
+            linkAttendeeIfExist();
         }
+    }
+
+    public void linkAttendeeIfExist() {
+        final IDataStoreOperationListener<Member> dataStoreOperationListenerNonRegisteredAttendee = new DataStoreOperationListener<Member>() {
+            @Override
+            public void onSuceedWithSingleData(Member data) {
+                member = data;
+                if (data != null && data.getId() > 0) {
+                    session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
+                }
+                else {
+                    session.setInt(Constants.CURRENT_MEMBER_ID, LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID);
+                }
+                session.setString(Constants.CURRENT_MEMBER_NAME, member.getFullName());
+
+                Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
+                LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+
+                if (delegate != null) {
+                    delegate.onLoggedIn();
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                if (delegate != null) {
+                    delegate.onError(message);
+                }
+            }
+        };
+
+        IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
+            @Override
+            public void onSuceedWithSingleData(Member data) {
+                member = data;
+                session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
+
+                Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
+                LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+
+                if (delegate != null) {
+                    delegate.onLoggedIn();
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                if (message.startsWith("404")) {
+                    memberDataStore.getLoggedInMemberBasicInfoOrigin(dataStoreOperationListenerNonRegisteredAttendee);
+                    return;
+                }
+
+                if (delegate != null) {
+                    delegate.onError(message);
+                }
+            }
+        };
+
+        memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
     }
 
     @Override
@@ -165,6 +205,7 @@ public class SecurityManager implements ISecurityManager {
         }
         member = null;
         session.setInt(Constants.CURRENT_MEMBER_ID, 0);
+        session.setString(Constants.CURRENT_MEMBER_NAME, null);
 
         if (sendNotification) {
             Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
@@ -205,23 +246,12 @@ public class SecurityManager implements ISecurityManager {
             member = memberDataStore.getByIdLocal(currentMemberId);
         }
 
-        return accountManager.getAccountsByType(accountType).length > 0 && currentMemberId > 0 && member != null;
+        return accountManager.getAccountsByType(accountType).length > 0 && currentMemberId != 0 && member != null;
     }
 
-    public List<MemberRole> getLoggedInMemberRoles() {
-        if (!isLoggedIn()) {
-            return null;
-        }
-
-        List<MemberRole> roles = new ArrayList<>();
-        Member member = getCurrentMember();
-        if (member.getAttendeeRole() != null) {
-            roles.add(MemberRole.Attendee);
-        }
-        if (member.getSpeakerRole() != null) {
-            roles.add(MemberRole.Speaker);
-        }
-
-        return roles;
+    @Override
+    public boolean isLoggedInAndConfirmedAttendee() {
+        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
+        return isLoggedIn() && currentMemberId != LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID;
     }
 }

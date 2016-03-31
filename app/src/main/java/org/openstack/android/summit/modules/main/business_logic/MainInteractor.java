@@ -35,7 +35,15 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         Member member = securityManager.getCurrentMember();
         String fullName = "";
         if (member != null) {
-            fullName = member.getSpeakerRole() != null ? member.getSpeakerRole().getFullName() : member.getAttendeeRole().getFullName();
+            if (member.getSpeakerRole() != null) {
+                fullName = member.getSpeakerRole().getFullName();
+            }
+            else if (member.getAttendeeRole() != null) {
+                fullName = member.getAttendeeRole().getFullName();
+            }
+            else {
+               fullName = member.getFullName();
+            }
         }
         return fullName;
     }
@@ -44,16 +52,27 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     public Uri getCurrentMemberProfilePictureUri() {
         Member member = securityManager.getCurrentMember();
         Uri uri = null;
+
         if (member != null) {
-            String profilePicUrl = member.getSpeakerRole() != null ? member.getSpeakerRole().getPictureUrl() : member.getAttendeeRole().getPictureUrl();
+            String profilePicUrl = null;
+            if (member.getSpeakerRole() != null) {
+                profilePicUrl = member.getSpeakerRole().getPictureUrl();
+            }
+            else if (member.getAttendeeRole() != null) {
+                profilePicUrl = member.getAttendeeRole().getPictureUrl();
+            }
+            else {
+                profilePicUrl = member.getPictureUrl();
+            }
             uri = profilePicUrl != null && !profilePicUrl.isEmpty() ? Uri.parse(profilePicUrl) : null;
         }
+
         return uri;
     }
 
     @Override
     public void subscribeLoggedInMemberToPushNotifications() {
-        if (securityManager.isLoggedIn()) {
+        if (securityManager.isLoggedInAndConfirmedAttendee()) {
             Summit summit = summitDataStore.getActiveLocal();
             Member member = securityManager.getCurrentMember();
             pushNotificationsManager.subscribeMember(member, summit);
@@ -76,5 +95,10 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     @Override
     public boolean isNetworkingAvailable() {
         return reachability.isNetworkingAvailable(OpenStackSummitApplication.context);
+    }
+
+    @Override
+    public boolean isLoggedInAndConfirmedAttendee() {
+        return securityManager.isLoggedInAndConfirmedAttendee();
     }
 }

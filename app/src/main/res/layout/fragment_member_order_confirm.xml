@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/openStackDarkBlue"
+        android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/member_order_confirm_profile_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eventbrite_order_confirm"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"></TextView>
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="15dp"
         android:background="@color/openStackYellow"
-        android:text="@string/dont_forget_to_link_ticket"/>
+        android:text="@string/dont_forget_to_link_ticket"
+        android:elevation="4dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="5dp"
         android:textSize="16dp"
         android:textColor="@color/openStackLightBlue"
@@ -22,18 +41,44 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginBottom="20dp"
         android:textSize="16dp"
         android:textColor="@color/openStackLightBlue"
-        android:text="Add your order # to unlock features only available for registered summit attendees"/>
+        android:text="Add your order # to unlock features only available for registered summit attendees" />
     <EditText
+        android:id="@+id/member_order_confirm_number_text"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:padding="10dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginBottom="20dp"
+        android:singleLine="true"
         android:hint="Eventbrite Order #"/>
-    <Spinner
+
+    <TextView
+        android:id="@+id/member_order_confirm_multiple_mathes_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="16dp"
+        android:textColor="@color/openStackDarkBlue"
+        android:text="@string/eventbrite_multiple_matches"
+        android:visibility="gone" />
+
+    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        android:id="@+id/member_order_confirm_number_attendees_spinner"
         android:layout_width="match_parent"
-        android:layout_height="40dp"></Spinner>
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_height="wrap_content"
+        android:hint="Attendee List"
+        app:met_floatingLabel="normal"
+        android:visibility="gone">
+    </com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner>
+
 </LinearLayout>

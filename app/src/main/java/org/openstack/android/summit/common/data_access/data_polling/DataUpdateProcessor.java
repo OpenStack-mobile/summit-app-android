@@ -72,7 +72,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
                 try {
                     type = classResolver.fromName(className);
                 } catch (ClassNotFoundException e) {
-                    throw new JSONException(String.format("It wasn't possible to deserialize json for className %s", className));
+                    throw new JSONException(String.format("It wasn't possible to deserialize json for className %s", className, e));
                 }
                 RealmObject entity = !operationType.equals("DELETE") && !className.equals("MySchedule")
                         ? deserializer.deserialize(jsonObject.get("entity").toString(), type )
@@ -102,6 +102,6 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
     }
 
     private boolean isClassNameKnownIgnored(String className) {
-        return className == "PresentationVideo";
+        return className == "PresentationVideo" || className == "SummitHotel" ;
     }
 }

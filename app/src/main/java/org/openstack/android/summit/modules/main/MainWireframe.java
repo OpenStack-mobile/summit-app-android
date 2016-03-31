@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.main;
 
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
+import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
@@ -21,12 +22,15 @@ public class MainWireframe implements IMainWireframe {
 
     IVenuesWireframe venuesWireframe;
 
-    public MainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe) {
+    IMemberOrderConfirmWireframe memberOrderConfirmWireframe;
+
+    public MainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IMemberOrderConfirmWireframe memberOrderConfirmWireframe) {
         this.eventsWireframe = eventsWireframe;
         this.speakerListWireframe = speakerListWireframe;
         this.memberProfileWireframe = memberProfileWireframe;
         this.searchWireframe = searchWireframe;
         this.venuesWireframe = venuesWireframe;
+        this.memberOrderConfirmWireframe = memberOrderConfirmWireframe;
     }
 
     public void showEventsView(IBaseView context) {
@@ -47,5 +51,10 @@ public class MainWireframe implements IMainWireframe {
 
     public void showVenuesView(IBaseView context) {
         venuesWireframe.presentVenuesView(context);
+    }
+
+    @Override
+    public void showMemberOrderConfirmView(IBaseView view) {
+        memberOrderConfirmWireframe.presentMemberOrderConfirmView(view);
     }
 }

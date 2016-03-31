@@ -147,7 +147,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         scheduleItemViewBuilder.build(
                 scheduleItemView,
                 scheduleItemDTO,
-                interactor.isMemberLoggedIn(),
+                interactor.isMemberLoggedInConfirmedAttendee(),
                 interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
                 false,
                 interactor.shouldShowVenues()

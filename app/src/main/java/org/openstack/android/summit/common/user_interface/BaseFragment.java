@@ -133,7 +133,7 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
     @Override
     public void showErrorMessage(String message) {
-        new SweetAlertDialog(this.getActivity(), SweetAlertDialog.ERROR_TYPE)
+        new SweetAlertDialog(this.getActivity(), SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Oops...")
                 .setContentText(message)
                 .show();

@@ -128,6 +128,11 @@ dependencies {
     // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION: due oo many method references: (max is 65536)
     compile 'com.android.support:multidex:1.0.0'
 
+    // material design spiner
+    compile ('com.weiwangcn.betterspinner:library-material:1.1.0') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
