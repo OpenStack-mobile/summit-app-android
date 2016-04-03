@@ -18,4 +18,6 @@ public interface IMainWireframe {
     void showVenuesView(IBaseView context);
 
     void showMemberOrderConfirmView(IBaseView view);
+
+    void showAboutView(IBaseView context);
 }

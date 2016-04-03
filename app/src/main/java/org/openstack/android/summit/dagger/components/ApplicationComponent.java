@@ -4,10 +4,12 @@ package org.openstack.android.summit.dagger.components;
  * Created by claudio on 11/3/2015.
  */
 
+import org.openstack.android.summit.dagger.modules.AboutModule;
 import org.openstack.android.summit.dagger.modules.FeedbackEditModule;
 import org.openstack.android.summit.dagger.modules.MainModule;
 import org.openstack.android.summit.dagger.modules.MemberOrderConfirmModule;
 import org.openstack.android.summit.dagger.modules.VenueMapModule;
+import org.openstack.android.summit.modules.about.user_interface.AboutFragment;
 import org.openstack.android.summit.modules.feedback_edit.user_interface.FeedbackEditFragment;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
@@ -61,7 +63,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class} )
+@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class} )
 public interface ApplicationComponent {
     void inject(MainActivity mainActivity);
     void inject(EventsFragment eventsFragment);
@@ -86,4 +88,5 @@ public interface ApplicationComponent {
     void inject(VenueMapFragment venueMapFragment);
     void inject(FeedbackEditFragment feedbackEditFragment);
     void inject(MemberOrderConfirmFragment memberOrderConfirmFragment);
+    void inject(AboutFragment aboutFragment);
 }

@@ -27,6 +27,7 @@
     <string name="rooms">Rooms</string>
     <string name="venue">Venue</string>
     <string name="feedback">Feedback</string>
+    <string name="about">About</string>
     <string name="send">Send</string>
     <string name="load_more">Load More</string>
     <string name="no_data_message">There was a problem loading summit information. If there is no internet connection active, please wait until it is available and click "retry" to load information.</string>
