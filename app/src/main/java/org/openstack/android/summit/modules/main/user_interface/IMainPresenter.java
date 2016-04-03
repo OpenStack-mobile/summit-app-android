@@ -18,6 +18,8 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
 
     void showVenuesView();
 
+    void showAboutView();
+
     void onLoggedOut();
 
     void onLoggedIn();

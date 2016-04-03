@@ -239,6 +239,8 @@ public class MainActivity extends AppCompatActivity
             presenter.showVenuesView();
         } else if (selectedMenuItemId == R.id.nav_my_profile) {
             presenter.showMyProfileView();
+        } else if (selectedMenuItemId == R.id.nav_about) {
+            presenter.showAboutView();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

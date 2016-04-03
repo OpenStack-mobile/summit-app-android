@@ -100,6 +100,10 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         wireframe.showSearchView(searchTerm, view);
     }
 
+    public void showAboutView() {
+        wireframe.showAboutView(view);
+    }
+
     public void showVenuesView() {
         if(!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
