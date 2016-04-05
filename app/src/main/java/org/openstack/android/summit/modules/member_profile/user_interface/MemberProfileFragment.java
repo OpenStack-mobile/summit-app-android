@@ -42,9 +42,6 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
     @Inject
     SpeakerPresentationsFragment speakerPresentationsFragment;
 
-    @Inject
-    MemberOrderConfirmFragment memberOrderConfirmFragment;
-
     private int selectedTabIndex;
 
     public MemberProfileFragment() {
@@ -213,56 +210,41 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         }
 
         private Fragment getItemForOtherProfileAsSpeaker(int i) {
-            if (presenter.showOrderConfirm()) {
-                return memberOrderConfirmFragment;
-            }
-            else {
-                switch (i) {
-                    case 0:
-                        return memberProfileDetailFragment;
-                    case 1:
-                        return speakerPresentationsFragment;
-                    default:
-                        return null;
-                }
+            switch (i) {
+                case 0:
+                    return memberProfileDetailFragment;
+                case 1:
+                    return speakerPresentationsFragment;
+                default:
+                    return null;
             }
         }
 
         private Fragment getItemForMyProfileAsAttendee(int i) {
-            if (presenter.showOrderConfirm()) {
-                return memberOrderConfirmFragment;
-            }
-            else {
-                switch (i) {
-                    case 0:
-                        return personalScheduleFragment;
-                    case 1:
-                        return memberProfileDetailFragment;
-                    case 2:
-                        return feedbackGivenListFragment;
-                    default:
-                        return null;
-                }
+            switch (i) {
+                case 0:
+                    return personalScheduleFragment;
+                case 1:
+                    return memberProfileDetailFragment;
+                case 2:
+                    return feedbackGivenListFragment;
+                default:
+                    return null;
             }
         }
 
         private Fragment getItemForMyProfileAsSpeaker(int i) {
-            if (presenter.showOrderConfirm()) {
-                return memberOrderConfirmFragment;
-            }
-            else {
-                switch (i) {
-                    case 0:
-                        return personalScheduleFragment;
-                    case 1:
-                        return memberProfileDetailFragment;
-                    case 2:
-                        return feedbackGivenListFragment;
-                    case 3:
-                        return speakerPresentationsFragment;
-                    default:
-                        return null;
-                }
+            switch (i) {
+                case 0:
+                    return personalScheduleFragment;
+                case 1:
+                    return memberProfileDetailFragment;
+                case 2:
+                    return feedbackGivenListFragment;
+                case 3:
+                    return speakerPresentationsFragment;
+                default:
+                    return null;
             }
         }
     }

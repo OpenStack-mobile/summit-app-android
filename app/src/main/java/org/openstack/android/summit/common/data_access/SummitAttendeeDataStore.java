@@ -44,7 +44,9 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     public void addEventToMemberSheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
         realm.beginTransaction();
         try {
-            summitAttendee.getScheduledEvents().add(summitEvent);
+            if (summitAttendee.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() == 0){
+                summitAttendee.getScheduledEvents().add(summitEvent);
+            }
             realm.commitTransaction();
         }
         catch (Exception e) {
@@ -75,7 +77,9 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     public void removeEventFromMemberSheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
         realm.beginTransaction();
         try{
-            summitAttendee.getScheduledEvents().remove(summitEvent);
+            if (summitAttendee.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() > 0) {
+                summitAttendee.getScheduledEvents().remove(summitEvent);
+            }
             realm.commitTransaction();
         }
         catch (Exception e) {

@@ -121,7 +121,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
             presenter.showFeedbackEdit();
         }
 
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
