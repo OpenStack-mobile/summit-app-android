@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
             if (intent.getAction() == Constants.LOGGED_OUT_EVENT && !userClickedLogout) {
                 showInfoMessage("Your login session expired");
                 onLoggedOut();
@@ -223,6 +225,12 @@ public class MainActivity extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
         getFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        presenter.onSaveInstanceState(outState);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

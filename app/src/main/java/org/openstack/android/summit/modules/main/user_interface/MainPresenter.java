@@ -32,15 +32,21 @@ import javax.net.ssl.X509TrustManager;
  * Created by Claudio Redi on 2/12/2016.
  */
 public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMainWireframe> implements IMainPresenter {
+    private boolean onSaveInstanceExecuted = false;
+
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-        if (interactor.isLoggedInAndConfirmedAttendee() || intent.getAction() == Constants.LOGGED_OUT_EVENT) {
-            wireframe.showEventsView(view);
-        }
-        else {
-            showMyProfileView();
-        }
+            if (onSaveInstanceExecuted) {
+                return;
+            }
+
+            if (interactor.isLoggedInAndConfirmedAttendee() || intent.getAction() == Constants.LOGGED_OUT_EVENT) {
+                wireframe.showEventsView(view);
+            }
+            else {
+                showMyProfileView();
+            }
         }
     };
 
@@ -134,6 +140,12 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         if (interactor.isLoggedInAndConfirmedAttendee()) {
             interactor.subscribeLoggedInMemberToPushNotifications();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        onSaveInstanceExecuted = true;
+        super.onSaveInstanceState(outState);
     }
 
     @Override

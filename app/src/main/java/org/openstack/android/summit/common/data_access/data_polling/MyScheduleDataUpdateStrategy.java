@@ -28,8 +28,10 @@ public class MyScheduleDataUpdateStrategy extends DataUpdateStrategy {
             case DataOperation.Insert:
             case DataOperation.Update:
                 summitAttendeeDataStore.addEventToMemberSheduleLocal(currentMember.getAttendeeRole(), (SummitEvent)dataUpdate.getEntity());
+                break;
             case DataOperation.Delete:
                 summitAttendeeDataStore.removeEventFromMemberSheduleLocal(currentMember.getAttendeeRole(), (SummitEvent)dataUpdate.getEntity());
+                break;
         }
     }
 }

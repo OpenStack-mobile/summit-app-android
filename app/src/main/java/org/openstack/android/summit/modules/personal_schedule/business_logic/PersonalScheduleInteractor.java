@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Sort;
+
 /**
  * Created by Claudio Redi on 1/27/2016.
  */
@@ -37,7 +39,7 @@ public class PersonalScheduleInteractor extends ScheduleInteractor implements IP
                     .where()
                     .greaterThanOrEqualTo("start", startDate)
                     .lessThanOrEqualTo("end", endDate)
-                    .findAll();
+                    .findAllSorted(new String[]{"start", "end", "name"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING});
 
             dtos = createDTOList(events, ScheduleItemDTO.class);
         }
