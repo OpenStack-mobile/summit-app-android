@@ -58,7 +58,7 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        setVersion("Version " + pInfo.versionName);
+        setVersion(String.format("Version %s(%s)",pInfo.versionName, pInfo.versionCode));
 
         TextView websiteLink = (TextView)view.findViewById(R.id.about_website_link);
         websiteLink.setOnClickListener(new View.OnClickListener() {

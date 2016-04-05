@@ -66,7 +66,6 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setScheduled(interactor.isEventScheduledByLoggedMember(eventId));
         view.setIsScheduledStatusVisible(interactor.isMemberLoggedInConfirmedAttendee());
         view.setAllowNewFeedback(getAllowNewFeedback());
-        view.setAverageRate((int) Math.round(event.getAverageRate()));
         view.setTags(event.getTags());
         view.hasMyFeedback(myFeedbackForEvent != null);
 
@@ -86,7 +85,13 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
             view.setMyFeedbackOwner(myFeedbackForEvent.getOwner());
         }
 
-        loadFeedback();
+        if (event.getFinished()){
+            view.setAverageRate((int) Math.round(event.getAverageRate()));
+            loadFeedback();
+        }
+        else {
+            view.setAverageRate(0); // TODO: we should implement a hide
+        }
     }
 
     public void loadFeedback() {
