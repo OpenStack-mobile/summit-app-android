@@ -229,8 +229,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
         presenter.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

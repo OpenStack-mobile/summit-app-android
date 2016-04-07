@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
@@ -41,11 +43,15 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                 return;
             }
 
-            if (interactor.isLoggedInAndConfirmedAttendee() || intent.getAction() == Constants.LOGGED_OUT_EVENT) {
-                wireframe.showEventsView(view);
-            }
-            else {
-                showMyProfileView();
+            try {
+                if (interactor.isLoggedInAndConfirmedAttendee() || intent.getAction() == Constants.LOGGED_OUT_EVENT) {
+                    wireframe.showEventsView(view);
+                }
+                else {
+                    showMyProfileView();
+                }
+            } catch (Exception ex) {
+                Crashlytics.logException(new Exception(String.format("Error opening fragment on login/logout notification. onSaveInstanceExecuted = %b ", onSaveInstanceExecuted), ex));
             }
         }
     };

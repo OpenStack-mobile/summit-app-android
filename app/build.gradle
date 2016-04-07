@@ -32,7 +32,7 @@ android {
         targetSdkVersion 23
         versionCode 4
         versionName "1.0"
-        multiDexEnabled true
+        multiDexEnabled 5
     }
     buildTypes {
         debug {
