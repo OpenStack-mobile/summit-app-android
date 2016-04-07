@@ -47,7 +47,7 @@
     <string name="dont_forget_to_link_ticket">Don\'t forget to add your Eventbrite order #!</string>
     <string name="order_not_found">Order wasn\'t found. Please verify that you provided correct order # and try again.</string>
     <string name="eventbrite_order_confirmation">Eventbrite Order Confirmation</string>
-    <string name="eventbrite_order_already_in_use">It seems your order was already confirmed with a different user. A same order # can\'t be confirmed more than once.</string>
+    <string name="eventbrite_order_already_in_use">This Order# has already been associated with another user. If you feel this is an error, please contact summitsupport@openstack.org or enter a different Order #.</string>
     <string name="eventbrite_multiple_matches">Multiple tickets are assigned to provided order #. Please pick your name from the list to finish confirmation process</string>
     <string name="eventbrite_order_confirm">Ticket Order Confirm</string>
     <string name="eventbrite_add_order_number">Add your order # to unlock features only available for registered summit attendees</string>

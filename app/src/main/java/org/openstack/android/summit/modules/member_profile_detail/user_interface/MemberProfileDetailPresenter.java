@@ -14,7 +14,7 @@ import org.openstack.android.summit.modules.member_profile_detail.business_logic
  * Created by Claudio Redi on 1/26/2016.
  */
 public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDetailView, IMemberProfileDetailInteractor, IMemberProfileDetailWireframe> implements IMemberProfileDetailPresenter {
-    private boolean isMyProfile;
+    private Boolean isMyProfile;
     private int speakerId;
     private PersonDTO person;
 
@@ -31,7 +31,7 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
             isMyProfile = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, Boolean.class);
         }
 
-        if (isMyProfile) {
+        if (isMyProfile != null && isMyProfile) {
             MemberDTO myProfile = interactor.getCurrentMember();
             person = myProfile.getSpeakerRole() != null ? myProfile.getSpeakerRole() : myProfile.getAttendeeRole();
         }
