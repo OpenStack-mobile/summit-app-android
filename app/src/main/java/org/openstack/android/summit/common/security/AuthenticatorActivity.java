@@ -26,6 +26,7 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Set;
 
@@ -55,6 +56,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private AccountManager accountManager;
     private Account account;
     private boolean isNewAccount;
+    private IDecoder decoder = new Decoder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -259,14 +261,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     Log.i(TAG, "Requesting access_token with AuthCode : " + authCode);
 
                     try {
-                        response = OIDCUtils.requestTokens(getTokenServerUrl(),
+                        response = OIDCUtils.requestTokens(decoder.getTokenServerUrl(),
                                 Constants.ConfigOIDC.REDIRECT_URL,
-                                getClientID(),
-                                getClientSecret(),
+                                decoder.getClientIDOIDC(),
+                                decoder.getClientSecretOIDC(),
                                 authCode);
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         Log.e(TAG, "Could not get response.");
-                        e.printStackTrace();
+                        Crashlytics.logException(e);
                         return false;
                     }
 
@@ -317,10 +319,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 Log.d(TAG, "Requesting ID token.");
 
                 try {
-                    response = OIDCUtils.requestTokens(getTokenServerUrl(),
+                    response = OIDCUtils.requestTokens(decoder.getTokenServerUrl(),
                             Constants.ConfigOIDC.REDIRECT_URL,
-                            getClientID(),
-                            getClientSecret(),
+                            decoder.getClientIDOIDC(),
+                            decoder.getClientSecretOIDC(),
                             authToken);
                 } catch (IOException e) {
                     Crashlytics.logException(e);
@@ -423,37 +425,5 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 .show();
     }
 
-    private String getClientID() {
-        String value = "";
-        if (BuildConfig.DEBUG) {
-            value = Constants.ConfigOIDC.TEST_CLIENT_ID;
-        }
-        else {
-            value = Constants.ConfigOIDC.PRODUCTION_CLIENT_ID;
-        }
-        return value;
-    }
-
-    private String getClientSecret() {
-        String resourceServerUrl = "";
-        if (BuildConfig.DEBUG) {
-            resourceServerUrl = Constants.ConfigOIDC.TEST_CLIENT_SECRET;
-        }
-        else {
-            resourceServerUrl = Constants.ConfigOIDC.PRODUCTION_CLIENT_SECRET;
-        }
-        return resourceServerUrl;
-    }
-
-    private String getTokenServerUrl() {
-        String value = "";
-        if (BuildConfig.DEBUG) {
-            value = Constants.TEST_TOKEN_SERVER_URL;
-        }
-        else {
-            value = Constants.PRODUCTION_TOKEN_SERVER_URL;
-        }
-        return value;
-    }
 }
 

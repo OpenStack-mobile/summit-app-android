@@ -10,7 +10,7 @@
             android:title="VENUES" />
         <item android:id="@+id/nav_my_profile" android:icon="@drawable/profile"
             android:title="MY PROFILE" android:visible="false" />
-        <item android:id="@+id/nav_about" android:icon="@drawable/settings"
+        <item android:id="@+id/nav_about" android:icon="@drawable/about"
             android:title="ABOUT" />
     </group>
 
