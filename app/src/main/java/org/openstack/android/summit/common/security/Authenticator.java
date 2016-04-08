@@ -19,6 +19,7 @@ import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.common.Constants;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 
@@ -40,6 +41,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
     private Context context;
     private AccountManager accountManager;
+    private IDecoder decoder = new Decoder();
 
     public static final String TOKEN_TYPE_ID = "org.openstack.android.summit.TOKEN_TYPE_ID";
     public static final String TOKEN_TYPE_ACCESS = "org.openstack.android.summit.TOKEN_TYPE_ACCESS";
@@ -118,10 +120,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 IdTokenResponse tokenResponse;
 
                 try {
-                    tokenResponse = OIDCUtils.refreshTokens(getTokenServerUrl(),
-                            getClientID(),
-                            getClientSecret(),
-                            getScopes(),
+                    tokenResponse = OIDCUtils.refreshTokens(decoder.getTokenServerUrl(),
+                            decoder.getClientIDOIDC(),
+                            decoder.getClientSecretOIDC(),
+                            decoder.getScopesOIDC(),
                             refreshToken);
 
                     Log.d(TAG, "Got new tokens.");
@@ -184,21 +186,21 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
         switch (Constants.ConfigOIDC.FLOW_TYPE) {
             case AuthorizationCode :
-                authUrl = OIDCUtils.codeFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), Constants.ConfigOIDC.REDIRECT_URL, getScopes());
+                authUrl = OIDCUtils.codeFlowAuthenticationUrl(decoder.getAuthorizationServerUrl(),
+                        decoder.getClientIDOIDC(), Constants.ConfigOIDC.REDIRECT_URL, decoder.getScopesOIDC());
                 break;
             case Implicit:
-                authUrl = OIDCUtils.implicitFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), Constants.ConfigOIDC.REDIRECT_URL, getScopes());
+                authUrl = OIDCUtils.implicitFlowAuthenticationUrl(decoder.getAuthorizationServerUrl(),
+                        decoder.getClientIDOIDC(), Constants.ConfigOIDC.REDIRECT_URL, decoder.getScopesOIDC());
                 break;
             case Hybrid:
-                authUrl = OIDCUtils.hybridFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), Constants.ConfigOIDC.REDIRECT_URL, getScopes());
+                authUrl = OIDCUtils.hybridFlowAuthenticationUrl(decoder.getAuthorizationServerUrl(),
+                        decoder.getClientIDOIDC(), Constants.ConfigOIDC.REDIRECT_URL, decoder.getScopesOIDC());
                 break;
             default:
                 Log.d(TAG, "Requesting unsupported flowType! Using CodeFlow instead");
-                authUrl = OIDCUtils.codeFlowAuthenticationUrl(getAuthorizationServerUrl(),
-                        getClientID(), Constants.ConfigOIDC.REDIRECT_URL, getScopes());
+                authUrl = OIDCUtils.codeFlowAuthenticationUrl(decoder.getAuthorizationServerUrl(),
+                        decoder.getClientIDOIDC(), Constants.ConfigOIDC.REDIRECT_URL, decoder.getScopesOIDC());
                 break;
         }
 
@@ -237,60 +239,5 @@ public class Authenticator extends AbstractAccountAuthenticator {
                                     String authTokenType, Bundle options)
             throws NetworkErrorException {
         return null;
-    }
-
-    private String getClientID() {
-        String value = "";
-        if (BuildConfig.DEBUG) {
-            value = Constants.ConfigOIDC.TEST_CLIENT_ID;
-        }
-        else {
-            value = Constants.ConfigOIDC.PRODUCTION_CLIENT_ID;
-        }
-        return value;
-    }
-
-    private String getClientSecret() {
-        String value = "";
-        if (BuildConfig.DEBUG) {
-            value = Constants.ConfigOIDC.TEST_CLIENT_SECRET;
-        }
-        else {
-            value = Constants.ConfigOIDC.PRODUCTION_CLIENT_SECRET;
-        }
-        return value;
-    }
-
-    private String getAuthorizationServerUrl() {
-        String value = "";
-        if (BuildConfig.DEBUG) {
-            value = Constants.TEST_AUTHORIZATION_SERVER_URL;
-        }
-        else {
-            value = Constants.PRODUCTION_AUTHORIZATION_SERVER_URL;
-        }
-        return value;
-    }
-
-    private String getTokenServerUrl() {
-        String value = "";
-        if (BuildConfig.DEBUG) {
-            value = Constants.TEST_TOKEN_SERVER_URL;
-        }
-        else {
-            value = Constants.PRODUCTION_TOKEN_SERVER_URL;
-        }
-        return value;
-    }
-
-    private String[] getScopes() {
-        String[] value = null;
-        if (BuildConfig.DEBUG) {
-            value = Constants.ConfigOIDC.TEST_SCOPES;
-        }
-        else {
-            value = Constants.ConfigOIDC.PRODUCTION_SCOPES;
-        }
-        return value;
     }
 }

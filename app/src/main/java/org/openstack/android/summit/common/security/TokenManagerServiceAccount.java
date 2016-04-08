@@ -17,6 +17,7 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -25,6 +26,7 @@ import java.util.Arrays;
  */
 public class TokenManagerServiceAccount implements ITokenManager {
     public final String TOKEN_SERVICE_ACCOUNT = "token_service_account";
+    private IDecoder decoder = new Decoder();
 
     @Override
     public String getToken() throws TokenGenerationException {
@@ -35,7 +37,7 @@ public class TokenManagerServiceAccount implements ITokenManager {
 
             TokenResponse tokenResponse = null;
             try {
-                tokenResponse = getOauth2AccessToken(getTokenServerUrl(), getClientID(), getClientSecret());
+                tokenResponse = getOauth2AccessToken(decoder.getTokenServerUrl(), decoder.getClientIDServiceAccount(), decoder.getClientSecretServiceAccount());
             } catch (IOException e) {
                 throw new TokenGenerationException(e);
             }
@@ -65,53 +67,9 @@ public class TokenManagerServiceAccount implements ITokenManager {
                 new GenericUrl(accessTokenURLWithClientCredentialsGrantTypeQueryParam),
                 "client_credentials");
         tokenRequest.setClientAuthentication(new BasicAuthentication(clientId, clientSecret));
-        tokenRequest.setScopes(new ArrayList<>(Arrays.asList(getScopes())));
+        tokenRequest.setScopes(new ArrayList<>(Arrays.asList(decoder.getScopesServiceAccount())));
         TokenResponse tokenResponse = tokenRequest.execute();
 
         return tokenResponse;
-    }
-
-    private String getClientID() {
-        String value = "";
-        if (BuildConfig.DEBUG) {
-            value = Constants.ConfigServiceAccount.TEST_CLIENT_ID;
-        }
-        else {
-            value = Constants.ConfigServiceAccount.PRODUCTION_CLIENT_ID;
-        }
-        return value;
-    }
-
-    private String getClientSecret() {
-        String value = "";
-        if (BuildConfig.DEBUG) {
-            value = Constants.ConfigServiceAccount.TEST_CLIENT_SECRET;
-        }
-        else {
-            value = Constants.ConfigServiceAccount.PRODUCTION_CLIENT_SECRET;
-        }
-        return value;
-    }
-
-    private String getTokenServerUrl() {
-        String value = "";
-        if (BuildConfig.DEBUG) {
-            value = Constants.TEST_TOKEN_SERVER_URL;
-        }
-        else {
-            value = Constants.PRODUCTION_TOKEN_SERVER_URL;
-        }
-        return value;
-    }
-
-    private String[] getScopes() {
-        String[] value = null;
-        if (BuildConfig.DEBUG) {
-            value = Constants.ConfigServiceAccount.TEST_SCOPES;
-        }
-        else {
-            value = Constants.ConfigServiceAccount.PRODUCTION_SCOPES;
-        }
-        return value;
     }
 }

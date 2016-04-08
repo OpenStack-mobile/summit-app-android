@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
@@ -133,10 +134,18 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
     @Override
     public void showErrorMessage(String message) {
-        new SweetAlertDialog(this.getActivity(), SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Oops...")
-                .setContentText(message)
-                .show();
+        if (BuildConfig.DEBUG){
+            new SweetAlertDialog(this.getActivity(), SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Oops...")
+                    .setContentText(message)
+                    .show();
+        }
+        else {
+            new SweetAlertDialog(this.getActivity(), SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Oops...")
+                    .setContentText("There was a problem performing this operation.")
+                    .show();
+        }
     }
 
     @Override

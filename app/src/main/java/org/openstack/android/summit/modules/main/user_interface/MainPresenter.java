@@ -113,6 +113,11 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     public void showAboutView() {
+        if(!interactor.isDataLoaded()) {
+            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
+            return;
+        }
+
         wireframe.showAboutView(view);
     }
 

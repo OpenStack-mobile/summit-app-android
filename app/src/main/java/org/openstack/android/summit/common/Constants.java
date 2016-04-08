@@ -27,11 +27,11 @@ public class Constants {
     public static final String NAVIGATION_PARAMETER_VENUE = "VenueId";
 
     public static class ConfigServiceAccount {
-        // TODO: Add the information you received from your OIDC provider below.
-        public static final String TEST_CLIENT_ID = "JYvz.AKTzlpLfSl4G.i42Abp-e5dVGVn.openstack.client";
-        public static final String TEST_CLIENT_SECRET = "lQxHMrd576TK.iLXFXVK7mpxY1hOie~gD71T_2H1o7kR0GlstSeomMU~rfMfy_Vy";
-        public static final String PRODUCTION_CLIENT_ID = "h70UpXbSlOAx-i.pYxPDM7qE03FW2nWF.openstack.client";
-        public static final String PRODUCTION_CLIENT_SECRET = "RlL3T1Cw5mugUs05ZYlc63hEwgEVgRTpXx_sASex5rZrh2kTpEGWs8VkiGfIZt5u";
+        //WARNING: these are enconded!!!
+        public static final String TEST_CLIENT_ID = "Sll2ei5BS1R6bHBMZlNsNEcuaTQyQWJwLWU1ZFZHVm4ub3BlbnN0YWNrLmNsaWVudA==";
+        public static final String TEST_CLIENT_SECRET = "bFF4SE1yZDU3NlRLLmlMWEZYVks3bXB4WTFoT2llfmdENzFUXzJIMW83a1IwR2xzdFNlb21NVX5yZk1meV9WeQ==";
+        public static final String PRODUCTION_CLIENT_ID = "aDcwVXBYYlNsT0F4LWkucFl4UERNN3FFMDNGVzJuV0Yub3BlbnN0YWNrLmNsaWVudA==";
+        public static final String PRODUCTION_CLIENT_SECRET = "UmxMM1QxQ3c1bXVnVXMwNVpZbGM2M2hFd2dFVmdSVHBYeF9zQVNleDVyWnJoMmtUcEVHV3M4VmtpR2ZJWnQ1dQ==";
 
         // The `offline_access` scope enables us to request Refresh Tokens, so we don't have to ask the
         // user to authorise us again every time the tokens expire. Some providers might have an
@@ -50,10 +50,11 @@ public class Constants {
      * https://stackoverflow.com/a/14570989
      */
     public static class ConfigOIDC {
-        public static final String TEST_CLIENT_ID = "9HKaikkxU~6Qvor_GvhQm6ADYi7QmwUL.openstack.client";
-        public static final String TEST_CLIENT_SECRET = "oWqW0hf49Im5Iyk-z59DsOekc9FZbcfVc4o9sGGX6gw3Ef6NRntlhqWEwzDGYPfT";
-        public static final String PRODUCTION_CLIENT_ID = "Gg2_KiXCd3OO1f8Gas_cy7RSR1g8EApY.openstack.client";
-        public static final String PRODUCTION_CLIENT_SECRET = "JgcmXHFR7s88KWd1J5hTL9Z70mSs2IAo8NnHTWCOsz.N16hMxXUUCXur6v3gg9Ma";
+        //WARNING: these are enconded!!!
+        public static final String TEST_CLIENT_ID = "OUhLYWlra3hVfjZRdm9yX0d2aFFtNkFEWWk3UW13VUwub3BlbnN0YWNrLmNsaWVudA==";
+        public static final String TEST_CLIENT_SECRET = "b1dxVzBoZjQ5SW01SXlrLXo1OURzT2VrYzlGWmJjZlZjNG85c0dHWDZndzNFZjZOUm50bGhxV0V3ekRHWVBmVA==";
+        public static final String PRODUCTION_CLIENT_ID = "R2cyX0tpWENkM09PMWY4R2FzX2N5N1JTUjFnOEVBcFkub3BlbnN0YWNrLmNsaWVudA==";
+        public static final String PRODUCTION_CLIENT_SECRET = "SmdjbVhIRlI3czg4S1dkMUo1aFRMOVo3MG1TczJJQW84Tm5IVFdDT3N6Lk4xNmhNeFhVVUNYdXI2djNnZzlNYQ==";
 
         // This URL doesn't really have a use with native apps and basically just signifies the end
         // of the authorisation process. It doesn't have to be a real URL, but it does have to be the

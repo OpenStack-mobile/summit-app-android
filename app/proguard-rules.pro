@@ -22,3 +22,17 @@
 -keep @io.realm.internal.Keep class *
 -dontwarn javax.**
 -dontwarn io.realm.**
+-dontwarn com.alibaba.**
+-dontwarn com.parse.**
+-dontwarn rx.internal.**
+-dontwarn com.google.**
+-dontwarn com.viewpagerindicator.**
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-dontwarn org.modelmapper.**
+-keep class android.support.v7.widget.LinearLayoutManager { *; }
+-keepattributes *Annotation*,Signature
+-keep class org.openstack.** { *; }
+-keep class cn.pedant.SweetAlert.** { *; }
+-keep class org.openstack.android.summit.common.data_access.deserialization** { *; }
+-keep class com.google.** { *; }

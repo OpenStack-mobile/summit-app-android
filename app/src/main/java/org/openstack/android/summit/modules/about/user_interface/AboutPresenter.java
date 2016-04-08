@@ -31,7 +31,7 @@ public class AboutPresenter extends BasePresenter<IAboutView, IAboutInteractor, 
     }
 
     private String buildNameDate(SummitDTO summit) {
-        String nameAndDate = summit.getName();
+        String  nameAndDate = summit.getName();
 
         DateFormat formatterFrom = new SimpleDateFormat("MMMM dd-");
         formatterFrom.setTimeZone(TimeZone.getTimeZone(summit.getTimeZone()));
