@@ -104,6 +104,22 @@
     <style name="AppTheme.IconedInformationBarTextViewNoMoreImage" parent="AppTheme.IconedInformationBarTextView">
         <item name="android:layout_marginRight">15dp</item>
     </style>
+
+    <style name="AppTheme.SearchSubsectionBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="AppTheme.SearchSubsectionBar.Button">
+        <item name="android:layout_weight">0.33</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/search_subsection_links</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="AppTheme.SponsorTextView">
         <item name="android:textSize">13sp</item>
         <item name="android:layout_marginTop">5dp</item>
