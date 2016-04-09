@@ -23,17 +23,18 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     }
 
     @Override
-    public void addEventToMemberShedule(SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
+    public void addEventToMemberShedule(final SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
+        addEventToMemberSheduleLocal(summitAttendee, summitEvent);
 
         IDataStoreOperationListener<SummitAttendee> remomoteDataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
             public void onSuceedWithSingleData(SummitAttendee data) {
-                addEventToMemberSheduleLocal(data, summitEvent);
                 dataStoreOperationListener.onSucceedWithoutData();
             }
 
             @Override
             public void onError(String message) {
+                removeEventFromMemberSheduleLocal(summitAttendee, summitEvent);
                 dataStoreOperationListener.onError(message);
             }
         };

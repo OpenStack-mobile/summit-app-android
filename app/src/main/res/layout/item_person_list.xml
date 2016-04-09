@@ -31,7 +31,8 @@
             android:textAllCaps="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/moderator"/>
+            android:text="@string/moderator"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/item_person_list_name"
             android:layout_width="wrap_content"

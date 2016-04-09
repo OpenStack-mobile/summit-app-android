@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.openstack.android.summit.OpenStackSummitApplication;
-import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
@@ -45,7 +43,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             onResume();
         }
     };
-    private int showEventDetailRetry;
 
     public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe);
@@ -186,27 +183,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     @Override
-    public void showEventDetail(final int position) {
-        if (scheduleablePresenter.hasOngoingOperation()) {
-            showEventDetailRetry++;
-            if (showEventDetailRetry == 3) {
-                view.showErrorMessage(view.getResources().getString(R.string.cannot_navigate_event));
-                return;
-            }
-            Handler handler = new Handler();
-            final Runnable showEventDetailDelayed = new Runnable() {
-                @Override
-                public void run() {
-                    showEventDetail(position);
-                }
-            };
-
-            handler.postDelayed(showEventDetailDelayed, 300);
-        }
-        else {
-            showEventDetailRetry = 0;
-            ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-            wireframe.showEventDetail(scheduleItemDTO.getId(), view);
-        }
+    public void showEventDetail(int position) {
+        ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
+        wireframe.showEventDetail(scheduleItemDTO.getId(), view);
     }
 }
