@@ -66,7 +66,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
 
     private String getLocation(S summitEvent) {
         String location = "";
-        if (summitEvent.getVenueRoom() != null) {
+        if (summitEvent.getVenueRoom() != null && summitEvent.getVenueRoom().getVenue() != null) {
             location = summitEvent.getVenueRoom().getVenue().getName() + " - " + summitEvent.getVenueRoom().getName();
         }
         else if (summitEvent.getVenue() != null){
