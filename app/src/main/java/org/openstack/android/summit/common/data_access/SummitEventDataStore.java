@@ -155,8 +155,6 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
 
     @Override
     public List<SummitEvent> getBySearchTerm(String searchTerm) {
-        //TODO: this is a hack for multithreading
-        Realm realm = Realm.getDefaultInstance();
         RealmQuery<SummitEvent> query = realm.where(SummitEvent.class)
                 .contains("name", searchTerm, Case.INSENSITIVE)
                 .or()
