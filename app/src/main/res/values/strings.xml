@@ -52,4 +52,5 @@
     <string name="eventbrite_order_confirm">Ticket Order Confirm</string>
     <string name="eventbrite_add_order_number">Add your order # to unlock features only available for registered summit attendees</string>
     <string name="eventbrite_order_number">Eventbrite Order #</string>
+    <string name="cannot_navigate_event">It\'s not possible to view this event right now. Please try again later.</string>
 </resources>

@@ -10,4 +10,5 @@ import org.openstack.android.summit.common.business_logic.InteractorAsyncOperati
  */
 public interface IScheduleablePresenter {
     void toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor, IInteractorAsyncOperationListener<Void> interactorOperationListener);
+    boolean hasOngoingOperation();
 }

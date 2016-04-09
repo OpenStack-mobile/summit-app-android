@@ -2,7 +2,6 @@ package org.openstack.android.summit.common.user_interface;
 
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
-import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
 import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 
@@ -10,15 +9,15 @@ import org.openstack.android.summit.common.business_logic.InteractorAsyncOperati
  * Created by Claudio Redi on 1/5/2016.
  */
 public class ScheduleablePresenter implements IScheduleablePresenter {
-    private boolean ongoingOperation;
+    private boolean hasOngoingOperation;
 
     @Override
     public void toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor, IInteractorAsyncOperationListener<Void> interactorOperationListener) {
-        if (ongoingOperation) {
+        if (hasOngoingOperation()) {
             return;
         }
 
-        ongoingOperation = true;
+        hasOngoingOperation = true;
         Boolean isScheduled = interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId());
 
         if (isScheduled) {
@@ -35,14 +34,14 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
             @Override
             public void onSucceed() {
                 interactorOperationListener.onSucceed();
-                ongoingOperation = false;
+                hasOngoingOperation = false;
             }
 
             @Override
             public void onError(String message) {
                 scheduleableView.setScheduled(!scheduleableView.getScheduled());
                 interactorOperationListener.onError(message);
-                ongoingOperation = false;
+                hasOngoingOperation = false;
             }
         };
 
@@ -55,17 +54,21 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
             @Override
             public void onSucceed() {
                 interactorOperationListener.onSucceed();
-                ongoingOperation = false;
+                hasOngoingOperation = false;
             }
 
             @Override
             public void onError(String message) {
                 scheduleableView.setScheduled(!scheduleableView.getScheduled());
                 interactorOperationListener.onError(message);
-                ongoingOperation = false;
+                hasOngoingOperation = false;
             }
         };
 
         interactor.addEventToLoggedInMemberSchedule(scheduleItemDTO.getId(), internalInteractorOperationListener);
+    }
+
+    public boolean hasOngoingOperation() {
+        return hasOngoingOperation;
     }
 }
