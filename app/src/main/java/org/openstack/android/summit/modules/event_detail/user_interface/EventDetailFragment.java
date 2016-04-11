@@ -5,11 +5,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.linearlistview.LinearListView;
 
@@ -26,6 +29,7 @@ import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
+import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.w3c.dom.Text;
 
 import java.util.Date;
@@ -148,7 +152,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         TextView descriptionTextView = (TextView)view.findViewById(R.id.event_detail_description);
         descriptionTextView.setVisibility(description != null && !description.isEmpty() ? View.VISIBLE : View.GONE);
         descriptionTextView.setText(description != null && !description.isEmpty() ? Html.fromHtml(description) : "");
-        descriptionTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        descriptionTextView.setMovementMethod(new CustomLinkMovementMethod());
     }
 
     @Override
@@ -428,5 +432,18 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         public int getCount() {
             return super.getCount();
         };
+    }
+
+    private class CustomLinkMovementMethod extends LinkMovementMethod {
+
+        @Override
+        public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
+            try {
+                return super.onTouchEvent(widget, buffer, event);
+            } catch (Exception ex) {
+                showInfoMessage("Could not navigate this link");
+                return true;
+            }
+        }
     }
 }
