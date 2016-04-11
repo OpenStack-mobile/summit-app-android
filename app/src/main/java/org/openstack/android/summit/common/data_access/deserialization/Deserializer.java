@@ -1,8 +1,13 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.IEntity;
@@ -17,6 +22,7 @@ import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 
+import java.security.spec.InvalidParameterSpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,9 +136,15 @@ public class Deserializer implements IDeserializer {
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONArray jsonArray = jsonObject.getJSONArray("data");
         List<T> list = new ArrayList<>();
+        JSONObject jsonPageItem = null;
         for(int i = 0; i < jsonArray.length(); i++) {
-            jsonObject = jsonArray.getJSONObject(i);
-            list.add(deserialize(jsonObject.toString(), type));
+            try {
+                jsonPageItem = jsonArray.getJSONObject(i);
+                list.add(deserialize(jsonObject.toString(), type));
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.e(Constants.LOG_TAG, String.format("Error deserializing %s", jsonPageItem.toString()), e);
+            }
         }
         return list;
     }

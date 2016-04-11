@@ -29,7 +29,6 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
         this.deserializer = deserializer;
     }
 
-
     @Override
     public void getFeedback(int eventId, int page, int objectsPerPage, final IDataStoreOperationListener<Feedback> dataStoreOperationListener) {
         try {
