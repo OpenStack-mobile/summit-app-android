@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
@@ -185,6 +186,13 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     @Override
     public void showEventDetail(int position) {
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-        wireframe.showEventDetail(scheduleItemDTO.getId(), view);
+
+        if (interactor.eventExist(scheduleItemDTO.getId())) {
+            wireframe.showEventDetail(scheduleItemDTO.getId(), view);
+        }
+        else {
+            view.showErrorMessage(view.getResources().getString(R.string.event_not_exist));
+            onResume();
+        }
     }
 }

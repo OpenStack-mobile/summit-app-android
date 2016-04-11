@@ -94,6 +94,12 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
         return inactiveDates;
     }
 
+    @Override
+    public boolean eventExist(int id) {
+        SummitEvent summitEvent = summitEventDataStore.getByIdLocal(id);
+        return summitEvent != null;
+    }
+
 
     @Override
     public void getActiveSummit(final IInteractorAsyncOperationListener<SummitDTO> delegate) {
