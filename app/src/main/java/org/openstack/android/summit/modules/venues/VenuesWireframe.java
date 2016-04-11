@@ -14,6 +14,7 @@ public class VenuesWireframe implements IVenuesWireframe {
     public void presentVenuesView(IBaseView context) {
         VenuesFragment venuesFragment = new VenuesFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, venuesFragment)

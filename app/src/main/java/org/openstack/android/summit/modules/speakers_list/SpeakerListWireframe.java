@@ -26,6 +26,7 @@ public class SpeakerListWireframe extends BaseWireframe implements ISpeakerListW
     public void presentSpeakersListView(IBaseView context) {
         SpeakerListFragment speakerListFragment = new SpeakerListFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, speakerListFragment)
