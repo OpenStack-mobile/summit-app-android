@@ -41,13 +41,15 @@ public class SummitRemoteDataStore extends BaseRemoteDataStore implements ISummi
                     } catch (JSONException e) {
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG,"Error deserializing summit", e);
-                        dataStoreOperationListener.onError(e.getMessage());
+                        String friendlyError = Constants.GENERIC_ERROR_MSG;
+                        dataStoreOperationListener.onError(friendlyError);
                     }
                 }
 
                 @Override
                 public void onError(Throwable error) {
-                    dataStoreOperationListener.onError(error.getMessage());
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
                 }
             };
             String url = getResourceServerUrl() + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";
@@ -56,7 +58,8 @@ public class SummitRemoteDataStore extends BaseRemoteDataStore implements ISummi
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
-            dataStoreOperationListener.onError(e.getMessage());
+            String friendlyError = Constants.GENERIC_ERROR_MSG;
+            dataStoreOperationListener.onError(friendlyError);
         }
     }
 }

@@ -56,7 +56,8 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
 
             @Override
             public void onError(Throwable error) {
-                dataStoreOperationListener.onError(error.getMessage());
+                String friendlyError = Constants.GENERIC_ERROR_MSG;
+                dataStoreOperationListener.onError(friendlyError);
             }
         };
 
@@ -89,7 +90,8 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
 
             @Override
             public void onError(Throwable error) {
-                dataStoreOperationListener.onError(error.getMessage());
+                String friendlyError = Constants.GENERIC_ERROR_MSG;
+                dataStoreOperationListener.onError(friendlyError);
             }
         };
 
