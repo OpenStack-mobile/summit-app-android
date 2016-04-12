@@ -72,7 +72,8 @@ public class GenericDataStore implements IGenericDataStore {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             if (delegate != null) {
-                delegate.onError(e.getMessage());
+                String friendlyError = Constants.GENERIC_ERROR_MSG;
+                delegate.onError(friendlyError);
             }
         }
     }
@@ -91,7 +92,8 @@ public class GenericDataStore implements IGenericDataStore {
             realm.cancelTransaction();
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
-            delegate.onError(e.getMessage());
+            String friendlyError = Constants.GENERIC_ERROR_MSG;
+            delegate.onError(friendlyError);
         }
     }
 

@@ -140,7 +140,7 @@ public class Deserializer implements IDeserializer {
         for(int i = 0; i < jsonArray.length(); i++) {
             try {
                 jsonPageItem = jsonArray.getJSONObject(i);
-                list.add(deserialize(jsonObject.toString(), type));
+                list.add(deserialize(jsonPageItem.toString(), type));
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.e(Constants.LOG_TAG, String.format("Error deserializing %s", jsonPageItem.toString()), e);

@@ -38,7 +38,8 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
                     realm.cancelTransaction();
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, e.getMessage(), e);
-                    dataStoreOperationListener.onError(e.getMessage());
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
                 }
             }
 
@@ -64,7 +65,8 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
                 catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, e.getMessage(), e);
-                    dataStoreOperationListener.onError(e.getMessage());
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
                 }
             }
 
@@ -86,7 +88,8 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
                 catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, e.getMessage(), e);
-                    dataStoreOperationListener.onError(e.getMessage());
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
                 }
             }
 

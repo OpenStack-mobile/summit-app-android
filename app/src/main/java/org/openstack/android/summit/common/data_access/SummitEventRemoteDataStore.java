@@ -41,13 +41,15 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                     } catch (JSONException e) {
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG, "Error deserializing feedback", e);
-                        dataStoreOperationListener.onError(e.getMessage());
+                        String friendlyError = Constants.GENERIC_ERROR_MSG;
+                        dataStoreOperationListener.onError(friendlyError);
                     }
                 }
 
                 @Override
                 public void onError(Throwable error) {
-                    dataStoreOperationListener.onError(error.getMessage());
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
                 }
             };
             String url = getResourceServerUrl() +
@@ -57,7 +59,8 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
-            dataStoreOperationListener.onError(e.getMessage());
+            String friendlyError = Constants.GENERIC_ERROR_MSG;
+            dataStoreOperationListener.onError(friendlyError);
         }
     }
 }

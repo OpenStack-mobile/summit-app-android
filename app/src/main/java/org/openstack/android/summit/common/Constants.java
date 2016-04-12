@@ -5,6 +5,7 @@ package org.openstack.android.summit.common;
  */
 public class Constants {
     static public final String LOG_TAG = "OpenStackSummit";
+    static public final String GENERIC_ERROR_MSG = "There was an error performing this operation.";
     static public final String TEST_TOKEN_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/token";
     static public final String TEST_AUTHORIZATION_SERVER_URL = "https://testopenstackid.openstack.org/oauth2/auth";
     static public final String TEST_RESOURCE_SERVER_BASE_URL = "https://testresource-server.openstack.org";

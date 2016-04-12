@@ -52,13 +52,15 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                 } catch (JSONException e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, "Error deserializing member", e);
-                    dataStoreOperationListener.onError(e.getMessage());
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
                 }
             }
 
             @Override
             public void onError(Throwable error) {
-                dataStoreOperationListener.onError(error.getMessage());
+                String friendlyError = Constants.GENERIC_ERROR_MSG;
+                dataStoreOperationListener.onError(friendlyError);
             }
         };
 
@@ -84,13 +86,15 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                 } catch (JSONException e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, "Error deserializing member", e);
-                    dataStoreOperationListener.onError(e.getMessage());
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
                 }
             }
 
             @Override
             public void onError(Throwable error) {
-                dataStoreOperationListener.onError(error.getMessage());
+                String friendlyError = Constants.GENERIC_ERROR_MSG;
+                dataStoreOperationListener.onError(friendlyError);
             }
         };
 
@@ -118,7 +122,8 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                 catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, e.getMessage(), e);
-                    dataStoreOperationListener.onError(e.getMessage());
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
                 }
             }
 
@@ -155,7 +160,8 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
 
             @Override
             public void onError(Throwable error) {
-                dataStoreOperationListener.onError(error.getMessage());
+                String friendlyError = Constants.GENERIC_ERROR_MSG;
+                dataStoreOperationListener.onError(friendlyError);
             }
         };
 
