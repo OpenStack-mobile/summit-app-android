@@ -50,9 +50,6 @@
                 android:textColor="@color/openStackLightBlue"
                 android:textSize="18dp"
                 android:layout_marginTop="5dp"/>
-<<<<<<< HEAD
-=======
-
             <TextView
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
@@ -61,7 +58,6 @@
                 android:gravity="center_horizontal"
                 android:textIsSelectable="true"
                 android:text="@string/app_support"/>
->>>>>>> dev
         </LinearLayout>
 
         <LinearLayout
