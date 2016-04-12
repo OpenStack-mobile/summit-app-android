@@ -1,8 +1,13 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -41,13 +46,19 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         }
 
         SummitEvent summitEvent;
-        int summitEventId;
+        int summitEventId = 0;
         JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
         for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
-            summitEventId = jsonArraySummitEvents.getInt(i);
-            summitEvent = deserializerStorage.get(summitEventId, SummitEvent.class);
-            if (summitEvent != null) {
-                summitAttendee.getScheduledEvents().add(summitEvent);
+            try{
+                summitEventId = jsonArraySummitEvents.getInt(i);
+                summitEvent = deserializerStorage.get(summitEventId, SummitEvent.class);
+                if (summitEvent != null) {
+                    summitAttendee.getScheduledEvents().add(summitEvent);
+                }
+            }
+            catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.e(Constants.LOG_TAG, String.format("Error deserializing schedule event %s", summitEventId), e);
             }
         }
 
@@ -65,8 +76,14 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         JSONArray jsonArrayFeedback = jsonObject.getJSONArray("feedback");
         for (int i = 0; i < jsonArrayFeedback.length(); i++) {
             jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
-            feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());
-            summitAttendee.getFeedback().add(feedback);
+            try {
+                feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());
+                summitAttendee.getFeedback().add(feedback);
+            }
+            catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.e(Constants.LOG_TAG, String.format("Error deserializing feedback %s", jsonObjectFeedback.toString()), e);
+            }
         }
 
         return summitAttendee;

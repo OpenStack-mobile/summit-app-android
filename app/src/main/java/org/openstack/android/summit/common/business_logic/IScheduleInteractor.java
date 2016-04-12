@@ -18,4 +18,6 @@ public interface IScheduleInteractor extends IScheduleableInteractor {
     void subscribeToPushChannelsUsingContextIfNotDoneAlready();
 
     List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels);
+
+    boolean eventExist(int id);
 }

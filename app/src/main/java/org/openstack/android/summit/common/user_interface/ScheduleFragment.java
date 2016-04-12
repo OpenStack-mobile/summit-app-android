@@ -36,6 +36,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
     ScheduleListAdapter scheduleListAdapter;
     List<ScheduleItemDTO> events;
+    int selectedPosition;
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -122,7 +123,13 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         ((LinearLayout)ranger.getParent()).setVisibility(View.VISIBLE);
         scheduleListAdapter.notifyDataSetChanged();
         ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
-        scheduleList.setSelectionAfterHeaderView();
+        if (selectedPosition == 0) {
+            scheduleList.setSelectionAfterHeaderView();
+        }
+        else {
+            // reset selected position so we start fresh next time
+            selectedPosition = 0;
+        }
     }
 
     @Override
@@ -148,6 +155,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    selectedPosition = position;
                     presenter.showEventDetail(position);
                 }
             });

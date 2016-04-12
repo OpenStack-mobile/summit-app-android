@@ -94,6 +94,12 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
         return inactiveDates;
     }
 
+    @Override
+    public boolean eventExist(int id) {
+        SummitEvent summitEvent = summitEventDataStore.getByIdLocal(id);
+        return summitEvent != null;
+    }
+
 
     @Override
     public void getActiveSummit(final IInteractorAsyncOperationListener<SummitDTO> delegate) {
@@ -105,8 +111,9 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                         SummitDTO summitDTO = dtoAssembler.createDTO(data, SummitDTO.class);
                         delegate.onSucceedWithData(summitDTO);
                     } catch (Exception e) {
-                        Log.e(Constants.LOG_TAG, "Error getting active summit", e);
-                        delegate.onError(e.getMessage());
+                        String friendlyError = "Error getting summit information";
+                        Log.e(Constants.LOG_TAG, friendlyError, e);
+                        delegate.onError(friendlyError);
                     }
                 }
             }

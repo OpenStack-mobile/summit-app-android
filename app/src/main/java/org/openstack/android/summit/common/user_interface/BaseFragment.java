@@ -134,18 +134,10 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
     @Override
     public void showErrorMessage(String message) {
-        if (BuildConfig.DEBUG){
-            new SweetAlertDialog(this.getActivity(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Oops...")
-                    .setContentText(message)
-                    .show();
-        }
-        else {
-            new SweetAlertDialog(this.getActivity(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Oops...")
-                    .setContentText("There was a problem performing this operation.")
-                    .show();
-        }
+        new SweetAlertDialog(this.getActivity(), SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Oops...")
+                .setContentText(message)
+                .show();
     }
 
     @Override

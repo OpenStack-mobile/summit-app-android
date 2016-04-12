@@ -152,7 +152,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
         String url = null;
         int latestDataUpdateId = dataUpdateDataStore.getLatestDataUpdate();
         if (latestDataUpdateId > 0) {
-            url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?last_event_id=", latestDataUpdateId);
+            url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=50&last_event_id=", latestDataUpdateId);
         }
         else {
             long fromDate = getFromDate();
@@ -165,7 +165,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
             }
 
             if (fromDate != 0) {
-                url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?from_date=", fromDate);
+                url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=50&from_date=", fromDate);
             }
         }
 
