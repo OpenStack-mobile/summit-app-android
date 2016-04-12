@@ -1,8 +1,13 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Presentation;
@@ -53,13 +58,21 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         EventType eventType = deserializerStorage.get(jsonObject.getInt("type_id"), EventType.class);
         summitEvent.setEventType(eventType);
 
-        SummitType summitType;
+        SummitType summitType = null;
         int summitTypeId;
         JSONArray jsonArraySummitTypes = jsonObject.getJSONArray("summit_types");
         for (int i = 0; i < jsonArraySummitTypes.length(); i++) {
             summitTypeId = jsonArraySummitTypes.getInt(i);
-            summitType = deserializerStorage.get(summitTypeId, SummitType.class);
-            summitEvent.getSummitTypes().add(summitType);
+            try {
+                summitType = deserializerStorage.get(summitTypeId, SummitType.class);
+                summitEvent.getSummitTypes().add(summitType);
+            }
+            catch (Exception e) {
+                Crashlytics.setInt("summitTypeId", summitTypeId);
+                Crashlytics.setBool("isSummitTypeNull", summitType == null);
+                Crashlytics.logException(e);
+                throw e;
+            }
         }
 
         Company company;
