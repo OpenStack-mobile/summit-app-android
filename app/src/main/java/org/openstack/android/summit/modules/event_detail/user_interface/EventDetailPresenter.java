@@ -111,7 +111,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
                 List<FeedbackDTO> feedbackPageWithoutMe = new ArrayList<FeedbackDTO>();
                 for (FeedbackDTO feedbackDTO : data) {
                     // TODO: if there are more than one owners with the same name, this could potencially fail
-                    if (myFeedbackForEvent == null || (feedbackDTO.getOwner() != myFeedbackForEvent.getOwner())) {
+                    if (myFeedbackForEvent == null || (feedbackDTO.getOwner() != null && !feedbackDTO.getOwner().equals(myFeedbackForEvent.getOwner()))) {
                         feedbackPageWithoutMe.add(feedbackDTO);
                     }
                 }
