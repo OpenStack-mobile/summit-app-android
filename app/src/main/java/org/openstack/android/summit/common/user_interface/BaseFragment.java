@@ -87,7 +87,7 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
     @Override
     public void showActivityIndicator(int delay) {
-        if (isActivityIndicatorVisible) {
+        if (isActivityIndicatorVisible || getActivity() == null) {
             return;
         }
 
@@ -118,6 +118,9 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
     @Override
     public void hideActivityIndicator() {
+        if (getActivity() == null) {
+            return;
+        }
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -134,6 +137,10 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
     @Override
     public void showErrorMessage(String message) {
+        if (getActivity() == null) {
+            return;
+        }
+
         new SweetAlertDialog(this.getActivity(), SweetAlertDialog.ERROR_TYPE)
                 .setTitleText("Oops...")
                 .setContentText(message)
@@ -142,6 +149,10 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
     @Override
     public void showInfoMessage(String message) {
+        if (getActivity() == null) {
+            return;
+        }
+
         new SweetAlertDialog(this.getActivity(), SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Info")
                 .setContentText(message)
