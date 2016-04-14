@@ -32,7 +32,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         String location = getLocation(source);
         scheduleItemDTO.setLocation(location);
         scheduleItemDTO.setRoom(source.getVenueRoom() != null ?source.getVenueRoom().getName() : null);
-        scheduleItemDTO.setEventType(source.getEventType().getName());
+        scheduleItemDTO.setEventType(source.getEventType() != null ? source.getEventType().getName() : "");
         String sponsors = getSponsors(source);
         scheduleItemDTO.setSponsors(sponsors);
         String credentials = getCredentials(source);

@@ -159,8 +159,6 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
                 .show();
     }
 
-
-
     @Override
     public FragmentManager getSupportFragmentManager() {
         return getActivity().getSupportFragmentManager();
