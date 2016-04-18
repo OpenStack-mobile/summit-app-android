@@ -59,8 +59,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
 
             @Override
             public void onError(Throwable error) {
-                String friendlyError = Constants.GENERIC_ERROR_MSG;
-                dataStoreOperationListener.onError(friendlyError);
+                dataStoreOperationListener.onError(error.getMessage());
             }
         };
 
