@@ -28,13 +28,16 @@ public class MemberDeserializer implements IMemberDeserializer {
     public Member deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
         Member member = new Member();
-        member.setId(jsonObject.optInt("id"));
         member.setFullName(jsonObject.has("name") ? jsonObject.optString("name") : getFullName(jsonObject));
         member.setPictureUrl(jsonObject.optString("picture"));
 
         if (jsonObject.has("member_id")) {
+            member.setId(jsonObject.optInt("member_id"));
             SummitAttendee summitAttendee = summitAttendeeDeserializer.deserialize(jsonString);
             member.setAttendeeRole(summitAttendee);
+        }
+        else {
+            member.setId(jsonObject.optInt("id"));
         }
 
         if (jsonObject.has("speaker")) {

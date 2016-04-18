@@ -74,6 +74,8 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="AbSHdAekX4l9WgP8PObe6PA2XsnnXUTpsiVP6kcN" />
 
+        <meta-data android:name="com.parse.push.notification_icon" android:resource="@drawable/push_icon"/>
+
         <service android:name="com.parse.PushService" />
         <receiver android:name="com.parse.ParsePushBroadcastReceiver"
             android:exported="false">

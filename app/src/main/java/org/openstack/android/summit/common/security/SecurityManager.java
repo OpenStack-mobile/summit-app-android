@@ -47,6 +47,8 @@ public class SecurityManager implements ISecurityManager {
     private ISession session;
     private ITokenManager tokenManager;
     private final int LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID = -1;
+    private final String HACK_FIX_MEMBER_ID = "HACK_FIX_MEMBER_ID";
+    private boolean hackForFixWrongMemberIDDoneOrInProgress;
 
     @Inject
     public SecurityManager(ITokenManager tokenManager, final IMemberDataStore memberDataStore, final ISession session) {
@@ -244,9 +246,32 @@ public class SecurityManager implements ISecurityManager {
 
         if (currentMemberId > 0) {
             member = memberDataStore.getByIdLocal(currentMemberId);
+
+            // Chili #10927. Delete this after summit
+            hackForFixWrongMemberID();
         }
 
         return accountManager.getAccountsByType(accountType).length > 0 && currentMemberId != 0 && member != null;
+    }
+
+    private void hackForFixWrongMemberID() {
+        if (!hackForFixWrongMemberIDDoneOrInProgress) {
+            String flag = session.getString(HACK_FIX_MEMBER_ID);
+            if (flag == null) {
+                hackForFixWrongMemberIDDoneOrInProgress = true;
+                Log.d(Constants.LOG_TAG, "Hack to fix wrong member id in progress");
+
+                IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
+                    @Override
+                    public void onSuceedWithSingleData(Member data) {
+                        session.setString(HACK_FIX_MEMBER_ID, "DONE");
+                        session.setInt(Constants.CURRENT_MEMBER_ID, data.getId());
+                    }
+                };
+
+                memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
+            }
+        }
     }
 
     @Override
