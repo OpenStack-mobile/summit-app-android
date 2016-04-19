@@ -23,4 +23,6 @@ public interface ISummitEventDataStore {
     List<SummitEvent> getSpeakerEvents(int speakerId, Date startDate, Date endDate);
 
     void getFeedbackOrigin(int eventId, int page, int objectsPerPage, IDataStoreOperationListener<Feedback> dataStoreOperationListener);
+
+    void getAverageFeedbackOrigin(int eventId, IDataStoreOperationListener<SummitEvent> dataStoreOperationListener);
 }

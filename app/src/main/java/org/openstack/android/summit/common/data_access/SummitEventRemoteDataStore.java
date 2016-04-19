@@ -10,6 +10,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
@@ -64,15 +65,15 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
         }
     }
 
-    /*@Override
-    public void getAverageFeedback(int eventId, final IDataStoreOperationListener<Integer> dataStoreOperationListener) {
+    @Override
+    public void getAverageFeedback(int eventId, final IDataStoreOperationListener<SummitEvent> dataStoreOperationListener) {
         try {
             HttpTaskListener httpTaskListener = new HttpTaskListener() {
                 @Override
                 public void onSucceed(String data) {
                     try {
-                        Integer averageFeedback = Integer.parseInt(data);
-                        dataStoreOperationListener.onSuceedWithSingleData(averageFeedback);
+                        SummitEvent event = deserializer.deserialize(data, SummitEvent.class);
+                        dataStoreOperationListener.onSuceedWithSingleData(event);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG, e.getMessage(), e);
@@ -88,7 +89,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                 }
             };
             String url = getResourceServerUrl() +
-                    String.format("/api/v1/summits/current/events/%d/feedback?expand=owner&page=%d&per_page=%d", eventId, page, objectsPerPage);
+                    String.format("/api/v1/summits/current/events/%d/published?fields=id,avg_feedback_rate&relations=none", eventId);
             HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
             httpTask.execute();
         } catch (Exception e) {
@@ -97,5 +98,5 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
             String friendlyError = Constants.GENERIC_ERROR_MSG;
             dataStoreOperationListener.onError(friendlyError);
         }
-    }*/
+    }
 }

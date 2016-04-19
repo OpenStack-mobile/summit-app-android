@@ -144,90 +144,131 @@ Nulla erant noluisse te has. Ipsum volumus gloriatur cu cum, unum mundi eos no, 
                 android:divider="@color/openStackLightGray"
                 app:dividerThickness="1dp" />
 
-            <LinearLayout
-                android:id="@+id/event_avg_feedback_rate"
-                android:orientation="horizontal"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/average_rating"
-                    android:textSize="17dp"
-                    android:layout_marginRight="15dp"
-                    android:textStyle="bold"
-                    android:layout_gravity="center_vertical"/>
+                android:layout_height="wrap_content">
+
                 <LinearLayout
+                    android:id="@+id/event_detail_loading_feedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:id="@+id/event_avg_feedback_rate_1"
-                        style="@style/AppTheme.MediumStarRate"/>
-                    <ImageView
-                        android:id="@+id/event_avg_feedback_rate_2"
-                        style="@style/AppTheme.MediumStarRate"/>
-                    <ImageView
-                        android:id="@+id/event_avg_feedback_rate_3"
-                        style="@style/AppTheme.MediumStarRate"/>
-                    <ImageView
-                        android:id="@+id/event_avg_feedback_rate_4"
-                        style="@style/AppTheme.MediumStarRate"/>
-                    <ImageView
-                        android:id="@+id/event_avg_feedback_rate_5"
-                        style="@style/AppTheme.MediumStarRate"/>
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:visibility="gone">
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+                    </ProgressBar>
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:text="@string/loading_ratings_and_reviews"/>
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/event_detail_my_feedback"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#efefef"
-                android:visibility="gone"
-                android:showDividers="beginning">
-                <include layout="@layout/item_feedback_list"></include>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/event_detail_error_loading_feedback_container"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:background="#FF3322"
-                android:visibility="gone"
-                style="@style/AppTheme.IconedInformationBarContainerNoBorder">
-                <ImageView
-                    style="@style/AppTheme.IconedInformationBarImageView"
-                    android:src="@drawable/warning"
-                    android:tint="@color/white"/>
-                <TextView
-                    android:id="@+id/event_detail_error_loading_feedback_text"
-                    style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
-                    android:textColor="@android:color/white"
-                    android:text="There was a problem loading feedback"/>
-            </LinearLayout>
 
-            <com.linearlistview.LinearListView
-                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/event_detail_feedback_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:showDividers="beginning|middle|end"
-                android:background="@android:color/white"
-                android:divider="@color/openStackLightGray"
-                app:dividerThickness="1dp" />
+                <LinearLayout
+                    android:id="@+id/event_detail_feedback_container"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
-            <Button
-                android:id="@+id/event_detail_load_more_feedback_button"
-                style="@style/AppTheme.Button"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:text="@string/load_more"/>
+                    <LinearLayout
+                        android:id="@+id/event_avg_feedback_rate"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:background="@drawable/bottom_bordered_control">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/average_rating"
+                            android:textSize="17dp"
+                            android:layout_marginRight="15dp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_vertical"/>
+                        <LinearLayout
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:id="@+id/event_avg_feedback_rate_1"
+                                style="@style/AppTheme.MediumStarRate"/>
+                            <ImageView
+                                android:id="@+id/event_avg_feedback_rate_2"
+                                style="@style/AppTheme.MediumStarRate"/>
+                            <ImageView
+                                android:id="@+id/event_avg_feedback_rate_3"
+                                style="@style/AppTheme.MediumStarRate"/>
+                            <ImageView
+                                android:id="@+id/event_avg_feedback_rate_4"
+                                style="@style/AppTheme.MediumStarRate"/>
+                            <ImageView
+                                android:id="@+id/event_avg_feedback_rate_5"
+                                style="@style/AppTheme.MediumStarRate"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/event_detail_my_feedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@color/openStackLightGray"
+                        android:visibility="gone"
+                        android:showDividers="beginning">
+                        <include layout="@layout/item_feedback_list"></include>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/event_detail_error_loading_feedback_container"
+                        android:paddingBottom="15dp"
+                        android:paddingTop="15dp"
+                        android:background="#FF3322"
+                        android:visibility="gone"
+                        style="@style/AppTheme.IconedInformationBarContainerNoBorder">
+                        <ImageView
+                            style="@style/AppTheme.IconedInformationBarImageView"
+                            android:src="@drawable/warning"
+                            android:tint="@color/white"/>
+                        <TextView
+                            android:id="@+id/event_detail_error_loading_feedback_text"
+                            style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
+                            android:textColor="@android:color/white"
+                            android:text="There was a problem loading feedback"/>
+                    </LinearLayout>
+
+                    <com.linearlistview.LinearListView
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/event_detail_feedback_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:showDividers="beginning|middle|end"
+                        android:background="@android:color/white"
+                        android:divider="@color/openStackLightGray"
+                        app:dividerThickness="1dp" />
+
+                    <Button
+                        android:id="@+id/event_detail_load_more_feedback_button"
+                        style="@style/AppTheme.Button"
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        android:text="@string/load_more"/>
+                </LinearLayout>
+
+            </FrameLayout>
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

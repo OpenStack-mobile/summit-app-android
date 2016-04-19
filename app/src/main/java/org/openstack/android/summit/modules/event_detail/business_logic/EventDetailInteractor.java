@@ -82,4 +82,22 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
 
         summitEventDataStore.getFeedbackOrigin(eventId, page, objectsPerPage, dataStoreOperationListener);
     }
+
+    public void getAverageFeedbackForEvent(int eventId, final IInteractorAsyncOperationListener<Double> interactorAsyncOperationListener) {
+        IDataStoreOperationListener<SummitEvent> dataStoreOperationListener = new DataStoreOperationListener<SummitEvent>() {
+            @Override
+            public void onSuceedWithSingleData(SummitEvent data) {
+                super.onSuceedWithSingleData(data);
+                interactorAsyncOperationListener.onSucceedWithData(data.getAverageRate());
+            }
+
+            @Override
+            public void onError(String message) {
+                super.onError(message);
+                interactorAsyncOperationListener.onError(message);
+            }
+        };
+
+        summitEventDataStore.getAverageFeedbackOrigin(eventId, dataStoreOperationListener);
+    }
 }

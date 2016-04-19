@@ -56,4 +56,5 @@
     <string name="app_support">For app support, please email summitapp@openstack.org.</string>
     <string name="event_not_exist">This event was removed from schedule.</string>
     <string name="average_rating">Average Rating</string>
+    <string name="loading_ratings_and_reviews">Loading Ratings &amp; Reviews...</string>
 </resources>
