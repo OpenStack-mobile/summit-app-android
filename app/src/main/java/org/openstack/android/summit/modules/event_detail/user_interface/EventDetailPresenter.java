@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.event_detail.user_interface;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
@@ -35,6 +36,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     private boolean loadedAllFeedback;
     private int feedbackPage = 1;
     private int feedbackObjectsPerPage = 5;
+    private boolean loadingFeedbackAverage;
 
     @Inject
     public EventDetailPresenter(IEventDetailInteractor interactor, IEventDetailWireframe wireframe, IScheduleablePresenter scheduleablePresenter) {
@@ -85,12 +87,10 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
             view.setMyFeedbackOwner(myFeedbackForEvent.getOwner());
         }
 
+        view.setAverageRate(0); // TODO: we should implement a hide
         if (event.getFinished()){
-            view.setAverageRate((int) Math.round(event.getAverageRate()));
             loadFeedback();
-        }
-        else {
-            view.setAverageRate(0); // TODO: we should implement a hide
+            loadAverageFeedback();
         }
     }
 
@@ -107,7 +107,6 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
             public void onSucceedWithData(List<FeedbackDTO> data) {
                 super.onSucceedWithData(data);
                 loadingFeedback = false;
-                view.hideFeedbackActivityIndicator();
                 List<FeedbackDTO> feedbackPageWithoutMe = new ArrayList<FeedbackDTO>();
                 for (FeedbackDTO feedbackDTO : data) {
                     // TODO: if there are more than one owners with the same name, this could potencially fail
@@ -122,19 +121,54 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
                 feedbackPage++;
                 loadedAllFeedback = data.size() < feedbackObjectsPerPage;
                 view.toggleLoadMore(!loadedAllFeedback);
+                showFeedbackInfoIfFinishedLoading();
             }
 
             @Override
             public void onError(String message) {
                 super.onError(message);
                 loadingFeedback = false;
-                view.hideFeedbackActivityIndicator();
                 view.showFeedbackErrorMessage(message);
+                showFeedbackInfoIfFinishedLoading();
             }
         };
 
         interactor.getFeedbackForEvent(eventId, feedbackPage, feedbackObjectsPerPage, interactorAsyncOperationListener);
     }
+
+    public void loadAverageFeedback() {
+        loadingFeedbackAverage = true;
+        view.showFeedbackActivityIndicator();
+
+        IInteractorAsyncOperationListener<Double> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Double>() {
+            @Override
+            public void onSucceedWithData(Double data) {
+                super.onSucceedWithData(data);
+                view.setAverageRate((int) Math.round(event.getAverageRate()));
+                loadingFeedbackAverage = false;
+                showFeedbackInfoIfFinishedLoading();
+            }
+
+            @Override
+            public void onError(String message) {
+                super.onError(message);
+                loadingFeedback = false;
+                view.showFeedbackErrorMessage(message);
+                loadingFeedbackAverage = false;
+                showFeedbackInfoIfFinishedLoading();
+            }
+        };
+
+        interactor.getAverageFeedbackForEvent(eventId, interactorAsyncOperationListener);
+    }
+
+    private void showFeedbackInfoIfFinishedLoading() {
+        if (!loadingFeedback && !loadingFeedbackAverage) {
+            view.showFeedbackContainer();
+            view.hideFeedbackActivityIndicator();
+        }
+    }
+
 
     @Override
     public void showVenueDetail() {

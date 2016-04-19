@@ -61,4 +61,6 @@ public interface IEventDetailView extends IBaseView, IScheduleableView {
     void toggleLoadMore(boolean show);
 
     void showFeedbackErrorMessage(String message);
+
+    void showFeedbackContainer();
 }
