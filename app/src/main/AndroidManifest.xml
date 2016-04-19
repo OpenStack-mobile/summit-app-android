@@ -94,9 +94,6 @@
                 <category android:name="org.openstack.android.summit" />
             </intent-filter>
         </receiver>
-        <!-- Required for UXTesting -->
-        <service android:enabled="true" android:name="io.uxtesting.UXTestingService" />
-
     </application>
 
 </manifest>

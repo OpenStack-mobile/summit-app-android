@@ -63,4 +63,39 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
             dataStoreOperationListener.onError(friendlyError);
         }
     }
+
+    /*@Override
+    public void getAverageFeedback(int eventId, final IDataStoreOperationListener<Integer> dataStoreOperationListener) {
+        try {
+            HttpTaskListener httpTaskListener = new HttpTaskListener() {
+                @Override
+                public void onSucceed(String data) {
+                    try {
+                        Integer averageFeedback = Integer.parseInt(data);
+                        dataStoreOperationListener.onSuceedWithSingleData(averageFeedback);
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.e(Constants.LOG_TAG, e.getMessage(), e);
+                        String friendlyError = Constants.GENERIC_ERROR_MSG;
+                        dataStoreOperationListener.onError(friendlyError);
+                    }
+                }
+
+                @Override
+                public void onError(Throwable error) {
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
+                }
+            };
+            String url = getResourceServerUrl() +
+                    String.format("/api/v1/summits/current/events/%d/feedback?expand=owner&page=%d&per_page=%d", eventId, page, objectsPerPage);
+            HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
+            httpTask.execute();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            String friendlyError = Constants.GENERIC_ERROR_MSG;
+            dataStoreOperationListener.onError(friendlyError);
+        }
+    }*/
 }
