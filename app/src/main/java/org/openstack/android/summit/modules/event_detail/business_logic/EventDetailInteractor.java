@@ -16,6 +16,7 @@ import org.openstack.android.summit.common.data_access.deserialization.DataStore
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.SummitEventAverageFeedback;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
@@ -84,9 +85,9 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
     }
 
     public void getAverageFeedbackForEvent(int eventId, final IInteractorAsyncOperationListener<Double> interactorAsyncOperationListener) {
-        IDataStoreOperationListener<SummitEvent> dataStoreOperationListener = new DataStoreOperationListener<SummitEvent>() {
+        IDataStoreOperationListener<SummitEventAverageFeedback> dataStoreOperationListener = new DataStoreOperationListener<SummitEventAverageFeedback>() {
             @Override
-            public void onSuceedWithSingleData(SummitEvent data) {
+            public void onSuceedWithSingleData(SummitEventAverageFeedback data) {
                 super.onSuceedWithSingleData(data);
                 interactorAsyncOperationListener.onSucceedWithData(data.getAverageRate());
             }

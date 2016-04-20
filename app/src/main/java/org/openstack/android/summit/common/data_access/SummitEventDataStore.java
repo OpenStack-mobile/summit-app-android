@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.SummitEventAverageFeedback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -202,11 +203,11 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     }
 
     @Override
-    public void getAverageFeedbackOrigin(int eventId, final IDataStoreOperationListener<SummitEvent> dataStoreOperationListener) {
-        IDataStoreOperationListener<SummitEvent> remoteDataStoreOperationListener = new DataStoreOperationListener<SummitEvent>() {
+    public void getAverageFeedbackOrigin(int eventId, final IDataStoreOperationListener<SummitEventAverageFeedback> dataStoreOperationListener) {
+        IDataStoreOperationListener<SummitEventAverageFeedback> remoteDataStoreOperationListener = new DataStoreOperationListener<SummitEventAverageFeedback>() {
 
             @Override
-            public void onSuceedWithSingleData(SummitEvent data) {
+            public void onSuceedWithSingleData(SummitEventAverageFeedback data) {
                 super.onSuceedWithSingleData(data);
                 dataStoreOperationListener.onSuceedWithSingleData(data);
             }

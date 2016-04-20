@@ -261,8 +261,8 @@ Nulla erant noluisse te has. Ipsum volumus gloriatur cu cum, unum mundi eos no, 
                         style="@style/AppTheme.Button"
                         android:layout_width="100dp"
                         android:layout_height="40dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:layout_gravity="center_horizontal"
                         android:visibility="gone"
                         android:text="@string/load_more"/>
                 </LinearLayout>
