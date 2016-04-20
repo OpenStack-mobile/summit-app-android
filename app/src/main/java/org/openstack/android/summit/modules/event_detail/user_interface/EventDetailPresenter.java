@@ -54,7 +54,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
             eventId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_EVENT_ID, Integer.class);
         }
 
-
+        loadedAllFeedback = false;
         event = interactor.getEventDetail(eventId);
         myFeedbackForEvent = interactor.getMyFeedbackForEvent(eventId);
         view.setName(event.getName());
@@ -88,7 +88,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         }
 
         view.setAverageRate(0); // TODO: we should implement a hide
-        if (event.getFinished()){
+        if (event.getFinished() && event.getAllowFeedback()){
             loadFeedback();
             loadAverageFeedback();
         }

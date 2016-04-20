@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.data_access.deserialization.IDeserial
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.SummitEventAverageFeedback;
 import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
@@ -66,14 +67,14 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
     }
 
     @Override
-    public void getAverageFeedback(int eventId, final IDataStoreOperationListener<SummitEvent> dataStoreOperationListener) {
+    public void getAverageFeedback(int eventId, final IDataStoreOperationListener<SummitEventAverageFeedback> dataStoreOperationListener) {
         try {
             HttpTaskListener httpTaskListener = new HttpTaskListener() {
                 @Override
                 public void onSucceed(String data) {
                     try {
-                        SummitEvent event = deserializer.deserialize(data, SummitEvent.class);
-                        dataStoreOperationListener.onSuceedWithSingleData(event);
+                        SummitEventAverageFeedback summitEventAverageFeedback = deserializer.deserialize(data, SummitEventAverageFeedback.class);
+                        dataStoreOperationListener.onSuceedWithSingleData(summitEventAverageFeedback);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG, e.getMessage(), e);
