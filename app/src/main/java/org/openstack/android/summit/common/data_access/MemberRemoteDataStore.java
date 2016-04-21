@@ -49,7 +49,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                 try {
                     Member member = deserializer.deserialize(data, Member.class);
                     dataStoreOperationListener.onSuceedWithSingleData(member);
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, "Error deserializing member", e);
                     String friendlyError = Constants.GENERIC_ERROR_MSG;
@@ -82,7 +82,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                 try {
                     Member member = deserializer.deserialize(data, Member.class);
                     dataStoreOperationListener.onSuceedWithSingleData(member);
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, "Error deserializing member", e);
                     String friendlyError = Constants.GENERIC_ERROR_MSG;

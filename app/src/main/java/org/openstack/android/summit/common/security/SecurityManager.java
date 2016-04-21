@@ -267,6 +267,11 @@ public class SecurityManager implements ISecurityManager {
                         session.setString(HACK_FIX_MEMBER_ID, "DONE");
                         session.setInt(Constants.CURRENT_MEMBER_ID, data.getId());
                     }
+
+                    @Override
+                    public void onError(String message) {
+                        session.setString(HACK_FIX_MEMBER_ID, "DONE");
+                    }
                 };
 
                 memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);

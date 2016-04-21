@@ -4,7 +4,6 @@ import org.joda.time.DateTime;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
-import org.openstack.android.summit.common.entities.SummitEventAverageFeedback;
 
 import java.util.Date;
 import java.util.List;
@@ -25,5 +24,5 @@ public interface ISummitEventDataStore {
 
     void getFeedbackOrigin(int eventId, int page, int objectsPerPage, IDataStoreOperationListener<Feedback> dataStoreOperationListener);
 
-    void getAverageFeedbackOrigin(int eventId, IDataStoreOperationListener<SummitEventAverageFeedback> dataStoreOperationListener);
+    void getAverageFeedbackOrigin(int eventId, IDataStoreOperationListener<SummitEvent> dataStoreOperationListener);
 }

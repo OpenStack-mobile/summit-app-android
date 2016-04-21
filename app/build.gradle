@@ -30,7 +30,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 10
+        versionCode 11
         versionName "1.0"
         multiDexEnabled true
     }
