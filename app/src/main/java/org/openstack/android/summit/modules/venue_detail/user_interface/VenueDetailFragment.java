@@ -78,9 +78,14 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        //This MUST be done before saving any of your own or your base class's variables
+        final Bundle mapViewSaveState = new Bundle(outState);
+        map.onSaveInstanceState(mapViewSaveState);
+        outState.putBundle("mapViewSaveState", mapViewSaveState);
+        //Add any other variables here.
+        super.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
         presenter.onSaveInstanceState(outState);
-        map.onSaveInstanceState(outState);
     }
 
     @Override
@@ -95,9 +100,9 @@ public class VenueDetailFragment extends BaseFragment<IVenueDetailPresenter> imp
         this.view = view;
 
         map = (MapView)view.findViewById(R.id.venue_map);
-        map.onCreate(savedInstanceState);
+        final Bundle mapViewSavedInstanceState = savedInstanceState != null ? savedInstanceState.getBundle("mapViewSaveState") : null;
+        map.onCreate(mapViewSavedInstanceState);
         map.getMapAsync(this);
-
 
         LinearLayout locationLayout = (LinearLayout)view.findViewById(R.id.venue_location_container);
         locationLayout.setOnClickListener(new View.OnClickListener() {
