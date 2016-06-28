@@ -34,7 +34,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 12
+        versionCode 14
         versionName "1.0"
         multiDexEnabled true
     }
@@ -71,8 +71,8 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
 
     // Dagger 2 and Compiler
-    compile 'com.google.dagger:dagger:2.0.1'
-    apt "com.google.dagger:dagger-compiler:2.0.1"
+    compile 'com.google.dagger:dagger:2.2'
+    apt "com.google.dagger:dagger-compiler:2.2"
     // Needed for @Generated annotation (missing in Java <= 1.6; therefore, Android)
     compile 'javax.annotation:jsr250-api:1.0'
 
@@ -105,13 +105,13 @@ dependencies {
     compile 'com.github.claudioredi:sweet-alert-dialog:9c1be1a'
 
     // image library
-    compile 'com.facebook.fresco:fresco:0.9.0'
+    compile 'com.facebook.fresco:fresco:0.11.0'
 
     // simulate list with a linear layout
     compile 'com.github.frankiesardo:linearlistview:1.0.1@aar'
 
     // HACK to get rid of an error related to realm https://github.com/realm/realm-java/issues/1963
-    compile ('io.reactivex:rxjava:1.1.0') {
+    compile ('io.reactivex:rxjava:1.1.6') {
         exclude module: 'rx.internal.operators'
     }
 
