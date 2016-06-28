@@ -3,9 +3,6 @@ package org.openstack.android.summit.common.data_access;
 import org.openstack.android.summit.common.data_access.data_polling.DataOperation;
 import org.openstack.android.summit.common.entities.DataUpdate;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
-
 /**
  * Created by Claudio Redi on 2/7/2016.
  */
@@ -28,7 +25,7 @@ public class DataUpdateDataStore extends GenericDataStore implements IDataUpdate
     public void deleteDataUpdate(DataUpdate dataUpdate) {
         realm.beginTransaction();
         try {
-            dataUpdate.removeFromRealm();
+            dataUpdate.deleteFromRealm();
             realm.commitTransaction();
         }
         catch (Exception e) {
