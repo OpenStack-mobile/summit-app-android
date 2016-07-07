@@ -18,19 +18,23 @@ repositories {
 }
 
 android {
+
+    targetCompatibility = '1.7'
+    sourceCompatibility = '1.7'
+
     dexOptions {
         javaMaxHeapSize "4g" //specify the heap size for the dex process
         preDexLibraries = false
     }
 
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 12
+        versionCode 14
         versionName "1.0"
         multiDexEnabled true
     }
@@ -63,12 +67,12 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
 
     // Dagger 2 and Compiler
-    compile 'com.google.dagger:dagger:2.0.1'
-    apt "com.google.dagger:dagger-compiler:2.0.1"
+    compile 'com.google.dagger:dagger:2.2'
+    apt "com.google.dagger:dagger-compiler:2.2"
     // Needed for @Generated annotation (missing in Java <= 1.6; therefore, Android)
     compile 'javax.annotation:jsr250-api:1.0'
 
@@ -89,7 +93,6 @@ dependencies {
     // Easier HTTP requests, not necessarily needed
     compile 'com.github.kevinsawicki:http-request:5.6'
 
-    compile 'io.realm:realm-android:0.87.4'
     compile 'com.alibaba:fastjson:1.2.+'
     compile 'org.modelmapper:modelmapper:0.+'
 
@@ -102,13 +105,13 @@ dependencies {
     compile 'com.github.claudioredi:sweet-alert-dialog:9c1be1a'
 
     // image library
-    compile 'com.facebook.fresco:fresco:0.9.0'
+    compile 'com.facebook.fresco:fresco:0.11.0'
 
     // simulate list with a linear layout
     compile 'com.github.frankiesardo:linearlistview:1.0.1@aar'
 
     // HACK to get rid of an error related to realm https://github.com/realm/realm-java/issues/1963
-    compile ('io.reactivex:rxjava:1.1.0') {
+    compile ('io.reactivex:rxjava:1.1.6') {
         exclude module: 'rx.internal.operators'
     }
 
@@ -119,14 +122,14 @@ dependencies {
     compile 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
 
     // google maps
-    compile 'com.google.android.gms:play-services-maps:8.4.0'
+    compile 'com.google.android.gms:play-services-maps:9.0.2'
 
     // push notifications
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
 
     // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION: due oo many method references: (max is 65536)
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.1'
 
     // material design spiner
     compile ('com.weiwangcn.betterspinner:library-material:1.1.0') {
@@ -147,3 +150,5 @@ dependencies {
 
     androidTestCompile 'junit:junit:4.12'
 }
+
+apply plugin: 'realm-android'
