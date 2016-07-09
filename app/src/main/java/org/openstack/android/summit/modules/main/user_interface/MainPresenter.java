@@ -8,9 +8,13 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
@@ -64,6 +68,8 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        showMessageIfTriggeredByNotification();
+
         trustEveryone();
 
         IntentFilter intentFilter = new IntentFilter();
@@ -73,6 +79,26 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
         if (savedInstanceState == null) {
             showEventsView();
+        }
+    }
+
+    private void showMessageIfTriggeredByNotification() {
+        Intent intent = view.getIntent();
+        if (intent != null) {
+            if (intent.getExtras() != null) {
+                try {
+                    String parseData = intent.getExtras().getString("com.parse.Data");
+                    if (parseData != null) {
+                        JSONObject json = new JSONObject(parseData);
+                        String notificationText = json.getString("alert");
+                        view.showInfoMessage(notificationText);
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.e(Constants.LOG_TAG, e.getMessage(), e);
+                    view.showErrorMessage(Constants.GENERIC_ERROR_MSG);
+                }
+            }
         }
     }
 

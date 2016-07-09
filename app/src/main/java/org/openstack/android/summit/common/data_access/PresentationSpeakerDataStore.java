@@ -36,9 +36,10 @@ public class PresentationSpeakerDataStore extends GenericDataStore implements IP
                 ? startRecord + (objectsPerPage - 1)
                 : results.size() - 1;
 
+        int size = results.size();
         if (startRecord <= endRecord) {
             int index = startRecord;
-            while (index  <= endRecord) {
+            while (index  <= endRecord && index < size) {
                 presentationSpeakers.add(results.get(index));
                 index++;
             }

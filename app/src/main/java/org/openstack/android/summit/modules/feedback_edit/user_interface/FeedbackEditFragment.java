@@ -1,9 +1,14 @@
 package org.openstack.android.summit.modules.feedback_edit.user_interface;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +23,8 @@ import org.openstack.android.summit.common.user_interface.BaseFragment;
  */
 public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> implements IFeedbackEditView {
     private int rate;
+    private Menu menu;
+
     public FeedbackEditFragment() {
         // Required empty public constructor
     }
@@ -74,6 +81,26 @@ public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> i
 
         super.onCreateView(inflater, container, savedInstanceState);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.feedback, menu);
+        this.menu = menu;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_send) {
+            presenter.saveFeedback();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private int getSelectedRate(View v) {

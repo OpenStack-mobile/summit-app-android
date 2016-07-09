@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -347,12 +350,25 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
 
     @Override
     public void showFeedbackActivityIndicator() {
+        LinearLayout loadingIndicatorLayout = (LinearLayout)view.findViewById(R.id.event_detail_loading_feedback);
+        loadingIndicatorLayout.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void showFeedbackContainer() {
+        LinearLayout feedbackContainerLayout = (LinearLayout)view.findViewById(R.id.event_detail_feedback_container);
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(2000);
+
+        feedbackContainerLayout.setVisibility(View.VISIBLE);
+        feedbackContainerLayout.setAnimation(fadeIn);
     }
 
     @Override
     public void hideFeedbackActivityIndicator() {
-
+        LinearLayout loadingIndicatorLayout = (LinearLayout)view.findViewById(R.id.event_detail_loading_feedback);
+        loadingIndicatorLayout.setVisibility(View.GONE);
     }
 
     @Override

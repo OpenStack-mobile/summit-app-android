@@ -1,5 +1,6 @@
 package org.openstack.android.summit.modules.main.user_interface;
 
+import android.content.Intent;
 import android.net.Uri;
 
 import org.openstack.android.summit.common.user_interface.IBaseView;
@@ -21,4 +22,6 @@ public interface IMainView extends IBaseView {
     void showInfoMessage(String message);
 
     void toggleMenu(boolean show);
+
+    Intent getIntent();
 }

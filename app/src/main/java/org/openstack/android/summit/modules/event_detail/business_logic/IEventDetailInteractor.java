@@ -17,4 +17,6 @@ public interface IEventDetailInteractor extends IScheduleableInteractor {
     FeedbackDTO getMyFeedbackForEvent(int eventId);
 
     void getFeedbackForEvent(int eventId, int page, int objectsPerPage, IInteractorAsyncOperationListener<List<FeedbackDTO>> interactorAsyncOperationListener);
+
+    void getAverageFeedbackForEvent(int eventId, IInteractorAsyncOperationListener<Double> interactorAsyncOperationListener);
 }

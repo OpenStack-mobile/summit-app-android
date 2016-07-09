@@ -36,8 +36,8 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
         feedback.setDate(new Date(jsonObject.getInt("created_date")*1000L));
 
         int ownwerId;
-        if (jsonObject.has("atendee_id")){
-            ownwerId = jsonObject.getInt("atendee_id");
+        if (jsonObject.has("attendee_id")){
+            ownwerId = jsonObject.getInt("attendee_id");
             feedback.setOwner(deserializerStorage.get(ownwerId, SummitAttendee.class));
         }
         else if (jsonObject.has("owner_id")) {

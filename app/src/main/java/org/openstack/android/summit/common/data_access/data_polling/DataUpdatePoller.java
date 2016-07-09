@@ -165,7 +165,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
             }
 
             if (fromDate != 0) {
-                url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=50&from_date=", fromDate);
+                url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=10&from_date=", fromDate);
             }
         }
 

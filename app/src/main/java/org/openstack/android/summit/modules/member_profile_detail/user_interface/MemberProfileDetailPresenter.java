@@ -24,11 +24,13 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            isMyProfile = savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE);
-        }
-        else {
-            isMyProfile = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, Boolean.class);
+        if (isMyProfile == null) {
+            if (savedInstanceState != null) {
+                isMyProfile = savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE);
+            }
+            else {
+                isMyProfile = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, Boolean.class);
+            }
         }
 
         if (isMyProfile != null && isMyProfile) {

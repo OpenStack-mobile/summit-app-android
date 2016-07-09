@@ -200,4 +200,24 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
 
         summitEventRemoteDataStore.getFeedback(eventId, page, objectsPerPage, remoteDataStoreOperationListener);
     }
+
+    @Override
+    public void getAverageFeedbackOrigin(int eventId, final IDataStoreOperationListener<SummitEvent> dataStoreOperationListener) {
+        IDataStoreOperationListener<SummitEvent> remoteDataStoreOperationListener = new DataStoreOperationListener<SummitEvent>() {
+
+            @Override
+            public void onSuceedWithSingleData(SummitEvent data) {
+                super.onSuceedWithSingleData(data);
+                dataStoreOperationListener.onSuceedWithSingleData(data);
+            }
+
+            @Override
+            public void onError(String message) {
+                super.onError(message);
+                dataStoreOperationListener.onError(message);
+            }
+        };
+
+        summitEventRemoteDataStore.getAverageFeedback(eventId, remoteDataStoreOperationListener);
+    }
 }

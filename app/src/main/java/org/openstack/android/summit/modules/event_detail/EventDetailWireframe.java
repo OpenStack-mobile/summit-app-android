@@ -1,6 +1,9 @@
 package org.openstack.android.summit.modules.event_detail;
 
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
@@ -33,14 +36,21 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
 
     @Override
     public void presentEventDetailView(int eventId, IBaseView context) {
-        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_EVENT_ID, eventId);
-        EventDetailFragment eventDetailFragment = new EventDetailFragment();
-        FragmentManager fragmentManager = context.getSupportFragmentManager();
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.frame_layout_content, eventDetailFragment)
-                .addToBackStack(null)
-                .commit();
+        try {
+            navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_EVENT_ID, eventId);
+            EventDetailFragment eventDetailFragment = new EventDetailFragment();
+            FragmentManager fragmentManager = context.getSupportFragmentManager();
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.frame_layout_content, eventDetailFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+        catch (Exception e) {
+            // Swallowing exception "Can not perform this action after onSaveInstanceState" until we figure out what's wrong
+            Crashlytics.logException(e);
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+        }
     }
 
     @Override
