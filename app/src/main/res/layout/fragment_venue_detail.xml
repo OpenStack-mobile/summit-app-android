@@ -16,6 +16,7 @@
             android:gravity="center_horizontal">
             <TextView
                 android:id="@+id/venue_name_textview"
+                android:textIsSelectable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TESTING"
@@ -37,6 +38,7 @@
                 android:src="@drawable/map"/>
             <TextView
                 android:id="@+id/venue_location_textview"
+                android:textIsSelectable="true"
                 style="@style/AppTheme.IconedInformationBarTextView"
                 android:text="Grand Prince International Convention Center &amp; Hotels"/>
             <ImageView
