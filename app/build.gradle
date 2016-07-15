@@ -17,6 +17,9 @@ repositories {
     }
 }
 
+Properties props = new Properties()
+props.load(new FileInputStream(file(project.property("summit-app.properties"))))
+
 android {
 
 
@@ -35,11 +38,9 @@ android {
         versionCode 14
         versionName "1.0"
         multiDexEnabled true
-
-    }
-
-
-
+        manifestPlaceholders = [googleMapApiKey: props['googleMapApiKey'], fabricApiKey: props['fabricApiKey'],
+                                parseApplicationId: props['parseApplicationId'], parseClientKey: props['parseClientKey']]
+   }
 
     buildTypes {
         debug {

@@ -7,3 +7,4 @@ build/
 /reports
 *.apk
 /.idea/
+/summit-app.properties
