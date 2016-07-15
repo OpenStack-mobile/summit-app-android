@@ -60,6 +60,7 @@
     </LinearLayout>
     <TextView
         android:id="@+id/item_feedback_review"
+        android:textIsSelectable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Mel te graecis menandri accusamus, meis putant imperdiet vis ut. Unum propriae volutpat no nam, tation everti assentior eos te. Eos an soluta repudiandae. Vel admodum adversarium ei, no est malis sadipscing intellegebat. Liber iudico lucilius ea his, vis stet periculis in, detraxit aliquando urbanitas has ea."/>

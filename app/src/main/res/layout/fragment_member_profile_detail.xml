@@ -42,6 +42,7 @@
 
                 <TextView
                     android:id="@+id/profile_detail_name"
+                    android:textIsSelectable="true"
                     android:textStyle="bold"
                     android:layout_marginBottom="5dp"
                     android:layout_width="wrap_content"
@@ -50,6 +51,7 @@
                     android:text="John Doe"/>
                 <TextView
                     android:id="@+id/profile_detail_title"
+                    android:textIsSelectable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/openStackGray"
@@ -65,6 +67,7 @@
                 android:src="@drawable/map"/>
             <TextView
                 android:id="@+id/profile_detail_location"
+                android:textIsSelectable="true"
                 style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
         </LinearLayout>
         <LinearLayout
@@ -76,6 +79,7 @@
                 android:src="@drawable/contact_mail"/>
             <TextView
                 android:id="@+id/profile_detail_mail"
+                android:textIsSelectable="true"
                 style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
         </LinearLayout>
         <LinearLayout
@@ -87,6 +91,7 @@
                 android:src="@drawable/contact_twitter"/>
             <TextView
                 android:id="@+id/profile_detail_twitter"
+                android:textIsSelectable="true"
                 style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
         </LinearLayout>
         <LinearLayout
@@ -98,6 +103,7 @@
                 android:src="@drawable/contact_irc"/>
             <TextView
                 android:id="@+id/profile_detail_irc"
+                android:textIsSelectable="true"
                 style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
         </LinearLayout>
         <TextView
@@ -105,6 +111,7 @@
             android:paddingRight="25dp"
             android:paddingTop="25dp"
             android:id="@+id/profile_detail_bio"
+            android:textIsSelectable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
