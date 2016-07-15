@@ -19,8 +19,6 @@ repositories {
 
 android {
 
-    targetCompatibility = '1.7'
-    sourceCompatibility = '1.7'
 
     dexOptions {
         javaMaxHeapSize "4g" //specify the heap size for the dex process
@@ -37,7 +35,12 @@ android {
         versionCode 14
         versionName "1.0"
         multiDexEnabled true
+
     }
+
+
+
+
     buildTypes {
         debug {
             // Settings for Crashlytics Beta Distribution
@@ -45,13 +48,11 @@ android {
             ext.betaDistributionEmails="claudioredi@gmail.com, darran.kelinske@gmail.com, " +
                     "gabriel.cutrini@gmail.com, jimmy@openstack.org, jp@tipit.net, " +
                     "lauren@openstack.org"
+            ext.enableCrashlytics = false
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            ext.enableCrashlytics = false
         }
     }
 
@@ -60,6 +61,13 @@ android {
         pickFirst  'META-INF/LICENSE.txt'
         pickFirst  'META-INF/NOTICE.txt'
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+
 }
 
 // Assists in working with annotation processors for Android Studio.
@@ -78,7 +86,7 @@ dependencies {
 
     // Google's OAuth library for OpenID Connect
     // See https://code.google.com/p/google-oauth-java-client/wiki/Setup
-    compile('com.google.oauth-client:google-oauth-client:1.21.0') {
+    compile('com.google.oauth-client:google-oauth-client:1.22.0') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'junit', module: 'junit'
@@ -91,10 +99,10 @@ dependencies {
     compile 'com.google.api-client:google-api-client-gson:1.21.0'
 
     // Easier HTTP requests, not necessarily needed
-    compile 'com.github.kevinsawicki:http-request:5.6'
+    compile 'com.github.kevinsawicki:http-request:6.0'
 
     compile 'com.alibaba:fastjson:1.2.+'
-    compile 'org.modelmapper:modelmapper:0.+'
+    compile 'org.modelmapper:modelmapper:0.7.5'
 
     compile 'com.github.claudioredi:Ranger:da908aa'
 
@@ -111,7 +119,7 @@ dependencies {
     compile 'com.github.frankiesardo:linearlistview:1.0.1@aar'
 
     // HACK to get rid of an error related to realm https://github.com/realm/realm-java/issues/1963
-    compile ('io.reactivex:rxjava:1.1.6') {
+    compile ('io.reactivex:rxjava:1.1.7') {
         exclude module: 'rx.internal.operators'
     }
 
@@ -122,7 +130,7 @@ dependencies {
     compile 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
 
     // google maps
-    compile 'com.google.android.gms:play-services-maps:9.0.2'
+    compile 'com.google.android.gms:play-services-maps:9.2.1'
 
     // push notifications
     compile 'com.parse.bolts:bolts-android:1.+'
@@ -136,19 +144,20 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.0@aar') {
         transitive = true;
     }
 
-    testCompile "org.mockito:mockito-core:2.0.5-beta"
+    testCompile "org.mockito:mockito-core:2.0.86-beta"
     testCompile 'junit:junit:4.12'
-    testCompile "org.robolectric:robolectric:3.0"
-    testCompile "org.powermock:powermock-module-junit4:1.6.2"
-    testCompile "org.powermock:powermock-module-junit4-rule:1.6.2"
-    testCompile "org.powermock:powermock-api-mockito:1.6.2"
-    testCompile "org.powermock:powermock-classloading-xstream:1.6.2"
+    testCompile "org.robolectric:robolectric:3.1"
+    testCompile "org.powermock:powermock-module-junit4:1.6.5"
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.5"
+    testCompile "org.powermock:powermock-api-mockito:1.6.5"
+    testCompile "org.powermock:powermock-classloading-xstream:1.6.5"
 
     androidTestCompile 'junit:junit:4.12'
+
 }
 
 apply plugin: 'realm-android'
