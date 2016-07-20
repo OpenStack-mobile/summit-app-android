@@ -75,6 +75,7 @@ import org.openstack.android.summit.common.data_access.deserialization.VenueRoom
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.network.Reachability;
+import org.openstack.android.summit.common.security.IOIDCConfigurationManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 import javax.inject.Singleton;
@@ -201,8 +202,10 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitRemoteDataStore providesSummitRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
-        return new SummitRemoteDataStore(httpTaskFactory, deserializer);
+    ISummitRemoteDataStore providesSummitRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer, IOIDCConfigurationManager ioidcConfigurationManager) {
+        SummitRemoteDataStore store = new SummitRemoteDataStore(httpTaskFactory, deserializer);
+        store.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
+        return store;
     }
 
     @Provides
@@ -211,8 +214,11 @@ public class DataAccessModule {
     }
 
     @Provides
-    IMemberRemoteDataStore providesMemberRemoteDataStore(INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,  IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
-        return new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, httpTaskFactory, deserializer);
+    IMemberRemoteDataStore providesMemberRemoteDataStore(INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,  IHttpTaskFactory httpTaskFactory, IDeserializer deserializer, IOIDCConfigurationManager ioidcConfigurationManager) {
+        MemberRemoteDataStore store = new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, httpTaskFactory, deserializer);
+        store.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
+        store.setUserInfoEndpointUrl(ioidcConfigurationManager.buildIdentityProviderUrls().getUserInfoEndpoint());
+        return store;
     }
 
     @Provides
@@ -236,13 +242,17 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitEventRemoteDataStore providesSummitEventRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
-        return new SummitEventRemoteDataStore(httpTaskFactory, deserializer);
+    ISummitEventRemoteDataStore providesSummitEventRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer, IOIDCConfigurationManager ioidcConfigurationManager) {
+        SummitEventRemoteDataStore store = new SummitEventRemoteDataStore(httpTaskFactory, deserializer);
+        store.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
+        return store;
     }
 
     @Provides
-    ISummitAttendeeRemoteDataStore providesSummitAttendeeRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
-        return new SummitAttendeeRemoteDataStore(httpTaskFactory, deserializer);
+    ISummitAttendeeRemoteDataStore providesSummitAttendeeRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer, IOIDCConfigurationManager ioidcConfigurationManager) {
+        SummitAttendeeRemoteDataStore store = new SummitAttendeeRemoteDataStore(httpTaskFactory, deserializer);
+        store.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
+        return store;
     }
 
     @Provides
@@ -283,8 +293,19 @@ public class DataAccessModule {
 
     @Provides
     @Singleton
-    IDataUpdatePoller providesDataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, ISession session) {
-        return new DataUpdatePoller(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, new Reachability(), session);
+    IDataUpdatePoller providesDataUpdatePoller
+    (
+                    ISecurityManager securityManager,
+                    IHttpTaskFactory httpTaskFactory,
+                    IDataUpdateProcessor dataUpdateProcessor,
+                    IDataUpdateDataStore dataUpdateDataStore,
+                    ISummitDataStore summitDataStore,
+                    ISession session,
+                    IOIDCConfigurationManager ioidcConfigurationManager
+    ) {
+        DataUpdatePoller poller = new DataUpdatePoller(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, new Reachability(), session);
+        poller.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
+        return poller;
     }
 
     @Provides

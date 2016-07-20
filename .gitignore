@@ -8,3 +8,5 @@ build/
 *.apk
 /.idea/
 /summit-app.properties
+/summit-app.debug.properties
+/app/libs

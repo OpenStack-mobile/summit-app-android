@@ -21,42 +21,46 @@ import com.crashlytics.android.Crashlytics;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 import com.google.api.client.json.gson.GsonFactory;
 
-import org.openstack.android.summit.BuildConfig;
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.security.oidc.AuthCodeResponse;
+import org.openstack.android.summit.common.security.oidc.OpenIdConnectProtocol;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
+import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 /**
  * An Activity that is launched by the Authenticator for requesting authorisation from the user and
  * creating an Account.
- *
+ * <p/>
  * The user will interact with the OIDC server via a WebView that monitors the URL for parameters
  * that indicate either a successful authorisation or an error. These parameters are set by the
  * spec.
- *
+ * <p/>
  * After the Authorization Token has successfully been obtained, we use the single-use token to
  * fetch an ID Token, an Access Token and a Refresh Token. We create an Account and persist these
  * tokens.
  *
- * @author Leo Nikkilä
- * @author Camilo Montes
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
+    public static final String KEY_AUTH_URL       = "org.openstack.android.summit.KEY_AUTH_URL";
+    public static final String KEY_IS_NEW_ACCOUNT = "org.openstack.android.summit.KEY_IS_NEW_ACCOUNT";
+    public static final String KEY_ACCOUNT_OBJECT = "org.openstack.android.summit.KEY_ACCOUNT_OBJECT";
+
     private final String TAG = getClass().getSimpleName();
-
-    public static final String KEY_AUTH_URL = "org.openstack.android.summit.KEY_AUTH_URL";
-    public static final String KEY_IS_NEW_ACCOUNT = "com.lnikkila.oidcsample.KEY_IS_NEW_ACCOUNT";
-    public static final String KEY_ACCOUNT_OBJECT = "com.lnikkila.oidcsample.KEY_ACCOUNT_OBJECT";
-
     private AccountManager accountManager;
     private Account account;
     private boolean isNewAccount;
-    private IDecoder decoder = new Decoder();
+
+    @Inject
+    IOIDCConfigurationManager oidcConfigurationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         setContentView(R.layout.activity_authentication);
 
         accountManager = AccountManager.get(this);
-
+        ((OpenStackSummitApplication) getApplication()).getApplicationComponent().inject(this);
         Bundle extras = getIntent().getExtras();
 
         // Are we supposed to create a new account or renew the authorisation of an old one?
@@ -82,100 +86,129 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         // Initialise the WebView
         WebView webView = (WebView) findViewById(R.id.WebView);
-        // TODO: Enable this if your authorisation page requires JavaScript
+
         webView.getSettings().setJavaScriptEnabled(true);
 
         webView.loadUrl(authUrl);
 
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error){
-                handler.proceed();
+        webView.setWebViewClient(new CustomWebViewClient(this, this.oidcConfigurationManager));
+    }
+
+    /**
+     *  CustomWebViewClient
+     */
+    private static  class CustomWebViewClient extends WebViewClient {
+
+        private final String TAG = getClass().getSimpleName();
+
+        private WeakReference<AuthenticatorActivity> authActivity;
+        private OIDCNativeClientConfiguration clientConfig;
+        private IOIDCConfigurationManager oidcConfigurationManager;
+
+        public CustomWebViewClient(AuthenticatorActivity activity, IOIDCConfigurationManager oidcConfigurationManager) {
+            authActivity                 = new WeakReference<>(activity);
+            this.oidcConfigurationManager = oidcConfigurationManager;
+            clientConfig                  = (OIDCNativeClientConfiguration) oidcConfigurationManager.buildConfiguration(OIDCClientConfiguration.ODICAccountType.NativeAccount);
+        }
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String urlString, Bitmap favicon) {
+
+            super.onPageStarted(view, urlString, favicon);
+
+            Uri url                    = Uri.parse(urlString);
+            Set<String> parameterNames = url.getQueryParameterNames();
+            String extractedFragment   = url.getEncodedFragment();
+
+            if (parameterNames.contains("error")) {
+                view.stopLoading();
+
+                // In case of an error, the `error` parameter contains an ASCII identifier, e.g.
+                // "temporarily_unavailable" and the `error_description` *may* contain a
+                // human-readable description of the error.
+                //
+                // For a list of the error identifiers, see
+                // http://tools.ietf.org/html/rfc6749#section-4.1.2.1
+
+                String error = url.getQueryParameter("error");
+                String errorDescription = url.getQueryParameter("error_description");
+
+                // If the user declines to authorise the app, there's no need to show an error
+                // message.
+                if (!error.equals("access_denied")) {
+                    authActivity.get().showErrorDialog(String.format("Error code: %s\n\n%s", error,
+                            errorDescription));
+                }
+                return;
             }
 
-            @Override
-            public void onPageStarted(WebView view, String urlString, Bitmap favicon) {
-                super.onPageStarted(view, urlString, favicon);
-
-                Uri url = Uri.parse(urlString);
-                Set<String> parameterNames = url.getQueryParameterNames();
-                String extractedFragment = url.getEncodedFragment();
-
-                if (parameterNames.contains("error")) {
-                    view.stopLoading();
-
-                    // In case of an error, the `error` parameter contains an ASCII identifier, e.g.
-                    // "temporarily_unavailable" and the `error_description` *may* contain a
-                    // human-readable description of the error.
-                    //
-                    // For a list of the error identifiers, see
-                    // http://tools.ietf.org/html/rfc6749#section-4.1.2.1
-
-                    String error = url.getQueryParameter("error");
-                    String errorDescription = url.getQueryParameter("error_description");
-
-                    // If the user declines to authorise the app, there's no need to show an error
-                    // message.
-                    if (!error.equals("access_denied")) {
-                        showErrorDialog(String.format("Error code: %s\n\n%s", error,
-                                errorDescription));
-                    }
-                } else if(urlString.startsWith(Constants.ConfigOIDC.REDIRECT_URL)){
-                    // We won't need to keep loading anymore. This also prevents errors when using
-                    // redirect URLs that don't have real protocols (like app://) that are just
-                    // used for identification purposes in native apps.
-                    view.stopLoading();
-
-                    switch (Constants.ConfigOIDC.FLOW_TYPE) {
+            if (urlString.startsWith(clientConfig.getReturnUrl())) {
+                // We won't need to keep loading anymore. This also prevents errors when using
+                // redirect URLs that don't have real protocols (like app://) that are just
+                // used for identification purposes in native apps.
+                view.stopLoading();
+                try {
+                    switch (clientConfig.getFlowType()) {
                         case Implicit: {
-                            if (!TextUtils.isEmpty(extractedFragment)) {
-                                CreateIdTokenFromFragmentPartTask task = new CreateIdTokenFromFragmentPartTask();
-                                task.execute(extractedFragment);
-
-                            } else {
-                                Log.e(TAG, String.format(
+                            if (TextUtils.isEmpty(extractedFragment)) {
+                                throw new InvalidParameterException(String.format(
                                         "urlString '%1$s' doesn't contain fragment part; can't extract tokens",
                                         urlString));
                             }
+                            CreateIdTokenFromFragmentPartTask task = new CreateIdTokenFromFragmentPartTask(authActivity.get());
+                            task.execute(extractedFragment);
                             break;
                         }
                         case Hybrid: {
-                            if (!TextUtils.isEmpty(extractedFragment)) {
-                                RequestIdTokenFromFragmentPartTask task = new RequestIdTokenFromFragmentPartTask();
-                                task.execute(extractedFragment);
-
-                            } else {
-                                Log.e(TAG, String.format(
-                                        "urlString '%1$s' doesn't contain fragment part; can't request tokens",
+                            if (TextUtils.isEmpty(extractedFragment)) {
+                                throw new InvalidParameterException(String.format(
+                                        "urlString '%1$s' doesn't contain fragment part; can't extract tokens",
                                         urlString));
                             }
+                            RequestIdTokenFromFragmentPartTask task = new RequestIdTokenFromFragmentPartTask(authActivity.get(), oidcConfigurationManager);
+                            task.execute(extractedFragment);
                             break;
                         }
                         case AuthorizationCode:
                         default: {
                             // The URL will contain a `code` parameter when the user has been authenticated
-                            if (parameterNames.contains("code")) {
-                                String authToken = url.getQueryParameter("code");
-
-                                // Request the ID token
-                                RequestIdTokenTask task = new RequestIdTokenTask();
-                                task.execute(authToken);
-                            }
-                            else {
-                                Log.e(TAG, String.format(
+                            if (!parameterNames.contains("code")) {
+                                throw new InvalidParameterException(String.format(
                                         "urlString '%1$s' doesn't contain code param; can't extract authCode",
                                         urlString));
                             }
+                            // Request the ID token
+                            RequestIdTokenTask task = new RequestIdTokenTask(authActivity.get(), oidcConfigurationManager);
+                            task.execute(url.getQueryParameter("code"));
                             break;
                         }
                     }
                 }
-                // else : should be an intermediate url, load it and keep going
+                catch (InvalidParameterException ipEx){
+                    Log.e(TAG, ipEx.getMessage());
+                }
             }
-        });
+            // else : should be an intermediate url, load it and keep going
+        }
     }
 
-    private class CreateIdTokenFromFragmentPartTask extends AsyncTask<String, Void, Boolean> {
+    /**
+     * Implicit Flow
+     */
+    private static class CreateIdTokenFromFragmentPartTask extends AsyncTask<String, Void, Boolean> {
+
+        private final String TAG = getClass().getSimpleName();
+        private WeakReference<AuthenticatorActivity> authActivity;
+
+        public CreateIdTokenFromFragmentPartTask(AuthenticatorActivity activity) {
+            super();
+            authActivity = new WeakReference<>(activity);
+        }
 
         @Override
         protected Boolean doInBackground(String... args) {
@@ -193,8 +226,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
                 if (TextUtils.isEmpty(accessToken) || TextUtils.isEmpty(idToken) || TextUtils.isEmpty(tokenType) || expiresIn == null) {
                     return false;
-                }
-                else {
+                } else {
                     Log.i(TAG, "AuthToken : " + accessToken);
 
                     IdTokenResponse response = new IdTokenResponse();
@@ -205,14 +237,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     response.setScope(scope);
                     response.setFactory(new GsonFactory());
 
-                    if (isNewAccount) {
-                        createAccount(response);
+                    if (authActivity.get().isNewAccount) {
+                        authActivity.get().createAccount(response);
                     } else {
-                        setTokens(response);
+                        authActivity.get().setTokens(response);
                     }
                 }
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.e(Constants.LOG_TAG, "Error executing API request", e);
                 return false;
@@ -223,26 +254,40 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected void onPostExecute(Boolean wasSuccess) {
-            if (wasSuccess) {
-                // The account manager still wants the following information back
-                Intent intent = new Intent();
-
-                intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, account.name);
-                intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-
-                setAccountAuthenticatorResult(intent.getExtras());
-                setResult(RESULT_OK, intent);
-                finish();
-            } else {
-                showErrorDialog("Could not get ID Token.");
+            if (!wasSuccess) {
+                authActivity.get().showErrorDialog("Could not get ID Token.");
+                return;
             }
+            // The account manager still wants the following information back
+            Intent intent = new Intent();
+
+            intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, authActivity.get().account.name);
+            intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, authActivity.get().account.type);
+
+            authActivity.get().setAccountAuthenticatorResult(intent.getExtras());
+            authActivity.get().setResult(RESULT_OK, intent);
+            authActivity.get().finish();
+
         }
     }
 
     /**
      * Hybrid flow
      */
-    private class RequestIdTokenFromFragmentPartTask extends AsyncTask<String, Void, Boolean> {
+    private static class RequestIdTokenFromFragmentPartTask extends AsyncTask<String, Void, Boolean> {
+
+        private OIDCNativeClientConfiguration clientConfig;
+        private OpenIdConnectProtocol oidcProtocol;
+        private final String TAG = getClass().getSimpleName();
+        private WeakReference<AuthenticatorActivity> authActivity;
+
+        public RequestIdTokenFromFragmentPartTask(AuthenticatorActivity activity, IOIDCConfigurationManager oidcConfigurationManager) {
+            super();
+            authActivity = new WeakReference<>(activity);
+            clientConfig = (OIDCNativeClientConfiguration) oidcConfigurationManager.buildConfiguration(OIDCClientConfiguration.ODICAccountType.NativeAccount);
+            oidcProtocol = new OpenIdConnectProtocol(oidcConfigurationManager.buildIdentityProviderUrls());
+        }
+
         @Override
         protected Boolean doInBackground(String... args) {
             try {
@@ -254,32 +299,26 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
                 if (TextUtils.isEmpty(idToken) || TextUtils.isEmpty(authCode)) {
                     return false;
-                }
-                else {
+                } else {
                     IdTokenResponse response;
 
                     Log.i(TAG, "Requesting access_token with AuthCode : " + authCode);
 
                     try {
-                        response = OIDCUtils.requestTokens(decoder.getTokenServerUrl(),
-                                Constants.ConfigOIDC.REDIRECT_URL,
-                                decoder.getClientIDOIDC(),
-                                decoder.getClientSecretOIDC(),
-                                authCode);
+                        response = oidcProtocol.makeTokenRequest(new AuthCodeResponse(clientConfig, authCode));
                     } catch (Exception e) {
                         Log.e(TAG, "Could not get response.");
                         Crashlytics.logException(e);
                         return false;
                     }
 
-                    if (isNewAccount) {
-                        createAccount(response);
+                    if (authActivity.get().isNewAccount) {
+                        authActivity.get().createAccount(response);
                     } else {
-                        setTokens(response);
+                        authActivity.get().setTokens(response);
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.e(Constants.LOG_TAG, "Error executing API request", e);
                 return false;
@@ -290,53 +329,62 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected void onPostExecute(Boolean wasSuccess) {
-            if (wasSuccess) {
-                // The account manager still wants the following information back
-                Intent intent = new Intent();
-
-                intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, account.name);
-                intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-
-                setAccountAuthenticatorResult(intent.getExtras());
-                setResult(RESULT_OK, intent);
-                finish();
-            } else {
-                showErrorDialog("Could not get ID Token.");
+            if (!wasSuccess) {
+                authActivity.get().showErrorDialog("Could not get ID Token.");
+                return;
             }
+            // The account manager still wants the following information back
+            Intent intent = new Intent();
+
+            intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, authActivity.get().account.name);
+            intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, authActivity.get().account.type);
+
+            authActivity.get().setAccountAuthenticatorResult(intent.getExtras());
+            authActivity.get().setResult(RESULT_OK, intent);
+            authActivity.get().finish();
+
         }
     }
 
     /**
      * Requests the ID Token asynchronously.
      */
-    private class RequestIdTokenTask extends AsyncTask<String, Void, Boolean> {
+    private static class RequestIdTokenTask extends AsyncTask<String, Void, Boolean> {
+
+        private OIDCNativeClientConfiguration clientConfig;
+        private OpenIdConnectProtocol oidcProtocol;
+        private final String TAG = getClass().getSimpleName();
+        private WeakReference<AuthenticatorActivity> authActivity;
+
+        public RequestIdTokenTask(AuthenticatorActivity activity, IOIDCConfigurationManager oidcConfigurationManager) {
+            super();
+            authActivity = new WeakReference<>(activity);
+            clientConfig = (OIDCNativeClientConfiguration) oidcConfigurationManager.buildConfiguration(OIDCClientConfiguration.ODICAccountType.NativeAccount);
+            oidcProtocol = new OpenIdConnectProtocol(oidcConfigurationManager.buildIdentityProviderUrls());
+        }
+
         @Override
         protected Boolean doInBackground(String... args) {
-            try{
+            try {
                 String authToken = args[0];
                 IdTokenResponse response;
 
                 Log.d(TAG, "Requesting ID token.");
 
                 try {
-                    response = OIDCUtils.requestTokens(decoder.getTokenServerUrl(),
-                            Constants.ConfigOIDC.REDIRECT_URL,
-                            decoder.getClientIDOIDC(),
-                            decoder.getClientSecretOIDC(),
-                            authToken);
+                    response = oidcProtocol.makeTokenRequest(new AuthCodeResponse(clientConfig, authToken));
                 } catch (IOException e) {
                     Crashlytics.logException(e);
                     Log.e(TAG, e.getMessage(), e);
                     return false;
                 }
 
-                if (isNewAccount) {
-                    createAccount(response);
+                if (authActivity.get().isNewAccount) {
+                    authActivity.get().createAccount(response);
                 } else {
-                    setTokens(response);
+                    authActivity.get().setTokens(response);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.e(Constants.LOG_TAG, "Error executing API request", e);
                 return false;
@@ -347,19 +395,20 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected void onPostExecute(Boolean wasSuccess) {
-            if (wasSuccess) {
-                // The account manager still wants the following information back
-                Intent intent = new Intent();
-
-                intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, account.name);
-                intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-
-                setAccountAuthenticatorResult(intent.getExtras());
-                setResult(RESULT_OK, intent);
-                finish();
-            } else {
-                showErrorDialog("Could not get ID Token.");
+            if (!wasSuccess) {
+                authActivity.get().showErrorDialog("Could not get ID Token.");
+                return;
             }
+            // The account manager still wants the following information back
+            Intent intent = new Intent();
+
+            intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, authActivity.get().account.name);
+            intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, authActivity.get().account.type);
+
+            authActivity.get().setAccountAuthenticatorResult(intent.getExtras());
+            authActivity.get().setResult(RESULT_OK, intent);
+            authActivity.get().finish();
+
         }
     }
 
@@ -406,9 +455,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_REFRESH, response.getRefreshToken());
     }
 
-    /**
-     * TODO: Improve error messages.
-     */
     private void showErrorDialog(String message) {
         new AlertDialog.Builder(AuthenticatorActivity.this)
                 .setTitle("Sorry, there was an error")

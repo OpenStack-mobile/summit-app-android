@@ -18,10 +18,8 @@ repositories {
 }
 
 Properties props = new Properties()
-props.load(new FileInputStream(file(project.property("summit-app.properties"))))
 
 android {
-
 
     dexOptions {
         javaMaxHeapSize "4g" //specify the heap size for the dex process
@@ -38,22 +36,45 @@ android {
         versionCode 14
         versionName "1.0"
         multiDexEnabled true
-        manifestPlaceholders = [googleMapApiKey: props['googleMapApiKey'], fabricApiKey: props['fabricApiKey'],
-                                parseApplicationId: props['parseApplicationId'], parseClientKey: props['parseClientKey']]
    }
 
     buildTypes {
         debug {
+            props.load(new FileInputStream(file("../summit-app.debug.properties")))
             // Settings for Crashlytics Beta Distribution
             ext.betaDistributionReleaseNotes="Release Notes for this build."
             ext.betaDistributionEmails="claudioredi@gmail.com, darran.kelinske@gmail.com, " +
                     "gabriel.cutrini@gmail.com, jimmy@openstack.org, jp@tipit.net, " +
                     "lauren@openstack.org"
             ext.enableCrashlytics = false
+            manifestPlaceholders = [googleMapApiKey: props['googleMapApiKey'],
+                                    fabricApiKey: props['fabricApiKey'],
+                                    parseApplicationId: props['parseApplicationId'],
+                                    parseClientKey: props['parseClientKey'],
+                                    ServiceClientId: props['ServiceClientId'],
+                                    ServiceClientSecret: props['ServiceClientSecret'],
+                                    NativeClientId: props['NativeClientId'],
+                                    NativeClientSecret: props['NativeClientSecret'],
+                                    NativeClientReturnUrl: props['NativeClientReturnUrl'],
+                                    ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
+                                    IdentityProviderBaseUrl: props['IdentityProviderBaseUrl']]
+
         }
         release {
+            props.load(new FileInputStream(file("../summit-app.properties")))
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [googleMapApiKey: props['googleMapApiKey'],
+                                    fabricApiKey: props['fabricApiKey'],
+                                    parseApplicationId: props['parseApplicationId'],
+                                    parseClientKey: props['parseClientKey'],
+                                    ServiceClientId: props['ServiceClientId'],
+                                    ServiceClientSecret: props['ServiceClientSecret'],
+                                    NativeClientId: props['NativeClientId'],
+                                    NativeClientSecret: props['NativeClientSecret'],
+                                    NativeClientReturnUrl: props['NativeClientReturnUrl'],
+                                    ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
+                                    IdentityProviderBaseUrl: props['IdentityProviderBaseUrl']]
         }
     }
 
@@ -68,7 +89,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 // Assists in working with annotation processors for Android Studio.

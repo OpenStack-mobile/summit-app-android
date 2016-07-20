@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.openstack.android.summit.OpenStackSummitApplication;
+
+import javax.inject.Inject;
+
 /**
  * The service that lets Android know about the custom Authenticator.
  *
@@ -13,12 +17,14 @@ import android.util.Log;
 public class AuthenticatorService extends Service {
 
     private final String TAG = getClass().getSimpleName();
+    @Inject
+    IOIDCConfigurationManager oidcConfigurationManager;
 
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "Binding Authenticator.");
-
-        Authenticator authenticator = new Authenticator(this);
+        ((OpenStackSummitApplication)getApplication()).getApplicationComponent().inject(this);
+        Authenticator authenticator = new Authenticator(this, this.oidcConfigurationManager);
         return authenticator.getIBinder();
     }
 }

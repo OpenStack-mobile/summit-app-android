@@ -29,6 +29,17 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 12/16/2015.
  */
 public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMemberRemoteDataStore {
+
+    private String userInfoEndpointUrl;
+
+    public String getUserInfoEndpointUrl() {
+        return userInfoEndpointUrl;
+    }
+
+    public void setUserInfoEndpointUrl(String userInfoEndpointUrl) {
+        this.userInfoEndpointUrl = userInfoEndpointUrl;
+    }
+
     private IDeserializer deserializer;
     private IHttpTaskFactory httpTaskFactory;
     private INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer;
@@ -63,7 +74,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             }
         };
 
-        String url = getResourceServerUrl() + "/api/v1/summits/current/attendees/me?expand=speaker,feedback";
+        String url = getBaseResourceServerUrl() + "/api/v1/summits/current/attendees/me?expand=speaker,feedback";
         HttpTask httpTask = null;
         try {
             httpTask = httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
@@ -97,7 +108,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             }
         };
 
-        String url = getUserInfoUrl();
+        String url = getUserInfoEndpointUrl();
 
         HttpTask httpTask = null;
         try {
@@ -132,7 +143,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             }
         };
 
-        String url = getResourceServerUrl() +
+        String url = getBaseResourceServerUrl() +
                 String.format("/api/v1/summits/current/external-orders/%s", orderNumber);
         HttpTask httpTask = null;
         try {
@@ -164,7 +175,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             }
         };
 
-        String url = getResourceServerUrl() +
+        String url = getBaseResourceServerUrl() +
                 String.format("/api/v1/summits/current/external-orders/%s/external-attendees/%d/confirm", orderNumber, externalAttendeeId);
         HttpTask httpTask = null;
         try {
@@ -180,16 +191,5 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
         httpTask.execute();
-    }
-
-    protected String getUserInfoUrl() {
-        String resourceServerUrl = "";
-        if (BuildConfig.DEBUG) {
-            resourceServerUrl = Constants.TEST_USER_INFO_SERVER_URL;
-        }
-        else {
-            resourceServerUrl = Constants.PRODUCTION_USER_INFO_SERVER_URL;
-        }
-        return resourceServerUrl;
     }
 }

@@ -57,7 +57,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                     dataStoreOperationListener.onError(friendlyError);
                 }
             };
-            String url = getResourceServerUrl() +
+            String url = getBaseResourceServerUrl() +
                     String.format("/api/v1/summits/current/events/%d/feedback?expand=owner&page=%d&per_page=%d", eventId, page, objectsPerPage);
             HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
             httpTask.execute();
@@ -95,7 +95,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                     dataStoreOperationListener.onError(friendlyError);
                 }
             };
-            String url = getResourceServerUrl() +
+            String url = getBaseResourceServerUrl() +
                     String.format("/api/v1/summits/current/events/%d/published?fields=id,avg_feedback_rate&relations=none", eventId);
             HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
             httpTask.execute();

@@ -4,6 +4,8 @@ package org.openstack.android.summit.dagger.components;
  * Created by claudio on 11/3/2015.
  */
 
+import org.openstack.android.summit.common.security.AuthenticatorActivity;
+import org.openstack.android.summit.common.security.AuthenticatorService;
 import org.openstack.android.summit.dagger.modules.AboutModule;
 import org.openstack.android.summit.dagger.modules.FeedbackEditModule;
 import org.openstack.android.summit.dagger.modules.MainModule;
@@ -89,4 +91,6 @@ public interface ApplicationComponent {
     void inject(FeedbackEditFragment feedbackEditFragment);
     void inject(MemberOrderConfirmFragment memberOrderConfirmFragment);
     void inject(AboutFragment aboutFragment);
+    void inject(AuthenticatorService authenticatorService);
+    void inject(AuthenticatorActivity authenticatorActivity);
 }

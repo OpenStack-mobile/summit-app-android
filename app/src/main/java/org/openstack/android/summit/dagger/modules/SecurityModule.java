@@ -1,5 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
+import android.content.Context;
+
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.network.HttpFactory;
@@ -25,8 +27,8 @@ public class SecurityModule {
     }
 
     @Provides
-    ITokenManagerFactory providesTokenManagerFactory() {
-        return new TokenManagerFactory(new TokenManagerOIDC(), new TokenManagerServiceAccount());
+    ITokenManagerFactory providesTokenManagerFactory(IOIDCConfigurationManager oidcConfigurationManager) {
+        return new TokenManagerFactory(new TokenManagerOIDC(), new TokenManagerServiceAccount(oidcConfigurationManager));
     }
 
     @Provides
@@ -38,5 +40,13 @@ public class SecurityModule {
     @Singleton
     ISecurityManager providesSecurityManager(IMemberDataStore memberDataStore, ISession session) {
         return new SecurityManager(new TokenManagerOIDC(), memberDataStore, session);
+    }
+
+    @Provides
+    @Singleton
+    IOIDCConfigurationManager providesOIDCConfigurationManager(Context context) {
+        return new OIDCConfigurationManager(new Base64Decoder(), new IConfigurationParamFinderStrategy[] {
+                new ConfigurationParamMetadataFinderStrategy(context)
+        });
     }
 }

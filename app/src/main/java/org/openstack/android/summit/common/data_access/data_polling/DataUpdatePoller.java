@@ -13,6 +13,7 @@ import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.data_access.BaseRemoteDataStore;
 import org.openstack.android.summit.common.data_access.DataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -37,8 +38,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Claudio Redi on 2/5/2016.
  */
-public class DataUpdatePoller implements IDataUpdatePoller {
-    private int pollingInterval = 20*1000;
+public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdatePoller {
+    private int pollingInterval = 20 * 1000;
     private ISecurityManager securityManager;
     private IHttpTaskFactory httpTaskFactory;
     private IDataUpdateProcessor dataUpdateProcessor;
@@ -83,8 +84,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
 
                     try {
                         dataUpdateProcessor.process(data);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         String errorMessage = String.format("There was an error processing these updates from server: : %s", data);
                         Crashlytics.logException(new Exception(errorMessage, e));
                         Log.e(Constants.LOG_TAG, errorMessage, e);
@@ -93,7 +93,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
 
                 @Override
                 public void onError(Throwable error) {
-                    if (error instanceof AuthorizationException){
+                    if (error instanceof AuthorizationException) {
                         securityManager.handleIllegalState();
                     }
                     Log.d(Constants.LOG_TAG, String.format("Error polling server for data updates: %s", error.getMessage()));
@@ -104,11 +104,9 @@ public class DataUpdatePoller implements IDataUpdatePoller {
                     ? httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, taskListener)
                     : httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, taskListener);
             httpTask.execute();
-        }
-        catch (InvalidParameterSpecException e) {
+        } catch (InvalidParameterSpecException e) {
             Log.d(Constants.LOG_TAG, e.getMessage(), e);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             //TODO: fabric
         }
@@ -132,9 +130,8 @@ public class DataUpdatePoller implements IDataUpdatePoller {
                 }
             };
 
-            handler.postDelayed(dataUpdatePoller, 5*1000);
-        }
-        catch (Exception e) {
+            handler.postDelayed(dataUpdatePoller, 5 * 1000);
+        } catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             //TODO: fabric
         }
@@ -152,9 +149,8 @@ public class DataUpdatePoller implements IDataUpdatePoller {
         String url = null;
         int latestDataUpdateId = dataUpdateDataStore.getLatestDataUpdate();
         if (latestDataUpdateId > 0) {
-            url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=50&last_event_id=", latestDataUpdateId);
-        }
-        else {
+            url = String.format("%s%s%d", getBaseResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=50&last_event_id=", latestDataUpdateId);
+        } else {
             long fromDate = getFromDate();
             if (fromDate == 0) {
                 Summit summit = summitDataStore.getActiveLocal();
@@ -165,7 +161,7 @@ public class DataUpdatePoller implements IDataUpdatePoller {
             }
 
             if (fromDate != 0) {
-                url = String.format("%s%s%d", getResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=10&from_date=", fromDate);
+                url = String.format("%s%s%d", getBaseResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=10&from_date=", fromDate);
             }
         }
 
@@ -190,16 +186,5 @@ public class DataUpdatePoller implements IDataUpdatePoller {
                 securityManager.logout();
             }
         }
-    }
-
-    private String getResourceServerUrl() {
-        String resourceServerUrl = "";
-        if (BuildConfig.DEBUG) {
-            resourceServerUrl = Constants.TEST_RESOURCE_SERVER_BASE_URL;
-        }
-        else {
-            resourceServerUrl = Constants.PRODUCTION_RESOURCE_SERVER_BASE_URL;
-        }
-        return resourceServerUrl;
     }
 }

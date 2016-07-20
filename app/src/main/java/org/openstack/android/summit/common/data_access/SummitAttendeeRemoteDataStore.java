@@ -63,7 +63,7 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
 
         String jsonString = String.format("{\"rate\":%d, \"note\":%s, \"attendee_id\":%d}", feedback.getRate(), JSONObject.quote(feedback.getReview()), feedback.getOwner().getId());
 
-        String url = getResourceServerUrl() +
+        String url = getBaseResourceServerUrl() +
                 String.format("/api/v1/summits/current/events/%s/feedback", feedback.getEvent().getId());
         HttpTask httpTask = null;
         try {
@@ -95,7 +95,7 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
             }
         };
 
-        String url = getResourceServerUrl() +
+        String url = getBaseResourceServerUrl() +
                 String.format("/api/v1/summits/current/attendees/%s/schedule/%s", summitAttendee.getId(), summitEvent.getId());
         HttpTask httpTask = null;
         try {

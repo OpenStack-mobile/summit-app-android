@@ -52,7 +52,7 @@ public class SummitRemoteDataStore extends BaseRemoteDataStore implements ISummi
                     dataStoreOperationListener.onError(friendlyError);
                 }
             };
-            String url = getResourceServerUrl() + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";
+            String url = getBaseResourceServerUrl() + "/api/v1/summits/current?expand=locations,sponsors,summit_types,event_types,presentation_categories,schedule";
             HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
             httpTask.execute();
         } catch (Exception e) {

@@ -7,13 +7,5 @@ import java.io.UnsupportedEncodingException;
  */
 public interface IDecoder {
     String decode(String codedString) throws UnsupportedEncodingException;
-    String getClientSecretOIDC();
-    String getClientIDOIDC();
-    String getClientSecretServiceAccount();
-    String getClientIDServiceAccount();
-    String getTokenServerUrl();
-    String[] getScopesOIDC();
-    String[] getScopesServiceAccount();
-    String getAuthorizationServerUrl();
 }
 
