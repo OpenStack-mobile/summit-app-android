@@ -1,8 +1,4 @@
-# Gradle generated files
-.gradle/
-fabric.properties
-# Signing files
-.signing/
+.gradle
 /local.properties
 .DS_Store
 build/
@@ -14,12 +10,4 @@ build/
 /summit-app.properties
 /summit-app.debug.properties
 /app/libs
-*
-# OS-specific files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+app/fabric.properties
