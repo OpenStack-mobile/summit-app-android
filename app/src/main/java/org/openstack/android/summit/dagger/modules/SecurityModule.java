@@ -46,7 +46,8 @@ public class SecurityModule {
     @Singleton
     IOIDCConfigurationManager providesOIDCConfigurationManager(Context context) {
         return new OIDCConfigurationManager(new Base64Decoder(), new IConfigurationParamFinderStrategy[] {
-                new ConfigurationParamMetadataFinderStrategy(context)
+                new ConfigurationParamMetadataFinderStrategy(context),
+                new ConfigurationParamSafeStorageFinderStrategy()
         });
     }
 }

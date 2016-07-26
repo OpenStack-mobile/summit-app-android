@@ -170,7 +170,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }
 
@@ -184,6 +184,13 @@ dependencies {
 
     androidTestCompile 'junit:junit:4.12'
 
+    if(file ('libs/safe_storage.aar').exists()) {
+        println('adding dependency safe_storage.aar ...')
+        compile "org.openstack.android.summit.safestorage:safe_storage@aar"
+        //compile(name: 'safe_storage', ext: 'aar'){
+        //    transitive = true;
+        //}
+    }
 }
 
 apply plugin: 'realm-android'

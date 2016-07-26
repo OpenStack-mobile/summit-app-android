@@ -11,3 +11,4 @@ build/
 /summit-app.debug.properties
 /app/libs
 app/fabric.properties
+/app/src/jni/

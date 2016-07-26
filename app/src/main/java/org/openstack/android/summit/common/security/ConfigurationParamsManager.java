@@ -21,7 +21,7 @@ public class ConfigurationParamsManager implements IConfigurationParamsManager {
         if(cache.containsKey(key)) return cache.get(key);
         for (int i = 0; i < this.finderStrategies.length; i++) {
             String value = this.finderStrategies[i].find(key);
-            if (value != null) {
+            if (value != null && !value.isEmpty()) {
                 cache.put(key, value);
                 return value;
             }
