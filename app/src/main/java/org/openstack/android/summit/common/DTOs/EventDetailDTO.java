@@ -7,8 +7,19 @@ import java.util.List;
  * Created by Claudio Redi on 11/18/2015.
  */
 public class EventDetailDTO extends ScheduleItemDTO {
+
     private int venueId;
     private int venueRoomId;
+    private int venueFloorId;
+
+    public int getVenueFloorId() {
+        return venueFloorId;
+    }
+
+    public void setVenueFloorId(int venueFloorId) {
+        this.venueFloorId = venueFloorId;
+    }
+
     private String eventDescription;
     private String tags;
     private List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();

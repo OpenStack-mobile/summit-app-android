@@ -8,6 +8,7 @@ import org.openstack.android.summit.modules.event_detail.user_interface.IEventDe
  * Created by Claudio Redi on 11/17/2015.
  */
 public interface IEventDetailWireframe extends IBaseWireframe {
+
     void presentEventDetailView(int eventId, IBaseView context);
 
     void showSpeakerProfile(int speakerId, IBaseView view);

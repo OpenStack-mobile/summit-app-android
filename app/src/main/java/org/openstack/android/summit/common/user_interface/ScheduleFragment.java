@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,8 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
     ScheduleListAdapter scheduleListAdapter;
     List<ScheduleItemDTO> events;
-    int selectedPosition;
+    Parcelable listState = null;
+    private static final String LIST_STATE = "scheduleListState";
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -45,8 +47,10 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         presenter.setView(this);
+        if(savedInstanceState != null) {
+            listState = savedInstanceState.getParcelable(LIST_STATE);
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,13 +72,23 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
     @Override
     public void onResume() {
+
         super.onResume();
+        if (listState != null){
+            ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
+            scheduleList.onRestoreInstanceState(listState);
+        }
+        listState = null;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         presenter.onSaveInstanceState(outState);
+        //save list state
+        ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
+        listState = scheduleList.onSaveInstanceState();
+        outState.putParcelable(LIST_STATE, listState);
     }
 
     @Override
@@ -122,14 +136,6 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         ((LinearLayout)ranger.getParent()).setVisibility(View.VISIBLE);
         scheduleListAdapter.notifyDataSetChanged();
-        ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
-        if (selectedPosition == 0) {
-            scheduleList.setSelectionAfterHeaderView();
-        }
-        else {
-            // reset selected position so we start fresh next time
-            selectedPosition = 0;
-        }
     }
 
     @Override
@@ -155,7 +161,6 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectedPosition = position;
                     presenter.showEventDetail(position);
                 }
             });
