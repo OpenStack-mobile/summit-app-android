@@ -20,10 +20,10 @@ public class SummitAttendee extends RealmObject implements IPerson {
     private String irc;
     private String email;
     private Integer memberId;
-    private RealmList<TicketType> ticketTypes = new RealmList<>();
-    private RealmList<SummitEvent> scheduledEvents = new RealmList<>();
+    private RealmList<TicketType> ticketTypes       = new RealmList<>();
+    private RealmList<SummitEvent> scheduledEvents  = new RealmList<>();
     private RealmList<SummitEvent> bookmarkedEvents = new RealmList<>();
-    private RealmList<Feedback> feedback = new RealmList<>();
+    private RealmList<Feedback>            feedback = new RealmList<>();
 
     public int getId() {
         return id;

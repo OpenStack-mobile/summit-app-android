@@ -8,12 +8,9 @@ import com.github.kevinsawicki.http.HttpRequest;
 import org.json.JSONException;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
-import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.HttpTask;
-import org.openstack.android.summit.common.network.HttpTaskConfig;
 import org.openstack.android.summit.common.network.HttpTaskListener;
-import org.openstack.android.summit.common.network.IHttpFactory;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
 
@@ -37,7 +34,7 @@ public class SummitRemoteDataStore extends BaseRemoteDataStore implements ISummi
                 public void onSucceed(String data) {
                     try {
                         Summit summit = deserializer.deserialize(data, Summit.class);
-                        dataStoreOperationListener.onSuceedWithSingleData(summit);
+                        dataStoreOperationListener.onSucceedWithSingleData(summit);
                     } catch (JSONException e) {
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG,"Error deserializing summit", e);

@@ -1,18 +1,13 @@
 package org.openstack.android.summit.common.business_logic;
 
 import android.util.Log;
-
-import com.google.api.client.util.store.DataStore;
-
 import org.joda.time.DateTime;
-import org.json.JSONException;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
-import org.openstack.android.summit.common.IPushNotificationsManager;
+import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.ISession;
-import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
@@ -26,23 +21,20 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
-
 import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
 public class ScheduleInteractor extends ScheduleableInteractor implements IScheduleInteractor {
-    private IPushNotificationsManager pushNotificationsManager;
+
     private ISession session;
     private final String PUSH_NOTIFICATIONS_SUBSCRIBED_KEY = "PUSH_NOTIFICATIONS_SUBSCRIBED_KEY";
 
     @Inject
     public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IDataUpdatePoller dataUpdatePoller) {
-        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, dataUpdatePoller);
+        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, dataUpdatePoller, pushNotificationsManager);
         this.summitDataStore = summitDataStore;
-        this.pushNotificationsManager = pushNotificationsManager;
         this.session = session;
     }
 
@@ -105,7 +97,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     public void getActiveSummit(final IInteractorAsyncOperationListener<SummitDTO> delegate) {
         DataStoreOperationListener<Summit> dataStoreOperationListener = new DataStoreOperationListener<Summit>() {
             @Override
-            public void onSuceedWithSingleData(Summit data) {
+            public void onSucceedWithSingleData(Summit data) {
                 if (delegate != null) {
                     try{
                         SummitDTO summitDTO = dtoAssembler.createDTO(data, SummitDTO.class);

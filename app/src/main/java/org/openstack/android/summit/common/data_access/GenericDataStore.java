@@ -45,7 +45,7 @@ public class GenericDataStore implements IGenericDataStore {
             realmEntity = realm.copyToRealmOrUpdate(entity);
             realm.commitTransaction();
             if (delegate != null) {
-                delegate.onSuceedWithSingleData(realmEntity);
+                delegate.onSucceedWithSingleData(realmEntity);
             }
         }
         catch (Exception e) {

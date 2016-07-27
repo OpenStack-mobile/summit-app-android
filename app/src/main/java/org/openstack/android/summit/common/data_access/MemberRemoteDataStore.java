@@ -5,17 +5,12 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.INonConfirmedSummitAttendeeDeserializer;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
-import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.HttpTask;
-import org.openstack.android.summit.common.network.HttpTaskFactory;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
@@ -59,7 +54,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             public void onSucceed(String data) {
                 try {
                     Member member = deserializer.deserialize(data, Member.class);
-                    dataStoreOperationListener.onSuceedWithSingleData(member);
+                    dataStoreOperationListener.onSucceedWithSingleData(member);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, "Error deserializing member", e);
@@ -92,7 +87,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             public void onSucceed(String data) {
                 try {
                     Member member = deserializer.deserialize(data, Member.class);
-                    dataStoreOperationListener.onSuceedWithSingleData(member);
+                    dataStoreOperationListener.onSucceedWithSingleData(member);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, "Error deserializing member", e);

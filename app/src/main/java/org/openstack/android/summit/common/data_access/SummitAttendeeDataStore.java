@@ -1,14 +1,7 @@
 package org.openstack.android.summit.common.data_access;
 
-import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
-
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
-import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
@@ -23,26 +16,26 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     }
 
     @Override
-    public void addEventToMemberShedule(final SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
-        addEventToMemberSheduleLocal(summitAttendee, summitEvent);
+    public void addEventToMemberSchedule(final SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
+        addEventToMemberScheduleLocal(summitAttendee, summitEvent);
 
-        IDataStoreOperationListener<SummitAttendee> remomoteDataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
+        IDataStoreOperationListener<SummitAttendee> remoteDataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
-            public void onSuceedWithSingleData(SummitAttendee data) {
+            public void onSucceedWithSingleData(SummitAttendee data) {
                 dataStoreOperationListener.onSucceedWithoutData();
             }
 
             @Override
             public void onError(String message) {
-                removeEventFromMemberSheduleLocal(summitAttendee, summitEvent);
+                removeEventFromMemberScheduleLocal(summitAttendee, summitEvent);
                 dataStoreOperationListener.onError(message);
             }
         };
-        summitAttendeeRemoteDataStore.addEventToShedule(summitAttendee, summitEvent, remomoteDataStoreOperationListener);
+        summitAttendeeRemoteDataStore.addEventToSchedule(summitAttendee, summitEvent, remoteDataStoreOperationListener);
     }
 
     @Override
-    public void addEventToMemberSheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
+    public void addEventToMemberScheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
         realm.beginTransaction();
         try {
             if (summitAttendee.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() == 0){
@@ -57,12 +50,12 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     }
 
     @Override
-    public void removeEventFromMemberShedule(SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
+    public void removeEventFromMemberSchedule(SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
 
-        IDataStoreOperationListener<SummitAttendee> remomoteDataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
+        IDataStoreOperationListener<SummitAttendee> remoteDataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
-            public void onSuceedWithSingleData(SummitAttendee data) {
-                removeEventFromMemberSheduleLocal(data, summitEvent);
+            public void onSucceedWithSingleData(SummitAttendee data) {
+                removeEventFromMemberScheduleLocal(data, summitEvent);
                 dataStoreOperationListener.onSucceedWithoutData();
             }
 
@@ -71,11 +64,11 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
                 dataStoreOperationListener.onError(message);
             }
         };
-        summitAttendeeRemoteDataStore.removeEventFromShedule(summitAttendee, summitEvent, remomoteDataStoreOperationListener);
+        summitAttendeeRemoteDataStore.removeEventFromSchedule(summitAttendee, summitEvent, remoteDataStoreOperationListener);
     }
 
     @Override
-    public void removeEventFromMemberSheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
+    public void removeEventFromMemberScheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
         realm.beginTransaction();
         try{
             if (summitAttendee.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() > 0) {
@@ -93,8 +86,8 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
     public void addFeedback(final SummitAttendee attendee, Feedback feedback, final IDataStoreOperationListener dataStoreOperationListener) {
         IDataStoreOperationListener<Feedback> remoteDataStoreOperationListener = new DataStoreOperationListener<Feedback>() {
             @Override
-            public void onSuceedWithSingleData(Feedback data) {
-                super.onSuceedWithSingleData(data);
+            public void onSucceedWithSingleData(Feedback data) {
+                super.onSucceedWithSingleData(data);
 
                 realm.beginTransaction();
                 try {
@@ -106,7 +99,7 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
                     throw e;
                 }
 
-                dataStoreOperationListener.onSuceedWithSingleData(data);
+                dataStoreOperationListener.onSucceedWithSingleData(data);
             }
 
             @Override

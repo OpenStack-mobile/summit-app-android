@@ -1,19 +1,14 @@
 package org.openstack.android.summit.dagger.modules;
 
 import android.content.Context;
-
 import org.openstack.android.summit.OpenStackSummitApplication;
-import org.openstack.android.summit.common.IPushNotificationsManager;
+import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.ISession;
-import org.openstack.android.summit.common.PushNotificationsManager;
+import org.openstack.android.summit.common.push_notifications.PushNotificationsManager;
 import org.openstack.android.summit.common.ScheduleFilter;
 import org.openstack.android.summit.common.Session;
-import org.openstack.android.summit.common.network.IReachability;
-import org.openstack.android.summit.common.network.Reachability;
-
 import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 

@@ -130,7 +130,7 @@ public class SecurityManager implements ISecurityManager {
     public void linkAttendeeIfExist() {
         final IDataStoreOperationListener<Member> dataStoreOperationListenerNonRegisteredAttendee = new DataStoreOperationListener<Member>() {
             @Override
-            public void onSuceedWithSingleData(Member data) {
+            public void onSucceedWithSingleData(Member data) {
                 member = data;
                 if (data != null && data.getId() > 0) {
                     session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
@@ -158,7 +158,7 @@ public class SecurityManager implements ISecurityManager {
 
         IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
-            public void onSuceedWithSingleData(Member data) {
+            public void onSucceedWithSingleData(Member data) {
                 member = data;
                 session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
 
@@ -263,7 +263,7 @@ public class SecurityManager implements ISecurityManager {
 
                 IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
                     @Override
-                    public void onSuceedWithSingleData(Member data) {
+                    public void onSucceedWithSingleData(Member data) {
                         session.setString(HACK_FIX_MEMBER_ID, "DONE");
                         session.setInt(Constants.CURRENT_MEMBER_ID, data.getId());
                     }

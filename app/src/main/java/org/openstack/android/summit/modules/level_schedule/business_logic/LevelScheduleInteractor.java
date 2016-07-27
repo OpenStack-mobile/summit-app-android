@@ -1,7 +1,7 @@
 package org.openstack.android.summit.modules.level_schedule.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
-import org.openstack.android.summit.common.IPushNotificationsManager;
+import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;

@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (!reachability.isNetworkingAvailable(MainActivity.this)) {
                     showErrorMessage(getResources().getString(R.string.login_disallowed_no_connectivity));
                     return;
@@ -326,8 +327,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showInfoMessage(String message) {
+        showInfoMessage(message, "info");
+    }
+
+    @Override
+    public void showInfoMessage(String message, String title) {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Info")
+                .setTitleText(title)
                 .setContentText(message)
                 .show();
     }

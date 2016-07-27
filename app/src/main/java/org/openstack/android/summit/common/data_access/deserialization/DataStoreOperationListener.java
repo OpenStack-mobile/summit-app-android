@@ -16,7 +16,7 @@ public abstract class DataStoreOperationListener<T extends RealmObject> implemen
     }
 
     @Override
-    public void onSuceedWithSingleData(T data) {
+    public void onSucceedWithSingleData(T data) {
 
     }
 

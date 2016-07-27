@@ -4,9 +4,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
-import com.google.api.client.http.HttpMethods;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
@@ -36,12 +34,12 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
     }
 
     @Override
-    public void addEventToShedule(SummitAttendee summitAttendee, SummitEvent summitEvent, IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
+    public void addEventToSchedule(SummitAttendee summitAttendee, SummitEvent summitEvent, IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
         addOrRemoveEventFromSchedule(summitAttendee, summitEvent, dataStoreOperationListener, HttpRequest.METHOD_POST);
     }
 
     @Override
-    public void removeEventFromShedule(SummitAttendee summitAttendee, SummitEvent summitEvent, IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
+    public void removeEventFromSchedule(SummitAttendee summitAttendee, SummitEvent summitEvent, IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
         addOrRemoveEventFromSchedule(summitAttendee, summitEvent, dataStoreOperationListener, HttpRequest.METHOD_DELETE);
     }
 
@@ -51,7 +49,7 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
             @Override
             public void onSucceed(String data) {
                 feedback.setId(Integer.parseInt(data));
-                dataStoreOperationListener.onSuceedWithSingleData(feedback);
+                dataStoreOperationListener.onSucceedWithSingleData(feedback);
             }
 
             @Override
@@ -85,7 +83,7 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
         HttpTaskListener httpTaskListener = new HttpTaskListener() {
             @Override
             public void onSucceed(String data) {
-                dataStoreOperationListener.onSuceedWithSingleData(summitAttendee);
+                dataStoreOperationListener.onSucceedWithSingleData(summitAttendee);
             }
 
             @Override

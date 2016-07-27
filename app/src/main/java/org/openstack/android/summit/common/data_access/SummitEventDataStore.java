@@ -1,23 +1,16 @@
 package org.openstack.android.summit.common.data_access;
 
-import org.joda.time.DateTime;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
-import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Feedback;
-import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
-import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import io.realm.Case;
-import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -206,9 +199,9 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
         IDataStoreOperationListener<SummitEvent> remoteDataStoreOperationListener = new DataStoreOperationListener<SummitEvent>() {
 
             @Override
-            public void onSuceedWithSingleData(SummitEvent data) {
-                super.onSuceedWithSingleData(data);
-                dataStoreOperationListener.onSuceedWithSingleData(data);
+            public void onSucceedWithSingleData(SummitEvent data) {
+                super.onSucceedWithSingleData(data);
+                dataStoreOperationListener.onSucceedWithSingleData(data);
             }
 
             @Override

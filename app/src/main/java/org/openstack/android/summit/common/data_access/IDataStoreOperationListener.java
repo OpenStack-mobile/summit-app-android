@@ -9,7 +9,7 @@ import io.realm.RealmObject;
  */
 public interface IDataStoreOperationListener<T> {
     void onSucceedWithDataCollection(List<T> data);
-    void onSuceedWithSingleData(T data);
+    void onSucceedWithSingleData(T data);
     void onSucceedWithoutData();
     void onError(String message);
 }

@@ -8,7 +8,6 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
-import org.openstack.android.summit.common.entities.Summit;
 
 import java.util.List;
 
@@ -27,12 +26,12 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
 
         IDataStoreOperationListener<Member> remoteDataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
-            public void onSuceedWithSingleData(Member data) {
+            public void onSucceedWithSingleData(Member data) {
                 try{
                     realm.beginTransaction();
                     Member realmEntity = realm.copyToRealmOrUpdate(data);
                     realm.commitTransaction();
-                    dataStoreOperationListener.onSuceedWithSingleData(realmEntity);
+                    dataStoreOperationListener.onSucceedWithSingleData(realmEntity);
                 }
                 catch (Exception e) {
                     realm.cancelTransaction();
@@ -58,9 +57,9 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
     public void getLoggedInMemberBasicInfoOrigin(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
         IDataStoreOperationListener<Member> remoteDataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
-            public void onSuceedWithSingleData(Member data) {
+            public void onSucceedWithSingleData(Member data) {
                 try{
-                    dataStoreOperationListener.onSuceedWithSingleData(data);
+                    dataStoreOperationListener.onSucceedWithSingleData(data);
                 }
                 catch (Exception e) {
                     Crashlytics.logException(e);

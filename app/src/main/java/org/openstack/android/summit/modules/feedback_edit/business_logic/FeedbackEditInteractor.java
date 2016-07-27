@@ -62,7 +62,7 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
 
         IDataStoreOperationListener<Feedback> dataStoreOperationListener = new DataStoreOperationListener<Feedback>() {
             @Override
-            public void onSuceedWithSingleData(Feedback data) {
+            public void onSucceedWithSingleData(Feedback data) {
                 FeedbackDTO dto = dtoAssembler.createDTO(data, FeedbackDTO.class);
                 interactorAsyncOperationListener.onSucceedWithData(dto);
             }

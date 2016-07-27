@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.Feedback;
-import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
@@ -80,7 +79,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                         SummitEvent summitEvent = realm.where(SummitEvent.class).equalTo("id", json.getInt("id")).findFirst();
                         Double averateRateFromServer = json.optDouble("avg_feedback_rate");
                         updateAverageRateIfNecessary(summitEvent, averateRateFromServer);
-                        dataStoreOperationListener.onSuceedWithSingleData(summitEvent);
+                        dataStoreOperationListener.onSucceedWithSingleData(summitEvent);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG, e.getMessage(), e);

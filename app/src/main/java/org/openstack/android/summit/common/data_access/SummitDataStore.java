@@ -12,8 +12,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.realm.RealmObject;
-
 /**
  * Created by Claudio Redi on 11/17/2015.
  */
@@ -31,20 +29,20 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
 
         if (summits.size() > 0) {
             if (dataStoreOperationListener != null) {
-                dataStoreOperationListener.onSuceedWithSingleData(summits.get(0));
+                dataStoreOperationListener.onSucceedWithSingleData(summits.get(0));
             }
         }
         else {
 
             DataStoreOperationListener<Summit> remoteDelegate = new DataStoreOperationListener<Summit>() {
                 @Override
-                public void onSuceedWithSingleData(Summit data) {
+                public void onSucceedWithSingleData(Summit data) {
                     try{
                         realm.beginTransaction();
                         Summit realmEntity = realm.copyToRealmOrUpdate(data);
                         realm.commitTransaction();
                         if (dataStoreOperationListener != null) {
-                            dataStoreOperationListener.onSuceedWithSingleData(realmEntity);
+                            dataStoreOperationListener.onSucceedWithSingleData(realmEntity);
                         }
                     }
                     catch (Exception e) {
