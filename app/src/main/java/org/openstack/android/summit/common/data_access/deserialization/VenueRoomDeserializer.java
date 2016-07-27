@@ -5,7 +5,10 @@ import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
+
+import java.security.InvalidParameterException;
 
 import javax.inject.Inject;
 
@@ -32,12 +35,25 @@ public class VenueRoomDeserializer extends BaseDeserializer implements IVenueRoo
         VenueRoom venueRoom = new VenueRoom();
         venueRoom.setId(jsonObject.getInt("id"));
         venueRoom.setName(jsonObject.getString("name"));
-        venueRoom.setCapacity(jsonObject.has("Capaciry") ? jsonObject.getInt("Capacity") : 0);
+        venueRoom.setCapacity(jsonObject.has("capacity")&& !jsonObject.isNull("capacity") ? jsonObject.getInt("capacity") : 0);
         venueRoom.setLocationDescription(jsonObject.getString("description"));
+
         int venueId = jsonObject.getInt("venue_id");
         Venue venue = deserializerStorage.get(venueId, Venue.class);
         venueRoom.setVenue(venue);
 
+        if(!jsonObject.isNull("floor_id")){
+            int floorId = jsonObject.getInt("floor_id");
+            VenueFloor floor = deserializerStorage.get(floorId, VenueFloor.class);
+            venueRoom.setFloor(floor);
+        }
+        if(!jsonObject.isNull("floor")){
+            JSONObject jsonObjectFloor = jsonObject.getJSONObject("floor");
+            VenueFloor floor           = deserializerStorage.get(jsonObjectFloor.getInt("id"), VenueFloor.class);
+            if(floor == null)
+                throw new InvalidParameterException(String.format("floor id %s not found on database!", jsonObjectFloor.getInt("id")));
+            venueRoom.setFloor(floor);
+        }
         if(!deserializerStorage.exist(venueRoom, VenueRoom.class)) {
             deserializerStorage.add(venueRoom, VenueRoom.class);
         }

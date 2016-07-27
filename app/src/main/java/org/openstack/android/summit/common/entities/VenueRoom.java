@@ -13,6 +13,15 @@ public class VenueRoom extends RealmObject implements INamedEntity {
     private int capacity;
     private String locationDescription;
     private Venue venue;
+    private VenueFloor floor;
+
+    public VenueFloor getFloor() {
+        return floor;
+    }
+
+    public void setFloor(VenueFloor floor) {
+        this.floor = floor;
+    }
 
     public int getId() {
         return id;

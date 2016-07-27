@@ -59,6 +59,7 @@ import org.openstack.android.summit.common.data_access.deserialization.ISummitEv
 import org.openstack.android.summit.common.data_access.deserialization.ITrackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ITrackGroupDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IVenueDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.IVenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IVenueRoomDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.MemberDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.NonConfirmedSummitAttendeeDeserializer;
@@ -71,6 +72,7 @@ import org.openstack.android.summit.common.data_access.deserialization.SummitEve
 import org.openstack.android.summit.common.data_access.deserialization.TrackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.TrackGroupDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.VenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.network.IReachability;
@@ -112,8 +114,8 @@ public class DataAccessModule {
     }
 
     @Provides
-    IVenueDeserializer providesVenueDeserializer(IGenericDeserializer genericDeserializer, IDeserializerStorage deserializerStorage) {
-        return new VenueDeserializer(genericDeserializer, deserializerStorage);
+    IVenueDeserializer providesVenueDeserializer(IGenericDeserializer genericDeserializer, IDeserializerStorage deserializerStorage, IVenueFloorDeserializer venueFloorDeserializer) {
+        return new VenueDeserializer(genericDeserializer, deserializerStorage, venueFloorDeserializer);
     }
 
     @Provides
@@ -141,6 +143,11 @@ public class DataAccessModule {
     @Provides
     IPresentationSpeakerDeserializer providesPresentationSpeakerDeserializer(IPersonDeserializer personDeserializer, IDeserializerStorage deserializerStorage) {
         return new PresentationSpeakerDeserializer(personDeserializer, deserializerStorage);
+    }
+
+    @Provides
+    IVenueFloorDeserializer providesVenueFloorDeserializer(IDeserializerStorage deserializerStorage) {
+        return new VenueFloorDeserializer(deserializerStorage);
     }
 
     @Provides
@@ -185,7 +192,8 @@ public class DataAccessModule {
                                        ITrackGroupDeserializer trackGroupDeserializer,
                                        ITrackDeserializer trackDeserializer,
                                        IVenueRoomDeserializer venueRoomDeserializer,
-                                       IVenueDeserializer venueDeserializer)
+                                       IVenueDeserializer venueDeserializer,
+                                       IVenueFloorDeserializer venueFloorDeserializer)
     {
         return new Deserializer(genericDeserializer,
                 feedbackDeserializer,
@@ -198,7 +206,8 @@ public class DataAccessModule {
                 trackGroupDeserializer,
                 trackDeserializer,
                 venueRoomDeserializer,
-                venueDeserializer);
+                venueDeserializer,
+                venueFloorDeserializer);
     }
 
     @Provides

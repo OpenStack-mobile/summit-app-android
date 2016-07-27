@@ -21,6 +21,7 @@ import io.realm.SummitEventRealmProxy;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
+
 public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extends ScheduleItemDTO> extends AbstractConverter<S, T> {
     protected void convertInternal(S source, ScheduleItemDTO scheduleItemDTO) {
         scheduleItemDTO.setId(source.getId());
@@ -67,7 +68,12 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
     private String getLocation(S summitEvent) {
         String location = "";
         if (summitEvent.getVenueRoom() != null && summitEvent.getVenueRoom().getVenue() != null) {
-            location = summitEvent.getVenueRoom().getVenue().getName() + " - " + summitEvent.getVenueRoom().getName();
+            location = summitEvent.getVenueRoom().getVenue().getName();
+            if(summitEvent.getVenueRoom().getFloor() != null)
+            {
+                location +=" - " + summitEvent.getVenueRoom().getFloor().getName();
+            }
+            location +=" - " + summitEvent.getVenueRoom().getName();
         }
         else if (summitEvent.getVenue() != null){
             location = summitEvent.getVenue().getName();

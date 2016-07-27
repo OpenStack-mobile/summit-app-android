@@ -7,8 +7,10 @@ import android.support.multidex.MultiDex;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.stetho.Stetho;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.components.DaggerApplicationComponent;
@@ -48,6 +50,15 @@ public class OpenStackSummitApplication extends Application {
 
         Parse.initialize(this);
         ParseInstallation.getCurrentInstallation().saveInBackground();
+        if(BuildConfig.DEBUG) {
+            // enable Stetho (http://facebook.github.io/stetho) and realm plugin
+            // chrome://inspect/#devices
+            Stetho.initialize(
+                    Stetho.newInitializerBuilder(this)
+                            .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                            .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                            .build());
+        }
     }
 
     private void initializeInjector() {

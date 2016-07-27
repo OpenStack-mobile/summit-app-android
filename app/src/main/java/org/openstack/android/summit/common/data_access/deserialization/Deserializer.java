@@ -20,6 +20,7 @@ import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
 
 import java.security.spec.InvalidParameterSpecException;
@@ -45,8 +46,10 @@ public class Deserializer implements IDeserializer {
     ISummitEventDeserializer summitEventDeserializer;
     ITrackGroupDeserializer trackGroupDeserializer;
     ITrackDeserializer trackDeserializer;
-    IVenueRoomDeserializer venueRoomDeserializer;
     IVenueDeserializer venueDeserializer;
+    IVenueFloorDeserializer venueFloorDeserializer;
+    IVenueRoomDeserializer venueRoomDeserializer;
+
 
     public Deserializer()
     {
@@ -64,7 +67,8 @@ public class Deserializer implements IDeserializer {
                         ITrackGroupDeserializer trackGroupDeserializer,
                         ITrackDeserializer trackDeserializer,
                         IVenueRoomDeserializer venueRoomDeserializer,
-                        IVenueDeserializer venueDeserializer)
+                        IVenueDeserializer venueDeserializer,
+                        IVenueFloorDeserializer venueFloorDeserializer)
     {
         this.genericDeserializer = genericDeserializer;
         this.feedbackDeserializer = feedbackDeserializer;
@@ -78,6 +82,7 @@ public class Deserializer implements IDeserializer {
         this.trackDeserializer = trackDeserializer;
         this.venueDeserializer = venueDeserializer;
         this.venueRoomDeserializer = venueRoomDeserializer;
+        this.venueFloorDeserializer = venueFloorDeserializer;
     }
 
     @Override
@@ -115,6 +120,9 @@ public class Deserializer implements IDeserializer {
         }
         else if (type == VenueRoom.class) {
             return (T)venueRoomDeserializer.deserialize(jsonString);
+        }
+        else if (type == VenueFloor.class) {
+            return (T)venueFloorDeserializer.deserialize(jsonString);
         }
         else {
             return genericDeserializer.deserialize(jsonString, type);

@@ -22,6 +22,15 @@ public class Venue extends RealmObject implements INamedEntity {
     private Boolean isInternal;
     private RealmList<Image> maps = new RealmList<>();
     private RealmList<Image> images = new RealmList<>();
+    private RealmList<VenueFloor> floors = new RealmList<>();
+
+    public RealmList<VenueFloor> getFloors() {
+        return floors;
+    }
+
+    public void setFloors(RealmList<VenueFloor> floors) {
+        this.floors = floors;
+    }
 
     public int getId() {
         return id;

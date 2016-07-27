@@ -28,18 +28,20 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
     IDeserializerStorage deserializerStorage;
 
     public DataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore, IClassResolver classResolver, IDeserializerStorage deserializerStorage) {
-        this.deserializer = deserializer;
+        this.deserializer              = deserializer;
         this.dataUpdateStrategyFactory = dataUpdateStrategyFactory;
-        this.dataUpdateDataStore = dataUpdateDataStore;
-        this.classResolver = classResolver;
-        this.deserializerStorage = deserializerStorage;
+        this.dataUpdateDataStore       = dataUpdateDataStore;
+        this.classResolver             = classResolver;
+        this.deserializerStorage       = deserializerStorage;
     }
 
     @Override
     public void process(String json) throws JSONException {
-        JSONArray jsonArray = new JSONArray(json);
+
+        JSONArray jsonArray   = new JSONArray(json);
         JSONObject jsonObject = null;
         DataUpdate dataUpdate = null;
+
         for(int i = 0; i < jsonArray.length(); i++) {
             try {
                 jsonObject = jsonArray.getJSONObject(i);

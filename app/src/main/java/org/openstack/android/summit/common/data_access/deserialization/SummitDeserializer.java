@@ -196,4 +196,5 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
     private boolean isVenueRoom(JSONObject jsonObjectVenueRoom) throws JSONException {
         return jsonObjectVenueRoom.getString("class_name").equals("SummitVenueRoom");
     }
+
 }

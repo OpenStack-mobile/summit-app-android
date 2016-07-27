@@ -12,6 +12,9 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven {
+        url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
+    }
     flatDir {
         dirs 'libs'
     }
@@ -191,6 +194,10 @@ dependencies {
         //    transitive = true;
         //}
     }
+
+    // http://facebook.github.io/stetho and https://github.com/uPhyca/stetho-realm
+    compile 'com.facebook.stetho:stetho:1.1.1'
+    compile 'com.uphyca:stetho_realm:0.9.0'
 }
 
 apply plugin: 'realm-android'

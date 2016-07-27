@@ -12,10 +12,10 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
 
     public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy, IDataUpdateStrategy summitDataUpdateStrategy, IDataUpdateStrategy trackGroupDataUpdateStrategy, IDataUpdateStrategy venueImageDataUpdateStrategy) {
         this.genericDataUpdateProcessStrategy = genericDataUpdateProcessStrategy;
-        this.myScheduleDataUpdateStrategy = myScheduleDataUpdateStrategy;
-        this.summitDataUpdateStrategy = summitDataUpdateStrategy;
-        this.trackGroupDataUpdateStrategy = trackGroupDataUpdateStrategy;
-        this.venueImageDataUpdateStrategy = venueImageDataUpdateStrategy;
+        this.myScheduleDataUpdateStrategy     = myScheduleDataUpdateStrategy;
+        this.summitDataUpdateStrategy         = summitDataUpdateStrategy;
+        this.trackGroupDataUpdateStrategy     = trackGroupDataUpdateStrategy;
+        this.venueImageDataUpdateStrategy     = venueImageDataUpdateStrategy;
     }
 
     @Override

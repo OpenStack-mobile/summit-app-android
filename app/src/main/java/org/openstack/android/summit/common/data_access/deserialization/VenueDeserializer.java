@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Image;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.entities.VenueFloor;
 
 import javax.inject.Inject;
 
@@ -16,11 +17,13 @@ import javax.inject.Inject;
 public class VenueDeserializer extends BaseDeserializer implements IVenueDeserializer {
     IGenericDeserializer genericDeserializer;
     IDeserializerStorage deserializerStorage;
+    IVenueFloorDeserializer venueFloorDeserializer;
 
     @Inject
-    public VenueDeserializer(IGenericDeserializer genericDeserializer, IDeserializerStorage deserializerStorage){
-        this.genericDeserializer = genericDeserializer;
-        this.deserializerStorage = deserializerStorage;
+    public VenueDeserializer(IGenericDeserializer genericDeserializer, IDeserializerStorage deserializerStorage, IVenueFloorDeserializer venueFloorDeserializer){
+        this.genericDeserializer    = genericDeserializer;
+        this.deserializerStorage    = deserializerStorage;
+        this.venueFloorDeserializer = venueFloorDeserializer;
     }
 
     @Override
@@ -76,6 +79,18 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
             jsonObjectImage = jsonArrayImages.getJSONObject(i);
             image = genericDeserializer.deserialize(jsonObjectImage.toString(), Image.class);
             venue.getImages().add(image);
+        }
+
+        if(jsonObject.has("floors")) {
+            VenueFloor floor;
+            JSONObject jsonObjectFloor;
+            JSONArray jsonArrayFloors = jsonObject.getJSONArray("floors");
+            for (int i = 0; i < jsonArrayFloors.length(); i++) {
+                jsonObjectFloor = jsonArrayFloors.getJSONObject(i);
+                floor = venueFloorDeserializer.deserialize(jsonObjectFloor.toString());
+                venue.getFloors().add(floor);
+                floor.setVenue(venue);
+            }
         }
 
         if(!deserializerStorage.exist(venue, Venue.class)) {

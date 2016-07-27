@@ -52,13 +52,13 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private Runnable dataUpdatePoller;
 
     public DataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, IReachability reachability, ISession session) {
-        this.securityManager = securityManager;
-        this.httpTaskFactory = httpTaskFactory;
+        this.securityManager     = securityManager;
+        this.httpTaskFactory     = httpTaskFactory;
         this.dataUpdateProcessor = dataUpdateProcessor;
         this.dataUpdateDataStore = dataUpdateDataStore;
-        this.summitDataStore = summitDataStore;
-        this.reachability = reachability;
-        this.session = session;
+        this.summitDataStore     = summitDataStore;
+        this.reachability        = reachability;
+        this.session             = session;
     }
 
     @Override
