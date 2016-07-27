@@ -1,4 +1,4 @@
-package org.openstack.android.summit.common;
+package org.openstack.android.summit.common.push_notifications;
 
 import com.parse.SaveCallback;
 

@@ -1,16 +1,11 @@
-package org.openstack.android.summit.common;
+package org.openstack.android.summit.common.push_notifications;
 
 import com.parse.ParseInstallation;
-import com.parse.SaveCallback;
 
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 2/22/2016.
