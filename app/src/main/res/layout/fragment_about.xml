@@ -59,7 +59,8 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:textIsSelectable="true"
-                android:text="@string/app_support"/>
+                android:text="@string/app_support"
+                android:autoLink="email"/>
         </LinearLayout>
 
         <LinearLayout
