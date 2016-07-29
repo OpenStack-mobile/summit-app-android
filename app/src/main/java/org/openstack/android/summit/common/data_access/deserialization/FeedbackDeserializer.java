@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.data_access.deserialization;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Feedback;
+import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
@@ -35,14 +36,16 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
         );
         feedback.setDate(new Date(jsonObject.getInt("created_date")*1000L));
 
-        int ownwerId;
+        int ownerId;
         if (jsonObject.has("attendee_id")){
-            ownwerId = jsonObject.getInt("attendee_id");
-            feedback.setOwner(deserializerStorage.get(ownwerId, SummitAttendee.class));
+            ownerId  = jsonObject.getInt("attendee_id");
+            feedback.setOwner(deserializerStorage.get(ownerId, SummitAttendee.class));
         }
-        else if (jsonObject.has("owner_id")) {
-            ownwerId = jsonObject.getInt("owner_id");
-            feedback.setOwner(deserializerStorage.get(ownwerId, SummitAttendee.class));
+        else if (jsonObject.has("member_id")) {
+            int memberId = jsonObject.getInt("member_id");
+            Member member = deserializerStorage.get(memberId, Member.class);
+            if(member != null && member.getAttendeeRole() != null)
+                feedback.setOwner(member.getAttendeeRole());
         }
         else if (jsonObject.has("owner")) {
             SummitAttendee summitAttendee = new SummitAttendee();
@@ -51,11 +54,14 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
             summitAttendee.setFullName(jsonObjectAttendee.getString("first_name") + " " + jsonObjectAttendee.getString("last_name"));
             feedback.setOwner(summitAttendee);
         }
-        else {
+
+        if(feedback.getOwner() == null)
             throw new JSONException(String.format("Can't deserialize owner for feedback with id %d", feedback.getId()));
-        }
 
         feedback.setEvent(deserializerStorage.get(jsonObject.getInt("event_id"), SummitEvent.class));
+
+        if(feedback.getEvent() == null)
+            throw new JSONException(String.format("Can't deserialize event for feedback with id %d", feedback.getId()));
 
         if(!deserializerStorage.exist(feedback, Feedback.class)) {
             deserializerStorage.add(feedback, Feedback.class);
