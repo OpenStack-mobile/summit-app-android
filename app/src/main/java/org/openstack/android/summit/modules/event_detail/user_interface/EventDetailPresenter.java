@@ -1,5 +1,6 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -69,6 +70,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setIsScheduledStatusVisible(interactor.isMemberLoggedInConfirmedAttendee());
         view.setAllowNewFeedback(getAllowNewFeedback());
         view.setTags(event.getTags());
+        view.setAllowRsvp(event.getAllowRsvp());
         view.hasMyFeedback(myFeedbackForEvent != null);
 
         if (interactor.shouldShowVenues()) {
@@ -173,6 +175,11 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     @Override
     public void showVenueDetail() {
         wireframe.showEventDetailView(event.getVenueId(), view);
+    }
+
+    @Override
+    public Intent createRsvpIntent() {
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(event.getRsvpLink()));
     }
 
     private boolean getAllowNewFeedback() {

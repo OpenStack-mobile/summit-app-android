@@ -16,6 +16,25 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     private Date start;
     private Date end;
     private String eventDescription;
+    private String rsvpLink;
+    private int headCount;
+
+    public String getRsvpLink() {
+        return rsvpLink;
+    }
+
+    public void setRsvpLink(String rsvpLink) {
+        this.rsvpLink = rsvpLink;
+    }
+
+    public int getHeadCount() {
+        return headCount;
+    }
+
+    public void setHeadCount(int headCount) {
+        this.headCount = headCount;
+    }
+
     private Boolean allowFeedback;
     private double averageRate;
     private EventType eventType;

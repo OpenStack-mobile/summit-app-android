@@ -12,6 +12,7 @@ import java.util.List;
  * Created by Claudio Redi on 1/22/2016.
  */
 public interface IEventDetailView extends IBaseView, IScheduleableView {
+
     void setName(String name);
 
     void setTrack(String track);
@@ -39,6 +40,8 @@ public interface IEventDetailView extends IBaseView, IScheduleableView {
     void setIsScheduledStatusVisible(Boolean isScheduledStatusVisible);
 
     void setAllowNewFeedback(boolean allowNewFeedback);
+
+    void setAllowRsvp(boolean allowRsvp);
 
     void setAverageRate(int rate);
 

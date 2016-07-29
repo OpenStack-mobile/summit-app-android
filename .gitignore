@@ -12,3 +12,4 @@ build/
 /app/libs
 app/fabric.properties
 /app/src/jni/
+Thumbs.db

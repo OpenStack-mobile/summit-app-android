@@ -1,5 +1,7 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
+import android.content.Intent;
+
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.IBasePresenter;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
@@ -22,4 +24,6 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> 
     void loadFeedback();
 
     void showVenueDetail();
+
+    Intent createRsvpIntent();
 }

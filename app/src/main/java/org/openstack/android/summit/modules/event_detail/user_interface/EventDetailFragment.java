@@ -52,6 +52,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     private boolean scheduled;
     private boolean isScheduledStatusVisible;
     private boolean allowNewFeedback;
+    private boolean allowRsvp;
 
     public EventDetailFragment() {
         // Required empty public constructor
@@ -113,6 +114,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         setScheduledInternal(scheduled);
         setIsScheduledStatusVisibleInternal(isScheduledStatusVisible);
         setAllowNewFeedback(allowNewFeedback);
+        setIAllowRsvpInternal(allowRsvp);
     }
 
     @Override
@@ -127,7 +129,9 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         else if (id == R.id.action_create_feedback) {
             presenter.showFeedbackEdit();
         }
-
+        else if (id == R.id.action_rsvp) {
+            startActivity(presenter.createRsvpIntent());
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -235,9 +239,23 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         }
     }
 
+    @Override
+    public void setAllowRsvp(boolean allowRsvp) {
+        if (menu != null && menu.findItem(R.id.action_rsvp) != null) {
+            setScheduledInternal(allowRsvp);
+        }
+        else {
+            this.allowRsvp = allowRsvp;
+        }
+    }
+
     private void setIAllowNewFeedbackInternal(boolean allowNewFeedback) {
         menu.findItem(R.id.action_create_feedback).setVisible(allowNewFeedback);
         this.allowNewFeedback = allowNewFeedback;
+    }
+
+    private void setIAllowRsvpInternal(boolean allowRsvp) {
+        menu.findItem(R.id.action_rsvp).setVisible(allowRsvp);
     }
 
     @Override

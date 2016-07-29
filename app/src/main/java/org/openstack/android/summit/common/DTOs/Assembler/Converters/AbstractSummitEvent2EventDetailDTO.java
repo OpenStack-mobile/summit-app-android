@@ -43,6 +43,8 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             eventDetailDTO.setTags(getTags(source));
             eventDetailDTO.setEventDescription(source.getEventDescription());
             eventDetailDTO.setAverageRate(source.getAverageRate());
+            eventDetailDTO.setHeadCount(source.getHeadCount());
+            eventDetailDTO.setRsvpLink(source.getRsvpLink());
 
             if (source.getPresentation() != null) {
                 eventDetailDTO.setTrack(

@@ -20,6 +20,30 @@ public class EventDetailDTO extends ScheduleItemDTO {
         this.venueFloorId = venueFloorId;
     }
 
+    private String rsvpLink;
+
+    public boolean getAllowRsvp(){
+        return this.rsvpLink != null;
+    }
+
+    private int headCount;
+
+    public String getRsvpLink() {
+        return rsvpLink;
+    }
+
+    public void setRsvpLink(String rsvpLink) {
+        this.rsvpLink = rsvpLink;
+    }
+
+    public int getHeadCount() {
+        return headCount;
+    }
+
+    public void setHeadCount(int headCount) {
+        this.headCount = headCount;
+    }
+
     private String eventDescription;
     private String tags;
     private List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();
