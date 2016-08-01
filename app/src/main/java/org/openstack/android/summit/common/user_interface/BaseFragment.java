@@ -31,6 +31,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by Claudio Redi on 11/3/2015.
  */
 public abstract class BaseFragment<P extends IBasePresenter> extends Fragment implements IBaseView {
+
     private ScheduledFuture<?> activityIndicatorTask;
     private ACProgressFlower progressDialog;
     private boolean showActivityIndicator;
@@ -181,4 +182,5 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
+
 }

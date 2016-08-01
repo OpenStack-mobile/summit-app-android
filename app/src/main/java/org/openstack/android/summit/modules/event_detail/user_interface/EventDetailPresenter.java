@@ -3,8 +3,7 @@ package org.openstack.android.summit.modules.event_detail.user_interface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.LinearLayout;
-
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
@@ -178,8 +177,21 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     }
 
     @Override
-    public Intent createRsvpIntent() {
-        return new Intent(Intent.ACTION_VIEW, Uri.parse(event.getRsvpLink()));
+    public void showEventRsvpView() {
+        this.wireframe.presentEventRsvpView(this.view,  new Intent(Intent.ACTION_VIEW, Uri.parse(event.getRsvpLink())));
+    }
+
+    @Override
+    public Intent createShareIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, String.format(
+                    view.getResources().getString(R.string.share_event_text),
+                    this.event.getSummitSegmentUrl(),
+                    this.event.getId()
+                )
+        );
+        return shareIntent;
     }
 
     private boolean getAllowNewFeedback() {

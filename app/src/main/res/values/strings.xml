@@ -5,6 +5,8 @@
     <string name="action_filter">Filter</string>
     <string name="action_scheduled_status">Scheduled</string>
     <string name="action_rsvp">RSVP required</string>
+    <string name="action_share_event">Share Event</string>
+    <string name="share_event_text" >Check out this summit event: https://www.openstack.org/summit/%1$s/summit-schedule/events/%2$s</string>
     <string name="action_send">Send</string>
     <string name="action_create_feedback">Feedback</string>
     <string name="log_in">LOG IN</string>

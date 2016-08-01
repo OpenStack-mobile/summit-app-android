@@ -25,5 +25,7 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> 
 
     void showVenueDetail();
 
-    Intent createRsvpIntent();
+    void showEventRsvpView();
+
+    Intent createShareIntent();
 }

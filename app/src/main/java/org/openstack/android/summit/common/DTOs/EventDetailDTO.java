@@ -51,6 +51,7 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private Boolean allowFeedback;
     private PersonListItemDTO moderator;
     private String level;
+    private String summitSegmentUrl;
     private Double averageRate;
 
     public int getVenueId() {
@@ -131,5 +132,13 @@ public class EventDetailDTO extends ScheduleItemDTO {
 
     public void setAverageRate(Double averageRate) {
         this.averageRate = averageRate;
+    }
+
+    public String getSummitSegmentUrl(){
+        return summitSegmentUrl;
+    }
+
+    public void setSummitSegmentUrl(String summitSegmentUrl){
+        this.summitSegmentUrl = summitSegmentUrl;
     }
 }

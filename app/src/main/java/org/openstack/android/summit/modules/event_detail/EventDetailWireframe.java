@@ -1,5 +1,6 @@
 package org.openstack.android.summit.modules.event_detail;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
@@ -51,6 +52,11 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void presentEventRsvpView(IBaseView context, Intent intent){
+        context.startActivity(intent);
     }
 
     @Override

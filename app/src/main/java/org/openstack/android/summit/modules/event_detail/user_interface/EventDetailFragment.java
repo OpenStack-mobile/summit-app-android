@@ -2,8 +2,11 @@ package org.openstack.android.summit.modules.event_detail.user_interface;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
@@ -22,20 +25,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.linearlistview.LinearListView;
-
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
-import org.openstack.android.summit.modules.main.user_interface.MainActivity;
-import org.w3c.dom.Text;
-
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,6 +49,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     private boolean isScheduledStatusVisible;
     private boolean allowNewFeedback;
     private boolean allowRsvp;
+    private ShareActionProvider shareActionProvider;
 
     public EventDetailFragment() {
         // Required empty public constructor
@@ -115,6 +112,20 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         setIsScheduledStatusVisibleInternal(isScheduledStatusVisible);
         setAllowNewFeedback(allowNewFeedback);
         setIAllowRsvpInternal(allowRsvp);
+
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.action_share);
+        // Fetch and store ShareActionProvider
+        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        setShareIntent(presenter.createShareIntent());
+        // Return true to display menu
+    }
+
+    // Call to update the share intent
+    private void setShareIntent(Intent shareIntent) {
+        if (shareActionProvider != null) {
+            shareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     @Override
@@ -130,7 +141,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
             presenter.showFeedbackEdit();
         }
         else if (id == R.id.action_rsvp) {
-            startActivity(presenter.createRsvpIntent());
+            presenter.showEventRsvpView();
         }
         return super.onOptionsItemSelected(item);
     }

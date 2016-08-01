@@ -3,15 +3,17 @@ package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
-
-import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Tag;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 
 /**
  * Created by Claudio Redi on 1/21/2016.
@@ -45,6 +47,13 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             eventDetailDTO.setAverageRate(source.getAverageRate());
             eventDetailDTO.setHeadCount(source.getHeadCount());
             eventDetailDTO.setRsvpLink(source.getRsvpLink());
+            Summit summit = source.getSummit();
+
+            if(summit != null){
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(summit.getStartDate());
+                eventDetailDTO.setSummitSegmentUrl(String.format("%s-%d",summit.getName().toLowerCase(),cal.get(Calendar.YEAR)));
+            }
 
             if (source.getPresentation() != null) {
                 eventDetailDTO.setTrack(
