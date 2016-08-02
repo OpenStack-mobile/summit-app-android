@@ -7,6 +7,7 @@ import org.openstack.android.summit.modules.main.user_interface.IMainView;
  * Created by Claudio Redi on 2/12/2016.
  */
 public interface IMainWireframe {
+
     void showEventsView(IBaseView context);
 
     void showMyProfileView(IBaseView context);
@@ -20,4 +21,8 @@ public interface IMainWireframe {
     void showMemberOrderConfirmView(IBaseView view);
 
     void showAboutView(IBaseView context);
+
+    void showEventDetail(int eventId, IBaseView context);
+
+    void showSpeakerProfile(int speakerId, IBaseView context);
 }

@@ -9,18 +9,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
+import org.openstack.android.summit.common.utils.DeepLinkInfo;
+import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
 
@@ -34,11 +31,16 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import bolts.AppLinkNavigation;
+
+
 /**
  * Created by Claudio Redi on 2/12/2016.
  */
 public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMainWireframe> implements IMainPresenter {
+
     private boolean onSaveInstanceExecuted = false;
+    private IAppLinkRouter appLinkRouter;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -60,8 +62,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         }
     };
 
-    public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe) {
+    public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter) {
         super(interactor, wireframe);
+        this.appLinkRouter = appLinkRouter;
     }
 
     @Override
@@ -69,7 +72,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         super.onCreate(savedInstanceState);
 
         showMessageIfTriggeredByNotification();
-
         trustEveryone();
 
         IntentFilter intentFilter = new IntentFilter();
@@ -80,6 +82,42 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         if (savedInstanceState == null) {
             showEventsView();
         }
+
+        checkDeepLinks();
+    }
+
+    private boolean checkDeepLinks(){
+        Intent intent = view.getIntent();
+
+        if(intent != null){
+            String action = intent.getAction();
+            Uri url       = intent.getData();
+
+            if(action == Intent.ACTION_VIEW && url != null){
+
+                if(this.appLinkRouter.isDeepLink(url)){
+                    // do routing ...
+                    DeepLinkInfo deepLinkInfo = appLinkRouter.buildDeepLinkInfo(url);
+                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewEvent){
+                        this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), this.view);
+                        return true;
+                    }
+                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSpeaker){
+                        this.wireframe.showSpeakerProfile(deepLinkInfo.getParamAsInt(), this.view);
+                        return true;
+                    }
+                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSchedule){
+                        return true;
+                    }
+                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewLocation){
+                        return true;
+                    }
+                }
+                // get the app link metadata
+                AppLinkNavigation.navigateInBackground((MainActivity)view, url);
+            }
+        }
+        return false;
     }
 
     private void showMessageIfTriggeredByNotification() {
@@ -103,6 +141,11 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     public void showEventsView() {
         wireframe.showEventsView(view);
+    }
+
+    @Override
+    public void showEventView(int eventId){
+        wireframe.showEventDetail(eventId, view);
     }
 
     public void showMyProfileView() {

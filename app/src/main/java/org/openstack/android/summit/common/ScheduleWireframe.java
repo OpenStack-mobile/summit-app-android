@@ -9,6 +9,7 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 12/29/2015.
  */
 public class ScheduleWireframe extends BaseWireframe implements IScheduleWireframe {
+
     IEventDetailWireframe eventDetailWireframe;
 
     @Inject

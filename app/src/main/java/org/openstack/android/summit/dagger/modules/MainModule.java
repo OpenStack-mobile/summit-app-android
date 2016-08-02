@@ -6,6 +6,7 @@ import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.about.IAboutWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.main.IMainWireframe;
@@ -28,6 +29,7 @@ import dagger.Provides;
  */
 @Module
 public class MainModule {
+
     @Provides
     IMainWireframe providesMainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IMemberOrderConfirmWireframe memberOrderConfirmWireframe, IAboutWireframe aboutWireframe) {
         return new MainWireframe(eventsWireframe, speakerListWireframe, memberProfileWireframe, searchWireframe, venuesWireframe, memberOrderConfirmWireframe, aboutWireframe);
@@ -39,7 +41,7 @@ public class MainModule {
     }
 
     @Provides
-    IMainPresenter providesMainPresenter(IMainInteractor interactor, IMainWireframe wireframe) {
-        return new MainPresenter(interactor, wireframe);
+    IMainPresenter providesMainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter) {
+        return new MainPresenter(interactor, wireframe, appLinkRouter);
     }
 }

@@ -60,7 +60,9 @@ android {
                                     NativeClientSecret: props['NativeClientSecret'],
                                     NativeClientReturnUrl: props['NativeClientReturnUrl'],
                                     ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
-                                    IdentityProviderBaseUrl: props['IdentityProviderBaseUrl']]
+                                    IdentityProviderBaseUrl: props['IdentityProviderBaseUrl'],
+                                    WebSiteBaseUrl: props['WebSiteBaseUrl']
+            ]
 
         }
         release {
@@ -77,7 +79,9 @@ android {
                                     NativeClientSecret: props['NativeClientSecret'],
                                     NativeClientReturnUrl: props['NativeClientReturnUrl'],
                                     ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
-                                    IdentityProviderBaseUrl: props['IdentityProviderBaseUrl']]
+                                    IdentityProviderBaseUrl: props['IdentityProviderBaseUrl'],
+                                    WebSiteBaseUrl: props['WebSiteBaseUrl']
+            ]
         }
     }
 
@@ -167,6 +171,8 @@ dependencies {
 
     // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION: due oo many method references: (max is 65536)
     compile 'com.android.support:multidex:1.0.1'
+
+    compile 'com.parse.bolts:bolts-applinks:1.+'
 
     // material design spiner
     compile ('com.weiwangcn.betterspinner:library-material:1.1.0') {

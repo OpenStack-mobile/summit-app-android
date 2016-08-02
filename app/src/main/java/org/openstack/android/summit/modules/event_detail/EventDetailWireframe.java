@@ -39,8 +39,10 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
     public void presentEventDetailView(int eventId, IBaseView context) {
         try {
             navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_EVENT_ID, eventId);
+
             EventDetailFragment eventDetailFragment = new EventDetailFragment();
-            FragmentManager fragmentManager = context.getSupportFragmentManager();
+            FragmentManager fragmentManager         = context.getSupportFragmentManager();
+
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.frame_layout_content, eventDetailFragment)

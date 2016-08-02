@@ -21,8 +21,10 @@ public class EventsWireframe implements IEventsWireframe {
 
     @Override
     public void presentEventsView(IBaseView context) {
-        EventsFragment eventsFragment = new EventsFragment();
+
+        EventsFragment eventsFragment   = new EventsFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
+
         fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager
                 .beginTransaction()

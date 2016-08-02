@@ -13,6 +13,7 @@ import org.openstack.android.summit.modules.venues.IVenuesWireframe;
  * Created by Claudio Redi on 2/12/2016.
  */
 public class MainWireframe implements IMainWireframe {
+
     IEventsWireframe eventsWireframe;
 
     ISpeakerListWireframe speakerListWireframe;
@@ -27,14 +28,21 @@ public class MainWireframe implements IMainWireframe {
 
     IAboutWireframe aboutWireframe;
 
-    public MainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IMemberOrderConfirmWireframe memberOrderConfirmWireframe, IAboutWireframe aboutWireframe) {
-        this.eventsWireframe = eventsWireframe;
-        this.speakerListWireframe = speakerListWireframe;
-        this.memberProfileWireframe = memberProfileWireframe;
-        this.searchWireframe = searchWireframe;
-        this.venuesWireframe = venuesWireframe;
+    public MainWireframe(IEventsWireframe eventsWireframe,
+                         ISpeakerListWireframe speakerListWireframe,
+                         IMemberProfileWireframe memberProfileWireframe,
+                         ISearchWireframe searchWireframe,
+                         IVenuesWireframe venuesWireframe,
+                         IMemberOrderConfirmWireframe memberOrderConfirmWireframe,
+                         IAboutWireframe aboutWireframe) {
+
+        this.eventsWireframe             = eventsWireframe;
+        this.speakerListWireframe        = speakerListWireframe;
+        this.memberProfileWireframe      = memberProfileWireframe;
+        this.searchWireframe             = searchWireframe;
+        this.venuesWireframe             = venuesWireframe;
         this.memberOrderConfirmWireframe = memberOrderConfirmWireframe;
-        this.aboutWireframe = aboutWireframe;
+        this.aboutWireframe              = aboutWireframe;
     }
 
     public void showEventsView(IBaseView context) {
@@ -64,5 +72,15 @@ public class MainWireframe implements IMainWireframe {
 
     public void showAboutView(IBaseView context) {
         aboutWireframe.presentAboutView(context);
+    }
+
+    @Override
+    public void showEventDetail(int eventId, IBaseView context){
+        searchWireframe.showEventDetail(eventId, context);
+    }
+
+    @Override
+    public void showSpeakerProfile(int speakerId, IBaseView context) {
+        speakerListWireframe.showSpeakerProfile(speakerId, context);
     }
 }

@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.user_interface.IBasePresenter;
  * Created by Claudio Redi on 2/12/2016.
  */
 public interface IMainPresenter extends IBasePresenter<IMainView> {
+
     void showEventsView();
 
     void showMyProfileView();
@@ -27,4 +28,6 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
     void onConfigurationChanged(Configuration newConfig);
 
     boolean isSummitDataLoaded();
+
+    void showEventView(int eventId);
 }

@@ -8,6 +8,9 @@ import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.push_notifications.PushNotificationsManager;
 import org.openstack.android.summit.common.ScheduleFilter;
 import org.openstack.android.summit.common.Session;
+import org.openstack.android.summit.common.utils.AppLinkRouter;
+import org.openstack.android.summit.common.utils.IAppLinkRouter;
+
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
@@ -45,5 +48,11 @@ public class ApplicationModule {
     @Singleton
     IPushNotificationsManager providesPushNotificationsManager() {
         return new PushNotificationsManager();
+    }
+
+    @Provides
+    @Singleton
+    IAppLinkRouter providesAppLinkRouter() {
+        return new AppLinkRouter();
     }
 }

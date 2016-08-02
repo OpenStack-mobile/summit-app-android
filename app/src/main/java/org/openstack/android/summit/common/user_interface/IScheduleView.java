@@ -11,6 +11,7 @@ import java.util.List;
  * Created by Claudio Redi on 12/29/2015.
  */
 public interface IScheduleView extends IBaseView {
+
     void setStartAndEndDateWithParts(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay);
 
     void setStartAndEndDateWithDisabledDates(DateTime startDate, DateTime endDate, List<DateTime> disabledDates);
@@ -22,6 +23,8 @@ public interface IScheduleView extends IBaseView {
     void setEvents(List<ScheduleItemDTO> events);
 
     DateTime getSelectedDate();
+
+    void setSelectedDate(int day);
 
     void reloadSchedule();
 

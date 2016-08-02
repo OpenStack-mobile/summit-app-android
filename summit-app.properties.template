@@ -9,3 +9,4 @@ NativeClientSecret=
 NativeClientReturnUrl=
 ResourceServerBaseUrl=
 IdentityProviderBaseUrl=
+WebSiteBaseUrl=

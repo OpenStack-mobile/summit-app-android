@@ -156,6 +156,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     public void reloadSchedule() {
+
         DateTime selectedDate = view.getSelectedDate();
 
         if (selectedDate != null) {

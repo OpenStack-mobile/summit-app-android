@@ -132,6 +132,12 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     }
 
     @Override
+    public void setSelectedDate(int day){
+        Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        ranger.setSelectedDay(day, true);
+    }
+
+    @Override
     public void reloadSchedule() {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         ((LinearLayout)ranger.getParent()).setVisibility(View.VISIBLE);
