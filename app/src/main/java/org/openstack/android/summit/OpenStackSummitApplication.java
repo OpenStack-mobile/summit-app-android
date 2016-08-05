@@ -12,6 +12,8 @@ import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.components.DaggerApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
@@ -24,11 +26,13 @@ import io.realm.RealmConfiguration;
  * Created by claudio on 11/3/2015.
  */
 public class OpenStackSummitApplication extends Application {
+
     private ApplicationComponent applicationComponent;
-    public static Context context;
+    public static Context        context;
     
     @Override public void onCreate() {
         super.onCreate();
+        JodaTimeAndroid.init(this);
         Fabric.with(
                 this,
                 new Crashlytics.Builder()

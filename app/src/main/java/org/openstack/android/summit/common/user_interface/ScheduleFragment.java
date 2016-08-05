@@ -1,12 +1,8 @@
 package org.openstack.android.summit.common.user_interface;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +11,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.andressantibanez.ranger.Ranger;
-
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
-import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.modules.events.user_interface.IEventsView;
 
-import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 12/29/2015.
@@ -39,6 +29,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     List<ScheduleItemDTO> events;
     Parcelable listState = null;
     private static final String LIST_STATE = "scheduleListState";
+
 
     public ScheduleFragment() {
         // Required empty public constructor

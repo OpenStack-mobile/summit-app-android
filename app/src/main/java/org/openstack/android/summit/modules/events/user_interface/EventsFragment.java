@@ -26,15 +26,9 @@ import org.openstack.android.summit.modules.track_list.user_interface.TrackListF
 
 import javax.inject.Inject;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EventsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link EventsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class EventsFragment extends BaseFragment<IEventsPresenter> implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IEventsView {
+public class EventsFragment
+        extends BaseFragment<IEventsPresenter>
+        implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IEventsView {
 
     @Inject
     GeneralScheduleFragment generalScheduleFragment;
@@ -63,11 +57,17 @@ public class EventsFragment extends BaseFragment<IEventsPresenter> implements Vi
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.main, menu);
+        this.menu = menu;
+        this.menu.clear();
+        inflater.inflate(R.menu.main, this.menu);
+        setFilterIcon();
+    }
 
+    private void setFilterIcon(){
+        if(menu == null) return;
         MenuItem filterItem = menu.findItem(R.id.action_filter);
-        Drawable newIcon = filterItem.getIcon();
+        if(filterItem == null) return;
+        Drawable newIcon    = filterItem.getIcon();
         int color;
         if (showActiveFilterIndicator) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -83,7 +83,6 @@ public class EventsFragment extends BaseFragment<IEventsPresenter> implements Vi
 
         newIcon.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
         filterItem.setIcon(newIcon);
-
     }
 
     @Override
@@ -131,7 +130,6 @@ public class EventsFragment extends BaseFragment<IEventsPresenter> implements Vi
         });
 
         super.onCreateView(inflater, container, savedInstanceState);
-
         return view;
     }
 
@@ -163,6 +161,7 @@ public class EventsFragment extends BaseFragment<IEventsPresenter> implements Vi
         LinearLayout activeFiltersIndicator = (LinearLayout)view.findViewById(R.id.active_filters_indicator);
         activeFiltersIndicator.setVisibility(showActiveFilterIndicator ? View.VISIBLE : View.GONE);
         this.showActiveFilterIndicator = showActiveFilterIndicator;
+        setFilterIcon();
     }
 
     private class EventsPageAdapter extends FragmentPagerAdapter {

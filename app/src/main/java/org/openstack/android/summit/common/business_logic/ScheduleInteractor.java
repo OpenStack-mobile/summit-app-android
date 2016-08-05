@@ -35,16 +35,25 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IDataUpdatePoller dataUpdatePoller) {
         super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, dataUpdatePoller, pushNotificationsManager);
         this.summitDataStore = summitDataStore;
-        this.session = session;
+        this.session         = session;
     }
 
     @Override
-    public List<ScheduleItemDTO> getScheduleEvents(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
-        List<SummitEvent> summitEvents = summitEventDataStore.getByFilterLocal(startDate, endDate, eventTypes, summitTypes, trackGroups, tracks, tags, levels);
-
-        List<ScheduleItemDTO> dtos = createDTOList(summitEvents, ScheduleItemDTO.class);
-
-        return dtos;
+    public List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
+        return createDTOList(
+                summitEventDataStore.getByFilterLocal
+                (
+                                startDate,
+                                endDate,
+                                eventTypes,
+                                summitTypes,
+                                trackGroups,
+                                tracks,
+                                tags,
+                                levels
+                ),
+                ScheduleItemDTO.class
+        );
     }
 
     @Override
@@ -69,8 +78,8 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
 
         while(startDate.isBefore(endDate)) {
            events = summitEventDataStore.getByFilterLocal(
-                    startDate.withTime(0, 0, 0, 0).toDate(),
-                    startDate.withTime(23, 59, 59, 999).toDate(),
+                    startDate.withTime(0, 0, 0, 0),
+                    startDate.withTime(23, 59, 59, 999),
                     eventTypes,
                     summitTypes,
                     trackGroups,
@@ -92,6 +101,17 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
         return summitEvent != null;
     }
 
+    @Override
+    public SummitDTO getLocalActiveSummit(){
+        Summit currentSummit = summitDataStore.getActiveLocal();
+        if(currentSummit == null) return null;
+        return dtoAssembler.createDTO(currentSummit, SummitDTO.class);
+    }
+
+    @Override
+    public boolean isDataLoaded() {
+        return summitDataStore.getActiveLocal() != null;
+    }
 
     @Override
     public void getActiveSummit(final IInteractorAsyncOperationListener<SummitDTO> delegate) {

@@ -99,10 +99,12 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                     // do routing ...
                     DeepLinkInfo deepLinkInfo = appLinkRouter.buildDeepLinkInfo(url);
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewEvent){
+                        if(!deepLinkInfo.hasParam()) return false;
                         this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSpeaker){
+                        if(!deepLinkInfo.hasParam()) return false;
                         this.wireframe.showSpeakerProfile(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
@@ -110,6 +112,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                         return true;
                     }
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewLocation){
+                        if(!deepLinkInfo.hasParam()) return false;
                         return true;
                     }
                 }

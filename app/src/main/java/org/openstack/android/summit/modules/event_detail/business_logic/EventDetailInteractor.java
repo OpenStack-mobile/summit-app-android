@@ -38,8 +38,7 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
     @Override
     public EventDetailDTO getEventDetail(int eventId) {
         SummitEvent summitEvent = summitEventDataStore.getByIdLocal(eventId);
-        EventDetailDTO dto = dtoAssembler.createDTO(summitEvent, EventDetailDTO.class);
-        return dto;
+        return summitEvent != null ? dtoAssembler.createDTO(summitEvent, EventDetailDTO.class):null;
     }
 
     public FeedbackDTO getMyFeedbackForEvent(int eventId) {

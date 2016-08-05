@@ -22,18 +22,20 @@ import java.util.Date;
  * Created by Claudio Redi on 1/4/2016.
  */
 public class ScheduleableInteractor extends BaseInteractor implements IScheduleableInteractor {
-    protected ISecurityManager securityManager;
-    protected ISummitEventDataStore summitEventDataStore;
-    protected ISummitAttendeeDataStore summitAttendeeDataStore;
-    protected ISummitDataStore summitDataStore;
+
+    protected ISecurityManager          securityManager;
+    protected ISummitEventDataStore     summitEventDataStore;
+    protected ISummitAttendeeDataStore  summitAttendeeDataStore;
+    protected ISummitDataStore          summitDataStore;
     protected IPushNotificationsManager pushNotificationsManager;
 
     public ScheduleableInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller, IPushNotificationsManager pushNotificationsManager) {
         super(dtoAssembler, dataUpdatePoller);
-        this.securityManager = securityManager;
-        this.summitEventDataStore = summitEventDataStore;
-        this.summitAttendeeDataStore = summitAttendeeDataStore;
-        this.summitDataStore = summitDataStore;
+
+        this.securityManager          = securityManager;
+        this.summitEventDataStore     = summitEventDataStore;
+        this.summitAttendeeDataStore  = summitAttendeeDataStore;
+        this.summitDataStore          = summitDataStore;
         this.pushNotificationsManager = pushNotificationsManager;
     }
 

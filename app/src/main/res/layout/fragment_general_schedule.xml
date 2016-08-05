@@ -12,35 +12,5 @@
         android:layout_height="match_parent">
         <!-- Adding layout_height and layout_width here is a hack to avoid active filter indicator to dissapear -->
         <include layout="@layout/schedule" android:layout_height="match_parent" android:layout_width="match_parent"></include>
-
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/general_schedule_no_connectivity_container"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:paddingBottom="30dp">
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/alert_big"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="30dp"
-            android:textAlignment="center"
-            android:textSize="16dp"
-            android:layout_height="wrap_content"
-            android:text="@string/no_data_message"/>
-        <Button
-            android:id="@+id/general_schedule_retry_button"
-            style="@style/AppTheme.Button"
-            android:layout_width="130dp"
-            android:layout_height="40dp"
-            android:text="@string/retry"/>
-    </LinearLayout>
-
 </LinearLayout>

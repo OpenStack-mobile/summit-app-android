@@ -27,4 +27,6 @@ public interface IMainView extends IBaseView {
     void toggleMenu(boolean show);
 
     Intent getIntent();
+
+    void startActivityForResult(Intent intent, int requestCode);
 }

@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.linearlistview.LinearListView;
 
@@ -36,9 +38,9 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
 
     private SummitTypeListAdapter summitTypeListAdapter;
     private TrackGroupListAdapter trackGroupListAdapter;
-    private EventTypeListAdapter eventTypeListAdapter;
-    private LevelListAdapter levelListAdapter;
-    private ArrayAdapter<String> tagsAdapter;
+    private EventTypeListAdapter  eventTypeListAdapter;
+    private LevelListAdapter      levelListAdapter;
+    private ArrayAdapter<String>  tagsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,14 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_general_schedule_filter, container, false);
+
+        final CheckBox hidePastTalks = (CheckBox) view.findViewById(R.id.hide_past_talks);
+        hidePastTalks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.toggleHidePastTalks(hidePastTalks.isChecked());
+            }
+        });
 
         LinearListView summitTypesList = (LinearListView) view.findViewById(R.id.filter_summit_types_list);
         summitTypeListAdapter = new SummitTypeListAdapter(getContext());
@@ -119,8 +129,9 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
 
     public void addTag(String tagText) {
         AutoCompleteTextView tagsTextView = (AutoCompleteTextView)view.findViewById(R.id.filter_tags_autocomplete);
-        TagView tagView = (TagView)view.findViewById(R.id.filter_tags_list);
-        Tag tag = new Tag(tagText);
+        TagView tagView                   = (TagView)view.findViewById(R.id.filter_tags_list);
+        Tag tag                           = new Tag(tagText);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             tag.layoutBorderColor = view.getResources().getColor(R.color.openStackGray, null);
         }
@@ -140,6 +151,20 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
         tagView.addTag(tag);
 
         tagsTextView.setText("");
+    }
+
+    @Override
+    public void toggleShowPastTalks(boolean isChecked) {
+        CheckBox hidePastTalks = (CheckBox) view.findViewById(R.id.hide_past_talks);
+        hidePastTalks.setChecked(isChecked);
+    }
+
+    @Override
+    public void showShowPastTalks(boolean show) {
+        LinearLayout header    = (LinearLayout) view.findViewById(R.id.hide_past_talks_header);
+        LinearLayout container = (LinearLayout) view.findViewById(R.id.hide_past_talks_container);
+        header.setVisibility(show ? View.VISIBLE : View.GONE);
+        container.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override

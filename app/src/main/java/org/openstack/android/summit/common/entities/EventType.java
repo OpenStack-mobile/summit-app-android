@@ -10,6 +10,15 @@ public class EventType extends RealmObject implements INamedEntity {
     @PrimaryKey
     private int id;
     private String name;
+    private String color;
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 
     public int getId() {
         return id;

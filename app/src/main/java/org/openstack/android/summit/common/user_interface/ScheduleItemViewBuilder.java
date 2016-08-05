@@ -7,16 +7,25 @@ import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
  */
 public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
     @Override
-    public void build(IScheduleItemView scheduleItemView, ScheduleItemDTO scheduleItemDTO, Boolean isMemberLoggedIn, Boolean isEventScheduledByLoggedMember, boolean useFullDate, boolean showVenues) {
+    public void build
+    (
+        IScheduleItemView scheduleItemView,
+        ScheduleItemDTO scheduleItemDTO,
+        boolean isMemberLoggedIn,
+        boolean isEventScheduledByLoggedMember,
+        boolean useFullDate, boolean showVenues
+    ) {
         scheduleItemView.setName(scheduleItemDTO.getName());
         scheduleItemView.setTime(useFullDate ? scheduleItemDTO.getDateTime() : scheduleItemDTO.getTime());
         scheduleItemView.setSponsors(scheduleItemDTO.getSponsors());
         scheduleItemView.setEventType(scheduleItemDTO.getEventType().toUpperCase());
         scheduleItemView.setTrack(scheduleItemDTO.getTrack());
         scheduleItemView.setIsScheduledStatusVisible(isMemberLoggedIn);
+
         if (isMemberLoggedIn) {
             scheduleItemView.setScheduled(isEventScheduledByLoggedMember);
         }
+
         String color = scheduleItemDTO.getColor() != null && scheduleItemDTO.getColor() != ""
                 ? scheduleItemDTO.getColor()
                 : "";

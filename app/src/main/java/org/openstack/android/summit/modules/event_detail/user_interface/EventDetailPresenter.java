@@ -56,6 +56,21 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
         loadedAllFeedback = false;
         event = interactor.getEventDetail(eventId);
+
+        if(event == null){
+            view.setName("");
+            view.setTrack("");
+            view.setDate("");
+            view.setDescription("");
+            view.setCredentials("");
+            view.setLevel("");
+            view.setSponsors("");
+            view.setTags("");
+            view.setLocation("");
+            view.showInfoMessage("Event not found!");
+            return;
+        }
+
         myFeedbackForEvent = interactor.getMyFeedbackForEvent(eventId);
         view.setName(event.getName());
         view.setTrack(event.getTrack());
@@ -183,6 +198,8 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public Intent createShareIntent() {
+        if(this.event == null) return null;
+
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, String.format(

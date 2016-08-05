@@ -47,6 +47,16 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
             person = interactor.getPresentationSpeaker(speakerId);
         }
 
+        if(person == null){
+            view.setName("");
+            view.setTitle("");
+            view.setBio("");
+            view.setTwitter("");
+            view.setIrc("");
+            view.showInfoMessage("Member profile not found!");
+            return;
+        }
+
         view.setName(person.getName());
         view.setTitle(person.getTitle());
         view.setBio(person.getBio());

@@ -6,17 +6,14 @@ import com.crashlytics.android.Crashlytics;
 
 import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-import io.realm.SummitEventRealmProxy;
 
 /**
  * Created by Claudio Redi on 12/28/2015.
@@ -45,8 +42,11 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         );
 
         if (source.getPresentation() != null && source.getPresentation().getTrack() != null && source.getPresentation().getTrack().getTrackGroups().size() > 0) {
-            String color = source.getPresentation().getTrack().getTrackGroups().get(0).getColor();
-            scheduleItemDTO.setColor(color);
+            scheduleItemDTO.setColor(source.getPresentation().getTrack().getTrackGroups().get(0).getColor());
+        }
+        else{
+            // use the color of the event type
+            scheduleItemDTO.setColor(source.getEventType().getColor());
         }
     }
 

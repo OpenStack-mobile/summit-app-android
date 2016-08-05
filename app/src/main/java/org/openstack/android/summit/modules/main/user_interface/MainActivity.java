@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.openstack.android.summit.BuildConfig;
+import org.openstack.android.summit.InitialDataLoadingActivity;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -57,13 +59,13 @@ public class MainActivity extends AppCompatActivity
     @Inject
     IReachability reachability;
 
-    private ACProgressFlower progressDialog;
-    private Button loginButton;
-    private TextView memberNameTextView;
-    private SimpleDraweeView memberProfileImageView;
+    private ACProgressFlower      progressDialog;
+    private Button                loginButton;
+    private TextView              memberNameTextView;
+    private SimpleDraweeView      memberProfileImageView;
     private ActionBarDrawerToggle toggle;
-    private boolean userClickedLogout;
-    private int selectedMenuItemId;
+    private boolean               userClickedLogout;
+    private int                   selectedMenuItemId;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -77,13 +79,20 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    static final int DATA_LOAD_REQUEST = 1;  // The request code
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         getApplicationComponent().inject(this);
         presenter.setView(this);
+
+        if(!presenter.isSummitDataLoaded()){
+            Intent intent = new Intent(MainActivity.this, InitialDataLoadingActivity.class);
+            startActivityForResult(intent, DATA_LOAD_REQUEST);
+        }
+
         presenter.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -98,6 +107,17 @@ public class MainActivity extends AppCompatActivity
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
 
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == DATA_LOAD_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Log.i(Constants.LOG_TAG, "Summit Data Loaded!");
+            }
+        }
     }
 
     @Override

@@ -3,8 +3,6 @@ package org.openstack.android.summit.modules.speaker_presentations.business_logi
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
-
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,7 +11,7 @@ import java.util.List;
 public interface ISpeakerPresentationsInteractor extends IScheduleInteractor {
     int getCurrentMemberSpeakerId();
 
-    List<ScheduleItemDTO> getSpeakerPresentations(int speakerId, Date startDate, Date endDate);
+    List<ScheduleItemDTO> getSpeakerPresentations(int speakerId, DateTime startDate, DateTime endDate);
 
     List<DateTime> getSpeakerPresentationScheduleDatesWithoutEvents(int speakerId, DateTime startDate, DateTime endDate);
 }

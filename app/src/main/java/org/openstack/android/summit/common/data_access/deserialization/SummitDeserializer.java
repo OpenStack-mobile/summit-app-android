@@ -1,15 +1,11 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
 import android.text.TextUtils;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
-import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
@@ -184,6 +180,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         summit.setInitialDataLoadDate(
                 jsonObject.has("timestamp") ? new Date(jsonObject.getInt("timestamp") * 1000L) : null
         );
+
         summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date")*1000L));
 
         return summit;

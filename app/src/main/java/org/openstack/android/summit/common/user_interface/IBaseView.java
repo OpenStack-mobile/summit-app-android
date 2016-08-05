@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
  * Created by Claudio Redi on 1/7/2016.
  */
 public interface IBaseView {
+
     void showActivityIndicator(int delay);
 
     void showActivityIndicator();
@@ -28,4 +29,5 @@ public interface IBaseView {
     void showInfoMessage(String message);
 
     void startActivity(Intent intent);
+
 }

@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import org.openstack.android.summit.BuildConfig;
+import org.openstack.android.summit.modules.events.user_interface.IEventsView;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
@@ -37,6 +38,7 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
     private boolean showActivityIndicator;
     private boolean isActivityIndicatorVisible;
     protected View view;
+
     @Inject
     protected P presenter;
 

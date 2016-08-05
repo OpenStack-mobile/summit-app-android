@@ -25,6 +25,10 @@ public class DeepLinkInfo {
         return param;
     }
 
+    public boolean hasParam(){
+        return !param.isEmpty();
+    }
+
     public int getParamAsInt() {
         return Integer.parseInt(param);
     }

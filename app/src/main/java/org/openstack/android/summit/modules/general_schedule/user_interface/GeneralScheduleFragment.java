@@ -5,10 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.ScheduleFragment;
 
@@ -36,14 +33,6 @@ public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_general_schedule, container, false);
-
-        Button retryButton = (Button)view.findViewById(R.id.general_schedule_retry_button);
-        retryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onResume();
-            }
-        });
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -60,9 +49,4 @@ public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePr
         eventListContainer.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public void toggleNoConnectivityMessage(boolean show) {
-        LinearLayout noConnectivityLayout = (LinearLayout)view.findViewById(R.id.general_schedule_no_connectivity_container);
-        noConnectivityLayout.setVisibility(show ? View.VISIBLE : View.GONE);
-    }
 }

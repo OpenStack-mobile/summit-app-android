@@ -28,11 +28,10 @@ import org.openstack.android.summit.common.data_access.SummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.TrackGroupDataStore;
 import org.openstack.android.summit.common.data_access.VenueDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
-import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
+import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePooler;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdateProcessor;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdateStrategyFactory;
-import org.openstack.android.summit.common.data_access.data_polling.IClassResolver;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateProcessor;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateStrategyFactory;
@@ -312,7 +311,7 @@ public class DataAccessModule {
                     ISession session,
                     IOIDCConfigurationManager ioidcConfigurationManager
     ) {
-        DataUpdatePoller poller = new DataUpdatePoller(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, new Reachability(), session);
+        DataUpdatePooler poller = new DataUpdatePooler(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, new Reachability(), session);
         poller.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
         return poller;
     }

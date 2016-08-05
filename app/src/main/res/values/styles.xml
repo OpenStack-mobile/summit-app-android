@@ -15,7 +15,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.Drawer">
@@ -78,16 +80,19 @@
         <item name="android:background">@drawable/search_subsection_links</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+
     <style name="AppTheme.IconedInformationBarContainerNoBorder">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">25dp</item>
         <item name="android:paddingRight">10dp</item>
     </style>
+
     <style name="AppTheme.IconedInformationBarContainer" parent="AppTheme.IconedInformationBarContainerNoBorder">
         <item name="android:layout_height">66dp</item>
         <item name="android:background">@drawable/bottom_bordered_control</item>
     </style>
+
     <style name="AppTheme.IconedInformationBarImageView">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">25dp</item>
@@ -95,12 +100,14 @@
         <item name="android:layout_marginRight">15dp</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
+
     <style name="AppTheme.IconedInformationBarTextView">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
     </style>
+
     <style name="AppTheme.IconedInformationBarTextViewNoMoreImage" parent="AppTheme.IconedInformationBarTextView">
         <item name="android:layout_marginRight">15dp</item>
     </style>
@@ -125,6 +132,7 @@
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:textColor">@color/openStackGray</item>
     </style>
+
     <style name="AppTheme.MemberProfileDetailFieldContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -134,6 +142,7 @@
         <item name="android:paddingBottom">9dp</item>
         <item name="android:background">@color/openStackLightGray</item>
     </style>
+
     <style name="AppTheme.MemberProfileDetailFieldContainerIcon">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">25dp</item>
@@ -141,23 +150,28 @@
         <item name="android:layout_marginRight">15dp</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
+
     <style name="AppTheme.MemberProfileDetailFieldContainerText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+
     <style name="AppTheme.StarRate">
         <item name="android:layout_marginRight">2dp</item>
         <item name="android:src">@drawable/star_ligth_grey</item>
     </style>
+
     <style name="AppTheme.SmallStarRate" parent="AppTheme.StarRate">
         <item name="android:layout_width">15dp</item>
         <item name="android:layout_height">15dp</item>
     </style>
+
     <style name="AppTheme.BigStarRate" parent="AppTheme.StarRate">
         <item name="android:layout_width">45dp</item>
         <item name="android:layout_height">45dp</item>
     </style>
+
     <style name="AppTheme.MediumStarRate" parent="AppTheme.StarRate">
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>

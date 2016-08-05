@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
+import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
 import org.openstack.android.summit.modules.track_schedule.ITrackScheduleWireframe;
 import org.openstack.android.summit.modules.track_schedule.business_logic.ITrackScheduleInteractor;
@@ -63,8 +64,8 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
         ArrayList<Integer> tracks = new ArrayList<>();
         tracks.add(trackId);
         List<ScheduleItemDTO> summitEvents = interactor.getScheduleEvents(
-                startDate.toDate(),
-                endDate.toDate(),
+                startDate,
+                endDate,
                 filtersOnEventTypes,
                 filtersOnSummitTypes,
                 filtersOnTrackGroups,
@@ -78,11 +79,11 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
 
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
-        List<Integer> filtersOnEventTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
+        List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
         List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<String> filtersOnLevels       = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String> filtersOnTags         = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
 
         ArrayList<Integer> tracks = new ArrayList<>();
         tracks.add(trackId);

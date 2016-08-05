@@ -8,5 +8,6 @@ public enum FilterSectionType {
     EventType,
     TrackGroup,
     Tag,
-    Level
+    Level,
+    HidePastTalks
 }

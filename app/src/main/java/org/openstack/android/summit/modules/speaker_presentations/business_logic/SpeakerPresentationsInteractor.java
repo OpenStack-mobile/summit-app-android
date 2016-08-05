@@ -22,6 +22,7 @@ import java.util.List;
  * Created by Claudio Redi on 1/27/2016.
  */
 public class SpeakerPresentationsInteractor extends ScheduleInteractor implements ISpeakerPresentationsInteractor {
+
     public SpeakerPresentationsInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IDataUpdatePoller dataUpdatePoller) {
         super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, dataUpdatePoller);
     }
@@ -33,7 +34,7 @@ public class SpeakerPresentationsInteractor extends ScheduleInteractor implement
     }
 
     @Override
-    public List<ScheduleItemDTO> getSpeakerPresentations(int speakerId, Date startDate, Date endDate) {
+    public List<ScheduleItemDTO> getSpeakerPresentations(int speakerId, DateTime startDate, DateTime endDate) {
         List<SummitEvent> speakerEvents = summitEventDataStore.getSpeakerEvents(speakerId, startDate, endDate);
         List<ScheduleItemDTO> dtos = createDTOList(speakerEvents, ScheduleItemDTO.class);
         return dtos;
@@ -47,8 +48,8 @@ public class SpeakerPresentationsInteractor extends ScheduleInteractor implement
         while(startDate.isBefore(endDate)) {
             events = summitEventDataStore.getSpeakerEvents(
                     speakerId,
-                    startDate.withTime(0, 0, 0, 0).toDate(),
-                    startDate.withTime(23, 59, 59, 999).toDate()
+                    startDate.withTime(0, 0, 0, 0),
+                    startDate.withTime(23, 59, 59, 999)
             );
             if (events.size() == 0) {
                 inactiveDates.add(startDate);

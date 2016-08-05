@@ -4,6 +4,7 @@ package org.openstack.android.summit.dagger.components;
  * Created by claudio on 11/3/2015.
  */
 
+import org.openstack.android.summit.InitialDataLoadingActivity;
 import org.openstack.android.summit.common.security.AuthenticatorActivity;
 import org.openstack.android.summit.common.security.AuthenticatorService;
 import org.openstack.android.summit.dagger.modules.AboutModule;
@@ -68,6 +69,7 @@ import dagger.Component;
 @Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class} )
 public interface ApplicationComponent {
     void inject(MainActivity mainActivity);
+    void inject(InitialDataLoadingActivity initialDataLoadingActivity);
     void inject(EventsFragment eventsFragment);
     void inject(GeneralScheduleFragment generalScheduleFragment);
     void inject(LevelListFragment levelListFragment);

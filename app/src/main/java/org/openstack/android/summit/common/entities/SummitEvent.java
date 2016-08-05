@@ -11,13 +11,13 @@ import io.realm.annotations.PrimaryKey;
  */
 public class SummitEvent extends RealmObject implements ISummitEvent {
     @PrimaryKey
-    private int id;
+    private int    id;
     private String name;
-    private Date start;
-    private Date end;
+    private Date   start;
+    private Date   end;
     private String eventDescription;
     private String rsvpLink;
-    private int headCount;
+    private int    headCount;
 
     public String getRsvpLink() {
         return rsvpLink;

@@ -1,15 +1,13 @@
 package org.openstack.android.summit.common.data_access;
 
+import org.joda.time.DateTime;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.SummitEvent;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-
 import io.realm.Case;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -27,10 +25,22 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     }
 
     @Override
-    public List<SummitEvent> getByFilterLocal(Date startDate, Date endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
+    public List<SummitEvent> getByFilterLocal
+    (
+        DateTime startDate,
+        DateTime endDate,
+        List<Integer> eventTypes,
+        List<Integer> summitTypes,
+        List<Integer> trackGroups,
+        List<Integer> tracks,
+        List<String> tags,
+        List<String> levels
+    )
+    {
+
         RealmQuery<SummitEvent> query = realm.where(SummitEvent.class)
-                .greaterThanOrEqualTo("start", startDate)
-                .lessThanOrEqualTo("end", endDate);
+                .greaterThanOrEqualTo("start", startDate.toDate())
+                .lessThanOrEqualTo("end", endDate.toDate());
 
         boolean isFirst;
 
@@ -112,9 +122,7 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
             query.endGroup();
         }
 
-        RealmResults<SummitEvent> results = query.findAll();
-        results.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
-        return results;
+        return query.findAllSorted(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
     }
 
     public SummitEvent getByIdLocal(int id) {
@@ -163,16 +171,13 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     }
 
     @Override
-    public List<SummitEvent> getSpeakerEvents(int speakerId, Date startDate, Date endDate) {
+    public List<SummitEvent> getSpeakerEvents(int speakerId, DateTime startDate, DateTime endDate) {
         RealmQuery<SummitEvent> query = realm.where(SummitEvent.class)
-                .greaterThanOrEqualTo("start", startDate)
-                .lessThanOrEqualTo("end", endDate)
+                .greaterThanOrEqualTo("start", startDate.toDate())
+                .lessThanOrEqualTo("end", endDate.toDate())
                 .equalTo("presentation.speakers.id", speakerId);
 
-        RealmResults<SummitEvent> results = query.findAll();
-        results.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
-
-        return results;
+        return query.findAllSorted(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
     }
 
     @Override

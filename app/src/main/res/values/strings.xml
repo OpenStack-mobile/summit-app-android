@@ -6,7 +6,7 @@
     <string name="action_scheduled_status">Scheduled</string>
     <string name="action_rsvp">RSVP required</string>
     <string name="action_share_event">Share Event</string>
-    <string name="share_event_text" >Check out this summit event: https://www.openstack.org/summit/%1$s/summit-schedule/events/%2$s</string>
+    <string name="share_event_text">Check out this summit event: https://www.openstack.org/summit/%1$s/summit-schedule/events/%2$s</string>
     <string name="action_send">Send</string>
     <string name="action_create_feedback">Feedback</string>
     <string name="log_in">LOG IN</string>
@@ -25,6 +25,7 @@
     <string name="levels">Levels</string>
     <string name="filter">Filter</string>
     <string name="tags">Tags</string>
+    <string name="past_talks">Hide past talks</string>
     <string name="profile">Profile</string>
     <string name="venues">Venues</string>
     <string name="rooms">Rooms</string>
@@ -60,4 +61,5 @@
     <string name="event_not_exist">This event was removed from schedule.</string>
     <string name="average_rating">Average Rating</string>
     <string name="loading_ratings_and_reviews">Loading Ratings &amp; Reviews...</string>
+    <string name="title_activity_initial_data_loading_activiy">InitialDataLoadingActiviy</string>
 </resources>

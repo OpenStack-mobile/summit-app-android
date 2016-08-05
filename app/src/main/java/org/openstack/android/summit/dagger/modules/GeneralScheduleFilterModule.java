@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -34,8 +35,8 @@ public class GeneralScheduleFilterModule {
     }
 
     @Provides
-    IGeneralScheduleFilterInteractor providesGeneralScheduleFilterInteractor(ISummitEventDataStore summitEventDataStore, IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
-        return new GeneralScheduleFilterInteractor(summitEventDataStore, genericDataStore, dtoAssembler, dataUpdatePoller);
+    IGeneralScheduleFilterInteractor providesGeneralScheduleFilterInteractor(ISummitDataStore summitDataStore, ISummitEventDataStore summitEventDataStore, IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
+        return new GeneralScheduleFilterInteractor(summitDataStore, summitEventDataStore, genericDataStore, dtoAssembler, dataUpdatePoller);
     }
 
     @Provides

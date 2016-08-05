@@ -60,7 +60,7 @@ public class ScheduleItemView implements IScheduleItemView {
 
     @Override
     public void setColor(String color) {
-        View colorView = view.findViewById(R.id.item_schedule_view_color);
+        View colorView         = view.findViewById(R.id.item_schedule_view_color);
         TextView trackTextView = (TextView) view.findViewById(R.id.item_schedule_textview_track);
 
         if (color == null || color.length() == 0) {
@@ -70,7 +70,6 @@ public class ScheduleItemView implements IScheduleItemView {
         else {
             colorView.setVisibility(View.VISIBLE);
             colorView.setBackgroundColor(Color.parseColor(color));
-
             trackTextView.setTextColor(Color.parseColor(color));
         }
     }

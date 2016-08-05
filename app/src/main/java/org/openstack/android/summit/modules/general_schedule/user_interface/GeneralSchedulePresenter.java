@@ -7,6 +7,7 @@ import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
+import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
 import org.openstack.android.summit.modules.general_schedule.IGeneralScheduleWireframe;
 import org.openstack.android.summit.modules.general_schedule.business_logic.IGeneralScheduleInteractor;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
@@ -28,38 +29,23 @@ public class GeneralSchedulePresenter extends SchedulePresenter<GeneralScheduleF
 
     @Override
     public void onResume() {
-        if(!interactor.isDataLoaded() && !interactor.isNetworkingAvailable()) {
-            view.toggleNoConnectivityMessage(true);
-            view.toggleEventList(false);
-            return;
-        }
-
-        view.toggleNoConnectivityMessage(false);
         view.toggleEventList(true);
-
         interactor.checkForClearDataEvents();
-
         super.onResume();
     }
 
     @Override
-    protected void onFailedInitialLoad(String message) {
-        super.onFailedInitialLoad(message);
-        view.toggleNoConnectivityMessage(true);
-        view.toggleEventList(false);
-    }
-
-    @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IGeneralScheduleInteractor interactor) {
-        List<Integer> filtersOnEventTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
+
+        List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
         List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<String> filtersOnLevels       = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String> filtersOnTags         = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
 
         List<ScheduleItemDTO> events = interactor.getScheduleEvents(
-                startDate.toDate(),
-                endDate.toDate(),
+                startDate,
+                endDate,
                 filtersOnEventTypes,
                 filtersOnSummitTypes,
                 filtersOnTrackGroups,

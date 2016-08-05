@@ -1,8 +1,8 @@
 package org.openstack.android.summit.common;
 
-import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSection;
+import org.openstack.android.summit.modules.general_schedule_filter.user_interface.AbstractFilterSection;
+import org.openstack.android.summit.modules.general_schedule_filter.user_interface.MultiFilterSection;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +10,20 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 2/2/2016.
  */
-public class ScheduleFilter implements IScheduleFilter {
-    private HashMap<FilterSectionType, List<Object>> selections = new HashMap<>();
-    private List<FilterSection> filterSections = new ArrayList<>();
+final public class ScheduleFilter implements IScheduleFilter {
+
+    private HashMap<FilterSectionType, List<Object>> selections   = new HashMap<>();
+    private List<AbstractFilterSection> filterSections             = new ArrayList<>();
+    private HashMap<FilterSectionType, FilterSectionType> typesSet = new HashMap<>();
+
+    public ScheduleFilter(){
+        getSelections().put(FilterSectionType.SummitType, new ArrayList<>());
+        getSelections().put(FilterSectionType.EventType, new ArrayList<>());
+        getSelections().put(FilterSectionType.Level, new ArrayList<>());
+        getSelections().put(FilterSectionType.TrackGroup, new ArrayList<>());
+        getSelections().put(FilterSectionType.Tag, new ArrayList<>());
+        getSelections().put(FilterSectionType.HidePastTalks, new ArrayList<>());
+    }
 
     @Override
     public boolean areAllSelectedForType(FilterSectionType type) {
@@ -22,7 +33,7 @@ public class ScheduleFilter implements IScheduleFilter {
 
         boolean found = false;
         int position = 0;
-        FilterSection filterSection = null;
+        AbstractFilterSection filterSection = null;
         while (!found && getFilterSections().size() < position) {
             filterSection = getFilterSections().get(position);
             if (filterSection.getType() == type) {
@@ -30,7 +41,7 @@ public class ScheduleFilter implements IScheduleFilter {
             }
             position++;
         }
-        return filterSection.getItems().size() == getSelections().get(type).size();
+        return MultiFilterSection.class.isInstance(filterSection)? ((MultiFilterSection)filterSection).getItems().size() == getSelections().get(type).size() : false;
     }
 
     @Override
@@ -44,12 +55,12 @@ public class ScheduleFilter implements IScheduleFilter {
     }
 
     @Override
-    public List<FilterSection> getFilterSections() {
+    public List<AbstractFilterSection> getFilterSections() {
         return filterSections;
     }
 
     @Override
-    public void setFilterSections(List<FilterSection> filterSections) {
+    public void setFilterSections(List<AbstractFilterSection> filterSections) {
         this.filterSections = filterSections;
     }
 
@@ -62,7 +73,6 @@ public class ScheduleFilter implements IScheduleFilter {
                 break;
             }
         }
-
         return hasActiveFilters;
     }
 
@@ -71,5 +81,24 @@ public class ScheduleFilter implements IScheduleFilter {
         for (List<Object> values : selections.values()) {
             values.clear();
         }
+    }
+
+    @Override
+    public boolean isTypeSet(FilterSectionType type) {
+        return typesSet.containsKey(type);
+    }
+
+    @Override
+    public void setTypeValues(FilterSectionType type, Object... values){
+        for(Object value:values){
+            getSelections().get(type).add(value);
+        }
+        typesSet.put(type, type);
+    }
+
+    @Override
+    public void clearTypeValues(FilterSectionType type){
+        getSelections().get(type).clear();
+        typesSet.remove(type);
     }
 }

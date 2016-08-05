@@ -26,4 +26,6 @@ public interface IGeneralScheduleFilterPresenter extends IBasePresenter<IGeneral
     void addTag(String tag);
 
     void removeTag(String tagToDelete);
+
+    void toggleHidePastTalks(boolean hidePastTalks);
 }

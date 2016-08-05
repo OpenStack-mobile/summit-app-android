@@ -10,6 +10,7 @@ import java.util.List;
  * Created by Claudio Redi on 2/2/2016.
  */
 public interface IGeneralScheduleFilterView extends IBaseView {
+
     void showSummitTypes(List<NamedDTO> summitTypes);
 
     void showTrackGroups(List<TrackGroupDTO> trackGroups);
@@ -21,4 +22,8 @@ public interface IGeneralScheduleFilterView extends IBaseView {
     void bindTags(List<String> tags);
 
     void addTag(String tagText);
+
+    void toggleShowPastTalks(boolean isChecked);
+
+    void showShowPastTalks(boolean show);
 }

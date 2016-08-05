@@ -10,6 +10,7 @@ import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
+import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
 import org.openstack.android.summit.modules.speaker_presentations.ISpeakerPresentationsWireframe;
 import org.openstack.android.summit.modules.speaker_presentations.business_logic.ISpeakerPresentationsInteractor;
 import org.openstack.android.summit.modules.speaker_presentations.business_logic.ISpeakerPresentationsInteractor;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 1/27/2016.
  */
-public class SpeakerPresentationsPresenter  extends SchedulePresenter<ISpeakerPresentationsView, ISpeakerPresentationsInteractor, ISpeakerPresentationsWireframe> implements ISpeakerPresentationsPresenter {
+public class SpeakerPresentationsPresenter extends SchedulePresenter<ISpeakerPresentationsView, ISpeakerPresentationsInteractor, ISpeakerPresentationsWireframe> implements ISpeakerPresentationsPresenter {
     private int speakerId;
 
     public SpeakerPresentationsPresenter(ISpeakerPresentationsInteractor interactor, ISpeakerPresentationsWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
@@ -54,14 +55,12 @@ public class SpeakerPresentationsPresenter  extends SchedulePresenter<ISpeakerPr
 
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, ISpeakerPresentationsInteractor interactor) {
-        List<ScheduleItemDTO> events = interactor.getSpeakerPresentations(speakerId, startDate.toDate(), endDate.toDate());
-        return events;
+        return interactor.getSpeakerPresentations(speakerId, startDate, endDate);
     }
 
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
-        List<DateTime> inactiveDates = interactor.getSpeakerPresentationScheduleDatesWithoutEvents(speakerId, startDate, endDate);
-        return inactiveDates;
+        return interactor.getSpeakerPresentationScheduleDatesWithoutEvents(speakerId, startDate, endDate);
     }
 
 }

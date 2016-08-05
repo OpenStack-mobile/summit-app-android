@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Claudio Redi on 2/5/2016.
  */
-public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdatePoller {
+public class DataUpdatePooler extends BaseRemoteDataStore implements IDataUpdatePoller {
     private int pollingInterval = 20 * 1000;
     private ISecurityManager securityManager;
     private IHttpTaskFactory httpTaskFactory;
@@ -51,7 +51,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private Handler handler;
     private Runnable dataUpdatePoller;
 
-    public DataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, IReachability reachability, ISession session) {
+    public DataUpdatePooler(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, IReachability reachability, ISession session) {
         this.securityManager     = securityManager;
         this.httpTaskFactory     = httpTaskFactory;
         this.dataUpdateProcessor = dataUpdateProcessor;
