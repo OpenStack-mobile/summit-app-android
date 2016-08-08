@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.data_access;
 
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,32 +17,32 @@ import io.realm.RealmResults;
 public class TrackGroupDataStore extends GenericDataStore implements ITrackGroupDataStore {
     @Override
     public List<TrackGroup> getTrackGroupsForTrack(String trackName) {
-        RealmResults<TrackGroup> trackGroups = realm.where(TrackGroup.class).equalTo("tracks.name", trackName).findAll();
+        RealmResults<TrackGroup> trackGroups = RealmFactory.getSession().where(TrackGroup.class).equalTo("tracks.name", trackName).findAll();
         return trackGroups;
     }
 
     @Override
     public List<Track> getTracks(int trackGroupId) {
-        RealmResults<Track> tracks = realm.where(Track.class).equalTo("trackGroups.id", trackGroupId).findAll();
+        RealmResults<Track> tracks = RealmFactory.getSession().where(Track.class).equalTo("trackGroups.id", trackGroupId).findAll();
         return tracks;
     }
 
     @Override
     public void removeTrackGroupFromTracksLocal(int trackGroupId) {
-        TrackGroup trackGroup = realm.where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
+        TrackGroup trackGroup = RealmFactory.getSession().where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
         if (trackGroup != null) {
             List<Track> results = getTracks(trackGroupId);
             try {
                 List<Track> tracks = new ArrayList<>();
                 tracks.addAll(results);
-                realm.beginTransaction();
+                RealmFactory.getSession().beginTransaction();
                 for (Track track : tracks) {
                     track.getTrackGroups().remove(trackGroup);
                 }
-                realm.commitTransaction();
+                RealmFactory.getSession().commitTransaction();
             }
             catch (Exception e) {
-                realm.cancelTransaction();
+                RealmFactory.getSession().cancelTransaction();
                 throw e;
             }
         }

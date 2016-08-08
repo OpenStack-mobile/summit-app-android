@@ -7,7 +7,6 @@ import org.openstack.android.summit.common.data_access.IDataStoreOperationListen
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
@@ -29,8 +28,8 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     protected ISummitDataStore          summitDataStore;
     protected IPushNotificationsManager pushNotificationsManager;
 
-    public ScheduleableInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller, IPushNotificationsManager pushNotificationsManager) {
-        super(dtoAssembler, dataUpdatePoller);
+    public ScheduleableInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager) {
+        super(dtoAssembler);
 
         this.securityManager          = securityManager;
         this.summitEventDataStore     = summitEventDataStore;

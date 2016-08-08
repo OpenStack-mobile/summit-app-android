@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.data_access;
 
+import org.openstack.android.summit.common.utils.RealmFactory;
 import org.powermock.api.mockito.PowerMockito;
 
 import io.realm.Realm;
@@ -21,7 +22,7 @@ public class MockSupport {
 
         Realm mockRealm = PowerMockito.mock(Realm.class);
 
-        when(Realm.getDefaultInstance()).thenReturn(mockRealm);
+        when(RealmFactory.getSession()).thenReturn(mockRealm);
 
         return mockRealm;
     }

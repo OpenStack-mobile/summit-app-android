@@ -5,6 +5,7 @@ package org.openstack.android.summit.dagger.components;
  */
 
 import org.openstack.android.summit.InitialDataLoadingActivity;
+import org.openstack.android.summit.common.data_updates.DataUpdatesService;
 import org.openstack.android.summit.common.security.AuthenticatorActivity;
 import org.openstack.android.summit.common.security.AuthenticatorService;
 import org.openstack.android.summit.dagger.modules.AboutModule;
@@ -94,5 +95,6 @@ public interface ApplicationComponent {
     void inject(MemberOrderConfirmFragment memberOrderConfirmFragment);
     void inject(AboutFragment aboutFragment);
     void inject(AuthenticatorService authenticatorService);
+    void inject(DataUpdatesService dataUpdatesService);
     void inject(AuthenticatorActivity authenticatorActivity);
 }

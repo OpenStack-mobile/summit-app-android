@@ -30,7 +30,6 @@ public class GeneralSchedulePresenter extends SchedulePresenter<GeneralScheduleF
     @Override
     public void onResume() {
         view.toggleEventList(true);
-        interactor.checkForClearDataEvents();
         super.onResume();
     }
 

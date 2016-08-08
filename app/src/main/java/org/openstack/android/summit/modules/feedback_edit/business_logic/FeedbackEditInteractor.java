@@ -3,13 +3,11 @@ package org.openstack.android.summit.modules.feedback_edit.business_logic;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
-import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
@@ -28,8 +26,8 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
     ISecurityManager securityManager;
     IReachability reachability;
 
-    public FeedbackEditInteractor(ISummitAttendeeDataStore summitAttendeeDataStore, IGenericDataStore genericDataStore, ISecurityManager securityManager, IReachability reachability, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
-        super(dtoAssembler, dataUpdatePoller);
+    public FeedbackEditInteractor(ISummitAttendeeDataStore summitAttendeeDataStore, IGenericDataStore genericDataStore, ISecurityManager securityManager, IReachability reachability, IDTOAssembler dtoAssembler) {
+        super(dtoAssembler);
         this.summitAttendeeDataStore = summitAttendeeDataStore;
         this.securityManager = securityManager;
         this.genericDataStore = genericDataStore;

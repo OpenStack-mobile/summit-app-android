@@ -3,7 +3,6 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.speakers_list.SpeakerListWireframe;
@@ -32,8 +31,8 @@ public class SpeakerListModule {
     }
 
     @Provides
-    ISpeakerListInteractor providesSpeakerListInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
-        return new SpeakerListInteractor(presentationSpeakerDataStore, dtoAssembler, dataUpdatePoller);
+    ISpeakerListInteractor providesSpeakerListInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler) {
+        return new SpeakerListInteractor(presentationSpeakerDataStore, dtoAssembler);
     }
 
     @Provides

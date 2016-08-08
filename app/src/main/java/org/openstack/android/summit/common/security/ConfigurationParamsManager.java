@@ -26,6 +26,6 @@ public class ConfigurationParamsManager implements IConfigurationParamsManager {
                 return value;
             }
         }
-        throw new InvalidParameterException(String.format("Parameter %d not found!", key));
+        throw new InvalidParameterException(String.format("Parameter %s not found!", key));
     }
 }

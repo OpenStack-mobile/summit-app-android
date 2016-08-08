@@ -1,15 +1,11 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
 import org.openstack.android.summit.common.entities.IEntity;
-
+import org.openstack.android.summit.common.utils.RealmFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
-
-import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
@@ -17,12 +13,6 @@ import io.realm.RealmObject;
  */
 public class DeserializerStorage implements IDeserializerStorage {
 
-    @Inject
-    public DeserializerStorage(Realm realm) {
-        this.realm = realm;
-    }
-
-    Realm realm;
 
     Map<Class, Map<Integer, IEntity>> deserializedEntityDictionary = new HashMap<Class, Map<Integer, IEntity>>();
 
@@ -42,7 +32,7 @@ public class DeserializerStorage implements IDeserializerStorage {
         }
 
         if (entity == null) {
-            entity = realm.where(type).equalTo("id", id).findFirst();
+            entity = RealmFactory.getSession().where(type).equalTo("id", id).findFirst();
         }
         return entity;
     }
@@ -56,7 +46,7 @@ public class DeserializerStorage implements IDeserializerStorage {
             }
         }
         else {
-            list = realm.where(type).findAll();
+            list = RealmFactory.getSession().where(type).findAll();
         }
         return list;
     }
@@ -65,7 +55,7 @@ public class DeserializerStorage implements IDeserializerStorage {
     public <T extends RealmObject & IEntity> Boolean exist(int entityId, Class<T> type) {
         return (deserializedEntityDictionary.containsKey(type) &&
                 deserializedEntityDictionary.get(type).containsKey(entityId)) ||
-                realm.where(type).equalTo("id", entityId).count() > 0;
+                RealmFactory.getSession().where(type).equalTo("id", entityId).count() > 0;
     }
 
     @Override

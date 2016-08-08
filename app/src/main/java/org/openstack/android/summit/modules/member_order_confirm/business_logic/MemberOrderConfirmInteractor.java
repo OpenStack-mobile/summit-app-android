@@ -7,9 +7,6 @@ import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.MemberDataStore;
-import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 import org.openstack.android.summit.common.network.IReachability;
@@ -26,8 +23,8 @@ public class MemberOrderConfirmInteractor extends BaseInteractor implements IMem
     IReachability reachability;
     ISecurityManager securityManager;
 
-    public MemberOrderConfirmInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
-        super(dtoAssembler, dataUpdatePoller);
+    public MemberOrderConfirmInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler) {
+        super(dtoAssembler);
         this.memberRemoteDataStore = memberRemoteDataStore;
         this.reachability = reachability;
         this.securityManager = securityManager;

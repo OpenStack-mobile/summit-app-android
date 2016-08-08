@@ -10,7 +10,6 @@ import org.openstack.android.summit.common.data_access.IDataStoreOperationListen
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
@@ -30,8 +29,8 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
     IReachability reachability;
 
     @Inject
-    public EventDetailInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IReachability reachability, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller, IPushNotificationsManager pushNotificationsManager) {
-        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, dataUpdatePoller, pushNotificationsManager);
+    public EventDetailInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IReachability reachability, IDTOAssembler dtoAssembler, ISecurityManager securityManager,IPushNotificationsManager pushNotificationsManager) {
+        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, pushNotificationsManager);
         this.reachability = reachability;
     }
 

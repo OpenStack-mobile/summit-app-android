@@ -10,6 +10,7 @@ import io.realm.RealmObject;
  * Created by Claudio Redi on 11/12/2015.
  */
 public interface IDeserializerStorage {
+
     <T extends RealmObject & IEntity> void add(T entity, Class<T> type);
 
     <T extends RealmObject & IEntity> T get(int id, Class<T> type);

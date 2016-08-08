@@ -7,7 +7,6 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.IReachability;
@@ -22,12 +21,12 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     private ISummitDataStore summitDataStore;
     private IReachability reachability;
 
-    public MainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability, IDataUpdatePoller dataUpdatePoller) {
-        super(dtoAssembler, dataUpdatePoller);
-        this.summitDataStore = summitDataStore;
-        this.securityManager = securityManager;
+    public MainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability) {
+        super(dtoAssembler);
+        this.summitDataStore          = summitDataStore;
+        this.securityManager          = securityManager;
         this.pushNotificationsManager = pushNotificationsManager;
-        this.reachability = reachability;
+        this.reachability             = reachability;
     }
 
     @Override

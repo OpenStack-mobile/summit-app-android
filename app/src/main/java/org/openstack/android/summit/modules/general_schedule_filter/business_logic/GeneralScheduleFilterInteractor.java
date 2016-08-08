@@ -1,16 +1,13 @@
 package org.openstack.android.summit.modules.general_schedule_filter.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
-import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.data_access.GenericDataStore;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitType;
@@ -36,11 +33,10 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
         ISummitDataStore summitDataStore,
         ISummitEventDataStore summitEventDataStore,
         IGenericDataStore genericDataStore,
-        IDTOAssembler dtoAssembler,
-        IDataUpdatePoller dataUpdatePoller
+        IDTOAssembler dtoAssembler
     )
     {
-        super(dtoAssembler, dataUpdatePoller);
+        super(dtoAssembler);
 
         this.summitDataStore      = summitDataStore;
         this.genericDataStore     = genericDataStore;

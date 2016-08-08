@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.data_access.deserialization.DataStore
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 /**
  * Created by Claudio Redi on 1/5/2016.
@@ -36,15 +37,15 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
 
     @Override
     public void addEventToMemberScheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
-        realm.beginTransaction();
+        RealmFactory.getSession().beginTransaction();
         try {
             if (summitAttendee.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() == 0){
                 summitAttendee.getScheduledEvents().add(summitEvent);
             }
-            realm.commitTransaction();
+            RealmFactory.getSession().commitTransaction();
         }
         catch (Exception e) {
-            realm.cancelTransaction();
+            RealmFactory.getSession().cancelTransaction();
             throw e;
         }
     }
@@ -69,15 +70,15 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
 
     @Override
     public void removeEventFromMemberScheduleLocal(SummitAttendee summitAttendee, SummitEvent summitEvent) {
-        realm.beginTransaction();
+        RealmFactory.getSession().beginTransaction();
         try{
             if (summitAttendee.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() > 0) {
                 summitAttendee.getScheduledEvents().remove(summitEvent);
             }
-            realm.commitTransaction();
+            RealmFactory.getSession().commitTransaction();
         }
         catch (Exception e) {
-            realm.cancelTransaction();
+            RealmFactory.getSession().cancelTransaction();
             throw e;
         }
     }
@@ -89,13 +90,13 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
             public void onSucceedWithSingleData(Feedback data) {
                 super.onSucceedWithSingleData(data);
 
-                realm.beginTransaction();
+                RealmFactory.getSession().beginTransaction();
                 try {
                     attendee.getFeedback().add(data);
-                    realm.commitTransaction();
+                    RealmFactory.getSession().commitTransaction();
                 }
                 catch (Exception e) {
-                    realm.cancelTransaction();
+                    RealmFactory.getSession().cancelTransaction();
                     throw e;
                 }
 

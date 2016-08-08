@@ -1,17 +1,18 @@
 package org.openstack.android.summit.common.data_access;
 import org.openstack.android.summit.common.entities.Image;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 public class VenueDataStore extends GenericDataStore implements IVenueDataStore {
 
     @Override
     public void addImageToVenue(Image image, Venue venue) {
         try {
-            realm.beginTransaction();
+            RealmFactory.getSession().beginTransaction();
             venue.getImages().add(image);
-            realm.commitTransaction();
+            RealmFactory.getSession().commitTransaction();
         } catch (Exception e) {
-            realm.cancelTransaction();
+            RealmFactory.getSession().cancelTransaction();
             throw e;
         }
     }
@@ -19,12 +20,12 @@ public class VenueDataStore extends GenericDataStore implements IVenueDataStore 
     @Override
     public void addMapToVenue(Image image, Venue venue) {
         try {
-            realm.beginTransaction();
+            RealmFactory.getSession().beginTransaction();
             Venue v = getByIdLocal(venue.getId(), Venue.class);
             v.getMaps().add(image);
-            realm.commitTransaction();
+            RealmFactory.getSession().commitTransaction();
         } catch (Exception e) {
-            realm.cancelTransaction();
+            RealmFactory.getSession().cancelTransaction();
             throw e;
         }
     }

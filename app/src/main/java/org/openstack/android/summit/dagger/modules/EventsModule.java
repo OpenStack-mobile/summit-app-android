@@ -3,9 +3,7 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.IReachability;
-import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.events.EventsWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.events.business_logic.EventsInteractor;
@@ -13,7 +11,6 @@ import org.openstack.android.summit.modules.events.business_logic.IEventsInterac
 import org.openstack.android.summit.modules.events.user_interface.EventsFragment;
 import org.openstack.android.summit.modules.events.user_interface.EventsPresenter;
 import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
-import org.openstack.android.summit.modules.events.user_interface.IEventsView;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 
 import dagger.Module;
@@ -35,8 +32,8 @@ public class EventsModule {
     }
 
     @Provides
-    IEventsInteractor providesEventsInteractor(ISummitDataStore summitDataStore, IReachability reachability, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
-        return new EventsInteractor(summitDataStore, reachability, dtoAssembler, dataUpdatePoller);
+    IEventsInteractor providesEventsInteractor(ISummitDataStore summitDataStore, IReachability reachability, IDTOAssembler dtoAssembler) {
+        return new EventsInteractor(summitDataStore, reachability, dtoAssembler);
     }
 
     @Provides

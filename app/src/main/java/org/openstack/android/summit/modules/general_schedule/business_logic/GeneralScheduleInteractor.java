@@ -8,7 +8,6 @@ import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
@@ -18,10 +17,11 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 12/21/2015.
  */
 public class GeneralScheduleInteractor extends ScheduleInteractor implements IGeneralScheduleInteractor {
+
     IReachability reachability;
 
-    public GeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IDataUpdatePoller dataUpdatePoller, IReachability reachability) {
-        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, dataUpdatePoller);
+    public GeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IReachability reachability) {
+        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session);
         this.reachability = reachability;
     }
 
@@ -35,8 +35,4 @@ public class GeneralScheduleInteractor extends ScheduleInteractor implements IGe
         return reachability.isNetworkingAvailable(OpenStackSummitApplication.context);
     }
 
-    @Override
-    public void checkForClearDataEvents() {
-        dataUpdatePoller.clearDataIfTruncateEventExist();
-    }
 }

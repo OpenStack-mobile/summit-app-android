@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.List;
 
@@ -38,15 +39,15 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
                 @Override
                 public void onSucceedWithSingleData(Summit data) {
                     try{
-                        realm.beginTransaction();
-                        Summit realmEntity = realm.copyToRealmOrUpdate(data);
-                        realm.commitTransaction();
+                        RealmFactory.getSession().beginTransaction();
+                        Summit realmEntity = RealmFactory.getSession().copyToRealmOrUpdate(data);
+                        RealmFactory.getSession().commitTransaction();
                         if (dataStoreOperationListener != null) {
                             dataStoreOperationListener.onSucceedWithSingleData(realmEntity);
                         }
                     }
                     catch (Exception e) {
-                        realm.cancelTransaction();
+                        RealmFactory.getSession().cancelTransaction();
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG, e.getMessage(), e);
                         dataStoreOperationListener.onError(e.getMessage());
@@ -72,16 +73,16 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
     @Override
     public void updateActiveSummitFromDataUpdate(Summit dataUpdateEntity) {
         try{
-            realm.beginTransaction();
-            Summit summit = realm.where(Summit.class).findFirst();
+            RealmFactory.getSession().beginTransaction();
+            Summit summit = RealmFactory.getSession().where(Summit.class).findFirst();
             summit.setName(dataUpdateEntity.getName());
             summit.setStartShowingVenuesDate(dataUpdateEntity.getStartShowingVenuesDate());
             summit.setStartDate(dataUpdateEntity.getStartDate());
             summit.setEndDate(dataUpdateEntity.getEndDate());
-            realm.commitTransaction();
+            RealmFactory.getSession().commitTransaction();
         }
         catch (Exception e) {
-            realm.cancelTransaction();
+            RealmFactory.getSession().cancelTransaction();
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }

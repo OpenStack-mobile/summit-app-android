@@ -2,9 +2,6 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.MemberDataStore;
-import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
@@ -34,8 +31,8 @@ public class MemberOrderConfirmModule {
     }
 
     @Provides
-    IMemberOrderConfirmInteractor providesMemberProfileDetailInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
-        return new MemberOrderConfirmInteractor(memberRemoteDataStore, reachability, securityManager, dtoAssembler, dataUpdatePoller);
+    IMemberOrderConfirmInteractor providesMemberProfileDetailInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler) {
+        return new MemberOrderConfirmInteractor(memberRemoteDataStore, reachability, securityManager, dtoAssembler);
     }
 
     @Provides

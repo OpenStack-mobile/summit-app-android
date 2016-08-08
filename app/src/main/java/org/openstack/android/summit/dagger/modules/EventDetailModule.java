@@ -2,11 +2,9 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
-import org.openstack.android.summit.common.NavigationParametersStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -41,8 +39,8 @@ public class EventDetailModule {
     }
 
     @Provides
-    IEventDetailInteractor providesEventDetailInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IDataUpdatePoller dataUpdatePoller, IPushNotificationsManager pushNotificationsManager) {
-        return new EventDetailInteractor(summitEventDataStore, summitAttendeeDataStore, summitDataStore, new Reachability(), dtoAssembler, securityManager, dataUpdatePoller, pushNotificationsManager);
+    IEventDetailInteractor providesEventDetailInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager) {
+        return new EventDetailInteractor(summitEventDataStore, summitAttendeeDataStore, summitDataStore, new Reachability(), dtoAssembler, securityManager, pushNotificationsManager);
     }
 
     @Provides

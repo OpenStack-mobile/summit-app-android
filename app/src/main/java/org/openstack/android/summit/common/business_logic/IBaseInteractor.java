@@ -5,7 +5,4 @@ package org.openstack.android.summit.common.business_logic;
  */
 public interface IBaseInteractor {
 
-    void stopPolling();
-
-    void startPollingIfNotPollingAlready();
 }

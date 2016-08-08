@@ -49,7 +49,7 @@ public class DeserializerStorageTests {
     @Test
     public void add_company_storageContainsAddedCompany() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
+        IDeserializerStorage deserializerStorage = new DeserializerStorage();
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);
@@ -66,7 +66,7 @@ public class DeserializerStorageTests {
     @Test
     public void add_companyAndEventType_storageContainsBothAddedEntities() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
+        IDeserializerStorage deserializerStorage = new DeserializerStorage();
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);
@@ -91,7 +91,7 @@ public class DeserializerStorageTests {
     @Test
     public void add_twoTimesSameCompany_storageContainsSingleCompany() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
+        IDeserializerStorage deserializerStorage = new DeserializerStorage();
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);
@@ -109,7 +109,7 @@ public class DeserializerStorageTests {
     @Test
     public void add_twoDifferentCompanies_storageContainsBothCompanies() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
+        IDeserializerStorage deserializerStorage = new DeserializerStorage();
         int companyId1 = 1;
         Company company1 = new Company();
         company1.setId(companyId1);
@@ -131,7 +131,7 @@ public class DeserializerStorageTests {
     @Test
     public void  exist_companyNotPresentOnStorage_returnsFalse() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
+        IDeserializerStorage deserializerStorage = new DeserializerStorage();
         int companyId = 1;
         long count = 0;
         RealmQuery<Company> mockQuery = MockSupport.mockRealmQuery();
@@ -152,7 +152,7 @@ public class DeserializerStorageTests {
     @Test
     public void  exist_companyPresentOnMemoryStorage_ReturnsTrue() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
+        IDeserializerStorage deserializerStorage = new DeserializerStorage();
         int companyId = 1;
         Company company = new Company();
         company.setId(companyId);
@@ -168,7 +168,7 @@ public class DeserializerStorageTests {
     @Test
     public void  clear_inMemoryStorageContainsOneCompany_inMemoryStorageIsEmpty() {
         //Arrange
-        IDeserializerStorage deserializerStorage = new DeserializerStorage(mockRealm);
+        IDeserializerStorage deserializerStorage = new DeserializerStorage();
         int companyId = 1;
         RealmQuery<Company> mockQuery = MockSupport.mockRealmQuery();
         RealmResults<Company> mockResults = MockSupport.mockRealmResults();

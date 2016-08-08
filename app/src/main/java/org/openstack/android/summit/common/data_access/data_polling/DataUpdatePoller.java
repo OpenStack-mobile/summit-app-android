@@ -1,63 +1,50 @@
 package org.openstack.android.summit.common.data_access.data_polling;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Handler;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
-import com.google.api.client.http.HttpMethods;
-
-import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.BaseRemoteDataStore;
-import org.openstack.android.summit.common.data_access.DataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
-import org.openstack.android.summit.common.entities.Image;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.network.AuthorizationException;
 import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
-import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.security.ISecurityManager;
-
 import java.security.spec.InvalidParameterSpecException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by Claudio Redi on 2/5/2016.
  */
-public class DataUpdatePooler extends BaseRemoteDataStore implements IDataUpdatePoller {
-    private int pollingInterval = 20 * 1000;
+public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdatePoller {
+
     private ISecurityManager securityManager;
     private IHttpTaskFactory httpTaskFactory;
     private IDataUpdateProcessor dataUpdateProcessor;
     private IDataUpdateDataStore dataUpdateDataStore;
     private ISummitDataStore summitDataStore;
-    private IReachability reachability;
     private ISession session;
-    private String KEY_SET_FROM_DATE = "KEY_SET_FROM_DATE";
-    private Handler handler;
-    private Runnable dataUpdatePoller;
 
-    public DataUpdatePooler(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, IReachability reachability, ISession session) {
+    private String KEY_SET_FROM_DATE      = "KEY_SET_FROM_DATE";
+    private String KEY_LAST_WIPE_EVENT_ID = "KEY_LAST_WIPE_EVENT_ID";
+    private String KEY_LAST_EVENT_ID      = "KEY_LAST_EVENT_ID";
+
+    public DataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, ISession session) {
+
         this.securityManager     = securityManager;
         this.httpTaskFactory     = httpTaskFactory;
         this.dataUpdateProcessor = dataUpdateProcessor;
         this.dataUpdateDataStore = dataUpdateDataStore;
         this.summitDataStore     = summitDataStore;
-        this.reachability        = reachability;
         this.session             = session;
     }
 
@@ -65,9 +52,6 @@ public class DataUpdatePooler extends BaseRemoteDataStore implements IDataUpdate
     public void pollServer() {
 
         try {
-            if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-                return;
-            }
 
             Log.d(Constants.LOG_TAG, "Polling server for data updates");
 
@@ -84,6 +68,7 @@ public class DataUpdatePooler extends BaseRemoteDataStore implements IDataUpdate
 
                     try {
                         dataUpdateProcessor.process(data);
+                        clearDataIfTruncateEventExist();
                     } catch (Exception e) {
                         String errorMessage = String.format("There was an error processing these updates from server: : %s", data);
                         Crashlytics.logException(new Exception(errorMessage, e));
@@ -112,31 +97,6 @@ public class DataUpdatePooler extends BaseRemoteDataStore implements IDataUpdate
         }
     }
 
-    public void startPollingIfNotPollingAlready() {
-        try {
-            if (dataUpdatePoller != null) {
-                return;
-            }
-
-            handler = new Handler();
-            dataUpdatePoller = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        pollServer();
-                    } finally {
-                        handler.postDelayed(dataUpdatePoller, pollingInterval);
-                    }
-                }
-            };
-
-            handler.postDelayed(dataUpdatePoller, 5 * 1000);
-        } catch (Exception e) {
-            Log.e(Constants.LOG_TAG, e.getMessage(), e);
-            //TODO: fabric
-        }
-    }
-
     private long getFromDate() {
         return session.getLong(KEY_SET_FROM_DATE);
     }
@@ -146,45 +106,55 @@ public class DataUpdatePooler extends BaseRemoteDataStore implements IDataUpdate
     }
 
     public String getUrl() {
-        String url = null;
-        int latestDataUpdateId = dataUpdateDataStore.getLatestDataUpdate();
-        if (latestDataUpdateId > 0) {
-            url = String.format("%s%s%d", getBaseResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=50&last_event_id=", latestDataUpdateId);
-        } else {
-            long fromDate = getFromDate();
-            if (fromDate == 0) {
-                Summit summit = summitDataStore.getActiveLocal();
-                if (summit != null) {
-                    fromDate = summit.getInitialDataLoadDate().getTime() / 1000L;
-                    setFromDate(fromDate);
+        long latestDataUpdateId = session.getLong(KEY_LAST_EVENT_ID);
+        if(latestDataUpdateId == 0){
+            latestDataUpdateId = dataUpdateDataStore.getLatestDataUpdate();
+            session.setLong(KEY_LAST_EVENT_ID, latestDataUpdateId);
+        }
+
+        if (latestDataUpdateId > 0)
+            return String.format("%s%s%d", getBaseResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=50&last_event_id=", latestDataUpdateId);
+
+        long fromDate = getFromDate();
+        if (fromDate == 0) {
+            Summit summit = summitDataStore.getActiveLocal();
+            if (summit != null) {
+                fromDate = summit.getInitialDataLoadDate().getTime() / 1000L;
+                setFromDate(fromDate);
+            }
+        }
+        if (fromDate != 0) {
+            return String.format("%s%s%d", getBaseResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=10&from_date=", fromDate);
+        }
+        return null;
+    }
+
+    private void clearDataIfTruncateEventExist() {
+        DataUpdate dataUpdate = null;
+        do {
+            long lastWipeEventId = session.getLong(KEY_LAST_WIPE_EVENT_ID);
+            dataUpdate           = dataUpdateDataStore.getTruncateDataUpdate();
+
+            if (dataUpdate != null) {
+                if (lastWipeEventId == 0 || lastWipeEventId < dataUpdate.getId()) {
+
+                    if(dataUpdateDataStore.getLatestDataUpdate() == 1)
+                        session.setLong(KEY_LAST_EVENT_ID, dataUpdate.getId());
+
+                    Log.d(Constants.LOG_TAG, "doing a wipe DB ...");
+                    session.setLong(KEY_LAST_WIPE_EVENT_ID, dataUpdate.getId());
+                    if (securityManager.isLoggedIn()) {
+                        securityManager.logout();
+                    }
+                    dataUpdateDataStore.clearDataLocal();
+                    setFromDate(0L);
+                    Intent intent = new Intent(Constants.WIPE_DATE_EVENT);
+                    LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+                    return;
                 }
+                dataUpdateDataStore.deleteDataUpdate(dataUpdate);
             }
-
-            if (fromDate != 0) {
-                url = String.format("%s%s%d", getBaseResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=10&from_date=", fromDate);
-            }
-        }
-
-        return url;
+        } while (dataUpdate != null);
     }
 
-    public void stop() {
-        if (handler != null) {
-            handler.removeCallbacks(dataUpdatePoller);
-            handler = null;
-            dataUpdatePoller = null;
-        }
-    }
-
-    @Override
-    public void clearDataIfTruncateEventExist() {
-        DataUpdate dataUpdate = dataUpdateDataStore.getTruncateDataUpdate();
-        if (dataUpdate != null) {
-            dataUpdateDataStore.clearDataLocal();
-            setFromDate(0L);
-            if (securityManager.isLoggedIn()) {
-                securityManager.logout();
-            }
-        }
-    }
 }

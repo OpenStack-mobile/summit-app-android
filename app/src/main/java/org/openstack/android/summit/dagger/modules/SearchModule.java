@@ -6,7 +6,6 @@ import org.openstack.android.summit.common.business_logic.IScheduleableInteracto
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
@@ -39,8 +38,8 @@ public class SearchModule {
     }
 
     @Provides
-    ISearchInteractor providesSearchInteractor(IScheduleableInteractor scheduleableInteractor, ISummitEventDataStore summitEventDataStore, IGenericDataStore genericDataStore, IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, IDataUpdatePoller dataUpdatePoller) {
-        return new SearchInteractor(scheduleableInteractor, summitEventDataStore, genericDataStore, presentationSpeakerDataStore, dtoAssembler, dataUpdatePoller);
+    ISearchInteractor providesSearchInteractor(IScheduleableInteractor scheduleableInteractor, ISummitEventDataStore summitEventDataStore, IGenericDataStore genericDataStore, IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler) {
+        return new SearchInteractor(scheduleableInteractor, summitEventDataStore, genericDataStore, presentationSpeakerDataStore, dtoAssembler);
     }
 
     @Provides

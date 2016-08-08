@@ -11,7 +11,6 @@ import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
@@ -19,7 +18,6 @@ import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -32,8 +30,8 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     private final String PUSH_NOTIFICATIONS_SUBSCRIBED_KEY = "PUSH_NOTIFICATIONS_SUBSCRIBED_KEY";
 
     @Inject
-    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IDataUpdatePoller dataUpdatePoller) {
-        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, dataUpdatePoller, pushNotificationsManager);
+    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session) {
+        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, pushNotificationsManager);
         this.summitDataStore = summitDataStore;
         this.session         = session;
     }

@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.List;
 
@@ -28,13 +29,13 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
             @Override
             public void onSucceedWithSingleData(Member data) {
                 try{
-                    realm.beginTransaction();
-                    Member realmEntity = realm.copyToRealmOrUpdate(data);
-                    realm.commitTransaction();
+                    RealmFactory.getSession().beginTransaction();
+                    Member realmEntity = RealmFactory.getSession().copyToRealmOrUpdate(data);
+                    RealmFactory.getSession().commitTransaction();
                     dataStoreOperationListener.onSucceedWithSingleData(realmEntity);
                 }
                 catch (Exception e) {
-                    realm.cancelTransaction();
+                    RealmFactory.getSession().cancelTransaction();
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, e.getMessage(), e);
                     String friendlyError = Constants.GENERIC_ERROR_MSG;

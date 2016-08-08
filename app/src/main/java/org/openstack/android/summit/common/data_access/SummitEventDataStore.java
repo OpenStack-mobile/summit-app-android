@@ -5,6 +5,8 @@ import org.openstack.android.summit.common.data_access.deserialization.DataStore
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.utils.RealmFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +40,7 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     )
     {
 
-        RealmQuery<SummitEvent> query = realm.where(SummitEvent.class)
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class)
                 .greaterThanOrEqualTo("start", startDate.toDate())
                 .lessThanOrEqualTo("end", endDate.toDate());
 
@@ -132,7 +134,7 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     @Override
     public List<String> getPresentationLevelsLocal() {
         ArrayList<String> levels = new ArrayList<>();
-        RealmResults<Presentation> presentations = realm.where(Presentation.class).findAll();
+        RealmResults<Presentation> presentations = RealmFactory.getSession().where(Presentation.class).findAll();
         for (Presentation presentation : presentations) {
             if (!levels.contains(presentation.getLevel())) {
                 levels.add(presentation.getLevel());
@@ -156,7 +158,7 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
 
     @Override
     public List<SummitEvent> getBySearchTerm(String searchTerm) {
-        RealmQuery<SummitEvent> query = realm.where(SummitEvent.class)
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class)
                 .contains("name", searchTerm, Case.INSENSITIVE)
                 .or()
                 .contains("tags.tag", searchTerm, Case.INSENSITIVE)
@@ -172,7 +174,7 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
 
     @Override
     public List<SummitEvent> getSpeakerEvents(int speakerId, DateTime startDate, DateTime endDate) {
-        RealmQuery<SummitEvent> query = realm.where(SummitEvent.class)
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class)
                 .greaterThanOrEqualTo("start", startDate.toDate())
                 .lessThanOrEqualTo("end", endDate.toDate())
                 .equalTo("presentation.speakers.id", speakerId);

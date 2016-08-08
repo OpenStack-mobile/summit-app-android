@@ -14,13 +14,13 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.components.DaggerApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 /**
  * Created by claudio on 11/3/2015.
@@ -43,10 +43,8 @@ public class OpenStackSummitApplication extends Application {
         );
 
         this.initializeInjector();
-        RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.setDefaultConfiguration(config);
+
+        Realm.setDefaultConfiguration(RealmFactory.buildDefaultConfiguration(getApplicationContext()));
 
         context = getApplicationContext();
 
@@ -80,4 +78,5 @@ public class OpenStackSummitApplication extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
 }

@@ -28,7 +28,7 @@ import org.openstack.android.summit.common.data_access.SummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.TrackGroupDataStore;
 import org.openstack.android.summit.common.data_access.VenueDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
-import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePooler;
+import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdateProcessor;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdateStrategyFactory;
@@ -94,7 +94,7 @@ public class DataAccessModule {
     @Provides
     @Singleton
     IDeserializerStorage providesDeserializerStorage() {
-        return new DeserializerStorage(Realm.getDefaultInstance());
+        return new DeserializerStorage();
     }
 
     @Provides
@@ -311,7 +311,7 @@ public class DataAccessModule {
                     ISession session,
                     IOIDCConfigurationManager ioidcConfigurationManager
     ) {
-        DataUpdatePooler poller = new DataUpdatePooler(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, new Reachability(), session);
+        DataUpdatePoller poller = new DataUpdatePoller(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, session);
         poller.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
         return poller;
     }

@@ -31,9 +31,8 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
         Track track = new Track();
         track.setId(jsonObject.getInt("id"));
         track.setName(jsonObject.getString("name"));
-
+        track.getTrackGroups().clear();
         if (shouldDeserializeTrackGroups) {
-            track.getTrackGroups().clear();
             int trackGroupId;
             TrackGroup trackGroup;
             JSONArray jsonArrayTrackGroups = jsonObject.getJSONArray("track_groups");

@@ -27,9 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.InitialDataLoadingActivity;
 import org.openstack.android.summit.OpenStackSummitApplication;
@@ -39,9 +37,7 @@ import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
-
 import javax.inject.Inject;
-
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -75,11 +71,28 @@ public class MainActivity extends AppCompatActivity
                 showInfoMessage("Your login session expired");
                 onLoggedOut();
             }
+            if (intent.getAction() == Constants.WIPE_DATE_EVENT) {
+                launchInitialDataLoadingActivity();
+            }
             userClickedLogout = false;
         }
     };
 
-    static final int DATA_LOAD_REQUEST = 1;  // The request code
+    static final int DATA_LOAD_REQUEST           = 1;  // The request code
+    static private boolean runningDataLoading    = false;
+    private final Object dataLoadingActivityLock = new Object();
+
+    private void launchInitialDataLoadingActivity(){
+        synchronized (dataLoadingActivityLock) {
+            if(runningDataLoading) return;
+            if (!presenter.isSummitDataLoaded()) {
+                runningDataLoading = true;
+                Intent intent      = new Intent(MainActivity.this, InitialDataLoadingActivity.class);
+                Log.i(Constants.LOG_TAG, "starting InitialDataLoadingActivity ...");
+                startActivityForResult(intent, DATA_LOAD_REQUEST);
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,14 +100,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         getApplicationComponent().inject(this);
         presenter.setView(this);
-
-        if(!presenter.isSummitDataLoaded()){
-            Intent intent = new Intent(MainActivity.this, InitialDataLoadingActivity.class);
-            startActivityForResult(intent, DATA_LOAD_REQUEST);
-        }
-
         presenter.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
         securityManager.init();
@@ -106,7 +112,11 @@ public class MainActivity extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
 
+        IntentFilter intentFilter2 = new IntentFilter();
+        intentFilter2.addAction(Constants.WIPE_DATE_EVENT);
+
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter2);
     }
 
     @Override
@@ -115,6 +125,9 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == DATA_LOAD_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
+                synchronized (dataLoadingActivityLock) {
+                    runningDataLoading = false;
+                }
                 Log.i(Constants.LOG_TAG, "Summit Data Loaded!");
             }
         }
@@ -123,7 +136,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        presenter.onResume();
         hideActivityIndicator();
+        launchInitialDataLoadingActivity();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        presenter.onPause();
     }
 
     @Override
@@ -315,13 +336,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoggedOut() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getMenu().getItem(3).setVisible(false);
-        if (selectedMenuItemId == R.id.nav_my_profile) {
-            navigationView.getMenu().getItem(0).setChecked(true);
-        }
-
-        presenter.onLoggedOut();
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.i(Constants.LOG_TAG, "doing log out");
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                navigationView.getMenu().getItem(3).setVisible(false);
+                if (selectedMenuItemId == R.id.nav_my_profile) {
+                    navigationView.getMenu().getItem(0).setChecked(true);
+                }
+                presenter.onLoggedOut();
+            }
+        });
     }
 
     @Override

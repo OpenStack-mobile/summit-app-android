@@ -15,6 +15,7 @@ import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.data_updates.DataUpdatesService;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
@@ -65,6 +66,20 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter) {
         super(interactor, wireframe);
         this.appLinkRouter = appLinkRouter;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        DataUpdatesService.setServiceAlarm((Context)view, true);
+    }
+
+    @Override
+    public void onPause() {
+      super.onPause();
+      if(DataUpdatesService.isServiceAlarmOn((Context)view)){
+          DataUpdatesService.setServiceAlarm((Context)view, false);
+      }
     }
 
     @Override

@@ -1,24 +1,14 @@
 package org.openstack.android.summit.modules.track_list.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
-import org.openstack.android.summit.common.DTOs.NamedDTO;
-import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.TrackDTO;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
-import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import io.realm.Sort;
 
 /**
@@ -29,8 +19,8 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
     private IGenericDataStore genericDataStore;
 
     @Inject
-    public TrackListInteractor(IDTOAssembler dtoAssembler, IGenericDataStore genericDataStore, IDataUpdatePoller dataUpdatePoller) {
-        super(dtoAssembler, dataUpdatePoller);
+    public TrackListInteractor(IDTOAssembler dtoAssembler, IGenericDataStore genericDataStore) {
+        super(dtoAssembler);
         this.genericDataStore = genericDataStore;
     }
 

@@ -8,12 +8,10 @@ import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
-import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
 import org.openstack.android.summit.modules.speaker_presentations.ISpeakerPresentationsWireframe;
 import org.openstack.android.summit.modules.speaker_presentations.SpeakerPresentationsWireframe;
 import org.openstack.android.summit.modules.speaker_presentations.business_logic.ISpeakerPresentationsInteractor;
@@ -36,8 +34,8 @@ public class SpeakerPresentationsModule {
     }
 
     @Provides
-    ISpeakerPresentationsInteractor providesSpeakerPresentationsInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IDataUpdatePoller dataUpdatePoller) {
-        return new SpeakerPresentationsInteractor(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, dataUpdatePoller);
+    ISpeakerPresentationsInteractor providesSpeakerPresentationsInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session) {
+        return new SpeakerPresentationsInteractor(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session);
     }
 
     @Provides

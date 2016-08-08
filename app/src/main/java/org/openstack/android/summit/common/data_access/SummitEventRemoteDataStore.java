@@ -15,6 +15,7 @@ import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.List;
 
@@ -26,7 +27,6 @@ import io.realm.Realm;
 public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements ISummitEventRemoteDataStore {
     private IDeserializer deserializer;
     private IHttpTaskFactory httpTaskFactory;
-    public Realm realm = Realm.getDefaultInstance();
 
     public SummitEventRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
         this.httpTaskFactory = httpTaskFactory;
@@ -76,7 +76,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                 public void onSucceed(String data) {
                     try {
                         JSONObject json = new JSONObject(data);
-                        SummitEvent summitEvent = realm.where(SummitEvent.class).equalTo("id", json.getInt("id")).findFirst();
+                        SummitEvent summitEvent = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", json.getInt("id")).findFirst();
                         Double averateRateFromServer = json.optDouble("avg_feedback_rate");
                         updateAverageRateIfNecessary(summitEvent, averateRateFromServer);
                         dataStoreOperationListener.onSucceedWithSingleData(summitEvent);
@@ -109,13 +109,13 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
     private void updateAverageRateIfNecessary(SummitEvent summitEvent, Double averateRateFromServer) {
         try{
             if (summitEvent != null && !averateRateFromServer.isNaN() && summitEvent.getAverageRate() != averateRateFromServer) {
-                realm.beginTransaction();
+                RealmFactory.getSession().beginTransaction();
                 summitEvent.setAverageRate(averateRateFromServer);
-                realm.commitTransaction();
+                RealmFactory.getSession().commitTransaction();
             }
         }
         catch (Exception e) {
-            realm.cancelTransaction();
+            RealmFactory.getSession().cancelTransaction();
             throw e;
         }
     }
