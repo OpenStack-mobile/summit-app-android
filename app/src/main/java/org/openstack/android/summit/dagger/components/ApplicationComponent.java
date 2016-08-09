@@ -14,6 +14,7 @@ import org.openstack.android.summit.dagger.modules.MainModule;
 import org.openstack.android.summit.dagger.modules.MemberOrderConfirmModule;
 import org.openstack.android.summit.dagger.modules.VenueMapModule;
 import org.openstack.android.summit.modules.about.user_interface.AboutFragment;
+import org.openstack.android.summit.modules.event_detail.user_interface.VenueRoomDetailFragment;
 import org.openstack.android.summit.modules.feedback_edit.user_interface.FeedbackEditFragment;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
@@ -90,6 +91,7 @@ public interface ApplicationComponent {
     void inject(VenueListFragment venueListFragment);
     void inject(VenuesMapFragment venuesMapFragment);
     void inject(VenueDetailFragment venueDetailFragment);
+    void inject(VenueRoomDetailFragment venueRoomDetailFragment);
     void inject(VenueMapFragment venueMapFragment);
     void inject(FeedbackEditFragment feedbackEditFragment);
     void inject(MemberOrderConfirmFragment memberOrderConfirmFragment);

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.VenueDTO;
+import org.openstack.android.summit.common.DTOs.VenueFloorDTO;
 import org.openstack.android.summit.common.DTOs.VenueRoomDTO;
 import org.openstack.android.summit.common.business_logic.IBaseInteractor;
 import org.openstack.android.summit.common.entities.VenueRoom;
@@ -18,8 +19,9 @@ import java.util.List;
  * Created by Claudio Redi on 2/12/2016.
  */
 public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenueDetailInteractor, IVenueDetailWireframe> implements IVenueDetailPresenter {
-    VenueDTO venue;
-    List<VenueRoomDTO> venueRooms;
+
+    protected VenueDTO           venue;
+    protected List<VenueRoomDTO> venueRooms;
 
     public VenueDetailPresenter(IVenueDetailInteractor interactor, IVenueDetailWireframe wireframe) {
         super(interactor, wireframe);
@@ -28,13 +30,9 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
     @Override
     public void onCreateView(Bundle savedInstanceState) {
         super.onCreateView(savedInstanceState);
-        int venueId = 0;
-        if (savedInstanceState != null) {
-            venueId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE);
-        }
-        else {
-            venueId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
-        }
+        int venueId = (savedInstanceState != null) ?savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE):
+                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
+
         venue = interactor.getVenue(venueId);
         view.setVenueName(venue.getName());
         view.setLocation(venue.getAddress());
@@ -44,18 +42,23 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
             view.setImages(venue.getImages());
         }
 
-        view.toggleMapNavigation(venue.getMaps().size() > 0);
-        view.toggleMapsGallery(venue.getMaps().size() > 0);
-        view.toggleMap(venue.getMaps().size() == 0 && isVenueGeoLocated(venue));
+        List<String> maps = venue.getMaps();
+        for(VenueFloorDTO floor:interactor.getVenueFloors(venueId)){
+            if(floor.getPictureUrl()!= null) maps.add(floor.getPictureUrl());
+        }
 
-        if (venue.getMaps().size() > 0) {
-            view.setMaps(venue.getMaps());
+        view.toggleMapNavigation(maps.size() > 0);
+        view.toggleMapsGallery(maps.size() > 0);
+        view.toggleMap(maps.size() == 0 && isVenueGeoLocated(venue));
+
+        if (maps.size() > 0) {
+            view.setMaps(maps);
         } else if (isVenueGeoLocated(venue)) {
             view.setMarker(venue);
         }
     }
 
-    private boolean isVenueGeoLocated(VenueDTO venue) {
+    protected boolean isVenueGeoLocated(VenueDTO venue) {
         return venue.getLat() != null && !venue.getLat().isEmpty() && venue.getLng() != null && !venue.getLng().isEmpty();
     }
 

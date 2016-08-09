@@ -188,7 +188,11 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public void showVenueDetail() {
-        wireframe.showEventDetailView(event.getVenueId(), view);
+        if(event.getVenueRoomId() > 0) {
+            wireframe.showEventLocationDetailView(event.getVenueRoomId(), view);
+            return;
+        }
+        wireframe.showEventVenueDetailView(event.getVenueId(), view);
     }
 
     @Override

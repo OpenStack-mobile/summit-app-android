@@ -1,10 +1,8 @@
 package org.openstack.android.summit.modules.event_detail;
 
 import android.content.Intent;
-
 import org.openstack.android.summit.common.IBaseWireframe;
 import org.openstack.android.summit.common.user_interface.IBaseView;
-import org.openstack.android.summit.modules.event_detail.user_interface.IEventDetailView;
 
 /**
  * Created by Claudio Redi on 11/17/2015.
@@ -17,7 +15,9 @@ public interface IEventDetailWireframe extends IBaseWireframe {
 
     void showFeedbackEditView(int eventId, IBaseView view);
 
-    void showEventDetailView(int venueId, IBaseView view);
+    void showEventVenueDetailView(int venueId, IBaseView view);
 
     void presentEventRsvpView(IBaseView context, Intent intent);
+
+    void showEventLocationDetailView(int locationId, IBaseView view);
 }

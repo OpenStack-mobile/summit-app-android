@@ -82,6 +82,7 @@ public class InitialDataLoadingActivity extends Activity {
                 .themeColor(Color.WHITE)
                 .text("Please wait...")
                 .fadeColor(Color.DKGRAY).build();
+                progressDialog.setCancelable(false);
                 progressDialog.show();
             }
         });

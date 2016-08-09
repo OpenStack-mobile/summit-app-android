@@ -7,12 +7,14 @@ import io.realm.annotations.PrimaryKey;
  * Created by sebastian on 7/26/2016.
  */
 public class VenueFloor extends RealmObject implements INamedEntity  {
+
     @PrimaryKey
     private int id;
-
     private String name;
-
     private String pictureUrl;
+    private String description;
+    private Venue venue;
+    private int   number;
 
     public String getPictureUrl() {
         return pictureUrl;
@@ -29,10 +31,6 @@ public class VenueFloor extends RealmObject implements INamedEntity  {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    private String description;
-    private Venue venue;
-    private int   number;
 
     public int getNumber() {
         return number;

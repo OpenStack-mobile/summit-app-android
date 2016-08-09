@@ -30,13 +30,16 @@
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
 -dontwarn org.modelmapper.**
+-keep class android.support.v7.widget.ShareActionProvider { *; }
 -keep class android.support.v7.widget.LinearLayoutManager { *; }
+-keep class android.support.v4.view.MenuItemCompat { *; }
 -keepattributes *Annotation*,Signature
 -keep class org.openstack.** { *; }
 -keep class cn.pedant.SweetAlert.** { *; }
 -keep class org.openstack.android.summit.common.data_access.deserialization** { *; }
 -keep class com.google.** { *; }
-
+-keep class org.openstack.android.summit.safestorage.SafeStorage { *; }
+-keep class org.openstack.android.summit.safestorage.FingerprintCalculator { *; }
 # Keep our interfaces so they can be used by other ProGuard rules.
 # See http://sourceforge.net/p/proguard/bugs/466/
 -keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
@@ -46,3 +49,5 @@
 -keepclassmembers class * {
     @com.facebook.common.internal.DoNotStrip *;
 }
+
+

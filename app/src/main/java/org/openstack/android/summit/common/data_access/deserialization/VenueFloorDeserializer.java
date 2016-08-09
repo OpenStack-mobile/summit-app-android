@@ -32,17 +32,13 @@ public class VenueFloorDeserializer  extends BaseDeserializer implements IVenueF
         VenueFloor venueFloor = new VenueFloor();
         venueFloor.setId(jsonObject.getInt("id"));
         venueFloor.setName(jsonObject.getString("name"));
-        venueFloor.setDescription(jsonObject.getString("description"));
+        venueFloor.setDescription(!jsonObject.isNull("description")?jsonObject.getString("description"): null);
         venueFloor.setNumber(jsonObject.getInt("number"));
         int venueId = jsonObject.getInt("venue_id");
         Venue venue = deserializerStorage.get(venueId, Venue.class);
         venueFloor.setVenue(venue);
         if(jsonObject.has("image")){
-            venueFloor.setPictureUrl(jsonObject.getString("image"));
-        }
-
-        if(jsonObject.has("rooms")){
-            JSONArray jsonArrayRooms = jsonObject.getJSONArray("rooms");
+            venueFloor.setPictureUrl(!jsonObject.isNull("image")?jsonObject.getString("image"): null);
         }
 
         if(!deserializerStorage.exist(venueFloor, VenueFloor.class)) {

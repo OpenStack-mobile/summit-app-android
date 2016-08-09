@@ -13,4 +13,6 @@ public interface IVenueDetailWireframe extends IBaseWireframe {
     void presentVenueDetailView(NamedDTO venue, IBaseView context);
 
     void showVenueMapView(VenueDTO venueDTO, IBaseView context);
+
+    void presentLocationDetailView(NamedDTO location, IBaseView context);
 }

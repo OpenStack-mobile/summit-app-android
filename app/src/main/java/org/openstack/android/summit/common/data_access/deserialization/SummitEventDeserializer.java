@@ -13,16 +13,15 @@ import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
-
 import java.util.Date;
 import java.util.List;
-
 import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 11/13/2015.
  */
 public class SummitEventDeserializer extends BaseDeserializer implements ISummitEventDeserializer {
+
     IGenericDeserializer genericDeserializer;
     IPresentationDeserializer presentationDeserializer;
     IDeserializerStorage deserializerStorage;
@@ -30,9 +29,9 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
 
     @Inject
     public SummitEventDeserializer(IGenericDeserializer genericDeserializer, IPresentationDeserializer presentationDeserializer, IDeserializerStorage deserializerStorage){
-        this.genericDeserializer = genericDeserializer;
+        this.genericDeserializer      = genericDeserializer;
         this.presentationDeserializer = presentationDeserializer;
-        this.deserializerStorage = deserializerStorage;
+        this.deserializerStorage      = deserializerStorage;
     }
 
     @Override
@@ -95,7 +94,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
 
         if (jsonObject.has("location_id") && !jsonObject.isNull("location_id")) {
             int locationId = jsonObject.getInt("location_id");
-            Venue venue = new Venue();
+            Venue venue    = new Venue();
             venue.setId(locationId);
             VenueRoom venueRoom = new VenueRoom();
             venueRoom.setId(locationId);

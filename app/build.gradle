@@ -20,7 +20,28 @@ repositories {
     }
 }
 
-Properties props = new Properties()
+def expandManifest(flavor, properties_file) {
+
+    println 'expanding manifest for: ' + flavor
+    Properties props = new Properties()
+    props.load(new FileInputStream(file(properties_file)))
+
+    return [googleMapApiKey: props['googleMapApiKey'],
+                            fabricApiKey: props['fabricApiKey'],
+                            parseApplicationId: props['parseApplicationId'],
+                            parseClientKey: props['parseClientKey'],
+                            ServiceClientId: props['ServiceClientId'],
+                            ServiceClientSecret: props['ServiceClientSecret'],
+                            NativeClientId: props['NativeClientId'],
+                            NativeClientSecret: props['NativeClientSecret'],
+                            NativeClientReturnUrl: props['NativeClientReturnUrl'],
+                            ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
+                            IdentityProviderBaseUrl: props['IdentityProviderBaseUrl'],
+                            WebSiteBaseUrl: props['WebSiteBaseUrl']
+    ]
+}
+
+
 
 android {
 
@@ -37,51 +58,37 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 15
-        versionName "2.0"
+        versionName "1.0"
         multiDexEnabled true
+
    }
 
     buildTypes {
         debug {
-            props.load(new FileInputStream(file("../summit-app.debug.properties")))
             // Settings for Crashlytics Beta Distribution
             ext.betaDistributionReleaseNotes="Release Notes for this build."
             ext.betaDistributionEmails="claudioredi@gmail.com, darran.kelinske@gmail.com, " +
                     "gabriel.cutrini@gmail.com, jimmy@openstack.org, jp@tipit.net, " +
                     "lauren@openstack.org"
             ext.enableCrashlytics = false
-            manifestPlaceholders = [googleMapApiKey: props['googleMapApiKey'],
-                                    fabricApiKey: props['fabricApiKey'],
-                                    parseApplicationId: props['parseApplicationId'],
-                                    parseClientKey: props['parseClientKey'],
-                                    ServiceClientId: props['ServiceClientId'],
-                                    ServiceClientSecret: props['ServiceClientSecret'],
-                                    NativeClientId: props['NativeClientId'],
-                                    NativeClientSecret: props['NativeClientSecret'],
-                                    NativeClientReturnUrl: props['NativeClientReturnUrl'],
-                                    ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
-                                    IdentityProviderBaseUrl: props['IdentityProviderBaseUrl'],
-                                    WebSiteBaseUrl: props['WebSiteBaseUrl']
-            ]
 
         }
         release {
-            props.load(new FileInputStream(file("../summit-app.properties")))
+
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [googleMapApiKey: props['googleMapApiKey'],
-                                    fabricApiKey: props['fabricApiKey'],
-                                    parseApplicationId: props['parseApplicationId'],
-                                    parseClientKey: props['parseClientKey'],
-                                    ServiceClientId: props['ServiceClientId'],
-                                    ServiceClientSecret: props['ServiceClientSecret'],
-                                    NativeClientId: props['NativeClientId'],
-                                    NativeClientSecret: props['NativeClientSecret'],
-                                    NativeClientReturnUrl: props['NativeClientReturnUrl'],
-                                    ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
-                                    IdentityProviderBaseUrl: props['IdentityProviderBaseUrl'],
-                                    WebSiteBaseUrl: props['WebSiteBaseUrl']
-            ]
+        }
+    }
+
+    productFlavors {
+        development {
+            manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
+        }
+        production {
+            manifestPlaceholders = expandManifest("production", "../summit-app.properties")
+        }
+        beta {
+            manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
         }
     }
 
@@ -99,6 +106,20 @@ android {
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+
+        if (names.contains("development") && variant.buildType.name == "release") {
+            variant.ignore = true
+        }
+        if (names.contains("production") && variant.buildType.name == "debug") {
+            variant.ignore = true
+        }
+        if (names.contains("beta") && variant.buildType.name == "debug") {
+            variant.ignore = true
         }
     }
 }
@@ -197,10 +218,16 @@ dependencies {
 
     if(file ('libs/safe_storage.aar').exists()) {
         println('adding dependency safe_storage.aar ...')
-        compile "org.openstack.android.summit.safestorage:safe_storage@aar"
-        //compile(name: 'safe_storage', ext: 'aar'){
-        //    transitive = true;
-        //}
+        productionCompile "org.openstack.android.summit.safestorage:safe_storage@aar"
+    }
+
+    if(file ('libs/safe_storage-testing.aar').exists()) {
+        println('adding dependency safe_storage-testing.aar ...')
+        betaCompile "org.openstack.android.summit.safestorage:safe_storage-testing@aar"
+    }
+    if(file ('libs/safe_storage_debug.aar').exists()) {
+        println('adding dependency safe_storage_debug.aar ...')
+        developmentCompile "org.openstack.android.summit.safestorage:safe_storage_debug@aar"
     }
 
     // http://facebook.github.io/stetho and https://github.com/uPhyca/stetho-realm

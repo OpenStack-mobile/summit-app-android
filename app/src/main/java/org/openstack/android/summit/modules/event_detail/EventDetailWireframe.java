@@ -3,9 +3,7 @@ package org.openstack.android.summit.modules.event_detail;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
-
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.Constants;
@@ -16,13 +14,13 @@ import org.openstack.android.summit.modules.event_detail.user_interface.EventDet
 import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
-
 import javax.inject.Inject;
 
 /**
  * Created by claudio on 11/2/2015.
  */
 public class EventDetailWireframe extends BaseWireframe implements IEventDetailWireframe {
+
     private IMemberProfileWireframe memberProfileWireframe;
     private IFeedbackEditWireframe feedbackEditWireframe;
     private IVenueDetailWireframe venueDetailWireframe;
@@ -72,9 +70,16 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
     }
 
     @Override
-    public void showEventDetailView(int venueId, IBaseView view) {
+    public void showEventVenueDetailView(int venueId, IBaseView view) {
         NamedDTO venue = new NamedDTO();
         venue.setId(venueId);
         venueDetailWireframe.presentVenueDetailView(venue, view);
+    }
+
+    @Override
+    public void showEventLocationDetailView(int locationId, IBaseView view){
+        NamedDTO location = new NamedDTO();
+        location.setId(locationId);
+        venueDetailWireframe.presentLocationDetailView(location, view);
     }
 }

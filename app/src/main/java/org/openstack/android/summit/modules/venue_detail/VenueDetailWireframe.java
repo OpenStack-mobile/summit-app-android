@@ -9,6 +9,7 @@ import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.VenueDTO;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
+import org.openstack.android.summit.modules.event_detail.user_interface.VenueRoomDetailFragment;
 import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailFragment;
 import org.openstack.android.summit.modules.venue_map.IVenueMapWireframe;
 
@@ -30,6 +31,17 @@ public class VenueDetailWireframe extends BaseWireframe implements IVenueDetailW
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, venueDetailFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void presentLocationDetailView(NamedDTO location, IBaseView context) {
+        VenueRoomDetailFragment locationDetailFragment = new VenueRoomDetailFragment();
+        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_ROOM, location.getId());
+        FragmentManager fragmentManager = context.getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.frame_layout_content, locationDetailFragment)
                 .addToBackStack(null)
                 .commit();
     }

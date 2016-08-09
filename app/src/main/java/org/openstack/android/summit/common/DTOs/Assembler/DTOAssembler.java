@@ -16,7 +16,9 @@ import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitEvent
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitEventRealmProxy2EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitEventRealmProxy2ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.Venue2VenueDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueFloorRealmProxy2VenueFloorDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueRealmProxy2VenueDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueRoomRealmProxy2VenueRoomDTO;
 
 import javax.inject.Inject;
 
@@ -43,7 +45,9 @@ public class DTOAssembler implements IDTOAssembler {
         modelMapper.addConverter(new Feedback2FeedbackDTO());
         modelMapper.addConverter(new FeedbackRealmProxy2FeedbackDTO());
         modelMapper.addConverter(new Venue2VenueDTO());
+        modelMapper.addConverter(new VenueRoomRealmProxy2VenueRoomDTO());
         modelMapper.addConverter(new VenueRealmProxy2VenueDTO());
+        modelMapper.addConverter(new VenueFloorRealmProxy2VenueFloorDTO());
     }
 
     @Override

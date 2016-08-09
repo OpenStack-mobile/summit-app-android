@@ -17,6 +17,7 @@ import java.util.List;
  * Created by Claudio Redi on 2/15/2016.
  */
 public class AbstractVenue2VenueDTO <S extends Venue> extends AbstractConverter<S, VenueDTO> {
+
     @Override
     protected VenueDTO convert(S source) {
         VenueDTO venueDTO = new VenueDTO();
