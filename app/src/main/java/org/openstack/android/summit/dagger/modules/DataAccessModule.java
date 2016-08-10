@@ -36,6 +36,7 @@ import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateP
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateProcessor;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdateStrategyFactory;
 import org.openstack.android.summit.common.data_access.data_polling.MyScheduleDataUpdateStrategy;
+import org.openstack.android.summit.common.data_access.data_polling.PresentationMaterialDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.SummitDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.SummitVenueImageDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.TrackGroupDataUpdateStrategy;
@@ -51,7 +52,10 @@ import org.openstack.android.summit.common.data_access.deserialization.IMemberDe
 import org.openstack.android.summit.common.data_access.deserialization.INonConfirmedSummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPersonDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.IPresentationLinkDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.IPresentationSlideDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationSpeakerDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.IPresentationVideoDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitEventDeserializer;
@@ -64,7 +68,10 @@ import org.openstack.android.summit.common.data_access.deserialization.MemberDes
 import org.openstack.android.summit.common.data_access.deserialization.NonConfirmedSummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PersonDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.PresentationLinkDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.PresentationSlideDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSpeakerDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.PresentationVideoDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitEventDeserializer;
@@ -73,6 +80,7 @@ import org.openstack.android.summit.common.data_access.deserialization.TrackGrou
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
+import org.openstack.android.summit.common.entities.IPresentationVideo;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.network.Reachability;
@@ -130,8 +138,31 @@ public class DataAccessModule {
     }
 
     @Provides
-    IPresentationDeserializer providesPresentationDeserializer(IPresentationSpeakerDeserializer presentationSpeakerDeserializer, IDeserializerStorage deserializerStorage) {
-        return new PresentationDeserializer(presentationSpeakerDeserializer, deserializerStorage);
+    IPresentationLinkDeserializer providesPresentationLinkDeserializer(IDeserializerStorage deserializerStorage) {
+        return new PresentationLinkDeserializer(deserializerStorage);
+    }
+
+    @Provides
+    IPresentationVideoDeserializer providesPresentationVideoDeserializer(IDeserializerStorage deserializerStorage) {
+        return new PresentationVideoDeserializer(deserializerStorage);
+    }
+
+    @Provides
+    IPresentationSlideDeserializer providesPresentationSlideDeserializer(IDeserializerStorage deserializerStorage) {
+        return new PresentationSlideDeserializer(deserializerStorage);
+    }
+
+    @Provides
+    IPresentationDeserializer providesPresentationDeserializer
+    (
+        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        IDeserializerStorage deserializerStorage,
+        IPresentationLinkDeserializer presentationLinkDeserializer,
+        IPresentationSlideDeserializer presentationSlideDeserializer,
+        IPresentationVideoDeserializer presentationVideoDeserializer
+    )
+    {
+        return new PresentationDeserializer(presentationSpeakerDeserializer, deserializerStorage, presentationLinkDeserializer, presentationVideoDeserializer, presentationSlideDeserializer);
     }
 
     @Provides
@@ -290,7 +321,8 @@ public class DataAccessModule {
                 new MyScheduleDataUpdateStrategy(genericDataStore, summitAttendeeDataStore, securityManager),
                 new SummitDataUpdateStrategy(genericDataStore, summitDataStore),
                 new TrackGroupDataUpdateStrategy(genericDataStore, trackGroupDataStore),
-                new SummitVenueImageDataUpdateStrategy(genericDataStore, venueDataStore)
+                new SummitVenueImageDataUpdateStrategy(genericDataStore, venueDataStore),
+                new PresentationMaterialDataUpdateStrategy(genericDataStore)
         );
     }
 

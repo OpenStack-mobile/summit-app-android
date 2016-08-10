@@ -9,13 +9,15 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
     IDataUpdateStrategy summitDataUpdateStrategy;
     IDataUpdateStrategy trackGroupDataUpdateStrategy;
     IDataUpdateStrategy venueImageDataUpdateStrategy;
+    IDataUpdateStrategy presentationMaterialDataUpdateStrategy;
 
-    public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy, IDataUpdateStrategy summitDataUpdateStrategy, IDataUpdateStrategy trackGroupDataUpdateStrategy, IDataUpdateStrategy venueImageDataUpdateStrategy) {
-        this.genericDataUpdateProcessStrategy = genericDataUpdateProcessStrategy;
-        this.myScheduleDataUpdateStrategy     = myScheduleDataUpdateStrategy;
-        this.summitDataUpdateStrategy         = summitDataUpdateStrategy;
-        this.trackGroupDataUpdateStrategy     = trackGroupDataUpdateStrategy;
-        this.venueImageDataUpdateStrategy     = venueImageDataUpdateStrategy;
+    public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy, IDataUpdateStrategy summitDataUpdateStrategy, IDataUpdateStrategy trackGroupDataUpdateStrategy, IDataUpdateStrategy venueImageDataUpdateStrategy, IDataUpdateStrategy presentationMaterialDataUpdateStrategy) {
+        this.genericDataUpdateProcessStrategy       = genericDataUpdateProcessStrategy;
+        this.myScheduleDataUpdateStrategy           = myScheduleDataUpdateStrategy;
+        this.summitDataUpdateStrategy               = summitDataUpdateStrategy;
+        this.trackGroupDataUpdateStrategy           = trackGroupDataUpdateStrategy;
+        this.venueImageDataUpdateStrategy           = venueImageDataUpdateStrategy;
+        this.presentationMaterialDataUpdateStrategy = presentationMaterialDataUpdateStrategy;
     }
 
     @Override
@@ -35,6 +37,11 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
             case "SummitLocationImage":
             case "SummitLocationMap":
                 dataUpdateProcessStrategy = venueImageDataUpdateStrategy;
+                break;
+            case "PresentationVideo":
+            case "PresentationLink":
+            case "PresentationSlide":
+                dataUpdateProcessStrategy = presentationMaterialDataUpdateStrategy;
                 break;
             default:
                 dataUpdateProcessStrategy = genericDataUpdateProcessStrategy;

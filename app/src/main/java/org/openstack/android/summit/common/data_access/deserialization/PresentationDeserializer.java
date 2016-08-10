@@ -4,7 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Presentation;
+import org.openstack.android.summit.common.entities.PresentationLink;
+import org.openstack.android.summit.common.entities.PresentationSlide;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.Track;
 
 import javax.inject.Inject;
@@ -15,11 +18,24 @@ import javax.inject.Inject;
 public class PresentationDeserializer extends BaseDeserializer implements IPresentationDeserializer {
     IDeserializerStorage deserializerStorage;
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
+    IPresentationLinkDeserializer presentationLinkDeserializer;
+    IPresentationVideoDeserializer presentationVideoDeserializer;
+    IPresentationSlideDeserializer presentationSlideDeserializer;
 
     @Inject
-    public PresentationDeserializer(IPresentationSpeakerDeserializer presentationSpeakerDeserializer, IDeserializerStorage deserializerStorage){
-        this.deserializerStorage = deserializerStorage;
+    public PresentationDeserializer
+    (
+        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        IDeserializerStorage deserializerStorage,
+        IPresentationLinkDeserializer presentationLinkDeserializer,
+        IPresentationVideoDeserializer presentationVideoDeserializer,
+        IPresentationSlideDeserializer presentationSlideDeserializer
+    ){
+        this.deserializerStorage             = deserializerStorage;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
+        this.presentationLinkDeserializer    = presentationLinkDeserializer;
+        this.presentationVideoDeserializer   = presentationVideoDeserializer;
+        this.presentationSlideDeserializer   = presentationSlideDeserializer;
     }
 
     @Override
@@ -56,6 +72,42 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
                 presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonArraySpeakers.getJSONObject(i).toString());
             }
             presentation.getSpeakers().add(presentationSpeaker);
+        }
+
+        if(jsonObject.has("slides")){
+            JSONArray slides = jsonObject.getJSONArray("slides");
+            JSONObject jsonObjSlide  = null;
+            PresentationSlide slide  = null;
+            for (int i = 0; i < slides.length(); i++) {
+                jsonObjSlide = slides.getJSONObject(i);
+                slide        = presentationSlideDeserializer.deserialize(jsonObjSlide.toString());
+                presentation.getSlides().add(slide);
+                slide.setPresentation(presentation);
+            }
+        }
+
+        if(jsonObject.has("videos")){
+            JSONArray videos = jsonObject.getJSONArray("videos");
+            JSONObject jsonObjVideo  = null;
+            PresentationVideo video  = null;
+            for (int i = 0; i < videos.length(); i++) {
+                jsonObjVideo = videos.getJSONObject(i);
+                video        = presentationVideoDeserializer.deserialize(jsonObjVideo.toString());
+                presentation.getVideos().add(video);
+                video.setPresentation(presentation);
+            }
+        }
+
+        if(jsonObject.has("links")){
+            JSONArray links = jsonObject.getJSONArray("links");
+            JSONObject jsonObjLink = null;
+            PresentationLink link  = null;
+            for (int i = 0; i < links.length(); i++) {
+                jsonObjLink = links.getJSONObject(i);
+                link        = presentationLinkDeserializer.deserialize(jsonObjLink.toString());
+                presentation.getLinks().add(link);
+                link.setPresentation(presentation);
+            }
         }
 
         if (!jsonObject.isNull("moderator_speaker_id")) {

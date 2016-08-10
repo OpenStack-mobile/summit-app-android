@@ -25,45 +25,39 @@ public class SummitVenueImageDataUpdateStrategy extends DataUpdateStrategy {
             case DataOperation.Insert:
 
                 JSONObject entityJSON = dataUpdate.getOriginalJSON().optJSONObject("entity");
-                if (entityJSON != null) {
-                    Integer venueId = entityJSON.optInt("location_id");
-                    if (venueId != null) {
-                        Venue venue = genericDataStore.getByIdLocal(venueId, Venue.class);
-                        if (venue != null) {
-                            Image image;
-                            try {
-                                image = (Image)dataUpdate.getEntity();
-                            }
-                            catch (Exception e) {
-                                throw new DataUpdateException("Entity is not an image");
-                            }
+                if (entityJSON == null) return;
+                Integer venueId = entityJSON.optInt("location_id");
 
-                            if (image != null) {
-                                if (dataUpdate.getEntityClassName().equals("SummitLocationImage")) {
-                                    venueDataStore.addImageToVenue(image, venue);
-                                }
-                                if (dataUpdate.getEntityClassName().equals("SummitLocationMap")) {
-                                    venueDataStore.addMapToVenue(image, venue);
-                                }
-                            }
-                            else {
-                                throw new DataUpdateException("Entity is null");
-                            }
-                        }
-                        else {
-                            throw new DataUpdateException(String.format("Venue with id %d not found", venueId));
-                        }
-                    }
-                    else {
-                        throw new DataUpdateException("It wasn't possible to find location_id on data update json");
-                    }
+                if (venueId == null)
+                    throw new DataUpdateException("It wasn't possible to find location_id on data update json");
+
+                Venue venue = genericDataStore.getByIdLocal(venueId, Venue.class);
+
+                if (venue == null)
+                    throw new DataUpdateException(String.format("Venue with id %d not found", venueId));
+
+                Image image;
+                try {
+                    image = (Image) dataUpdate.getEntity();
+                } catch (Exception e) {
+                    throw new DataUpdateException("Entity is not an image");
+                }
+
+                if (image == null)
+                    throw new DataUpdateException("Entity is null");
+
+                if (dataUpdate.getEntityClassName().equals("SummitLocationImage")) {
+                    venueDataStore.addImageToVenue(image, venue);
+                }
+                if (dataUpdate.getEntityClassName().equals("SummitLocationMap")) {
+                    venueDataStore.addMapToVenue(image, venue);
                 }
                 break;
             case DataOperation.Update:
-                genericDataStore.saveOrUpdate((Image)dataUpdate.getEntity(), null, Image.class);
+                genericDataStore.saveOrUpdate((Image) dataUpdate.getEntity(), null, Image.class);
                 break;
             case DataOperation.Delete:
-                genericDataStore.delete(((Image)dataUpdate.getEntity()).getId(), null, Image.class);
+                genericDataStore.delete(((Image) dataUpdate.getEntity()).getId(), null, Image.class);
                 break;
         }
     }

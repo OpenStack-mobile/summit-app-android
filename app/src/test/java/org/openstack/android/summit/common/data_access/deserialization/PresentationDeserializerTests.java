@@ -40,8 +40,11 @@ public class PresentationDeserializerTests {
         when(deserializerStorageMock.get(speakerId2, PresentationSpeaker.class)).thenReturn(presentationSpeaker2);
 
         PresentationSpeakerDeserializer presentationSpeakerDeserializerMock = mock(PresentationSpeakerDeserializer.class);
+        PresentationSlideDeserializer presentationSlideDeserializer         = mock(PresentationSlideDeserializer.class);
+        PresentationVideoDeserializer presentationVideoDeserializer         = mock(PresentationVideoDeserializer.class);
+        PresentationLinkDeserializer presentationLinkDeserializer           = mock(PresentationLinkDeserializer.class);
 
-        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(presentationSpeakerDeserializerMock, deserializerStorageMock);
+        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(presentationSpeakerDeserializerMock, deserializerStorageMock, presentationLinkDeserializer, presentationVideoDeserializer, presentationSlideDeserializer);
 
         // Act
         Presentation presentation = presentationDeserializer.deserialize(jsonString);
@@ -61,8 +64,11 @@ public class PresentationDeserializerTests {
 
         DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         PresentationSpeakerDeserializer presentationSpeakerDeserializerMock = mock(PresentationSpeakerDeserializer.class);
+        PresentationSlideDeserializer presentationSlideDeserializer         = mock(PresentationSlideDeserializer.class);
+        PresentationVideoDeserializer presentationVideoDeserializer         = mock(PresentationVideoDeserializer.class);
+        PresentationLinkDeserializer presentationLinkDeserializer           = mock(PresentationLinkDeserializer.class);
 
-        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(presentationSpeakerDeserializerMock, deserializerStorageMock);
+        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(presentationSpeakerDeserializerMock, deserializerStorageMock, presentationLinkDeserializer, presentationVideoDeserializer, presentationSlideDeserializer);
 
         String exceptionMessage = "";
         int exceptionCount = 0;
@@ -103,8 +109,11 @@ public class PresentationDeserializerTests {
         when(deserializerStorageMock.get(speakerId2, PresentationSpeaker.class)).thenReturn(presentationSpeaker2);
 
         PresentationSpeakerDeserializer presentationSpeakerDeserializerMock = mock(PresentationSpeakerDeserializer.class);
+        PresentationSlideDeserializer presentationSlideDeserializer         = mock(PresentationSlideDeserializer.class);
+        PresentationVideoDeserializer presentationVideoDeserializer         = mock(PresentationVideoDeserializer.class);
+        PresentationLinkDeserializer presentationLinkDeserializer           = mock(PresentationLinkDeserializer.class);
 
-        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(presentationSpeakerDeserializerMock, deserializerStorageMock);
+        PresentationDeserializer presentationDeserializer = new PresentationDeserializer(presentationSpeakerDeserializerMock, deserializerStorageMock, presentationLinkDeserializer, presentationVideoDeserializer, presentationSlideDeserializer);
 
         // Act
         Presentation presentation = presentationDeserializer.deserialize(jsonString);
