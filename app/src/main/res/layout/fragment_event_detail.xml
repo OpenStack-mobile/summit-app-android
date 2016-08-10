@@ -20,6 +20,7 @@
                 android:gravity="center_vertical">
                 <TextView
                     android:id="@+id/event_detail_name"
+                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -33,6 +34,7 @@
                     android:textStyle="bold"></TextView>
                 <TextView
                     android:id="@+id/event_detail_track"
+                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -52,46 +54,40 @@
                     android:src="@drawable/map"/>
                 <TextView
                     android:id="@+id/event_detail_place"
+                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     style="@style/AppTheme.IconedInformationBarTextView"
                     android:text="Grand Prince International Convention Center &amp; Hotels"/>
                 <ImageView style="@style/AppTheme.MoreImageView" />
-
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/event_detail_date_container"
                 style="@style/AppTheme.IconedInformationBarContainer">
-
                 <ImageView
                     style="@style/AppTheme.IconedInformationBarImageView"
                     android:src="@drawable/time"/>
                 <TextView
                     android:id="@+id/event_detail_date"
+                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
                     android:text="Monday 26 October 06:00 am / 06:15 am"
                     />
-
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_bordered_control"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/event_detail_description"
-                    android:textIsSelectable="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="25dp"
-                    android:paddingTop="25dp"
-                    android:background="@android:color/transparent"
-                    android:text="Mel te graecis menandri accusamus, meis putant imperdiet vis ut. Unum propriae volutpat no nam, tation everti assentior eos te. Eos an soluta repudiandae. Vel admodum adversarium ei, no est malis sadipscing intellegebat. Liber iudico lucilius ea his, vis stet periculis in, detraxit aliquando urbanitas has ea.
-Epicuri erroribus pertinacia nam at, ne ludus adversarium pro. Id eirmod epicuri torquatos mea, deleniti probatus sed te. Eu possit rationibus duo, novum euripidis necessitatibus cu usu. Has sonet adipisci cu, id minimum constituam pri.
-Eam tractatos suavitate ei, id cum partem aliquip accusam, an scripta vulputate usu. Quem doming urbanitas pri te, harum hendrerit duo no, id mel purto dolor. Ut elitr soleat eligendi cum, wisi menandri mea eu, vim et iudico menandri. Prompta saperet splendide ex mei, qui ea mundi contentiones. Te aliquip dissentias consectetuer usu, eos et legimus suavitate. Modus nullam has ad.
-Nulla erant noluisse te has. Ipsum volumus gloriatur cu cum, unum mundi eos no, an fastidii repudiare voluptatibus pri. Cu vocibus inimicus similique ius, ad postulant salutatus euripidis ius. Ferri probatus adipisci ea vel, id quo dicit ullamcorper. Ei hinc inani pertinacia eum, vim no duis vocent. Ut malorum inimicus mediocritatem vel, in viderer fabellas vim."/>
-
+               <org.openstack.android.summit.common.HtmlTextView
+                   android:id="@+id/event_detail_description"
+                   android:paddingLeft="20dp"
+                   android:paddingRight="20dp"
+                   android:paddingTop="25dp"
+                   android:paddingBottom="5dp"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent">
+               </org.openstack.android.summit.common.HtmlTextView>
                 <TextView
                     android:id="@+id/event_detail_sponsors"
                     style="@style/AppTheme.SponsorTextView"
@@ -122,6 +118,7 @@ Nulla erant noluisse te has. Ipsum volumus gloriatur cu cum, unum mundi eos no, 
                     android:src="@drawable/credential"/>
                 <TextView
                     android:id="@+id/event_detail_credentials"
+                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
                     android:text="Main Conference, Design Summit"/>
@@ -137,9 +134,9 @@ Nulla erant noluisse te has. Ipsum volumus gloriatur cu cum, unum mundi eos no, 
                 <TextView
                     android:id="@+id/event_detail_level"
                     android:textIsSelectable="true"
+                    android:bufferType="spannable"
                     style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
                     android:text="Main Conference, Design Summit"/>
-
             </LinearLayout>
 
             <com.linearlistview.LinearListView

@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import com.linearlistview.LinearListView;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
+import org.openstack.android.summit.common.HtmlTextView;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
@@ -167,10 +169,15 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
 
     @Override
     public void setDescription(String description) {
-        TextView descriptionTextView = (TextView)view.findViewById(R.id.event_detail_description);
+        /*WebView descriptionTextView = (WebView)view.findViewById(R.id.event_detail_description);
         descriptionTextView.setVisibility(description != null && !description.isEmpty() ? View.VISIBLE : View.GONE);
-        descriptionTextView.setText(description != null && !description.isEmpty() ? Html.fromHtml(description) : "");
-        descriptionTextView.setMovementMethod(new CustomLinkMovementMethod());
+        if(!description.isEmpty())
+            descriptionTextView.loadData(String.format("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>%s</body></html>", description) , "text/html; charset=utf-8", "UTF-8");*/
+
+        HtmlTextView descriptionTextView = (HtmlTextView) view.findViewById(R.id.event_detail_description);
+        descriptionTextView.setVisibility(description != null && !description.isEmpty() ? View.VISIBLE : View.GONE);
+        if(!description.isEmpty())
+            descriptionTextView.setText(description);
     }
 
     @Override

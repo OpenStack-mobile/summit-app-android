@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.HtmlTextView;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.modules.member_profile.user_interface.IMemberProfilePresenter;
 
@@ -67,8 +68,8 @@ public class MemberProfileDetailFragment extends BaseFragment<IMemberProfileDeta
 
     @Override
     public void setBio(String bio) {
-        TextView bioTextView = (TextView) view.findViewById(R.id.profile_detail_bio);
-        bioTextView.setText(bio != null && !bio.isEmpty() ? Html.fromHtml(bio) : "");
+        HtmlTextView bioTextView = (HtmlTextView) view.findViewById(R.id.profile_detail_bio);
+        bioTextView.setText(bio != null && !bio.isEmpty() ? bio : "");
     }
 
     @Override
