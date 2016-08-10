@@ -413,6 +413,9 @@ public class MainActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(progressDialog != null) {
+                    hideActivityIndicator();
+                }
                 progressDialog = new ACProgressFlower.Builder(MainActivity.this)
                         .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                         .themeColor(Color.WHITE)
@@ -429,7 +432,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (progressDialog != null) {
-                    progressDialog.dismiss();
+                    progressDialog.hide();
                     progressDialog = null;
                 }
             }
