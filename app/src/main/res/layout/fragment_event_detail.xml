@@ -81,10 +81,10 @@
                 android:orientation="vertical">
                <org.openstack.android.summit.common.HtmlTextView
                    android:id="@+id/event_detail_description"
-                   android:paddingLeft="20dp"
-                   android:paddingRight="20dp"
+                   android:paddingLeft="18dp"
+                   android:paddingRight="18dp"
                    android:paddingTop="25dp"
-                   android:paddingBottom="5dp"
+                   android:paddingBottom="1dp"
                    android:layout_width="match_parent"
                    android:layout_height="match_parent">
                </org.openstack.android.summit.common.HtmlTextView>

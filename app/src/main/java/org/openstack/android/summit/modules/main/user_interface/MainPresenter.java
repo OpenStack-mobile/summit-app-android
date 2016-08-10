@@ -53,10 +53,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
             try {
                 if (interactor.isLoggedInAndConfirmedAttendee() || intent.getAction() == Constants.LOGGED_OUT_EVENT) {
                     wireframe.showEventsView(view);
+                    return;
                 }
-                else {
-                    showMyProfileView();
-                }
+                showMyProfileView();
             } catch (Exception ex) {
                 Crashlytics.logException(new Exception(String.format("Error opening fragment on login/logout notification. onSaveInstanceExecuted = %b ", onSaveInstanceExecuted), ex));
             }

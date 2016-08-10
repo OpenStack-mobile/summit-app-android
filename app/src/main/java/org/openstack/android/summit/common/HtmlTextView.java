@@ -27,7 +27,7 @@ public class HtmlTextView extends ScrollView {
         webView.setId(this.getId()+WEB_VIEW_ID);
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         webView.setLayoutParams(params);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setNetworkAvailable(false);

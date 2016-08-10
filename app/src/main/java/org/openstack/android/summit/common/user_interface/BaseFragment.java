@@ -110,6 +110,7 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
                                 .themeColor(Color.WHITE)
                                 .text("Please wait...")
                                 .fadeColor(Color.DKGRAY).build();
+                        progressDialog.setCancelable(false);
                         progressDialog.show();
                     }
                 });

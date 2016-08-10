@@ -410,6 +410,7 @@ public class MainActivity extends AppCompatActivity
                  .themeColor(Color.WHITE)
                  .text(getResources().getString(R.string.please_wait))
                  .fadeColor(Color.DKGRAY).build();
+         progressDialog.setCancelable(false);
          progressDialog.show();
     }
 
