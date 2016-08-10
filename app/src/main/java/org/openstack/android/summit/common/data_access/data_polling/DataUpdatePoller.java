@@ -106,9 +106,12 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     }
 
     public String getUrl() {
-        long latestDataUpdateId = session.getLong(KEY_LAST_EVENT_ID);
-        if(latestDataUpdateId == 0){
-            latestDataUpdateId = dataUpdateDataStore.getLatestDataUpdate();
+
+        long latestDataUpdateId       = session.getLong(KEY_LAST_EVENT_ID);
+        long latestDataUpdateIdFromDB = dataUpdateDataStore.getLatestDataUpdate();
+
+        if(latestDataUpdateId < latestDataUpdateIdFromDB ){
+            latestDataUpdateId = latestDataUpdateIdFromDB;
             session.setLong(KEY_LAST_EVENT_ID, latestDataUpdateId);
         }
 
@@ -126,6 +129,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         if (fromDate != 0) {
             return String.format("%s%s%d", getBaseResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=10&from_date=", fromDate);
         }
+
         return null;
     }
 

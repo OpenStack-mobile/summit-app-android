@@ -45,7 +45,7 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
                     .beginTransaction()
                     .replace(R.id.frame_layout_content, eventDetailFragment)
                     .addToBackStack(null)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
         catch (Exception e) {
             // Swallowing exception "Can not perform this action after onSaveInstanceState" until we figure out what's wrong

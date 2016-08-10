@@ -15,7 +15,6 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -24,31 +23,22 @@ import org.openstack.android.summit.common.data_access.IDataStoreOperationListen
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.network.AuthorizationException;
-import org.openstack.android.summit.common.network.HttpTask;
-import org.openstack.android.summit.common.network.HttpTaskListener;
-import org.openstack.android.summit.common.network.HttpTaskResult;
-import org.openstack.android.summit.common.network.IHttpTaskFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
-
-import io.fabric.sdk.android.services.network.HttpMethod;
 
 /**
  * Created by Claudio Redi on 12/7/2015.
  */
 public class SecurityManager implements ISecurityManager {
+
     private IMemberDataStore memberDataStore;
     private Member member;
     private ISecurityManagerListener delegate;
     private ISession session;
     private ITokenManager tokenManager;
-    private final int LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID = -1;
-    private final String HACK_FIX_MEMBER_ID = "HACK_FIX_MEMBER_ID";
     private boolean hackForFixWrongMemberIDDoneOrInProgress;
+    private final int LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID = -1;
+    private final String HACK_FIX_MEMBER_ID               = "HACK_FIX_MEMBER_ID";
 
     @Inject
     public SecurityManager(ITokenManager tokenManager, final IMemberDataStore memberDataStore, final ISession session) {
@@ -108,7 +98,7 @@ public class SecurityManager implements ISecurityManager {
     @Override
     public void login(final Activity context) {
         final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-        final String accountType = context.getString(R.string.ACCOUNT_TYPE);
+        final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
 
         if (accountManager.getAccountsByType(accountType).length == 0) {
             // No account has been created, let's create one now
@@ -119,12 +109,13 @@ public class SecurityManager implements ISecurityManager {
                             // Unless the account creation was cancelled, try logging in again
                             // after the account has been created.
                             if (futureManager.isCancelled()) return;
+                            if(delegate != null) delegate.onStartedLoginProcess();
                             login(context);
                         }
                     }, null);
-        } else {
-            linkAttendeeIfExist();
+            return;
         }
+        linkAttendeeIfExist();
     }
 
     public void linkAttendeeIfExist() {

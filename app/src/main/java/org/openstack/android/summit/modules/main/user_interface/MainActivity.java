@@ -328,6 +328,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onStartedLoginProcess() {
+        showActivityIndicator();
+    }
+
+    @Override
     public void onLoggedIn() {
         presenter.onLoggedIn();
 
@@ -405,18 +410,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showActivityIndicator() {
-         progressDialog = new ACProgressFlower.Builder(MainActivity.this)
-                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                 .themeColor(Color.WHITE)
-                 .text(getResources().getString(R.string.please_wait))
-                 .fadeColor(Color.DKGRAY).build();
-         progressDialog.setCancelable(false);
-         progressDialog.show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = new ACProgressFlower.Builder(MainActivity.this)
+                        .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                        .themeColor(Color.WHITE)
+                        .text(getResources().getString(R.string.please_wait))
+                        .fadeColor(Color.DKGRAY).build();
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            }
+        });
     }
 
     public void hideActivityIndicator() {
-        if (progressDialog != null) {
-            progressDialog.hide();
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
+            }
+        });
     }
 }
