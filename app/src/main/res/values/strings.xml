@@ -8,7 +8,7 @@
     <string name="action_share_event">Share Event</string>
     <string name="share_event_text">Check out this summit event: https://www.openstack.org/summit/%1$s/summit-schedule/events/%2$s</string>
     <string name="action_send">Send</string>
-    <string name="action_create_feedback">Feedback</string>
+    <string name="action_create_feedback">Leave a Review</string>
     <string name="log_in">LOG IN</string>
     <string name="log_out">LOG OUT</string>
     <string name="search_placeholder">search events &amp; people...</string>
@@ -31,7 +31,7 @@
     <string name="rooms">Rooms</string>
     <string name="venue">Venue</string>
     <string name="location">Location</string>
-    <string name="feedback">Feedback</string>
+    <string name="feedback">Leave a Review</string>
     <string name="about">About</string>
     <string name="send">Send</string>
     <string name="load_more">Load More</string>

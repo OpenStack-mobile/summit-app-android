@@ -41,8 +41,6 @@ def expandManifest(flavor, properties_file) {
     ]
 }
 
-
-
 android {
 
     dexOptions {
@@ -225,6 +223,7 @@ dependencies {
         println('adding dependency safe_storage-testing.aar ...')
         betaCompile "org.openstack.android.summit.safestorage:safe_storage-testing@aar"
     }
+
     if(file ('libs/safe_storage_debug.aar').exists()) {
         println('adding dependency safe_storage_debug.aar ...')
         developmentCompile "org.openstack.android.summit.safestorage:safe_storage_debug@aar"
