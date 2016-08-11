@@ -105,6 +105,8 @@
                         android:src="@drawable/tags"/>
                     <TextView
                         android:id="@+id/event_detail_tags"
+                        android:bufferType="spannable"
+                        android:textIsSelectable="true"
                         style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
                         android:text="tag1, tag2, tag3"/>
                 </LinearLayout>
@@ -231,7 +233,6 @@
                         android:showDividers="beginning">
                         <include layout="@layout/item_feedback_list"></include>
                     </LinearLayout>
-
 
                     <LinearLayout
                         android:id="@+id/event_detail_error_loading_feedback_container"

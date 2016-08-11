@@ -108,7 +108,7 @@ public class InitialDataLoadingActivity extends Activity {
 
     private void showErrorContainer(boolean show){
         LinearLayout container = (LinearLayout)this.findViewById(R.id.initial_data_loading_no_conectivity);
-        container.setVisibility(show?View.VISIBLE:View.GONE);
+        container.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
 }

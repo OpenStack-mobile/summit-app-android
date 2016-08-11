@@ -191,4 +191,11 @@
         <item name="android:minHeight">36dp</item>
         <item name="android:layout_margin">3dp</item>
     </style>
+
+    <style name="AppTheme.InitialLoadActivity" parent="Theme.AppCompat.Dialog">
+        <item name="android:padding">0dp</item>
+        <item name="android:minWidth">1dp</item>
+        <item name="android:minHeight">1dp</item>
+    </style>
+
 </resources>

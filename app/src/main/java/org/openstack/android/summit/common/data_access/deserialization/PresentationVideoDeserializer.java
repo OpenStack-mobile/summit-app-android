@@ -19,13 +19,13 @@ public class PresentationVideoDeserializer extends PresentationMaterialDeseriali
     @Override
     public PresentationVideo deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
-        String[] missedFields = validateRequiredFields(new String[] {"youtube_id","highlighted","data_uploaded","views"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[] {"youtube_id","highlighted", "data_uploaded"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
         PresentationVideo video = (PresentationVideo)internalDeserialize(jsonString);
         video.setYouTubeId(jsonObject.getString("youtube_id"));
         video.setHighlighted(jsonObject.getBoolean("highlighted"));
         video.setDateUploaded(new Date(jsonObject.getLong("data_uploaded") * 1000L));
-        video.setViews(jsonObject.getLong("views"));
+        video.setViews(jsonObject.isNull("views")? 0 :  jsonObject.getLong("views"));
         if(!deserializerStorage.exist(video, PresentationVideo.class)) {
             deserializerStorage.add(video, PresentationVideo.class);
         }
