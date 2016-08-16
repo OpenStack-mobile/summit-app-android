@@ -144,8 +144,10 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                 try {
                     String parseData = intent.getExtras().getString("com.parse.Data");
                     if (parseData != null) {
-                        JSONObject json     = new JSONObject(parseData);
-                        view.showInfoMessage(json.getString("alert"), json.getString("title"));
+                        JSONObject json = new JSONObject(parseData);
+                        String msg       = json.getString("alert");
+                        String title     = json.has("title")? json.getString("title"):  view.getResources().getString(R.string.app_name);
+                        view.showInfoMessage(msg, title);
                     }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
