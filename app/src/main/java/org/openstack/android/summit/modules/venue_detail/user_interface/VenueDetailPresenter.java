@@ -34,6 +34,11 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
 
         venue = interactor.getVenue(venueId);
+        if(venue == null){
+            view.showInfoMessage("Venue not found!");
+            return;
+        }
+
         view.setVenueName(venue.getName());
         view.setLocation(venue.getAddress());
 

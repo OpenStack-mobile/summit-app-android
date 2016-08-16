@@ -28,7 +28,18 @@ public class VenueRoomDetailPresenter extends VenueDetailPresenter implements IV
                          wireframe.getParameter(Constants.NAVIGATION_PARAMETER_ROOM, Integer.class);
 
         room  = interactor.getRoom(locationId);
+        if(room == null){
+            view.showInfoMessage("Room not found!");
+            return;
+        }
+
         venue = interactor.getVenue(room.getVenueId());
+
+        if(venue == null){
+            view.showInfoMessage("Venue not found!");
+            return;
+        }
+
         if(room.getFloorId() > 0)
             floor = interactor.getFloor(room.getFloorId());
         String locationName = venue.getName();
