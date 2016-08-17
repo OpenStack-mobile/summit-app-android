@@ -71,6 +71,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onResume() {
         super.onResume();
         DataUpdatesService.setServiceAlarm((Context)view, true);
+        checkDeepLinks();
     }
 
     @Override
@@ -97,7 +98,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
             showEventsView();
         }
 
-        checkDeepLinks();
     }
 
     private boolean checkDeepLinks(){

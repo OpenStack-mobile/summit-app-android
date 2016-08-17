@@ -10,15 +10,20 @@ public class DeepLinkInfo {
     public static final String ActionViewLocation = "VIEW_LOCATION";
     public static final String ActionViewSchedule = "VIEW_SCHEDULE";
 
+    public static final String EventsPath         = "events";
+    public static final String SpeakersPath       = "speakers";
+    public static final String LocationsPath      = "locations";
+    public static final String SchedulePath       = "schedule";
+
     private String param;
     private String action;
 
-    public DeepLinkInfo(String param, String action) {
+    public DeepLinkInfo(String action, String param) {
         this.param  = param;
-        if(action.startsWith("events"))    this.action = ActionViewEvent;
-        if(action.startsWith("speakers"))  this.action = ActionViewSpeaker;
-        if(action.startsWith("locations")) this.action = ActionViewLocation;
-        if(action.startsWith("schedule"))  this.action = ActionViewSchedule;
+        if(action.toLowerCase().contains(EventsPath))      this.action = ActionViewEvent;
+        if(action.toLowerCase().contains(SpeakersPath))    this.action = ActionViewSpeaker;
+        if(action.toLowerCase().startsWith(LocationsPath)) this.action = ActionViewLocation;
+        if(action.toLowerCase().startsWith(SchedulePath))  this.action = ActionViewSchedule;
     }
 
     public String getParam() {

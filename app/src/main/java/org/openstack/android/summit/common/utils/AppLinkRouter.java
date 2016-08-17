@@ -7,13 +7,14 @@ import android.net.Uri;
  */
 final public class AppLinkRouter implements IAppLinkRouter {
 
+    public static final String DeepLinkHost = "org.openstack.android.summit";
     @Override
     public boolean isDeepLink(Uri url) {
-        if(!url.getScheme().startsWith("org.openstack.android.summi")) return false;
-        if(url.getHost().startsWith("events")) return true;
-        if(url.getHost().startsWith("speakers")) return true;
-        if(url.getHost().startsWith("locations")) return true;
-        if(url.getHost().startsWith("schedule")) return true;
+        if(!url.getScheme().toLowerCase().contains(DeepLinkHost)) return false;
+        if(url.getHost().toLowerCase().contains(DeepLinkInfo.EventsPath)) return true;
+        if(url.getHost().toLowerCase().contains(DeepLinkInfo.SpeakersPath)) return true;
+        if(url.getHost().toLowerCase().contains(DeepLinkInfo.LocationsPath)) return true;
+        if(url.getHost().toLowerCase().contains(DeepLinkInfo.SchedulePath)) return true;
         return false;
     }
 
@@ -21,6 +22,6 @@ final public class AppLinkRouter implements IAppLinkRouter {
     public DeepLinkInfo buildDeepLinkInfo(Uri url) {
         String action = url.getHost();
         String param  = url.getPath().replace("/","");
-        return new DeepLinkInfo(param, action);
+        return new DeepLinkInfo(action, param);
     }
 }
