@@ -6,7 +6,9 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
+import org.openstack.android.summit.common.DTOs.VideoDTO;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Tag;
@@ -18,9 +20,10 @@ import java.util.GregorianCalendar;
 /**
  * Created by Claudio Redi on 1/21/2016.
  */
-public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends PresentationSpeaker> extends AbstractSummitEvent2ScheduleItemDTO<E, EventDetailDTO> {
+public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends PresentationSpeaker, V extends PresentationVideo> extends AbstractSummitEvent2ScheduleItemDTO<E, EventDetailDTO> {
 
     protected AbstractPresentationSpeaker2PersonListIemDTO<S, PersonListItemDTO> presentationSpeaker2PersonListIemDTO;
+    protected AbstractPresentationVideo2VideoDTO<V> video2VideoDTO;
 
     @Override
     protected EventDetailDTO convert(E source) {
@@ -72,6 +75,11 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
                 if (source.getPresentation().getModerator() != null) {
                     speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)source.getPresentation().getModerator());
                     eventDetailDTO.setModerator(speakerListItemDTO);
+                }
+
+                if(source.getPresentation().getVideos().size() > 0){
+                    PresentationVideo video = source.getPresentation().getVideos().first();
+                    eventDetailDTO.setVideo(video2VideoDTO.convert((V)video));
                 }
             }
         }

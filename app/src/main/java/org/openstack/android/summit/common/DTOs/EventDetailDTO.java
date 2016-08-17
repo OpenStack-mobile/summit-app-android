@@ -11,6 +11,15 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private int venueId;
     private int venueRoomId;
     private int venueFloorId;
+    private VideoDTO video;
+
+    public VideoDTO getVideo() {
+        return video;
+    }
+
+    public void setVideo(VideoDTO video) {
+        this.video = video;
+    }
 
     public int getVenueFloorId() {
         return venueFloorId;
@@ -47,6 +56,7 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private String eventDescription;
     private String tags;
     private List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();
+
     private Boolean finished;
     private Boolean allowFeedback;
     private PersonListItemDTO moderator;

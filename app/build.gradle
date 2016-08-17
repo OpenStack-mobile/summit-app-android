@@ -26,18 +26,20 @@ def expandManifest(flavor, properties_file) {
     Properties props = new Properties()
     props.load(new FileInputStream(file(properties_file)))
 
-    return [googleMapApiKey: props['googleMapApiKey'],
-                            fabricApiKey: props['fabricApiKey'],
-                            parseApplicationId: props['parseApplicationId'],
-                            parseClientKey: props['parseClientKey'],
-                            ServiceClientId: props['ServiceClientId'],
-                            ServiceClientSecret: props['ServiceClientSecret'],
-                            NativeClientId: props['NativeClientId'],
-                            NativeClientSecret: props['NativeClientSecret'],
-                            NativeClientReturnUrl: props['NativeClientReturnUrl'],
-                            ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
-                            IdentityProviderBaseUrl: props['IdentityProviderBaseUrl'],
-                            WebSiteBaseUrl: props['WebSiteBaseUrl']
+    return [
+            googleMapApiKey: props['googleMapApiKey'],
+            fabricApiKey: props['fabricApiKey'],
+            parseApplicationId: props['parseApplicationId'],
+            parseClientKey: props['parseClientKey'],
+            ServiceClientId: props['ServiceClientId'],
+            ServiceClientSecret: props['ServiceClientSecret'],
+            NativeClientId: props['NativeClientId'],
+            NativeClientSecret: props['NativeClientSecret'],
+            NativeClientReturnUrl: props['NativeClientReturnUrl'],
+            ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
+            IdentityProviderBaseUrl: props['IdentityProviderBaseUrl'],
+            WebSiteBaseUrl: props['WebSiteBaseUrl'],
+            YouTubeAndroidPlayerAPIKey: props['YouTubeAndroidPlayerAPIKey']
     ]
 }
 
@@ -194,6 +196,8 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
     compile 'com.parse.bolts:bolts-applinks:1.+'
+
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
 
     // material design spiner
     compile ('com.weiwangcn.betterspinner:library-material:1.1.0') {

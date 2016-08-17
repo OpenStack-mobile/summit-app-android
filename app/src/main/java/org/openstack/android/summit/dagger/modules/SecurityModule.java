@@ -50,4 +50,13 @@ public class SecurityModule {
                 new ConfigurationParamSafeStorageFinderStrategy()
         });
     }
+
+    @Provides
+    @Singleton
+    IConfigurationParamsManager providesConfigurationManager(Context context) {
+        return new ConfigurationParamsManager(new IConfigurationParamFinderStrategy[] {
+                new ConfigurationParamMetadataFinderStrategy(context),
+                new ConfigurationParamSafeStorageFinderStrategy()
+        });
+    }
 }

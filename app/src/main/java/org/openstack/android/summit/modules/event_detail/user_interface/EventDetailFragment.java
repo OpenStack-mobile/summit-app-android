@@ -1,15 +1,14 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,23 +19,30 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.youtube.player.YouTubePlayer;
 import com.linearlistview.LinearListView;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
+import org.openstack.android.summit.common.DTOs.VideoDTO;
 import org.openstack.android.summit.common.HtmlTextView;
+import org.openstack.android.summit.common.player.YouTubePlayerActivity;
+import org.openstack.android.summit.common.player.YouTubeThumbnail;
+import org.openstack.android.summit.common.player.enums.PlayerOrientation;
+import org.openstack.android.summit.common.player.enums.ThumbnailQuality;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,7 +60,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     private ShareActionProvider shareActionProvider;
 
     public EventDetailFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
@@ -102,7 +108,52 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         ((LinearLayout)feedbackErrorTextView.getParent()).setVisibility(View.GONE);
 
         super.onCreateView(inflater, container, savedInstanceState);
+
         return view;
+    }
+
+    public void loadVideo(final VideoDTO video){
+
+        RelativeLayout container     = (RelativeLayout) view.findViewById(R.id.video_preview);
+        SimpleDraweeView thumbnail   = (SimpleDraweeView) view.findViewById(R.id.thumbnail);
+        final ImageButton playButton = (ImageButton) view.findViewById(R.id.play_button);
+
+        container.setVisibility(View.VISIBLE);
+        thumbnail.setImageURI(YouTubeThumbnail.getUrlFromVideoId(video.getYouTubeId(), ThumbnailQuality.HIGH));
+
+        final YouTubePlayer.PlayerStyle playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
+        final PlayerOrientation orientation         = PlayerOrientation.AUTO;
+
+        playButton.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View view) {
+                int[] location = new int[2];
+                playButton.getLocationOnScreen(location);
+                Toast toast = Toast.makeText(getActivity(), video.getName(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP|Gravity.LEFT, playButton.getRight()+5, location[1]-10);
+                toast.show();
+                return true;
+            }
+        });
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), YouTubePlayerActivity.class);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, video.getYouTubeId());
+                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, true);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_ENTER, R.anim.fade_in);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_EXIT, R.anim.fade_out);
+                //intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_ENTER, R.anim.modal_close_enter);
+                //intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_EXIT, R.anim.modal_close_exit);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -169,11 +220,6 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
 
     @Override
     public void setDescription(String description) {
-        /*WebView descriptionTextView = (WebView)view.findViewById(R.id.event_detail_description);
-        descriptionTextView.setVisibility(description != null && !description.isEmpty() ? View.VISIBLE : View.GONE);
-        if(!description.isEmpty())
-            descriptionTextView.loadData(String.format("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>%s</body></html>", description) , "text/html; charset=utf-8", "UTF-8");*/
-
         HtmlTextView descriptionTextView = (HtmlTextView) view.findViewById(R.id.event_detail_description);
         descriptionTextView.setVisibility(description != null && !description.isEmpty() ? View.VISIBLE : View.GONE);
         if(!description.isEmpty())

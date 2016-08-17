@@ -46,6 +46,24 @@
                     android:layout_gravity="center"
                     android:paddingTop="10dp"></TextView>
             </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/video_preview"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="gone"
+                >
+                 <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/thumbnail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                <ImageButton
+                    android:id="@+id/play_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:longClickable="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_play" />
+            </RelativeLayout>
             <LinearLayout
                 android:id="@+id/event_detail_place_container"
                 style="@style/AppTheme.IconedInformationBarContainer">

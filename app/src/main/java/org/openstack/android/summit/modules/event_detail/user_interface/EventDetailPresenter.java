@@ -47,6 +47,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     @Override
     public void onCreateView(Bundle savedInstanceState) {
         super.onCreateView(savedInstanceState);
+
         if (savedInstanceState != null) {
             eventId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_ID);
         }
@@ -55,7 +56,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         }
 
         loadedAllFeedback = false;
-        event = interactor.getEventDetail(eventId);
+        event            = interactor.getEventDetail(eventId);
 
         if(event == null){
             view.setName("");
@@ -86,6 +87,10 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setTags(event.getTags());
         view.setAllowRsvp(event.getAllowRsvp());
         view.hasMyFeedback(myFeedbackForEvent != null);
+
+        if(event.getVideo() != null){
+            view.loadVideo(event.getVideo());
+        }
 
         if (interactor.shouldShowVenues()) {
             view.setLocation(event.getLocation());

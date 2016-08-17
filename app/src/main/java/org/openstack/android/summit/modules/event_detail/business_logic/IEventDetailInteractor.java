@@ -12,6 +12,7 @@ import java.util.List;
  * Created by Claudio Redi on 1/21/2016.
  */
 public interface IEventDetailInteractor extends IScheduleableInteractor {
+
     EventDetailDTO getEventDetail(int eventId);
 
     FeedbackDTO getMyFeedbackForEvent(int eventId);

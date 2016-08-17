@@ -2,10 +2,9 @@ package org.openstack.android.summit.modules.event_detail.user_interface;
 
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
+import org.openstack.android.summit.common.DTOs.VideoDTO;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.common.user_interface.IScheduleableView;
-
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,4 +65,6 @@ public interface IEventDetailView extends IBaseView, IScheduleableView {
     void showFeedbackErrorMessage(String message);
 
     void showFeedbackContainer();
+
+    void loadVideo(VideoDTO video);
 }
