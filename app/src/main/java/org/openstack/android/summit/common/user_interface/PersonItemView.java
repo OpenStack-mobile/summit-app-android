@@ -1,13 +1,9 @@
 package org.openstack.android.summit.common.user_interface;
 
-import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
-
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import org.openstack.android.summit.R;
 
 /**
