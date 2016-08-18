@@ -47,27 +47,12 @@
                     android:layout_gravity="center"
                     android:paddingTop="10dp"></TextView>
             </LinearLayout>
-            <RelativeLayout
+            <org.openstack.android.summit.common.player.VideoPlayer
                 android:id="@+id/video_preview"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:visibility="gone">
-                 <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/thumbnail"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        fresco:placeholderImage="@drawable/video_player_placeholder"
-                        fresco:actualImageScaleType="centerCrop"
-                        android:layout_gravity="center"
-                     />
-                <ImageButton
-                    android:id="@+id/play_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:longClickable="true"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_play" />
-            </RelativeLayout>
+            </org.openstack.android.summit.common.player.VideoPlayer>
             <LinearLayout
                 android:id="@+id/event_detail_place_container"
                 style="@style/AppTheme.IconedInformationBarContainer">

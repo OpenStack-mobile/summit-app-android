@@ -8,7 +8,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,27 +20,20 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.youtube.player.YouTubePlayer;
 import com.linearlistview.LinearListView;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.VideoDTO;
 import org.openstack.android.summit.common.HtmlTextView;
-import org.openstack.android.summit.common.player.YouTubePlayerActivity;
-import org.openstack.android.summit.common.player.YouTubeThumbnail;
-import org.openstack.android.summit.common.player.enums.PlayerOrientation;
-import org.openstack.android.summit.common.player.enums.ThumbnailQuality;
+import org.openstack.android.summit.common.player.VideoPlayer;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
+
 import java.util.List;
 
 /**
@@ -112,48 +104,10 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         return view;
     }
 
-    public void loadVideo(final VideoDTO video){
-
-        RelativeLayout container     = (RelativeLayout) view.findViewById(R.id.video_preview);
-        SimpleDraweeView thumbnail   = (SimpleDraweeView) view.findViewById(R.id.thumbnail);
-        final ImageButton playButton = (ImageButton) view.findViewById(R.id.play_button);
-
-        container.setVisibility(View.VISIBLE);
-        thumbnail.setImageURI(YouTubeThumbnail.getUrlFromVideoId(video.getYouTubeId(), ThumbnailQuality.HIGH));
-
-        final YouTubePlayer.PlayerStyle playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
-        final PlayerOrientation orientation         = PlayerOrientation.AUTO;
-
-        playButton.setOnLongClickListener(new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View view) {
-                int[] location = new int[2];
-                playButton.getLocationOnScreen(location);
-                Toast toast = Toast.makeText(getActivity(), video.getName(), Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP|Gravity.LEFT, playButton.getRight()+5, location[1]-10);
-                toast.show();
-                return true;
-            }
-        });
-
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), YouTubePlayerActivity.class);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, video.getYouTubeId());
-                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, true);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_ENTER, R.anim.fade_in);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_EXIT, R.anim.fade_out);
-                //intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_ENTER, R.anim.modal_close_enter);
-                //intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_EXIT, R.anim.modal_close_exit);
-                startActivity(intent);
-            }
-        });
-
+    public void loadVideo(VideoDTO video){
+        VideoPlayer videoPlayer = (VideoPlayer) view.findViewById(R.id.video_preview);
+        if(videoPlayer != null)
+            videoPlayer.loadVideo(video);
     }
 
     @Override

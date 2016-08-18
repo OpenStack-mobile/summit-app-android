@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        fresco:placeholderImage="@drawable/video_player_placeholder"
+        fresco:placeholderImageScaleType="fitXY"
+        fresco:actualImageScaleType="centerCrop"
+        android:layout_gravity="center"
+        />
+    <ImageButton
+        android:id="@+id/play_button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:longClickable="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_play" />
+</merge>
