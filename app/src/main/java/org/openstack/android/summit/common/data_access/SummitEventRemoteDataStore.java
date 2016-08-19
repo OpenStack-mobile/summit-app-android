@@ -8,6 +8,7 @@ import com.github.kevinsawicki.http.HttpRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.api_endpoints.ApiEndpointBuilder;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -17,7 +18,9 @@ import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.realm.Realm;
 
@@ -56,9 +59,22 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                     dataStoreOperationListener.onError(friendlyError);
                 }
             };
-            String url = getBaseResourceServerUrl() +
-                    String.format("/api/v1/summits/current/events/%d/feedback?expand=owner&page=%d&per_page=%d", eventId, page, objectsPerPage);
-            HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
+
+            Map<String,Object> params = new HashMap<>();
+            params.put(ApiEndpointBuilder.EventIdParam, eventId);
+            params.put(ApiEndpointBuilder.ExpandParam, "owner");
+            params.put(ApiEndpointBuilder.PageParam, page);
+            params.put(ApiEndpointBuilder.PerPageParam,objectsPerPage);
+
+            HttpTask httpTask = httpTaskFactory.create
+            (
+                AccountType.ServiceAccount,
+                ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.GetFeedback, params).toString(),
+                HttpRequest.METHOD_GET,
+                null,
+                null,
+                httpTaskListener
+            );
             httpTask.execute();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -94,9 +110,21 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                     dataStoreOperationListener.onError(friendlyError);
                 }
             };
-            String url = getBaseResourceServerUrl() +
-                    String.format("/api/v1/summits/current/events/%d/published?fields=id,avg_feedback_rate&relations=none", eventId);
-            HttpTask httpTask = httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
+
+            Map<String,Object> params = new HashMap<>();
+            params.put(ApiEndpointBuilder.EventIdParam, eventId);
+            params.put(ApiEndpointBuilder.FieldsParam, "id,avg_feedback_rate");
+            params.put(ApiEndpointBuilder.RelationsParam, "none");
+
+            HttpTask httpTask = httpTaskFactory.create
+            (
+                AccountType.ServiceAccount,
+                ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.GetPublishedEvent, params).toString(),
+                HttpRequest.METHOD_GET,
+                null,
+                null,
+                httpTaskListener
+            );
             httpTask.execute();
         } catch (Exception e) {
             Crashlytics.logException(e);

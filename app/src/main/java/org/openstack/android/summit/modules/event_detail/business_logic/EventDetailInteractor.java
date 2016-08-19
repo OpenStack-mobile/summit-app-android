@@ -12,7 +12,6 @@ import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
-import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
@@ -42,17 +41,13 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
 
     public FeedbackDTO getMyFeedbackForEvent(int eventId) {
 
-        FeedbackDTO dto = null;
-        Member currentMember = securityManager.getCurrentMember();
+        if (securityManager.isLoggedIn()) {
 
-        if (securityManager.isLoggedInAndConfirmedAttendee() && currentMember != null) {
-
-            Feedback feedback = currentMember.getAttendeeRole().getFeedback().where().equalTo("event.id", eventId).findFirst();
-            if (feedback != null) {
-                dto = dtoAssembler.createDTO(feedback, FeedbackDTO.class);
-            }
+            Feedback feedback = securityManager.getCurrentMember().getFeedback().where().equalTo("event.id", eventId).findFirst();
+            if (feedback == null) return null;
+            return dtoAssembler.createDTO(feedback, FeedbackDTO.class);
         }
-        return dto;
+        return null;
     }
 
     @Override

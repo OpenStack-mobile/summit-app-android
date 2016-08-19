@@ -6,7 +6,8 @@ import org.openstack.android.summit.common.user_interface.IBasePresenter;
  * Created by Claudio Redi on 3/27/2016.
  */
 public interface IMemberOrderConfirmPresenter extends IBasePresenter<IMemberOrderConfirmView> {
-    void comfirmOrder(String orderNumber);
+
+    void confirmOrder(String orderNumber);
 
     void selectAttendeeFromOrderList(int position);
 }

@@ -52,10 +52,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
     public Authenticator(Context context, IOIDCConfigurationManager oidcConfigurationManager) {
         super(context);
-        this.context = context;
+        this.context      = context;
         this.oidcProtocol = new OpenIdConnectProtocol(oidcConfigurationManager.buildIdentityProviderUrls());
         this.clientConfig = (OIDCNativeClientConfiguration) oidcConfigurationManager.buildConfiguration(OIDCClientConfiguration.ODICAccountType.NativeAccount);
-        accountManager = AccountManager.get(context);
+        accountManager    = AccountManager.get(context);
         Log.d(TAG, "Authenticator created.");
     }
 

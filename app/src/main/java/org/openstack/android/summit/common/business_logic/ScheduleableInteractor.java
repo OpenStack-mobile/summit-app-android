@@ -40,12 +40,14 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
 
     @Override
     public void addEventToLoggedInMemberSchedule(int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
-        final Member loggedInMember   = securityManager.getCurrentMember();
-        if (loggedInMember == null) {
+        if (!securityManager.isLoggedInAndConfirmedAttendee()) {
             interactorAsyncOperationListener.onError(OpenStackSummitApplication.context.getResources().getString(R.string.no_logged_in_user));
             return;
         }
+
+        final Member loggedInMember   = securityManager.getCurrentMember();
         final SummitEvent summitEvent = summitEventDataStore.getByIdLocal(eventId);
+
         IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
             public void onSucceedWithoutData() {
@@ -65,12 +67,14 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
 
     @Override
     public void removeEventFromLoggedInMemberSchedule(int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
-        final Member loggedInMember = securityManager.getCurrentMember();
-        if (loggedInMember == null) {
+        if (!securityManager.isLoggedInAndConfirmedAttendee()) {
             interactorAsyncOperationListener.onError(OpenStackSummitApplication.context.getResources().getString(R.string.no_logged_in_user));
             return;
         }
+
+        final Member loggedInMember   = securityManager.getCurrentMember();
         final SummitEvent summitEvent = summitEventDataStore.getByIdLocal(eventId);
+
         IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
             public void onSucceedWithoutData() {
@@ -89,14 +93,15 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     }
 
     @Override
-    public Boolean isEventScheduledByLoggedMember(int eventId) {
+    public boolean isEventScheduledByLoggedMember(int eventId) {
+
         if (!securityManager.isLoggedInAndConfirmedAttendee()) {
             return false;
         }
 
         Member loggedInMember = securityManager.getCurrentMember();
 
-        if (loggedInMember == null) {
+        if (loggedInMember == null || loggedInMember.getAttendeeRole() == null) {
             return false;
         }
 
@@ -112,7 +117,12 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     }
 
     @Override
-    public Boolean isMemberLoggedInConfirmedAttendee() {
+    public boolean isMemberLogged() {
+        return securityManager.isLoggedIn();
+    }
+
+    @Override
+    public boolean isMemberLoggedAndConfirmedAttendee() {
         return securityManager.isLoggedInAndConfirmedAttendee();
     }
 

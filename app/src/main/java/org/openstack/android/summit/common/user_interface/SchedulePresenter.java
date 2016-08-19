@@ -102,7 +102,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         isFirstTime = false;
         reloadSchedule();
         view.hideActivityIndicator();
-        interactor.subscribeToPushChannelsUsingContextIfNotDoneAlready();
     }
 
     @Override
@@ -142,7 +141,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         scheduleItemViewBuilder.build(
                 scheduleItemView,
                 scheduleItemDTO,
-                interactor.isMemberLoggedInConfirmedAttendee(),
+                interactor.isMemberLoggedAndConfirmedAttendee(),
                 interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
                 false,
                 interactor.shouldShowVenues()

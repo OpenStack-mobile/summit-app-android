@@ -1,7 +1,6 @@
 package org.openstack.android.summit.common.data_access;
 
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
-import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
@@ -10,6 +9,7 @@ import org.openstack.android.summit.common.utils.RealmFactory;
  * Created by Claudio Redi on 1/5/2016.
  */
 public class SummitAttendeeDataStore extends GenericDataStore implements ISummitAttendeeDataStore {
+
     private ISummitAttendeeRemoteDataStore summitAttendeeRemoteDataStore;
 
     public SummitAttendeeDataStore(ISummitAttendeeRemoteDataStore summitAttendeeRemoteDataStore) {
@@ -83,32 +83,4 @@ public class SummitAttendeeDataStore extends GenericDataStore implements ISummit
         }
     }
 
-    @Override
-    public void addFeedback(final SummitAttendee attendee, Feedback feedback, final IDataStoreOperationListener dataStoreOperationListener) {
-        IDataStoreOperationListener<Feedback> remoteDataStoreOperationListener = new DataStoreOperationListener<Feedback>() {
-            @Override
-            public void onSucceedWithSingleData(Feedback data) {
-                super.onSucceedWithSingleData(data);
-
-                RealmFactory.getSession().beginTransaction();
-                try {
-                    attendee.getFeedback().add(data);
-                    RealmFactory.getSession().commitTransaction();
-                }
-                catch (Exception e) {
-                    RealmFactory.getSession().cancelTransaction();
-                    throw e;
-                }
-
-                dataStoreOperationListener.onSucceedWithSingleData(data);
-            }
-
-            @Override
-            public void onError(String message) {
-                super.onError(message);
-                dataStoreOperationListener.onError(message);
-            }
-        };
-        summitAttendeeRemoteDataStore.addFeedback(attendee, feedback, remoteDataStoreOperationListener);
-    }
 }

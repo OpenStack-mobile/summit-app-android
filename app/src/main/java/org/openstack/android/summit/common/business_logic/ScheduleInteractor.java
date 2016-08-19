@@ -55,21 +55,6 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     }
 
     @Override
-    public void subscribeToPushChannelsUsingContextIfNotDoneAlready() {
-        Summit summit = summitDataStore.getActiveLocal();
-        if (summit != null && session.getString(PUSH_NOTIFICATIONS_SUBSCRIBED_KEY) == null) {
-            if (securityManager.isLoggedIn()) {
-                Member member = securityManager.getCurrentMember();
-                pushNotificationsManager.subscribeMember(member, summit);
-            }
-            else {
-                pushNotificationsManager.subscribeAnonymous(summit);
-            }
-            session.setString(PUSH_NOTIFICATIONS_SUBSCRIBED_KEY,"YES");
-        }
-    }
-
-    @Override
     public List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
         ArrayList<DateTime> inactiveDates = new ArrayList<>();
         List<SummitEvent> events;

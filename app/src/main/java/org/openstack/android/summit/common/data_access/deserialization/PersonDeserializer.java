@@ -21,12 +21,8 @@ public class PersonDeserializer extends BaseDeserializer implements IPersonDeser
         person.setBio(
                 !jsonObject.isNull("bio") ? jsonObject.getString("bio") : null
         );
-
         person.setIrc(
                 !jsonObject.isNull("irc") ? jsonObject.getString("irc") : null
-        );
-        person.setMemberId(
-                !jsonObject.isNull("member_id") ? jsonObject.getInt("member_id") : null
         );
         person.setPictureUrl(
                 !jsonObject.isNull("pic") ? jsonObject.getString("pic") : null

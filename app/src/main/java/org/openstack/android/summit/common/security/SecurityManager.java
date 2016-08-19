@@ -12,9 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
-
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -36,18 +34,19 @@ public class SecurityManager implements ISecurityManager {
     private ISecurityManagerListener delegate;
     private ISession session;
     private ITokenManager tokenManager;
-    private boolean hackForFixWrongMemberIDDoneOrInProgress;
-    private final int LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID = -1;
-    private final String HACK_FIX_MEMBER_ID               = "HACK_FIX_MEMBER_ID";
 
     @Inject
     public SecurityManager(ITokenManager tokenManager, final IMemberDataStore memberDataStore, final ISession session) {
         this.memberDataStore = memberDataStore;
-        this.session = session;
-        this.tokenManager = tokenManager;
+        this.session         = session;
+        this.tokenManager    = tokenManager;
     }
 
-    private void checkForIllegalState() {
+    /**
+     * check for token valid states
+     */
+    private void checkTokenValidState() {
+
         AsyncTask<Void, Void, String> checkTask = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -64,10 +63,10 @@ public class SecurityManager implements ISecurityManager {
             @Override
             protected void onPostExecute(String token) {
                 final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-                final String accountType = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
+                final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
+                int currentMemberId                 = session.getInt(Constants.CURRENT_MEMBER_ID);
+                Account[] accounts                  = accountManager.getAccountsByType(accountType);
 
-                int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
-                Account[] accounts = accountManager.getAccountsByType(accountType);
                 if (accounts.length > 0) {
                     if ((token != null && currentMemberId == 0) || (token == null && currentMemberId != 0)) {
                         logout(false);
@@ -79,13 +78,7 @@ public class SecurityManager implements ISecurityManager {
     }
 
     public void init() {
-        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
-        if (currentMemberId == LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID && member == null) {
-            member = new Member();
-            member.setId(currentMemberId);
-            member.setFullName(session.getString(Constants.CURRENT_MEMBER_NAME));
-        }
-        checkForIllegalState();
+        checkTokenValidState();
     }
 
     @Override
@@ -115,38 +108,11 @@ public class SecurityManager implements ISecurityManager {
                     }, null);
             return;
         }
-        linkAttendeeIfExist();
+        bindCurrentUser();
     }
 
-    public void linkAttendeeIfExist() {
-        final IDataStoreOperationListener<Member> dataStoreOperationListenerNonRegisteredAttendee = new DataStoreOperationListener<Member>() {
-            @Override
-            public void onSucceedWithSingleData(Member data) {
-                member = data;
-                if (data != null && data.getId() > 0) {
-                    session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
-                }
-                else {
-                    session.setInt(Constants.CURRENT_MEMBER_ID, LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID);
-                }
-                session.setString(Constants.CURRENT_MEMBER_NAME, member.getFullName());
-
-                Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
-                LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-
-                if (delegate != null) {
-                    delegate.onLoggedIn();
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                if (delegate != null) {
-                    delegate.onError(message);
-                }
-            }
-        };
-
+    @Override
+    public void bindCurrentUser(){
         IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
             public void onSucceedWithSingleData(Member data) {
@@ -163,17 +129,12 @@ public class SecurityManager implements ISecurityManager {
 
             @Override
             public void onError(String message) {
-                if (message.startsWith("404")) {
-                    memberDataStore.getLoggedInMemberBasicInfoOrigin(dataStoreOperationListenerNonRegisteredAttendee);
-                    return;
-                }
 
-                if (delegate != null) {
+                 if (delegate != null) {
                     delegate.onError(message);
                 }
             }
         };
-
         memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
     }
 
@@ -183,10 +144,11 @@ public class SecurityManager implements ISecurityManager {
     }
 
     private void logout(boolean sendNotification) {
-        Context context = OpenStackSummitApplication.context;
+
+        Context context                     = OpenStackSummitApplication.context;
         final AccountManager accountManager = AccountManager.get(context);
-        final String accountType = context.getString(R.string.ACCOUNT_TYPE);
-        Account availableAccounts[] = accountManager.getAccountsByType(accountType);
+        final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
+        Account availableAccounts[]         = accountManager.getAccountsByType(accountType);
 
         if (availableAccounts.length > 0) {
 
@@ -196,9 +158,9 @@ public class SecurityManager implements ISecurityManager {
                 accountManager.removeAccount(availableAccounts[0], null, null);
             }
         }
+
         member = null;
         session.setInt(Constants.CURRENT_MEMBER_ID, 0);
-        session.setString(Constants.CURRENT_MEMBER_NAME, null);
 
         if (sendNotification) {
             Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
@@ -220,59 +182,25 @@ public class SecurityManager implements ISecurityManager {
 
     @Override
     public Member getCurrentMember() {
-        // TODO: check if token is valid
+
+        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
+        final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
+        if( accountManager.getAccountsByType(accountType).length == 0) return null;
+
         int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
-        if (currentMemberId > 0) {
-            member = memberDataStore.getByIdLocal(currentMemberId);
-        }
+        if(currentMemberId == 0) return null;
+
+        member = memberDataStore.getByIdLocal(currentMemberId);
         return member;
     }
 
     @Override
-    public Boolean isLoggedIn() {
-        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-        final String accountType = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
-
-        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
-
-        if (currentMemberId > 0) {
-            member = memberDataStore.getByIdLocal(currentMemberId);
-
-            // Chili #10927. Delete this after summit
-            hackForFixWrongMemberID();
-        }
-
-        return accountManager.getAccountsByType(accountType).length > 0 && currentMemberId != 0 && member != null;
-    }
-
-    private void hackForFixWrongMemberID() {
-        if (!hackForFixWrongMemberIDDoneOrInProgress) {
-            String flag = session.getString(HACK_FIX_MEMBER_ID);
-            if (flag == null) {
-                hackForFixWrongMemberIDDoneOrInProgress = true;
-                Log.d(Constants.LOG_TAG, "Hack to fix wrong member id in progress");
-
-                IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
-                    @Override
-                    public void onSucceedWithSingleData(Member data) {
-                        session.setString(HACK_FIX_MEMBER_ID, "DONE");
-                        session.setInt(Constants.CURRENT_MEMBER_ID, data.getId());
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        session.setString(HACK_FIX_MEMBER_ID, "DONE");
-                    }
-                };
-
-                memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
-            }
-        }
+    public boolean isLoggedIn() {
+        return getCurrentMember() != null;
     }
 
     @Override
     public boolean isLoggedInAndConfirmedAttendee() {
-        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
-        return isLoggedIn() && currentMemberId != LOGGED_IN_NOT_CONFIRMED_ATTENDEE_ID;
+        return isLoggedIn() && member.getAttendeeRole() != null;
     }
 }

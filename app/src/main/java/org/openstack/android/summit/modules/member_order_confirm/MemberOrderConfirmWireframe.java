@@ -1,8 +1,6 @@
 package org.openstack.android.summit.modules.member_order_confirm;
 
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.member_order_confirm.user_interface.MemberOrderConfirmFragment;
@@ -18,6 +16,6 @@ public class MemberOrderConfirmWireframe implements IMemberOrderConfirmWireframe
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, memberOrderConfirmFragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 }

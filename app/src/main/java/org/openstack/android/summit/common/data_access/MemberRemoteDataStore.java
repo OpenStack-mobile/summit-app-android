@@ -1,22 +1,24 @@
 package org.openstack.android.summit.common.data_access;
 
 import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
-
+import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.api_endpoints.ApiEndpointBuilder;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.INonConfirmedSummitAttendeeDeserializer;
+import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
-
 import java.security.spec.InvalidParameterSpecException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -42,12 +44,12 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
     @Inject
     public MemberRemoteDataStore(INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer, IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
         this.nonConfirmedSummitAttendeeDeserializer = nonConfirmedSummitAttendeeDeserializer;
-        this.httpTaskFactory = httpTaskFactory;
-        this.deserializer = deserializer;
+        this.httpTaskFactory                        = httpTaskFactory;
+        this.deserializer                           = deserializer;
     }
 
     @Override
-    public void getLoggedInMember(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
+    public void getMemberInfo(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
 
         HttpTaskListener httpTaskListener = new HttpTaskListener() {
             @Override
@@ -57,7 +59,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                     dataStoreOperationListener.onSucceedWithSingleData(member);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
-                    Log.e(Constants.LOG_TAG, "Error deserializing member", e);
+                    Log.e(Constants.LOG_TAG, "Error on member deserialization", e);
                     String friendlyError = Constants.GENERIC_ERROR_MSG;
                     dataStoreOperationListener.onError(friendlyError);
                 }
@@ -69,46 +71,28 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             }
         };
 
-        String url = getBaseResourceServerUrl() + "/api/v1/summits/current/attendees/me?expand=speaker,feedback";
+        HashMap<String,Object> params = new HashMap<>();
+        params.put(ApiEndpointBuilder.ExpandParam, "attendee,speaker,feedback");
+
         HttpTask httpTask = null;
         try {
-            httpTask = httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
-        } catch (InvalidParameterSpecException e) {
-            Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            httpTask = httpTaskFactory.create
+                    (
+                            AccountType.OIDC,
+                            ApiEndpointBuilder.getInstance().buildEndpoint
+                            (
+                                getBaseResourceServerUrl(),
+                                "current",
+                                ApiEndpointBuilder.EndpointType.GetMemberInfo,
+                                params
+                            ).toString(),
+                            HttpRequest.METHOD_GET,
+                            null,
+                            null,
+                            httpTaskListener
+                    );
         }
-        httpTask.execute();
-    }
-
-    public void getLoggedInMemberBasicInfo(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
-
-        HttpTaskListener httpTaskListener = new HttpTaskListener() {
-            @Override
-            public void onSucceed(String data) {
-                try {
-                    Member member = deserializer.deserialize(data, Member.class);
-                    dataStoreOperationListener.onSucceedWithSingleData(member);
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.e(Constants.LOG_TAG, "Error deserializing member", e);
-                    String friendlyError = Constants.GENERIC_ERROR_MSG;
-                    dataStoreOperationListener.onError(friendlyError);
-                }
-            }
-
-            @Override
-            public void onError(Throwable error) {
-                String friendlyError = Constants.GENERIC_ERROR_MSG;
-                dataStoreOperationListener.onError(friendlyError);
-            }
-        };
-
-        String url = getUserInfoEndpointUrl();
-
-        HttpTask httpTask = null;
-        try {
-            httpTask = httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, httpTaskListener);
-        } catch (InvalidParameterSpecException e) {
+        catch (InvalidParameterSpecException e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
@@ -138,13 +122,14 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             }
         };
 
-        String url = getBaseResourceServerUrl() +
-                String.format("/api/v1/summits/current/external-orders/%s", orderNumber);
+        Map<String,Object> params = new HashMap<>();
+        params.put(ApiEndpointBuilder.OrderNumberParam, orderNumber.trim());
+
         HttpTask httpTask = null;
         try {
             httpTask = httpTaskFactory.create(
                     AccountType.OIDC,
-                    url,
+                    ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.GetExternalOrder, params).toString(),
                     HttpRequest.METHOD_GET,
                     HttpRequest.CONTENT_TYPE_JSON,
                     null,
@@ -170,13 +155,15 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             }
         };
 
-        String url = getBaseResourceServerUrl() +
-                String.format("/api/v1/summits/current/external-orders/%s/external-attendees/%d/confirm", orderNumber, externalAttendeeId);
+        Map<String,Object> params = new HashMap<>();
+        params.put(ApiEndpointBuilder.OrderNumberParam, orderNumber.trim());
+        params.put(ApiEndpointBuilder.ExternalAttendeeIdParam, externalAttendeeId);
+
         HttpTask httpTask = null;
         try {
             httpTask = httpTaskFactory.create(
                     AccountType.OIDC,
-                    url,
+                    ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.ConfirmExternalOrder, params).toString(),
                     HttpRequest.METHOD_POST,
                     HttpRequest.CONTENT_TYPE_JSON,
                     null,
@@ -187,4 +174,44 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
         }
         httpTask.execute();
     }
+
+    @Override
+    public void addFeedback(final Feedback feedback, final IDataStoreOperationListener<Feedback> dataStoreOperationListener) {
+
+        HttpTaskListener httpTaskListener = new HttpTaskListener() {
+            @Override
+            public void onSucceed(String data) {
+                feedback.setId(Integer.parseInt(data));
+                dataStoreOperationListener.onSucceedWithSingleData(feedback);
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                String friendlyError = Constants.GENERIC_ERROR_MSG;
+                dataStoreOperationListener.onError(friendlyError);
+            }
+        };
+        HttpTask httpTask         = null;
+        Map<String,Object> params = new HashMap<>();
+        params.put(ApiEndpointBuilder.EventIdParam, feedback.getEvent().getId());
+
+        try {
+            JSONObject feedbackJson = new JSONObject();
+            feedbackJson.put("rate", feedback.getRate());
+            feedbackJson.put("note", JSONObject.quote(feedback.getReview()));
+
+            httpTask = httpTaskFactory.create(
+                    AccountType.OIDC,
+                    ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.AddFeedback, params).toString(),
+                    HttpRequest.METHOD_POST,
+                    HttpRequest.CONTENT_TYPE_JSON,
+                    feedbackJson.toString(),
+                    httpTaskListener);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+        }
+        httpTask.execute();
+    }
+
 }

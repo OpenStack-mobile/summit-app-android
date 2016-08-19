@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.DTOs;
 
+import org.joda.time.Instant;
+
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
@@ -18,7 +20,7 @@ public class PersonListItemDTO extends NamedDTO {
     }
 
     public String getPictureUrl() {
-        return pictureUrl;
+        return pictureUrl+"?t="+ Instant.now().getMillis();
     }
 
     public void setPictureUrl(String pictureUrl) {

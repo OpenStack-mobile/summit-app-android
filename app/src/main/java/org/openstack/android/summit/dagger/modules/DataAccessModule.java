@@ -166,8 +166,8 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitAttendeeDeserializer providesSummitAttendeeDeserializer(IPersonDeserializer personDeserializer, IFeedbackDeserializer feedbackDeserializer, IDeserializerStorage deserializerStorage) {
-        return new SummitAttendeeDeserializer(personDeserializer, feedbackDeserializer, deserializerStorage);
+    ISummitAttendeeDeserializer providesSummitAttendeeDeserializer(IDeserializerStorage deserializerStorage) {
+        return new SummitAttendeeDeserializer(deserializerStorage);
     }
 
     @Provides
@@ -196,8 +196,16 @@ public class DataAccessModule {
     }
 
     @Provides
-    IMemberDeserializer providesMemberDeserializer(IPresentationSpeakerDeserializer presentationSpeakerDeserializer, ISummitAttendeeDeserializer summitAttendeeDeserializer) {
-        return new MemberDeserializer(presentationSpeakerDeserializer, summitAttendeeDeserializer);
+    IMemberDeserializer providesMemberDeserializer
+    (
+        IPersonDeserializer personDeserializer,
+        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        ISummitAttendeeDeserializer summitAttendeeDeserializer,
+        IFeedbackDeserializer feedbackDeserializer,
+        IDeserializerStorage deserializerStorage
+    )
+    {
+        return new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer,deserializerStorage);
     }
 
     @Provides

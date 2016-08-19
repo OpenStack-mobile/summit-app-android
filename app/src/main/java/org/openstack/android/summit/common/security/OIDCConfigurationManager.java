@@ -70,11 +70,11 @@ final public class OIDCConfigurationManager extends ConfigurationParamsManager i
                 return new String[] {
                     "openid",
                     "offline_access",
-                    "profile",
                     String.format("%s/summits/read", rsBaseUrl),
                     String.format("%s/summits/write", rsBaseUrl),
                     String.format("%s/summits/read-external-orders", rsBaseUrl),
-                    String.format("%s/summits/confirm-external-orders", rsBaseUrl)
+                    String.format("%s/summits/confirm-external-orders", rsBaseUrl),
+                    String.format("%s/me/read", rsBaseUrl)
                 };
             }
             case ServiceAccount:{

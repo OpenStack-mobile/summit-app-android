@@ -1,67 +1,87 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
-import com.alibaba.fastjson.JSON;
-
+import android.util.Log;
+import com.crashlytics.android.Crashlytics;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openstack.android.summit.common.entities.IPerson;
+import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitAttendee;
-
 import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 11/13/2015.
  */
-public class MemberDeserializer implements IMemberDeserializer {
+public class MemberDeserializer extends BaseDeserializer implements IMemberDeserializer {
+
+    IPersonDeserializer              personDeserializer;
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
-    ISummitAttendeeDeserializer summitAttendeeDeserializer;
+    ISummitAttendeeDeserializer      summitAttendeeDeserializer;
+    IFeedbackDeserializer            feedbackDeserializer;
+    IDeserializerStorage             deserializerStorage;
 
     @Inject
-    public MemberDeserializer(IPresentationSpeakerDeserializer presentationSpeakerDeserializer, ISummitAttendeeDeserializer summitAttendeeDeserializer) {
+    public MemberDeserializer
+    (
+        IPersonDeserializer personDeserializer,
+        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        ISummitAttendeeDeserializer summitAttendeeDeserializer,
+        IFeedbackDeserializer feedbackDeserializer,
+        IDeserializerStorage deserializerStorage
+    )
+    {
+        this.personDeserializer              = personDeserializer;
+        this.deserializerStorage             = deserializerStorage;
+        this.feedbackDeserializer            = feedbackDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
-        this.summitAttendeeDeserializer = summitAttendeeDeserializer;
+        this.summitAttendeeDeserializer      = summitAttendeeDeserializer;
     }
 
     @Override
     public Member deserialize(String jsonString) throws JSONException {
-        JSONObject jsonObject = new JSONObject(jsonString);
-        Member member = new Member();
-        member.setFullName(jsonObject.has("name") ? jsonObject.optString("name") : getFullName(jsonObject));
-        member.setPictureUrl(jsonObject.optString("picture"));
 
-        if (jsonObject.has("member_id")) {
-            member.setId(jsonObject.optInt("member_id"));
-            SummitAttendee summitAttendee = summitAttendeeDeserializer.deserialize(jsonString);
-            member.setAttendeeRole(summitAttendee);
-        }
-        else {
-            member.setId(jsonObject.optInt("id"));
+        Member member = new Member();
+        JSONObject jsonObject = new JSONObject(jsonString);
+        String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
+        handleMissedFieldsIfAny(missedFields);
+        personDeserializer.deserialize(member, jsonObject);
+
+        // added here so it's available on child deserialization
+        if(!deserializerStorage.exist(member, Member.class)) {
+            deserializerStorage.add(member, Member.class);
         }
 
         if (jsonObject.has("speaker")) {
-            JSONObject speakerJSONObject = jsonObject.getJSONObject("speaker");
+            JSONObject speakerJSONObject            = jsonObject.getJSONObject("speaker");
             PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(speakerJSONObject.toString());
             member.setSpeakerRole(presentationSpeaker);
         }
-        return member;
-    }
 
-    private String getFullName(JSONObject jsonObject) {
-        String fullName = null;
-        String firstName = jsonObject.optString("first_name");
-        String lastName = jsonObject.optString("last_name");
-        
-        if (firstName != null && lastName != null) {
-            fullName = firstName + " " + lastName;
+        if (jsonObject.has("attendee")) {
+            JSONObject attendeeJSONObject = jsonObject.getJSONObject("attendee");
+            SummitAttendee attendee       = summitAttendeeDeserializer.deserialize(attendeeJSONObject.toString());
+            member.setAttendeeRole(attendee);
         }
-        else if (firstName != null){
-            fullName = firstName;
+
+        if(jsonObject.has("feedback")) {
+            Feedback feedback;
+            JSONObject jsonObjectFeedback;
+            JSONArray jsonArrayFeedback = jsonObject.getJSONArray("feedback");
+            for (int i = 0; i < jsonArrayFeedback.length(); i++) {
+                jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
+                try {
+                    feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());
+                    member.getFeedback().add(feedback);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.e(Constants.LOG_TAG, String.format("Error deserializing feedback %s", jsonObjectFeedback.toString()), e);
+                }
+            }
         }
-        else  if (lastName != null){
-            fullName = lastName;
-        }
-        return fullName;
+
+        return member;
     }
 }

@@ -3,18 +3,10 @@ package org.openstack.android.summit.common.DTOs;
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
-public class MemberDTO {
-    private int id;
+public class MemberDTO extends PersonDTO {
+
     private PersonDTO speakerRole;
     private PersonDTO attendeeRole;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public PersonDTO getSpeakerRole() {
         return speakerRole;
@@ -30,5 +22,10 @@ public class MemberDTO {
 
     public void setAttendeeRole(PersonDTO attendeeRole) {
         this.attendeeRole = attendeeRole;
+    }
+
+    public String getPictureUrl() {
+        if(speakerRole!=null) return speakerRole.getPictureUrl();
+        return super.getPictureUrl();
     }
 }

@@ -22,6 +22,4 @@ public interface IPerson extends IEntity {
     public void setIrc(String irc);
     public String getEmail();
     public void setEmail(String email);
-    public Integer getMemberId();
-    public void setMemberId(Integer memberId);
 }

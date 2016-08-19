@@ -27,7 +27,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.facebook.drawee.view.SimpleDraweeView;
+
 import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.InitialDataLoadingActivity;
 import org.openstack.android.summit.OpenStackSummitApplication;
@@ -37,7 +39,9 @@ import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
+
 import javax.inject.Inject;
+
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -50,18 +54,18 @@ public class MainActivity extends AppCompatActivity
 
     @Inject
     // TODO: this should be moved to interactor. It's necessary to know how to deal with the Activiy parameter on login
-    ISecurityManager securityManager;
+            ISecurityManager securityManager;
 
     @Inject
     IReachability reachability;
 
-    private ACProgressFlower      progressDialog;
-    private Button                loginButton;
-    private TextView              memberNameTextView;
-    private SimpleDraweeView      memberProfileImageView;
+    private ACProgressFlower progressDialog;
+    private Button loginButton;
+    private TextView memberNameTextView;
+    private SimpleDraweeView memberProfileImageView;
     private ActionBarDrawerToggle toggle;
-    private boolean               userClickedLogout;
-    private int                   selectedMenuItemId;
+    private boolean userClickedLogout;
+    private int selectedMenuItemId;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity
                 showInfoMessage("Your login session expired");
                 onLoggedOut();
             }
+
             if (intent.getAction() == Constants.WIPE_DATE_EVENT) {
                 launchInitialDataLoadingActivity();
             }
@@ -78,16 +83,16 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-    static final int DATA_LOAD_REQUEST           = 1;  // The request code
-    static private boolean runningDataLoading    = false;
+    static final int DATA_LOAD_REQUEST = 1;  // The request code
+    static private boolean runningDataLoading = false;
     private final Object dataLoadingActivityLock = new Object();
 
-    private void launchInitialDataLoadingActivity(){
+    private void launchInitialDataLoadingActivity() {
         synchronized (dataLoadingActivityLock) {
-            if(runningDataLoading) return;
+            if (runningDataLoading) return;
             if (!presenter.isSummitDataLoaded()) {
                 runningDataLoading = true;
-                Intent intent      = new Intent(MainActivity.this, InitialDataLoadingActivity.class);
+                Intent intent = new Intent(MainActivity.this, InitialDataLoadingActivity.class);
                 Log.i(Constants.LOG_TAG, "starting InitialDataLoadingActivity ...");
                 startActivityForResult(intent, DATA_LOAD_REQUEST);
             }
@@ -153,6 +158,7 @@ public class MainActivity extends AppCompatActivity
         // This is somewhat like [[NSNotificationCenter defaultCenter] removeObserver:name:object:]
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
         super.onDestroy();
+        hideActivityIndicator();
     }
 
     @Override
@@ -164,7 +170,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void toggleMenuLogo(boolean show) {
-        ImageView footerLogo = (ImageView)findViewById(R.id.footer_logo);
+        ImageView footerLogo = (ImageView) findViewById(R.id.footer_logo);
         footerLogo.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
@@ -173,8 +179,16 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                presenter.onOpenedNavigationMenu();
+            }
+        };
+
         drawer.setDrawerListener(toggle);
+        //calling sync state is neccesary or else your hamburger icon wont show up
         toggle.syncState();
 
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -205,8 +219,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
-        LinearLayout headerView = (LinearLayout)navigationView.inflateHeaderView(R.layout.nav_header_main);
-        loginButton = (Button)headerView.findViewById(R.id.login_button);
+        LinearLayout headerView = (LinearLayout) navigationView.inflateHeaderView(R.layout.nav_header_main);
+        loginButton = (Button) headerView.findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,15 +240,16 @@ public class MainActivity extends AppCompatActivity
                     securityManager.login(MainActivity.this);
                 } else {
                     userClickedLogout = true;
+
                     securityManager.logout();
                 }
             }
         });
 
-        memberNameTextView = (TextView)headerView.findViewById(R.id.member_name_textview);
-        memberProfileImageView = (SimpleDraweeView)headerView.findViewById(R.id.member_profile_pic_imageview);
+        memberNameTextView = (TextView) headerView.findViewById(R.id.member_name_textview);
+        memberProfileImageView = (SimpleDraweeView) headerView.findViewById(R.id.member_profile_pic_imageview);
 
-        EditText searchText = (EditText)headerView.findViewById(R.id.nav_header_search_edittext);
+        EditText searchText = (EditText) headerView.findViewById(R.id.nav_header_search_edittext);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -301,7 +316,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public ApplicationComponent getApplicationComponent() {
-        return ((OpenStackSummitApplication)getApplication()).getApplicationComponent();
+        return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
     }
 
     public ActivityModule getActivityModule() {
@@ -335,7 +350,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoggedIn() {
         presenter.onLoggedIn();
-
         hideActivityIndicator();
     }
 
@@ -361,13 +375,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showErrorMessage(String message) {
-        if (BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Oops...")
                     .setContentText(message)
                     .show();
-        }
-        else {
+        } else {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Oops...")
                     .setContentText("There was a problem performing this operation.")
@@ -393,8 +406,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (show) {
             drawer.openDrawer(GravityCompat.START);
-        }
-        else {
+        } else {
             drawer.closeDrawer(GravityCompat.START);
         }
     }
@@ -410,32 +422,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showActivityIndicator() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(progressDialog != null) {
-                    hideActivityIndicator();
-                }
-                progressDialog = new ACProgressFlower.Builder(MainActivity.this)
-                        .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                        .themeColor(Color.WHITE)
-                        .text(getResources().getString(R.string.please_wait))
-                        .fadeColor(Color.DKGRAY).build();
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-            }
-        });
+        if (progressDialog != null) {
+            hideActivityIndicator();
+        }
+        progressDialog = new ACProgressFlower.Builder(MainActivity.this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .themeColor(Color.WHITE)
+                .text(getResources().getString(R.string.please_wait))
+                .fadeColor(Color.DKGRAY).build();
+        progressDialog.setCancelable(false);
+        progressDialog.show();
     }
 
     public void hideActivityIndicator() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (progressDialog != null) {
-                    progressDialog.hide();
-                    progressDialog = null;
-                }
-            }
-        });
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 }

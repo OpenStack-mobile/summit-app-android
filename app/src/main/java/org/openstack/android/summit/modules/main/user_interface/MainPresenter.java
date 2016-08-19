@@ -15,25 +15,22 @@ import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.data_updates.DataUpdatesService;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
-
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
-
 import bolts.AppLinkNavigation;
-
 
 /**
  * Created by Claudio Redi on 2/12/2016.
@@ -228,16 +225,13 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     @Override
     public void onLoggedIn() {
-        String currentMemberName = interactor.getCurrentMemberName();
-        Uri currentMemberProfilePicUri = interactor.getCurrentMemberProfilePictureUri();
-        view.setMemberName(currentMemberName);
+        MemberDTO member = interactor.getCurrentMember();
+        view.setMemberName(member.getFullName());
         view.setLoginButtonText(view.getResources().getText(R.string.log_out).toString());
         view.toggleMyProfileMenuItem(true);
-        view.setProfilePic(currentMemberProfilePicUri);
+        view.setProfilePic(Uri.parse(member.getPictureUrl()));
         view.toggleMenu(false);
-        if (interactor.isLoggedInAndConfirmedAttendee()) {
-            interactor.subscribeLoggedInMemberToPushNotifications();
-        }
+        interactor.subscribeLoggedInMemberToPushNotifications();
     }
 
     @Override
@@ -260,6 +254,11 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public boolean isSummitDataLoaded() {
         return interactor.isDataLoaded();
+    }
+
+    @Override
+    public void onOpenedNavigationMenu() {
+
     }
 
     private void trustEveryone() {

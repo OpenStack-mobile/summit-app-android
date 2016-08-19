@@ -4,11 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
-
 import java.util.Date;
-
 import javax.inject.Inject;
 
 /**
@@ -24,6 +21,7 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
 
     @Override
     public Feedback deserialize(String jsonString) throws JSONException {
+
         JSONObject jsonObject = new JSONObject(jsonString);
         String[] missedFields = validateRequiredFields(new String[] {"id", "rate", "created_date", "event_id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
@@ -36,23 +34,18 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
         );
         feedback.setDate(new Date(jsonObject.getInt("created_date")*1000L));
 
-        int ownerId;
-        if (jsonObject.has("attendee_id")){
-            ownerId  = jsonObject.getInt("attendee_id");
-            feedback.setOwner(deserializerStorage.get(ownerId, SummitAttendee.class));
-        }
-        else if (jsonObject.has("member_id")) {
+        if (jsonObject.has("member_id")) {
             int memberId = jsonObject.getInt("member_id");
             Member member = deserializerStorage.get(memberId, Member.class);
             if(member != null && member.getAttendeeRole() != null)
-                feedback.setOwner(member.getAttendeeRole());
+                feedback.setOwner(member);
         }
         else if (jsonObject.has("owner")) {
-            SummitAttendee summitAttendee = new SummitAttendee();
+            Member member = new Member();
             JSONObject jsonObjectAttendee = jsonObject.getJSONObject("owner");
-            summitAttendee.setId(jsonObjectAttendee.getInt("id"));
-            summitAttendee.setFullName(jsonObjectAttendee.getString("first_name") + " " + jsonObjectAttendee.getString("last_name"));
-            feedback.setOwner(summitAttendee);
+            member.setId(jsonObjectAttendee.getInt("id"));
+            member.setFullName(jsonObjectAttendee.getString("first_name") + " " + jsonObjectAttendee.getString("last_name"));
+            feedback.setOwner(member);
         }
 
         if(feedback.getOwner() == null)

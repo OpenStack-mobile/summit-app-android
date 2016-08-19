@@ -8,6 +8,7 @@ import com.github.kevinsawicki.http.HttpRequest;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.api_endpoints.ApiEndpointBuilder;
 import org.openstack.android.summit.common.data_access.BaseRemoteDataStore;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -20,6 +21,8 @@ import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -109,14 +112,18 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
 
         long latestDataUpdateId       = session.getLong(KEY_LAST_EVENT_ID);
         long latestDataUpdateIdFromDB = dataUpdateDataStore.getLatestDataUpdate();
+        Map<String, Object>params     =  new HashMap<>();
 
         if(latestDataUpdateId < latestDataUpdateIdFromDB ){
             latestDataUpdateId = latestDataUpdateIdFromDB;
             session.setLong(KEY_LAST_EVENT_ID, latestDataUpdateId);
         }
 
-        if (latestDataUpdateId > 0)
-            return String.format("%s%s%d", getBaseResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=50&last_event_id=", latestDataUpdateId);
+        if (latestDataUpdateId > 0){
+            params.put(ApiEndpointBuilder.LimitParam, 50);
+            params.put(ApiEndpointBuilder.LastEventIdParam, latestDataUpdateId);
+            return ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.EntityEvents, params ).toString();
+        }
 
         long fromDate = getFromDate();
         if (fromDate == 0) {
@@ -127,7 +134,9 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             }
         }
         if (fromDate != 0) {
-            return String.format("%s%s%d", getBaseResourceServerUrl(), "/api/v1/summits/current/entity-events?limit=10&from_date=", fromDate);
+            params.put(ApiEndpointBuilder.LimitParam, 50);
+            params.put(ApiEndpointBuilder.FromDateParam, fromDate);
+            return ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(),"current", ApiEndpointBuilder.EndpointType.EntityEvents, params ).toString();
         }
 
         return null;

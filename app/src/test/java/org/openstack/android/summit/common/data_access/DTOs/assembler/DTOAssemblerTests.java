@@ -19,6 +19,7 @@ import org.openstack.android.summit.common.data_access.MockSupport;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Feedback;
+import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.Summit;
@@ -284,14 +285,14 @@ public class DTOAssemblerTests {
         summitEvent.setId(4);
         summitEvent.setName("Registration Check-In");
 
-        SummitAttendee summitAttendee = new SummitAttendee();
-        summitAttendee.setId(2);
-        summitAttendee.setFullName("Claudio Redi");
+        Member owner = new Member();
+        owner.setId(2);
+        owner.setFullName("Claudio Redi");
 
         Feedback feedback = new Feedback();
         feedback.setId(1);
         feedback.setEvent(summitEvent);
-        feedback.setOwner(summitAttendee);
+        feedback.setOwner(owner);
         feedback.setDate(new Date(new Date().getTime() - 1000*60*1));
         feedback.setRate(4);
 
@@ -317,14 +318,14 @@ public class DTOAssemblerTests {
         summitEvent.setId(4);
         summitEvent.setName("Registration Check-In");
 
-        SummitAttendee summitAttendee = new SummitAttendee();
-        summitAttendee.setId(2);
-        summitAttendee.setFullName("Claudio Redi");
+        Member owner = new Member();
+        owner.setId(2);
+        owner.setFullName("Claudio Redi");
 
         Feedback feedback = new Feedback();
         feedback.setId(1);
         feedback.setEvent(summitEvent);
-        feedback.setOwner(summitAttendee);
+        feedback.setOwner(owner);
         feedback.setDate(new Date(new Date().getTime() - 1000*60*60*24));
         feedback.setRate(4);
 

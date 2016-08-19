@@ -29,5 +29,7 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
 
     boolean isSummitDataLoaded();
 
+    void onOpenedNavigationMenu();
+
     void showEventView(int eventId);
 }

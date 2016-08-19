@@ -9,6 +9,7 @@ import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.entities.Feedback;
+import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
@@ -23,7 +24,7 @@ public class AbstractFeedback2FeedbackDTO<S extends Feedback> extends AbstractCo
             feedbackDTO.setId(source.getId());
             feedbackDTO.setRate(source.getRate());
             feedbackDTO.setReview(source.getReview());
-            SummitAttendee owner =  source.getOwner();
+            Member owner =  source.getOwner();
             SummitEvent event    = source.getEvent();
             String ownerFullName = (owner != null) ? owner.getFullName() : "NOT SET";
 

@@ -46,13 +46,18 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     }
 
     @Override
-    public Boolean isEventScheduledByLoggedMember(int eventId) {
+    public boolean isEventScheduledByLoggedMember(int eventId) {
         return scheduleableInteractor.isEventScheduledByLoggedMember(eventId);
     }
 
     @Override
-    public Boolean isMemberLoggedInConfirmedAttendee() {
-        return scheduleableInteractor.isMemberLoggedInConfirmedAttendee();
+    public boolean isMemberLoggedAndConfirmedAttendee() {
+        return scheduleableInteractor.isMemberLoggedAndConfirmedAttendee();
+    }
+
+    @Override
+    public boolean isMemberLogged() {
+        return scheduleableInteractor.isMemberLogged();
     }
 
     @Override

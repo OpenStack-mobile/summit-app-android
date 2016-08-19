@@ -11,8 +11,6 @@ import org.openstack.android.summit.common.data_access.deserialization.DataStore
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,7 +98,7 @@ public class MemberOrderConfirmInteractor extends BaseInteractor implements IMem
     }
 
     @Override
-    public void linkAttendee() {
-        securityManager.linkAttendeeIfExist();
+    public void bindCurrentUser() {
+        securityManager.bindCurrentUser();
     }
 }

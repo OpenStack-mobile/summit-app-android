@@ -23,7 +23,7 @@ public class MemberOrderConfirmPresenter extends BasePresenter<IMemberOrderConfi
     }
 
     @Override
-    public void comfirmOrder(final String orderNumber) {
+    public void confirmOrder(final String orderNumber) {
         view.showActivityIndicator();
 
         this.orderNumber = orderNumber;
@@ -72,7 +72,7 @@ public class MemberOrderConfirmPresenter extends BasePresenter<IMemberOrderConfi
         IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
             @Override
             public void onSucceed() {
-                interactor.linkAttendee();
+                interactor.bindCurrentUser();
                 view.hideActivityIndicator();
             }
 

@@ -1,14 +1,10 @@
 package org.openstack.android.summit.modules.feedback_given_list.user_interface;
 
 import android.os.Bundle;
-
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
-import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.IFeedbackItemView;
 import org.openstack.android.summit.modules.feedback_given_list.business_logic.IFeedbackGivenListInteractor;
-
 import java.util.List;
 
 /**
@@ -31,6 +27,7 @@ public class FeedbackGivenListPresenter extends BasePresenter<IFeedbackGivenList
     public void buildItem(IFeedbackItemView feedbackItemView, int position) {
         FeedbackDTO feedback = feedbackList.get(position);
         feedbackItemView.setDate(feedback.getTimeAgo());
+        feedbackItemView.setOwner(feedback.getOwner());
         feedbackItemView.setEventTitle(feedback.getEventName());
         feedbackItemView.setRate(feedback.getRate());
         feedbackItemView.setReview(feedback.getReview());

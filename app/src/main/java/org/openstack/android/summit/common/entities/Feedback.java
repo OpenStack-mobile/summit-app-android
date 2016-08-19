@@ -15,7 +15,7 @@ public class Feedback extends RealmObject implements IEntity {
     private String review;
     private Date date;
     private SummitEvent event;
-    private SummitAttendee owner;
+    private Member owner;
 
     public int getId() {
         return id;
@@ -57,11 +57,11 @@ public class Feedback extends RealmObject implements IEntity {
         this.event = event;
     }
 
-    public SummitAttendee getOwner() {
+    public Member getOwner() {
         return owner;
     }
 
-    public void setOwner(SummitAttendee owner) {
+    public void setOwner(Member owner) {
         this.owner = owner;
     }
 }

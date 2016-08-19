@@ -49,9 +49,10 @@ public class HttpTask extends AsyncTask<Void, Void, HttpTaskResult> {
                 taskResult.setBody("Invalid http method");
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG, "Error executing API request", e);
+            Log.w(Constants.LOG_TAG, "Error executing API request", e);
             taskResult.setSucceed(false);
             taskResult.setBody(e.getMessage());
             taskResult.setError(e);

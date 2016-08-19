@@ -12,8 +12,9 @@ import io.realm.SummitAttendeeRealmProxy;
  * Created by Claudio Redi on 1/27/2016.
  */
 public class MemberRealmProxy2MemberDTO extends AbstractMember2MemberDTO<MemberRealmProxy, SummitAttendeeRealmProxy, PresentationSpeakerRealmProxy> {
+
     public MemberRealmProxy2MemberDTO() {
-        abstractSummitAttendee2PersonDTO = new SummitAttendeeRealmProxy2PersonDTO();
+        abstractSummitAttendee2PersonDTO      = new SummitAttendeeRealmProxy2PersonDTO();
         abstractPresentationSpeaker2PersonDTO = new PresentationSpeakerRealmProxy2PersonDTO();
     }
 }

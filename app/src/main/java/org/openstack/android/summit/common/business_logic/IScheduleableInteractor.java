@@ -11,9 +11,11 @@ public interface IScheduleableInteractor extends IBaseInteractor  {
 
     void removeEventFromLoggedInMemberSchedule(int eventId, IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener);
 
-    Boolean isEventScheduledByLoggedMember(int eventId);
+    boolean isEventScheduledByLoggedMember(int eventId);
 
-    Boolean isMemberLoggedInConfirmedAttendee();
+    boolean isMemberLoggedAndConfirmedAttendee();
+
+    boolean isMemberLogged();
 
     boolean shouldShowVenues();
 }

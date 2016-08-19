@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import org.openstack.android.summit.BuildConfig;
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.modules.events.user_interface.IEventsView;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
@@ -120,6 +122,13 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
         activityIndicatorTask = worker.schedule(task, delay, TimeUnit.MILLISECONDS);
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideActivityIndicator();
+    }
+
     @Override
     public void hideActivityIndicator() {
         if (getActivity() == null) {
@@ -132,7 +141,7 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
                 isActivityIndicatorVisible = false;
 
                 if (progressDialog != null) {
-                    progressDialog.hide();
+                    progressDialog.dismiss();
                     progressDialog = null;
                 }
             }

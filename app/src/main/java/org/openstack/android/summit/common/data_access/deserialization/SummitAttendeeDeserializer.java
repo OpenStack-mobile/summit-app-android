@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.TicketType;
@@ -19,15 +18,11 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 11/16/2015.
  */
 public class SummitAttendeeDeserializer extends BaseDeserializer implements ISummitAttendeeDeserializer {
-    IPersonDeserializer personDeserializer;
     IDeserializerStorage deserializerStorage;
-    IFeedbackDeserializer feedbackDeserializer;
 
     @Inject
-    public SummitAttendeeDeserializer(IPersonDeserializer personDeserializer, IFeedbackDeserializer feedbackDeserializer, IDeserializerStorage deserializerStorage) {
-        this.personDeserializer = personDeserializer;
+    public SummitAttendeeDeserializer(IDeserializerStorage deserializerStorage) {
         this.deserializerStorage = deserializerStorage;
-        this.feedbackDeserializer = feedbackDeserializer;
     }
 
     @Override
@@ -38,7 +33,7 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         handleMissedFieldsIfAny(missedFields);
 
         SummitAttendee summitAttendee = new SummitAttendee();
-        personDeserializer.deserialize(summitAttendee, jsonObject);
+        summitAttendee.setId(jsonObject.getInt("id"));
 
         // added here so it's available on child deserialization
         if(!deserializerStorage.exist(summitAttendee, SummitAttendee.class)) {
@@ -69,21 +64,6 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
             ticketTypeId = jsonArrayTicketTypes.getInt(i);
             ticketType = deserializerStorage.get(ticketTypeId, TicketType.class);
             summitAttendee.getTicketTypes().add(ticketType);
-        }
-
-        Feedback feedback;
-        JSONObject jsonObjectFeedback;
-        JSONArray jsonArrayFeedback = jsonObject.getJSONArray("feedback");
-        for (int i = 0; i < jsonArrayFeedback.length(); i++) {
-            jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
-            try {
-                feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());
-                summitAttendee.getFeedback().add(feedback);
-            }
-            catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.e(Constants.LOG_TAG, String.format("Error deserializing feedback %s", jsonObjectFeedback.toString()), e);
-            }
         }
 
         return summitAttendee;

@@ -21,10 +21,19 @@ public class AbstractMember2MemberDTO<S extends Member, A extends SummitAttendee
 
     @Override
     protected MemberDTO convert(S source) {
+
         MemberDTO memberDTO = new MemberDTO();
 
         try {
+
             memberDTO.setId(source.getId());
+            memberDTO.setFirstName(source.getFirstName());
+            memberDTO.setLastName(source.getLastName());
+            memberDTO.setPictureUrl(source.getPictureUrl());
+            memberDTO.setBio(source.getBio());
+            memberDTO.setIrc(source.getIrc());
+            memberDTO.setTwitter(source.getTwitter());
+
             if (source.getAttendeeRole() != null) {
                 memberDTO.setAttendeeRole(abstractSummitAttendee2PersonDTO.convert((A)source.getAttendeeRole()));
             }

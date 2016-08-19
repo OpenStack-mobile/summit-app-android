@@ -27,13 +27,11 @@ public class FeedbackGivenListInteractor extends BaseInteractor implements IFeed
         Member member = securityManager.getCurrentMember();
         List<FeedbackDTO> dtos;
         if (member != null) {
-            dtos = createDTOList(member.getAttendeeRole().getFeedback(), FeedbackDTO.class);
+            dtos = createDTOList(member.getFeedback(), FeedbackDTO.class);
             Collections.sort(dtos, new CustomComparator());
             return dtos;
         }
-        else {
-            return new ArrayList<>();
-        }
+        return new ArrayList<>();
     }
 
     public class CustomComparator implements Comparator<FeedbackDTO> {

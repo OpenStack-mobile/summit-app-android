@@ -138,7 +138,7 @@ public class MemberOrderConfirmFragment extends BaseFragment<IMemberOrderConfirm
         TextView orderNumberText = (TextView)view.findViewById(R.id.member_order_confirm_number_text);
         String orderNumber = orderNumberText.getText().toString();
         if (!orderNumber.isEmpty()) {
-            presenter.comfirmOrder(orderNumber);
+            presenter.confirmOrder(orderNumber);
         }
     }
 
