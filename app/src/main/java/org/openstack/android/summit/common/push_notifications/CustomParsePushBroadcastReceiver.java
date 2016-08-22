@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.push_notifications;
 
 import android.app.Activity;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
@@ -11,24 +12,59 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.BigTextStyle;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
 import com.parse.ParseAnalytics;
 import com.parse.ParsePushBroadcastReceiver;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
+import org.openstack.android.summit.common.entities.Member;
+import org.openstack.android.summit.common.entities.PushNotification;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.AppLinkRouter;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
+import org.openstack.android.summit.common.utils.IAppLinkRouter;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationsListInteractor;
+
 import java.util.Locale;
 import java.util.Random;
-import android.support.v4.app.NotificationCompat.BigTextStyle;
+
+import javax.inject.Inject;
 
 /**
  * Created by sebastian on 8/16/2016.
  */
 public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
+
+    @Inject
+    IDeserializer deserializer;
+
+    @Inject
+    IPushNotificationDataStore pushNotificationDataStore;
+
+    @Inject
+    ISecurityManager securityManager;
+
+    @Inject
+    IPushNotificationsListInteractor interactor;
+
+    @Inject
+    IAppLinkRouter appLinkRouter;
+
+    @Override
+    public void onReceive(Context context, Intent intent){
+       ((OpenStackSummitApplication)context.getApplicationContext()).getApplicationComponent().inject(this);
+        super.onReceive(context, intent);
+    }
 
     final static String GROUP_KEY_OPENSTACK_NOTIFICATIONS = "openstack_notifications";
 
@@ -50,7 +86,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
         }
 
         String title                 = pushData.optString("title", "OpenStack");
-        String alert                 = pushData.optString("alert", "Notification received.");
+        String alert                 = pushData.optString("alert", "PushNotification received.");
         String tickerText            = String.format(Locale.getDefault(), "%s: %s", title, alert);
         Bundle extras                = intent.getExtras();
         Random random                = new Random();
@@ -75,7 +111,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
         PendingIntent pDeleteIntent = PendingIntent.getBroadcast(context, deleteIntentRequestCode,
                 deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // The purpose of setDefaults(Notification.DEFAULT_ALL) is to inherit notification properties
+        // The purpose of setDefaults(PushNotification.DEFAULT_ALL) is to inherit notification properties
         // from system defaults
         Builder builder    = new Builder(context);
         BigTextStyle style = new BigTextStyle();
@@ -102,20 +138,19 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
     protected void onPushOpen(Context context, Intent intent) {
         // Send a Parse Analytics "push opened" event
         ParseAnalytics.trackAppOpenedInBackground(intent);
-
-        String uriString = null;
+        Integer notificationId = 0;
         try {
             JSONObject pushData = new JSONObject(intent.getStringExtra(KEY_PUSH_DATA));
-            int eventId = pushData.optInt("event_id", 0);
-            if(eventId > 0){
-                uriString = String.format("%s://%s/%s", AppLinkRouter.DeepLinkHost, DeepLinkInfo.EventsPath, eventId);
-            }
+            notificationId      = pushData.optInt("id", 0);
+            if(notificationId > 0)
+                interactor.markAsOpen(notificationId);
+
         } catch (JSONException e) {
             Log.e(Constants.LOG_TAG, "Unexpected JSONException when receiving push data: ", e);
         }
 
         Class<? extends Activity> cls = getActivity(context, intent);
-        Intent activityIntent = (uriString != null)?new Intent(Intent.ACTION_VIEW, Uri.parse(uriString)): new Intent(context, cls);
+        Intent activityIntent         = new Intent(Intent.ACTION_VIEW, this.appLinkRouter.buildUriFor(DeepLinkInfo.NotificationsPath, notificationId.toString()));
         activityIntent.putExtras(intent.getExtras());
 
         /*
@@ -132,14 +167,81 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
             return;
         }
 
+        Intent openedIntent = new Intent(Constants.PUSH_NOTIFICATION_OPENED);
+        LocalBroadcastManager.getInstance(context.getApplicationContext()).sendBroadcast(openedIntent);
+
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         context.startActivity(activityIntent);
     }
 
     @Override
     protected void onPushDismiss(Context context, Intent intent) {
-        // do nothing
+        Intent deletedIntent = new Intent(Constants.PUSH_NOTIFICATION_DELETED);
+        LocalBroadcastManager.getInstance(context.getApplicationContext()).sendBroadcast(deletedIntent);
+    }
+
+    @Override
+    protected void onPushReceive(Context context, Intent intent){
+        String data = intent.getStringExtra(KEY_PUSH_DATA);
+
+        if (data == null) {
+            return;
+        }
+
+        JSONObject pushData = null;
+        try {
+            pushData = new JSONObject(data);
+        } catch (JSONException e) {
+            Log.e(Constants.LOG_TAG, "Unexpected JSONException when receiving push data: ", e);
+        }
+
+        // save
+        try{
+            // If the push data includes an action string, that broadcast intent is fired.
+            String action = null;
+            if (pushData != null) {
+                action = pushData.optString("action", null);
+            }
+            if (action != null) {
+                Bundle extras = intent.getExtras();
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.putExtras(extras);
+                broadcastIntent.setAction(action);
+                broadcastIntent.setPackage(context.getPackageName());
+                context.sendBroadcast(broadcastIntent);
+            }
+
+            Notification notification = getNotification(context, intent);
+
+            PushNotification pushNotification = deserializer.deserialize(data, PushNotification.class);
+            Member currentMember              = securityManager.getCurrentMember();
+            if(currentMember != null)
+                pushNotification.setOwner(currentMember);
+
+            pushNotificationDataStore.saveOrUpdate(pushNotification, null, PushNotification.class);
+
+            if (notification != null) {
+                // Fire off the notification
+                NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+                try {
+                    nm.notify(pushNotification.getId(), notification);
+                } catch (SecurityException e) {
+                    // Some phones throw an exception for unapproved vibration
+                    notification.defaults = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND;
+                    nm.notify(pushNotification.getId(), notification);
+                }
+            }
+            // send the notification
+            Intent receivedIntent = new Intent(Constants.PUSH_NOTIFICATION_RECEIVED);
+            LocalBroadcastManager.getInstance(context.getApplicationContext()).sendBroadcast(receivedIntent);
+        }
+        catch (Exception ex){
+            Log.w(Constants.LOG_TAG, ex);
+        }
     }
 
 }

@@ -190,7 +190,6 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         }
     }
 
-
     @Override
     public void showVenueDetail() {
         if(event.getVenueRoomId() > 0) {

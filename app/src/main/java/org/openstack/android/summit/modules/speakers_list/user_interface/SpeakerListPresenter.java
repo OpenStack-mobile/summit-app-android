@@ -27,7 +27,7 @@ public class SpeakerListPresenter extends BasePresenter<ISpeakerListView, ISpeak
     @Inject
     public SpeakerListPresenter(ISpeakerListInteractor interactor, ISpeakerListWireframe wireframe) {
         super(interactor, wireframe);
-    }
+}
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {

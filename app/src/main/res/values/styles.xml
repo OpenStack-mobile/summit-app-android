@@ -9,6 +9,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewAppTheme</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <!-- CAB overlays action bar -->
+        <item name="windowActionModeOverlay">true</item>
+        <!-- CAB Style -->
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
+    </style>
+
+    <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/colorPrimary</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -196,6 +210,24 @@
         <item name="android:padding">0dp</item>
         <item name="android:minWidth">1dp</item>
         <item name="android:minHeight">1dp</item>
+    </style>
+
+    <style name="counter" parent="android:Widget.TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/material_badge</item>
+    </style>
+
+    <style name="label" parent="android:Widget.TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/material_label</item>
     </style>
 
 </resources>

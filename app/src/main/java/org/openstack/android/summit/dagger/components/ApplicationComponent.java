@@ -7,12 +7,14 @@ package org.openstack.android.summit.dagger.components;
 import org.openstack.android.summit.InitialDataLoadingActivity;
 import org.openstack.android.summit.common.data_updates.DataUpdatesService;
 import org.openstack.android.summit.common.player.YouTubePlayerActivity;
+import org.openstack.android.summit.common.push_notifications.CustomParsePushBroadcastReceiver;
 import org.openstack.android.summit.common.security.AuthenticatorActivity;
 import org.openstack.android.summit.common.security.AuthenticatorService;
 import org.openstack.android.summit.dagger.modules.AboutModule;
 import org.openstack.android.summit.dagger.modules.FeedbackEditModule;
 import org.openstack.android.summit.dagger.modules.MainModule;
 import org.openstack.android.summit.dagger.modules.MemberOrderConfirmModule;
+import org.openstack.android.summit.dagger.modules.PushNotificationsInboxModule;
 import org.openstack.android.summit.dagger.modules.VenueMapModule;
 import org.openstack.android.summit.modules.about.user_interface.AboutFragment;
 import org.openstack.android.summit.modules.event_detail.user_interface.VenueRoomDetailFragment;
@@ -53,6 +55,8 @@ import org.openstack.android.summit.modules.level_schedule.user_interface.LevelS
 import org.openstack.android.summit.modules.member_order_confirm.user_interface.MemberOrderConfirmFragment;
 import org.openstack.android.summit.modules.member_profile.user_interface.MemberProfileFragment;
 import org.openstack.android.summit.modules.member_profile_detail.user_interface.MemberProfileDetailFragment;
+import org.openstack.android.summit.modules.push_notifications_inbox.user_interface.PushNotificationDetailFragment;
+import org.openstack.android.summit.modules.push_notifications_inbox.user_interface.PushPushNotificationsListFragment;
 import org.openstack.android.summit.modules.personal_schedule.user_interface.PersonalScheduleFragment;
 import org.openstack.android.summit.modules.search.user_interface.SearchFragment;
 import org.openstack.android.summit.modules.speaker_presentations.user_interface.SpeakerPresentationsFragment;
@@ -69,7 +73,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class} )
+@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class, PushNotificationsInboxModule.class} )
 public interface ApplicationComponent {
     void inject(MainActivity mainActivity);
     void inject(InitialDataLoadingActivity initialDataLoadingActivity);
@@ -101,4 +105,7 @@ public interface ApplicationComponent {
     void inject(DataUpdatesService dataUpdatesService);
     void inject(AuthenticatorActivity authenticatorActivity);
     void inject(YouTubePlayerActivity youTubePlayerActivity);
+    void inject(CustomParsePushBroadcastReceiver customParsePushBroadcastReceiver);
+    void inject(PushPushNotificationsListFragment pushPushNotificationsListFragment);
+    void inject(PushNotificationDetailFragment pushNotificationDetailFragment);
 }

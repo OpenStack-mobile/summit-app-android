@@ -7,6 +7,7 @@ import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
@@ -18,6 +19,7 @@ import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
 import org.openstack.android.summit.common.data_access.IVenueDataStore;
 import org.openstack.android.summit.common.data_access.MemberDataStore;
 import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.PushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.PresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.SummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataStore;
@@ -56,6 +58,7 @@ import org.openstack.android.summit.common.data_access.deserialization.IPresenta
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationSlideDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationSpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationVideoDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.IPushNotificationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitEventDeserializer;
@@ -72,6 +75,7 @@ import org.openstack.android.summit.common.data_access.deserialization.Presentat
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSlideDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationVideoDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.PushNotificationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitEventDeserializer;
@@ -80,7 +84,6 @@ import org.openstack.android.summit.common.data_access.deserialization.TrackGrou
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
-import org.openstack.android.summit.common.entities.IPresentationVideo;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.network.Reachability;
@@ -91,7 +94,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.realm.Realm;
 
 /**
  * Created by Claudio Redi on 11/3/2015.
@@ -175,6 +177,12 @@ public class DataAccessModule {
         return new PresentationSpeakerDeserializer(personDeserializer, deserializerStorage);
     }
 
+
+    @Provides
+    IPushNotificationDeserializer providesPushNotificationDeserializer(IDeserializerStorage deserializerStorage) {
+        return new PushNotificationDeserializer(deserializerStorage);
+    }
+
     @Provides
     IVenueFloorDeserializer providesVenueFloorDeserializer(IDeserializerStorage deserializerStorage) {
         return new VenueFloorDeserializer(deserializerStorage);
@@ -231,7 +239,9 @@ public class DataAccessModule {
                                        ITrackDeserializer trackDeserializer,
                                        IVenueRoomDeserializer venueRoomDeserializer,
                                        IVenueDeserializer venueDeserializer,
-                                       IVenueFloorDeserializer venueFloorDeserializer)
+                                       IVenueFloorDeserializer venueFloorDeserializer,
+                                       IPushNotificationDeserializer pushNotificationDeserializer
+                                       )
     {
         return new Deserializer(genericDeserializer,
                 feedbackDeserializer,
@@ -245,7 +255,9 @@ public class DataAccessModule {
                 trackDeserializer,
                 venueRoomDeserializer,
                 venueDeserializer,
-                venueFloorDeserializer);
+                venueFloorDeserializer,
+                pushNotificationDeserializer
+                );
     }
 
     @Provides
@@ -310,6 +322,11 @@ public class DataAccessModule {
     @Provides
     IPresentationSpeakerDataStore providesPresentationSpeakerDataStore() {
         return new PresentationSpeakerDataStore();
+    }
+
+    @Provides
+    IPushNotificationDataStore providesNotificationDataStore() {
+        return new PushNotificationDataStore();
     }
 
     @Provides

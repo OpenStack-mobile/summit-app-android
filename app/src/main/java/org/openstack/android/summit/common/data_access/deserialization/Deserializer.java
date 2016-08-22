@@ -14,6 +14,7 @@ import org.openstack.android.summit.common.entities.IEntity;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.PushNotification;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -49,7 +50,7 @@ public class Deserializer implements IDeserializer {
     IVenueDeserializer venueDeserializer;
     IVenueFloorDeserializer venueFloorDeserializer;
     IVenueRoomDeserializer venueRoomDeserializer;
-
+    IPushNotificationDeserializer pushNotificationDeserializer;
 
     public Deserializer()
     {
@@ -68,7 +69,9 @@ public class Deserializer implements IDeserializer {
                         ITrackDeserializer trackDeserializer,
                         IVenueRoomDeserializer venueRoomDeserializer,
                         IVenueDeserializer venueDeserializer,
-                        IVenueFloorDeserializer venueFloorDeserializer)
+                        IVenueFloorDeserializer venueFloorDeserializer,
+                        IPushNotificationDeserializer pushNotificationDeserializer
+    )
     {
         this.genericDeserializer = genericDeserializer;
         this.feedbackDeserializer = feedbackDeserializer;
@@ -83,6 +86,7 @@ public class Deserializer implements IDeserializer {
         this.venueDeserializer = venueDeserializer;
         this.venueRoomDeserializer = venueRoomDeserializer;
         this.venueFloorDeserializer = venueFloorDeserializer;
+        this.pushNotificationDeserializer = pushNotificationDeserializer;
     }
 
     @Override
@@ -123,6 +127,9 @@ public class Deserializer implements IDeserializer {
         }
         else if (type == VenueFloor.class) {
             return (T)venueFloorDeserializer.deserialize(jsonString);
+        }
+        else if (type == PushNotification.class) {
+            return (T)pushNotificationDeserializer.deserialize(jsonString);
         }
         else {
             return genericDeserializer.deserialize(jsonString, type);

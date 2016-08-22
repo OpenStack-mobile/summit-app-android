@@ -122,7 +122,6 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
         activityIndicatorTask = worker.schedule(task, delay, TimeUnit.MILLISECONDS);
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -194,5 +193,11 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
+
+    @Override
+    public Context getApplicationContext() {
+        return getContext().getApplicationContext();
+    }
+
 
 }

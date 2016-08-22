@@ -48,11 +48,33 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
             }
 
             try {
-                if (interactor.isLoggedInAndConfirmedAttendee() || intent.getAction() == Constants.LOGGED_OUT_EVENT) {
+
+                if(intent.getAction().contains(Constants.PUSH_NOTIFICATION_RECEIVED)){
+                    updateNotificationCounter();
+                    return;
+                }
+
+                if(intent.getAction().contains(Constants.PUSH_NOTIFICATION_DELETED)){
+                    updateNotificationCounter();
+                    return;
+                }
+
+                if(intent.getAction().contains(Constants.PUSH_NOTIFICATION_OPENED)){
+                    updateNotificationCounter();
+                    return;
+                }
+
+                if(intent.getAction().contains(Constants.LOGGED_IN_EVENT)){
+                    showMyProfileView();
+                    return;
+                }
+
+                if (interactor.isLoggedInAndConfirmedAttendee() || intent.getAction().contains(Constants.LOGGED_OUT_EVENT)) {
                     wireframe.showEventsView(view);
                     return;
                 }
-                showMyProfileView();
+
+
             } catch (Exception ex) {
                 Crashlytics.logException(new Exception(String.format("Error opening fragment on login/logout notification. onSaveInstanceExecuted = %b ", onSaveInstanceExecuted), ex));
             }
@@ -64,9 +86,14 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         this.appLinkRouter = appLinkRouter;
     }
 
+    private void updateNotificationCounter(){
+        view.updateNotificationCounter(this.interactor.getNotReadNotificationsCount());
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        updateNotificationCounter();
         DataUpdatesService.setServiceAlarm((Context)view, true);
         checkDeepLinks();
     }
@@ -83,18 +110,20 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        showMessageIfTriggeredByNotification();
+        //showMessageIfTriggeredByNotification();
         trustEveryone();
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGGED_IN_EVENT);
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
+        intentFilter.addAction(Constants.PUSH_NOTIFICATION_RECEIVED);
+        intentFilter.addAction(Constants.PUSH_NOTIFICATION_DELETED);
+        intentFilter.addAction(Constants.PUSH_NOTIFICATION_OPENED);
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
 
         if (savedInstanceState == null) {
             showEventsView();
         }
-
     }
 
     private boolean checkDeepLinks(){
@@ -119,6 +148,11 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                         this.wireframe.showSpeakerProfile(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
+                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewNotification){
+                        if(!deepLinkInfo.hasParam()) return false;
+                        this.wireframe.showPushNotification(deepLinkInfo.getParamAsInt(), this.view);
+                        return true;
+                    }
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSchedule){
                         return true;
                     }
@@ -134,7 +168,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         return false;
     }
 
-    private void showMessageIfTriggeredByNotification() {
+    /*private void showMessageIfTriggeredByNotification() {
         Intent intent = view.getIntent();
         if (intent != null) {
             if (intent.getExtras() != null) {
@@ -153,7 +187,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                 }
             }
         }
-    }
+    }*/
 
     public void showEventsView() {
         wireframe.showEventsView(view);
@@ -164,6 +198,15 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         wireframe.showEventDetail(eventId, view);
     }
 
+    @Override
+    public void showNotificationView() {
+        if(!interactor.isDataLoaded()) {
+            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
+            return;
+        }
+        wireframe.showNotificationsListView(view);
+    }
+
     public void showMyProfileView() {
         if(!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
@@ -172,10 +215,11 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
         if (interactor.isLoggedInAndConfirmedAttendee()) {
             wireframe.showMyProfileView(view);
+            return;
         }
-        else {
-            wireframe.showMemberOrderConfirmView(view);
-        }
+
+        wireframe.showMemberOrderConfirmView(view);
+
     }
 
     public void showSpeakerListView() {

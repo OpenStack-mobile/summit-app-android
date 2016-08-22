@@ -1,9 +1,7 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 
 import javax.inject.Inject;

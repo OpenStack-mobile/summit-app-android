@@ -12,4 +12,5 @@
     <color name="white">#FFFFFF</color>
     <color name="openStackYellow">#F8E71C</color>
     <color name="translucent">#70000000</color>
+    <color name="choice_mode_multiple_pressed_color">#99D9EA</color>
 </resources>

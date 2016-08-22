@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.network.IReachability;
@@ -16,6 +17,7 @@ import org.openstack.android.summit.modules.main.user_interface.IMainPresenter;
 import org.openstack.android.summit.modules.main.user_interface.MainPresenter;
 import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
+import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.venues.IVenuesWireframe;
@@ -30,13 +32,13 @@ import dagger.Provides;
 public class MainModule {
 
     @Provides
-    IMainWireframe providesMainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IMemberOrderConfirmWireframe memberOrderConfirmWireframe, IAboutWireframe aboutWireframe) {
-        return new MainWireframe(eventsWireframe, speakerListWireframe, memberProfileWireframe, searchWireframe, venuesWireframe, memberOrderConfirmWireframe, aboutWireframe);
+    IMainWireframe providesMainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IMemberOrderConfirmWireframe memberOrderConfirmWireframe, IAboutWireframe aboutWireframe, IPushNotificationsWireframe nofificationsWireframe) {
+        return new MainWireframe(eventsWireframe, speakerListWireframe, memberProfileWireframe, searchWireframe, venuesWireframe, memberOrderConfirmWireframe, aboutWireframe, nofificationsWireframe);
     }
 
     @Provides
-    IMainInteractor providesMainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability) {
-        return new MainInteractor(summitDataStore, securityManager, pushNotificationsManager, dtoAssembler, reachability);
+    IMainInteractor providesMainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability, IPushNotificationDataStore pushNotificationDataStore) {
+        return new MainInteractor(summitDataStore, securityManager, pushNotificationsManager, dtoAssembler, reachability, pushNotificationDataStore);
     }
 
     @Provides

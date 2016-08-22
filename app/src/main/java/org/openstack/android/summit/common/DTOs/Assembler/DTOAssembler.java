@@ -9,6 +9,9 @@ import org.openstack.android.summit.common.DTOs.Assembler.Converters.Presentatio
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.PresentationSpeaker2PersonListIemDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.PresentationSpeakerRealmProxy2PersonDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.PresentationSpeakerRealmProxy2PersonListItemDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.PushNotification2PushNotificationListItemDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.PushNotificationRealmProxy2PushNotificationDetailDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.PushNotificationRealmProxy2PushNotificationListItemDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitAttendee2PersonDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitAttendeeRealmProxy2PersonDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitEvent2EventDetailDTO;
@@ -19,6 +22,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.Converters.Venue2Venue
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueFloorRealmProxy2VenueFloorDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueRealmProxy2VenueDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueRoomRealmProxy2VenueRoomDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.PushNotification2PushNotificationDetailDTO;
 
 import javax.inject.Inject;
 
@@ -48,6 +52,10 @@ public class DTOAssembler implements IDTOAssembler {
         modelMapper.addConverter(new VenueRoomRealmProxy2VenueRoomDTO());
         modelMapper.addConverter(new VenueRealmProxy2VenueDTO());
         modelMapper.addConverter(new VenueFloorRealmProxy2VenueFloorDTO());
+        modelMapper.addConverter(new PushNotification2PushNotificationListItemDTO());
+        modelMapper.addConverter(new PushNotificationRealmProxy2PushNotificationListItemDTO());
+        modelMapper.addConverter(new PushNotification2PushNotificationDetailDTO());
+        modelMapper.addConverter(new PushNotificationRealmProxy2PushNotificationDetailDTO());
     }
 
     @Override

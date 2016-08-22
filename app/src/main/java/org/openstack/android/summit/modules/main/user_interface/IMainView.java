@@ -28,5 +28,7 @@ public interface IMainView extends IBaseView {
 
     Intent getIntent();
 
+    void updateNotificationCounter(Long value);
+
     void startActivityForResult(Intent intent, int requestCode);
 }

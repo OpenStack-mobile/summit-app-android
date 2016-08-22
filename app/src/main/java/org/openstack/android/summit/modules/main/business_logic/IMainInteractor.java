@@ -21,4 +21,6 @@ public interface IMainInteractor extends IBaseInteractor {
     boolean isLoggedInAndConfirmedAttendee();
 
     boolean isMemberLogged();
+
+    long getNotReadNotificationsCount();
 }

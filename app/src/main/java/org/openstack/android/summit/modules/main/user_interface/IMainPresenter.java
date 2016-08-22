@@ -32,4 +32,6 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
     void onOpenedNavigationMenu();
 
     void showEventView(int eventId);
+
+    void showNotificationView();
 }

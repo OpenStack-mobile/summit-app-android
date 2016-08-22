@@ -5,6 +5,7 @@ import org.openstack.android.summit.modules.about.IAboutWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
+import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.venues.IVenuesWireframe;
@@ -28,13 +29,17 @@ public class MainWireframe implements IMainWireframe {
 
     IAboutWireframe aboutWireframe;
 
+    IPushNotificationsWireframe notificationsWireframe;
+
     public MainWireframe(IEventsWireframe eventsWireframe,
                          ISpeakerListWireframe speakerListWireframe,
                          IMemberProfileWireframe memberProfileWireframe,
                          ISearchWireframe searchWireframe,
                          IVenuesWireframe venuesWireframe,
                          IMemberOrderConfirmWireframe memberOrderConfirmWireframe,
-                         IAboutWireframe aboutWireframe) {
+                         IAboutWireframe aboutWireframe,
+                         IPushNotificationsWireframe notificationsWireframe
+                         ) {
 
         this.eventsWireframe             = eventsWireframe;
         this.speakerListWireframe        = speakerListWireframe;
@@ -43,6 +48,7 @@ public class MainWireframe implements IMainWireframe {
         this.venuesWireframe             = venuesWireframe;
         this.memberOrderConfirmWireframe = memberOrderConfirmWireframe;
         this.aboutWireframe              = aboutWireframe;
+        this.notificationsWireframe      = notificationsWireframe;
     }
 
     public void showEventsView(IBaseView context) {
@@ -55,6 +61,11 @@ public class MainWireframe implements IMainWireframe {
 
     public void showSpeakerListView(IBaseView context) {
         speakerListWireframe.presentSpeakersListView(context);
+    }
+
+    @Override
+    public void showNotificationsListView(IBaseView context) {
+        notificationsWireframe.presentNotificationsListView(context);
     }
 
     public void showSearchView(String searchTerm, IBaseView context) {
@@ -82,5 +93,11 @@ public class MainWireframe implements IMainWireframe {
     @Override
     public void showSpeakerProfile(int speakerId, IBaseView context) {
         speakerListWireframe.showSpeakerProfile(speakerId, context);
+    }
+
+    @Override
+    public void showPushNotification(int pushNotificationId, IBaseView context) {
+        notificationsWireframe.presentNotificationsListView(context);
+        notificationsWireframe.showNotification(pushNotificationId, context);
     }
 }

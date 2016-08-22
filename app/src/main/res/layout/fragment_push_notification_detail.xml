@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:background="@drawable/bottom_bordered_control"
+                android:gravity="center_horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:id="@+id/push_notification_detail_subject"
+                    android:bufferType="spannable"
+                    android:textIsSelectable="true"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:text="lorep ip sum lorep ip sum lorep ip sum lorep ip sum lorep ip sum lorep ip sum lorep ip sum lorep ip sum lorep ip sum lorep ip sum"
+                    android:textSize="16sp"
+                    android:paddingLeft="5dp"
+                    android:layout_gravity="left|center"
+                    android:textColor="#000000"
+                    android:gravity="left"
+                    android:layout_weight="0.75" />
+                <TextView
+                    android:id="@+id/push_notification_detail_type"
+                    android:text="MEMBERS"
+                    android:bufferType="spannable"
+                    android:textIsSelectable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    style="@style/label"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottom_bordered_control"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/push_notification_detail_received"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:gravity="right"
+                    android:paddingRight="10dp"
+                    android:textAlignment="gravity"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:text="12:00 PM"/>
+                <org.openstack.android.summit.common.HtmlTextView
+                    android:id="@+id/push_notification_detail_body"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </org.openstack.android.summit.common.HtmlTextView>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

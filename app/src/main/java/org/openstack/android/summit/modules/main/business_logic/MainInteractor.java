@@ -4,6 +4,7 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
+import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
@@ -20,13 +21,24 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     private IPushNotificationsManager pushNotificationsManager;
     private ISummitDataStore summitDataStore;
     private IReachability reachability;
+    private IPushNotificationDataStore pushNotificationDataStore;
 
-    public MainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability) {
+    public MainInteractor
+    (
+        ISummitDataStore summitDataStore,
+        ISecurityManager securityManager,
+        IPushNotificationsManager pushNotificationsManager,
+        IDTOAssembler dtoAssembler,
+        IReachability reachability,
+        IPushNotificationDataStore pushNotificationDataStore
+    )
+    {
         super(dtoAssembler);
-        this.summitDataStore          = summitDataStore;
-        this.securityManager          = securityManager;
-        this.pushNotificationsManager = pushNotificationsManager;
-        this.reachability             = reachability;
+        this.summitDataStore           = summitDataStore;
+        this.securityManager           = securityManager;
+        this.pushNotificationsManager  = pushNotificationsManager;
+        this.reachability              = reachability;
+        this.pushNotificationDataStore = pushNotificationDataStore;
     }
 
     @Override
@@ -69,5 +81,10 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     @Override
     public boolean isMemberLogged() {
         return securityManager.isLoggedIn();
+    }
+
+    @Override
+    public long getNotReadNotificationsCount() {
+        return pushNotificationDataStore.getNotOpenedCountBy(securityManager.getCurrentMember());
     }
 }

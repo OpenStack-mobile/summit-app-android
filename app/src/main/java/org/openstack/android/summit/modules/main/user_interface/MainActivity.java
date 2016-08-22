@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -37,6 +40,7 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.*;
+import org.openstack.android.summit.common.user_interface.BadgeCounterMenuItemDecorator;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
 
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private boolean userClickedLogout;
     private int selectedMenuItemId;
+    private NavigationView navigationView;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -188,6 +193,8 @@ public class MainActivity extends AppCompatActivity
         };
 
         drawer.setDrawerListener(toggle);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
         //calling sync state is neccesary or else your hamburger icon wont show up
         toggle.syncState();
 
@@ -216,7 +223,7 @@ public class MainActivity extends AppCompatActivity
 
     private void NavigationMenuSetup(Bundle savedInstanceState) {
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
         LinearLayout headerView = (LinearLayout) navigationView.inflateHeaderView(R.layout.nav_header_main);
@@ -264,7 +271,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         if (securityManager.isLoggedIn()) {
             presenter.onLoggedIn();
         }
@@ -306,7 +312,11 @@ public class MainActivity extends AppCompatActivity
             presenter.showVenuesView();
         } else if (selectedMenuItemId == R.id.nav_my_profile) {
             presenter.showMyProfileView();
-        } else if (selectedMenuItemId == R.id.nav_about) {
+        }
+        else if (selectedMenuItemId == R.id.nav_notifications) {
+            presenter.showNotificationView();
+        }
+        else if (selectedMenuItemId == R.id.nav_about) {
             presenter.showAboutView();
         }
 
@@ -393,6 +403,7 @@ public class MainActivity extends AppCompatActivity
         showInfoMessage(message, "info");
     }
 
+
     @Override
     public void showInfoMessage(String message, String title) {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
@@ -409,6 +420,20 @@ public class MainActivity extends AppCompatActivity
         } else {
             drawer.closeDrawer(GravityCompat.START);
         }
+    }
+
+    @Override
+    public void updateNotificationCounter(Long value) {
+        BadgeCounterMenuItemDecorator badge = new BadgeCounterMenuItemDecorator
+        (
+            navigationView.getMenu().findItem(R.id.nav_notifications),
+            R.id.txt_counter
+        );
+        if(value > 0){
+            badge.updateCounter(value.toString());
+            return;
+        }
+        badge.hideCounter();
     }
 
     @Override

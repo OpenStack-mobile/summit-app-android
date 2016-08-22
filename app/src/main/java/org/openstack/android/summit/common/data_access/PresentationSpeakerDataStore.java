@@ -19,7 +19,7 @@ public class PresentationSpeakerDataStore extends GenericDataStore implements IP
 
     @Override
     public List<PresentationSpeaker> getByFilterLocal(String searchTerm, int page, int objectsPerPage) {
-         RealmQuery<PresentationSpeaker> query = RealmFactory.getSession().where(PresentationSpeaker.class);
+        RealmQuery<PresentationSpeaker> query = RealmFactory.getSession().where(PresentationSpeaker.class);
         query.isNotNull("fullName");
 
         if (searchTerm != null && !searchTerm.isEmpty()) {

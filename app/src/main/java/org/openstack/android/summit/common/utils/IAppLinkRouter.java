@@ -10,4 +10,6 @@ public interface IAppLinkRouter {
     boolean isDeepLink(Uri url);
 
     DeepLinkInfo buildDeepLinkInfo(Uri url);
+
+    Uri buildUriFor(String action, String param);
 }

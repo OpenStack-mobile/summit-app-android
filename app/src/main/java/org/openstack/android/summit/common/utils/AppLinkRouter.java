@@ -15,6 +15,7 @@ final public class AppLinkRouter implements IAppLinkRouter {
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.SpeakersPath)) return true;
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.LocationsPath)) return true;
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.SchedulePath)) return true;
+        if(url.getHost().toLowerCase().contains(DeepLinkInfo.NotificationsPath)) return true;
         return false;
     }
 
@@ -23,5 +24,12 @@ final public class AppLinkRouter implements IAppLinkRouter {
         String action = url.getHost();
         String param  = url.getPath().replace("/","");
         return new DeepLinkInfo(action, param);
+    }
+
+    @Override
+    public Uri buildUriFor(String action, String param){
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(DeepLinkHost).authority(action).path(param);
+        return builder.build();
     }
 }
