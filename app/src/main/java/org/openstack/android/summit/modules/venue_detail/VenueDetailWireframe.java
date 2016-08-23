@@ -30,8 +30,8 @@ public class VenueDetailWireframe extends BaseWireframe implements IVenueDetailW
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.frame_layout_content, venueDetailFragment)
-                .addToBackStack(null)
+                    .replace(R.id.frame_layout_content, venueDetailFragment)
+                    .addToBackStack(null)
                 .commit();
     }
 
@@ -41,8 +41,8 @@ public class VenueDetailWireframe extends BaseWireframe implements IVenueDetailW
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.frame_layout_content, locationDetailFragment)
-                .addToBackStack(null)
+                    .replace(R.id.frame_layout_content, locationDetailFragment)
+                    .addToBackStack(null)
                 .commit();
     }
 

@@ -49,6 +49,7 @@ public class PushNotificationDetailPresenter
         pushNotification = interactor.getPushNotificationDetail(pushNotificationId);
         if(pushNotification == null){
             view.setSubject(view.getResources().getString(R.string.notification_not_found));
+            view.hideView();
             return;
         }
 

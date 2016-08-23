@@ -26,7 +26,9 @@ public class PushNotificationDetailFragment
         implements IPushNotificationDetailView {
 
     MenuItem itemGo2Event = null;
+    MenuItem itemDelete   = null;
     boolean showGo2Event  = false;
+    boolean showDelete    = true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
@@ -57,6 +59,8 @@ public class PushNotificationDetailFragment
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         itemGo2Event = menu.findItem(R.id.menu_item_push_notification_go_2_event);
+        itemDelete   = menu.findItem(R.id.menu_item_push_notification_delete);
+        if(itemDelete != null) itemDelete.setVisible(showDelete);
         showGo2EventMenuItem(showGo2Event);
     }
 
@@ -112,5 +116,16 @@ public class PushNotificationDetailFragment
     @Override
     public void close() {
         getFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void hideView() {
+        TextView receivedTextView = (TextView)view.findViewById(R.id.push_notification_detail_received);
+        if(receivedTextView != null) receivedTextView.setVisibility(View.GONE);
+        TextView typeTextView = (TextView)view.findViewById(R.id.push_notification_detail_type);
+        if(typeTextView != null) typeTextView.setVisibility(View.GONE);
+        HtmlTextView bodyTextView = (HtmlTextView)view.findViewById(R.id.push_notification_detail_body);
+        if(bodyTextView != null) bodyTextView.setVisibility(View.GONE);
+        showDelete = showGo2Event = false;
     }
 }

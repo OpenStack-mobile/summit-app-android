@@ -25,10 +25,12 @@ public class EventsWireframe implements IEventsWireframe {
         EventsFragment eventsFragment   = new EventsFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
 
-        fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        if (fragmentManager.getBackStackEntryCount()> 0)
+            fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryCount() - 1, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.frame_layout_content, eventsFragment)
+                    .replace(R.id.frame_layout_content, eventsFragment)
                 .commitAllowingStateLoss();
     }
 

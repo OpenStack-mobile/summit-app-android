@@ -20,4 +20,6 @@ public interface IPushNotificationDetailView extends IBaseView {
     void showGo2EventMenuItem(boolean show);
 
     void close();
+
+    void hideView();
 }

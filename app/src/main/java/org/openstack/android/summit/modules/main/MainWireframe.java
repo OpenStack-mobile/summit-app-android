@@ -92,6 +92,7 @@ public class MainWireframe implements IMainWireframe {
 
     @Override
     public void showSpeakerProfile(int speakerId, IBaseView context) {
+        speakerListWireframe.presentSpeakersListView(context);
         speakerListWireframe.showSpeakerProfile(speakerId, context);
     }
 

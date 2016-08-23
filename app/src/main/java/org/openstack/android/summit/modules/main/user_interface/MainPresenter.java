@@ -49,7 +49,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
             if (onSaveInstanceExecuted) {
                 return;
             }
-
             try {
 
                 if(intent.getAction().contains(Constants.PUSH_NOTIFICATION_RECEIVED)){
@@ -135,7 +134,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     private boolean checkDeepLinks(){
         Intent intent = view.getIntent();
-
         if(intent != null){
             String action = intent.getAction();
             Uri url       = intent.getData();
@@ -148,20 +146,24 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                     DeepLinkInfo deepLinkInfo = appLinkRouter.buildDeepLinkInfo(url);
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewEvent){
                         if(!deepLinkInfo.hasParam()) return false;
+                        view.setMenuItemChecked(R.id.nav_events);
                         this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSpeaker){
                         if(!deepLinkInfo.hasParam()) return false;
+                        view.setMenuItemChecked(R.id.nav_speakers);
                         this.wireframe.showSpeakerProfile(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewNotification){
                         if(!deepLinkInfo.hasParam()) return false;
+                        view.setMenuItemChecked(R.id.nav_notifications);
                         this.wireframe.showPushNotification(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSchedule){
+                        view.setMenuItemChecked(R.id.nav_events);
                         return true;
                     }
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewLocation){

@@ -27,11 +27,11 @@ public interface IMainView extends IBaseView {
 
     Intent getIntent();
 
-    void clearState();
-
     void setIntent(Intent newIntent);
 
     void updateNotificationCounter(Long value);
 
     void startActivityForResult(Intent intent, int requestCode);
+
+    void setMenuItemChecked(int menuItemId);
 }

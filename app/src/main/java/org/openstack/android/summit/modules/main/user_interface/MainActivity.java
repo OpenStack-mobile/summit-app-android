@@ -320,6 +320,7 @@ public class MainActivity
         return true;
     }
 
+
     public ApplicationComponent getApplicationComponent() {
         return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
     }
@@ -366,8 +367,16 @@ public class MainActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(false);
         navigationView.getMenu().findItem(R.id.nav_events).setChecked(true);
-        clearState();
         presenter.onLoggedOut();
+    }
+
+
+    public void setMenuItemChecked(int menuItemId){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if(navigationView == null) return;
+        MenuItem menuItem = navigationView.getMenu().findItem(menuItemId);
+        if(menuItem == null) return;
+        menuItem.setChecked(true);
     }
 
     @Override
@@ -411,12 +420,6 @@ public class MainActivity
         } else {
             drawer.closeDrawer(GravityCompat.START);
         }
-    }
-
-    @Override
-    public void clearState() {
-        setIntent(null);
-        getFragmentManager().popBackStackImmediate();
     }
 
     @Override
