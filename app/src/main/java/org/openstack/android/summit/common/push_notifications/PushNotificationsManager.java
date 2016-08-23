@@ -46,7 +46,14 @@ public class PushNotificationsManager implements IPushNotificationsManager {
         }
         ArrayList<String> channels = new ArrayList<>();
         channels.add(String.format("su_%d", summit.getId()));
+
         ParseInstallation.getCurrentInstallation().put("channels", channels);
+        ParseInstallation.getCurrentInstallation().saveEventually();
+    }
+
+    @Override
+    public void unSubscribe() {
+        ParseInstallation.getCurrentInstallation().remove("channels");
         ParseInstallation.getCurrentInstallation().saveEventually();
     }
 }

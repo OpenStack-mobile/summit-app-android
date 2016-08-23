@@ -56,8 +56,10 @@ public class PushPushNotificationsListFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        searchQuery = searchView.getQuery().toString();
-        outState.putString(SEARCH_KEY, searchQuery);
+        if(searchView != null){
+            searchQuery = searchView.getQuery().toString();
+            outState.putString(SEARCH_KEY, searchQuery);
+        }
     }
 
     @Override

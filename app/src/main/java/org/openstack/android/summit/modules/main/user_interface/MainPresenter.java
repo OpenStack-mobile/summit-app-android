@@ -8,9 +8,9 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
+
 import com.crashlytics.android.Crashlytics;
-import org.json.JSONObject;
+
 import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
@@ -22,14 +22,17 @@ import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
+
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
+
 import bolts.AppLinkNavigation;
 
 /**
@@ -69,14 +72,18 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                     return;
                 }
 
-                if (interactor.isLoggedInAndConfirmedAttendee() || intent.getAction().contains(Constants.LOGGED_OUT_EVENT)) {
+                if (intent.getAction().contains(Constants.LOGGED_OUT_EVENT)) {
                     wireframe.showEventsView(view);
                     return;
                 }
 
-
             } catch (Exception ex) {
-                Crashlytics.logException(new Exception(String.format("Error opening fragment on login/logout notification. onSaveInstanceExecuted = %b ", onSaveInstanceExecuted), ex));
+                Crashlytics.logException(
+                        new Exception(
+                                String.format("Error opening fragment on login/logout notification. onSaveInstanceExecuted = %b - action %s", onSaveInstanceExecuted, intent.getAction())
+                                ,ex
+                        )
+                );
             }
         }
     };
@@ -96,6 +103,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         updateNotificationCounter();
         DataUpdatesService.setServiceAlarm((Context)view, true);
         checkDeepLinks();
+        interactor.subscribeToPushNotifications();
     }
 
     @Override
@@ -110,7 +118,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //showMessageIfTriggeredByNotification();
         trustEveryone();
 
         IntentFilter intentFilter = new IntentFilter();
@@ -134,7 +141,8 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
             Uri url       = intent.getData();
 
             if(action == Intent.ACTION_VIEW && url != null){
-
+                // mark as processed
+                view.setIntent(null);
                 if(this.appLinkRouter.isDeepLink(url)){
                     // do routing ...
                     DeepLinkInfo deepLinkInfo = appLinkRouter.buildDeepLinkInfo(url);
@@ -168,27 +176,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         return false;
     }
 
-    /*private void showMessageIfTriggeredByNotification() {
-        Intent intent = view.getIntent();
-        if (intent != null) {
-            if (intent.getExtras() != null) {
-                try {
-                    String parseData = intent.getExtras().getString("com.parse.Data");
-                    if (parseData != null) {
-                        JSONObject json = new JSONObject(parseData);
-                        String msg       = json.getString("alert");
-                        String title     = json.has("title")? json.getString("title"):  view.getResources().getString(R.string.app_name);
-                        view.showInfoMessage(msg, title);
-                    }
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.e(Constants.LOG_TAG, e.getMessage(), e);
-                    view.showErrorMessage(Constants.GENERIC_ERROR_MSG);
-                }
-            }
-        }
-    }*/
-
     public void showEventsView() {
         wireframe.showEventsView(view);
     }
@@ -219,7 +206,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         }
 
         wireframe.showMemberOrderConfirmView(view);
-
     }
 
     public void showSpeakerListView() {
@@ -254,7 +240,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
-
         wireframe.showVenuesView(view);
     }
 
@@ -262,9 +247,8 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onLoggedOut() {
         view.setMemberName("");
         view.setLoginButtonText(view.getResources().getText(R.string.log_in).toString());
-        view.toggleMyProfileMenuItem(false);
         view.setProfilePic(null);
-        interactor.subscribeAnonymousToPushNotifications();
+        interactor.subscribeToPushNotifications();
     }
 
     @Override
@@ -272,10 +256,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         MemberDTO member = interactor.getCurrentMember();
         view.setMemberName(member.getFullName());
         view.setLoginButtonText(view.getResources().getText(R.string.log_out).toString());
-        view.toggleMyProfileMenuItem(true);
         view.setProfilePic(Uri.parse(member.getPictureUrl()));
         view.toggleMenu(false);
-        interactor.subscribeLoggedInMemberToPushNotifications();
+        interactor.subscribeToPushNotifications();
     }
 
     @Override

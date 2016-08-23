@@ -10,9 +10,7 @@ public interface IMainInteractor extends IBaseInteractor {
 
     MemberDTO getCurrentMember();
 
-    void subscribeLoggedInMemberToPushNotifications();
-
-    void subscribeAnonymousToPushNotifications();
+    void subscribeToPushNotifications();
 
     boolean isDataLoaded();
 

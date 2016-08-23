@@ -6,24 +6,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.MenuItemCompat;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +36,8 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.network.IReachability;
-import org.openstack.android.summit.common.security.*;
+import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.security.ISecurityManagerListener;
 import org.openstack.android.summit.common.user_interface.BadgeCounterMenuItemDecorator;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
@@ -50,7 +48,8 @@ import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity
+        extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISecurityManagerListener, IMainView {
 
     @Inject
@@ -75,7 +74,6 @@ public class MainActivity extends AppCompatActivity
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
             if (intent.getAction() == Constants.LOGGED_OUT_EVENT && !userClickedLogout) {
                 showInfoMessage("Your login session expired");
                 onLoggedOut();
@@ -247,7 +245,6 @@ public class MainActivity extends AppCompatActivity
                     securityManager.login(MainActivity.this);
                 } else {
                     userClickedLogout = true;
-
                     securityManager.logout();
                 }
             }
@@ -312,11 +309,9 @@ public class MainActivity extends AppCompatActivity
             presenter.showVenuesView();
         } else if (selectedMenuItemId == R.id.nav_my_profile) {
             presenter.showMyProfileView();
-        }
-        else if (selectedMenuItemId == R.id.nav_notifications) {
+        } else if (selectedMenuItemId == R.id.nav_notifications) {
             presenter.showNotificationView();
-        }
-        else if (selectedMenuItemId == R.id.nav_about) {
+        } else if (selectedMenuItemId == R.id.nav_about) {
             presenter.showAboutView();
         }
 
@@ -349,7 +344,7 @@ public class MainActivity extends AppCompatActivity
 
     public void toggleMyProfileMenuItem(boolean show) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getMenu().getItem(3).setVisible(show);
+        navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(show);
     }
 
     @Override
@@ -360,22 +355,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoggedIn() {
         presenter.onLoggedIn();
+        navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(true);
+        navigationView.getMenu().findItem(R.id.nav_my_profile).setChecked(true);
         hideActivityIndicator();
     }
 
     @Override
     public void onLoggedOut() {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                Log.i(Constants.LOG_TAG, "doing log out");
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                navigationView.getMenu().getItem(3).setVisible(false);
-                if (selectedMenuItemId == R.id.nav_my_profile) {
-                    navigationView.getMenu().getItem(0).setChecked(true);
-                }
-                presenter.onLoggedOut();
-            }
-        });
+        Log.i(Constants.LOG_TAG, "doing log out");
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(false);
+        navigationView.getMenu().findItem(R.id.nav_events).setChecked(true);
+        clearState();
+        presenter.onLoggedOut();
     }
 
     @Override
@@ -403,7 +395,6 @@ public class MainActivity extends AppCompatActivity
         showInfoMessage(message, "info");
     }
 
-
     @Override
     public void showInfoMessage(String message, String title) {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
@@ -423,13 +414,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void clearState() {
+        setIntent(null);
+        getFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
     public void updateNotificationCounter(Long value) {
         BadgeCounterMenuItemDecorator badge = new BadgeCounterMenuItemDecorator
-        (
-            navigationView.getMenu().findItem(R.id.nav_notifications),
-            R.id.txt_counter
-        );
-        if(value > 0){
+                (
+                        navigationView.getMenu().findItem(R.id.nav_notifications),
+                        R.id.txt_counter
+                );
+        if (value > 0) {
             badge.updateCounter(value.toString());
             return;
         }

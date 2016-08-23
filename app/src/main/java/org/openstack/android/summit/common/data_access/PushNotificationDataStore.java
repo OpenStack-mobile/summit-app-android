@@ -18,20 +18,42 @@ public class PushNotificationDataStore extends GenericDataStore implements IPush
     @Override
     public long getNotOpenedCountBy(Member member) {
         RealmQuery<PushNotification> query = RealmFactory.getSession().where(PushNotification.class).equalTo("opened", false);
-        query = (member != null) ? query.equalTo("owner.id", member.getId()) : query.isNull("owner");
+        if(member == null){
+            query = query.isNull("owner");
+        }
+        else{
+            query
+                    .beginGroup()
+                    .equalTo("owner.id", member.getId())
+                    .or()
+                    .isNull("owner")
+                    .endGroup();
+        }
         return query.count();
     }
 
     @Override
     public List<PushNotification> getByFilterLocal(String searchTerm, Member member, int page, int objectsPerPage) {
         RealmQuery<PushNotification> query = RealmFactory.getSession().where(PushNotification.class);
-        query = (member != null) ? query.equalTo("owner.id", member.getId()) : query.isNull("owner");
+
+        if(member == null){
+            query = query.isNull("owner");
+        }
+        else{
+            query
+                    .beginGroup()
+                        .equalTo("owner.id", member.getId())
+                        .or()
+                        .isNull("owner")
+                    .endGroup();
+        }
 
         if (searchTerm != null && !searchTerm.isEmpty()) {
-            query.beginGroup()
-                    .contains("subject", searchTerm, Case.INSENSITIVE)
-                    .or()
-                    .contains("body", searchTerm, Case.INSENSITIVE)
+            query
+                    .beginGroup()
+                        .contains("subject", searchTerm, Case.INSENSITIVE)
+                        .or()
+                        .contains("body", searchTerm, Case.INSENSITIVE)
                     .endGroup();
         }
 

@@ -49,17 +49,14 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     }
 
     @Override
-    public void subscribeLoggedInMemberToPushNotifications() {
-        if (!securityManager.isLoggedIn()) return;
+    public void subscribeToPushNotifications() {
         Summit summit = summitDataStore.getActiveLocal();
-        Member member = securityManager.getCurrentMember();
-        pushNotificationsManager.subscribeMember(member, summit);
-    }
-
-    @Override
-    public void subscribeAnonymousToPushNotifications() {
-        if (securityManager.isLoggedIn()) return;
-        Summit summit = summitDataStore.getActiveLocal();
+        if(summit == null) return;
+        if (securityManager.isLoggedIn()){
+            Member member = securityManager.getCurrentMember();
+            pushNotificationsManager.subscribeMember(member, summit);
+            return;
+        }
         pushNotificationsManager.subscribeAnonymous(summit);
     }
 

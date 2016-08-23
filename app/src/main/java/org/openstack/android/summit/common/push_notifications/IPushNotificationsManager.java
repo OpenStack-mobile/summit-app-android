@@ -9,5 +9,9 @@ import org.openstack.android.summit.common.entities.Summit;
 public interface IPushNotificationsManager {
 
     void subscribeMember(Member member, Summit summit);
+
     void subscribeAnonymous(Summit summit);
+
+    void unSubscribe();
+
 }

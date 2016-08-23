@@ -33,6 +33,7 @@
 -keep class android.support.v7.widget.ShareActionProvider { *; }
 -keep class android.support.v7.widget.LinearLayoutManager { *; }
 -keep class android.support.v4.view.MenuItemCompat { *; }
+-keep class android.support.v7.widget.SearchView { *; }
 -keepattributes *Annotation*,Signature
 -keep class org.openstack.** { *; }
 -keep class cn.pedant.SweetAlert.** { *; }

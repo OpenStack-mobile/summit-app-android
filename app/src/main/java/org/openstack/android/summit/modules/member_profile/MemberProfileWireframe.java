@@ -37,20 +37,23 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, true);
         MemberProfileFragment memberProfileFragment = new MemberProfileFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate();
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, memberProfileFragment)
-                .commit();
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
     }
 
     private void presentMemberProfileView(IBaseView context) {
         MemberProfileFragment memberProfileFragment = new MemberProfileFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate();
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, memberProfileFragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     public void showEventsView(IBaseView context) {
