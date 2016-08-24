@@ -40,8 +40,7 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
         fragmentManager
                 .beginTransaction()
                     .replace(R.id.frame_layout_content, memberProfileFragment)
-                    .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     private void presentMemberProfileView(IBaseView context) {

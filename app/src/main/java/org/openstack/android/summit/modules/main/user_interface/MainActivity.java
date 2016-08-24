@@ -250,7 +250,7 @@ public class MainActivity
             }
         });
 
-        memberNameTextView = (TextView) headerView.findViewById(R.id.member_name_textview);
+        memberNameTextView     = (TextView) headerView.findViewById(R.id.member_name_textview);
         memberProfileImageView = (SimpleDraweeView) headerView.findViewById(R.id.member_profile_pic_imageview);
 
         EditText searchText = (EditText) headerView.findViewById(R.id.nav_header_search_edittext);

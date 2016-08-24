@@ -103,6 +103,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         DataUpdatesService.setServiceAlarm((Context)view, true);
         checkDeepLinks();
         interactor.subscribeToPushNotifications();
+        view.toggleMyProfileMenuItem(interactor.isMemberLogged());
     }
 
     @Override
