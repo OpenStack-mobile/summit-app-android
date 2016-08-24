@@ -8,8 +8,11 @@ import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.entities.Company;
+import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
+
+import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -94,15 +97,29 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
     }
 
     private String getTime(S summitEvent) {
-        DateFormat formatterFrom = new SimpleDateFormat("hh:mm a");
-        formatterFrom.setTimeZone(TimeZone.getTimeZone(summitEvent.getSummit().getTimeZone()));
+        Summit summit = null;
+        try {
+            DateFormat formatterFrom = new SimpleDateFormat("hh:mm a");
+            summit                   = summitEvent.getSummit();
 
-        DateFormat formatterTo = new SimpleDateFormat("hh:mm a");
-        formatterTo.setTimeZone(TimeZone.getTimeZone(summitEvent.getSummit().getTimeZone()));
+            if(summit == null)
+                throw new InvalidParameterException("missing summit on event id "+ summitEvent.getId());
 
-        String timeRange = String.format("%s / %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
+            if(summit.getTimeZone() == null)
+                throw new InvalidParameterException("summit timezone id is not set for summit id "+ summit.getId());
 
-        return timeRange.toLowerCase();
+            TimeZone timeZone = TimeZone.getTimeZone(summit.getTimeZone());
+            formatterFrom.setTimeZone(timeZone);
+            DateFormat formatterTo = new SimpleDateFormat("hh:mm a");
+            formatterTo.setTimeZone(timeZone);
+            String timeRange = String.format("%s / %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
+            return timeRange.toLowerCase();
+        }
+        catch (Exception ex){
+            Log.w(Constants.LOG_TAG, ex);
+            Crashlytics.logException(ex);
+        }
+        return "INVALID";
     }
 
     private String getCredentials(S summitEvent) {

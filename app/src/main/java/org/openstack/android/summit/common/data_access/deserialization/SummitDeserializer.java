@@ -64,12 +64,21 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
 
             JSONObject jsonObject = new JSONObject(jsonString);
 
-            String[] missedFields = validateRequiredFields(new String[]{"id", "name", "start_date", "end_date", "time_zone", "start_showing_venues_date"/* Summit data updates comes without these,"sponsors", "summit_types", "ticket_types", "event_types", "tracks", "locations", "speakers", "schedule"*/}, jsonObject);
+            String[] missedFields = validateRequiredFields(new String[]{"id", "name", "start_date", "end_date", "time_zone", "start_showing_venues_date"}, jsonObject);
+
             if (missedFields.length > 0) {
                 throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
             }
 
             Summit summit = new Summit();
+            summit.setId(jsonObject.getInt("id"));
+            summit.setName(jsonObject.getString("name"));
+            summit.setStartDate(new Date(jsonObject.getInt("start_date") * 1000L));
+            summit.setEndDate(new Date(jsonObject.getInt("end_date") * 1000L));
+            summit.setTimeZone(jsonObject.getJSONObject("time_zone").getString("name"));
+            summit.setInitialDataLoadDate(jsonObject.has("timestamp") ? new Date(jsonObject.getInt("timestamp") * 1000L) : null);
+            summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date") * 1000L));
+
             deserializerStorage.add(summit, Summit.class); // added here so it's available on child deserialization
 
             if (jsonObject.has("sponsors")) {
@@ -161,14 +170,16 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                 }
             }
 
-            if (jsonObject.has("locations")) {
+            if (jsonObject.has("speakers")) {
                 JSONObject jsonObjectPresentationSpeaker;
                 JSONArray jsonArrayPresentationSpeakers = jsonObject.getJSONArray("speakers");
                 for (int i = 0; i < jsonArrayPresentationSpeakers.length(); i++) {
                     jsonObjectPresentationSpeaker = jsonArrayPresentationSpeakers.getJSONObject(i);
                     presentationSpeakerDeserializer.deserialize(jsonObjectPresentationSpeaker.toString());
                 }
+            }
 
+            if (jsonObject.has("schedule")) {
                 SummitEvent summitEvent;
                 JSONObject jsonObjectSummitEvent;
                 JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
@@ -179,17 +190,6 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                 }
             }
 
-            summit.setId(jsonObject.getInt("id"));
-            summit.setName(jsonObject.getString("name"));
-
-            summit.setStartDate(new Date(jsonObject.getInt("start_date") * 1000L));
-            summit.setEndDate(new Date(jsonObject.getInt("end_date") * 1000L));
-            summit.setTimeZone(jsonObject.getJSONObject("time_zone").getString("name"));
-            summit.setInitialDataLoadDate(
-                    jsonObject.has("timestamp") ? new Date(jsonObject.getInt("timestamp") * 1000L) : null
-            );
-
-            summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date") * 1000L));
             RealmFactory.getSession().commitTransaction();
             return summit;
         }

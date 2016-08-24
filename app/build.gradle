@@ -20,11 +20,22 @@ repositories {
     }
 }
 
+def loadPropertiesFile(properties_file){
+    Properties props = new Properties()
+    println 'loading properties file : '+ properties_file;
+    props.load(new FileInputStream(file(properties_file)));
+    return props;
+}
+
+def getPropertyFromFile(properties_file, key){
+    Properties props = loadPropertiesFile(properties_file);
+    return props[key]
+}
+
 def expandManifest(flavor, properties_file) {
 
     println 'expanding manifest for: ' + flavor
-    Properties props = new Properties()
-    props.load(new FileInputStream(file(properties_file)))
+    Properties props = loadPropertiesFile(properties_file);
 
     return [
             googleMapApiKey: props['googleMapApiKey'],
@@ -57,19 +68,15 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 21
+        versionCode 23
         versionName "1.0"
         multiDexEnabled true
-
    }
 
     buildTypes {
         debug {
             // Settings for Crashlytics Beta Distribution
             ext.betaDistributionReleaseNotes="Release Notes for this build."
-            ext.betaDistributionEmails="claudioredi@gmail.com, darran.kelinske@gmail.com, " +
-                    "gabriel.cutrini@gmail.com, jimmy@openstack.org, jp@tipit.net, " +
-                    "lauren@openstack.org"
             ext.enableCrashlytics = false
 
         }
@@ -82,6 +89,7 @@ android {
 
     productFlavors {
         development {
+            ext.betaDistributionEmails = getPropertyFromFile("../summit-app.debug.properties", "BetaDistributionEmails")
             manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
         }
         production {

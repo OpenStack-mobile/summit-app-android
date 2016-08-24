@@ -37,7 +37,7 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
         if (jsonObject.has("member_id")) {
             int memberId = jsonObject.getInt("member_id");
             Member member = deserializerStorage.get(memberId, Member.class);
-            if(member != null && member.getAttendeeRole() != null)
+            if(member != null)
                 feedback.setOwner(member);
         }
         else if (jsonObject.has("owner")) {
