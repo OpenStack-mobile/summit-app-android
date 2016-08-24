@@ -19,6 +19,7 @@ import org.openstack.android.summit.modules.events.user_interface.IEventsView;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
+import java.lang.reflect.Field;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -199,5 +200,21 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
         return getContext().getApplicationContext();
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            // todo: remove when we update to com.android.support:appcompat-v7:24.2.0
+            // https://code.google.com/p/android/issues/detail?id=42601
+            // http://johnfeng.github.io/blog/2015/05/31/fragment-activity-has-been-destoryed-problem/
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
 
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
