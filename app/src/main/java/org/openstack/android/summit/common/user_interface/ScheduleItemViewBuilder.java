@@ -29,15 +29,11 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         String color = scheduleItemDTO.getColor() != null && scheduleItemDTO.getColor() != ""
                 ? scheduleItemDTO.getColor()
                 : "";
-        scheduleItemView.setColor(color);
 
-        if (showVenues) {
-            scheduleItemView.setLocation(scheduleItemDTO.getLocation());
-        }
-        else {
-            String stringToRemove = " - " + scheduleItemDTO.getRoom();
-            String locationWithoutRoom =  scheduleItemDTO.getLocation().replace(stringToRemove, "");
-            scheduleItemView.setLocation(locationWithoutRoom);
-        }
+        scheduleItemView.setColor(color);
+        String location = showVenues ? scheduleItemDTO.getLocation(): (
+                (scheduleItemDTO.getRoom() != null )? scheduleItemDTO.getLocation().replace(" - " + scheduleItemDTO.getRoom(), "") : scheduleItemDTO.getLocation()
+        );
+        scheduleItemView.setLocation(location);
     }
 }

@@ -28,7 +28,6 @@ public class VenueDetailInteractor extends BaseInteractor implements IVenueDetai
     public VenueDTO getVenue(int venueId) {
         Venue venue = genericDataStore.getByIdLocal(venueId, Venue.class);
         return venue != null ? dtoAssembler.createDTO(venue, VenueDTO.class):null;
-
     }
 
     @Override

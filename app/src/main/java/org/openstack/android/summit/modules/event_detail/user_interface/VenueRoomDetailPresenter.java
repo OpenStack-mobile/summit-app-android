@@ -24,10 +24,12 @@ public class VenueRoomDetailPresenter extends VenueDetailPresenter implements IV
     @Override
     public void onCreateView(Bundle savedInstanceState) {
 
-        int locationId = (savedInstanceState != null) ?savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_ROOM):
-                         wireframe.getParameter(Constants.NAVIGATION_PARAMETER_ROOM, Integer.class);
+        int locationId = (savedInstanceState != null) ?
+                          savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_ROOM):
+                          wireframe.getParameter(Constants.NAVIGATION_PARAMETER_ROOM, Integer.class);
 
         room  = interactor.getRoom(locationId);
+
         if(room == null){
             view.showInfoMessage("Room not found!");
             return;

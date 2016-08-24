@@ -215,6 +215,7 @@ public class MainActivity
 
     private void setupNavigationIcons() {
         toggle.setDrawerIndicatorEnabled(getSupportFragmentManager().getBackStackEntryCount() == 0);
+        // Enable Up button only  if there are entries in the back stack ( back arrow )
         getSupportActionBar().setDisplayHomeAsUpEnabled(getSupportFragmentManager().getBackStackEntryCount() > 0);
         toggle.syncState();
     }
