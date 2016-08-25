@@ -55,15 +55,16 @@ def expandManifest(flavor, properties_file) {
 }
 
 android {
-
+    signingConfigs {
+        config {
+        }
+    }
     dexOptions {
         javaMaxHeapSize "4g" //specify the heap size for the dex process
         preDexLibraries = false
     }
-
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
-
+    buildToolsVersion '24.0.1'
     defaultConfig {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16
@@ -71,12 +72,17 @@ android {
         versionCode 23
         versionName "1.0"
         multiDexEnabled true
-   }
 
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
     buildTypes {
         debug {
             // Settings for Crashlytics Beta Distribution
-            ext.betaDistributionReleaseNotes="Release Notes for this build."
+            ext.betaDistributionReleaseNotes = "Release Notes for this build."
+            ext.betaDistributionEmails = "claudioredi@gmail.com, darran.kelinske@gmail.com, " +
+                    "gabriel.cutrini@gmail.com, jimmy@openstack.org, jp@tipit.net, " +
+                    "lauren@openstack.org"
+
             ext.enableCrashlytics = false
 
         }
@@ -86,7 +92,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     productFlavors {
         development {
             ext.betaDistributionEmails = getPropertyFromFile("../summit-app.debug.properties", "BetaDistributionEmails")
@@ -99,24 +104,20 @@ android {
             manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
         }
     }
-
     packagingOptions {
-        pickFirst  'META-INF/license.txt'
-        pickFirst  'META-INF/LICENSE.txt'
-        pickFirst  'META-INF/NOTICE.txt'
+        pickFirst 'META-INF/license.txt'
+        pickFirst 'META-INF/LICENSE.txt'
+        pickFirst 'META-INF/NOTICE.txt'
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
         }
     }
-
     variantFilter { variant ->
         def names = variant.flavors*.name
 
@@ -136,7 +137,7 @@ android {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'joda-time:joda-time:2.9.4'
@@ -145,8 +146,8 @@ dependencies {
     apt "com.google.dagger:dagger-compiler:2.2"
     // Needed for @Generated annotation (missing in Java <= 1.6; therefore, Android)
     compile 'javax.annotation:jsr250-api:1.0'
-
     // Google's OAuth library for OpenID Connect
+
     // See https://code.google.com/p/google-oauth-java-client/wiki/Setup
     compile('com.google.oauth-client:google-oauth-client:1.22.0') {
         exclude group: 'xpp3', module: 'xpp3'
@@ -154,96 +155,88 @@ dependencies {
         exclude group: 'junit', module: 'junit'
         exclude group: 'com.google.android', module: 'android'
     }
-
     compile 'com.google.api-client:google-api-client-android:1.21.0'
-
     // Google's JSON parsing, could be replaced with Jackson
     compile 'com.google.api-client:google-api-client-gson:1.21.0'
-
     // Easier HTTP requests, not necessarily needed
     compile 'com.github.kevinsawicki:http-request:6.0'
-
     compile 'com.alibaba:fastjson:1.2.+'
     compile 'org.modelmapper:modelmapper:0.7.5'
-
-    compile('com.github.claudioredi:Ranger:da908aa'){
+    compile('com.github.claudioredi:Ranger:da908aa') {
         exclude module: 'joda-time'
     }
-
     // progress indicator
     compile 'cc.cloudist.acplibrary:library:1.2.1'
-
     // pop up alerts
     compile 'com.github.claudioredi:sweet-alert-dialog:9c1be1a'
-
     // image library
     compile 'com.facebook.fresco:fresco:0.11.0'
-
     // simulate list with a linear layout
     compile 'com.github.frankiesardo:linearlistview:1.0.1@aar'
-
     // HACK to get rid of an error related to realm https://github.com/realm/realm-java/issues/1963
-    compile ('io.reactivex:rxjava:1.1.7') {
+    compile('io.reactivex:rxjava:1.1.7') {
         exclude module: 'rx.internal.operators'
     }
-
     // page indicator
     compile 'com.githang:viewpagerindicator:2.4.2@aar'
-
     // Tags
     compile 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
-
     // google maps
     compile 'com.google.android.gms:play-services-maps:9.2.1'
-
     // push notifications
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
-
     // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION: due oo many method references: (max is 65536)
     compile 'com.android.support:multidex:1.0.1'
-
     compile 'com.parse.bolts:bolts-applinks:1.+'
-
     compile files('libs/YouTubeAndroidPlayerApi.jar')
-
     // material design spiner
-    compile ('com.weiwangcn.betterspinner:library-material:1.1.0') {
+    compile('com.weiwangcn.betterspinner:library-material:1.1.0') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }
-
-    testCompile "org.mockito:mockito-core:2.0.86-beta"
+    testCompile 'org.mockito:mockito-core:2.0.86-beta'
     testCompile 'junit:junit:4.12'
-    testCompile "org.robolectric:robolectric:3.1"
-    testCompile "org.powermock:powermock-module-junit4:1.6.5"
-    testCompile "org.powermock:powermock-module-junit4-rule:1.6.5"
-    testCompile "org.powermock:powermock-api-mockito:1.6.5"
-    testCompile "org.powermock:powermock-classloading-xstream:1.6.5"
-
+    testCompile 'org.robolectric:robolectric:3.1'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
+    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.5'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
+    testCompile 'org.powermock:powermock-classloading-xstream:1.6.5'
     androidTestCompile 'junit:junit:4.12'
-
-    if(file ('libs/safe_storage.aar').exists()) {
+    if (file('libs/safe_storage.aar').exists()) {
         println('adding dependency safe_storage.aar ...')
         productionCompile "org.openstack.android.summit.safestorage:safe_storage@aar"
     }
-
-    if(file ('libs/safe_storage-testing.aar').exists()) {
+    if (file('libs/safe_storage-testing.aar').exists()) {
         println('adding dependency safe_storage-testing.aar ...')
         betaCompile "org.openstack.android.summit.safestorage:safe_storage-testing@aar"
     }
-
-    if(file ('libs/safe_storage_debug.aar').exists()) {
+    if (file('libs/safe_storage_debug.aar').exists()) {
         println('adding dependency safe_storage_debug.aar ...')
         developmentCompile "org.openstack.android.summit.safestorage:safe_storage_debug@aar"
     }
-
     // http://facebook.github.io/stetho and https://github.com/uPhyca/stetho-realm
     compile 'com.facebook.stetho:stetho:1.1.1'
     compile 'com.uphyca:stetho_realm:0.9.0'
+
+    // Espresso Dependencies
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2', {
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+    })
+
+    configurations.all {
+        resolutionStrategy {
+            force 'com.android.support:support-annotations:23.0.1'
+        }
+    }
 }
 
 apply plugin: 'realm-android'
