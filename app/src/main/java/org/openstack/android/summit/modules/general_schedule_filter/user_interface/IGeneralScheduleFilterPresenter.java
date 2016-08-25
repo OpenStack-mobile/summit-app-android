@@ -7,15 +7,11 @@ import org.openstack.android.summit.common.user_interface.IBasePresenter;
  */
 public interface IGeneralScheduleFilterPresenter extends IBasePresenter<IGeneralScheduleFilterView> {
 
-    void buildSummitTypeFilterItem(GeneralScheduleFilterItemView item, int position);
-
     void buildEventTypeFilterItem(GeneralScheduleFilterItemView item, int position);
 
     void buildLevelFilterItem(GeneralScheduleFilterItemView item, int position);
 
     void buildTrackGroupFilterItem(GeneralScheduleFilterItemView item, int position);
-
-    void toggleSelectionSummitType(IGeneralScheduleFilterItemView item, int position);
 
     void toggleSelectionEventType(IGeneralScheduleFilterItemView item, int position);
 

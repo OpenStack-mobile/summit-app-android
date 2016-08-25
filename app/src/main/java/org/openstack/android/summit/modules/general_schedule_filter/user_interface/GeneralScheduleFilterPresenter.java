@@ -96,7 +96,6 @@ public class GeneralScheduleFilterPresenter
         singleFilterSection.setName("Hide Past Talks");
         scheduleFilter.getFilterSections().add(singleFilterSection);
 
-        view.showSummitTypes(summitTypes);
         view.showEventTypes(eventTypes);
         view.showTrackGroups(trackGroups);
         view.showLevels(levels);
@@ -156,12 +155,6 @@ public class GeneralScheduleFilterPresenter
     }
 
     @Override
-    public void buildSummitTypeFilterItem(GeneralScheduleFilterItemView item, int position) {
-        AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(0);
-        buildFilterItem(item, Color.WHITE, Color.RED, false, (MultiFilterSection)filterSection, position);
-    }
-
-    @Override
     public void buildEventTypeFilterItem(GeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(1);
         buildFilterItem(item,Color.WHITE, Color.RED, false, (MultiFilterSection)filterSection, position);
@@ -190,11 +183,6 @@ public class GeneralScheduleFilterPresenter
                 position);
     }
 
-    @Override
-    public void toggleSelectionSummitType(IGeneralScheduleFilterItemView item, int position) {
-        AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(0);
-        toggleSelection(item, Color.WHITE, Color.LTGRAY, (MultiFilterSection)filterSection, position);
-    }
 
     @Override
     public void toggleSelectionEventType(IGeneralScheduleFilterItemView item, int position) {

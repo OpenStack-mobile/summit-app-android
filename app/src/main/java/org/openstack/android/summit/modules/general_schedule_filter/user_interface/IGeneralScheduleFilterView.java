@@ -11,8 +11,6 @@ import java.util.List;
  */
 public interface IGeneralScheduleFilterView extends IBaseView {
 
-    void showSummitTypes(List<NamedDTO> summitTypes);
-
     void showTrackGroups(List<TrackGroupDTO> trackGroups);
 
     void showEventTypes(List<NamedDTO> eventTypes);

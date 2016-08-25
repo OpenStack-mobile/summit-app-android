@@ -36,7 +36,6 @@ import me.kaede.tagview.TagView;
  */
 public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralScheduleFilterPresenter> implements IGeneralScheduleFilterView {
 
-    private SummitTypeListAdapter summitTypeListAdapter;
     private TrackGroupListAdapter trackGroupListAdapter;
     private EventTypeListAdapter  eventTypeListAdapter;
     private LevelListAdapter      levelListAdapter;
@@ -57,17 +56,6 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
             @Override
             public void onClick(View v) {
                 presenter.toggleHidePastTalks(hidePastTalks.isChecked());
-            }
-        });
-
-        LinearListView summitTypesList = (LinearListView) view.findViewById(R.id.filter_summit_types_list);
-        summitTypeListAdapter = new SummitTypeListAdapter(getContext());
-        summitTypesList.setAdapter(summitTypeListAdapter);
-        summitTypesList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(LinearListView parent, View view, int position, long id) {
-                GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view);
-                presenter.toggleSelectionSummitType(generalScheduleFilterItemView, position);
             }
         });
 
@@ -185,11 +173,6 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
         presenter.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void showSummitTypes(List<NamedDTO> summitTypes) {
-        summitTypeListAdapter.clear();
-        summitTypeListAdapter.addAll(summitTypes);
-    }
 
     @Override
     public void showTrackGroups(List<TrackGroupDTO> trackGroups) {
@@ -214,33 +197,6 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
         AutoCompleteTextView tagsTextView = (AutoCompleteTextView)view.findViewById(R.id.filter_tags_autocomplete);
         tagsAdapter = new ArrayAdapter<String>(this.getActivity(),android.R.layout.simple_list_item_1, tags);
         tagsTextView.setAdapter(tagsAdapter);
-    }
-
-    private class SummitTypeListAdapter extends ArrayAdapter<NamedDTO> {
-
-        public SummitTypeListAdapter(Context context) {
-            super(context, 0);
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_filter_list, parent, false);
-            }
-
-            GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
-            presenter.buildSummitTypeFilterItem(generalScheduleFilterItemView, position);
-
-            // Return the completed view to render on screen
-            return convertView;
-        }
-
-        @Override
-        public int getCount() {
-            return super.getCount();
-        }
     }
 
     private class EventTypeListAdapter extends ArrayAdapter<NamedDTO> {
