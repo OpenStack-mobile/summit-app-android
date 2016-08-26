@@ -64,7 +64,7 @@ android {
         preDexLibraries = false
     }
     compileSdkVersion 23
-    buildToolsVersion '24.0.1'
+    buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16

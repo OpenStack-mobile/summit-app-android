@@ -24,7 +24,6 @@ import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Created by Claudio Redi on 2/5/2016.
  */
@@ -37,9 +36,10 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private ISummitDataStore summitDataStore;
     private ISession session;
 
-    private String KEY_SET_FROM_DATE      = "KEY_SET_FROM_DATE";
-    private String KEY_LAST_WIPE_EVENT_ID = "KEY_LAST_WIPE_EVENT_ID";
-    private String KEY_LAST_EVENT_ID      = "KEY_LAST_EVENT_ID";
+    private static final String KEY_SET_FROM_DATE       = "KEY_SET_FROM_DATE";
+    private static final String KEY_LAST_WIPE_EVENT_ID  = "KEY_LAST_WIPE_EVENT_ID";
+    private static final String KEY_LAST_EVENT_ID       = "KEY_LAST_EVENT_ID";
+    private static final int EntityEventUpdatesPageSize = 100;
 
     public DataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, ISession session) {
 
@@ -120,7 +120,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         }
 
         if (latestDataUpdateId > 0){
-            params.put(ApiEndpointBuilder.LimitParam, 50);
+            params.put(ApiEndpointBuilder.LimitParam, EntityEventUpdatesPageSize);
             params.put(ApiEndpointBuilder.LastEventIdParam, latestDataUpdateId);
             return ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.EntityEvents, params ).toString();
         }
@@ -134,7 +134,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             }
         }
         if (fromDate != 0) {
-            params.put(ApiEndpointBuilder.LimitParam, 50);
+            params.put(ApiEndpointBuilder.LimitParam, EntityEventUpdatesPageSize);
             params.put(ApiEndpointBuilder.FromDateParam, fromDate);
             return ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(),"current", ApiEndpointBuilder.EndpointType.EntityEvents, params ).toString();
         }

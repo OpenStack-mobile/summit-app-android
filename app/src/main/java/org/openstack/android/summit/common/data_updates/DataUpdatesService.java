@@ -11,6 +11,8 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.IReachability;
+import org.openstack.android.summit.common.utils.RealmFactory;
+
 import javax.inject.Inject;
 
 public class DataUpdatesService extends IntentService {
@@ -36,6 +38,13 @@ public class DataUpdatesService extends IntentService {
     public int onStartCommand(Intent intent, int flags, int startId){
         ((OpenStackSummitApplication)getApplication()).getApplicationComponent().inject(this);
         return super.onStartCommand(intent,flags,startId);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        RealmFactory.closeSession();
+        Log.d(Constants.LOG_TAG, "DataUpdatesService.onDestroy");
     }
 
     @Override

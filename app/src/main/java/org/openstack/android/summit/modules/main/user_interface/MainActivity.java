@@ -39,6 +39,7 @@ import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.security.ISecurityManagerListener;
 import org.openstack.android.summit.common.user_interface.BadgeCounterMenuItemDecorator;
+import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
 
@@ -162,6 +163,8 @@ public class MainActivity
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
         super.onDestroy();
         hideActivityIndicator();
+        RealmFactory.closeSession();
+        Log.d(Constants.LOG_TAG, "MainActivity.onDestroy");
     }
 
     @Override
