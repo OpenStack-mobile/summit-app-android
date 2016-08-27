@@ -204,7 +204,12 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4-rule:1.6.5'
     testCompile 'org.powermock:powermock-api-mockito:1.6.5'
     testCompile 'org.powermock:powermock-classloading-xstream:1.6.5'
+
     androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+
     if (file('libs/safe_storage.aar').exists()) {
         println('adding dependency safe_storage.aar ...')
         productionCompile "org.openstack.android.summit.safestorage:safe_storage@aar"

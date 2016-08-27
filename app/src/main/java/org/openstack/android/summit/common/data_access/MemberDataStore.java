@@ -13,6 +13,8 @@ import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.List;
 
+import io.realm.Realm;
+
 /**
  * Created by Claudio Redi on 12/16/2015.
  */
@@ -28,15 +30,18 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
 
         IDataStoreOperationListener<Member> remoteDataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
-            public void onSucceedWithSingleData(Member data) {
+            public void onSucceedWithSingleData(final Member data) {
                 try{
-                    RealmFactory.getSession().beginTransaction();
-                    Member realmEntity = RealmFactory.getSession().copyToRealmOrUpdate(data);
-                    RealmFactory.getSession().commitTransaction();
-                    dataStoreOperationListener.onSucceedWithSingleData(realmEntity);
+
+                    Member member = RealmFactory.transaction(new RealmFactory.IRealmCallback<Member>() {
+                        @Override
+                        public Member callback(Realm session) throws Exception {
+                            return session.copyToRealmOrUpdate(data);
+                        }
+                    });
+                    dataStoreOperationListener.onSucceedWithSingleData(member);
                 }
                 catch (Exception e) {
-                    RealmFactory.getSession().cancelTransaction();
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, e.getMessage(), e);
                     String friendlyError = Constants.GENERIC_ERROR_MSG;

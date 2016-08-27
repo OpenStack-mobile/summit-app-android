@@ -25,9 +25,9 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
         JSONObject jsonObject = new JSONObject(jsonString);
         String[] missedFields = validateRequiredFields(new String[] {"id", "rate", "created_date", "event_id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
-
-        Feedback feedback = new Feedback();
-        feedback.setId(jsonObject.getInt("id"));
+        int id = jsonObject.getInt("id");
+        Feedback feedback = deserializerStorage.exist(id, Feedback.class) ? deserializerStorage.get(id, Feedback.class) : new Feedback();
+        feedback.setId(id);
         feedback.setRate(jsonObject.getInt("rate"));
         feedback.setReview(
                 !jsonObject.isNull("note") ? jsonObject.getString("note") : null

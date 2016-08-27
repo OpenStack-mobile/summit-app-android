@@ -33,7 +33,8 @@ final public class RealmFactory {
     }
 
     public static void closeSession(){
-        session.get().close();
+        if(!session.get().isClosed());
+            session.get().close();
         session.remove();
     }
 

@@ -41,19 +41,13 @@ public class DataUpdatesService extends IntentService {
     }
 
     @Override
-    public void onDestroy(){
-        super.onDestroy();
-        RealmFactory.closeSession();
-        Log.d(Constants.LOG_TAG, "DataUpdatesService.onDestroy");
-    }
-
-    @Override
     protected void onHandleIntent(Intent intent) {
         if (!reachability.isNetworkingAvailable(this)) {
             return;
         }
         // normal flow ...
         dataUpdatePoller.pollServer();
+        RealmFactory.closeSession();
     }
 
     public static void setServiceAlarm(Context context, boolean isOn) {

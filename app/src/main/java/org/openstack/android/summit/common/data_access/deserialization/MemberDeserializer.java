@@ -25,13 +25,13 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
 
     @Inject
     public MemberDeserializer
-    (
-        IPersonDeserializer personDeserializer,
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
-        ISummitAttendeeDeserializer summitAttendeeDeserializer,
-        IFeedbackDeserializer feedbackDeserializer,
-        IDeserializerStorage deserializerStorage
-    )
+            (
+                    IPersonDeserializer personDeserializer,
+                    IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+                    ISummitAttendeeDeserializer summitAttendeeDeserializer,
+                    IFeedbackDeserializer feedbackDeserializer,
+                    IDeserializerStorage deserializerStorage
+            )
     {
         this.personDeserializer              = personDeserializer;
         this.deserializerStorage             = deserializerStorage;
@@ -43,10 +43,11 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
     @Override
     public Member deserialize(String jsonString) throws JSONException {
 
-        Member member = new Member();
         JSONObject jsonObject = new JSONObject(jsonString);
         String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
+        int id = jsonObject.getInt("id");
+        Member member = deserializerStorage.exist(id, Member.class)? deserializerStorage.get(id, Member.class) : new Member();
         personDeserializer.deserialize(member, jsonObject);
 
         // added here so it's available on child deserialization
@@ -74,6 +75,7 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
                 jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
                 try {
                     feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());
+                    if(member.getFeedback().contains(feedback)) continue;
                     member.getFeedback().add(feedback);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
