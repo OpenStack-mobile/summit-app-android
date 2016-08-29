@@ -20,6 +20,8 @@ import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.utils.RealmFactory;
+
 import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,8 +69,6 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             HttpTaskListener taskListener = new HttpTaskListener() {
                 @Override
                 public void onSucceed(String data) {
-                    Log.d(Constants.LOG_TAG, "Data updates: " + data);
-
                     try {
                         dataUpdateProcessor.process(data);
                         clearDataIfTruncateEventExist();
@@ -87,16 +87,18 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
                     Log.d(Constants.LOG_TAG, String.format("Error polling server for data updates: %s", error.getMessage()));
                 }
             };
-
             HttpTask httpTask = securityManager.isLoggedIn()
                     ? httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, taskListener)
                     : httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, taskListener);
+
             httpTask.execute();
-        } catch (InvalidParameterSpecException e) {
-            Log.d(Constants.LOG_TAG, e.getMessage(), e);
+
+        } catch (InvalidParameterSpecException e1) {
+            Crashlytics.logException(e1);
+            Log.d(Constants.LOG_TAG, e1.getMessage(), e1);
         } catch (Exception e) {
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
-            //TODO: fabric
         }
     }
 

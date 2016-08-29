@@ -67,7 +67,7 @@ public class PersonalScheduleFragment extends ScheduleFragment<IPersonalSchedule
      * layout, and then to run animations between all of those start/end positions.
      */
     private void animateRemoval(final ListView listview, final ScheduleListAdapter adapter, View viewToRemove) {
-        int firstVisiblePosition          = listview.getFirstVisiblePosition();
+        int firstVisiblePosition = listview.getFirstVisiblePosition();
 
         for (int i = 0; i < listview.getChildCount(); ++i) {
             View child = listview.getChildAt(i);
@@ -134,5 +134,10 @@ public class PersonalScheduleFragment extends ScheduleFragment<IPersonalSchedule
                 return true;
             }
         });
+    }
+
+    @Override
+    public void enableListView(boolean enable) {
+        scheduleList.setEnabled(enable);
     }
 }

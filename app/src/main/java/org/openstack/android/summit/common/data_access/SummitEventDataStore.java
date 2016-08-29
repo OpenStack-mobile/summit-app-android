@@ -36,7 +36,8 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
         List<Integer> trackGroups,
         List<Integer> tracks,
         List<String> tags,
-        List<String> levels
+        List<String> levels,
+        List<Integer> venues
     )
     {
 
@@ -119,6 +120,19 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
                     query = query.or();
                 }
                 query = query.equalTo("presentation.track.trackGroups.id", trackGroupId);
+                isFirst = false;
+            }
+            query.endGroup();
+        }
+
+        isFirst = true;
+        if (venues != null) {
+            query.beginGroup();
+            for (int venueId : venues) {
+                if (!isFirst) {
+                    query = query.or();
+                }
+                query = query.equalTo("venueRoom.venue.id", venueId);
                 isFirst = false;
             }
             query.endGroup();

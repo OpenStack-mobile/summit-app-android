@@ -9,11 +9,15 @@ public interface IGeneralScheduleFilterPresenter extends IBasePresenter<IGeneral
 
     void buildEventTypeFilterItem(GeneralScheduleFilterItemView item, int position);
 
+    void buildVenueFilterItem(GeneralScheduleFilterItemView item, int position);
+
     void buildLevelFilterItem(GeneralScheduleFilterItemView item, int position);
 
     void buildTrackGroupFilterItem(GeneralScheduleFilterItemView item, int position);
 
     void toggleSelectionEventType(IGeneralScheduleFilterItemView item, int position);
+
+    void toggleSelectionVenue(IGeneralScheduleFilterItemView item, int position);
 
     void toggleSelectionLevel(IGeneralScheduleFilterItemView item, int position);
 

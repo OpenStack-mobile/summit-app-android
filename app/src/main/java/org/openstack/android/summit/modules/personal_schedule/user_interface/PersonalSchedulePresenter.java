@@ -49,16 +49,19 @@ public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalSchedu
     @Override
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, final int position) {
         if(dayEvents.size() - 1 < position ) return;
+        view.enableListView(false);
         view.showActivityIndicator();
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
         IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
             @Override
             public void onError(String message) {
+                view.enableListView(true);
                 view.hideActivityIndicator();
                 view.showErrorMessage(message);
             }
             @Override
             public void onSucceed(){
+                view.enableListView(true);
                 view.hideActivityIndicator();
                 view.removeItem(position);
             }

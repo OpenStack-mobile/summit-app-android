@@ -42,10 +42,13 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
         JSONObject jsonObject = null;
         DataUpdate dataUpdate = null;
 
+        Log.d(Constants.LOG_TAG, String.format("Thread %s Data updates : %s", Thread.currentThread().getName(), jsonArray.toString(4)));
+
         for(int i = 0; i < jsonArray.length(); i++) {
             try {
                 jsonObject = jsonArray.getJSONObject(i);
                 dataUpdate = deserialize(jsonObject.toString());
+
                 IDataUpdateStrategy dataUpdateStrategy;
                 if (dataUpdate.getEntity() != null) {
                     dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate.getEntityClassName());
@@ -68,6 +71,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
     public DataUpdate deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
         DataUpdate dataUpdate = new DataUpdate();
+
         dataUpdate.setId(jsonObject.getInt("id"));
         dataUpdate.setOriginalJSON(jsonObject);
         String operationType = jsonObject.getString("type");

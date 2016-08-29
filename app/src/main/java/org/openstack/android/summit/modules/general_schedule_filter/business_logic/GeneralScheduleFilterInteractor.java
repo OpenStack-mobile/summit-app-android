@@ -13,6 +13,7 @@ import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.TrackGroup;
+import org.openstack.android.summit.common.entities.Venue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,12 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
     public List<String> getLevels() {
         List<String> levels = summitEventDataStore.getPresentationLevelsLocal();
         return levels;
+    }
+
+    @Override
+    public List<NamedDTO> getVenues() {
+        List<Venue> venues = genericDataStore.getAllLocal(Venue.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
+        return createDTOList(venues, NamedDTO.class);
     }
 
     @Override

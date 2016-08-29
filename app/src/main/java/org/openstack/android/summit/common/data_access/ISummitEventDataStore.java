@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ISummitEventDataStore {
 
-    List<SummitEvent> getByFilterLocal(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels);
+    List<SummitEvent> getByFilterLocal(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues);
 
     SummitEvent getByIdLocal(int id);
 

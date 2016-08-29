@@ -117,6 +117,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
         List<String> filtersOnLevels       = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
         List<String> filtersOnTags         = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         List<DateTime> inactiveDates = interactor.getDatesWithoutEvents(
                 startDate,
@@ -126,7 +127,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
                 filtersOnTrackGroups,
                 null,
                 filtersOnTags,
-                filtersOnLevels);
+                filtersOnLevels,
+                filtersOnVenues);
 
         return inactiveDates;
     }

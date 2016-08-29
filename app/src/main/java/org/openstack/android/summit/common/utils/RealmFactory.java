@@ -34,9 +34,10 @@ final public class RealmFactory {
     }
 
     public static void closeSession(){
-        if(!session.get().isClosed()) {
+        Realm realmSession = session.get();
+        if(!realmSession.isClosed()) {
             Log.d(Constants.LOG_TAG, String.format("Closing Realm instance for thread %s", Thread.currentThread().getName()));
-            session.get().close();
+            realmSession.close();
         }
         session.remove();
     }
@@ -52,7 +53,7 @@ final public class RealmFactory {
     public static <T> T transaction(IRealmCallback<T> callback) throws DataAccessException {
 
         Realm session = null;
-        T res = null;
+        T res         = null;
         try {
             session = getSession();
             session.beginTransaction();

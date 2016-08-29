@@ -39,6 +39,7 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
     private TrackGroupListAdapter trackGroupListAdapter;
     private EventTypeListAdapter  eventTypeListAdapter;
     private LevelListAdapter      levelListAdapter;
+    private VenueListAdapter      venueListAdapter;
     private ArrayAdapter<String>  tagsAdapter;
 
     @Override
@@ -78,6 +79,17 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
             public void onItemClick(LinearListView parent, View view, int position, long id) {
                 GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view);
                 presenter.toggleSelectionEventType(generalScheduleFilterItemView, position);
+            }
+        });
+
+        LinearListView venuesList = (LinearListView) view.findViewById(R.id.filter_venues_list);
+        venueListAdapter = new VenueListAdapter(getContext());
+        venuesList.setAdapter(venueListAdapter);
+        venuesList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(LinearListView parent, View view, int position, long id) {
+                GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view);
+                presenter.toggleSelectionVenue(generalScheduleFilterItemView, position);
             }
         });
 
@@ -187,6 +199,12 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
     }
 
     @Override
+    public void showVenues(List<NamedDTO> venues) {
+        venueListAdapter.clear();
+        venueListAdapter.addAll(venues);
+    }
+
+    @Override
     public void showLevels(List<String> levels) {
         levelListAdapter.clear();
         levelListAdapter.addAll(levels);
@@ -215,6 +233,33 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
 
             GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
             presenter.buildEventTypeFilterItem(generalScheduleFilterItemView, position);
+
+            // Return the completed view to render on screen
+            return convertView;
+        }
+
+        @Override
+        public int getCount() {
+            return super.getCount();
+        }
+    }
+
+    private class VenueListAdapter extends ArrayAdapter<NamedDTO> {
+
+        public VenueListAdapter(Context context) {
+            super(context, 0);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_filter_list, parent, false);
+            }
+
+            GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
+            presenter.buildVenueFilterItem(generalScheduleFilterItemView, position);
 
             // Return the completed view to render on screen
             return convertView;

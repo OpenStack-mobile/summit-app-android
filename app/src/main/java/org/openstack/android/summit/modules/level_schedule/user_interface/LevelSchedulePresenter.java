@@ -59,6 +59,7 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
         List<String> filtersOnLevels       = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
         List<String> filtersOnTags         = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         if (filtersOnLevels != null && filtersOnLevels.size() > 0 && !filtersOnLevels.contains(level)) {
             return new ArrayList<>();
@@ -74,7 +75,8 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
                 filtersOnTrackGroups,
                 null,
                 filtersOnTags,
-                levels
+                levels,
+                filtersOnVenues
         );
 
         return summitEvents;
@@ -88,6 +90,7 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
         List<String> filtersOnLevels       = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
         List<String> filtersOnTags         = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         if (filtersOnLevels != null && filtersOnLevels.size() > 0 && !filtersOnLevels.contains(level)) {
             return new ArrayList<>();
@@ -104,7 +107,8 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
                 filtersOnTrackGroups,
                 null,
                 filtersOnTags,
-                levels);
+                levels,
+                filtersOnVenues);
 
         return inactiveDates;
     }

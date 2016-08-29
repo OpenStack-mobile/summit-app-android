@@ -55,11 +55,13 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
 
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, ITrackScheduleInteractor interactor) {
-        List<Integer> filtersOnEventTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
+
+        List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
         List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<String> filtersOnLevels       = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String> filtersOnTags         = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         ArrayList<Integer> tracks = new ArrayList<>();
         tracks.add(trackId);
@@ -71,7 +73,8 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
                 filtersOnTrackGroups,
                 tracks,
                 filtersOnTags,
-                filtersOnLevels
+                filtersOnLevels,
+                filtersOnVenues
         );
 
         return summitEvents;
@@ -84,6 +87,7 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
         List<String> filtersOnLevels       = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
         List<String> filtersOnTags         = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         ArrayList<Integer> tracks = new ArrayList<>();
         tracks.add(trackId);
@@ -96,7 +100,8 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
                 filtersOnTrackGroups,
                 tracks,
                 filtersOnTags,
-                filtersOnLevels);
+                filtersOnLevels,
+                filtersOnVenues);
 
         return inactiveDates;
     }

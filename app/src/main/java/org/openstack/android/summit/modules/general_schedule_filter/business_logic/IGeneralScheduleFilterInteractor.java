@@ -4,7 +4,6 @@ import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.business_logic.IBaseInteractor;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 
 import java.util.List;
 
@@ -24,5 +23,7 @@ public interface IGeneralScheduleFilterInteractor extends IBaseInteractor {
     List<String> getTags();
 
     SummitDTO getActiveSummit();
+
+    List<NamedDTO> getVenues();
 
 }

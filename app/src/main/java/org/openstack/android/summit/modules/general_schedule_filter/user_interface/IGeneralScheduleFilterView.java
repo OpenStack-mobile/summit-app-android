@@ -15,6 +15,8 @@ public interface IGeneralScheduleFilterView extends IBaseView {
 
     void showEventTypes(List<NamedDTO> eventTypes);
 
+    void showVenues(List<NamedDTO> venues);
+
     void showLevels(List<String> levels);
 
     void bindTags(List<String> tags);

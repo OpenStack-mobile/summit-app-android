@@ -23,6 +23,7 @@ final public class ScheduleFilter implements IScheduleFilter {
         getSelections().put(FilterSectionType.TrackGroup, new ArrayList<>());
         getSelections().put(FilterSectionType.Tag, new ArrayList<>());
         getSelections().put(FilterSectionType.HidePastTalks, new ArrayList<>());
+        getSelections().put(FilterSectionType.Venues, new ArrayList<>());
     }
 
     @Override

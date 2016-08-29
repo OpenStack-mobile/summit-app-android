@@ -37,7 +37,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     }
 
     @Override
-    public List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
+    public List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues) {
         return createDTOList(
                 summitEventDataStore.getByFilterLocal
                 (
@@ -48,14 +48,15 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                                 trackGroups,
                                 tracks,
                                 tags,
-                                levels
+                                levels,
+                                venues
                 ),
                 ScheduleItemDTO.class
         );
     }
 
     @Override
-    public List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels) {
+    public List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues) {
         ArrayList<DateTime> inactiveDates = new ArrayList<>();
         List<SummitEvent> events;
 
@@ -68,7 +69,8 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                     trackGroups,
                     tracks,
                     tags,
-                    levels);
+                    levels,
+                   venues);
             if (events.size() == 0) {
                 inactiveDates.add(startDate);
             }

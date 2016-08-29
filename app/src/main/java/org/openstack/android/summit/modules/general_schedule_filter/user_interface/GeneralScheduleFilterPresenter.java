@@ -23,6 +23,7 @@ public class GeneralScheduleFilterPresenter
 
     private IScheduleFilter     scheduleFilter;
     private List<NamedDTO>      summitTypes;
+    private List<NamedDTO>      venues;
     private List<NamedDTO>      eventTypes;
     private List<String>        levels;
     private List<TrackGroupDTO> trackGroups;
@@ -49,6 +50,7 @@ public class GeneralScheduleFilterPresenter
         levels      = interactor.getLevels();
         trackGroups = interactor.getTrackGroups();
         tags        = interactor.getTags();
+        venues      = interactor.getVenues();
 
         scheduleFilter.getFilterSections().clear();
 
@@ -96,9 +98,20 @@ public class GeneralScheduleFilterPresenter
         singleFilterSection.setName("Hide Past Talks");
         scheduleFilter.getFilterSections().add(singleFilterSection);
 
+        filterSection = new MultiFilterSection();
+        filterSection.setType(FilterSectionType.Venues);
+        filterSection.setName("Venues");
+        for (NamedDTO venue : venues) {
+            filterSectionItem = createSectionItem(venue.getId(), venue.getName(), filterSection.getType());
+            filterSection.getItems().add(filterSectionItem);
+        }
+
+        scheduleFilter.getFilterSections().add(filterSection);
+
         view.showEventTypes(eventTypes);
         view.showTrackGroups(trackGroups);
         view.showLevels(levels);
+        view.showVenues(venues);
         view.bindTags(tags);
         view.showShowPastTalks(false);
 
@@ -161,6 +174,12 @@ public class GeneralScheduleFilterPresenter
     }
 
     @Override
+    public void buildVenueFilterItem(GeneralScheduleFilterItemView item, int position) {
+        AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(5);
+        buildFilterItem(item,Color.WHITE, Color.RED, false, (MultiFilterSection)filterSection, position);
+    }
+
+    @Override
     public void buildLevelFilterItem(GeneralScheduleFilterItemView item, int position) {
         MultiFilterSection filterSection = (MultiFilterSection)scheduleFilter.getFilterSections().get(2);
         FilterSectionItem filterItem     = filterSection.getItems().get(position);
@@ -189,7 +208,13 @@ public class GeneralScheduleFilterPresenter
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(1);
         toggleSelection(item, Color.WHITE, Color.LTGRAY, (MultiFilterSection)filterSection, position);
     }
-    
+
+    @Override
+    public void toggleSelectionVenue(IGeneralScheduleFilterItemView item, int position) {
+        AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(5);
+        toggleSelection(item, Color.WHITE, Color.LTGRAY, (MultiFilterSection)filterSection, position);
+    }
+
     @Override
     public void toggleSelectionLevel(IGeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(2);
