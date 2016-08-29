@@ -112,7 +112,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
 
         long latestDataUpdateId       = session.getLong(KEY_LAST_EVENT_ID);
         long latestDataUpdateIdFromDB = dataUpdateDataStore.getLatestDataUpdate();
-        Map<String, Object>params     =  new HashMap<>();
+        Map<String, Object>params     = new HashMap<>();
 
         if(latestDataUpdateId < latestDataUpdateIdFromDB ){
             latestDataUpdateId = latestDataUpdateIdFromDB;

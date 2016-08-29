@@ -2,20 +2,24 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.andressantibanez.ranger.Ranger;
+
 import org.joda.time.DateTime;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
-import org.openstack.android.summit.modules.events.user_interface.IEventsView;
 
 import java.util.List;
 
@@ -25,11 +29,11 @@ import java.util.List;
  */
 public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment<P> implements IScheduleView {
 
-    ScheduleListAdapter scheduleListAdapter;
-    List<ScheduleItemDTO> events;
-    Parcelable listState = null;
+    protected ScheduleListAdapter scheduleListAdapter;
+    protected List<ScheduleItemDTO> events;
+    protected ListView scheduleList;
+    protected Parcelable listState         = null;
     private static final String LIST_STATE = "scheduleListState";
-
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -45,8 +49,10 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
+
+        scheduleList        = (ListView)view.findViewById(R.id.list_schedule);
         scheduleListAdapter = new ScheduleListAdapter(getContext());
+
         scheduleList.setAdapter(scheduleListAdapter);
 
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
@@ -108,12 +114,16 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     }
 
     @Override
-    public void setEvents(List<ScheduleItemDTO> events) {
-        this.events = events;
+    public void setEvents(final List<ScheduleItemDTO> events) {
         scheduleListAdapter.clear();
         scheduleListAdapter.addAll(events);
-        TextView listEmptyMessageTextView = (TextView)view.findViewById(R.id.list_empty_message);
-        listEmptyMessageTextView.setVisibility(events.size() > 0 ? View.GONE : View.VISIBLE);
+        showEmptyMessage(events.size() == 0 );
+    }
+
+    @Override
+    public void showEmptyMessage(boolean show){
+        TextView listEmptyMessageTextView = (TextView) view.findViewById(R.id.list_empty_message);
+        listEmptyMessageTextView.setVisibility(show? View.VISIBLE: View.GONE );
     }
 
     @Override
@@ -141,10 +151,22 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         ranger.setDisabledDates(disabledDates);
     }
 
-    private class ScheduleListAdapter extends ArrayAdapter<ScheduleItemDTO> {
+    protected class ScheduleListAdapter extends ArrayAdapter<ScheduleItemDTO> {
 
         public ScheduleListAdapter(Context context) {
             super(context, 0);
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        private int lastPosition = -1;
+        private boolean areAnimationsEnabled = true;
+
+        public void enableAnimations(boolean enable){
+            areAnimationsEnabled = enable;
         }
 
         @Override
@@ -175,6 +197,12 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
             presenter.buildItem(scheduleItemView, position);
 
             // Return the completed view to render on screen
+            if(areAnimationsEnabled) {
+                Animation animation = AnimationUtils.loadAnimation(getContext(), (position > lastPosition) ? R.anim.slide_from_top : R.anim.slide_to_top);
+                animation.setDuration(500);
+                convertView.startAnimation(animation);
+                animation = null;
+            }
             return convertView;
         }
 
@@ -182,5 +210,15 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         public int getCount() {
             return super.getCount();
         };
+
+        @Override
+        public long getItemId(int position) {
+            try {
+                return getItem(position).getId();
+            }
+            catch(IndexOutOfBoundsException ex){
+                return -1;
+            }
+        }
     }
 }

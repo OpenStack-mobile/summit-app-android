@@ -28,4 +28,6 @@ public interface IScheduleView extends IBaseView {
 
     void reloadSchedule();
 
+    void showEmptyMessage(boolean show);
+
 }

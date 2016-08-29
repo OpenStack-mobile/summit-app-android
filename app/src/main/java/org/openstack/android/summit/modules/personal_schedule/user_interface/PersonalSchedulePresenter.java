@@ -41,35 +41,28 @@ public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalSchedu
 
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
-        List<DateTime> inactiveDates = null;
-        if (interactor.isMemberLoggedAndConfirmedAttendee()) {
-            inactiveDates = interactor.getCurrentMemberScheduleDatesWithoutEvents(startDate, endDate);
-        }
-        else {
-            inactiveDates = new ArrayList<>();
-        }
-        return inactiveDates;
+        return interactor.isMemberLoggedAndConfirmedAttendee()?
+                interactor.getCurrentMemberScheduleDatesWithoutEvents(startDate, endDate):
+                new ArrayList<DateTime>();
     }
 
     @Override
-    public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
-        view.showActivityIndicator(0);
+    public void toggleScheduleStatus(IScheduleItemView scheduleItemView, final int position) {
+        if(dayEvents.size() - 1 < position ) return;
+        view.showActivityIndicator();
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-
         IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
             @Override
             public void onError(String message) {
                 view.hideActivityIndicator();
                 view.showErrorMessage(message);
             }
-
             @Override
-            public void onSucceed() {
+            public void onSucceed(){
                 view.hideActivityIndicator();
-                reloadSchedule();
+                view.removeItem(position);
             }
         };
-
         scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor, interactorAsyncOperationListener);
     }
 }

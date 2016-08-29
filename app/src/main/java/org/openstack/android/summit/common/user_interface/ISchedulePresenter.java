@@ -14,5 +14,7 @@ public interface ISchedulePresenter<V extends IScheduleView> extends IBasePresen
     void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position);
 
     void showEventDetail(int position);
+
+    void removeItem(int position);
 }
 

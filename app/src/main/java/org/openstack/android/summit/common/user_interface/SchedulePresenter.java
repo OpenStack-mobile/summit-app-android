@@ -137,6 +137,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     public void buildItem(IScheduleItemView scheduleItemView, int position) {
+        if(dayEvents.size() - 1 < position) return;
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
         scheduleItemViewBuilder.build(
                 scheduleItemView,
@@ -194,14 +195,20 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void showEventDetail(int position) {
+        if(dayEvents.size() - 1 < position ) return;
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
 
         if (interactor.eventExist(scheduleItemDTO.getId())) {
             wireframe.showEventDetail(scheduleItemDTO.getId(), view);
+            return;
         }
-        else {
-            view.showErrorMessage(view.getResources().getString(R.string.event_not_exist));
-            onResume();
-        }
+        view.showErrorMessage(view.getResources().getString(R.string.event_not_exist));
+        onResume();
+    }
+
+    @Override
+    public void removeItem(int position){
+        if(dayEvents.size() - 1 < position ) return;
+        dayEvents.remove(position);
     }
 }

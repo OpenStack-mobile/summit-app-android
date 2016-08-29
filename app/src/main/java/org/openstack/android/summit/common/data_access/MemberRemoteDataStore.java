@@ -15,12 +15,16 @@ import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
+import org.openstack.android.summit.common.utils.RealmFactory;
+
 import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import io.realm.Realm;
 
 /**
  * Created by Claudio Redi on 12/16/2015.
