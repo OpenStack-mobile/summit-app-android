@@ -84,11 +84,13 @@ import org.openstack.android.summit.common.data_access.deserialization.TrackGrou
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
+import org.openstack.android.summit.common.network.IHttpFactory;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.security.IOIDCConfigurationManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.security.ITokenManagerFactory;
 
 import javax.inject.Singleton;
 
@@ -361,14 +363,23 @@ public class DataAccessModule {
     IDataUpdatePoller providesDataUpdatePoller
     (
                     ISecurityManager securityManager,
-                    IHttpTaskFactory httpTaskFactory,
+                    ITokenManagerFactory tokenManagerFactory,
                     IDataUpdateProcessor dataUpdateProcessor,
                     IDataUpdateDataStore dataUpdateDataStore,
                     ISummitDataStore summitDataStore,
                     ISession session,
-                    IOIDCConfigurationManager ioidcConfigurationManager
+                    IOIDCConfigurationManager ioidcConfigurationManager,
+                    IHttpFactory httpFactory
     ) {
-        DataUpdatePoller poller = new DataUpdatePoller(securityManager, httpTaskFactory, dataUpdateProcessor, dataUpdateDataStore, summitDataStore, session);
+        DataUpdatePoller poller = new DataUpdatePoller(
+                securityManager,
+                tokenManagerFactory,
+                dataUpdateProcessor,
+                dataUpdateDataStore,
+                summitDataStore,
+                session,
+                httpFactory
+        );
         poller.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
         return poller;
     }

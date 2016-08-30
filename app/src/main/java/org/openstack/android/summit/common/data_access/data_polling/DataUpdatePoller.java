@@ -3,8 +3,10 @@ package org.openstack.android.summit.common.data_access.data_polling;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
 import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
+
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
@@ -14,13 +16,17 @@ import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.network.AuthorizationException;
+import org.openstack.android.summit.common.network.Http;
 import org.openstack.android.summit.common.network.HttpTask;
-import org.openstack.android.summit.common.network.HttpTaskListener;
+import org.openstack.android.summit.common.network.HttpTaskConfig;
+import org.openstack.android.summit.common.network.IHttp;
+import org.openstack.android.summit.common.network.IHttpFactory;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.security.ISecurityManager;
-import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.security.ITokenManager;
+import org.openstack.android.summit.common.security.ITokenManagerFactory;
+import org.openstack.android.summit.common.security.TokenManagerFactory;
 
 import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
@@ -32,25 +38,27 @@ import java.util.Map;
 public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdatePoller {
 
     private ISecurityManager securityManager;
-    private IHttpTaskFactory httpTaskFactory;
+    private ITokenManagerFactory tokenManagerFactory;
     private IDataUpdateProcessor dataUpdateProcessor;
     private IDataUpdateDataStore dataUpdateDataStore;
     private ISummitDataStore summitDataStore;
     private ISession session;
+    private IHttpFactory httpFactory;
 
     private static final String KEY_SET_FROM_DATE       = "KEY_SET_FROM_DATE";
     private static final String KEY_LAST_WIPE_EVENT_ID  = "KEY_LAST_WIPE_EVENT_ID";
     private static final String KEY_LAST_EVENT_ID       = "KEY_LAST_EVENT_ID";
     private static final int EntityEventUpdatesPageSize = 100;
 
-    public DataUpdatePoller(ISecurityManager securityManager, IHttpTaskFactory httpTaskFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, ISession session) {
+    public DataUpdatePoller(ISecurityManager securityManager, ITokenManagerFactory tokenManagerFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, ISession session, IHttpFactory httpFactory) {
 
         this.securityManager     = securityManager;
-        this.httpTaskFactory     = httpTaskFactory;
+        this.tokenManagerFactory = tokenManagerFactory;
         this.dataUpdateProcessor = dataUpdateProcessor;
         this.dataUpdateDataStore = dataUpdateDataStore;
         this.summitDataStore     = summitDataStore;
         this.session             = session;
+        this.httpFactory         = httpFactory;
     }
 
     @Override
@@ -65,37 +73,24 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             if (url == null) {
                 return;
             }
+            AccountType accountType    = securityManager.isLoggedIn() ? AccountType.OIDC : AccountType.ServiceAccount;
+            ITokenManager tokenManager = null;
 
-            HttpTaskListener taskListener = new HttpTaskListener() {
-                @Override
-                public void onSucceed(String data) {
-                    try {
-                        dataUpdateProcessor.process(data);
-                        clearDataIfTruncateEventExist();
-                    } catch (Exception e) {
-                        String errorMessage = String.format("There was an error processing these updates from server: : %s", data);
-                        Crashlytics.logException(new Exception(errorMessage, e));
-                        Log.e(Constants.LOG_TAG, errorMessage, e);
-                    }
-                }
+            switch (accountType){
+                case OIDC:
+                    tokenManager = tokenManagerFactory.Create(TokenManagerFactory.TokenManagerType.OIDC);
+                    break;
+                case ServiceAccount:
+                    tokenManager = tokenManagerFactory.Create(TokenManagerFactory.TokenManagerType.ServiceAccount);
+                    break;
+                default:
+                    tokenManager = tokenManagerFactory.Create(TokenManagerFactory.TokenManagerType.ServiceAccount);
+                    break;
+            }
 
-                @Override
-                public void onError(Throwable error) {
-                    if (error instanceof AuthorizationException) {
-                        securityManager.handleIllegalState();
-                    }
-                    Log.d(Constants.LOG_TAG, String.format("Error polling server for data updates: %s", error.getMessage()));
-                }
-            };
-            HttpTask httpTask = securityManager.isLoggedIn()
-                    ? httpTaskFactory.create(AccountType.OIDC, url, HttpRequest.METHOD_GET, null, null, taskListener)
-                    : httpTaskFactory.create(AccountType.ServiceAccount, url, HttpRequest.METHOD_GET, null, null, taskListener);
+            dataUpdateProcessor.process(httpFactory.create(tokenManager).GET(url));
+            clearDataIfTruncateEventExist();
 
-            httpTask.execute();
-
-        } catch (InvalidParameterSpecException e1) {
-            Crashlytics.logException(e1);
-            Log.d(Constants.LOG_TAG, e1.getMessage(), e1);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
@@ -161,6 +156,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
                     if (securityManager.isLoggedIn()) {
                         securityManager.logout();
                     }
+
                     dataUpdateDataStore.clearDataLocal();
                     setFromDate(0L);
                     Intent intent = new Intent(Constants.WIPE_DATE_EVENT);
