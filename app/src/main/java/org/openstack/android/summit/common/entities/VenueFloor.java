@@ -1,12 +1,13 @@
 package org.openstack.android.summit.common.entities;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by sebastian on 7/26/2016.
  */
-public class VenueFloor extends RealmObject implements INamedEntity  {
+public class VenueFloor extends RealmObject implements INamedEntity {
 
     @PrimaryKey
     private int id;
@@ -14,7 +15,17 @@ public class VenueFloor extends RealmObject implements INamedEntity  {
     private String pictureUrl;
     private String description;
     private Venue venue;
-    private int   number;
+
+    public RealmList<VenueRoom> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(RealmList<VenueRoom> rooms) {
+        this.rooms = rooms;
+    }
+
+    private int number;
+    private RealmList<VenueRoom> rooms = new RealmList<>();
 
     public String getPictureUrl() {
         return pictureUrl;

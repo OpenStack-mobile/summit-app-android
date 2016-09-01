@@ -13,6 +13,7 @@ import org.openstack.android.summit.common.entities.TicketType;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
@@ -56,11 +57,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
     @Override
     public Summit deserialize(String jsonString) throws JSONException {
 
-        try {
-
             deserializerStorage.clear();
-
-            RealmFactory.getSession().beginTransaction();
 
             JSONObject jsonObject = new JSONObject(jsonString);
 
@@ -147,9 +144,11 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
             }
 
             if (jsonObject.has("locations")) {
+
                 Venue venue;
                 JSONObject jsonObjectVenue;
                 JSONArray jsonArrayVenues = jsonObject.getJSONArray("locations");
+
                 for (int i = 0; i < jsonArrayVenues.length(); i++) {
                     jsonObjectVenue = jsonArrayVenues.getJSONObject(i);
                     if (isVenue(jsonObjectVenue)) {
@@ -161,11 +160,19 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                 VenueRoom venueRoom;
                 JSONObject jsonObjectVenueRoom;
                 JSONArray jsonArrayVenueRooms = jsonObject.getJSONArray("locations");
+
                 for (int i = 0; i < jsonArrayVenueRooms.length(); i++) {
                     jsonObjectVenueRoom = jsonArrayVenueRooms.getJSONObject(i);
                     if (isVenueRoom(jsonObjectVenueRoom)) {
+
+                        Integer floorId = jsonObjectVenueRoom.optInt("floor_id");
                         venueRoom = venueRoomDeserializer.deserialize(jsonObjectVenueRoom.toString());
                         summit.getVenueRooms().add(venueRoom);
+
+                        if(floorId != null && deserializerStorage.exist(floorId, VenueFloor.class)){
+                            VenueFloor venueFloor = deserializerStorage.get(floorId, VenueFloor.class);
+                            venueFloor.getRooms().add(venueRoom);
+                        }
                     }
                 }
             }
@@ -189,14 +196,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                     summit.getEvents().add(summitEvent);
                 }
             }
-
-            RealmFactory.getSession().commitTransaction();
             return summit;
-        }
-        catch (Exception e) {
-            RealmFactory.getSession().cancelTransaction();
-            throw e;
-        }
     }
 
     private boolean isVenue(JSONObject jsonObjectVenue) throws JSONException {

@@ -34,8 +34,9 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
         if (missedFields.length > 0) {
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
-        Venue venue = new Venue();
-        venue.setId(jsonObject.getInt("id"));
+        int venueId = jsonObject.getInt("id");
+        Venue venue = deserializerStorage.exist(venueId, Venue.class) ? deserializerStorage.get(venueId, Venue.class) :new Venue();
+        venue.setId(venueId);
         venue.setName(jsonObject.getString("name"));
         venue.setLocationDescription(
                 !jsonObject.isNull("description") ? jsonObject.getString("description") : null
@@ -66,6 +67,7 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
         Image map;
         JSONObject jsonObjectMap;
         JSONArray jsonArrayMap = jsonObject.getJSONArray("maps");
+        venue.getMaps().clear();
         for (int i = 0; i < jsonArrayMap.length(); i++) {
             jsonObjectMap = jsonArrayMap.getJSONObject(i);
             map = genericDeserializer.deserialize(jsonObjectMap.toString(), Image.class);
@@ -75,6 +77,7 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
         Image image;
         JSONObject jsonObjectImage;
         JSONArray jsonArrayImages = jsonObject.getJSONArray("images");
+        venue.getImages().clear();
         for (int i = 0; i < jsonArrayImages.length(); i++) {
             jsonObjectImage = jsonArrayImages.getJSONObject(i);
             image = genericDeserializer.deserialize(jsonObjectImage.toString(), Image.class);
@@ -85,9 +88,10 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
             VenueFloor floor;
             JSONObject jsonObjectFloor;
             JSONArray jsonArrayFloors = jsonObject.getJSONArray("floors");
+            venue.getFloors().clear();
             for (int i = 0; i < jsonArrayFloors.length(); i++) {
                 jsonObjectFloor = jsonArrayFloors.getJSONObject(i);
-                floor = venueFloorDeserializer.deserialize(jsonObjectFloor.toString());
+                floor           = venueFloorDeserializer.deserialize(jsonObjectFloor.toString());
                 venue.getFloors().add(floor);
                 floor.setVenue(venue);
             }

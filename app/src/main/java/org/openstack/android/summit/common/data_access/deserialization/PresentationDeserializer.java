@@ -44,9 +44,9 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
 
         String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
-
-        Presentation presentation = new Presentation();
-        presentation.setId(jsonObject.getInt("id"));
+        int presentationId = jsonObject.getInt("id");
+        Presentation presentation = deserializerStorage.exist(presentationId, Presentation.class) ? deserializerStorage.get(presentationId, Presentation.class) : new Presentation();
+        presentation.setId(presentationId);
 
         if(!deserializerStorage.exist(presentation, Presentation.class)) {
             deserializerStorage.add(presentation, Presentation.class);
@@ -62,6 +62,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         PresentationSpeaker presentationSpeaker;
         int speakerId;
         JSONArray jsonArraySpeakers = jsonObject.getJSONArray("speakers");
+        presentation.getSpeakers().clear();
         for (int i = 0; i < jsonArraySpeakers.length(); i++) {
             speakerId = jsonArraySpeakers.optInt(i);
             if (speakerId > 0) {
@@ -74,7 +75,9 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
             presentation.getSpeakers().add(presentationSpeaker);
         }
 
+
         if(jsonObject.has("slides")){
+            presentation.getSlides().clear();
             JSONArray slides = jsonObject.getJSONArray("slides");
             JSONObject jsonObjSlide  = null;
             PresentationSlide slide  = null;
@@ -87,6 +90,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         }
 
         if(jsonObject.has("videos")){
+            presentation.getVideos().clear();
             JSONArray videos = jsonObject.getJSONArray("videos");
             JSONObject jsonObjVideo  = null;
             PresentationVideo video  = null;
@@ -99,6 +103,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         }
 
         if(jsonObject.has("links")){
+            presentation.getLinks().clear();
             JSONArray links = jsonObject.getJSONArray("links");
             JSONObject jsonObjLink = null;
             PresentationLink link  = null;

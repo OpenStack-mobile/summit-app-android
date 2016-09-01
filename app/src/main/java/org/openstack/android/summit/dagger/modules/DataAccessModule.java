@@ -42,6 +42,7 @@ import org.openstack.android.summit.common.data_access.data_polling.Presentation
 import org.openstack.android.summit.common.data_access.data_polling.SummitDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.SummitVenueImageDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.TrackGroupDataUpdateStrategy;
+import org.openstack.android.summit.common.data_access.data_polling.VenueLocationsDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.deserialization.Deserializer;
 import org.openstack.android.summit.common.data_access.deserialization.DeserializerStorage;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
@@ -349,7 +350,8 @@ public class DataAccessModule {
                 new SummitDataUpdateStrategy(genericDataStore, summitDataStore),
                 new TrackGroupDataUpdateStrategy(genericDataStore, trackGroupDataStore),
                 new SummitVenueImageDataUpdateStrategy(genericDataStore, venueDataStore),
-                new PresentationMaterialDataUpdateStrategy(genericDataStore)
+                new PresentationMaterialDataUpdateStrategy(genericDataStore),
+                new VenueLocationsDataUpdateStrategy(genericDataStore)
         );
     }
 

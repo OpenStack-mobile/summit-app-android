@@ -29,27 +29,27 @@ public class PresentationMaterialDataUpdateStrategy extends DataUpdateStrategy  
                 if (presentation_id == null)
                     throw new DataUpdateException("It wasn't possible to find presentation_id on data update json");
 
-                Presentation presentation = genericDataStore.getByIdLocal(presentation_id, Presentation.class);
-
-                if (presentation == null)
-                    throw new DataUpdateException(String.format("Presentation with id %d not found", presentation_id));
-
                 try {
                     RealmFactory.getSession().beginTransaction();
+
+                    Presentation managedPresentation = genericDataStore.getByIdLocal(presentation_id, Presentation.class);
+                    if (managedPresentation == null)
+                        throw new DataUpdateException(String.format("Presentation with id %d not found", presentation_id));
+
                     if (className.equals("PresentationSlide")) {
                         PresentationSlide slide = (PresentationSlide) dataUpdate.getEntity();
-                        slide.setPresentation(presentation);
-                        presentation.getSlides().add(slide);
+                        slide.setPresentation(managedPresentation);
+                        managedPresentation.getSlides().add(slide);
                     }
                     if (className.equals("PresentationVideo")) {
                         PresentationVideo video = (PresentationVideo) dataUpdate.getEntity();
-                        video.setPresentation(presentation);
-                        presentation.getVideos().add(video);
+                        video.setPresentation(managedPresentation);
+                        managedPresentation.getVideos().add(video);
                     }
                     if (className.equals("PresentationLink")) {
                         PresentationLink link = (PresentationLink) dataUpdate.getEntity();
-                        link.setPresentation(presentation);
-                        presentation.getLinks().add(link);
+                        link.setPresentation(managedPresentation);
+                        managedPresentation.getLinks().add(link);
                     }
                     RealmFactory.getSession().commitTransaction();
                 }

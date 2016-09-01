@@ -62,6 +62,13 @@ public class Member extends RealmObject implements IPerson {
         return feedback;
     }
 
+    public void clearFeedback(){
+        for(Feedback f: feedback){
+            f.setOwner(null);
+        }
+        feedback.clear();
+    }
+
     public void setFeedback(RealmList<Feedback> feedback) {
         this.feedback = feedback;
     }

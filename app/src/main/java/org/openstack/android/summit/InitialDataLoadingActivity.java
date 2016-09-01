@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
-import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.modules.general_schedule.business_logic.IGeneralScheduleInteractor;
@@ -30,17 +29,20 @@ import cc.cloudist.acplibrary.ACProgressFlower;
 public class InitialDataLoadingActivity extends Activity {
 
     private ACProgressFlower progressDialog;
-    private final static String IN_PROGRESS = "InitialDataLoadingActivity.InProgress";
-
+    private int inProgress = 0;
+    private final static String IN_PROGRESS_KEY = "InitialDataLoadingActivity.InProgress";
     @Inject
     IGeneralScheduleInteractor interactor;
-    @Inject
-    ISession session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getApplicationComponent().inject(this);
+
+        if (savedInstanceState != null) {
+            inProgress = savedInstanceState.getInt(IN_PROGRESS_KEY);
+        }
+
         setFinishOnTouchOutside(false);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_initial_data_loading_activity);
@@ -56,19 +58,26 @@ public class InitialDataLoadingActivity extends Activity {
         );
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(IN_PROGRESS_KEY, inProgress);
+    }
+
     private void doInitialDataLoading() {
         showActivityIndicator();
-        if(session.getInt(IN_PROGRESS) > 0){
-            Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity loading in progress");
+        showErrorContainer(false);
+
+        if (inProgress > 0) {
+            Log.d(Constants.LOG_TAG, "there is already another data loading process in place ...");
             return;
         }
-        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity running initial data loading ...");
-        session.setInt(IN_PROGRESS, 1);
-        showErrorContainer(false);
+
+        Log.d(Constants.LOG_TAG, "doing initial data loading ...");
+        inProgress = 1;
         InteractorAsyncOperationListener<SummitDTO> operationListener = new InteractorAsyncOperationListener<SummitDTO>() {
             @Override
             public void onSucceedWithData(SummitDTO summit) {
-                session.setInt(IN_PROGRESS, 0);
+                inProgress = 0;
                 hideActivityIndicator();
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
@@ -77,7 +86,7 @@ public class InitialDataLoadingActivity extends Activity {
 
             @Override
             public void onError(String message) {
-                session.setInt(IN_PROGRESS, 0);
+                inProgress = 0;
                 onFailedInitialLoad(message);
             }
         };

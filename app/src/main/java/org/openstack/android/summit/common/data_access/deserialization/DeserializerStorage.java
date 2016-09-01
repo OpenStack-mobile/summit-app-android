@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
@@ -26,15 +28,20 @@ public class DeserializerStorage implements IDeserializerStorage {
 
     @Override
     public <T extends RealmObject & IEntity> T get(int id, Class<T> type) {
-        T entity = null;
+        T detachedEntity = null;
         if (deserializedEntityDictionary.containsKey(type) && deserializedEntityDictionary.get(type).containsKey(id)) {
-            entity = (T)deserializedEntityDictionary.get(type).get(id);
+            detachedEntity = (T)deserializedEntityDictionary.get(type).get(id);
         }
 
-        if (entity == null) {
-            entity = RealmFactory.getSession().where(type).equalTo("id", id).findFirst();
+        if (detachedEntity == null) {
+            Realm session = RealmFactory.getSession();
+            T managedEntity = session .where(type).equalTo("id", id).findFirst();
+            if(managedEntity != null) {
+                detachedEntity = session.copyFromRealm(managedEntity);
+                add(detachedEntity, type);
+            }
         }
-        return entity;
+        return detachedEntity;
     }
 
     @Override
@@ -46,7 +53,12 @@ public class DeserializerStorage implements IDeserializerStorage {
             }
         }
         else {
-            list = RealmFactory.getSession().where(type).findAll();
+            Realm session = RealmFactory.getSession();
+            list = session.where(type).findAll();
+            list = session.copyFromRealm(list);
+            for(T entity: list){
+                this.add(entity, type);
+            }
         }
         return list;
     }

@@ -23,13 +23,13 @@ public class PresentationSpeakerDeserializer extends BaseDeserializer implements
     public PresentationSpeaker deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[]{"id"}, jsonObject);
         handleMissedFieldsIfAny(missedFields);
-
-        PresentationSpeaker presentationSpeaker = new PresentationSpeaker();
+        int speakerId = jsonObject.getInt("id");
+        PresentationSpeaker presentationSpeaker = deserializerStorage.exist(speakerId, PresentationSpeaker.class) ? deserializerStorage.get(speakerId, PresentationSpeaker.class) : new PresentationSpeaker();
         personDeserializer.deserialize(presentationSpeaker, jsonObject);
 
-        if(!deserializerStorage.exist(presentationSpeaker, PresentationSpeaker.class)) {
+        if (!deserializerStorage.exist(presentationSpeaker, PresentationSpeaker.class)) {
             deserializerStorage.add(presentationSpeaker, PresentationSpeaker.class);
         }
 

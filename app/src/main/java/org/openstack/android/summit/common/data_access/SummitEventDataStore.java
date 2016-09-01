@@ -133,6 +133,8 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
                     query = query.or();
                 }
                 query = query.equalTo("venueRoom.venue.id", venueId);
+                query = query.or();
+                query = query.equalTo("venue.id", venueId);
                 isFirst = false;
             }
             query.endGroup();

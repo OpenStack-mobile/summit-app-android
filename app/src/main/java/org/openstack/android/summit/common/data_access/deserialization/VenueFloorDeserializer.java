@@ -28,9 +28,9 @@ public class VenueFloorDeserializer  extends BaseDeserializer implements IVenueF
         if (missedFields.length > 0) {
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
-
-        VenueFloor venueFloor = new VenueFloor();
-        venueFloor.setId(jsonObject.getInt("id"));
+        int floorId = jsonObject.getInt("id");
+        VenueFloor venueFloor = deserializerStorage.exist(floorId, VenueFloor.class) ? deserializerStorage.get(floorId, VenueFloor.class) :new VenueFloor();
+        venueFloor.setId(floorId);
         venueFloor.setName(jsonObject.getString("name"));
         venueFloor.setDescription(!jsonObject.isNull("description")?jsonObject.getString("description"): null);
         venueFloor.setNumber(jsonObject.getInt("number"));

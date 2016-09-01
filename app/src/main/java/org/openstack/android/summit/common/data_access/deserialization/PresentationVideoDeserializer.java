@@ -33,7 +33,9 @@ public class PresentationVideoDeserializer extends PresentationMaterialDeseriali
     }
 
     @Override
-    protected IPresentationMaterial buildMaterial() {
-        return new PresentationVideo();
+    protected IPresentationMaterial buildMaterial(int materialId) {
+        return deserializerStorage.exist(materialId, PresentationVideo.class) ?
+                deserializerStorage.get(materialId, PresentationVideo.class) :
+                new PresentationVideo();
     }
 }

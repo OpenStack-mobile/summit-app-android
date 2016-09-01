@@ -27,9 +27,9 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
 
         String[] missedFields = validateRequiredFields(new String[] {"id", "name", "track_groups"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
-
-        Track track = new Track();
-        track.setId(jsonObject.getInt("id"));
+        int trackId = jsonObject.getInt("id");
+        Track track = deserializerStorage.exist(trackId, Track.class) ? deserializerStorage.get(trackId, Track.class) : new Track();
+        track.setId(trackId);
         track.setName(jsonObject.getString("name"));
         track.getTrackGroups().clear();
         if (shouldDeserializeTrackGroups) {
@@ -38,7 +38,7 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
             JSONArray jsonArrayTrackGroups = jsonObject.getJSONArray("track_groups");
             for (int i = 0; i < jsonArrayTrackGroups.length(); i++) {
                 trackGroupId = jsonArrayTrackGroups.getInt(i);
-                trackGroup = deserializerStorage.get(trackGroupId, TrackGroup.class);
+                trackGroup   = deserializerStorage.get(trackGroupId, TrackGroup.class);
                 track.getTrackGroups().add(trackGroup);
             }
         }

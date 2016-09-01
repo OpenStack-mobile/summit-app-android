@@ -32,8 +32,9 @@ public class VenueRoomDeserializer extends BaseDeserializer implements IVenueRoo
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
 
-        VenueRoom venueRoom = new VenueRoom();
-        venueRoom.setId(jsonObject.getInt("id"));
+        int roomId = jsonObject.getInt("id");
+        VenueRoom venueRoom = deserializerStorage.exist(roomId, VenueRoom.class) ? deserializerStorage.get(roomId, VenueRoom.class) : new VenueRoom();
+        venueRoom.setId(roomId);
         venueRoom.setName(jsonObject.getString("name"));
         venueRoom.setCapacity(jsonObject.has("capacity")&& !jsonObject.isNull("capacity") ? jsonObject.getInt("capacity") : 0);
         venueRoom.setLocationDescription(jsonObject.getString("description"));
@@ -47,13 +48,15 @@ public class VenueRoomDeserializer extends BaseDeserializer implements IVenueRoo
             VenueFloor floor = deserializerStorage.get(floorId, VenueFloor.class);
             venueRoom.setFloor(floor);
         }
-        if(!jsonObject.isNull("floor")){
+
+        if(jsonObject.has("floor")){
             JSONObject jsonObjectFloor = jsonObject.getJSONObject("floor");
-            VenueFloor floor           = deserializerStorage.get(jsonObjectFloor.getInt("id"), VenueFloor.class);
+            VenueFloor floor           = deserializerStorage.get(jsonObjectFloor.optInt("id"), VenueFloor.class);
             if(floor == null)
                 throw new InvalidParameterException(String.format("floor id %s not found on database!", jsonObjectFloor.getInt("id")));
             venueRoom.setFloor(floor);
         }
+
         if(!deserializerStorage.exist(venueRoom, VenueRoom.class)) {
             deserializerStorage.add(venueRoom, VenueRoom.class);
         }

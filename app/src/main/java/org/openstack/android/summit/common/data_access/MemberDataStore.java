@@ -30,13 +30,12 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
 
         IDataStoreOperationListener<Member> remoteDataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
-            public void onSucceedWithSingleData(final Member data) {
+            public void onSucceedWithSingleData(final Member detachedMember) {
                 try{
-
                     Member member = RealmFactory.transaction(new RealmFactory.IRealmCallback<Member>() {
                         @Override
                         public Member callback(Realm session) throws Exception {
-                            return session.copyToRealmOrUpdate(data);
+                            return session.copyToRealmOrUpdate(detachedMember);
                         }
                     });
                     dataStoreOperationListener.onSucceedWithSingleData(member);
@@ -91,8 +90,8 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
             public void onSucceedWithSingleData(Feedback data) {
                 super.onSucceedWithSingleData(data);
 
-                RealmFactory.getSession().beginTransaction();
                 try {
+                    RealmFactory.getSession().beginTransaction();
                     member.getFeedback().add(data);
                     RealmFactory.getSession().commitTransaction();
                 }

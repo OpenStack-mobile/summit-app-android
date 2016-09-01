@@ -15,20 +15,22 @@ public class PresentationLinkDeserializer extends PresentationMaterialDeserializ
     }
 
     @Override
-    public PresentationLink deserialize(String jsonString) throws JSONException{
+    public PresentationLink deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
-        String[] missedFields = validateRequiredFields(new String[] {"link"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[]{"link"}, jsonObject);
         handleMissedFieldsIfAny(missedFields);
-        PresentationLink link = (PresentationLink)internalDeserialize(jsonString);
+        PresentationLink link = (PresentationLink) internalDeserialize(jsonString);
         link.setLink(jsonObject.getString("link"));
-        if(!deserializerStorage.exist(link, PresentationLink.class)) {
+        if (!deserializerStorage.exist(link, PresentationLink.class)) {
             deserializerStorage.add(link, PresentationLink.class);
         }
         return link;
     }
 
     @Override
-    protected IPresentationMaterial buildMaterial() {
-        return new PresentationLink();
+    protected IPresentationMaterial buildMaterial(int materialId) {
+        return deserializerStorage.exist(materialId, PresentationLink.class) ?
+                deserializerStorage.get(materialId, PresentationLink.class) :
+                new PresentationLink();
     }
 }

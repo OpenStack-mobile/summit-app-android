@@ -155,6 +155,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             @Override
             public void onError(Throwable error) {
                 String friendlyError = Constants.GENERIC_ERROR_MSG;
+                Crashlytics.logException(error);
                 dataStoreOperationListener.onError(friendlyError);
             }
         };
@@ -172,11 +173,12 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                     HttpRequest.CONTENT_TYPE_JSON,
                     null,
                     httpTaskListener);
-        } catch (InvalidParameterSpecException e) {
+            httpTask.execute();
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
-        httpTask.execute();
+
     }
 
     @Override

@@ -20,7 +20,7 @@ public class HttpTaskFactory implements IHttpTaskFactory {
     @Inject
     public HttpTaskFactory(ITokenManagerFactory tokenManagerFactory, IHttpFactory httpFactory) {
         this.tokenManagerFactory = tokenManagerFactory;
-        this.httpFactory = httpFactory;
+        this.httpFactory         = httpFactory;
     }
 
     @Override

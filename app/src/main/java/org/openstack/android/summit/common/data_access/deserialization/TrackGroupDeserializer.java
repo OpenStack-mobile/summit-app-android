@@ -29,13 +29,13 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
 
         String[] missedFields = validateRequiredFields(new String[] {"id", "name", "color", "tracks"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
-
-        TrackGroup trackGroup = new TrackGroup();
+        int groupId = jsonObject.getInt("id");
+        TrackGroup trackGroup = deserializerStorage.exist(groupId, TrackGroup.class) ? deserializerStorage.get(groupId, TrackGroup.class) : new TrackGroup();
         deserializerStorage.add(trackGroup, TrackGroup.class); // added here so it's available on child deserialization
 
         trackDeserializer.setShouldDeserializeTrackGroups(false);
 
-        trackGroup.setId(jsonObject.getInt("id"));
+        trackGroup.setId(groupId);
         trackGroup.setName(jsonObject.getString("name"));
         trackGroup.setDescription(jsonObject.getString("description"));
         trackGroup.setColor(jsonObject.getString("color"));
@@ -47,6 +47,7 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
         Track track = null;
         int trackId = 0;
         JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
+        trackGroup.getTracks().clear();
         for (int i = 0; i < jsonArrayTracks.length(); i++) {
 
             if (jsonArrayTracks.optInt(i) > 0) {

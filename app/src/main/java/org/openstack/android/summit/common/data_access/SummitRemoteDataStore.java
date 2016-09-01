@@ -27,7 +27,7 @@ public class SummitRemoteDataStore extends BaseRemoteDataStore implements ISummi
 
     public SummitRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
         this.httpTaskFactory = httpTaskFactory;
-        this.deserializer = deserializer;
+        this.deserializer    = deserializer;
     }
 
     @Override

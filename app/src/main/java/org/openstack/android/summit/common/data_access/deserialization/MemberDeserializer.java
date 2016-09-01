@@ -46,7 +46,8 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
         JSONObject jsonObject = new JSONObject(jsonString);
         String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
-        Member member =  new Member();
+        int memberId = jsonObject.getInt("id");
+        Member member = deserializerStorage.exist(memberId, Member.class) ? deserializerStorage.get(memberId, Member.class) : new Member();
         personDeserializer.deserialize(member, jsonObject);
 
         // added here so it's available on child deserialization
@@ -70,6 +71,7 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
             Feedback feedback;
             JSONObject jsonObjectFeedback;
             JSONArray jsonArrayFeedback = jsonObject.getJSONArray("feedback");
+            member.clearFeedback();
             for (int i = 0; i < jsonArrayFeedback.length(); i++) {
                 jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
                 try {
