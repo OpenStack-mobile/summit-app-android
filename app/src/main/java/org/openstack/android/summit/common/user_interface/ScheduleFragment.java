@@ -29,11 +29,12 @@ import java.util.List;
  */
 public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment<P> implements IScheduleView {
 
+    protected Parcelable listState                    = null;
+    private static final String LIST_STATE            = "scheduleListState";
     protected ScheduleListAdapter scheduleListAdapter;
     protected List<ScheduleItemDTO> events;
     protected ListView scheduleList;
-    protected Parcelable listState         = null;
-    private static final String LIST_STATE = "scheduleListState";
+
 
     public ScheduleFragment() {
         // Required empty public constructor

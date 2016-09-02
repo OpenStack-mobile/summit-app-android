@@ -1,6 +1,10 @@
 package org.openstack.android.summit.common.entities;
 
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -10,6 +14,39 @@ import io.realm.annotations.PrimaryKey;
  * Created by Claudio Redi on 11/4/2015.
  */
 public class Summit extends RealmObject implements INamedEntity {
+
+    public Date getScheduleStartDate() {
+        return scheduleStartDate;
+    }
+
+    public void setScheduleStartDate(Date scheduleStartDate) {
+        this.scheduleStartDate = scheduleStartDate;
+    }
+
+    public String getPageUrl() {
+        return pageUrl;
+    }
+
+    public void setPageUrl(String pageUrl) {
+        this.pageUrl = pageUrl;
+    }
+
+    public String getSchedulePageUrl() {
+        return schedulePageUrl;
+    }
+
+    public void setSchedulePageUrl(String schedulePageUrl) {
+        this.schedulePageUrl = schedulePageUrl;
+    }
+
+    public String getScheduleEventDetailUrl() {
+        return scheduleEventDetailUrl;
+    }
+
+    public void setScheduleEventDetailUrl(String scheduleEventDetailUrl) {
+        this.scheduleEventDetailUrl = scheduleEventDetailUrl;
+    }
+
     @PrimaryKey
     private int id;
     private String name;
@@ -18,6 +55,11 @@ public class Summit extends RealmObject implements INamedEntity {
     private String timeZone;
     private Date initialDataLoadDate;
     private Date startShowingVenuesDate;
+    private Date scheduleStartDate;
+    private String pageUrl;
+    private String schedulePageUrl;
+    private String scheduleEventDetailUrl;
+
     private RealmList<SummitType> types = new RealmList<>();
     private RealmList<TicketType> ticketTypes = new RealmList<>();
     private RealmList<Venue> venues = new RealmList<>();

@@ -1,6 +1,8 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
 import android.text.TextUtils;
+
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +27,7 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 11/15/2015.
  */
 public class SummitDeserializer extends BaseDeserializer implements ISummitDeserializer {
+
     IGenericDeserializer genericDeserializer;
     IVenueDeserializer venueDeserializer;
     IVenueRoomDeserializer venueRoomDeserializer;
@@ -61,7 +64,18 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
 
             JSONObject jsonObject = new JSONObject(jsonString);
 
-            String[] missedFields = validateRequiredFields(new String[]{"id", "name", "start_date", "end_date", "time_zone", "start_showing_venues_date"}, jsonObject);
+            String[] missedFields = validateRequiredFields(new String[]
+                    {
+                            "id",
+                            "name",
+                            "start_date",
+                            "end_date",
+                            "time_zone",
+                            "start_showing_venues_date",
+                            "page_url",
+                            "schedule_page_url",
+                            "schedule_event_detail_url"
+                    }, jsonObject);
 
             if (missedFields.length > 0) {
                 throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
@@ -72,7 +86,14 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
             summit.setName(jsonObject.getString("name"));
             summit.setStartDate(new Date(jsonObject.getInt("start_date") * 1000L));
             summit.setEndDate(new Date(jsonObject.getInt("end_date") * 1000L));
+            summit.setScheduleStartDate(!jsonObject.isNull("schedule_start_date")
+                    ? new Date(jsonObject.getInt("schedule_start_date") * 1000L):
+                      new DateTime(summit.getStartDate()).withTime(0,0,0,0).toDate()
+            );
             summit.setTimeZone(jsonObject.getJSONObject("time_zone").getString("name"));
+            summit.setPageUrl(jsonObject.getString("page_url"));
+            summit.setSchedulePageUrl(jsonObject.getString("schedule_page_url"));
+            summit.setScheduleEventDetailUrl(jsonObject.getString("schedule_event_detail_url"));
             summit.setInitialDataLoadDate(jsonObject.has("timestamp") ? new Date(jsonObject.getInt("timestamp") * 1000L) : null);
             summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date") * 1000L));
 

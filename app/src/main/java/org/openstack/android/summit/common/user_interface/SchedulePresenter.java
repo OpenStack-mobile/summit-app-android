@@ -95,6 +95,9 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
         if (isFirstTime) {
             view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
+            if(!inactiveDates.contains(currentSummit.getScheduleStartDate())){
+                view.setSelectedDate(currentSummit.getScheduleStartDay());
+            }
         }
         else {
             view.setDisabledDates(inactiveDates);
