@@ -95,7 +95,18 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
         if (isFirstTime) {
             view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
-            if(!inactiveDates.contains(currentSummit.getScheduleStartDate())){
+            DateTime scheduleStartDate = currentSummit.getLocalScheduleStartDate();
+            boolean foundDate          = false;
+
+            for(DateTime dt: inactiveDates){
+                if(dt.compareTo(scheduleStartDate) == 0)
+                {
+                    foundDate = true;
+                    break;
+                }
+            }
+
+            if(!foundDate){
                 view.setSelectedDate(currentSummit.getScheduleStartDay());
             }
         }
@@ -120,7 +131,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
         List<String> filtersOnLevels       = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
         List<String> filtersOnTags         = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Venues);
+        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         List<DateTime> inactiveDates = interactor.getDatesWithoutEvents(
                 startDate,

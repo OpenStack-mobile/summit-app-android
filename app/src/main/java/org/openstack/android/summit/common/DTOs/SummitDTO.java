@@ -78,6 +78,11 @@ public class SummitDTO extends NamedDTO {
         return localDateTime.toDateTime(DateTimeZone.UTC);
     }
 
+    public DateTime getLocalScheduleStartDate(){
+        DateTimeZone summitTimeZone = DateTimeZone.forID(getTimeZone());
+        return new DateTime(getScheduleStartDate(), summitTimeZone).withTime(0,0,0,0);
+    }
+
     public DateTime convertFromUTCToLocal(DateTime dateTime) {
         DateTimeZone summitTimeZone = DateTimeZone.forID(getTimeZone());
         DateTime utcDateTime = new DateTime(dateTime, DateTimeZone.UTC);

@@ -202,7 +202,6 @@ public class GeneralScheduleFilterPresenter
                 position);
     }
 
-
     @Override
     public void toggleSelectionEventType(IGeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(1);
