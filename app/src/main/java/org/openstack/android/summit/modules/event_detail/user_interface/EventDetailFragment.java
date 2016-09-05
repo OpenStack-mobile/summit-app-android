@@ -118,8 +118,6 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         setScheduledInternal(scheduled);
         setIsScheduledStatusVisibleInternal(isScheduledStatusVisible);
         setAllowNewFeedback(allowNewFeedback);
-        setIAllowRsvpInternal(allowRsvp);
-
         // Locate MenuItem with ShareActionProvider
         MenuItem item = menu.findItem(R.id.action_share);
         // Fetch and store ShareActionProvider
@@ -146,9 +144,6 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         }
         else if (id == R.id.action_create_feedback) {
             presenter.showFeedbackEdit();
-        }
-        else if (id == R.id.action_rsvp) {
-            presenter.showEventRsvpView();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -259,21 +254,21 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
 
     @Override
     public void setAllowRsvp(boolean allowRsvp) {
-        if (menu != null && menu.findItem(R.id.action_rsvp) != null) {
-            setScheduledInternal(allowRsvp);
-        }
-        else {
-            this.allowRsvp = allowRsvp;
-        }
+        this.allowRsvp = allowRsvp;
+        Button rsvpButton = (Button)view.findViewById(R.id.rsvp_button);
+        if(rsvpButton == null) return;
+        rsvpButton.setVisibility(this.allowRsvp ? View.VISIBLE : View.GONE);
+        rsvpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.showEventRsvpView();
+            }
+        });
     }
 
     private void setIAllowNewFeedbackInternal(boolean allowNewFeedback) {
         menu.findItem(R.id.action_create_feedback).setVisible(allowNewFeedback);
         this.allowNewFeedback = allowNewFeedback;
-    }
-
-    private void setIAllowRsvpInternal(boolean allowRsvp) {
-        menu.findItem(R.id.action_rsvp).setVisible(allowRsvp);
     }
 
     @Override

@@ -11,11 +11,11 @@ public class DeepLinkInfo {
     public static final String ActionViewSchedule     = "VIEW_SCHEDULE";
     public static final String ActionViewNotification = "VIEW_NOTIFICATION";
 
-    public static final String EventsPath         = "events";
-    public static final String SpeakersPath       = "speakers";
-    public static final String LocationsPath      = "locations";
-    public static final String SchedulePath       = "schedule";
-    public static final String NotificationsPath  = "notifications";
+    public static final String EventsPath             = "events";
+    public static final String SpeakersPath           = "speakers";
+    public static final String LocationsPath          = "locations";
+    public static final String SchedulePath           = "schedule";
+    public static final String NotificationsPath      = "notifications";
 
     private String param;
     private String action;

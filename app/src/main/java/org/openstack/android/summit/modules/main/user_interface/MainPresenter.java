@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -26,6 +27,8 @@ import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -173,6 +176,17 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                     }
                 }
                 // get the app link metadata
+                //before check if we are trying to see a custom rsvp
+                Pattern r = Pattern.compile(".*/summit/.*/.*/events/\\d+/.*/rsvp");
+                Matcher m = r.matcher(url.toString());
+                if(m.find()){
+                    Log.d(Constants.LOG_TAG, "opening custom RSVP template ...");
+                    // match! rsvp browser
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(url);
+                    view.startActivity(i);
+                    return false;
+                }
                 AppLinkNavigation.navigateInBackground((MainActivity)view, url);
             }
         }

@@ -117,6 +117,15 @@
                         style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
                         android:text="tag1, tag2, tag3"/>
                 </LinearLayout>
+                <Button
+                    android:id="@+id/rsvp_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    style="@style/button"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/action_rsvp"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/event_detail_credentials_container"

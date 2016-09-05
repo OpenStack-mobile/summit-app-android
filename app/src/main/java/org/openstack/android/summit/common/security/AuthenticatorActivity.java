@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.security;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,10 +11,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -86,12 +91,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         // Initialise the WebView
         WebView webView = (WebView) findViewById(R.id.WebView);
-
         webView.getSettings().setJavaScriptEnabled(true);
-
-        webView.loadUrl(authUrl);
-
         webView.setWebViewClient(new CustomWebViewClient(this, this.oidcConfigurationManager));
+        // persists the oookies ...
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+        }
+        CookieManager.getInstance().setAcceptCookie(true);
+        webView.loadUrl(authUrl);
     }
 
     /**
@@ -106,7 +113,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         private IOIDCConfigurationManager oidcConfigurationManager;
 
         public CustomWebViewClient(AuthenticatorActivity activity, IOIDCConfigurationManager oidcConfigurationManager) {
-            authActivity                 = new WeakReference<>(activity);
+            authActivity                  = new WeakReference<>(activity);
             this.oidcConfigurationManager = oidcConfigurationManager;
             clientConfig                  = (OIDCNativeClientConfiguration) oidcConfigurationManager.buildConfiguration(OIDCClientConfiguration.ODICAccountType.NativeAccount);
         }
@@ -114,6 +121,21 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             handler.proceed();
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url){
+            super.onPageFinished(view, url);
+            String cookies = CookieManager.getInstance().getCookie(url);
+            if(cookies != null) {
+                Log.d(TAG, "All the cookies in a string:" + cookies);
+            }
+        }
+
+        @TargetApi(21)
+        private void flushCookies() {
+
+            CookieManager.getInstance().flush();
         }
 
         @Override
