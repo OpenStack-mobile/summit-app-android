@@ -50,7 +50,9 @@ def expandManifest(flavor, properties_file) {
             ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
             IdentityProviderBaseUrl: props['IdentityProviderBaseUrl'],
             WebSiteBaseUrl: props['WebSiteBaseUrl'],
-            YouTubeAndroidPlayerAPIKey: props['YouTubeAndroidPlayerAPIKey']
+            YouTubeAndroidPlayerAPIKey: props['YouTubeAndroidPlayerAPIKey'],
+            BasicAuthUser: props['BasicAuthUser'],
+            BasicAuthPass: props['BasicAuthPass'],
     ]
 }
 

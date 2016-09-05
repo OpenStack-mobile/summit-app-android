@@ -85,7 +85,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setIsScheduledStatusVisible(interactor.isMemberLoggedAndConfirmedAttendee());
         view.setAllowNewFeedback(getAllowNewFeedback());
         view.setTags(event.getTags());
-        view.setAllowRsvp(event.getAllowRsvp());
+        view.setAllowRsvp(event.getAllowRsvp() && interactor.isMemberLoggedAndConfirmedAttendee());
         view.hasMyFeedback(myFeedbackForEvent != null);
 
         if(event.getVideo() != null){
@@ -201,7 +201,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public void showEventRsvpView() {
-        this.wireframe.presentEventRsvpView(this.view,  new Intent(Intent.ACTION_VIEW, Uri.parse(event.getRsvpLink())));
+        this.wireframe.presentEventRsvpView(event.getRsvpLink(), view);
     }
 
     @Override

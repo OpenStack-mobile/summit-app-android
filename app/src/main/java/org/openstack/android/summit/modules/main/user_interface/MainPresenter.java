@@ -13,6 +13,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.BuildConfig;
+import org.openstack.android.summit.InitialDataLoadingActivity;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -23,6 +24,7 @@ import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
+import org.openstack.android.summit.modules.rsvp.RSVPViewerActivity;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -177,13 +179,12 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                 }
                 // get the app link metadata
                 //before check if we are trying to see a custom rsvp
-                Pattern r = Pattern.compile(".*/summit/.*/.*/events/\\d+/.*/rsvp");
-                Matcher m = r.matcher(url.toString());
-                if(m.find()){
+                if(this.appLinkRouter.isCustomRSVPLink(url)){
                     Log.d(Constants.LOG_TAG, "opening custom RSVP template ...");
                     // match! rsvp browser
-                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    Intent i = new Intent((Context)view, RSVPViewerActivity.class);
                     i.setData(url);
+                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     view.startActivity(i);
                     return false;
                 }

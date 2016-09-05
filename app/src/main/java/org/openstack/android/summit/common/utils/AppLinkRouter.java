@@ -2,12 +2,16 @@ package org.openstack.android.summit.common.utils;
 
 import android.net.Uri;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by sebastian on 8/2/2016.
  */
 final public class AppLinkRouter implements IAppLinkRouter {
 
     public static final String DeepLinkHost = "org.openstack.android.summit";
+
     @Override
     public boolean isDeepLink(Uri url) {
         if(!url.getScheme().toLowerCase().contains(DeepLinkHost)) return false;
@@ -17,6 +21,15 @@ final public class AppLinkRouter implements IAppLinkRouter {
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.SchedulePath)) return true;
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.NotificationsPath)) return true;
         return false;
+    }
+
+    @Override
+    public boolean isCustomRSVPLink(Uri url){
+        // get the app link metadata
+        //before check if we are trying to see a custom rsvp
+        Pattern r = Pattern.compile(".*/summit/.*/.*/events/\\d+/.*/rsvp");
+        Matcher m = r.matcher(url.toString());
+        return m.find();
     }
 
     @Override

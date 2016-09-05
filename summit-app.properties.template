@@ -11,3 +11,5 @@ ResourceServerBaseUrl=
 IdentityProviderBaseUrl=
 WebSiteBaseUrl=
 YouTubeAndroidPlayerAPIKey=
+BasicAuthUser=
+BasicAuthPass=

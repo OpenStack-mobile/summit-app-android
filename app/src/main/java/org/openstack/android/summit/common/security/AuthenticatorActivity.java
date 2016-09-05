@@ -29,13 +29,18 @@ import com.google.api.client.json.gson.GsonFactory;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.security.oidc.AuthCodeResponse;
 import org.openstack.android.summit.common.security.oidc.OpenIdConnectProtocol;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.CookiePolicy;
+import java.net.HttpCookie;
+import java.net.URI;
 import java.security.InvalidParameterException;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -66,6 +71,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @Inject
     IOIDCConfigurationManager oidcConfigurationManager;
+
+    @Inject
+    ISession session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +106,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
         }
         CookieManager.getInstance().setAcceptCookie(true);
+        CookieManager.getInstance().removeAllCookie();
         webView.loadUrl(authUrl);
     }
 
@@ -128,13 +137,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             super.onPageFinished(view, url);
             String cookies = CookieManager.getInstance().getCookie(url);
             if(cookies != null) {
-                Log.d(TAG, "All the cookies in a string:" + cookies);
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) flushCookies();
+                else CookieSyncManager.getInstance().sync();
             }
         }
 
         @TargetApi(21)
         private void flushCookies() {
-
             CookieManager.getInstance().flush();
         }
 

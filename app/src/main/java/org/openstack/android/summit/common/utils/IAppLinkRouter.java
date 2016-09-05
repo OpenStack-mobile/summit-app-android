@@ -12,4 +12,6 @@ public interface IAppLinkRouter {
     DeepLinkInfo buildDeepLinkInfo(Uri url);
 
     Uri buildUriFor(String action, String param);
+
+    boolean isCustomRSVPLink(Uri url);
 }

@@ -58,6 +58,7 @@ import org.openstack.android.summit.modules.member_profile_detail.user_interface
 import org.openstack.android.summit.modules.push_notifications_inbox.user_interface.PushNotificationDetailFragment;
 import org.openstack.android.summit.modules.push_notifications_inbox.user_interface.PushPushNotificationsListFragment;
 import org.openstack.android.summit.modules.personal_schedule.user_interface.PersonalScheduleFragment;
+import org.openstack.android.summit.modules.rsvp.RSVPViewerActivity;
 import org.openstack.android.summit.modules.search.user_interface.SearchFragment;
 import org.openstack.android.summit.modules.speaker_presentations.user_interface.SpeakerPresentationsFragment;
 import org.openstack.android.summit.modules.speakers_list.user_interface.SpeakerListFragment;
@@ -108,4 +109,5 @@ public interface ApplicationComponent {
     void inject(CustomParsePushBroadcastReceiver customParsePushBroadcastReceiver);
     void inject(PushPushNotificationsListFragment pushPushNotificationsListFragment);
     void inject(PushNotificationDetailFragment pushNotificationDetailFragment);
+    void inject(RSVPViewerActivity rsvpViewerActivity);
 }

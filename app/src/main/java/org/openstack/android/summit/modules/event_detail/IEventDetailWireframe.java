@@ -17,7 +17,7 @@ public interface IEventDetailWireframe extends IBaseWireframe {
 
     void showEventVenueDetailView(int venueId, IBaseView view);
 
-    void presentEventRsvpView(IBaseView context, Intent intent);
+    void presentEventRsvpView(String rsvpLink, IBaseView view);
 
     void showEventLocationDetailView(int locationId, IBaseView view);
 }
