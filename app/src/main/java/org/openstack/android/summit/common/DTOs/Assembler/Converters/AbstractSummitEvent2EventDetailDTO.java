@@ -3,18 +3,15 @@ package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
-import org.openstack.android.summit.common.DTOs.VideoDTO;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Tag;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 
 /**
@@ -35,11 +32,10 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             if (source.getVenueRoom() != null) {
                 eventDetailDTO.setVenueId(source.getVenueRoom().getVenue().getId());
                 eventDetailDTO.setVenueRoomId(source.getVenueRoom().getId());
-                if(source.getVenueRoom().getFloor() != null){
+                if (source.getVenueRoom().getFloor() != null) {
                     eventDetailDTO.setVenueFloorId(source.getVenueRoom().getFloor().getId());
                 }
-            }
-            else if (source.getVenue() != null) {
+            } else if (source.getVenue() != null) {
                 eventDetailDTO.setVenueId(source.getVenue().getId());
             }
 
@@ -52,10 +48,13 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             eventDetailDTO.setRsvpLink(source.getRsvpLink());
             Summit summit = source.getSummit();
 
-            if(summit != null){
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(summit.getStartDate());
-                eventDetailDTO.setSummitSegmentUrl(String.format("%s-%d",summit.getName().toLowerCase(),cal.get(Calendar.YEAR)));
+            if (summit != null) {
+                String templateUrl = summit.getScheduleEventDetailUrl();
+                String eventUrl    = templateUrl
+                        .replace(":event_id", Integer.toString(source.getId()))
+                        .replace(":event_title", eventDetailDTO.getSlug());
+
+                eventDetailDTO.setEventUrl(eventUrl);
             }
 
             if (source.getPresentation() != null) {
@@ -65,25 +64,24 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
                 eventDetailDTO.setLevel(source.getPresentation().getLevel() + " Level");
 
                 PersonListItemDTO speakerListItemDTO;
-                for (PresentationSpeaker presentationSpeaker: source.getPresentation().getSpeakers()) {
-                    if (presentationSpeaker.getFullName()!= null && !presentationSpeaker.getFullName().isEmpty()){
-                        speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)presentationSpeaker);
+                for (PresentationSpeaker presentationSpeaker : source.getPresentation().getSpeakers()) {
+                    if (presentationSpeaker.getFullName() != null && !presentationSpeaker.getFullName().isEmpty()) {
+                        speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S) presentationSpeaker);
                         eventDetailDTO.getSpeakers().add(speakerListItemDTO);
                     }
                 }
 
                 if (source.getPresentation().getModerator() != null) {
-                    speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S)source.getPresentation().getModerator());
+                    speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S) source.getPresentation().getModerator());
                     eventDetailDTO.setModerator(speakerListItemDTO);
                 }
 
-                if(source.getPresentation().getVideos().size() > 0){
+                if (source.getPresentation().getVideos().size() > 0) {
                     PresentationVideo video = source.getPresentation().getVideos().first();
-                    eventDetailDTO.setVideo(video2VideoDTO.convert((V)video));
+                    eventDetailDTO.setVideo(video2VideoDTO.convert((V) video));
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             throw e;
@@ -96,7 +94,7 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
         String tags = "";
         String separator = "";
 
-        for(Tag tag: source.getTags()) {
+        for (Tag tag : source.getTags()) {
             tags += separator + tag.getTag();
             separator = ", ";
         }

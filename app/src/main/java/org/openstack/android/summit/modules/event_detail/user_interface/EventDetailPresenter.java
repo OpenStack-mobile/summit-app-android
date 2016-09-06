@@ -208,8 +208,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, String.format(
                     view.getResources().getString(R.string.share_event_text),
-                    this.event.getSummitSegmentUrl(),
-                    this.event.getId()
+                    this.event.getEventUrl()
                 )
         );
         return shareIntent;

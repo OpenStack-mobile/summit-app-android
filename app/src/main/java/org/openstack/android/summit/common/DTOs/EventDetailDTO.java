@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.DTOs;
 
+import org.openstack.android.summit.common.utils.Slugifier;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +63,7 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private Boolean allowFeedback;
     private PersonListItemDTO moderator;
     private String level;
-    private String summitSegmentUrl;
+    private String eventUrl;
     private Double averageRate;
 
     public int getVenueId() {
@@ -144,11 +146,15 @@ public class EventDetailDTO extends ScheduleItemDTO {
         this.averageRate = averageRate;
     }
 
-    public String getSummitSegmentUrl(){
-        return summitSegmentUrl;
+    public String getEventUrl(){
+        return eventUrl;
     }
 
-    public void setSummitSegmentUrl(String summitSegmentUrl){
-        this.summitSegmentUrl = summitSegmentUrl;
+    public void setEventUrl(String eventUrl){
+        this.eventUrl = eventUrl;
+    }
+
+    public String getSlug(){
+        return Slugifier.toSlug(getName());
     }
 }
