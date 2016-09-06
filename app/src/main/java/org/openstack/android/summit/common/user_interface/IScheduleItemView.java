@@ -20,4 +20,6 @@ public interface IScheduleItemView extends IScheduleableView {
     void setIsScheduledStatusVisible(Boolean isScheduledStatusVisible);
 
     void setLocation(String location);
+
+    void showLocation(boolean show);
 }

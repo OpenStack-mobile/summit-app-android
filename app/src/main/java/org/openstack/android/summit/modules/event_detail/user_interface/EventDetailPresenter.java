@@ -92,13 +92,9 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
             view.loadVideo(event.getVideo());
         }
 
+        view.showLocation(interactor.shouldShowVenues());
         if (interactor.shouldShowVenues()) {
             view.setLocation(event.getLocation());
-        }
-        else {
-            String stringToRemove = " - " + event.getRoom();
-            String locationWithoutRoom =  event.getLocation().replace(stringToRemove, "");
-            view.setLocation(locationWithoutRoom);
         }
 
         if (myFeedbackForEvent != null) {

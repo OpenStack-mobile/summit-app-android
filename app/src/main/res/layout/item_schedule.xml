@@ -72,6 +72,7 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/item_schedule_place_container"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             android:layout_width="match_parent"

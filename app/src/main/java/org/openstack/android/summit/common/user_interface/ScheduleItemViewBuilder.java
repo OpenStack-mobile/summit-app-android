@@ -31,9 +31,9 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
                 : "";
 
         scheduleItemView.setColor(color);
-        String location = showVenues ? scheduleItemDTO.getLocation(): (
-                (scheduleItemDTO.getRoom() != null )? scheduleItemDTO.getLocation().replace(" - " + scheduleItemDTO.getRoom(), "") : scheduleItemDTO.getLocation()
-        );
-        scheduleItemView.setLocation(location);
+
+        scheduleItemView.showLocation(showVenues);
+        if(showVenues)
+            scheduleItemView.setLocation(scheduleItemDTO.getLocation());
     }
 }

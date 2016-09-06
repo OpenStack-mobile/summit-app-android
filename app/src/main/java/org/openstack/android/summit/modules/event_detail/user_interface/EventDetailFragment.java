@@ -183,6 +183,13 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     }
 
     @Override
+    public void showLocation(boolean show){
+        LinearLayout locationContainer = (LinearLayout)view.findViewById(R.id.event_detail_place_container);
+        if(locationContainer == null) return;
+        locationContainer.setVisibility(show ? View.VISIBLE: View.GONE);
+    }
+
+    @Override
     public void setLocation(String location) {
         TextView locationTextView = (TextView)view.findViewById(R.id.event_detail_place);
         ((LinearLayout)locationTextView.getParent()).setVisibility(location != null && !location.isEmpty() ? View.VISIBLE : View.GONE);
