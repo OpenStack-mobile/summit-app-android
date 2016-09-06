@@ -143,12 +143,13 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         if(intent != null){
             String action = intent.getAction();
             Uri url       = intent.getData();
-
             if(action == Intent.ACTION_VIEW && url != null){
                 // mark as processed
                 view.setIntent(null);
+                Log.d(Constants.LOG_TAG, "processing deep link url "+url.toString());
                 if(this.appLinkRouter.isDeepLink(url)){
                     // do routing ...
+                    Log.d(Constants.LOG_TAG, "deep link url "+url.toString());
                     DeepLinkInfo deepLinkInfo = appLinkRouter.buildDeepLinkInfo(url);
                     if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewEvent){
                         if(!deepLinkInfo.hasParam()) return false;
@@ -184,10 +185,10 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                     // match! rsvp browser
                     Intent i = new Intent((Context)view, RSVPViewerActivity.class);
                     i.setData(url);
-                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     view.startActivity(i);
                     return false;
                 }
+                Log.d(Constants.LOG_TAG, "do app link url navigation to "+url.toString());
                 AppLinkNavigation.navigateInBackground((MainActivity)view, url);
             }
         }

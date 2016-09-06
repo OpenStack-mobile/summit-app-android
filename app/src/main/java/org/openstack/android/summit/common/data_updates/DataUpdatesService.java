@@ -57,11 +57,11 @@ public class DataUpdatesService extends IntentService {
                 context.getSystemService(Context.ALARM_SERVICE);
         if (isOn) {
             alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,SystemClock.elapsedRealtime(), POLL_INTERVAL, pi);
-            Log.i(Constants.LOG_TAG, "Initialized Service DataUpdatesService");
+            Log.d(Constants.LOG_TAG, "Initialized Service DataUpdatesService");
         } else {
             alarmManager.cancel(pi);
             pi.cancel();
-            Log.i(Constants.LOG_TAG, "Stopping Service DataUpdatesService");
+            Log.d(Constants.LOG_TAG, "Stopping Service DataUpdatesService");
         }
     }
 

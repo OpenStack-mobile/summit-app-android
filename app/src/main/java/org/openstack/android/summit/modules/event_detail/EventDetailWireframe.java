@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -72,12 +73,12 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
         Uri uri  = Uri.parse(rsvpLink);
         Intent i = null;
         if(this.appLinkRouter.isCustomRSVPLink(uri)){
-            Log.d(Constants.LOG_TAG, "opening custom RSVP template ...");
+            Log.i(Constants.LOG_TAG, "opening custom RSVP template ...");
             // match! rsvp browser
             i = new Intent(context.getApplicationContext(), RSVPViewerActivity.class);
             i.setData(uri);
-            i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         } else {
+            Log.i(Constants.LOG_TAG, "opening Third party RSVP link ...");
             i = new Intent(Intent.ACTION_VIEW, uri);
         }
         context.startActivity(i);

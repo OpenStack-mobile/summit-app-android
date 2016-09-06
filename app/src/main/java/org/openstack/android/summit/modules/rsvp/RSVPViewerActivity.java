@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebView;
@@ -46,13 +47,15 @@ public class RSVPViewerActivity extends Activity {
         cookieManager.setAcceptCookie(true);
 
         Uri url = getIntent().getData();
-
+        webView.setWebViewClient(new WebViewClient());
         // set the basic auth
         if (BuildConfig.FLAVOR.contains(Constants.FLAVOR_BETA) || BuildConfig.FLAVOR.contains(Constants.FLAVOR_DEV)) {
             webView.setWebViewClient(new MyWebViewClient());
         }
         Uri.Builder builder = url.buildUpon();
-        webView.loadUrl(builder.appendQueryParameter("mobile_app", "1").build().toString());
+        String link = builder.appendQueryParameter("mobile_app", "1").build().toString();
+        Log.d(Constants.LOG_TAG, " opening RSVP "+link);
+        webView.loadUrl(link);
     }
 
     private class MyWebViewClient extends WebViewClient {
