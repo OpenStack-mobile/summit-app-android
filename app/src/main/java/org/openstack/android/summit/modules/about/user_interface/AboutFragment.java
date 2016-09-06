@@ -64,7 +64,7 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
         websiteLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("http://www.openstack.org");
+                Uri uri = Uri.parse("https://www.openstack.org");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
