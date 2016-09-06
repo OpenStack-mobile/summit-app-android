@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -54,6 +55,21 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         scheduleList        = (ListView)view.findViewById(R.id.list_schedule);
         scheduleListAdapter = new ScheduleListAdapter(getContext());
 
+        scheduleList.setOnScrollListener(new AbsListView.OnScrollListener(){
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            }
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //stop animations on scrolling
+                if(scrollState == 0)
+                {
+                    scheduleListAdapter.enableAnimations(true);
+                }
+                else{
+                    scheduleListAdapter.enableAnimations(false);
+                }
+             }
+        });
+
         scheduleList.setAdapter(scheduleListAdapter);
 
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
@@ -73,7 +89,6 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
         super.onResume();
         if (listState != null){
-            ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
             scheduleList.onRestoreInstanceState(listState);
         }
         listState = null;
@@ -154,6 +169,10 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
     protected class ScheduleListAdapter extends ArrayAdapter<ScheduleItemDTO> {
 
+        private static final int AnimationDuration = 300;
+        private int lastPosition                   = -1;
+        private boolean areAnimationsEnabled       = true;
+
         public ScheduleListAdapter(Context context) {
             super(context, 0);
         }
@@ -162,9 +181,6 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         public boolean hasStableIds() {
             return true;
         }
-
-        private int lastPosition = -1;
-        private boolean areAnimationsEnabled = true;
 
         public void enableAnimations(boolean enable){
             areAnimationsEnabled = enable;
@@ -200,7 +216,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
             // Return the completed view to render on screen
             if(areAnimationsEnabled) {
                 Animation animation = AnimationUtils.loadAnimation(getContext(), (position > lastPosition) ? R.anim.slide_from_top : R.anim.slide_to_top);
-                animation.setDuration(500);
+                animation.setDuration(AnimationDuration);
                 convertView.startAnimation(animation);
                 animation = null;
             }
