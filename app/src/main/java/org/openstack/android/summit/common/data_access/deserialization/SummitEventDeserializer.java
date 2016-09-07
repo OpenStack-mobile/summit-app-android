@@ -28,7 +28,6 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
     IPresentationDeserializer presentationDeserializer;
     IDeserializerStorage deserializerStorage;
 
-
     @Inject
     public SummitEventDeserializer(IGenericDeserializer genericDeserializer, IPresentationDeserializer presentationDeserializer, IDeserializerStorage deserializerStorage){
         this.genericDeserializer      = genericDeserializer;
@@ -132,7 +131,9 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
 
         Summit summit  = deserializerStorage.get(summitId, Summit.class);
         summitEvent.setSummit(summit);
-        deserializerStorage.add(summitEvent, SummitEvent.class);
+
+        if(!deserializerStorage.exist(summitEvent, SummitEvent.class))
+            deserializerStorage.add(summitEvent, SummitEvent.class);
 
         return summitEvent;
     }

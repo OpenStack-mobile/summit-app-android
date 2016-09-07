@@ -13,7 +13,6 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.BuildConfig;
-import org.openstack.android.summit.InitialDataLoadingActivity;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -29,8 +28,6 @@ import org.openstack.android.summit.modules.rsvp.RSVPViewerActivity;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -56,22 +53,22 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
             }
             try {
 
-                if(intent.getAction().contains(Constants.PUSH_NOTIFICATION_RECEIVED)){
+                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_RECEIVED)) {
                     updateNotificationCounter();
                     return;
                 }
 
-                if(intent.getAction().contains(Constants.PUSH_NOTIFICATION_DELETED)){
+                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_DELETED)) {
                     updateNotificationCounter();
                     return;
                 }
 
-                if(intent.getAction().contains(Constants.PUSH_NOTIFICATION_OPENED)){
+                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_OPENED)) {
                     updateNotificationCounter();
                     return;
                 }
 
-                if(intent.getAction().contains(Constants.LOGGED_IN_EVENT)){
+                if (intent.getAction().contains(Constants.LOGGED_IN_EVENT)) {
                     showMyProfileView();
                     return;
                 }
@@ -85,7 +82,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                 Crashlytics.logException(
                         new Exception(
                                 String.format("Error opening fragment on login/logout notification. onSaveInstanceExecuted = %b - action %s", onSaveInstanceExecuted, intent.getAction())
-                                ,ex
+                                , ex
                         )
                 );
             }
@@ -97,7 +94,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         this.appLinkRouter = appLinkRouter;
     }
 
-    private void updateNotificationCounter(){
+    private void updateNotificationCounter() {
         view.updateNotificationCounter(this.interactor.getNotReadNotificationsCount());
     }
 
@@ -105,18 +102,16 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onResume() {
         super.onResume();
         updateNotificationCounter();
-        DataUpdatesService.setServiceAlarm((Context)view, true);
         checkDeepLinks();
         interactor.subscribeToPushNotifications();
         view.toggleMyProfileMenuItem(interactor.isMemberLogged());
+        enableDataUpdateService();
     }
 
     @Override
     public void onPause() {
-      super.onPause();
-      if(DataUpdatesService.isServiceAlarmOn((Context)view)){
-          DataUpdatesService.setServiceAlarm((Context)view, false);
-      }
+        super.onPause();
+        disableDataUpdateService();
     }
 
     @Override
@@ -138,58 +133,58 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         }
     }
 
-    private boolean checkDeepLinks(){
+    private boolean checkDeepLinks() {
         Intent intent = view.getIntent();
-        if(intent != null){
+        if (intent != null) {
             String action = intent.getAction();
-            Uri url       = intent.getData();
-            if(action == Intent.ACTION_VIEW && url != null){
+            Uri url = intent.getData();
+            if (action == Intent.ACTION_VIEW && url != null) {
                 // mark as processed
                 view.setIntent(null);
-                Log.d(Constants.LOG_TAG, "processing deep link url "+url.toString());
-                if(this.appLinkRouter.isDeepLink(url)){
+                Log.d(Constants.LOG_TAG, "processing deep link url " + url.toString());
+                if (this.appLinkRouter.isDeepLink(url)) {
                     // do routing ...
-                    Log.d(Constants.LOG_TAG, "deep link url "+url.toString());
+                    Log.d(Constants.LOG_TAG, "deep link url " + url.toString());
                     DeepLinkInfo deepLinkInfo = appLinkRouter.buildDeepLinkInfo(url);
-                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewEvent){
-                        if(!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewEvent) {
+                        if (!deepLinkInfo.hasParam()) return false;
                         view.setMenuItemChecked(R.id.nav_events);
                         this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
-                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSpeaker){
-                        if(!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSpeaker) {
+                        if (!deepLinkInfo.hasParam()) return false;
                         view.setMenuItemChecked(R.id.nav_speakers);
                         this.wireframe.showSpeakerProfile(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
-                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewNotification){
-                        if(!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewNotification) {
+                        if (!deepLinkInfo.hasParam()) return false;
                         view.setMenuItemChecked(R.id.nav_notifications);
                         this.wireframe.showPushNotification(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
-                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSchedule){
+                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSchedule) {
                         view.setMenuItemChecked(R.id.nav_events);
                         return true;
                     }
-                    if(deepLinkInfo.getAction() == DeepLinkInfo.ActionViewLocation){
-                        if(!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewLocation) {
+                        if (!deepLinkInfo.hasParam()) return false;
                         return true;
                     }
                 }
                 // get the app link metadata
                 //before check if we are trying to see a custom rsvp
-                if(this.appLinkRouter.isCustomRSVPLink(url)){
+                if (this.appLinkRouter.isCustomRSVPLink(url)) {
                     Log.d(Constants.LOG_TAG, "opening custom RSVP template ...");
                     // match! rsvp browser
-                    Intent i = new Intent((Context)view, RSVPViewerActivity.class);
+                    Intent i = new Intent((Context) view, RSVPViewerActivity.class);
                     i.setData(url);
                     view.startActivity(i);
                     return false;
                 }
-                Log.d(Constants.LOG_TAG, "do app link url navigation to "+url.toString());
-                AppLinkNavigation.navigateInBackground((MainActivity)view, url);
+                Log.d(Constants.LOG_TAG, "do app link url navigation to " + url.toString());
+                AppLinkNavigation.navigateInBackground((MainActivity) view, url);
             }
         }
         return false;
@@ -200,21 +195,35 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     @Override
-    public void showEventView(int eventId){
+    public void showEventView(int eventId) {
         wireframe.showEventDetail(eventId, view);
     }
 
     @Override
     public void showNotificationView() {
-        if(!interactor.isDataLoaded()) {
+        if (!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
         wireframe.showNotificationsListView(view);
     }
 
+    @Override
+    public void enableDataUpdateService() {
+        if (!DataUpdatesService.isServiceAlarmOn((Context) view)) {
+            DataUpdatesService.setServiceAlarm((Context) view, true);
+        }
+    }
+
+    @Override
+    public void disableDataUpdateService() {
+        if (DataUpdatesService.isServiceAlarmOn((Context) view)) {
+            DataUpdatesService.setServiceAlarm((Context) view, false);
+        }
+    }
+
     public void showMyProfileView() {
-        if(!interactor.isDataLoaded()) {
+        if (!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
@@ -228,7 +237,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     public void showSpeakerListView() {
-        if(!interactor.isDataLoaded()) {
+        if (!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
@@ -237,7 +246,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     public void showSearchView(String searchTerm) {
-        if(!interactor.isDataLoaded()) {
+        if (!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
@@ -246,7 +255,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     public void showAboutView() {
-        if(!interactor.isDataLoaded()) {
+        if (!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
@@ -255,7 +264,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     public void showVenuesView() {
-        if(!interactor.isDataLoaded()) {
+        if (!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
@@ -319,14 +328,19 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                 }
             });
             SSLContext context = SSLContext.getInstance("TLS");
-            context.init(null, new X509TrustManager[]{new X509TrustManager(){
+            context.init(null, new X509TrustManager[]{new X509TrustManager() {
                 public void checkClientTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {}
+                                               String authType) throws CertificateException {
+                }
+
                 public void checkServerTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {}
+                                               String authType) throws CertificateException {
+                }
+
                 public X509Certificate[] getAcceptedIssuers() {
                     return new X509Certificate[0];
-                }}}, new SecureRandom());
+                }
+            }}, new SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(
                     context.getSocketFactory());
         } catch (Exception e) { // should never happen

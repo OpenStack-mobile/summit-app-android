@@ -10,11 +10,11 @@ public class AudioUtil {
 
     private AudioUtil() {}
 
-    private static final Object mSingletonLock = new Object();
+    private static final Object lock = new Object();
     private static AudioManager audioManager;
 
     private static AudioManager getInstance(Context context) {
-        synchronized (mSingletonLock) {
+        synchronized (lock) {
             if (audioManager != null)
                 return audioManager;
             if (context != null)

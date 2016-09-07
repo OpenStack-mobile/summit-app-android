@@ -87,18 +87,36 @@ public class MainActivity
         }
     };
 
-    static final int DATA_LOAD_REQUEST = 1;  // The request code
-    static private boolean runningDataLoading = false;
-    private final Object dataLoadingActivityLock = new Object();
+    private static final int DATA_LOAD_REQUEST          = 1;  // The request code
+    private static boolean runningDataLoading           = false;
+    private static final Object dataLoadingActivityLock = new Object();
 
     private void launchInitialDataLoadingActivity() {
         synchronized (dataLoadingActivityLock) {
             if (runningDataLoading) return;
             if (!presenter.isSummitDataLoaded()) {
                 runningDataLoading = true;
+                // disable data updates ...
+                presenter.disableDataUpdateService();
                 Intent intent = new Intent(MainActivity.this, InitialDataLoadingActivity.class);
                 Log.i(Constants.LOG_TAG, "starting InitialDataLoadingActivity ...");
                 startActivityForResult(intent, DATA_LOAD_REQUEST);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == DATA_LOAD_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                synchronized (dataLoadingActivityLock) {
+                    runningDataLoading = false;
+                }
+                Log.i(Constants.LOG_TAG, "Summit Data Loaded!");
+                //re enable data update service
+                presenter.enableDataUpdateService();
             }
         }
     }
@@ -129,20 +147,6 @@ public class MainActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == DATA_LOAD_REQUEST) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                synchronized (dataLoadingActivityLock) {
-                    runningDataLoading = false;
-                }
-                Log.i(Constants.LOG_TAG, "Summit Data Loaded!");
-            }
-        }
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         presenter.onResume();
@@ -170,7 +174,6 @@ public class MainActivity
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
         presenter.onConfigurationChanged(newConfig);
         setupNavigationIcons();
     }
@@ -254,7 +257,7 @@ public class MainActivity
             }
         });
 
-        memberNameTextView     = (TextView) headerView.findViewById(R.id.member_name_textview);
+        memberNameTextView = (TextView) headerView.findViewById(R.id.member_name_textview);
         memberProfileImageView = (SimpleDraweeView) headerView.findViewById(R.id.member_profile_pic_imageview);
 
         EditText searchText = (EditText) headerView.findViewById(R.id.nav_header_search_edittext);
@@ -375,11 +378,11 @@ public class MainActivity
     }
 
 
-    public void setMenuItemChecked(int menuItemId){
+    public void setMenuItemChecked(int menuItemId) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView == null) return;
+        if (navigationView == null) return;
         MenuItem menuItem = navigationView.getMenu().findItem(menuItemId);
-        if(menuItem == null) return;
+        if (menuItem == null) return;
         menuItem.setChecked(true);
     }
 
