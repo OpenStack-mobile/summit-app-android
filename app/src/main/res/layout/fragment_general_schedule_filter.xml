@@ -27,6 +27,9 @@
                    android:id="@+id/hide_past_talks"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
+                   android:background="@color/white"
+                   android:text="@string/past_talks_hide"
+                   android:textColor="@color/openStackDarkGray"
                    android:checked="false"/>
             </LinearLayout>
             <LinearLayout style="@style/AppTheme.SubsectionHeader">

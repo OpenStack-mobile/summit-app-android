@@ -26,7 +26,8 @@
     <string name="levels">Levels</string>
     <string name="filter">Filter</string>
     <string name="tags">Tags</string>
-    <string name="past_talks">Hide past talks</string>
+    <string name="past_talks">Past talks</string>
+    <string name="past_talks_hide">Hide Talks</string>
     <string name="profile">Profile</string>
     <string name="venues">Venues</string>
     <string name="rooms">Rooms</string>
