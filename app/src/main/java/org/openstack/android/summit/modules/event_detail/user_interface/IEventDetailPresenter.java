@@ -28,4 +28,6 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> 
     void showEventRsvpView();
 
     Intent createShareIntent();
+
+    void addToCalendar();
 }

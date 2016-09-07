@@ -1,8 +1,15 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.support.v4.content.ContextCompat;
+
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
@@ -50,15 +57,14 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
         if (savedInstanceState != null) {
             eventId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_ID);
-        }
-        else {
+        } else {
             eventId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_EVENT_ID, Integer.class);
         }
 
         loadedAllFeedback = false;
-        event            = interactor.getEventDetail(eventId);
+        event = interactor.getEventDetail(eventId);
 
-        if(event == null){
+        if (event == null) {
             view.setName("");
             view.setTrack("");
             view.setDate("");
@@ -88,7 +94,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setAllowRsvp(event.getAllowRsvp() && interactor.isMemberLoggedAndConfirmedAttendee());
         view.hasMyFeedback(myFeedbackForEvent != null);
 
-        if(event.getVideo() != null){
+        if (event.getVideo() != null) {
             view.loadVideo(event.getVideo());
         }
 
@@ -105,9 +111,43 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         }
 
         view.setAverageRate(0); // TODO: we should implement a hide
-        if (event.getFinished() && event.getAllowFeedback()){
+        if (event.getFinished() && event.getAllowFeedback()) {
             loadFeedback();
             loadAverageFeedback();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        view.showAddToMyCalendar(!isEventInCalendar(view.getApplicationContext()));
+    }
+
+    private boolean isEventInCalendar(Context context) {
+        Cursor cursor = null;
+        try {
+
+            int permissionCheck = ContextCompat.checkSelfPermission(view.getApplicationContext(), Manifest.permission.READ_CALENDAR);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
+
+            cursor = CalendarContract.Instances.query(context.getContentResolver(), new String[]{
+                            CalendarContract.Instances._ID,
+                            CalendarContract.Instances.BEGIN,
+                            CalendarContract.Instances.END,
+                            CalendarContract.Instances.EVENT_ID},
+                    event.getStartDate().getMillis(),
+                    event.getEndDate().getMillis(),
+                    String.format("\"%s\"", event.getName()));
+
+            if (cursor.moveToFirst()) {
+                return true;
+            }
+            return false;
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
     }
 
@@ -188,7 +228,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public void showVenueDetail() {
-        if(event.getVenueRoomId() > 0 && interactor.shouldShowVenues()) {
+        if (event.getVenueRoomId() > 0 && interactor.shouldShowVenues()) {
             wireframe.showEventLocationDetailView(event.getVenueRoomId(), view);
             return;
         }
@@ -202,21 +242,37 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public Intent createShareIntent() {
-        if(this.event == null) return null;
+        if (this.event == null) return null;
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, String.format(
-                    view.getResources().getString(R.string.share_event_text),
-                    this.event.getEventUrl()
+                view.getResources().getString(R.string.share_event_text),
+                this.event.getEventUrl()
                 )
         );
         return shareIntent;
     }
 
+    @Override
+    public void addToCalendar() {
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.Events.CALENDAR_ID, event.getId())
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStartDate().getMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEndDate().getMillis())
+                .putExtra(CalendarContract.Events.TITLE, event.getName())
+                .putExtra(CalendarContract.Events.DESCRIPTION, android.text.Html.fromHtml(event.getEventDescription()).toString())
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocationAddress())
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+
+        view.showAddToMyCalendar(false);
+        view.startActivity(intent);
+    }
+
     private boolean getAllowNewFeedback() {
         return event.getAllowFeedback() && event.getFinished() && interactor.isMemberLogged() &&
-               myFeedbackForEvent == null;
+                myFeedbackForEvent == null;
     }
 
     @Override

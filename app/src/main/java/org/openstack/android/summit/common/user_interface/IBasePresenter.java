@@ -6,6 +6,7 @@ import android.os.Bundle;
  * Created by Claudio Redi on 1/13/2016.
  */
 public interface IBasePresenter <T extends IBaseView> {
+
     void setView(T view);
 
     void onSaveInstanceState(Bundle outState);

@@ -2,6 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/action_add_to_calendar" android:icon="@drawable/ic_action_add_2_calendar" android:title="@string/action_add_to_calendar"
+        android:orderInCategory="100" app:showAsAction="always" />
     <item android:id="@+id/action_scheduled_status" android:icon="@drawable/unchecked" android:title="@string/action_scheduled_status"
         android:orderInCategory="100" app:showAsAction="always" />
     <item android:id="@+id/action_create_feedback" android:icon="@drawable/submenu_feedback" android:title="@string/action_create_feedback"

@@ -13,3 +13,4 @@ build/
 app/fabric.properties
 /app/src/jni/
 Thumbs.db
+crashlytics-build.properties

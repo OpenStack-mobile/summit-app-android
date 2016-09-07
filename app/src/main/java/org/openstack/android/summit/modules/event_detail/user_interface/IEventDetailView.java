@@ -69,4 +69,6 @@ public interface IEventDetailView extends IBaseView, IScheduleableView {
     void loadVideo(VideoDTO video);
 
     void showLocation(boolean show);
+
+    void showAddToMyCalendar(boolean show);
 }

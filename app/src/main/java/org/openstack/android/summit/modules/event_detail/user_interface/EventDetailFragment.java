@@ -1,9 +1,13 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Spannable;
@@ -48,8 +52,10 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     private boolean scheduled;
     private boolean isScheduledStatusVisible;
     private boolean allowNewFeedback;
+    private boolean allowAddMyCalendar;
     private boolean allowRsvp;
     private ShareActionProvider shareActionProvider;
+    private final static int MY_PERMISSIONS_READ_CALENDAR = 0xFF45;
 
     public EventDetailFragment() {
 
@@ -65,7 +71,15 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     @Override
     public void onResume() {
         super.onResume();
+        presenter.onResume();
         setTitle(getResources().getString(R.string.event));
+    }
+
+    private void setAdd2MyCalendarVisibility(){
+        if(menu == null) return;
+        MenuItem add2MyCalendarItem  = menu.findItem(R.id.action_add_to_calendar);
+        if(add2MyCalendarItem == null) return;
+        add2MyCalendarItem.setVisible(allowAddMyCalendar);
     }
 
     @Override
@@ -101,9 +115,34 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
 
         super.onCreateView(inflater, container, savedInstanceState);
 
+        // ask for dangerous permission (READ_CALENDAR)
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+                 ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.READ_CALENDAR},
+                        MY_PERMISSIONS_READ_CALENDAR);
+        }
+
         return view;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_READ_CALENDAR: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.showAddToMyCalendar(true);
+                } else {
+                    this.showAddToMyCalendar(false);
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
     public void loadVideo(VideoDTO video){
         VideoPlayer videoPlayer = (VideoPlayer) view.findViewById(R.id.video_preview);
         if(videoPlayer != null)
@@ -123,6 +162,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         // Fetch and store ShareActionProvider
         shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
         setShareIntent(presenter.createShareIntent());
+        setAdd2MyCalendarVisibility();
         // Return true to display menu
     }
 
@@ -144,6 +184,9 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         }
         else if (id == R.id.action_create_feedback) {
             presenter.showFeedbackEdit();
+        }
+        else if (id == R.id.action_add_to_calendar) {
+            presenter.addToCalendar();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -187,6 +230,12 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         LinearLayout locationContainer = (LinearLayout)view.findViewById(R.id.event_detail_place_container);
         if(locationContainer == null) return;
         locationContainer.setVisibility(show ? View.VISIBLE: View.GONE);
+    }
+
+    @Override
+    public void showAddToMyCalendar(boolean show) {
+        allowAddMyCalendar = show;
+        setAdd2MyCalendarVisibility();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.joda.time.DateTime;
 import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
@@ -11,6 +12,7 @@ import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
+import org.openstack.android.summit.common.entities.Venue;
 
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
@@ -23,6 +25,7 @@ import java.util.TimeZone;
  */
 
 public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extends ScheduleItemDTO> extends AbstractConverter<S, T> {
+
     protected void convertInternal(S source, ScheduleItemDTO scheduleItemDTO) {
         scheduleItemDTO.setId(source.getId());
         scheduleItemDTO.setName(source.getName());
@@ -30,8 +33,11 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         scheduleItemDTO.setTime(time);
         String dateTime = getDateTime(source);
         scheduleItemDTO.setDateTime(dateTime);
-        String location = getLocation(source);
-        scheduleItemDTO.setLocation(location);
+        scheduleItemDTO.setStartDate( new DateTime(source.getStart()));
+        scheduleItemDTO.setEndDate( new DateTime(source.getEnd()));
+
+        scheduleItemDTO.setLocation(getLocation(source));
+        scheduleItemDTO.setLocationAddress(getLocationAddress(source));
         scheduleItemDTO.setRoom(source.getVenueRoom() != null ?source.getVenueRoom().getName() : null);
         scheduleItemDTO.setEventType(source.getEventType() != null ? source.getEventType().getName() : "");
         String sponsors = getSponsors(source);
@@ -82,6 +88,39 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
             location = summitEvent.getVenue().getName();
         }
         return location;
+    }
+
+    private String getLocationAddress(S summitEvent){
+        String address = "";
+        Venue venue    = summitEvent.getVenue() != null ? summitEvent.getVenue():(summitEvent.getVenueRoom() != null ? summitEvent.getVenueRoom().getVenue() : null) ;
+
+        if(venue != null){
+            address = venue.getName();
+            if(venue.getAddress() != null && !venue.getAddress().isEmpty()){
+                address += ", " + venue.getAddress();
+            }
+            if(venue.getZipCode() != null && !venue.getZipCode().isEmpty()){
+                address += ", " + venue.getZipCode();
+            }
+            if(venue.getCity() != null && !venue.getCity().isEmpty()){
+                address += ", " + venue.getCity();
+            }
+            if(venue.getState() != null && !venue.getState().isEmpty()){
+                address += ", " + venue.getState();
+            }
+            if(venue.getCountry() != null && !venue.getCountry().isEmpty()){
+                address += ", " + venue.getCountry();
+            }
+        }
+
+        if (summitEvent.getVenueRoom() != null) {
+            if(summitEvent.getVenueRoom().getFloor() != null)
+            {
+                address +=", " + summitEvent.getVenueRoom().getFloor().getName();
+            }
+            address += ", " + summitEvent.getVenueRoom().getName();
+        }
+        return address;
     }
 
     private String getDateTime(S summitEvent) {

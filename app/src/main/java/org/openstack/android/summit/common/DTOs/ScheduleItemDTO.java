@@ -1,6 +1,8 @@
 
 package org.openstack.android.summit.common.DTOs;
 
+import org.joda.time.DateTime;
+
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
@@ -14,6 +16,35 @@ public class ScheduleItemDTO extends NamedDTO {
     private String sponsors;
     private String eventType;
     private String color;
+    private String locationAddress;
+
+    public String getLocationAddress() {
+        return locationAddress;
+    }
+
+    public void setLocationAddress(String locationAddress) {
+        this.locationAddress = locationAddress;
+    }
+
+    public DateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(DateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    private DateTime startDate;
+
+    public DateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(DateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    private DateTime endDate;
 
     public String getDateTime() {
         return dateTime;
