@@ -7,6 +7,7 @@ import org.openstack.android.summit.common.entities.Image;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
+import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
 
 /**
@@ -20,6 +21,10 @@ public class ClassResolver implements IClassResolver {
 
         if (className.equals("PresentationCategory")) {
             type = Track.class;
+        }
+
+        if (className.equals("SummitExternalLocation")) {
+            type = Venue.class;
         }
 
         if (className.equals("PresentationCategoryGroup")) {

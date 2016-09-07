@@ -27,47 +27,56 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
 
     @Override
     public SummitAttendee deserialize(String jsonString) throws JSONException {
-        JSONObject jsonObject = new JSONObject(jsonString);
+        boolean clearCancelled = true;
+        try {
 
-        String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
-        handleMissedFieldsIfAny(missedFields);
-        int attendeeId = jsonObject.getInt("id");
-        SummitAttendee summitAttendee = deserializerStorage.exist(attendeeId, SummitAttendee.class) ? deserializerStorage.get(attendeeId, SummitAttendee.class) : new SummitAttendee();
-        summitAttendee.setId(attendeeId);
+            clearCancelled = deserializerStorage.cancelClear();
 
-        // added here so it's available on child deserialization
-        if(!deserializerStorage.exist(summitAttendee, SummitAttendee.class)) {
-            deserializerStorage.add(summitAttendee, SummitAttendee.class);
-        }
+            JSONObject jsonObject = new JSONObject(jsonString);
 
-        SummitEvent summitEvent;
-        int summitEventId = 0;
-        JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
-        summitAttendee.getScheduledEvents().clear();
-        for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
-            try{
-                summitEventId = jsonArraySummitEvents.getInt(i);
-                summitEvent = deserializerStorage.get(summitEventId, SummitEvent.class);
-                if (summitEvent != null) {
-                    summitAttendee.getScheduledEvents().add(summitEvent);
+            String[] missedFields = validateRequiredFields(new String[]{"id"}, jsonObject);
+            handleMissedFieldsIfAny(missedFields);
+            int attendeeId = jsonObject.getInt("id");
+            SummitAttendee summitAttendee = deserializerStorage.exist(attendeeId, SummitAttendee.class) ? deserializerStorage.get(attendeeId, SummitAttendee.class) : new SummitAttendee();
+            summitAttendee.setId(attendeeId);
+
+            // added here so it's available on child deserialization
+            if (!deserializerStorage.exist(summitAttendee, SummitAttendee.class)) {
+                deserializerStorage.add(summitAttendee, SummitAttendee.class);
+            }
+
+            SummitEvent summitEvent;
+            int summitEventId = 0;
+            JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
+            summitAttendee.getScheduledEvents().clear();
+            for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
+                try {
+                    summitEventId = jsonArraySummitEvents.getInt(i);
+                    summitEvent = deserializerStorage.get(summitEventId, SummitEvent.class);
+                    if (summitEvent != null) {
+                        summitAttendee.getScheduledEvents().add(summitEvent);
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.e(Constants.LOG_TAG, String.format("Error deserializing schedule event %s", summitEventId), e);
                 }
             }
-            catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.e(Constants.LOG_TAG, String.format("Error deserializing schedule event %s", summitEventId), e);
+
+            TicketType ticketType;
+            int ticketTypeId;
+            JSONArray jsonArrayTicketTypes = jsonObject.getJSONArray("tickets");
+            summitAttendee.getTicketTypes().clear();
+            for (int i = 0; i < jsonArrayTicketTypes.length(); i++) {
+                ticketTypeId = jsonArrayTicketTypes.getInt(i);
+                ticketType = deserializerStorage.get(ticketTypeId, TicketType.class);
+                summitAttendee.getTicketTypes().add(ticketType);
             }
-        }
 
-        TicketType ticketType;
-        int ticketTypeId;
-        JSONArray jsonArrayTicketTypes = jsonObject.getJSONArray("tickets");
-        summitAttendee.getTicketTypes().clear();
-        for (int i = 0; i < jsonArrayTicketTypes.length(); i++) {
-            ticketTypeId = jsonArrayTicketTypes.getInt(i);
-            ticketType = deserializerStorage.get(ticketTypeId, TicketType.class);
-            summitAttendee.getTicketTypes().add(ticketType);
+            return summitAttendee;
         }
-
-        return summitAttendee;
+        finally {
+            if(clearCancelled)
+                deserializerStorage.enableClear();
+        }
     }
 }

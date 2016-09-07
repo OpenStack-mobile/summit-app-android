@@ -19,15 +19,7 @@ public class AbstractSummitAttendee2PersonDTO<S extends SummitAttendee> extends 
         PersonDTO personDTO = new PersonDTO();
 
         try {
-            /*personDTO.setId(source.getId());
-            personDTO.setName(source.getFirstName() + " " + source.getLastName());
-            personDTO.setTitle(source.getTitle());
-            personDTO.setPictureUrl(source.getPictureUrl());
-            personDTO.setIsSpeaker(false);
-            personDTO.setIsAttendee(true);
-            personDTO.setBio(source.getBio());
-            personDTO.setTwitter(source.getTwitter());
-            personDTO.setIrc(source.getIrc());*/
+            personDTO.setId(source.getId());
         }
         catch (Exception e) {
             Crashlytics.logException(e);

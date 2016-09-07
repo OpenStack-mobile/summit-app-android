@@ -35,7 +35,7 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
 
         if (isMyProfile != null && isMyProfile) {
             MemberDTO myProfile = interactor.getCurrentMember();
-            person = myProfile.getSpeakerRole() != null ? myProfile.getSpeakerRole() : myProfile.getAttendeeRole();
+            person = myProfile.getSpeakerRole() != null ? myProfile.getSpeakerRole() : myProfile;
         }
         else {
             if (savedInstanceState != null) {

@@ -1,5 +1,8 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
+import android.util.Log;
+
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Feedback;
@@ -23,12 +26,12 @@ import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
 import org.openstack.android.summit.common.utils.RealmFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bolts.Task;
 import io.realm.Realm;
 import io.realm.RealmObject;
 
@@ -38,8 +41,34 @@ import io.realm.RealmObject;
 public class DeserializerStorage implements IDeserializerStorage {
 
     private static final Object lock = new Object();
-    Map<Class, Map<Integer, IEntity>> deserializedEntityDictionary = new HashMap<Class, Map<Integer, IEntity>>();
+    private Map<Class, Map<Integer, IEntity>> deserializedEntityDictionary = new HashMap<Class, Map<Integer, IEntity>>();
+    private boolean canClear  = true;
+    private static final Object clearLock = new Object();
 
+    @Override
+    public boolean cancelClear(){
+        synchronized (clearLock){
+            if(!canClear) return false;
+            canClear = false;
+            Log.d(Constants.LOG_TAG, "disabling deserializer storage clear");
+            return true;
+        }
+    }
+
+    @Override
+    public void enableClear(){
+        synchronized (clearLock){
+            Log.d(Constants.LOG_TAG, "enabling deserializer storage clear");
+            canClear = true;
+        }
+    }
+
+    @Override
+    public boolean canClear(){
+        synchronized (clearLock){
+            return canClear;
+        }
+    }
 
     @Override
     public <T extends RealmObject & IEntity> void add(T entity, Class<T> type){
@@ -93,7 +122,7 @@ public class DeserializerStorage implements IDeserializerStorage {
                 add(member.getSpeakerRole(), PresentationSpeaker.class, false);
 
             for(Feedback f: member.getFeedback())
-                add(f, Feedback.class, false);
+                add(f, Feedback.class, true);
         }
 
         if(type == SummitAttendee.class && deepCopy){
@@ -256,8 +285,12 @@ public class DeserializerStorage implements IDeserializerStorage {
 
     @Override
     public void clear() {
-        synchronized (lock) {
-            deserializedEntityDictionary.clear();
+        synchronized (clearLock) {
+            if(!canClear) return;
+            synchronized (lock) {
+                Log.d(Constants.LOG_TAG, "clearing deserializer storage");
+                deserializedEntityDictionary.clear();
+            }
         }
     }
 }
