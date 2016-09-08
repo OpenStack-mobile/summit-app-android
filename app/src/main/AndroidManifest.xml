@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.openstack.android.summit">
+
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+
+    <!--
+      GET_ACCOUNTS is only required for GCM on devices running Android lower than
+      4.0.4. You may leave out this permission if you are targetting 4.0.4+.
+    -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <permission
+        android:name="com.parse.starter.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="org.openstack.android.summit.permission.C2D_MESSAGE" />
+
+    <application
+        android:name=".OpenStackSummitApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
+        <activity
+            android:name=".modules.main.user_interface.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter android:priority="999" android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="${WebSiteBaseUrl}" />
+                <data android:pathPattern="/summit/.*/summit-schedule.*" />
+            </intent-filter>
+            <!-- custom schema -->
+            <intent-filter android:priority="999">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="events"
+                    android:scheme="org.openstack.android.summit" />
+                <data
+                    android:host="locations"
+                    android:scheme="org.openstack.android.summit" />
+                <data
+                    android:host="schedule"
+                    android:scheme="org.openstack.android.summit" />
+                <data
+                    android:host="speakers"
+                    android:scheme="org.openstack.android.summit" />
+                <data
+                    android:host="notifications"
+                    android:scheme="org.openstack.android.summit" />
+
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".InitialDataLoadingActivity"
+            android:theme="@style/AppTheme.InitialLoadActivity"/>
+
+        <activity android:name=".common.player.YouTubePlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="sensor"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        </activity>
+
+        <activity android:name=".modules.rsvp.RSVPViewerActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        </activity>
+
+        <!-- https://developers.google.com/youtube/android/player/register -->
+        <meta-data
+            android:name="common.player.YouTubePlayerActivity.API_KEY"
+            android:value="${YouTubeAndroidPlayerAPIKey}" />
+
+        <activity
+            android:name=".common.security.AuthenticatorActivity"
+            android:theme="@android:style/Theme.Holo.NoActionBar" />
+
+        <service android:name=".common.security.AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${googleMapApiKey}" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="${fabricApiKey}" />
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="${parseApplicationId}" />
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="${parseClientKey}" />
+
+        <meta-data
+            android:name="org.openstack.android.summit.common.security.BASIC_AUTH_USER"
+            android:value="${BasicAuthUser}" />
+
+        <meta-data
+            android:name="org.openstack.android.summit.common.security.BASIC_AUTH_PASS"
+            android:value="${BasicAuthPass}" />
+
+        <!-- OIDC Application Configuration -->
+        <meta-data
+            android:name="org.openstack.android.summit.common.security.SERVICE_CLIENT_ID"
+            android:value="${ServiceClientId}" />
+
+        <!--
+            this should be set here only for development/debugging purposes, set blank on production
+            deployment
+        -->
+        <meta-data
+            android:name="org.openstack.android.summit.common.security.SERVICE_CLIENT_SECRET"
+            android:value="${ServiceClientSecret}" />
+
+        <meta-data
+            android:name="org.openstack.android.summit.common.security.NATIVE_CLIENT_ID"
+            android:value="${NativeClientId}" />
+
+        <!--
+           this should be set here only for development/debugging purposes, set blank on production
+           deployment
+        -->
+        <meta-data
+            android:name="org.openstack.android.summit.common.security.NATIVE_CLIENT_SECRET"
+            android:value="${NativeClientSecret}" />
+        <meta-data
+            android:name="org.openstack.android.summit.common.security.NATIVE_CLIENT_RETURN_URL"
+            android:value="${NativeClientReturnUrl}" />
+        <meta-data
+            android:name="org.openstack.android.summit.common.security.RS_BASE_URL"
+            android:value="${ResourceServerBaseUrl}" />
+        <meta-data
+            android:name="org.openstack.android.summit.common.security.IDP_BASE_URL"
+            android:value="${IdentityProviderBaseUrl}" />
+
+        <meta-data
+            android:name="com.parse.push.notification_icon"
+            android:resource="@drawable/push_icon"
+            tools:ignore="ManifestResource" />
+
+        <service android:name="com.parse.PushService" />
+
+        <receiver
+            android:name=".common.push_notifications.CustomParsePushBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="org.openstack.android.summit" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".common.data_updates.DataUpdatesService"
+            android:exported="false">
+        </service>
+    </application>
+
+</manifest>
