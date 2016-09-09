@@ -18,7 +18,7 @@ public class MemberProfileDetailInteractor extends BaseInteractor implements IMe
 
     public MemberProfileDetailInteractor(IGenericDataStore genericDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler) {
         super(dtoAssembler);
-        this.securityManager = securityManager;
+        this.securityManager  = securityManager;
         this.genericDataStore = genericDataStore;
     }
     @Override

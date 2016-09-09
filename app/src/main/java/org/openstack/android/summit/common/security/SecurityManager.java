@@ -185,13 +185,13 @@ public class SecurityManager implements ISecurityManager {
 
         final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
         final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
-        if( accountManager.getAccountsByType(accountType).length == 0) return null;
+
+        if(accountManager.getAccountsByType(accountType).length == 0) return null;
 
         int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
         if(currentMemberId == 0) return null;
 
-        member = memberDataStore.getByIdLocal(currentMemberId);
-        return member;
+        return memberDataStore.getByIdLocal(currentMemberId);
     }
 
     @Override

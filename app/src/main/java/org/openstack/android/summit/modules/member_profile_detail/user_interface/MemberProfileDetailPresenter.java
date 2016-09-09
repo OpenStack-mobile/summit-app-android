@@ -24,27 +24,23 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
+        
         if (isMyProfile == null) {
-            if (savedInstanceState != null) {
-                isMyProfile = savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE);
-            }
-            else {
-                isMyProfile = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, Boolean.class);
-            }
+            isMyProfile = (savedInstanceState != null) ?
+                    savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE) :
+                    wireframe.getParameter(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, Boolean.class);
         }
 
         if (isMyProfile != null && isMyProfile) {
             MemberDTO myProfile = interactor.getCurrentMember();
-            person = myProfile.getSpeakerRole() != null ? myProfile.getSpeakerRole() : myProfile;
+            person = myProfile != null && myProfile.getSpeakerRole() != null ? myProfile.getSpeakerRole() : myProfile;
         }
         else {
-            if (savedInstanceState != null) {
-                speakerId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_SPEAKER);
-            }
-            else {
-                speakerId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_SPEAKER, Integer.class);
-            }
-            person = interactor.getPresentationSpeaker(speakerId);
+            speakerId = (savedInstanceState != null) ?
+                    savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_SPEAKER) :
+                    wireframe.getParameter(Constants.NAVIGATION_PARAMETER_SPEAKER, Integer.class);
+
+            person   = interactor.getPresentationSpeaker(speakerId);
         }
 
         if(person == null){
