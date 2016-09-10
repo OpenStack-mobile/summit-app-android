@@ -24,7 +24,7 @@ public class VenueFloorDeserializer  extends BaseDeserializer implements IVenueF
     public VenueFloor deserialize(String jsonString) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        String[] missedFields = validateRequiredFields(new String[] {"id", "name", "description", "number", "venue_id"},  jsonObject);
+        String[] missedFields = validateRequiredFields(new String[] {"id", "name", "number", "venue_id"},  jsonObject);
         if (missedFields.length > 0) {
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
