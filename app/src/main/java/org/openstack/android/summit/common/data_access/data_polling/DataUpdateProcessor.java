@@ -43,9 +43,11 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
         DataUpdate dataUpdate = null;
 
         Log.d(Constants.LOG_TAG, String.format("Thread %s Data updates : %s", Thread.currentThread().getName(), jsonArray.toString(4)));
-        deserializerStorage.clear();
+
         for(int i = 0; i < jsonArray.length(); i++) {
             try {
+
+                deserializerStorage.clear();
                 jsonObject = jsonArray.getJSONObject(i);
                 dataUpdate = deserialize(jsonObject.toString());
 

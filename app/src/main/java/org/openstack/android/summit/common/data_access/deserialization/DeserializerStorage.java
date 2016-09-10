@@ -81,7 +81,8 @@ public class DeserializerStorage implements IDeserializerStorage {
             if (!deserializedEntityDictionary.containsKey(type)) {
                 deserializedEntityDictionary.put(type, new HashMap<Integer, IEntity>());
             }
-            deserializedEntityDictionary.get(type).put(entity.getId(), entity);
+            if(!deserializedEntityDictionary.get(type).containsKey(entity.getId()))
+                deserializedEntityDictionary.get(type).put(entity.getId(), entity);
         }
 
         if(type == Summit.class && deepCopy){
