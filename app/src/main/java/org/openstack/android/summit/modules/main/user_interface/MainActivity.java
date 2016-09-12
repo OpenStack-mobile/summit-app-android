@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.openstack.android.summit.BuildConfig;
@@ -75,34 +76,66 @@ public class MainActivity
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == Constants.LOGGED_OUT_EVENT && !userClickedLogout) {
-                showInfoMessage("Your login session expired");
-                onLoggedOut();
-            }
+            try {
 
-            if (intent.getAction() == Constants.WIPE_DATE_EVENT) {
-                launchInitialDataLoadingActivity();
+                if (intent.getAction() == Constants.WIPE_DATE_EVENT) {
+                    Log.d(Constants.LOG_TAG, "WIPE_DATE_EVENT");
+                    launchInitialDataLoadingActivity();
+                }
+
+                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_RECEIVED)) {
+                    Log.d(Constants.LOG_TAG, "PUSH_NOTIFICATION_RECEIVED");
+                    presenter.updateNotificationCounter();
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_DELETED)) {
+                    Log.d(Constants.LOG_TAG, "PUSH_NOTIFICATION_DELETED");
+                    presenter.updateNotificationCounter();
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_OPENED)) {
+                    Log.d(Constants.LOG_TAG, "PUSH_NOTIFICATION_OPENED");
+                    presenter.updateNotificationCounter();
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.LOGGED_IN_EVENT)) {
+                    Log.d(Constants.LOG_TAG, "LOGGED_IN_EVENT");
+                    presenter.showMyProfileView();
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.LOGGED_OUT_EVENT)) {
+                    Log.d(Constants.LOG_TAG, "LOGGED_OUT_EVENT");
+                    if(!userClickedLogout){
+                        showInfoMessage("Your login session expired");
+                        onLoggedOut();
+                        return;
+                    }
+                    presenter.showEventsView();
+                    return;
+                }
+
+                userClickedLogout = false;
+
+            } catch (Exception ex) {
+                Crashlytics.logException(new Exception(String.format("Error opening fragment on login/logout notification - action %s" , intent.getAction()), ex));
             }
-            userClickedLogout = false;
         }
     };
 
     private static final int DATA_LOAD_REQUEST          = 1;  // The request code
-    private static boolean runningDataLoading           = false;
-    private static final Object dataLoadingActivityLock = new Object();
 
     private void launchInitialDataLoadingActivity() {
-        synchronized (dataLoadingActivityLock) {
-            if (runningDataLoading) return;
             if (!presenter.isSummitDataLoaded()) {
-                runningDataLoading = true;
                 // disable data updates ...
                 presenter.disableDataUpdateService();
                 Intent intent = new Intent(MainActivity.this, InitialDataLoadingActivity.class);
                 Log.i(Constants.LOG_TAG, "starting InitialDataLoadingActivity ...");
                 startActivityForResult(intent, DATA_LOAD_REQUEST);
             }
-        }
     }
 
     @Override
@@ -111,11 +144,9 @@ public class MainActivity
         if (requestCode == DATA_LOAD_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                synchronized (dataLoadingActivityLock) {
-                    runningDataLoading = false;
-                }
                 Log.i(Constants.LOG_TAG, "Summit Data Loaded!");
                 //re enable data update service
+                presenter.showEventsView();
                 presenter.enableDataUpdateService();
             }
         }
@@ -135,15 +166,15 @@ public class MainActivity
         NavigationMenuSetup(savedInstanceState);
 
         securityManager.setDelegate(this);
-
+        // bind local broadcast receiver
         IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.LOGGED_IN_EVENT);
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
-
-        IntentFilter intentFilter2 = new IntentFilter();
-        intentFilter2.addAction(Constants.WIPE_DATE_EVENT);
-
+        intentFilter.addAction(Constants.PUSH_NOTIFICATION_RECEIVED);
+        intentFilter.addAction(Constants.PUSH_NOTIFICATION_DELETED);
+        intentFilter.addAction(Constants.PUSH_NOTIFICATION_OPENED);
+        intentFilter.addAction(Constants.WIPE_DATE_EVENT);
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter2);
     }
 
     @Override
@@ -162,8 +193,7 @@ public class MainActivity
 
     @Override
     public void onDestroy() {
-        // Unregister since the activity is about to be closed.
-        // This is somewhat like [[NSNotificationCenter defaultCenter] removeObserver:name:object:]
+        // unbind local broadcast receiver
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
         super.onDestroy();
         hideActivityIndicator();
@@ -249,6 +279,7 @@ public class MainActivity
 
                 if (!securityManager.isLoggedIn()) {
                     showActivityIndicator();
+                    presenter.disableDataUpdateService();
                     securityManager.login(MainActivity.this);
                 } else {
                     userClickedLogout = true;
@@ -300,6 +331,12 @@ public class MainActivity
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         presenter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -362,21 +399,31 @@ public class MainActivity
 
     @Override
     public void onLoggedIn() {
-        presenter.onLoggedIn();
-        navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(true);
-        navigationView.getMenu().findItem(R.id.nav_my_profile).setChecked(true);
-        hideActivityIndicator();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                presenter.enableDataUpdateService();
+                presenter.onLoggedIn();
+                navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(true);
+                navigationView.getMenu().findItem(R.id.nav_my_profile).setChecked(true);
+                hideActivityIndicator();
+            }
+        });
     }
 
     @Override
     public void onLoggedOut() {
-        Log.i(Constants.LOG_TAG, "doing log out");
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(false);
-        navigationView.getMenu().findItem(R.id.nav_events).setChecked(true);
-        presenter.onLoggedOut();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(Constants.LOG_TAG, "doing log out");
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_events).setChecked(true);
+                presenter.onLoggedOut();
+            }
+        });
     }
-
 
     public void setMenuItemChecked(int menuItemId) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

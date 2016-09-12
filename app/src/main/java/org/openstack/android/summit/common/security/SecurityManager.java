@@ -191,7 +191,8 @@ public class SecurityManager implements ISecurityManager {
         int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
         if(currentMemberId == 0) return null;
 
-        return memberDataStore.getByIdLocal(currentMemberId);
+        member = memberDataStore.getByIdLocal(currentMemberId);
+        return member;
     }
 
     @Override

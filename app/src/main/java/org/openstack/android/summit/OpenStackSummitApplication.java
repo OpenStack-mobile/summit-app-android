@@ -60,6 +60,7 @@ public class OpenStackSummitApplication extends Application {
                             .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                             .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                             .build());
+            //LeakCanary.install(this);
         }
     }
 

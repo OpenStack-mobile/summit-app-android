@@ -49,34 +49,39 @@ public class VenueMapFragment extends BaseFragment<IVenueMapPresenter> implement
     public void onResume() {
         setTitle(getResources().getString(R.string.venue));
         super.onResume();
-        map.onResume();
+        if(map != null)
+            map.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         presenter.onPause();
-        map.onPause();
+        if(map != null)
+            map.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         presenter.onDestroy();
-        map.onDestroy();
+        if(map != null)
+            map.onDestroy();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         presenter.onSaveInstanceState(outState);
-        map.onSaveInstanceState(outState);
+        if(map != null)
+            map.onSaveInstanceState(outState);
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        map.onLowMemory();
+        if(map != null)
+            map.onLowMemory();
     }
 
     @Override

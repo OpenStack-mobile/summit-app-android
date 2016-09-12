@@ -1,19 +1,13 @@
 package org.openstack.android.summit.modules.main.user_interface;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.openstack.android.summit.BuildConfig;
-import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
@@ -45,56 +39,14 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     private boolean onSaveInstanceExecuted = false;
     private IAppLinkRouter appLinkRouter;
 
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (onSaveInstanceExecuted) {
-                return;
-            }
-            try {
-
-                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_RECEIVED)) {
-                    updateNotificationCounter();
-                    return;
-                }
-
-                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_DELETED)) {
-                    updateNotificationCounter();
-                    return;
-                }
-
-                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_OPENED)) {
-                    updateNotificationCounter();
-                    return;
-                }
-
-                if (intent.getAction().contains(Constants.LOGGED_IN_EVENT)) {
-                    showMyProfileView();
-                    return;
-                }
-
-                if (intent.getAction().contains(Constants.LOGGED_OUT_EVENT)) {
-                    wireframe.showEventsView(view);
-                    return;
-                }
-
-            } catch (Exception ex) {
-                Crashlytics.logException(
-                        new Exception(
-                                String.format("Error opening fragment on login/logout notification. onSaveInstanceExecuted = %b - action %s", onSaveInstanceExecuted, intent.getAction())
-                                , ex
-                        )
-                );
-            }
-        }
-    };
 
     public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter) {
         super(interactor, wireframe);
         this.appLinkRouter = appLinkRouter;
     }
 
-    private void updateNotificationCounter() {
+    @Override
+    public void updateNotificationCounter() {
         view.updateNotificationCounter(this.interactor.getNotReadNotificationsCount());
     }
 
@@ -117,17 +69,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         trustEveryone();
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.LOGGED_IN_EVENT);
-        intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
-        intentFilter.addAction(Constants.PUSH_NOTIFICATION_RECEIVED);
-        intentFilter.addAction(Constants.PUSH_NOTIFICATION_DELETED);
-        intentFilter.addAction(Constants.PUSH_NOTIFICATION_OPENED);
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
-
         if (savedInstanceState == null) {
             showEventsView();
         }
@@ -298,7 +240,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
     }
 
     @Override

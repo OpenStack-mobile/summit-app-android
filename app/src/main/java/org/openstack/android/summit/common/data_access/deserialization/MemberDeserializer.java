@@ -57,12 +57,14 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
                 deserializerStorage.add(member, Member.class);
             }
 
+            member.setSpeakerRole(null);
             if (jsonObject.has("speaker")) {
                 JSONObject speakerJSONObject = jsonObject.getJSONObject("speaker");
                 PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(speakerJSONObject.toString());
                 member.setSpeakerRole(presentationSpeaker);
             }
 
+            member.setAttendeeRole(null);
             if (jsonObject.has("attendee")) {
                 JSONObject attendeeJSONObject = jsonObject.getJSONObject("attendee");
                 SummitAttendee attendee = summitAttendeeDeserializer.deserialize(attendeeJSONObject.toString());
