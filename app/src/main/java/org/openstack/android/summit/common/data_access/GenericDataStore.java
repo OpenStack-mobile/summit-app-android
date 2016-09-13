@@ -25,14 +25,13 @@ public class GenericDataStore implements IGenericDataStore {
 
     @Override
     public <T extends RealmObject> List<T> getAllLocal(Class<T> type) {
-        RealmResults<T> result = RealmFactory.getSession().where(type).findAll();
-        return result;
+        return RealmFactory.getSession().where(type).findAll();
     }
 
     @Override
     public <T extends RealmObject> List<T> getAllLocal(Class<T> type, String fieldNames[], Sort sortOrders[]) {
         RealmResults<T> result = RealmFactory.getSession().where(type).findAll();
-        result.sort(fieldNames, sortOrders);
+        result = result.sort(fieldNames, sortOrders);
         return result;
     }
 

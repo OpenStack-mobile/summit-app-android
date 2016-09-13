@@ -47,21 +47,18 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
     @Override
     public List<NamedDTO> getSummitTypes() {
         List<SummitType> summitTypes = genericDataStore.getAllLocal(SummitType.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
-        List<NamedDTO> dtos = createDTOList(summitTypes, NamedDTO.class);
-        return dtos;
+        return createDTOList(summitTypes, NamedDTO.class);
     }
 
     @Override
     public List<NamedDTO> getEventTypes() {
         List<EventType> eventTypes = genericDataStore.getAllLocal(EventType.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
-        List<NamedDTO> dtos = createDTOList(eventTypes, NamedDTO.class);
-        return dtos;
+        return createDTOList(eventTypes, NamedDTO.class);
     }
 
     @Override
     public List<String> getLevels() {
-        List<String> levels = summitEventDataStore.getPresentationLevelsLocal();
-        return levels;
+        return summitEventDataStore.getPresentationLevelsLocal();
     }
 
     @Override
@@ -73,8 +70,7 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
     @Override
     public List<TrackGroupDTO> getTrackGroups() {
         List<TrackGroup> trackGroups = genericDataStore.getAllLocal(TrackGroup.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
-        List<TrackGroupDTO> dtos = createDTOList(trackGroups, TrackGroupDTO.class);
-        return dtos;
+        return createDTOList(trackGroups, TrackGroupDTO.class);
     }
 
     @Override

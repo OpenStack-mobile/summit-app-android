@@ -27,7 +27,7 @@ public class PresentationSpeakerDataStore extends GenericDataStore implements IP
         }
 
         RealmResults<PresentationSpeaker> results = query.findAll();
-        results.sort(new String[] { "firstName", "lastName"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING });
+        results                                   = results.sort(new String[] { "firstName", "lastName"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING });
 
         ArrayList<PresentationSpeaker> presentationSpeakers = new ArrayList<>();
         int startRecord = (page-1) * objectsPerPage;

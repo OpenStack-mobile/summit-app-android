@@ -150,26 +150,11 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     @Override
     public List<String> getPresentationLevelsLocal() {
         ArrayList<String> levels = new ArrayList<>();
-        RealmResults<Presentation> presentations = RealmFactory.getSession().where(Presentation.class).findAll();
-        for (Presentation presentation : presentations) {
-            if (!levels.contains(presentation.getLevel())) {
-                levels.add(presentation.getLevel());
-            }
-        }
-
-        Collections.sort(levels);
-
-        // HACK: this is to return in a specific order (begginer - intermediate - advanced)
-        ArrayList<String> levelsSorted = new ArrayList<>();
-        if (levels.size() == 3) {
-            levelsSorted.add(levels.get(1));
-            levelsSorted.add(levels.get(2));
-            levelsSorted.add(levels.get(0));
-        }
-        else {
-            levelsSorted = levels;
-        }
-        return levelsSorted;
+        levels.add(Presentation.LevelBeginner);
+        levels.add(Presentation.LevelIntermediate);
+        levels.add(Presentation.LevelAdvanced);
+        levels.add(Presentation.LevelNA);
+        return levels;
     }
 
     @Override
@@ -184,7 +169,7 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
                 .contains("presentation.level", searchTerm, Case.INSENSITIVE);
 
         RealmResults<SummitEvent> results = query.findAll();
-        results.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
+        results = results.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
         return results;
     }
 
