@@ -38,6 +38,11 @@ public class BasePresenter<V extends IBaseView, I extends IBaseInteractor, W> im
     }
 
     @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+
+    }
+
+    @Override
     public void onResume() {
 
     }

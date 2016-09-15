@@ -217,4 +217,10 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public View getView() {
+        if(view != null) return view;
+        return super.getView();
+    }
 }

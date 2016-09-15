@@ -25,7 +25,6 @@ public class VenuesMapPresenter extends BasePresenter<IVenuesMapView, IVenuesMap
     public void onCreateView(Bundle savedInstanceState) {
         venues = interactor.getInternalVenuesWithCoordinates();
         view.addMarkers(venues);
-
         super.onCreateView(savedInstanceState);
     }
 

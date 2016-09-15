@@ -34,7 +34,7 @@ import javax.inject.Inject;
  */
 public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEventDetailInteractor, IEventDetailWireframe> implements IEventDetailPresenter {
 
-    private int eventId;
+    private Integer eventId;
     private EventDetailDTO event;
     private IScheduleablePresenter scheduleablePresenter;
     private FeedbackDTO myFeedbackForEvent;
@@ -52,17 +52,17 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        eventId = (savedInstanceState != null) ?
+                savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_ID,0) :
+                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_EVENT_ID, Integer.class);
+    }
+
+    @Override
     public void onCreateView(Bundle savedInstanceState) {
         super.onCreateView(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            eventId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_ID);
-        } else {
-            eventId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_EVENT_ID, Integer.class);
-        }
-
-        loadedAllFeedback = false;
-        event = interactor.getEventDetail(eventId);
+        event = interactor.getEventDetail(eventId != null ? eventId : 0);
 
         if (event == null) {
             view.setName("");
@@ -77,7 +77,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
             view.showInfoMessage("Event not found!");
             return;
         }
-
+        loadedAllFeedback  = false;
         myFeedbackForEvent = interactor.getMyFeedbackForEvent(eventId);
         view.setName(event.getName());
         view.setTrack(event.getTrack());
@@ -126,7 +126,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     private boolean isEventInCalendar(Context context) {
         Cursor cursor = null;
         try {
-
+            if(event == null) return true;
             int permissionCheck = ContextCompat.checkSelfPermission(view.getApplicationContext(), Manifest.permission.READ_CALENDAR);
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 return true;
@@ -278,7 +278,16 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Constants.NAVIGATION_PARAMETER_EVENT_ID, eventId);
+        if(eventId != null)
+            outState.putInt(Constants.NAVIGATION_PARAMETER_EVENT_ID, eventId);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null){
+            eventId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_ID , 0);
+        }
     }
 
     @Override

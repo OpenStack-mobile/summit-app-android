@@ -13,9 +13,13 @@ import org.openstack.android.summit.modules.member_profile_detail.business_logic
 /**
  * Created by Claudio Redi on 1/26/2016.
  */
-public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDetailView, IMemberProfileDetailInteractor, IMemberProfileDetailWireframe> implements IMemberProfileDetailPresenter {
+public class MemberProfileDetailPresenter
+        extends BasePresenter<IMemberProfileDetailView, IMemberProfileDetailInteractor, IMemberProfileDetailWireframe>
+        implements IMemberProfileDetailPresenter
+{
+
     private Boolean isMyProfile;
-    private int speakerId;
+    private Integer speakerId;
     private PersonDTO person;
 
     public MemberProfileDetailPresenter(IMemberProfileDetailInteractor interactor, IMemberProfileDetailWireframe wireframe) {
@@ -23,8 +27,8 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
     }
 
     @Override
-    public void onCreateView(Bundle savedInstanceState) {
-        
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (isMyProfile == null) {
             isMyProfile = (savedInstanceState != null) ?
                     savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE) :
@@ -34,6 +38,7 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
         if (isMyProfile != null && isMyProfile) {
             MemberDTO myProfile = interactor.getCurrentMember();
             person = myProfile != null && myProfile.getSpeakerRole() != null ? myProfile.getSpeakerRole() : myProfile;
+            speakerId = myProfile != null && myProfile.getSpeakerRole() != null ? myProfile.getSpeakerRole().getId() : 0;
         }
         else {
             speakerId = (savedInstanceState != null) ?
@@ -42,6 +47,10 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
 
             person   = interactor.getPresentationSpeaker(speakerId);
         }
+    }
+
+    @Override
+    public void onCreateView(Bundle savedInstanceState) {
 
         if(person == null){
             view.setName("");
@@ -68,8 +77,10 @@ public class MemberProfileDetailPresenter extends BasePresenter<IMemberProfileDe
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, isMyProfile);
-        if (!isMyProfile) {
+        if(isMyProfile != null) {
+            outState.putBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, isMyProfile);
+        }
+        if(speakerId != null){
             outState.putInt(Constants.NAVIGATION_PARAMETER_SPEAKER, speakerId);
         }
     }

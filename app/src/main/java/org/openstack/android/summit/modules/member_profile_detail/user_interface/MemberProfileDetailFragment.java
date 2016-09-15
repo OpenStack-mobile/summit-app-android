@@ -2,7 +2,6 @@ package org.openstack.android.summit.modules.member_profile_detail.user_interfac
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.HtmlTextView;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
-import org.openstack.android.summit.modules.member_profile.user_interface.IMemberProfilePresenter;
-
-import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 1/26/2016.
@@ -38,6 +34,13 @@ public class MemberProfileDetailFragment extends BaseFragment<IMemberProfileDeta
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         presenter.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onViewStateRestored (savedInstanceState);
+        presenter.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

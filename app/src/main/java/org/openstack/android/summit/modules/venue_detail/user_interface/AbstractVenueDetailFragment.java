@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.venue_detail.user_interface;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +10,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -48,28 +51,32 @@ public class AbstractVenueDetailFragment<P extends IVenueDetailPresenter> extend
     @Override
     public void onResume() {
         super.onResume();
-        map.onResume();
+        if(map != null)
+            map.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         presenter.onPause();
-        map.onPause();
+        if(map != null)
+            map.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         presenter.onDestroy();
-        map.onDestroy();
+        if(map != null)
+            map.onDestroy();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         //This MUST be done before saving any of your own or your base class's variables
         final Bundle mapViewSaveState = new Bundle(outState);
-        map.onSaveInstanceState(mapViewSaveState);
+        if(map != null)
+            map.onSaveInstanceState(mapViewSaveState);
         outState.putBundle("mapViewSaveState", mapViewSaveState);
         //Add any other variables here.
         super.onSaveInstanceState(outState);
@@ -80,7 +87,8 @@ public class AbstractVenueDetailFragment<P extends IVenueDetailPresenter> extend
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        map.onLowMemory();
+        if(map != null)
+            map.onLowMemory();
     }
 
     @Override
@@ -107,7 +115,8 @@ public class AbstractVenueDetailFragment<P extends IVenueDetailPresenter> extend
     }
 
     public void toggleMap(boolean visible) {
-        map.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if(map != null)
+            map.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -165,9 +174,12 @@ public class AbstractVenueDetailFragment<P extends IVenueDetailPresenter> extend
         pageIndicator.setViewPager(pager);
     }
 
+    private static final float zoomLevel = 18.0f;
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         if (venue != null) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
             LatLng latLng;
             Marker marker;
             latLng = new LatLng(new Double(venue.getLat()), new Double(venue.getLng()));
@@ -177,7 +189,13 @@ public class AbstractVenueDetailFragment<P extends IVenueDetailPresenter> extend
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map));
             marker.showInfoWindow();
 
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15), 10, null);
+            builder.include(latLng);
+            LatLngBounds bounds = builder.build();
+            DisplayMetrics display = getResources().getDisplayMetrics();
+            int padding = display.widthPixels / 20;
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, display.widthPixels, display.heightPixels, padding);
+            googleMap.moveCamera(cameraUpdate);
+            googleMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
         }
     }
 }

@@ -2,11 +2,13 @@ package org.openstack.android.summit.modules.general_schedule.user_interface;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.user_interface.ScheduleFragment;
 
 /**
@@ -32,6 +34,7 @@ public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePr
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(Constants.LOG_TAG, "GeneralScheduleFragment.onCreateView");
         view = inflater.inflate(R.layout.fragment_general_schedule, container, false);
         return super.onCreateView(inflater, container, savedInstanceState);
     }

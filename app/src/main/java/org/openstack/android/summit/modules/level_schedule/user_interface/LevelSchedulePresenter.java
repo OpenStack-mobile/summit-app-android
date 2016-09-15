@@ -9,7 +9,6 @@ import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
-import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
 import org.openstack.android.summit.modules.level_schedule.ILevelScheduleWireframe;
 import org.openstack.android.summit.modules.level_schedule.business_logic.ILevelScheduleInteractor;
@@ -21,6 +20,7 @@ import java.util.List;
  * Created by Claudio Redi on 1/11/2016.
  */
 public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView, ILevelScheduleInteractor, ILevelScheduleWireframe> implements ILevelSchedulePresenter {
+
     private String level;
 
     public LevelSchedulePresenter(ILevelScheduleInteractor interactor, ILevelScheduleWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
@@ -28,13 +28,18 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        level = (savedInstanceState != null) ?
+                savedInstanceState.getString(Constants.NAVIGATION_PARAMETER_LEVEL, "") :
+                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_LEVEL, String.class);
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onCreateView(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            level = savedInstanceState.getString(Constants.NAVIGATION_PARAMETER_LEVEL);
-        }
-        else {
-            level = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_LEVEL, String.class);
-        }
+
         view.setShowActiveFilterIndicator(scheduleFilter.hasActiveFilters());
         super.onCreateView(savedInstanceState);
     }
@@ -48,7 +53,8 @@ public class LevelSchedulePresenter extends SchedulePresenter<ILevelScheduleView
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(Constants.NAVIGATION_PARAMETER_LEVEL, level);
+        if(level != null)
+            outState.putString(Constants.NAVIGATION_PARAMETER_LEVEL, level);
     }
 
     @Override

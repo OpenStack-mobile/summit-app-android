@@ -21,7 +21,7 @@ public class VenueMapInteractor extends BaseInteractor implements IVenueMapInter
     @Override
     public VenueListItemDTO getVenue(int venueId) {
         Venue venue = genericDataStore.getByIdLocal(venueId, Venue.class);
-        VenueDTO dto = dtoAssembler.createDTO(venue, VenueDTO.class);
-        return dto;
+        if(venue == null) return null;
+        return dtoAssembler.createDTO(venue, VenueDTO.class);
     }
 }

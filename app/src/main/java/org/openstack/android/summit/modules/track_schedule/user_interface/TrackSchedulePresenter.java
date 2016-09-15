@@ -3,7 +3,6 @@ package org.openstack.android.summit.modules.track_schedule.user_interface;
 import android.os.Bundle;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
@@ -11,13 +10,11 @@ import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
-import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
 import org.openstack.android.summit.modules.track_schedule.ITrackScheduleWireframe;
 import org.openstack.android.summit.modules.track_schedule.business_logic.ITrackScheduleInteractor;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,13 +29,15 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        trackId = (savedInstanceState != null) ? savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_TRACK, 0) :
+                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_TRACK, Integer.class);
+    }
+
+    @Override
     public void onCreateView(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            trackId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_TRACK);
-        }
-        else {
-            trackId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_TRACK, Integer.class);
-        }
+
 
         track = interactor.getTrack(trackId);
         view.setTrack(track.getName());
@@ -50,18 +49,19 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Constants.NAVIGATION_PARAMETER_TRACK, trackId);
+        if (trackId != null)
+            outState.putInt(Constants.NAVIGATION_PARAMETER_TRACK, trackId);
     }
 
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, ITrackScheduleInteractor interactor) {
 
-        List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
-        List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
-        List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels       = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags         = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
+        List<Integer> filtersOnEventTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
+        List<Integer> filtersOnTrackGroups = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
+        List<Integer> filtersOnSummitTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
+        List<String> filtersOnLevels = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String> filtersOnTags = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<Integer> filtersOnVenues = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         ArrayList<Integer> tracks = new ArrayList<>();
         tracks.add(trackId);
@@ -82,12 +82,12 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
 
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
-        List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
-        List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
-        List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels       = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags         = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
+        List<Integer> filtersOnEventTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
+        List<Integer> filtersOnTrackGroups = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
+        List<Integer> filtersOnSummitTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
+        List<String> filtersOnLevels = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String> filtersOnTags = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<Integer> filtersOnVenues = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         ArrayList<Integer> tracks = new ArrayList<>();
         tracks.add(trackId);

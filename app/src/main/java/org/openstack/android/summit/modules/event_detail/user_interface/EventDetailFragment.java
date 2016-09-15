@@ -65,6 +65,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
+        presenter.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
@@ -195,6 +196,13 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         presenter.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onViewStateRestored (savedInstanceState);
+        presenter.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

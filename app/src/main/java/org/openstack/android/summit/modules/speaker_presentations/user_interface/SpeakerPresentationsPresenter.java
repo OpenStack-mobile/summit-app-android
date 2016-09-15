@@ -6,13 +6,10 @@ import org.joda.time.DateTime;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
-import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
-import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
 import org.openstack.android.summit.modules.speaker_presentations.ISpeakerPresentationsWireframe;
-import org.openstack.android.summit.modules.speaker_presentations.business_logic.ISpeakerPresentationsInteractor;
 import org.openstack.android.summit.modules.speaker_presentations.business_logic.ISpeakerPresentationsInteractor;
 
 import java.util.List;
@@ -20,47 +17,63 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 1/27/2016.
  */
-public class SpeakerPresentationsPresenter extends SchedulePresenter<ISpeakerPresentationsView, ISpeakerPresentationsInteractor, ISpeakerPresentationsWireframe> implements ISpeakerPresentationsPresenter {
-    private int speakerId;
+public class SpeakerPresentationsPresenter
+        extends SchedulePresenter<ISpeakerPresentationsView, ISpeakerPresentationsInteractor, ISpeakerPresentationsWireframe>
+        implements ISpeakerPresentationsPresenter
+{
+
+    private Integer speakerId;
+    private Boolean isMyProfile;
 
     public SpeakerPresentationsPresenter(ISpeakerPresentationsInteractor interactor, ISpeakerPresentationsWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
         super(interactor, wireframe, scheduleablePresenter, scheduleItemViewBuilder, scheduleFilter);
     }
 
     @Override
-    public void onCreateView(Bundle savedInstanceState) {
-        boolean isMyProfile;
-        if (savedInstanceState != null) {
-            isMyProfile = savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE);
-        }
-        else {
-            isMyProfile = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, Boolean.class);
-        }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isMyProfile = (savedInstanceState != null) ?
+                savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, false) :
+                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, Boolean.class);
 
-        if (isMyProfile) {
+        if (isMyProfile != null && isMyProfile) {
             speakerId = interactor.getCurrentMemberSpeakerId();
+        } else {
+            speakerId = (savedInstanceState != null) ?
+                    savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_SPEAKER, 0) :
+                    wireframe.getParameter(Constants.NAVIGATION_PARAMETER_SPEAKER, Integer.class);
         }
-        else {
-            if (savedInstanceState != null) {
-                speakerId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_SPEAKER);
-            }
-            else {
-                speakerId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_SPEAKER, Integer.class);
-            }
-        }
+    }
 
+    @Override
+    public void onCreateView(Bundle savedInstanceState) {
         view.setTitle("PROFILE");
         super.onCreate(savedInstanceState);
     }
 
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, ISpeakerPresentationsInteractor interactor) {
-        return interactor.getSpeakerPresentations(speakerId, startDate, endDate);
+        return interactor.getSpeakerPresentations(speakerId != null ? speakerId : 0, startDate, endDate);
     }
 
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
-        return interactor.getSpeakerPresentationScheduleDatesWithoutEvents(speakerId, startDate, endDate);
+        return interactor.getSpeakerPresentationScheduleDatesWithoutEvents(speakerId != null ? speakerId : 0, startDate, endDate);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (isMyProfile != null) {
+            outState.putBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, isMyProfile);
+        }
+        if (speakerId != null) {
+            outState.putInt(Constants.NAVIGATION_PARAMETER_SPEAKER, speakerId);
+        }
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
 }

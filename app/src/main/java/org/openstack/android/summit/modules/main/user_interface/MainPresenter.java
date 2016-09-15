@@ -63,7 +63,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onPause() {
         super.onPause();
-        disableDataUpdateService();
     }
 
     @Override
@@ -239,6 +238,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     @Override
     public void onDestroy() {
+        disableDataUpdateService();
         super.onDestroy();
     }
 

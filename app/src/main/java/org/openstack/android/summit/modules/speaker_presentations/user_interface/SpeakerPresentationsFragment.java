@@ -6,11 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.ScheduleFragment;
-import org.openstack.android.summit.modules.personal_schedule.user_interface.IPersonalSchedulePresenter;
-
-import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 1/27/2016.
@@ -24,8 +20,22 @@ public class SpeakerPresentationsFragment extends ScheduleFragment<ISpeakerPrese
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_personal_schedule, container, false);
-        this.view = view;
-        return super.onCreateView(inflater, container, savedInstanceState);
+        view = inflater.inflate(R.layout.fragment_personal_schedule, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
+        presenter.onCreateView(savedInstanceState);
+        return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onViewStateRestored (savedInstanceState);
+        presenter.onRestoreInstanceState(savedInstanceState);
     }
 }

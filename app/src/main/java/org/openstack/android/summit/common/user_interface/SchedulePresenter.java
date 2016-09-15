@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import org.joda.time.DateTime;
 import org.openstack.android.summit.OpenStackSummitApplication;
@@ -25,13 +26,15 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
-public abstract class SchedulePresenter<V extends IScheduleView, I extends IScheduleInteractor, W extends IScheduleWireframe> extends BasePresenter<V, I, W> implements ISchedulePresenter<V> {
+public abstract class SchedulePresenter<V extends IScheduleView, I extends IScheduleInteractor, W extends IScheduleWireframe>
+        extends BasePresenter<V, I, W> implements ISchedulePresenter<V> {
 
     protected List<ScheduleItemDTO>                             dayEvents;
     protected IScheduleFilter                                   scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
     private IScheduleItemViewBuilder                            scheduleItemViewBuilder;
     protected IScheduleablePresenter                            scheduleablePresenter;
+
 
     private boolean isFirstTime               = true;
     protected boolean hasToCheckDisabledDates = true;
@@ -71,7 +74,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     @Override
     public void onCreate(Bundle savedInstanceState) {
         IntentFilter intentFilter = new IntentFilter();
-
         intentFilter.addAction(Constants.LOGGED_IN_EVENT);
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
         super.onCreate(savedInstanceState);

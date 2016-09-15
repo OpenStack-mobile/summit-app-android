@@ -16,6 +16,7 @@ public class VenueRoomDetailPresenter extends VenueDetailPresenter implements IV
 
     private VenueRoomDTO room;
     private VenueFloorDTO floor;
+    private Integer locationId = null;
 
     public VenueRoomDetailPresenter(IVenueDetailInteractor interactor, IVenueDetailWireframe wireframe) {
         super(interactor, wireframe);
@@ -24,11 +25,11 @@ public class VenueRoomDetailPresenter extends VenueDetailPresenter implements IV
     @Override
     public void onCreateView(Bundle savedInstanceState) {
 
-        int locationId = (savedInstanceState != null) ?
-                          savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_ROOM):
+        locationId = (savedInstanceState != null) ?
+                          savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_ROOM, 0):
                           wireframe.getParameter(Constants.NAVIGATION_PARAMETER_ROOM, Integer.class);
 
-        room  = interactor.getRoom(locationId);
+        room  = interactor.getRoom(locationId != null ?locationId : 0);
 
         if(room == null){
             view.showInfoMessage("Room not found!");
@@ -73,6 +74,14 @@ public class VenueRoomDetailPresenter extends VenueDetailPresenter implements IV
             view.setMaps(maps);
         } else if (isVenueGeoLocated(venue)) {
             view.setMarker(venue);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(locationId != null){
+            outState.putInt(Constants.NAVIGATION_PARAMETER_ROOM, locationId);
         }
     }
 }

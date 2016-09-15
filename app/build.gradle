@@ -71,7 +71,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 31
+        versionCode 33
         versionName "1.0"
         multiDexEnabled true
 
@@ -81,12 +81,8 @@ android {
         debug {
             // Settings for Crashlytics Beta Distribution
             ext.betaDistributionReleaseNotes = "Release Notes for this build."
-            ext.betaDistributionEmails = "claudioredi@gmail.com, darran.kelinske@gmail.com, " +
-                    "gabriel.cutrini@gmail.com, jimmy@openstack.org, jp@tipit.net, " +
-                    "lauren@openstack.org"
-
+            ext.betaDistributionEmails = getPropertyFromFile("../summit-app.debug.properties", "BetaDistributionEmails")
             ext.enableCrashlytics = false
-
         }
         release {
             minifyEnabled true

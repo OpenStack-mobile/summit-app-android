@@ -129,6 +129,6 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     @Override
     public boolean shouldShowVenues() {
         Summit summit = summitDataStore.getActiveLocal();
-        return summit.getStartShowingVenuesDate().getTime() < new Date().getTime();
+        return summit != null && summit.getStartShowingVenuesDate() != null && summit.getStartShowingVenuesDate().getTime() < new Date().getTime();
     }
 }

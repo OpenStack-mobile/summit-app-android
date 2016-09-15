@@ -2,7 +2,6 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +29,15 @@ import java.util.List;
  */
 public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment<P> implements IScheduleView {
 
-    protected Parcelable listState                    = null;
-    private static final String LIST_STATE            = "scheduleListState";
     protected ScheduleListAdapter scheduleListAdapter;
     protected List<ScheduleItemDTO> events;
     protected ListView scheduleList;
+    protected Ranger ranger;
+
+    protected Parcelable listState            = null;
+    private static final String LIST_STATE    = "SCHEDULE_LIST_STATE";
+    protected Integer     selectedDay         = null;
+    private static final String SELECTED_DAY  = "SCHEDULE_SELECTED_DAY";
 
 
     public ScheduleFragment() {
@@ -45,8 +48,9 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.setView(this);
-        if(savedInstanceState != null) {
-            listState = savedInstanceState.getParcelable(LIST_STATE);
+        if(savedInstanceState != null){
+            listState   = savedInstanceState.getParcelable(LIST_STATE);
+            selectedDay = savedInstanceState.getInt(SELECTED_DAY, 0);
         }
     }
 
@@ -72,7 +76,7 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
         scheduleList.setAdapter(scheduleListAdapter);
 
-        Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        ranger = (Ranger) view.findViewById(R.id.ranger_summit);
         ranger.setDayViewOnClickListener(new Ranger.DayViewOnClickListener() {
             @Override
             public void onDaySelected(DateTime date) {
@@ -86,22 +90,44 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
 
     @Override
     public void onResume() {
-
         super.onResume();
         if (listState != null){
             scheduleList.onRestoreInstanceState(listState);
         }
-        listState = null;
+        if (selectedDay != null && selectedDay > 0 ){
+            ranger.setSelectedDay(selectedDay, true);
+        }
+        listState   = null;
+        selectedDay = null;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         presenter.onSaveInstanceState(outState);
-        //save list state
-        ListView scheduleList = (ListView)view.findViewById(R.id.list_schedule);
-        listState = scheduleList.onSaveInstanceState();
-        outState.putParcelable(LIST_STATE, listState);
+        //save list state ( if visible)
+        if(view != null) {
+            listState = scheduleList.onSaveInstanceState();
+            outState.putParcelable(LIST_STATE, listState);
+            outState.putInt(SELECTED_DAY, ranger.getSelectedDay());
+        }
+        if(listState != null){
+            outState.putParcelable(LIST_STATE, listState);
+        }
+        if(selectedDay != null){
+            outState.putInt(SELECTED_DAY, selectedDay);
+        }
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onViewStateRestored (savedInstanceState);
+        if(savedInstanceState != null){
+            listState   = savedInstanceState.getParcelable(LIST_STATE);
+            selectedDay = savedInstanceState.getInt(SELECTED_DAY, 0);
+        }
+        presenter.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

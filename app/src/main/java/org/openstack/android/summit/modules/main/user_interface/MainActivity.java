@@ -154,18 +154,16 @@ public class MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Log.d(Constants.LOG_TAG, "MainActivity.onCreate");
         super.onCreate(savedInstanceState);
         getApplicationComponent().inject(this);
         presenter.setView(this);
         presenter.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        securityManager.setDelegate(this);
         securityManager.init();
         ActionBarSetup();
         NavigationMenuSetup(savedInstanceState);
-
-        securityManager.setDelegate(this);
         // bind local broadcast receiver
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGGED_IN_EVENT);
@@ -179,26 +177,31 @@ public class MainActivity
 
     @Override
     protected void onResume() {
+        Log.d(Constants.LOG_TAG, "MainActivity.onResume");
         super.onResume();
         presenter.onResume();
         hideActivityIndicator();
         launchInitialDataLoadingActivity();
+        setupNavigationIcons();
     }
 
     @Override
     protected void onPause() {
+        Log.d(Constants.LOG_TAG, "MainActivity.onPause");
         super.onPause();
         presenter.onPause();
     }
 
     @Override
     public void onDestroy() {
+        Log.d(Constants.LOG_TAG, "MainActivity.onDestroy");
         // unbind local broadcast receiver
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
         super.onDestroy();
+        securityManager.setDelegate(null);
+        presenter.onDestroy();
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
         hideActivityIndicator();
         RealmFactory.closeSession();
-        Log.d(Constants.LOG_TAG, "MainActivity.onDestroy");
     }
 
     @Override
@@ -335,6 +338,7 @@ public class MainActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Log.d(Constants.LOG_TAG, "MainActivity.onSaveInstanceState");
         super.onSaveInstanceState(outState);
         presenter.onSaveInstanceState(outState);
     }
@@ -394,7 +398,12 @@ public class MainActivity
 
     @Override
     public void onStartedLoginProcess() {
-        showActivityIndicator();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showActivityIndicator();
+            }
+        });
     }
 
     @Override
@@ -504,7 +513,7 @@ public class MainActivity
         if (progressDialog != null) {
             hideActivityIndicator();
         }
-        progressDialog = new ACProgressFlower.Builder(MainActivity.this)
+        progressDialog = new ACProgressFlower.Builder(this)
                 .direction(ACProgressConstant.DIRECT_CLOCKWISE)
                 .themeColor(Color.WHITE)
                 .text(getResources().getString(R.string.please_wait))

@@ -22,7 +22,7 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
 
     protected VenueDTO           venue;
     protected List<VenueRoomDTO> venueRooms;
-
+    protected Integer venueId   = null;
     public VenueDetailPresenter(IVenueDetailInteractor interactor, IVenueDetailWireframe wireframe) {
         super(interactor, wireframe);
     }
@@ -30,10 +30,11 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
     @Override
     public void onCreateView(Bundle savedInstanceState) {
         super.onCreateView(savedInstanceState);
-        int venueId = (savedInstanceState != null) ?savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE):
+        venueId = (savedInstanceState != null) ?
+                savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE, 0):
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
 
-        venue = interactor.getVenue(venueId);
+        venue = interactor.getVenue(venueId !=null ? venueId : 0);
         if(venue == null){
             view.showInfoMessage("Venue not found!");
             return;
@@ -78,6 +79,14 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
     public void showToMapIfApplies() {
         if (venue.getMaps().size() > 0) {
             wireframe.showVenueMapView(venue, view);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(venueId != null){
+            outState.putInt(Constants.NAVIGATION_PARAMETER_VENUE, venueId);
         }
     }
 }
