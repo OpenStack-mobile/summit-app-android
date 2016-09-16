@@ -36,7 +36,6 @@ import bolts.AppLinkNavigation;
  */
 public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMainWireframe> implements IMainPresenter {
 
-    private boolean onSaveInstanceExecuted = false;
     private IAppLinkRouter appLinkRouter;
 
 
@@ -50,9 +49,22 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         view.updateNotificationCounter(this.interactor.getNotReadNotificationsCount());
     }
 
+    private boolean shouldShowMainView = false;
+
+    @Override
+    public void shouldShowMainView(){
+        this.shouldShowMainView = true;
+    }
+
     @Override
     public void onResume() {
+        Log.d(Constants.LOG_TAG, "MainPresenter.onResume");
         super.onResume();
+        if(shouldShowMainView){
+            Log.d(Constants.LOG_TAG, "MainPresenter.onResume - showEventsView");
+            shouldShowMainView = false;
+            showEventsView();
+        }
         updateNotificationCounter();
         checkDeepLinks();
         interactor.subscribeToPushNotifications();
@@ -69,9 +81,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         trustEveryone();
-        if (savedInstanceState == null) {
-            showEventsView();
-        }
     }
 
     private boolean checkDeepLinks() {
@@ -232,7 +241,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        onSaveInstanceExecuted = true;
         super.onSaveInstanceState(outState);
     }
 

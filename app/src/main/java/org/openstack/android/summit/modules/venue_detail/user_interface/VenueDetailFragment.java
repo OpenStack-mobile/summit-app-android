@@ -13,11 +13,18 @@ public class VenueDetailFragment extends AbstractVenueDetailFragment<IVenueDetai
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
+        presenter.onCreate(savedInstanceState);
     }
 
     @Override
     public void onResume() {
         setTitle(getResources().getString(R.string.venue));
         super.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
     }
 }

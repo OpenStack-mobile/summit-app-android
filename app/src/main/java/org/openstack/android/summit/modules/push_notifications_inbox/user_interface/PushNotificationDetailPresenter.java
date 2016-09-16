@@ -21,7 +21,7 @@ public class PushNotificationDetailPresenter
         extends BasePresenter<IPushNotificationDetailView, IPushNotificationDetailInteractor, IPushNotificationDetailWireframe>
         implements IPushNotificationDetailPresenter  {
 
-    private int pushNotificationId;
+    private Integer pushNotificationId;
     private PushNotificationDetailDTO pushNotification;
 
     @Inject
@@ -30,23 +30,24 @@ public class PushNotificationDetailPresenter
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        pushNotificationId = (savedInstanceState != null) ?
+                savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_NOTIFICATION_ID, 0):
+                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_NOTIFICATION_ID, Integer.class);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Constants.NAVIGATION_PARAMETER_NOTIFICATION_ID, pushNotificationId);
+        if(pushNotificationId != null)
+            outState.putInt(Constants.NAVIGATION_PARAMETER_NOTIFICATION_ID, pushNotificationId);
     }
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
         super.onCreateView(savedInstanceState);
+        pushNotification = interactor.getPushNotificationDetail(pushNotificationId != null ? pushNotificationId : 0);
 
-        if (savedInstanceState != null) {
-            pushNotificationId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_NOTIFICATION_ID);
-        }
-        else {
-            pushNotificationId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_NOTIFICATION_ID, Integer.class);
-        }
-
-        pushNotification = interactor.getPushNotificationDetail(pushNotificationId);
         if(pushNotification == null){
             view.setSubject(view.getResources().getString(R.string.notification_not_found));
             view.hideView();

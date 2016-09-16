@@ -40,4 +40,6 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
     void disableDataUpdateService();
 
     void updateNotificationCounter();
+
+    void shouldShowMainView();
 }

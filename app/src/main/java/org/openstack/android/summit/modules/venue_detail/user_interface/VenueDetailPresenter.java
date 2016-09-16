@@ -23,18 +23,25 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
     protected VenueDTO           venue;
     protected List<VenueRoomDTO> venueRooms;
     protected Integer venueId   = null;
+
     public VenueDetailPresenter(IVenueDetailInteractor interactor, IVenueDetailWireframe wireframe) {
         super(interactor, wireframe);
     }
 
     @Override
-    public void onCreateView(Bundle savedInstanceState) {
-        super.onCreateView(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         venueId = (savedInstanceState != null) ?
                 savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE, 0):
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
+    }
+
+    @Override
+    public void onCreateView(Bundle savedInstanceState) {
+        super.onCreateView(savedInstanceState);
 
         venue = interactor.getVenue(venueId !=null ? venueId : 0);
+
         if(venue == null){
             view.showInfoMessage("Venue not found!");
             return;

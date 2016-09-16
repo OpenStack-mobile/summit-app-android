@@ -15,27 +15,35 @@ import java.util.List;
  * Created by Claudio Redi on 2/11/2016.
  */
 public class VenueMapPresenter extends BasePresenter<IVenueMapView, IVenueMapInteractor, IVenueMapWireframe> implements IVenueMapPresenter {
-    VenueListItemDTO venue;
-    Integer venueId;
+    private VenueListItemDTO venue;
+    private Integer venueId;
 
     public VenueMapPresenter(IVenueMapInteractor interactor, IVenueMapWireframe wireframe) {
         super(interactor, wireframe);
     }
 
     @Override
-    public void onCreateView(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            venueId = savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE);
-        }
-        else {
-            venueId = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
-        }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        venueId = (savedInstanceState != null) ?
+                savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE, 0):
+                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
+    }
 
+    @Override
+    public void onCreateView(Bundle savedInstanceState) {
         if (venueId != null) {
             venue = interactor.getVenue(venueId);
+            view.setMarker(venue);
         }
-        view.setMarker(venue);
-
         super.onCreateView(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(venueId != null){
+            outState.putInt(Constants.NAVIGATION_PARAMETER_VENUE, venueId);
+        }
     }
 }

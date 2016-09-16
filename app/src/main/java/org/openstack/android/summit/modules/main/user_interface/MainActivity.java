@@ -59,7 +59,7 @@ public class MainActivity
 
     @Inject
     // TODO: this should be moved to interactor. It's necessary to know how to deal with the Activiy parameter on login
-            ISecurityManager securityManager;
+    ISecurityManager securityManager;
 
     @Inject
     IReachability reachability;
@@ -146,8 +146,8 @@ public class MainActivity
             if (resultCode == RESULT_OK) {
                 Log.i(Constants.LOG_TAG, "Summit Data Loaded!");
                 //re enable data update service
-                presenter.showEventsView();
                 presenter.enableDataUpdateService();
+                presenter.shouldShowMainView();
             }
         }
     }
@@ -164,6 +164,10 @@ public class MainActivity
         securityManager.init();
         ActionBarSetup();
         NavigationMenuSetup(savedInstanceState);
+        if(savedInstanceState == null) {
+            Log.d(Constants.LOG_TAG, "MainActivity.onCreate - savedInstanceState == null");
+            presenter.shouldShowMainView();
+        }
         // bind local broadcast receiver
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGGED_IN_EVENT);
@@ -173,6 +177,12 @@ public class MainActivity
         intentFilter.addAction(Constants.PUSH_NOTIFICATION_OPENED);
         intentFilter.addAction(Constants.WIPE_DATE_EVENT);
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onNewIntent (Intent intent){
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
     @Override
@@ -328,12 +338,6 @@ public class MainActivity
 
         drawer.closeDrawer(GravityCompat.START);
         getFragmentManager().popBackStack();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        presenter.onSaveInstanceState(outState);
-        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override

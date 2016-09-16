@@ -25,15 +25,23 @@ public class PushNotificationDetailFragment
         extends BaseFragment<IPushNotificationDetailPresenter>
         implements IPushNotificationDetailView {
 
-    MenuItem itemGo2Event = null;
-    MenuItem itemDelete   = null;
-    boolean showGo2Event  = false;
-    boolean showDelete    = true;
+    private MenuItem itemGo2Event = null;
+    private MenuItem itemDelete   = null;
+    private boolean showGo2Event  = false;
+    private boolean showDelete    = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
+        presenter.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
     }
 
     @Override

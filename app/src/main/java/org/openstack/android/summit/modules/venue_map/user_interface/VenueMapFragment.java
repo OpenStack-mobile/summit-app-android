@@ -32,6 +32,7 @@ public class VenueMapFragment extends BaseFragment<IVenueMapPresenter> implement
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
+        presenter.onCreate(savedInstanceState);
     }
 
     @Override
