@@ -23,4 +23,12 @@ public interface ISummitEventDataStore {
     void getFeedbackOrigin(int eventId, int page, int objectsPerPage, IDataStoreOperationListener<Feedback> dataStoreOperationListener);
 
     void getAverageFeedbackOrigin(int eventId, IDataStoreOperationListener<SummitEvent> dataStoreOperationListener);
+
+    long countByTrackGroup(int trackGroupId);
+
+    long countByTrack(int trackId);
+
+    long countByEventType(int eventTypeId);
+
+    long countByLevel(String level);
 }

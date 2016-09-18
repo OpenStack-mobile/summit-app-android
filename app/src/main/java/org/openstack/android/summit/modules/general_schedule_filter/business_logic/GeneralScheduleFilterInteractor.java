@@ -53,7 +53,12 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
     @Override
     public List<NamedDTO> getEventTypes() {
         List<EventType> eventTypes = genericDataStore.getAllLocal(EventType.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
-        return createDTOList(eventTypes, NamedDTO.class);
+        List<EventType> results = new ArrayList<>();
+        for(EventType eventType: eventTypes){
+            if ( summitEventDataStore.countByEventType(eventType.getId()) > 0)
+                results.add(eventType);
+        }
+        return createDTOList(results, NamedDTO.class);
     }
 
     @Override
@@ -70,7 +75,12 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
     @Override
     public List<TrackGroupDTO> getTrackGroups() {
         List<TrackGroup> trackGroups = genericDataStore.getAllLocal(TrackGroup.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
-        return createDTOList(trackGroups, TrackGroupDTO.class);
+        List<TrackGroup> results = new ArrayList<>();
+        for(TrackGroup trackGroup: trackGroups){
+            if ( summitEventDataStore.countByTrackGroup(trackGroup.getId()) > 0)
+                results.add(trackGroup);
+        }
+        return createDTOList(results, TrackGroupDTO.class);
     }
 
     @Override

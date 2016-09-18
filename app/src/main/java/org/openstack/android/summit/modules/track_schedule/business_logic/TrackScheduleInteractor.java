@@ -29,7 +29,6 @@ public class TrackScheduleInteractor extends ScheduleInteractor implements ITrac
     @Override
     public NamedDTO getTrack(Integer trackId) {
         Track track = genericDataStore.getByIdLocal(trackId, Track.class);
-        NamedDTO dto = dtoAssembler.createDTO(track, NamedDTO.class);
-        return dto;
+        return (track != null) ? dtoAssembler.createDTO(track, NamedDTO.class) : null;
     }
 }

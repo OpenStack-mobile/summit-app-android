@@ -27,6 +27,32 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     }
 
     @Override
+    public long countByTrackGroup(int trackGroupId){
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
+        query = query.equalTo("presentation.track.trackGroups.id", trackGroupId);
+        return query.count();
+    }
+
+    @Override
+    public long countByTrack(int trackId){
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
+        query = query.equalTo("presentation.track.id", trackId);
+        return query.count();
+    }
+
+    @Override
+    public long countByEventType(int eventTypeId){
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
+        query = query.equalTo("eventType.id", eventTypeId);
+        return query.count();
+    }
+
+    @Override
+    public long countByLevel(String level){
+        return 0;
+    }
+
+    @Override
     public List<SummitEvent> getByFilterLocal
     (
         DateTime startDate,

@@ -68,29 +68,25 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     @Override
     public List<ScheduleItemDTO> getEventsBySearchTerm(String searchTerm) {
         List<SummitEvent> events = summitEventDataStore.getBySearchTerm(searchTerm);
-        List<ScheduleItemDTO> dtos = createDTOList(events, ScheduleItemDTO.class);
-        return dtos;
+        return createDTOList(events, ScheduleItemDTO.class);
     }
 
     @Override
     public List<NamedDTO> getTracksBySearchTerm(String searchTerm) {
-        List<Track> tracks = genericDataStore.getAllLocal(Track.class);
+        List<Track> tracks                        = genericDataStore.getAllLocal(Track.class);
         ArrayList<Track> tracksMatchingSearchTerm = new ArrayList<>();
 
         for(Track track: tracks) {
-            if (track.getName().toLowerCase().contains(searchTerm.toLowerCase())) {
+            if (track.getName().toLowerCase().contains(searchTerm.toLowerCase()) && summitEventDataStore.countByTrack(track.getId()) > 0 ) {
                 tracksMatchingSearchTerm.add(track);
             }
         }
-        List<NamedDTO> dtos = createDTOList(tracksMatchingSearchTerm, NamedDTO.class);
-        return dtos;
+        return createDTOList(tracksMatchingSearchTerm, NamedDTO.class);
     }
 
     @Override
     public List<PersonListItemDTO> getSpeakersBySearchTerm(String searchTerm) {
-        List<PresentationSpeaker> speakers = presentationSpeakerDataStore.getByFilterLocal(searchTerm, 1, 10000);
-
-        List<PersonListItemDTO> dtos = createDTOList(speakers, PersonListItemDTO.class);
-        return dtos;
+        List<PresentationSpeaker> speakers = presentationSpeakerDataStore.getByFilterLocal(searchTerm, 1, Integer.MAX_VALUE);
+        return createDTOList(speakers, PersonListItemDTO.class);
     }
 }
