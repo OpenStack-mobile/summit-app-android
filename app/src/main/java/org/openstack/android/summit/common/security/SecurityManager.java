@@ -31,7 +31,6 @@ public class SecurityManager implements ISecurityManager {
 
     private IMemberDataStore memberDataStore;
     private Member member;
-    private ISecurityManagerListener delegate;
     private ISession session;
     private ITokenManager tokenManager;
 
@@ -92,7 +91,9 @@ public class SecurityManager implements ISecurityManager {
     public void login(final Activity context) {
         final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
         final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
-
+        Log.d(Constants.LOG_TAG, "SecurityManager.login");
+        Intent intent = new Intent(Constants.START_LOG_IN_EVENT);
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
         if (accountManager.getAccountsByType(accountType).length == 0) {
             // No account has been created, let's create one now
             accountManager.addAccount(accountType, Authenticator.TOKEN_TYPE_ID, null, null,
@@ -102,7 +103,6 @@ public class SecurityManager implements ISecurityManager {
                             // Unless the account creation was cancelled, try logging in again
                             // after the account has been created.
                             if (futureManager.isCancelled()) return;
-                            if(delegate != null) delegate.onStartedLoginProcess();
                             login(context);
                         }
                     }, null);
@@ -113,26 +113,24 @@ public class SecurityManager implements ISecurityManager {
 
     @Override
     public void bindCurrentUser(){
+        Log.d(Constants.LOG_TAG, "SecurityManager.bindCurrentUser");
         IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
             public void onSucceedWithSingleData(Member data) {
+                Log.d(Constants.LOG_TAG, "SecurityManager.onSucceedWithSingleData");
                 member = data;
                 session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
 
                 Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
                 LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-
-                if (delegate != null) {
-                    delegate.onLoggedIn();
-                }
             }
 
             @Override
             public void onError(String message) {
 
-                 if (delegate != null) {
-                    delegate.onError(message);
-                }
+                Intent intent = new Intent(Constants.LOG_IN_ERROR_EVENT);
+                intent.putExtra(Constants.LOG_IN_ERROR_MESSAGE, message);
+                LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
             }
         };
         memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
@@ -165,19 +163,7 @@ public class SecurityManager implements ISecurityManager {
         if (sendNotification) {
             Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
             LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-
-            if (delegate != null) {
-                delegate.onLoggedOut();
-            }
         }
-    }
-
-    public ISecurityManagerListener getDelegate() {
-        return delegate;
-    }
-
-    public void setDelegate(ISecurityManagerListener delegate) {
-        this.delegate = delegate;
     }
 
     @Override

@@ -32,10 +32,11 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
             @Override
             public void onSucceedWithSingleData(final Member detachedMember) {
                 try{
+                    Log.d(Constants.LOG_TAG, "MemberDataStore.getLoggedInMemberOrigin");
                     Member member = RealmFactory.transaction(new RealmFactory.IRealmCallback<Member>() {
                         @Override
                         public Member callback(Realm session) throws Exception {
-                            return session.copyToRealmOrUpdate(detachedMember);
+                           return session.copyToRealmOrUpdate(detachedMember);
                         }
                     });
                     dataStoreOperationListener.onSucceedWithSingleData(member);

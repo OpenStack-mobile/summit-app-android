@@ -51,18 +51,19 @@ public class DataUpdatesService extends IntentService {
     }
 
     public static void setServiceAlarm(Context context, boolean isOn) {
-        Intent i = DataUpdatesService.newIntent(context);
-        PendingIntent pi = PendingIntent.getService(context, 0, i, 0);
-        AlarmManager alarmManager = (AlarmManager)
-                context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent i                  = DataUpdatesService.newIntent(context);
+        PendingIntent pi          = PendingIntent.getService(context, 0, i, 0);
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
         if (isOn) {
-            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,SystemClock.elapsedRealtime(), POLL_INTERVAL, pi);
-            Log.d(Constants.LOG_TAG, "Initialized Service DataUpdatesService");
-        } else {
-            alarmManager.cancel(pi);
-            pi.cancel();
-            Log.d(Constants.LOG_TAG, "Stopping Service DataUpdatesService");
+            Log.d(Constants.LOG_TAG, "Starting Service DataUpdatesService");
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), POLL_INTERVAL, pi);
+            return;
         }
+        Log.d(Constants.LOG_TAG, "Stopping Service DataUpdatesService");
+        alarmManager.cancel(pi);
+        pi.cancel();
     }
 
     public static boolean isServiceAlarmOn(Context context) {

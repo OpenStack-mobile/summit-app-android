@@ -42,33 +42,6 @@ public class DeserializerStorage implements IDeserializerStorage {
 
     private static final Object lock = new Object();
     private Map<Class, Map<Integer, IEntity>> deserializedEntityDictionary = new HashMap<Class, Map<Integer, IEntity>>();
-    private boolean canClear  = true;
-    private static final Object clearLock = new Object();
-
-    @Override
-    public boolean cancelClear(){
-        synchronized (clearLock){
-            if(!canClear) return false;
-            canClear = false;
-            Log.d(Constants.LOG_TAG, "disabling deserializer storage clear");
-            return true;
-        }
-    }
-
-    @Override
-    public void enableClear(){
-        synchronized (clearLock){
-            Log.d(Constants.LOG_TAG, "enabling deserializer storage clear");
-            canClear = true;
-        }
-    }
-
-    @Override
-    public boolean canClear(){
-        synchronized (clearLock){
-            return canClear;
-        }
-    }
 
     @Override
     public <T extends RealmObject & IEntity> void add(T entity, Class<T> type){
@@ -286,12 +259,9 @@ public class DeserializerStorage implements IDeserializerStorage {
 
     @Override
     public void clear() {
-        synchronized (clearLock) {
-            if(!canClear) return;
-            synchronized (lock) {
-                Log.d(Constants.LOG_TAG, "clearing deserializer storage");
-                deserializedEntityDictionary.clear();
-            }
+        synchronized (lock) {
+            Log.d(Constants.LOG_TAG, "clearing deserializer storage");
+            deserializedEntityDictionary.clear();
         }
     }
 }

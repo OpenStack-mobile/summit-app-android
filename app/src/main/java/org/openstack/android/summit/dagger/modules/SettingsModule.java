@@ -1,6 +1,5 @@
 package org.openstack.android.summit.dagger.modules;
 
-import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.modules.settings.ISettingsWireframe;
 import org.openstack.android.summit.modules.settings.SettingsWireframe;
@@ -29,8 +28,8 @@ public class SettingsModule {
     }
 
     @Provides
-    ISettingsInteractor providesSettingsInteractor(ISession session, IDTOAssembler dtoAssembler) {
-        return new SettingsInteractor(dtoAssembler);
+    ISettingsInteractor providesSettingsInteractor(ISession session) {
+        return new SettingsInteractor(session);
     }
 
     @Provides

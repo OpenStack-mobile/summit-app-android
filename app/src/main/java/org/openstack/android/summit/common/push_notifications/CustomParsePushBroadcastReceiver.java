@@ -24,7 +24,6 @@ import org.json.JSONObject;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.Member;
@@ -33,6 +32,7 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationsListInteractor;
+import org.openstack.android.summit.modules.settings.business_logic.ISettingsInteractor;
 
 import java.util.Locale;
 import java.util.Random;
@@ -60,13 +60,13 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
     IAppLinkRouter appLinkRouter;
 
     @Inject
-    ISession session;
+    ISettingsInteractor settings;
 
     @Override
-    public void onReceive(Context context, Intent intent){
-       ((OpenStackSummitApplication)context.getApplicationContext()).getApplicationComponent().inject(this);
-        boolean isBlockedNotifications = session.getInt(Constants.SETTING_BLOCK_NOTIFICATIONS_KEY) == 1 ;
-        if(isBlockedNotifications) return;
+    public void onReceive(Context context, Intent intent) {
+        ((OpenStackSummitApplication) context.getApplicationContext()).getApplicationComponent().inject(this);
+        boolean isBlockedNotifications = settings.getBlockAllNotifications();
+        if (isBlockedNotifications) return;
         super.onReceive(context, intent);
     }
 
@@ -89,13 +89,13 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
             return null;
         }
 
-        String title                 = pushData.optString("title", "OpenStack");
-        String alert                 = pushData.optString("alert", "PushNotification received.");
-        String tickerText            = String.format(Locale.getDefault(), "%s: %s", title, alert);
-        Bundle extras                = intent.getExtras();
-        Random random                = new Random();
+        String title = pushData.optString("title", "OpenStack");
+        String alert = pushData.optString("alert", "PushNotification received.");
+        String tickerText = String.format(Locale.getDefault(), "%s: %s", title, alert);
+        Bundle extras = intent.getExtras();
+        Random random = new Random();
         int contentIntentRequestCode = random.nextInt();
-        int deleteIntentRequestCode  = random.nextInt();
+        int deleteIntentRequestCode = random.nextInt();
 
         // Security consideration: To protect the app from tampering, we require that intent filters
         // not be exported. To protect the app from information leaks, we restrict the packages which
@@ -117,7 +117,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
 
         // The purpose of setDefaults(PushNotification.DEFAULT_ALL) is to inherit notification properties
         // from system defaults
-        Builder builder    = new Builder(context);
+        Builder builder = new Builder(context);
         BigTextStyle style = new BigTextStyle();
         style.setBigContentTitle(title).bigText(alert);
 
@@ -145,8 +145,8 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
         Integer notificationId = 0;
         try {
             JSONObject pushData = new JSONObject(intent.getStringExtra(KEY_PUSH_DATA));
-            notificationId      = pushData.optInt("id", 0);
-            if(notificationId > 0)
+            notificationId = pushData.optInt("id", 0);
+            if (notificationId > 0)
                 interactor.markAsOpen(notificationId);
 
         } catch (JSONException e) {
@@ -154,7 +154,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
         }
 
         Class<? extends Activity> cls = getActivity(context, intent);
-        Intent activityIntent         = new Intent(Intent.ACTION_VIEW, this.appLinkRouter.buildUriFor(DeepLinkInfo.NotificationsPath, notificationId.toString()));
+        Intent activityIntent = new Intent(Intent.ACTION_VIEW, this.appLinkRouter.buildUriFor(DeepLinkInfo.NotificationsPath, notificationId.toString()));
         activityIntent.putExtras(intent.getExtras());
 
         /*
@@ -187,7 +187,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
     }
 
     @Override
-    protected void onPushReceive(Context context, Intent intent){
+    protected void onPushReceive(Context context, Intent intent) {
         String data = intent.getStringExtra(KEY_PUSH_DATA);
 
         if (data == null) {
@@ -202,7 +202,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
         }
 
         // save
-        try{
+        try {
             // If the push data includes an action string, that broadcast intent is fired.
             String action = null;
             if (pushData != null) {
@@ -220,8 +220,8 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
             Notification notification = getNotification(context, intent);
 
             PushNotification pushNotification = deserializer.deserialize(data, PushNotification.class);
-            Member currentMember              = securityManager.getCurrentMember();
-            if(currentMember != null)
+            Member currentMember = securityManager.getCurrentMember();
+            if (currentMember != null)
                 pushNotification.setOwner(currentMember);
 
             pushNotificationDataStore.saveOrUpdate(pushNotification, null, PushNotification.class);
@@ -242,8 +242,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
             // send the notification
             Intent receivedIntent = new Intent(Constants.PUSH_NOTIFICATION_RECEIVED);
             LocalBroadcastManager.getInstance(context.getApplicationContext()).sendBroadcast(receivedIntent);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             Log.w(Constants.LOG_TAG, ex);
         }
     }

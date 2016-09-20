@@ -3,6 +3,7 @@ package org.openstack.android.summit.modules.main.user_interface;
 import android.content.res.Configuration;
 
 import org.openstack.android.summit.common.user_interface.IBasePresenter;
+import org.openstack.android.summit.modules.main.exceptions.MissingMemberException;
 
 /**
  * Created by Claudio Redi on 2/12/2016.
@@ -23,7 +24,7 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
 
     void onLoggedOut();
 
-    void onLoggedIn();
+    void onLoggedIn() throws MissingMemberException;
 
     void onConfigurationChanged(Configuration newConfig);
 

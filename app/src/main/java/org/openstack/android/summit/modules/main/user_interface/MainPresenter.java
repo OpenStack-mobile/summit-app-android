@@ -17,6 +17,7 @@ import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
+import org.openstack.android.summit.modules.main.exceptions.MissingMemberException;
 import org.openstack.android.summit.modules.rsvp.RSVPViewerActivity;
 
 import java.security.SecureRandom;
@@ -74,7 +75,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         checkDeepLinks();
         interactor.subscribeToPushNotifications();
         view.toggleMyProfileMenuItem(interactor.isMemberLogged());
-        enableDataUpdateService();
     }
 
     @Override
@@ -235,8 +235,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     @Override
-    public void onLoggedIn() {
+    public void onLoggedIn() throws MissingMemberException {
         MemberDTO member = interactor.getCurrentMember();
+        if(member == null) throw new MissingMemberException();
         view.setMemberName(member.getFullName());
         view.setLoginButtonText(view.getResources().getText(R.string.log_out).toString());
         view.setProfilePic(Uri.parse(member.getPictureUrl()));
@@ -271,9 +272,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     private void trustEveryone() {
-        if (!BuildConfig.DEBUG) {
-            return;
-        }
 
         try {
             HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {

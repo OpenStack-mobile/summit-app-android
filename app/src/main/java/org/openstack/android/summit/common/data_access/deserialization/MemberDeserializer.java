@@ -1,7 +1,9 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
 import android.util.Log;
+
 import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +12,7 @@ import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitAttendee;
+
 import javax.inject.Inject;
 
 /**
@@ -17,11 +20,11 @@ import javax.inject.Inject;
  */
 public class MemberDeserializer extends BaseDeserializer implements IMemberDeserializer {
 
-    IPersonDeserializer              personDeserializer;
+    IPersonDeserializer personDeserializer;
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
-    ISummitAttendeeDeserializer      summitAttendeeDeserializer;
-    IFeedbackDeserializer            feedbackDeserializer;
-    IDeserializerStorage             deserializerStorage;
+    ISummitAttendeeDeserializer summitAttendeeDeserializer;
+    IFeedbackDeserializer feedbackDeserializer;
+    IDeserializerStorage deserializerStorage;
 
     @Inject
     public MemberDeserializer
@@ -31,68 +34,60 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
                     ISummitAttendeeDeserializer summitAttendeeDeserializer,
                     IFeedbackDeserializer feedbackDeserializer,
                     IDeserializerStorage deserializerStorage
-            )
-    {
-        this.personDeserializer              = personDeserializer;
-        this.deserializerStorage             = deserializerStorage;
-        this.feedbackDeserializer            = feedbackDeserializer;
+            ) {
+        this.personDeserializer = personDeserializer;
+        this.deserializerStorage = deserializerStorage;
+        this.feedbackDeserializer = feedbackDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
-        this.summitAttendeeDeserializer      = summitAttendeeDeserializer;
+        this.summitAttendeeDeserializer = summitAttendeeDeserializer;
     }
 
     @Override
     public Member deserialize(String jsonString) throws JSONException {
-        boolean clearCancelled = true;
-        try {
-            clearCancelled = deserializerStorage.cancelClear();
-            JSONObject jsonObject = new JSONObject(jsonString);
-            String[] missedFields = validateRequiredFields(new String[]{"id"}, jsonObject);
-            handleMissedFieldsIfAny(missedFields);
-            int memberId = jsonObject.getInt("id");
-            Member member = deserializerStorage.exist(memberId, Member.class) ? deserializerStorage.get(memberId, Member.class) : new Member();
-            personDeserializer.deserialize(member, jsonObject);
 
-            // added here so it's available on child deserialization
-            if (!deserializerStorage.exist(member, Member.class)) {
-                deserializerStorage.add(member, Member.class);
-            }
+        JSONObject jsonObject = new JSONObject(jsonString);
+        String[] missedFields = validateRequiredFields(new String[]{"id"}, jsonObject);
+        handleMissedFieldsIfAny(missedFields);
+        int memberId = jsonObject.getInt("id");
+        Member member = deserializerStorage.exist(memberId, Member.class) ? deserializerStorage.get(memberId, Member.class) : new Member();
+        personDeserializer.deserialize(member, jsonObject);
 
-            member.setSpeakerRole(null);
-            if (jsonObject.has("speaker")) {
-                JSONObject speakerJSONObject = jsonObject.getJSONObject("speaker");
-                PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(speakerJSONObject.toString());
-                member.setSpeakerRole(presentationSpeaker);
-            }
+        // added here so it's available on child deserialization
+        if (!deserializerStorage.exist(member, Member.class)) {
+            deserializerStorage.add(member, Member.class);
+        }
 
-            member.setAttendeeRole(null);
-            if (jsonObject.has("attendee")) {
-                JSONObject attendeeJSONObject = jsonObject.getJSONObject("attendee");
-                SummitAttendee attendee = summitAttendeeDeserializer.deserialize(attendeeJSONObject.toString());
-                member.setAttendeeRole(attendee);
-            }
+        member.setSpeakerRole(null);
+        if (jsonObject.has("speaker")) {
+            JSONObject speakerJSONObject = jsonObject.getJSONObject("speaker");
+            PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(speakerJSONObject.toString());
+            member.setSpeakerRole(presentationSpeaker);
+        }
 
-            if (jsonObject.has("feedback")) {
-                Feedback feedback;
-                JSONObject jsonObjectFeedback;
-                JSONArray jsonArrayFeedback = jsonObject.getJSONArray("feedback");
-                member.clearFeedback();
-                for (int i = 0; i < jsonArrayFeedback.length(); i++) {
-                    jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
-                    try {
-                        feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());
-                        member.getFeedback().add(feedback);
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.e(Constants.LOG_TAG, String.format("Error deserializing feedback %s", jsonObjectFeedback.toString()), e);
-                    }
+        member.setAttendeeRole(null);
+        if (jsonObject.has("attendee")) {
+            JSONObject attendeeJSONObject = jsonObject.getJSONObject("attendee");
+            SummitAttendee attendee = summitAttendeeDeserializer.deserialize(attendeeJSONObject.toString());
+            member.setAttendeeRole(attendee);
+        }
+
+        if (jsonObject.has("feedback")) {
+            Feedback feedback;
+            JSONObject jsonObjectFeedback;
+            JSONArray jsonArrayFeedback = jsonObject.getJSONArray("feedback");
+            member.clearFeedback();
+            for (int i = 0; i < jsonArrayFeedback.length(); i++) {
+                jsonObjectFeedback = jsonArrayFeedback.getJSONObject(i);
+                try {
+                    feedback = feedbackDeserializer.deserialize(jsonObjectFeedback.toString());
+                    member.getFeedback().add(feedback);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.e(Constants.LOG_TAG, String.format("Error deserializing feedback %s", jsonObjectFeedback.toString()), e);
                 }
             }
+        }
 
-            return member;
-        }
-        finally {
-            if(clearCancelled)
-                deserializerStorage.enableClear();
-        }
+        return member;
     }
 }

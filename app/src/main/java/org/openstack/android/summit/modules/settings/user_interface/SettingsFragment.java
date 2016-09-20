@@ -8,11 +8,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
-
-import javax.inject.Inject;
 
 /**
  * Created by sebastian on 9/19/2016.
@@ -23,9 +19,6 @@ public class SettingsFragment
 
     private Switch switchBtn;
 
-    @Inject
-    ISession session;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
@@ -34,9 +27,9 @@ public class SettingsFragment
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view         = inflater.inflate(R.layout.fragment_settings, container, false);
-        this.view         = view;
-        switchBtn         = (Switch)view.findViewById(R.id.switch_enable_notifications);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        this.view = view;
+        switchBtn = (Switch) view.findViewById(R.id.switch_enable_notifications);
         super.onCreateView(inflater, container, savedInstanceState);
         presenter.onCreateView(savedInstanceState);
 
@@ -45,11 +38,11 @@ public class SettingsFragment
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
-                session.setInt(Constants.SETTING_BLOCK_NOTIFICATIONS_KEY, isChecked ? 1: 0);
+                presenter.setBlockAllNotifications(isChecked);
             }
         });
 
-        switchBtn.setChecked(session.getInt(Constants.SETTING_BLOCK_NOTIFICATIONS_KEY) == 1 );
+        switchBtn.setChecked(presenter.getBlockAllNotifications());
 
         return view;
     }

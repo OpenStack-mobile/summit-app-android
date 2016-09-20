@@ -21,11 +21,5 @@ public interface IDeserializerStorage {
 
     <T extends RealmObject & IEntity> Boolean exist(int entityId, Class<T> type);
 
-    boolean cancelClear();
-
-    void enableClear();
-
-    boolean canClear();
-
     void clear();
 }

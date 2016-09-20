@@ -13,4 +13,14 @@ public class SettingsPresenter extends BasePresenter<ISettingsView, ISettingsInt
     public SettingsPresenter(ISettingsInteractor interactor, ISettingsWireframe wireframe) {
         super(interactor, wireframe);
     }
+
+    @Override
+    public void setBlockAllNotifications(boolean block) {
+        interactor.setBlockAllNotifications(block);
+    }
+
+    @Override
+    public boolean getBlockAllNotifications() {
+        return interactor.getBlockAllNotifications();
+    }
 }

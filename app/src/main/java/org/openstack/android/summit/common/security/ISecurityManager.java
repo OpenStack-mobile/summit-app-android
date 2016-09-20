@@ -18,10 +18,6 @@ public interface ISecurityManager {
 
     boolean isLoggedIn();
 
-    ISecurityManagerListener getDelegate();
-
-    void setDelegate(ISecurityManagerListener delegate);
-
     Member getCurrentMember();
 
     boolean isLoggedInAndConfirmedAttendee();

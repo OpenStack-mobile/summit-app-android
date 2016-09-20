@@ -9,6 +9,11 @@ public class Constants {
     static public final String GENERIC_ERROR_MSG                    = "There was an error performing this operation.";
     static public final String CURRENT_MEMBER_ID                    = "CurrentMemberId";
     static public final String LOGGED_IN_EVENT                      = "logged-in-event";
+    static public final String START_LOG_IN_EVENT                   = "start-logged-in-event";
+    static public final String ON_LOGGING_PROCESS                   = "on-logging-process";
+    static public final String LOG_IN_ERROR_EVENT                   = "log-in-error-event";
+    static public final String LOG_IN_CANCELLED_EVENT               = "log-in-cancelled-event";
+    static public final String LOG_IN_ERROR_MESSAGE                 = "log-in-error-message";
     static public final String LOGGED_OUT_EVENT                     = "logged-out-event";
     static public final String PUSH_NOTIFICATION_RECEIVED           = "push-notification-received-event";
     static public final String PUSH_NOTIFICATION_DELETED            = "push-notification-deleted-event";

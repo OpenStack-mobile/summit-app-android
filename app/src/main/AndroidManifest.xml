@@ -199,6 +199,7 @@
             android:name=".common.data_updates.DataUpdatesService"
             android:exported="false">
         </service>
+
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -32,6 +33,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.security.oidc.AuthCodeResponse;
 import org.openstack.android.summit.common.security.oidc.OpenIdConnectProtocol;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -68,6 +70,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private AccountManager accountManager;
     private Account account;
     private boolean isNewAccount;
+    private boolean workflowCompleted = false;
+
+    public void setWorkflowCompleted(){
+        workflowCompleted = true;
+    }
 
     @Inject
     IOIDCConfigurationManager oidcConfigurationManager;
@@ -400,7 +407,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 String authToken = args[0];
                 IdTokenResponse response;
 
-                Log.d(TAG, "Requesting ID token.");
+                Log.d(Constants.LOG_TAG, "RequestIdTokenTask : Requesting ID token.");
 
                 try {
                     response = oidcProtocol.makeTokenRequest(new AuthCodeResponse(clientConfig, authToken));
@@ -415,6 +422,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 } else {
                     authActivity.get().setTokens(response);
                 }
+
+                authActivity.get().setWorkflowCompleted();
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.e(Constants.LOG_TAG, "Error executing API request", e);
@@ -435,11 +444,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
             intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, authActivity.get().account.name);
             intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, authActivity.get().account.type);
-
+            Log.d(Constants.LOG_TAG, "RequestIdTokenTask.onPostExecute");
             authActivity.get().setAccountAuthenticatorResult(intent.getExtras());
             authActivity.get().setResult(RESULT_OK, intent);
             authActivity.get().finish();
-
         }
     }
 
@@ -501,6 +509,18 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 .create()
                 .show();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(Constants.LOG_TAG, "AuthenticatorActivity.onDestroy");
+        if(!workflowCompleted){
+            // was canceled ... inform it
+            Intent intent = new Intent(Constants.LOG_IN_CANCELLED_EVENT);
+            LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+        }
+    }
+
 
 }
 
