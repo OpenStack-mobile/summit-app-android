@@ -28,4 +28,6 @@ public interface IMainWireframe {
     void showSpeakerProfile(int speakerId, IBaseView context);
 
     void showPushNotification(int pushNotificationId, IBaseView context);
+
+    void showSettingsView(IBaseView context);
 }

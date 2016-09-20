@@ -8,7 +8,6 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -25,12 +24,12 @@ import org.json.JSONObject;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PushNotification;
 import org.openstack.android.summit.common.security.ISecurityManager;
-import org.openstack.android.summit.common.utils.AppLinkRouter;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationsListInteractor;
@@ -60,9 +59,14 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
     @Inject
     IAppLinkRouter appLinkRouter;
 
+    @Inject
+    ISession session;
+
     @Override
     public void onReceive(Context context, Intent intent){
        ((OpenStackSummitApplication)context.getApplicationContext()).getApplicationComponent().inject(this);
+        boolean isBlockedNotifications = session.getInt(Constants.SETTING_BLOCK_NOTIFICATIONS_KEY) == 1 ;
+        if(isBlockedNotifications) return;
         super.onReceive(context, intent);
     }
 

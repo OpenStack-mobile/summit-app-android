@@ -68,15 +68,19 @@
     <string name="loading_ratings_and_reviews">Loading Ratings &amp; Reviews...</string>
     <string name="title_activity_initial_data_loading_activiy">InitialDataLoadingActiviy</string>
     <string name="nav_item_notifications">NOTIFICATIONS</string>
+    <string name="nav_item_settings">SETTINGS</string>
     <string name="nav_item_about">ABOUT</string>
     <string name="nav_item_my_summit">MY SUMMIT</string>
     <string name="nav_item_venues">VENUES</string>
     <string name="nav_item_speakers">SPEAKERS</string>
     <string name="nav_item_events">EVENTS</string>
     <string name="notifications">Notifications</string>
+    <string name="Settings">Settings</string>
     <string name="notifications_empty_list">You do not have any notification at the moment.</string>
     <string name="search_title">Search</string>
     <string name="delete">Delete</string>
     <string name="menu_item_go_2_event">Go to event</string>
     <string name="notification_not_found">Notification not found</string>
+    <string name="switch_enable_notifications_text">Block All notifications</string>
+    <string name="switch_enable_notifications_subtext">Never show notification from this app</string>
 </resources>

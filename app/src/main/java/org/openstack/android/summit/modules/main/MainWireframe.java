@@ -7,6 +7,7 @@ import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderCon
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
+import org.openstack.android.summit.modules.settings.ISettingsWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.venues.IVenuesWireframe;
 
@@ -31,6 +32,8 @@ public class MainWireframe implements IMainWireframe {
 
     IPushNotificationsWireframe notificationsWireframe;
 
+    ISettingsWireframe settingsWireframe;
+
     public MainWireframe(IEventsWireframe eventsWireframe,
                          ISpeakerListWireframe speakerListWireframe,
                          IMemberProfileWireframe memberProfileWireframe,
@@ -38,7 +41,8 @@ public class MainWireframe implements IMainWireframe {
                          IVenuesWireframe venuesWireframe,
                          IMemberOrderConfirmWireframe memberOrderConfirmWireframe,
                          IAboutWireframe aboutWireframe,
-                         IPushNotificationsWireframe notificationsWireframe
+                         IPushNotificationsWireframe notificationsWireframe,
+                         ISettingsWireframe settingsWireframe
                          ) {
 
         this.eventsWireframe             = eventsWireframe;
@@ -49,6 +53,7 @@ public class MainWireframe implements IMainWireframe {
         this.memberOrderConfirmWireframe = memberOrderConfirmWireframe;
         this.aboutWireframe              = aboutWireframe;
         this.notificationsWireframe      = notificationsWireframe;
+        this.settingsWireframe           = settingsWireframe;
     }
 
     public void showEventsView(IBaseView context) {
@@ -100,5 +105,10 @@ public class MainWireframe implements IMainWireframe {
     public void showPushNotification(int pushNotificationId, IBaseView context) {
         notificationsWireframe.presentNotificationsListView(context);
         notificationsWireframe.showNotification(pushNotificationId, context);
+    }
+
+    @Override
+    public void showSettingsView(IBaseView context) {
+        settingsWireframe.presentSettingsView(context);
     }
 }

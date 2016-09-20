@@ -27,4 +27,5 @@ public class Constants {
     public static final String BASIC_AUTH_PASS                      = "org.openstack.android.summit.common.security.BASIC_AUTH_PASS";
     public static final String FLAVOR_DEV                           = "development";
     public static final String FLAVOR_BETA                          = "beta";
+    public static final String SETTING_BLOCK_NOTIFICATIONS_KEY      = "BlockNotificationsSetting";
 }

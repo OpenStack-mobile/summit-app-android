@@ -363,7 +363,10 @@ public class MainActivity
             presenter.showMyProfileView();
         } else if (selectedMenuItemId == R.id.nav_notifications) {
             presenter.showNotificationView();
-        } else if (selectedMenuItemId == R.id.nav_about) {
+        } else if (selectedMenuItemId == R.id.nav_settings) {
+            presenter.showSettingsView();
+        }
+        else if (selectedMenuItemId == R.id.nav_about) {
             presenter.showAboutView();
         }
 

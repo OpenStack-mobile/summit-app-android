@@ -42,4 +42,6 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
     void updateNotificationCounter();
 
     void shouldShowMainView();
+
+    void showSettingsView();
 }

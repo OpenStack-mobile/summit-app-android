@@ -57,6 +57,11 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     @Override
+    public void showSettingsView() {
+        wireframe.showSettingsView(view);
+    }
+
+    @Override
     public void onResume() {
         Log.d(Constants.LOG_TAG, "MainPresenter.onResume");
         super.onResume();
