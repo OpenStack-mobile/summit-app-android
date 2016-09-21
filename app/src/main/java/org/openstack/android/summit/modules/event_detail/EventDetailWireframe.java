@@ -73,12 +73,12 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
         Uri uri  = Uri.parse(rsvpLink);
         Intent i = null;
         if(this.appLinkRouter.isCustomRSVPLink(uri)){
-            Log.i(Constants.LOG_TAG, "opening custom RSVP template ...");
+            Log.i(Constants.LOG_TAG, String.format("opening custom RSVP template %s...", uri.toString()));
             // match! rsvp browser
             i = new Intent(context.getApplicationContext(), RSVPViewerActivity.class);
             i.setData(uri);
         } else {
-            Log.i(Constants.LOG_TAG, "opening Third party RSVP link ...");
+            Log.i(Constants.LOG_TAG, String.format("opening Third party RSVP link %s ...", uri.toString()));
             i = new Intent(Intent.ACTION_VIEW, uri);
         }
         context.startActivity(i);
