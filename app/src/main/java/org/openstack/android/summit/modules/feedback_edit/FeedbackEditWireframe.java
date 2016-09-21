@@ -19,8 +19,11 @@ public class FeedbackEditWireframe extends BaseWireframe implements IFeedbackEdi
     }
 
     @Override
-    public void presentFeedbackEditView(int eventId, IBaseView context) {
+    public void presentFeedbackEditView(int eventId, int rate, IBaseView context) {
+
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_EVENT_ID, eventId);
+        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_EVENT_RATE, rate);
+
         FeedbackEditFragment feedbackEditFragment = new FeedbackEditFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager

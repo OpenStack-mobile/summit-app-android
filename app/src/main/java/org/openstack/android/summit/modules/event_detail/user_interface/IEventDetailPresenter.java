@@ -17,7 +17,7 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> 
 
     void showSpeakerProfile(int position);
 
-    void showFeedbackEdit();
+    void showFeedbackEdit(int rate);
 
     void buildFeedbackListItem(FeedbackItemView feedbackItemView, int position);
 

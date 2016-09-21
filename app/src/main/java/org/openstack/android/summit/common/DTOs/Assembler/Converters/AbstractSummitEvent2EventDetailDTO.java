@@ -40,7 +40,7 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             }
 
             eventDetailDTO.setAllowFeedback(source.getAllowFeedback());
-            eventDetailDTO.setFinished(getFinished(source));
+            eventDetailDTO.setStarted(isStarted(source));
             eventDetailDTO.setTags(getTags(source));
             eventDetailDTO.setEventDescription(source.getEventDescription());
             eventDetailDTO.setAverageRate(source.getAverageRate());
@@ -102,7 +102,7 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
         return tags;
     }
 
-    private Boolean getFinished(E source) {
-        return source.getEnd().getTime() < System.currentTimeMillis();
+    private Boolean isStarted(E source){
+        return source.getStart().getTime() <= System.currentTimeMillis();
     }
 }

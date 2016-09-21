@@ -111,7 +111,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         }
 
         view.setAverageRate(0); // TODO: we should implement a hide
-        if (event.getFinished() && event.getAllowFeedback()) {
+        if (event.isStarted() && event.getAllowFeedback()) {
             loadFeedback();
             loadAverageFeedback();
         }
@@ -266,12 +266,12 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocationAddress())
                 .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
 
-        view.showAddToMyCalendar(false);
+        //view.showAddToMyCalendar(false);
         view.startActivity(intent);
     }
 
     private boolean getAllowNewFeedback() {
-        return event.getAllowFeedback() && event.getFinished() && interactor.isMemberLogged() &&
+        return event.getAllowFeedback() && event.isStarted() && interactor.isMemberLogged() &&
                 myFeedbackForEvent == null;
     }
 
@@ -321,8 +321,8 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     }
 
     @Override
-    public void showFeedbackEdit() {
-        wireframe.showFeedbackEditView(eventId, view);
+    public void showFeedbackEdit(int rate) {
+        wireframe.showFeedbackEditView(eventId, rate, view);
     }
 
     @Override

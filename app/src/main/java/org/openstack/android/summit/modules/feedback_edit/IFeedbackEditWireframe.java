@@ -7,7 +7,8 @@ import org.openstack.android.summit.common.user_interface.IBaseView;
  * Created by Claudio Redi on 2/17/2016.
  */
 public interface IFeedbackEditWireframe extends IBaseWireframe {
-    void presentFeedbackEditView(int eventId, IBaseView context);
+
+    void presentFeedbackEditView(int eventId, int rate, IBaseView context);
 
     void backToPreviousView(IBaseView context);
 }

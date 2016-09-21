@@ -7,5 +7,6 @@ import org.openstack.android.summit.common.user_interface.IBaseView;
  */
 public interface IFeedbackEditView extends IBaseView {
     int getRate();
+    void setRate(int rate);
     String getReview();
 }

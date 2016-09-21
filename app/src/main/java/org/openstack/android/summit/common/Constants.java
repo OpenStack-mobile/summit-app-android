@@ -21,6 +21,7 @@ public class Constants {
     static public final String WIPE_DATE_EVENT                      = "wipe-data-event";
     static public final String NAVIGATION_PARAMETER_SEARCH_TERM     = "SearchTerm";
     static public final String NAVIGATION_PARAMETER_EVENT_ID        = "EventId";
+    static public final String NAVIGATION_PARAMETER_EVENT_RATE      = "EventRate";
     public static final String NAVIGATION_PARAMETER_LEVEL           = "Level";
     public static final String NAVIGATION_PARAMETER_TRACK           = "Track";
     public static final String NAVIGATION_PARAMETER_IS_MY_PROFILE   = "IsMyProfile";

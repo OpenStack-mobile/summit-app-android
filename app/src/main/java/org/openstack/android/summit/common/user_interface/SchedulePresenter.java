@@ -85,6 +85,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         if(!interactor.isDataLoaded()) return;
 
         currentSummit                = interactor.getLocalActiveSummit();
+        if(currentSummit == null) return;
         DateTime startDate           = currentSummit.getLocalStartDate().withTime(0,0,0,0);
         DateTime endDate             = currentSummit.getLocalEndDate().withTime(23, 59, 59, 999);
         // check if current time is on summit time

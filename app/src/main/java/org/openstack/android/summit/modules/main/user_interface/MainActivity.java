@@ -125,6 +125,8 @@ public class MainActivity
                         presenter.showMyProfileView();
                     } catch (MissingMemberException ex1) {
                         Crashlytics.logException(ex1);
+                        Log.w(Constants.LOG_TAG, ex1.getMessage());
+                        showErrorMessage(getResources().getString(R.string.login_error_message));
                     } finally {
                         presenter.enableDataUpdateService();
                         hideActivityIndicator();
@@ -229,11 +231,16 @@ public class MainActivity
 
     @Override
     protected void onResume() {
-        Log.d(Constants.LOG_TAG, "MainActivity.onResume");
-        super.onResume();
-        presenter.onResume();
-        launchInitialDataLoadingActivity();
-        setupNavigationIcons();
+        try {
+            Log.d(Constants.LOG_TAG, "MainActivity.onResume");
+            toggleMenuLogo(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+            super.onResume();
+            presenter.onResume();
+            launchInitialDataLoadingActivity();
+            setupNavigationIcons();
+        } catch (Exception ex) {
+            Crashlytics.logException(ex);
+        }
     }
 
     @Override
@@ -327,6 +334,7 @@ public class MainActivity
 
                     if (!presenter.isSummitDataLoaded()) {
                         showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
+                        launchInitialDataLoadingActivity();
                         return;
                     }
 

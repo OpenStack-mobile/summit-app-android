@@ -85,7 +85,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        trustEveryone();
+        //trustEveryone();
     }
 
     private boolean checkDeepLinks() {

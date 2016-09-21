@@ -25,6 +25,11 @@ public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> i
     private int rate;
     private Menu menu;
 
+    @Override
+    public void setRate(int rate){
+        this.rate = rate;
+    }
+
     public FeedbackEditFragment() {
         // Required empty public constructor
     }
@@ -39,7 +44,21 @@ public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> i
     @Override
     public void onResume() {
         super.onResume();
+        presenter.onResume();
         setTitle(getResources().getString(R.string.feedback));
+        if(rate > 0){
+            setStarColor(rate, 1, R.id.feedback_rate_1);
+            setStarColor(rate, 2, R.id.feedback_rate_2);
+            setStarColor(rate, 3, R.id.feedback_rate_3);
+            setStarColor(rate, 4, R.id.feedback_rate_4);
+            setStarColor(rate, 5, R.id.feedback_rate_5);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
     }
 
     @Override
@@ -114,6 +133,7 @@ public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> i
 
         return rate;
     }
+
     private void setStarColor(int selectedRate, int starRate, int controlId) {
         ImageView starRateImage = (ImageView)view.findViewById(controlId);
         if (starRate <= selectedRate) {

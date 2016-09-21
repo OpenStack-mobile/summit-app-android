@@ -30,7 +30,7 @@ public class EventsWireframe implements IEventsWireframe {
         fragmentManager
                 .beginTransaction()
                     .replace(R.id.frame_layout_content, eventsFragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override

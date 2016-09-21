@@ -187,8 +187,8 @@
     </style>
 
     <style name="AppTheme.MediumStarRate" parent="AppTheme.StarRate">
-        <item name="android:layout_width">30dp</item>
-        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
     </style>
 
     <style name="AppTheme.FilterSectionList">

@@ -272,7 +272,7 @@ public class DTOAssemblerTests {
         Assert.assertEquals(1, eventDetailDTO.getVenueRoomId());
         Assert.assertEquals(2, eventDetailDTO.getSpeakers().size());
         Assert.assertEquals(2, eventDetailDTO.getModerator().getId());
-        Assert.assertTrue(eventDetailDTO.getFinished());
+        Assert.assertTrue(eventDetailDTO.isStarted());
         Assert.assertFalse(eventDetailDTO.getAllowFeedback());
         Assert.assertEquals(trackGroup.getColor(), eventDetailDTO.getColor());
     }

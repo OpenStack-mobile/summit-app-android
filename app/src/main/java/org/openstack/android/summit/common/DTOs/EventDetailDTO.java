@@ -33,7 +33,7 @@ public class EventDetailDTO extends ScheduleItemDTO {
 
     private String rsvpLink;
 
-    public boolean getAllowRsvp(){
+    public boolean getAllowRsvp() {
         return this.rsvpLink != null;
     }
 
@@ -59,7 +59,7 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private String tags;
     private List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();
 
-    private Boolean finished;
+    private Boolean started;
     private Boolean allowFeedback;
     private PersonListItemDTO moderator;
     private String level;
@@ -106,12 +106,12 @@ public class EventDetailDTO extends ScheduleItemDTO {
         this.speakers = speakers;
     }
 
-    public Boolean getFinished() {
-        return finished;
+    public Boolean isStarted() {
+        return started;
     }
 
-    public void setFinished(Boolean finished) {
-        this.finished = finished;
+    public void setStarted(Boolean started) {
+        this.started = started;
     }
 
     public Boolean getAllowFeedback() {
@@ -146,15 +146,15 @@ public class EventDetailDTO extends ScheduleItemDTO {
         this.averageRate = averageRate;
     }
 
-    public String getEventUrl(){
+    public String getEventUrl() {
         return eventUrl;
     }
 
-    public void setEventUrl(String eventUrl){
+    public void setEventUrl(String eventUrl) {
         this.eventUrl = eventUrl;
     }
 
-    public String getSlug(){
+    public String getSlug() {
         return Slugifier.toSlug(getName());
     }
 }

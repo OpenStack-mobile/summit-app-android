@@ -56,6 +56,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     private boolean allowRsvp;
     private ShareActionProvider shareActionProvider;
     private final static int MY_PERMISSIONS_READ_CALENDAR = 0xFF45;
+    private int rate;
 
     public EventDetailFragment() {
 
@@ -125,7 +126,66 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
                         MY_PERMISSIONS_READ_CALENDAR);
         }
 
+        // feedback
+
+        ImageView starRateImage1 = (ImageView)view.findViewById(R.id.feedback_rate_1);
+        ImageView starRateImage2 = (ImageView)view.findViewById(R.id.feedback_rate_2);
+        ImageView starRateImage3 = (ImageView)view.findViewById(R.id.feedback_rate_3);
+        ImageView starRateImage4 = (ImageView)view.findViewById(R.id.feedback_rate_4);
+        ImageView starRateImage5 = (ImageView)view.findViewById(R.id.feedback_rate_5);
+        ImageView rateButton     = (ImageView)view.findViewById(R.id.rate_button);
+
+        rateButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        presenter.showFeedbackEdit(rate);
+                    }
+                }
+        );
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rate = getSelectedRate(v);
+                setStarColor(rate, 1, R.id.feedback_rate_1);
+                setStarColor(rate, 2, R.id.feedback_rate_2);
+                setStarColor(rate, 3, R.id.feedback_rate_3);
+                setStarColor(rate, 4, R.id.feedback_rate_4);
+                setStarColor(rate, 5, R.id.feedback_rate_5);
+                presenter.showFeedbackEdit(rate);
+            }
+        };
+
+        starRateImage1.setOnClickListener(onClickListener);
+        starRateImage2.setOnClickListener(onClickListener);
+        starRateImage3.setOnClickListener(onClickListener);
+        starRateImage4.setOnClickListener(onClickListener);
+        starRateImage5.setOnClickListener(onClickListener);
+
         return view;
+    }
+
+    private int getSelectedRate(View v) {
+        int rate = 0;
+
+        if (v.getId() == R.id.feedback_rate_1) { rate = 1; }
+        else if (v.getId() == R.id.feedback_rate_2) { rate = 2; }
+        else if (v.getId() == R.id.feedback_rate_3) { rate = 3; }
+        else if (v.getId() == R.id.feedback_rate_4) { rate = 4; }
+        else if (v.getId() == R.id.feedback_rate_5) { rate = 5; }
+
+        return rate;
+    }
+
+    private void setStarColor(int selectedRate, int starRate, int controlId) {
+        ImageView starRateImage = (ImageView)view.findViewById(controlId);
+        if (starRate <= selectedRate) {
+            starRateImage.setImageResource(R.drawable.star_color);
+        }
+        else {
+            starRateImage.setImageResource(R.drawable.star_ligth_grey);
+        }
     }
 
     @Override
@@ -157,7 +217,6 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         this.menu = menu;
         setScheduledInternal(scheduled);
         setIsScheduledStatusVisibleInternal(isScheduledStatusVisible);
-        setAllowNewFeedback(allowNewFeedback);
         // Locate MenuItem with ShareActionProvider
         MenuItem item = menu.findItem(R.id.action_share);
         // Fetch and store ShareActionProvider
@@ -177,14 +236,9 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_scheduled_status) {
             presenter.toggleScheduleStatus();
             return true;
-        }
-        else if (id == R.id.action_create_feedback) {
-            presenter.showFeedbackEdit();
         }
         else if (id == R.id.action_add_to_calendar) {
             presenter.addToCalendar();
@@ -308,12 +362,10 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
 
     @Override
     public void setAllowNewFeedback(boolean allowNewFeedback) {
-        if (menu != null && menu.findItem(R.id.action_scheduled_status) != null) {
-            setIAllowNewFeedbackInternal(allowNewFeedback);
-        }
-        else {
-            this.allowNewFeedback = allowNewFeedback;
-        }
+        this.allowNewFeedback = allowNewFeedback;
+        if(view == null) return;
+        LinearLayout feedbackContainer = (LinearLayout) view.findViewById(R.id.feedback_container);
+        feedbackContainer.setVisibility(this.allowNewFeedback ? View.VISIBLE : view.GONE);
     }
 
     @Override
@@ -328,11 +380,6 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
                 presenter.showEventRsvpView();
             }
         });
-    }
-
-    private void setIAllowNewFeedbackInternal(boolean allowNewFeedback) {
-        menu.findItem(R.id.action_create_feedback).setVisible(allowNewFeedback);
-        this.allowNewFeedback = allowNewFeedback;
     }
 
     @Override

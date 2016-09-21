@@ -27,12 +27,12 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
 
     @Override
     public void getLoggedInMemberOrigin(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
-
+        Log.d(Constants.LOG_TAG, "MemberDataStore.getLoggedInMemberOrigin");
         IDataStoreOperationListener<Member> remoteDataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
             public void onSucceedWithSingleData(final Member detachedMember) {
                 try{
-                    Log.d(Constants.LOG_TAG, "MemberDataStore.getLoggedInMemberOrigin");
+                    Log.d(Constants.LOG_TAG, "MemberDataStore.onSucceedWithSingleData");
                     Member member = RealmFactory.transaction(new RealmFactory.IRealmCallback<Member>() {
                         @Override
                         public Member callback(Realm session) throws Exception {

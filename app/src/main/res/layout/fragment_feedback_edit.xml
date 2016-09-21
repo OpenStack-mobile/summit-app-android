@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:layout_gravity="center"
         android:paddingRight="10dp"
@@ -28,7 +27,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="335dp"
         android:background="@color/openStackLightGray"
         android:orientation="vertical">
         <EditText
@@ -50,5 +49,13 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:text="@string/send"/>
+        <TextView
+            android:layout_gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:id="@+id/disclaimer_note"
+            android:text="@string/feedback_disclaimer"/>
     </LinearLayout>
 </LinearLayout>

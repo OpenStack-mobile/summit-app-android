@@ -175,7 +175,10 @@ public class SecurityManager implements ISecurityManager {
         if(accountManager.getAccountsByType(accountType).length == 0) return null;
 
         int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
-        if(currentMemberId == 0) return null;
+        if(currentMemberId == 0){
+            Log.d(Constants.LOG_TAG, "current member id is zero !!!");
+            return null;
+        }
 
         member = memberDataStore.getByIdLocal(currentMemberId);
         return member;
