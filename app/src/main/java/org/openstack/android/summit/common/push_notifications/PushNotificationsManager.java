@@ -14,14 +14,10 @@ import java.util.ArrayList;
 public class PushNotificationsManager implements IPushNotificationsManager {
 
 
-    public void subscribeMember(Member member, Summit summit) {
-
-        if (summit == null) {
-            return;
-        }
+    public void subscribeMember(Member member, int summitId) {
 
         ArrayList<String> channels = new ArrayList<>();
-        channels.add(String.format("su_%d", summit.getId()));
+        channels.add(String.format("su_%d", summitId));
         channels.add(String.format("me_%d", member.getId()));
 
         if(member.getAttendeeRole()!= null) {
@@ -40,12 +36,10 @@ public class PushNotificationsManager implements IPushNotificationsManager {
         ParseInstallation.getCurrentInstallation().saveEventually();
     }
 
-    public void subscribeAnonymous(Summit summit) {
-        if (summit == null) {
-            return;
-        }
+    public void subscribeAnonymous(int summitId) {
+
         ArrayList<String> channels = new ArrayList<>();
-        channels.add(String.format("su_%d", summit.getId()));
+        channels.add(String.format("su_%d", summitId));
 
         ParseInstallation.getCurrentInstallation().put("channels", channels);
         ParseInstallation.getCurrentInstallation().saveEventually();

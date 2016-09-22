@@ -61,15 +61,25 @@ public class SecurityManager implements ISecurityManager {
 
             @Override
             protected void onPostExecute(String token) {
-                final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-                final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
-                int currentMemberId                 = session.getInt(Constants.CURRENT_MEMBER_ID);
-                Account[] accounts                  = accountManager.getAccountsByType(accountType);
+                try{
+                    final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
+                    final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
+                    int currentMemberId                 = session.getInt(Constants.CURRENT_MEMBER_ID);
+                    Account[] accounts                  = accountManager.getAccountsByType(accountType);
 
-                if (accounts.length > 0) {
-                    if ((token != null && currentMemberId == 0) || (token == null && currentMemberId != 0)) {
-                        logout(false);
+                    if (accounts.length > 0) {
+                        if ((token != null && currentMemberId == 0) || (token == null && currentMemberId != 0)) {
+                            logout(false);
+                        }
                     }
+                }
+                catch(SecurityException ex1){
+                    Log.w(Constants.LOG_TAG, ex1.getMessage());
+                    Crashlytics.logException(ex1);
+                }
+                catch(Exception ex){
+                    Log.e(Constants.LOG_TAG, ex.getMessage());
+                    Crashlytics.logException(ex);
                 }
             }
         };
@@ -89,26 +99,36 @@ public class SecurityManager implements ISecurityManager {
 
     @Override
     public void login(final Activity context) {
-        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-        final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
-        Log.d(Constants.LOG_TAG, "SecurityManager.login");
-        Intent intent = new Intent(Constants.START_LOG_IN_EVENT);
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-        if (accountManager.getAccountsByType(accountType).length == 0) {
-            // No account has been created, let's create one now
-            accountManager.addAccount(accountType, Authenticator.TOKEN_TYPE_ID, null, null,
-                    context, new AccountManagerCallback<Bundle>() {
-                        @Override
-                        public void run(AccountManagerFuture<Bundle> futureManager) {
-                            // Unless the account creation was cancelled, try logging in again
-                            // after the account has been created.
-                            if (futureManager.isCancelled()) return;
-                            login(context);
-                        }
-                    }, null);
-            return;
+        try{
+            final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
+            final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
+            Log.d(Constants.LOG_TAG, "SecurityManager.login");
+            Intent intent = new Intent(Constants.START_LOG_IN_EVENT);
+            LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+            if (accountManager.getAccountsByType(accountType).length == 0) {
+                // No account has been created, let's create one now
+                accountManager.addAccount(accountType, Authenticator.TOKEN_TYPE_ID, null, null,
+                        context, new AccountManagerCallback<Bundle>() {
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> futureManager) {
+                                // Unless the account creation was cancelled, try logging in again
+                                // after the account has been created.
+                                if (futureManager.isCancelled()) return;
+                                login(context);
+                            }
+                        }, null);
+                return;
+            }
+            bindCurrentUser();
         }
-        bindCurrentUser();
+        catch(SecurityException ex1){
+            Log.w(Constants.LOG_TAG, ex1.getMessage());
+            Crashlytics.logException(ex1);
+        }
+        catch(Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
     }
 
     @Override
@@ -143,44 +163,62 @@ public class SecurityManager implements ISecurityManager {
 
     private void logout(boolean sendNotification) {
 
-        Context context                     = OpenStackSummitApplication.context;
-        final AccountManager accountManager = AccountManager.get(context);
-        final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
-        Account availableAccounts[]         = accountManager.getAccountsByType(accountType);
+        try {
+            Context context = OpenStackSummitApplication.context;
+            final AccountManager accountManager = AccountManager.get(context);
+            final String accountType = context.getString(R.string.ACCOUNT_TYPE);
+            Account availableAccounts[] = accountManager.getAccountsByType(accountType);
 
-        if (availableAccounts.length > 0) {
+            if (availableAccounts.length > 0) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                accountManager.removeAccountExplicitly(availableAccounts[0]);
-            } else {
-                accountManager.removeAccount(availableAccounts[0], null, null);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    accountManager.removeAccountExplicitly(availableAccounts[0]);
+                } else {
+                    accountManager.removeAccount(availableAccounts[0], null, null);
+                }
+            }
+
+            member = null;
+            session.setInt(Constants.CURRENT_MEMBER_ID, 0);
+
+            if (sendNotification) {
+                Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
+                LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
             }
         }
-
-        member = null;
-        session.setInt(Constants.CURRENT_MEMBER_ID, 0);
-
-        if (sendNotification) {
-            Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
-            LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+        catch(SecurityException ex1){
+            Log.w(Constants.LOG_TAG, ex1.getMessage());
+            Crashlytics.logException(ex1);
+        }
+        catch(Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
         }
     }
 
     @Override
     public Member getCurrentMember() {
+        try{
+            final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
+            final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
 
-        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-        final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
+            if(accountManager.getAccountsByType(accountType).length == 0) return null;
 
-        if(accountManager.getAccountsByType(accountType).length == 0) return null;
+            int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
 
-        int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
-        if(currentMemberId == 0){
-            Log.d(Constants.LOG_TAG, "current member id is zero !!!");
-            return null;
+            if(currentMemberId == 0) return null;
+
+            member = memberDataStore.getByIdLocal(currentMemberId);
+
         }
-
-        member = memberDataStore.getByIdLocal(currentMemberId);
+        catch(SecurityException ex1){
+            Log.w(Constants.LOG_TAG, ex1.getMessage());
+            Crashlytics.logException(ex1);
+        }
+        catch(Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
         return member;
     }
 

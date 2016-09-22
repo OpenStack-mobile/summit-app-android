@@ -81,8 +81,8 @@
     <string name="delete">Delete</string>
     <string name="menu_item_go_2_event">Go to event</string>
     <string name="notification_not_found">Notification not found</string>
-    <string name="switch_enable_notifications_text">Block All notifications</string>
-    <string name="switch_enable_notifications_subtext">Never show notification from this app</string>
+    <string name="switch_enable_notifications_text">Block all notifications</string>
+    <string name="switch_enable_notifications_subtext">Never show notifications from this app</string>
     <string name="feedback_disclaimer">* This feedback will be publicly available.</string>
     <string name="feedback_rate_session">Rate Session</string>
     <string name="login_error_message">We sorry, there was an error with your login process, please try again.</string>

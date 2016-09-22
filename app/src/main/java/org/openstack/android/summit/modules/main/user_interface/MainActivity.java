@@ -73,6 +73,16 @@ public class MainActivity
     private NavigationView navigationView;
     private boolean onLoginProcess = false;
 
+    private void cancelLoginProcess(){
+        Log.d(Constants.LOG_TAG, "MainActivity.cancelLoginProcess");
+        this.onLoginProcess = false;
+    }
+
+    private void initiateLoginProcess(){
+        Log.d(Constants.LOG_TAG, "MainActivity.initiateLoginProcess");
+        this.onLoginProcess = true;
+    }
+
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -105,7 +115,7 @@ public class MainActivity
                     Log.d(Constants.LOG_TAG, "START_LOG_IN_EVENT");
                     showActivityIndicator();
                     presenter.disableDataUpdateService();
-                    onLoginProcess = true;
+                    initiateLoginProcess();
                     return;
                 }
 
@@ -113,6 +123,7 @@ public class MainActivity
                     Log.d(Constants.LOG_TAG, "LOG_IN_ERROR_EVENT");
                     hideActivityIndicator();
                     showErrorMessage(intent.getExtras().getString(Constants.LOG_IN_ERROR_MESSAGE, Constants.GENERIC_ERROR_MSG));
+                    cancelLoginProcess();
                     return;
                 }
 
@@ -130,12 +141,14 @@ public class MainActivity
                     } finally {
                         presenter.enableDataUpdateService();
                         hideActivityIndicator();
+                        cancelLoginProcess();
                     }
                     return;
                 }
 
                 if (intent.getAction().contains(Constants.LOGGED_OUT_EVENT)) {
                     Log.d(Constants.LOG_TAG, "LOGGED_OUT_EVENT");
+                    cancelLoginProcess();
                     onLoggedOut();
                     if (!userClickedLogout) {
                         showInfoMessage("Your login session expired");
@@ -149,6 +162,7 @@ public class MainActivity
                 if (intent.getAction().contains(Constants.LOG_IN_CANCELLED_EVENT)) {
                     Log.d(Constants.LOG_TAG, "LOG_IN_CANCELLED_EVENT");
                     hideActivityIndicator();
+                    cancelLoginProcess();
                     return;
                 }
 
@@ -215,7 +229,7 @@ public class MainActivity
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
         if (onLoginProcess) {
             Log.d(Constants.LOG_TAG, "MainActivity.onCreate - its on logging process ...");
-            onLoginProcess = false;
+            cancelLoginProcess();
             showActivityIndicator();
             return;
         }

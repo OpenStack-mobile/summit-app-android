@@ -52,12 +52,15 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     public void subscribeToPushNotifications() {
         Summit summit = summitDataStore.getActiveLocal();
         if(summit == null) return;
+        int summitId = summit.getId();
+
         if (securityManager.isLoggedIn()){
             Member member = securityManager.getCurrentMember();
-            pushNotificationsManager.subscribeMember(member, summit);
+            pushNotificationsManager.subscribeMember(member, summitId);
             return;
         }
-        pushNotificationsManager.subscribeAnonymous(summit);
+
+        pushNotificationsManager.subscribeAnonymous(summitId);
     }
 
     @Override
