@@ -27,6 +27,7 @@ public class VenueDetailWireframe extends BaseWireframe implements IVenueDetailW
     public void presentVenueDetailView(NamedDTO venue, IBaseView context) {
         VenueDetailFragment venueDetailFragment = new VenueDetailFragment();
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_VENUE, venue.getId());
+        navigationParametersStore.remove(Constants.NAVIGATION_PARAMETER_ROOM);
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
@@ -38,6 +39,7 @@ public class VenueDetailWireframe extends BaseWireframe implements IVenueDetailW
     public void presentLocationDetailView(NamedDTO location, IBaseView context) {
         VenueRoomDetailFragment locationDetailFragment = new VenueRoomDetailFragment();
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_ROOM, location.getId());
+        navigationParametersStore.remove(Constants.NAVIGATION_PARAMETER_VENUE);
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()

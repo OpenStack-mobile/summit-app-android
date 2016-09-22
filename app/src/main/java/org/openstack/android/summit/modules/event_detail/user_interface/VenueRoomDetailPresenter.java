@@ -1,12 +1,17 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
 import android.os.Bundle;
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.VenueFloorDTO;
 import org.openstack.android.summit.common.DTOs.VenueRoomDTO;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
 import org.openstack.android.summit.modules.venue_detail.business_logic.IVenueDetailInteractor;
 import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailPresenter;
+
 import java.util.List;
 
 /**
@@ -23,30 +28,38 @@ public class VenueRoomDetailPresenter extends VenueDetailPresenter implements IV
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        try {
+            locationId = (savedInstanceState != null) ?
+                    savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_ROOM, 0) :
+                    wireframe.getParameter(Constants.NAVIGATION_PARAMETER_ROOM, Integer.class);
+        } catch (Exception ex) {
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
+    }
+
+    @Override
     public void onCreateView(Bundle savedInstanceState) {
 
-        locationId = (savedInstanceState != null) ?
-                          savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_ROOM, 0):
-                          wireframe.getParameter(Constants.NAVIGATION_PARAMETER_ROOM, Integer.class);
+        room = interactor.getRoom(locationId != null ? locationId : 0);
 
-        room  = interactor.getRoom(locationId != null ?locationId : 0);
-
-        if(room == null){
+        if (room == null) {
             view.showInfoMessage("Room not found!");
             return;
         }
 
         venue = interactor.getVenue(room.getVenueId());
 
-        if(venue == null){
+        if (venue == null) {
             view.showInfoMessage("Venue not found!");
             return;
         }
 
-        if(room.getFloorId() > 0)
+        if (room.getFloorId() > 0)
             floor = interactor.getFloor(room.getFloorId());
         String locationName = venue.getName();
-        if(floor != null)
+        if (floor != null)
             locationName += " - " + floor.getName();
         locationName += " - " + room.getName();
         view.setVenueName(locationName);
@@ -59,10 +72,10 @@ public class VenueRoomDetailPresenter extends VenueDetailPresenter implements IV
         }
 
         List<String> maps = venue.getMaps();
-        if(floor != null && floor.getPictureUrl() != null){
+        if (floor != null && floor.getPictureUrl() != null) {
             maps.add(floor.getPictureUrl());
         }
-        if(room != null && room.getMapUrl() != null){
+        if (room != null && room.getMapUrl() != null) {
             maps.add(room.getMapUrl());
         }
 
@@ -80,7 +93,7 @@ public class VenueRoomDetailPresenter extends VenueDetailPresenter implements IV
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(locationId != null){
+        if (locationId != null) {
             outState.putInt(Constants.NAVIGATION_PARAMETER_ROOM, locationId);
         }
     }

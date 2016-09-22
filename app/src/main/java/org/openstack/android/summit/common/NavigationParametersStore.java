@@ -1,9 +1,6 @@
 package org.openstack.android.summit.common;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 /**
  * Created by Claudio Redi on 1/19/2016.
@@ -33,5 +30,11 @@ public class NavigationParametersStore implements INavigationParametersStore {
     @Override
     public void put(String key, Object value) {
         navigationParameterStore.put(key, value);
+    }
+
+    @Override
+    public void remove(String key) {
+        if(navigationParameterStore.containsKey(key))
+            navigationParameterStore.remove(key);
     }
 }

@@ -1,13 +1,14 @@
 package org.openstack.android.summit.modules.venue_detail.user_interface;
 
 import android.os.Bundle;
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.VenueDTO;
 import org.openstack.android.summit.common.DTOs.VenueFloorDTO;
 import org.openstack.android.summit.common.DTOs.VenueRoomDTO;
-import org.openstack.android.summit.common.business_logic.IBaseInteractor;
-import org.openstack.android.summit.common.entities.VenueRoom;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
@@ -20,9 +21,9 @@ import java.util.List;
  */
 public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenueDetailInteractor, IVenueDetailWireframe> implements IVenueDetailPresenter {
 
-    protected VenueDTO           venue;
+    protected VenueDTO venue;
     protected List<VenueRoomDTO> venueRooms;
-    protected Integer venueId   = null;
+    protected Integer venueId = null;
 
     public VenueDetailPresenter(IVenueDetailInteractor interactor, IVenueDetailWireframe wireframe) {
         super(interactor, wireframe);
@@ -30,19 +31,24 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        venueId = (savedInstanceState != null) ?
-                savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE, 0):
-                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
+        try {
+            super.onCreate(savedInstanceState);
+            venueId = (savedInstanceState != null) ?
+                    savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_VENUE, 0) :
+                    wireframe.getParameter(Constants.NAVIGATION_PARAMETER_VENUE, Integer.class);
+        } catch (Exception ex) {
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
     }
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
         super.onCreateView(savedInstanceState);
 
-        venue = interactor.getVenue(venueId !=null ? venueId : 0);
+        venue = interactor.getVenue(venueId != null ? venueId : 0);
 
-        if(venue == null){
+        if (venue == null) {
             view.showInfoMessage("Venue not found!");
             return;
         }
@@ -56,8 +62,8 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
         }
 
         List<String> maps = venue.getMaps();
-        for(VenueFloorDTO floor:interactor.getVenueFloors(venueId)){
-            if(floor.getPictureUrl()!= null) maps.add(floor.getPictureUrl());
+        for (VenueFloorDTO floor : interactor.getVenueFloors(venueId)) {
+            if (floor.getPictureUrl() != null) maps.add(floor.getPictureUrl());
         }
 
         view.toggleMapNavigation(maps.size() > 0);
@@ -92,7 +98,7 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(venueId != null){
+        if (venueId != null) {
             outState.putInt(Constants.NAVIGATION_PARAMETER_VENUE, venueId);
         }
     }
