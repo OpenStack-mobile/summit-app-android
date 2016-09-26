@@ -30,5 +30,7 @@ public interface ISummitEventDataStore {
 
     long countByEventType(int eventTypeId);
 
+    long countBySummitType(int sumitTypeId);
+
     long countByLevel(String level);
 }

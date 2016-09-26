@@ -1,7 +1,6 @@
 package org.openstack.android.summit.modules.general_schedule_filter.user_interface;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.linearlistview.LinearListView;
@@ -20,12 +18,8 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
-import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
-import org.openstack.android.summit.common.user_interface.SimpleListItemView;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import me.kaede.tagview.OnTagDeleteListener;
 import me.kaede.tagview.Tag;
@@ -36,11 +30,12 @@ import me.kaede.tagview.TagView;
  */
 public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralScheduleFilterPresenter> implements IGeneralScheduleFilterView {
 
+    private SummitTypeListAdapter summitTypeListAdapter;
     private TrackGroupListAdapter trackGroupListAdapter;
-    private EventTypeListAdapter  eventTypeListAdapter;
-    private LevelListAdapter      levelListAdapter;
-    private VenueListAdapter      venueListAdapter;
-    private ArrayAdapter<String>  tagsAdapter;
+    private EventTypeListAdapter eventTypeListAdapter;
+    private LevelListAdapter levelListAdapter;
+    private VenueListAdapter venueListAdapter;
+    private ArrayAdapter<String> tagsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +52,17 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
             @Override
             public void onClick(View v) {
                 presenter.toggleHidePastTalks(hidePastTalks.isChecked());
+            }
+        });
+
+        LinearListView summitTypesList = (LinearListView) view.findViewById(R.id.filter_summit_types_list);
+        summitTypeListAdapter = new SummitTypeListAdapter(getContext());
+        summitTypesList.setAdapter(summitTypeListAdapter);
+        summitTypesList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(LinearListView parent, View view, int position, long id) {
+                GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view);
+                presenter.toggleSelectionSummitType(generalScheduleFilterItemView, position);
             }
         });
 
@@ -104,17 +110,17 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
             }
         });
 
-        AutoCompleteTextView tagsTextView = (AutoCompleteTextView)view.findViewById(R.id.filter_tags_autocomplete);
+        AutoCompleteTextView tagsTextView = (AutoCompleteTextView) view.findViewById(R.id.filter_tags_autocomplete);
         tagsTextView.setThreshold(2);
         tagsTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String tagText = (String)parent.getItemAtPosition(position);
+                String tagText = (String) parent.getItemAtPosition(position);
                 presenter.addTag(tagText);
             }
         });
 
-        TagView tagView = (TagView)view.findViewById(R.id.filter_tags_list);
+        TagView tagView = (TagView) view.findViewById(R.id.filter_tags_list);
         tagView.setOnTagDeleteListener(new OnTagDeleteListener() {
             @Override
             public void onTagDeleted(Tag tag, int i) {
@@ -127,22 +133,26 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
         return view;
     }
 
+    @Override
+    public void showSummitTypes(List<NamedDTO> summitTypes) {
+        summitTypeListAdapter.clear();
+        summitTypeListAdapter.addAll(summitTypes);
+    }
+
     public void addTag(String tagText) {
-        AutoCompleteTextView tagsTextView = (AutoCompleteTextView)view.findViewById(R.id.filter_tags_autocomplete);
-        TagView tagView                   = (TagView)view.findViewById(R.id.filter_tags_list);
-        Tag tag                           = new Tag(tagText);
+        AutoCompleteTextView tagsTextView = (AutoCompleteTextView) view.findViewById(R.id.filter_tags_autocomplete);
+        TagView tagView = (TagView) view.findViewById(R.id.filter_tags_list);
+        Tag tag = new Tag(tagText);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             tag.layoutBorderColor = view.getResources().getColor(R.color.openStackGray, null);
-        }
-        else {
+        } else {
             tag.layoutBorderColor = view.getResources().getColor(R.color.openStackGray);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             tag.layoutColor = view.getResources().getColor(R.color.openStackLightBlue, null);
-        }
-        else {
+        } else {
             tag.layoutColor = view.getResources().getColor(R.color.openStackLightBlue);
         }
 
@@ -161,7 +171,7 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
 
     @Override
     public void showShowPastTalks(boolean show) {
-        LinearLayout header    = (LinearLayout) view.findViewById(R.id.hide_past_talks_header);
+        LinearLayout header = (LinearLayout) view.findViewById(R.id.hide_past_talks_header);
         LinearLayout container = (LinearLayout) view.findViewById(R.id.hide_past_talks_container);
         header.setVisibility(show ? View.VISIBLE : View.GONE);
         container.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -212,9 +222,35 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
 
     @Override
     public void bindTags(List<String> tags) {
-        AutoCompleteTextView tagsTextView = (AutoCompleteTextView)view.findViewById(R.id.filter_tags_autocomplete);
-        tagsAdapter = new ArrayAdapter<String>(this.getActivity(),android.R.layout.simple_list_item_1, tags);
+        AutoCompleteTextView tagsTextView = (AutoCompleteTextView) view.findViewById(R.id.filter_tags_autocomplete);
+        tagsAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, tags);
         tagsTextView.setAdapter(tagsAdapter);
+    }
+
+    private class SummitTypeListAdapter extends ArrayAdapter<NamedDTO> {
+
+        public SummitTypeListAdapter(Context context) {
+            super(context, 0);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_filter_list, parent, false);
+            }
+
+            GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
+            presenter.buildSummitTypeFilterItem(generalScheduleFilterItemView, position);
+
+            // Return the completed view to render on screen
+            return convertView;
+        }
+
+        @Override
+        public int getCount() {
+            return super.getCount();
+        }
     }
 
     private class EventTypeListAdapter extends ArrayAdapter<NamedDTO> {

@@ -8,8 +8,8 @@ import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
 import io.realm.Case;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -44,6 +44,13 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     public long countByEventType(int eventTypeId){
         RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
         query = query.equalTo("eventType.id", eventTypeId);
+        return query.count();
+    }
+
+    @Override
+    public long countBySummitType(int sumitTypeId) {
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
+        query = query.equalTo("summitTypes.id", sumitTypeId);
         return query.count();
     }
 

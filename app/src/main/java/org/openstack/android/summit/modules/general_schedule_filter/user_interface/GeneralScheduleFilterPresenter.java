@@ -4,14 +4,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import org.openstack.android.summit.common.DTOs.NamedDTO;
-import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.business_logic.IGeneralScheduleFilterInteractor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +35,7 @@ public class GeneralScheduleFilterPresenter
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
 
     }
 
@@ -108,6 +106,7 @@ public class GeneralScheduleFilterPresenter
 
         scheduleFilter.getFilterSections().add(filterSection);
 
+        view.showSummitTypes(summitTypes);
         view.showEventTypes(eventTypes);
         view.showTrackGroups(trackGroups);
         view.showLevels(levels);
@@ -115,15 +114,15 @@ public class GeneralScheduleFilterPresenter
         view.bindTags(tags);
         view.showShowPastTalks(false);
 
-        if(scheduleFilter.isTypeSet(FilterSectionType.HidePastTalks)){
+        if (scheduleFilter.isTypeSet(FilterSectionType.HidePastTalks)) {
             view.showShowPastTalks(true);
-            List<Boolean> filtersOnPassTalks = (List<Boolean>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks);
-            boolean hidePastTalks            = filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty()? filtersOnPassTalks.get(0) : false;
+            List<Boolean> filtersOnPassTalks = (List<Boolean>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks);
+            boolean hidePastTalks = filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty() ? filtersOnPassTalks.get(0) : false;
             view.toggleShowPastTalks(hidePastTalks);
         }
 
-        for (Object tag: scheduleFilter.getSelections().get(FilterSectionType.Tag)){
-            view.addTag((String)tag);
+        for (Object tag : scheduleFilter.getSelections().get(FilterSectionType.Tag)) {
+            view.addTag((String) tag);
         }
     }
 
@@ -137,8 +136,8 @@ public class GeneralScheduleFilterPresenter
     private boolean isItemSelected(FilterSectionType filterSectionType, int id) {
         List<Object> filterSelectionsForType = scheduleFilter.getSelections().get(filterSectionType);
         if (filterSelectionsForType != null) {
-            for (Object selectedId: filterSelectionsForType) {
-                if (id == (int)selectedId) {
+            for (Object selectedId : filterSelectionsForType) {
+                if (id == (int) selectedId) {
                     return true;
                 }
             }
@@ -149,7 +148,7 @@ public class GeneralScheduleFilterPresenter
     private boolean isItemSelected(FilterSectionType filterSectionType, String name) {
         List<Object> filterSelectionsForType = scheduleFilter.getSelections().get(filterSectionType);
         if (filterSelectionsForType != null) {
-            for (Object selectedName: filterSelectionsForType) {
+            for (Object selectedName : filterSelectionsForType) {
                 if (name.equals(selectedName)) {
                     return true;
                 }
@@ -168,21 +167,34 @@ public class GeneralScheduleFilterPresenter
     }
 
     @Override
+    public void buildSummitTypeFilterItem(GeneralScheduleFilterItemView item, int position) {
+        AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(0);
+        buildFilterItem(item, Color.WHITE, Color.RED, false, (MultiFilterSection) filterSection, position);
+    }
+
+    @Override
+    public void toggleSelectionSummitType(IGeneralScheduleFilterItemView item, int position) {
+        AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(0);
+        toggleSelection(item, Color.WHITE, Color.LTGRAY, (MultiFilterSection) filterSection, position);
+    }
+
+
+    @Override
     public void buildEventTypeFilterItem(GeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(1);
-        buildFilterItem(item,Color.WHITE, Color.RED, false, (MultiFilterSection)filterSection, position);
+        buildFilterItem(item, Color.WHITE, Color.RED, false, (MultiFilterSection) filterSection, position);
     }
 
     @Override
     public void buildVenueFilterItem(GeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(5);
-        buildFilterItem(item,Color.WHITE, Color.RED, false, (MultiFilterSection)filterSection, position);
+        buildFilterItem(item, Color.WHITE, Color.RED, false, (MultiFilterSection) filterSection, position);
     }
 
     @Override
     public void buildLevelFilterItem(GeneralScheduleFilterItemView item, int position) {
-        MultiFilterSection filterSection = (MultiFilterSection)scheduleFilter.getFilterSections().get(2);
-        FilterSectionItem filterItem     = filterSection.getItems().get(position);
+        MultiFilterSection filterSection = (MultiFilterSection) scheduleFilter.getFilterSections().get(2);
+        FilterSectionItem filterItem = filterSection.getItems().get(position);
 
         item.setText(filterItem.getName());
         item.setIsSelected(isItemSelected(filterSection.getType(), filterItem.getName()));
@@ -192,51 +204,49 @@ public class GeneralScheduleFilterPresenter
     @Override
     public void buildTrackGroupFilterItem(GeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(3);
-        TrackGroupDTO trackGroupDTO         = trackGroups.get(position);
+        TrackGroupDTO trackGroupDTO = trackGroups.get(position);
         buildFilterItem(
                 item,
                 Color.parseColor(trackGroupDTO.getColor()),
                 Color.parseColor(trackGroupDTO.getColor()),
                 true,
-                (MultiFilterSection)filterSection,
+                (MultiFilterSection) filterSection,
                 position);
     }
 
     @Override
     public void toggleSelectionEventType(IGeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(1);
-        toggleSelection(item, Color.WHITE, Color.LTGRAY, (MultiFilterSection)filterSection, position);
+        toggleSelection(item, Color.WHITE, Color.LTGRAY, (MultiFilterSection) filterSection, position);
     }
 
     @Override
     public void toggleSelectionVenue(IGeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(5);
-        toggleSelection(item, Color.WHITE, Color.LTGRAY, (MultiFilterSection)filterSection, position);
+        toggleSelection(item, Color.WHITE, Color.LTGRAY, (MultiFilterSection) filterSection, position);
     }
 
     @Override
     public void toggleSelectionLevel(IGeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(2);
-        FilterSectionItem filterItem       = ((MultiFilterSection)filterSection).getItems().get(position);
+        FilterSectionItem filterItem = ((MultiFilterSection) filterSection).getItems().get(position);
 
         if (isItemSelected(filterSection.getType(), filterItem.getName())) {
             int filterItemPosition = 0;
             boolean found = false;
             String level;
-            while(!found) {
-                level = (String)scheduleFilter.getSelections().get(filterSection.getType()).get(filterItemPosition);
+            while (!found) {
+                level = (String) scheduleFilter.getSelections().get(filterSection.getType()).get(filterItemPosition);
                 if (level.equals(filterItem.getName())) {
                     found = true;
-                }
-                else {
+                } else {
                     filterItemPosition++;
                 }
             }
 
             scheduleFilter.getSelections().get(filterSection.getType()).remove(filterItemPosition);
             item.setIsSelected(false);
-        }
-        else {
+        } else {
             scheduleFilter.getSelections().get(filterSection.getType()).add(filterItem.getName());
             item.setIsSelected(true);
         }
@@ -245,12 +255,12 @@ public class GeneralScheduleFilterPresenter
     @Override
     public void toggleSelectionTrackGroup(IGeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(3);
-        TrackGroupDTO trackGroupDTO         = trackGroups.get(position);
+        TrackGroupDTO trackGroupDTO = trackGroups.get(position);
         toggleSelection(
                 item,
                 Color.parseColor(trackGroupDTO.getColor()),
                 Color.parseColor(trackGroupDTO.getColor()),
-                (MultiFilterSection)filterSection,
+                (MultiFilterSection) filterSection,
                 position
         );
     }
@@ -270,12 +280,11 @@ public class GeneralScheduleFilterPresenter
         int filterItemPosition = 0;
         boolean found = false;
         String tag = "";
-        while(!found) {
-            tag = (String)scheduleFilter.getSelections().get(FilterSectionType.Tag).get(filterItemPosition);
+        while (!found) {
+            tag = (String) scheduleFilter.getSelections().get(FilterSectionType.Tag).get(filterItemPosition);
             if (tag == tagToDelete) {
                 found = true;
-            }
-            else {
+            } else {
                 filterItemPosition++;
             }
         }
@@ -285,33 +294,31 @@ public class GeneralScheduleFilterPresenter
 
     @Override
     public void toggleHidePastTalks(boolean hidePastTalks) {
-        SingleFilterSelection filterSection = (SingleFilterSelection)scheduleFilter.getFilterSections().get(4);
+        SingleFilterSelection filterSection = (SingleFilterSelection) scheduleFilter.getFilterSections().get(4);
         filterSection.setValue(hidePastTalks);
         scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks).clear();
-        if(hidePastTalks)
+        if (hidePastTalks)
             scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks).add(hidePastTalks);
     }
 
-    public void toggleSelection(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, MultiFilterSection filterSection, int position){
+    public void toggleSelection(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, MultiFilterSection filterSection, int position) {
         FilterSectionItem filterItem = filterSection.getItems().get(position);
         if (isItemSelected(filterSection.getType(), filterItem.getId())) {
             int filterItemPosition = 0;
             boolean found = false;
             int id;
-            while(!found) {
-                id = (int)scheduleFilter.getSelections().get(filterSection.getType()).get(filterItemPosition);
+            while (!found) {
+                id = (int) scheduleFilter.getSelections().get(filterSection.getType()).get(filterItemPosition);
                 if (id == filterItem.getId()) {
                     found = true;
-                }
-                else {
+                } else {
                     filterItemPosition++;
                 }
             }
 
             scheduleFilter.getSelections().get(filterSection.getType()).remove(filterItemPosition);
             item.setIsSelected(false);
-        }
-        else {
+        } else {
             scheduleFilter.getSelections().get(filterSection.getType()).add(filterItem.getId());
             item.setIsSelected(true);
         }
