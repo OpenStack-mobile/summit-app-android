@@ -20,7 +20,6 @@
                 android:weightSum="1">
                 <TextView
                     android:id="@+id/push_notification_detail_subject"
-                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     android:layout_width="240dp"
                     android:layout_height="wrap_content"
@@ -34,7 +33,6 @@
                 <TextView
                     android:id="@+id/push_notification_detail_type"
                     android:text="MEMBERS"
-                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

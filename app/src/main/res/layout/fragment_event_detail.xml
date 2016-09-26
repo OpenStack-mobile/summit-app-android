@@ -21,7 +21,6 @@
                 android:gravity="center_vertical">
                 <TextView
                     android:id="@+id/event_detail_name"
-                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -35,7 +34,6 @@
                     android:textStyle="bold"></TextView>
                 <TextView
                     android:id="@+id/event_detail_track"
-                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -109,7 +107,6 @@
                     android:src="@drawable/map"/>
                 <TextView
                     android:id="@+id/event_detail_place"
-                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     style="@style/AppTheme.IconedInformationBarTextView"
                     android:text="Grand Prince International Convention Center &amp; Hotels"/>
@@ -123,7 +120,6 @@
                     android:src="@drawable/time"/>
                 <TextView
                     android:id="@+id/event_detail_date"
-                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
                     android:text="Monday 26 October 06:00 am / 06:15 am"
@@ -160,7 +156,6 @@
                         android:src="@drawable/tags"/>
                     <TextView
                         android:id="@+id/event_detail_tags"
-                        android:bufferType="spannable"
                         android:textIsSelectable="true"
                         style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
                         android:text="tag1, tag2, tag3"/>
@@ -184,11 +179,9 @@
                     android:src="@drawable/credential"/>
                 <TextView
                     android:id="@+id/event_detail_credentials"
-                    android:bufferType="spannable"
                     android:textIsSelectable="true"
                     style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
                     android:text="Main Conference, Design Summit"/>
-
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/event_detail_level_container"
@@ -200,7 +193,6 @@
                 <TextView
                     android:id="@+id/event_detail_level"
                     android:textIsSelectable="true"
-                    android:bufferType="spannable"
                     style="@style/AppTheme.IconedInformationBarTextViewNoMoreImage"
                     android:text="Main Conference, Design Summit"/>
             </LinearLayout>
