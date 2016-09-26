@@ -131,9 +131,11 @@ public class MainActivity
                     try {
                         Log.d(Constants.LOG_TAG, "LOGGED_IN_EVENT");
                         presenter.onLoggedIn();
+                        //show my profile tab
                         navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(true);
-                        navigationView.getMenu().findItem(R.id.nav_my_profile).setChecked(true);
-                        presenter.showMyProfileView();
+                        // set events tab ...
+                        navigationView.getMenu().findItem(R.id.nav_events).setChecked(true);
+                        presenter.showEventsView();
                     } catch (MissingMemberException ex1) {
                         Crashlytics.logException(ex1);
                         Log.w(Constants.LOG_TAG, ex1.getMessage());
