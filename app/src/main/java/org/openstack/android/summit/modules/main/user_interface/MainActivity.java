@@ -90,6 +90,7 @@ public class MainActivity
 
                 if (intent.getAction() == Constants.WIPE_DATE_EVENT) {
                     Log.d(Constants.LOG_TAG, "WIPE_DATE_EVENT");
+                    securityManager.logout();
                     launchInitialDataLoadingActivity();
                 }
 
@@ -353,6 +354,7 @@ public class MainActivity
                         showErrorMessage(getResources().getString(R.string.login_disallowed_no_connectivity));
                         return;
                     }
+
                     presenter.disableDataUpdateService();
 
                     if (!presenter.isSummitDataLoaded()) {

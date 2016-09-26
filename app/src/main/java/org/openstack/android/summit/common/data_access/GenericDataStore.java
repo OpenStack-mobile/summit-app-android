@@ -6,9 +6,11 @@ import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -78,13 +80,18 @@ public class GenericDataStore implements IGenericDataStore {
 
     @Override
     public void clearDataLocal() {
-        RealmFactory.getSession().beginTransaction();
         try{
-            RealmFactory.getSession().deleteAll();
-            RealmFactory.getSession().commitTransaction();
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    session.deleteAll();
+                    return Void.getInstance();
+                }
+            });
         }
-        catch (Exception e) {
-            RealmFactory.getSession().cancelTransaction();
+        catch (Exception ex) {
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
         }
     }
 }

@@ -153,10 +153,6 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
 
                     Log.d(Constants.LOG_TAG, "doing a wipe DB ...");
                     session.setLong(KEY_LAST_WIPE_EVENT_ID, dataUpdate.getId());
-                    if (securityManager.isLoggedIn()) {
-                        securityManager.logout();
-                    }
-
                     dataUpdateDataStore.clearDataLocal();
                     setFromDate(0L);
                     Intent intent = new Intent(Constants.WIPE_DATE_EVENT);
