@@ -107,7 +107,6 @@ public class GeneralScheduleFilterPresenter
         scheduleFilter.getFilterSections().add(filterSection);
 
         view.showSummitTypes(summitTypes);
-        view.showEventTypes(eventTypes);
         view.showTrackGroups(trackGroups);
         view.showLevels(levels);
         view.showVenues(venues);

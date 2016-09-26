@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.TicketType;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -48,7 +49,7 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
             try {
                 summitEventId = jsonArraySummitEvents.getInt(i);
-                summitEvent = deserializerStorage.get(summitEventId, SummitEvent.class);
+                summitEvent     = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", summitEventId).findFirst();
                 if (summitEvent != null) {
                     summitAttendee.getScheduledEvents().add(summitEvent);
                 }
@@ -64,7 +65,7 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         summitAttendee.getTicketTypes().clear();
         for (int i = 0; i < jsonArrayTicketTypes.length(); i++) {
             ticketTypeId = jsonArrayTicketTypes.getInt(i);
-            ticketType = deserializerStorage.get(ticketTypeId, TicketType.class);
+            ticketType   = RealmFactory.getSession().where(TicketType.class).equalTo("id", ticketTypeId).findFirst();
             summitAttendee.getTicketTypes().add(ticketType);
         }
 

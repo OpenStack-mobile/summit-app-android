@@ -24,6 +24,8 @@ public class MyScheduleDataUpdateStrategy extends DataUpdateStrategy {
     public void process(DataUpdate dataUpdate) {
         Member currentMember = securityManager.getCurrentMember();
 
+        if(currentMember == null) return;
+
         switch (dataUpdate.getOperation()) {
             case DataOperation.Insert:
             case DataOperation.Update:

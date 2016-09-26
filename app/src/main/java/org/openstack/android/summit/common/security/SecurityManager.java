@@ -164,9 +164,9 @@ public class SecurityManager implements ISecurityManager {
     private void logout(boolean sendNotification) {
 
         try {
-            Context context = OpenStackSummitApplication.context;
+            Context context                     = OpenStackSummitApplication.context;
             final AccountManager accountManager = AccountManager.get(context);
-            final String accountType = context.getString(R.string.ACCOUNT_TYPE);
+            final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
             Account availableAccounts[] = accountManager.getAccountsByType(accountType);
 
             if (availableAccounts.length > 0) {
@@ -209,7 +209,6 @@ public class SecurityManager implements ISecurityManager {
             if(currentMemberId == 0) return null;
 
             member = memberDataStore.getByIdLocal(currentMemberId);
-
         }
         catch(SecurityException ex1){
             Log.w(Constants.LOG_TAG, ex1.getMessage());

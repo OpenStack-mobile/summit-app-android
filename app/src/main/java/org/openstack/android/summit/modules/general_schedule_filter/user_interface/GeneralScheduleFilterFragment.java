@@ -77,17 +77,6 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
             }
         });
 
-        LinearListView eventTypesList = (LinearListView) view.findViewById(R.id.filter_event_types_list);
-        eventTypeListAdapter = new EventTypeListAdapter(getContext());
-        eventTypesList.setAdapter(eventTypeListAdapter);
-        eventTypesList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(LinearListView parent, View view, int position, long id) {
-                GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view);
-                presenter.toggleSelectionEventType(generalScheduleFilterItemView, position);
-            }
-        });
-
         LinearListView venuesList = (LinearListView) view.findViewById(R.id.filter_venues_list);
         venueListAdapter = new VenueListAdapter(getContext());
         venuesList.setAdapter(venueListAdapter);

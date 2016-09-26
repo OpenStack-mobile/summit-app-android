@@ -92,6 +92,7 @@ public class MainWireframe implements IMainWireframe {
 
     @Override
     public void showEventDetail(int eventId, IBaseView context){
+        eventsWireframe.presentEventsView(context);
         searchWireframe.showEventDetail(eventId, context);
     }
 

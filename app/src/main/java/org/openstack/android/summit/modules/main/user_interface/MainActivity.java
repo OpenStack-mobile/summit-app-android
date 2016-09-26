@@ -114,7 +114,6 @@ public class MainActivity
                 if (intent.getAction().contains(Constants.START_LOG_IN_EVENT)) {
                     Log.d(Constants.LOG_TAG, "START_LOG_IN_EVENT");
                     showActivityIndicator();
-                    presenter.disableDataUpdateService();
                     initiateLoginProcess();
                     return;
                 }
@@ -124,6 +123,7 @@ public class MainActivity
                     hideActivityIndicator();
                     showErrorMessage(intent.getExtras().getString(Constants.LOG_IN_ERROR_MESSAGE, Constants.GENERIC_ERROR_MSG));
                     cancelLoginProcess();
+                    presenter.enableDataUpdateService();
                     return;
                 }
 
@@ -149,15 +149,19 @@ public class MainActivity
                 }
 
                 if (intent.getAction().contains(Constants.LOGGED_OUT_EVENT)) {
-                    Log.d(Constants.LOG_TAG, "LOGGED_OUT_EVENT");
-                    cancelLoginProcess();
-                    onLoggedOut();
-                    if (!userClickedLogout) {
-                        showInfoMessage("Your login session expired");
-                        return;
+                    try {
+                        Log.d(Constants.LOG_TAG, "LOGGED_OUT_EVENT");
+                        onLoggedOut();
+                        if (!userClickedLogout) {
+                            showInfoMessage("Your login session expired");
+                        }
+                        userClickedLogout = false;
+                        presenter.showEventsView();
                     }
-                    userClickedLogout = false;
-                    presenter.showEventsView();
+                    finally {
+                        presenter.enableDataUpdateService();
+                        cancelLoginProcess();
+                    }
                     return;
                 }
 
@@ -229,6 +233,7 @@ public class MainActivity
         intentFilter.addAction(Constants.PUSH_NOTIFICATION_OPENED);
         intentFilter.addAction(Constants.WIPE_DATE_EVENT);
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+
         if (onLoginProcess) {
             Log.d(Constants.LOG_TAG, "MainActivity.onCreate - its on logging process ...");
             cancelLoginProcess();
@@ -338,7 +343,8 @@ public class MainActivity
             navigationView.setNavigationItemSelectedListener(this);
             navigationView.getMenu().getItem(0).setChecked(true);
             LinearLayout headerView = (LinearLayout) navigationView.inflateHeaderView(R.layout.nav_header_main);
-            loginButton = (Button) headerView.findViewById(R.id.login_button);
+            loginButton             = (Button) headerView.findViewById(R.id.login_button);
+
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -347,6 +353,7 @@ public class MainActivity
                         showErrorMessage(getResources().getString(R.string.login_disallowed_no_connectivity));
                         return;
                     }
+                    presenter.disableDataUpdateService();
 
                     if (!presenter.isSummitDataLoaded()) {
                         showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
@@ -362,8 +369,8 @@ public class MainActivity
 
                     // LOGOUT
                     userClickedLogout = true;
-                    securityManager.logout();
 
+                    securityManager.logout();
                 }
             });
 

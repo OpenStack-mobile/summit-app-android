@@ -67,11 +67,6 @@
                 </me.kaede.tagview.TagView>
             </LinearLayout>
 
-            <LinearLayout style="@style/AppTheme.SubsectionHeader">
-                <TextView
-                    style="@style/AppTheme.SubsectionHeader.Text"
-                    android:text="@string/summit_types"/>
-            </LinearLayout>
             <com.linearlistview.LinearListView
                 android:id="@+id/filter_summit_types_list"
                 style="@style/AppTheme.FilterSectionList" />
@@ -83,14 +78,6 @@
             </LinearLayout>
             <com.linearlistview.LinearListView
                 android:id="@+id/filter_track_groups_list"
-                style="@style/AppTheme.FilterSectionList" />
-            <LinearLayout style="@style/AppTheme.SubsectionHeader">
-                <TextView
-                    style="@style/AppTheme.SubsectionHeader.Text"
-                    android:text="@string/event_types"/>
-            </LinearLayout>
-            <com.linearlistview.LinearListView
-                android:id="@+id/filter_event_types_list"
                 style="@style/AppTheme.FilterSectionList" />
             <LinearLayout style="@style/AppTheme.SubsectionHeader">
                 <TextView
