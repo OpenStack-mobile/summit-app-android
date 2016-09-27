@@ -17,10 +17,12 @@ import javax.inject.Inject;
  */
 public class VenueRoomDeserializer extends BaseDeserializer implements IVenueRoomDeserializer {
     IDeserializerStorage deserializerStorage;
+    IVenueFloorDeserializer floorDeserializer;
 
     @Inject
-    public VenueRoomDeserializer(IDeserializerStorage deserializerStorage){
+    public VenueRoomDeserializer(IDeserializerStorage deserializerStorage, IVenueFloorDeserializer floorDeserializer){
         this.deserializerStorage = deserializerStorage;
+        this.floorDeserializer   = floorDeserializer;
     }
 
     @Override
@@ -52,8 +54,9 @@ public class VenueRoomDeserializer extends BaseDeserializer implements IVenueRoo
         if(jsonObject.has("floor")){
             JSONObject jsonObjectFloor = jsonObject.getJSONObject("floor");
             VenueFloor floor           = deserializerStorage.get(jsonObjectFloor.optInt("id"), VenueFloor.class);
-            if(floor == null)
-                throw new InvalidParameterException(String.format("floor id %s not found on database!", jsonObjectFloor.getInt("id")));
+            if(floor == null){
+                floor = floorDeserializer.deserialize(jsonObjectFloor.toString());
+            }
             venueRoom.setFloor(floor);
         }
 
