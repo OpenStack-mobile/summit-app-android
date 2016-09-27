@@ -8,10 +8,14 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.realm.Realm;
 
 /**
  * Created by Claudio Redi on 11/17/2015.
@@ -71,21 +75,24 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
     }
 
     @Override
-    public void updateActiveSummitFromDataUpdate(Summit dataUpdateEntity) {
+    public void updateActiveSummitFromDataUpdate(final Summit dataUpdateEntity) {
         try{
-            RealmFactory.getSession().beginTransaction();
-            Summit summit = RealmFactory.getSession().where(Summit.class).findFirst();
-            if(summit == null) return;
 
-            summit.setName(dataUpdateEntity.getName());
-            summit.setStartShowingVenuesDate(dataUpdateEntity.getStartShowingVenuesDate());
-            summit.setStartDate(dataUpdateEntity.getStartDate());
-            summit.setEndDate(dataUpdateEntity.getEndDate());
-            RealmFactory.getSession().commitTransaction();
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    Summit summit = session.where(Summit.class).findFirst();
+                    if(summit == null) throw new InvalidParameterException("missing current summit!");
+                    summit.setName(dataUpdateEntity.getName());
+                    summit.setStartShowingVenuesDate(dataUpdateEntity.getStartShowingVenuesDate());
+                    summit.setStartDate(dataUpdateEntity.getStartDate());
+                    summit.setEndDate(dataUpdateEntity.getEndDate());
+                    return Void.getInstance();
+                }
+            });
         }
         catch (Exception e) {
-            RealmFactory.getSession().cancelTransaction();
-            Crashlytics.logException(e);
+           Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
     }

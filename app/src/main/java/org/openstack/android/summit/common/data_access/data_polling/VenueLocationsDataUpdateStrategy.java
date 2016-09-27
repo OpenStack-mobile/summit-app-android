@@ -27,7 +27,8 @@ public class VenueLocationsDataUpdateStrategy extends DataUpdateStrategy {
                     RealmFactory.getSession().beginTransaction();
 
                     JSONObject entityJSON = dataUpdate.getOriginalJSON().optJSONObject("entity");
-                    if (entityJSON == null) return;
+                    if (entityJSON == null)
+                        throw new DataUpdateException("missing entity from data update");
 
                     Integer venueId = entityJSON.optInt("venue_id", 0);
                     Integer floorId = 0;

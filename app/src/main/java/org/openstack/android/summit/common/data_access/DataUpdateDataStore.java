@@ -1,8 +1,16 @@
 package org.openstack.android.summit.common.data_access;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.data_polling.DataOperation;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
+
+import io.realm.Realm;
 
 /**
  * Created by Claudio Redi on 2/7/2016.
@@ -22,15 +30,19 @@ public class DataUpdateDataStore extends GenericDataStore implements IDataUpdate
     }
 
     @Override
-    public void deleteDataUpdate(DataUpdate dataUpdate) {
-        RealmFactory.getSession().beginTransaction();
-        try {
-            dataUpdate.deleteFromRealm();
-            RealmFactory.getSession().commitTransaction();
+    public void deleteDataUpdate(final DataUpdate dataUpdate) {
+        try{
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    dataUpdate.deleteFromRealm();
+                    return Void.getInstance();
+                }
+            });
         }
-        catch (Exception e) {
-            RealmFactory.getSession().cancelTransaction();
-            throw e;
+        catch (Exception ex) {
+            Crashlytics.logException(ex);
+            Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
         }
     }
 }

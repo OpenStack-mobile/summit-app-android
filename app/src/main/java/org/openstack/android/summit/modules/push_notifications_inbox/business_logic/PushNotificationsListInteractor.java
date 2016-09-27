@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PushNotification;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class PushNotificationsListInteractor extends BaseInteractor implements I
         try {
             RealmFactory.getSession().beginTransaction();
             PushNotification entity = pushNotificationDataStore.getByIdLocal(notificationId, PushNotification.class);
-            if (entity == null) return;
+            if (entity == null) throw new InvalidParameterException("missing push notification!");
             entity.setOpened(true);
             RealmFactory.getSession().commitTransaction();
         }

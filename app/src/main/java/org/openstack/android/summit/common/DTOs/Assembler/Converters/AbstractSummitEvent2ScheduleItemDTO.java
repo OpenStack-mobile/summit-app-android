@@ -124,15 +124,33 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
     }
 
     private String getDateTime(S summitEvent) {
-        DateFormat formatterFrom = new SimpleDateFormat("EEEE dd MMMM hh:mm a");
-        formatterFrom.setTimeZone(TimeZone.getTimeZone(summitEvent.getSummit().getTimeZone()));
+        Summit summit = null;
+        try {
 
-        DateFormat formatterTo = new SimpleDateFormat("hh:mm a");
-        formatterTo.setTimeZone(TimeZone.getTimeZone(summitEvent.getSummit().getTimeZone()));
+            summit = summitEvent.getSummit();
 
-        String timeRange = String.format("%s / %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
+            if(summit == null)
+                throw new InvalidParameterException("missing summit on event id "+ summitEvent.getId());
 
-        return timeRange;
+            if(summit.getTimeZone() == null)
+                throw new InvalidParameterException("summit timezone id is not set for summit id "+ summit.getId());
+
+            TimeZone timeZone = TimeZone.getTimeZone(summit.getTimeZone());
+
+            DateFormat formatterFrom = new SimpleDateFormat("EEEE dd MMMM hh:mm a");
+            formatterFrom.setTimeZone(timeZone);
+
+            DateFormat formatterTo = new SimpleDateFormat("hh:mm a");
+            formatterTo.setTimeZone(timeZone);
+
+            return String.format("%s / %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
+
+        }
+        catch (Exception ex){
+            Log.w(Constants.LOG_TAG, ex);
+            Crashlytics.logException(ex);
+        }
+        return "INVALID";
     }
 
     private String getTime(S summitEvent) {

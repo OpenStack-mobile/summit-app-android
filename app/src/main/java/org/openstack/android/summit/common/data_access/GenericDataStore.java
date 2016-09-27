@@ -33,25 +33,26 @@ public class GenericDataStore implements IGenericDataStore {
     @Override
     public <T extends RealmObject> List<T> getAllLocal(Class<T> type, String fieldNames[], Sort sortOrders[]) {
         RealmResults<T> result = RealmFactory.getSession().where(type).findAll();
-        result = result.sort(fieldNames, sortOrders);
-        return result;
+        return result.sort(fieldNames, sortOrders);
     }
 
     @Override
-    public <T extends RealmObject> void saveOrUpdate(final T entity, IDataStoreOperationListener<T> delegate, Class<T> type) {
-        T realmEntity;
+    public <T extends RealmObject> void saveOrUpdate(final T entity, final IDataStoreOperationListener<T> delegate, Class<T> type) {
         try{
-            RealmFactory.getSession().beginTransaction();
-            realmEntity = RealmFactory.getSession().copyToRealmOrUpdate(entity);
-            RealmFactory.getSession().commitTransaction();
-            if (delegate != null) {
-                delegate.onSucceedWithSingleData(realmEntity);
-            }
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                T realmEntity  = session.copyToRealmOrUpdate(entity);
+                if (delegate != null) {
+                    delegate.onSucceedWithSingleData(realmEntity);
+                }
+                return Void.getInstance();
+                }
+            });
         }
-        catch (Exception e) {
-            RealmFactory.getSession().cancelTransaction();
-            Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+        catch (Exception ex) {
+            Crashlytics.logException(ex);
+            Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
             if (delegate != null) {
                 String friendlyError = Constants.GENERIC_ERROR_MSG;
                 delegate.onError(friendlyError);
@@ -60,19 +61,24 @@ public class GenericDataStore implements IGenericDataStore {
     }
 
     @Override
-    public <T extends RealmObject> void delete(int id, IDataStoreOperationListener<T> delegate, Class<T> type) {
+    public <T extends RealmObject> void delete(final int id, final IDataStoreOperationListener<T> delegate, final Class<T> type) {
+
         try{
-            RealmFactory.getSession().beginTransaction();
-            RealmFactory.getSession().where(type).equalTo("id", id).findFirst().deleteFromRealm();
-            RealmFactory.getSession().commitTransaction();
-            if (delegate != null) {
-                delegate.onSucceedWithoutData();
-            }
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                session.where(type).equalTo("id", id).findFirst().deleteFromRealm();
+                if (delegate != null) {
+                    delegate.onSucceedWithoutData();
+                }
+                return Void.getInstance();
+                }
+            });
         }
-        catch (Exception e) {
+        catch (Exception ex) {
             RealmFactory.getSession().cancelTransaction();
-            Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            Crashlytics.logException(ex);
+            Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
             String friendlyError = Constants.GENERIC_ERROR_MSG;
             delegate.onError(friendlyError);
         }
@@ -84,8 +90,8 @@ public class GenericDataStore implements IGenericDataStore {
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override
                 public Void callback(Realm session) throws Exception {
-                    session.deleteAll();
-                    return Void.getInstance();
+                session.deleteAll();
+                return Void.getInstance();
                 }
             });
         }
