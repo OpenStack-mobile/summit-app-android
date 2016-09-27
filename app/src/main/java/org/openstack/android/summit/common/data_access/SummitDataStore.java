@@ -75,6 +75,8 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
         try{
             RealmFactory.getSession().beginTransaction();
             Summit summit = RealmFactory.getSession().where(Summit.class).findFirst();
+            if(summit == null) return;
+            
             summit.setName(dataUpdateEntity.getName());
             summit.setStartShowingVenuesDate(dataUpdateEntity.getStartShowingVenuesDate());
             summit.setStartDate(dataUpdateEntity.getStartDate());
