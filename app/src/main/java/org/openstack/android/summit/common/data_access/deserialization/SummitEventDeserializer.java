@@ -88,13 +88,12 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             JSONArray jsonArraySponsors = jsonObject.getJSONArray("sponsors");
             summitEvent.getSponsors().clear();
             for (int i = 0; i < jsonArraySponsors.length(); i++) {
-
                 sponsorId = jsonArraySponsors.optInt(i);
-                if (sponsorId > 0) {
-                    company = deserializerStorage.get(sponsorId, Company.class);
-                } else {
-                    company = genericDeserializer.deserialize(jsonArraySponsors.getJSONObject(i).toString(), Company.class);
-                }
+                company = (sponsorId > 0) ?
+                        deserializerStorage.get(sponsorId, Company.class) :
+                        genericDeserializer.deserialize(jsonArraySponsors.getJSONObject(i).toString(), Company.class);
+
+                if(company == null) continue;
                 summitEvent.getSponsors().add(company);
             }
         }
@@ -125,6 +124,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             for (int i = 0; i < jsonArrayTags.length(); i++) {
                 jsonObjectTag = jsonArrayTags.getJSONObject(i);
                 tag = genericDeserializer.deserialize(jsonObjectTag.toString(), Tag.class);
+                if(tag == null) continue;
                 summitEvent.getTags().add(tag);
             }
         }

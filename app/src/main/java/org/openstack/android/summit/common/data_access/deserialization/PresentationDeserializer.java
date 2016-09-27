@@ -62,16 +62,14 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         PresentationSpeaker presentationSpeaker;
         int speakerId;
         JSONArray jsonArraySpeakers = jsonObject.getJSONArray("speakers");
+
         presentation.getSpeakers().clear();
         for (int i = 0; i < jsonArraySpeakers.length(); i++) {
             speakerId = jsonArraySpeakers.optInt(i);
-            if (speakerId > 0) {
-                presentationSpeaker = deserializerStorage.get(speakerId, PresentationSpeaker.class);
-            }
-            else {
-                //on data updates speaker comes complete!
-                presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonArraySpeakers.getJSONObject(i).toString());
-            }
+            presentationSpeaker = (speakerId > 0) ?
+                    deserializerStorage.get(speakerId, PresentationSpeaker.class) :
+                    presentationSpeakerDeserializer.deserialize(jsonArraySpeakers.getJSONObject(i).toString());
+            if(presentationSpeaker == null) continue;
             presentation.getSpeakers().add(presentationSpeaker);
         }
 
@@ -84,6 +82,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
             for (int i = 0; i < slides.length(); i++) {
                 jsonObjSlide = slides.getJSONObject(i);
                 slide        = presentationSlideDeserializer.deserialize(jsonObjSlide.toString());
+                if(slide == null) continue;
                 presentation.getSlides().add(slide);
                 slide.setPresentation(presentation);
             }
@@ -97,6 +96,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
             for (int i = 0; i < videos.length(); i++) {
                 jsonObjVideo = videos.getJSONObject(i);
                 video        = presentationVideoDeserializer.deserialize(jsonObjVideo.toString());
+                if(video == null) continue;
                 presentation.getVideos().add(video);
                 video.setPresentation(presentation);
             }
@@ -110,6 +110,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
             for (int i = 0; i < links.length(); i++) {
                 jsonObjLink = links.getJSONObject(i);
                 link        = presentationLinkDeserializer.deserialize(jsonObjLink.toString());
+                if(link == null) continue;
                 presentation.getLinks().add(link);
                 link.setPresentation(presentation);
             }
