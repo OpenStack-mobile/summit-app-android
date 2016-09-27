@@ -94,7 +94,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setAllowRsvp(event.getAllowRsvp() && interactor.isMemberLoggedAndConfirmedAttendee());
         view.hasMyFeedback(myFeedbackForEvent != null);
 
-        if (event.getVideo() != null) {
+        if (event.getVideo() != null && event.getVideo().getYouTubeId() != null) {
             view.loadVideo(event.getVideo());
         }
 
