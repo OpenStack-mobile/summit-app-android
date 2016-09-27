@@ -13,19 +13,18 @@ import org.openstack.android.summit.common.data_access.deserialization.IDeserial
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializerStorage;
 import org.openstack.android.summit.common.entities.DataUpdate;
 
-import java.util.List;
-
 import io.realm.RealmObject;
 
 /**
  * Created by Claudio Redi on 2/7/2016.
  */
 public class DataUpdateProcessor implements IDataUpdateProcessor {
-    IDeserializer deserializer;
-    IDataUpdateDataStore dataUpdateDataStore;
+
+    IDeserializer              deserializer;
+    IDataUpdateDataStore       dataUpdateDataStore;
     IDataUpdateStrategyFactory dataUpdateStrategyFactory;
-    IClassResolver classResolver;
-    IDeserializerStorage deserializerStorage;
+    IClassResolver             classResolver;
+    IDeserializerStorage       deserializerStorage;
 
     public DataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore, IClassResolver classResolver, IDeserializerStorage deserializerStorage) {
         this.deserializer              = deserializer;
@@ -38,31 +37,29 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
     @Override
     public void process(String json) throws JSONException {
 
-        JSONArray jsonArray   = new JSONArray(json);
+        JSONArray jsonArray = new JSONArray(json);
         JSONObject jsonObject = null;
         DataUpdate dataUpdate = null;
 
         Log.d(Constants.LOG_TAG, String.format("Thread %s Data updates : %s", Thread.currentThread().getName(), jsonArray.toString(4)));
 
-        for(int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < jsonArray.length(); i++) {
             try {
 
                 deserializerStorage.clear();
                 jsonObject = jsonArray.getJSONObject(i);
                 dataUpdate = deserialize(jsonObject.toString());
-
+                if (dataUpdate == null) continue;
                 IDataUpdateStrategy dataUpdateStrategy;
                 if (dataUpdate.getEntity() != null) {
                     dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate.getEntityClassName());
                     dataUpdateStrategy.process(dataUpdate);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 String errorMessage = jsonObject != null ? String.format("There was an error processing this data update: %s", jsonObject.toString()) : "";
                 Crashlytics.logException(new Exception(errorMessage, e));
                 Log.e(Constants.LOG_TAG, errorMessage, e);
-            }
-            finally {
+            } finally {
                 if (dataUpdate != null) {
                     dataUpdateDataStore.saveOrUpdate(dataUpdate, null, DataUpdate.class);
                 }
@@ -77,23 +74,25 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
         dataUpdate.setId(jsonObject.getInt("id"));
         dataUpdate.setOriginalJSON(jsonObject);
         String operationType = jsonObject.getString("type");
-        
-        if (!operationType.equals("TRUNCATE")) {
-            String className = jsonObject.getString("class_name");
-            if (!isClassNameKnownIgnored(className)) {
-                Class type = null;
-                try {
-                    type = classResolver.fromName(className);
-                } catch (ClassNotFoundException e) {
-                    throw new JSONException(String.format("It wasn't possible to deserialize json for className %s", className, e));
-                }
-                RealmObject entity = !operationType.equals("DELETE") && !className.equals("MySchedule")
-                        ? deserializer.deserialize(jsonObject.get("entity").toString(), type )
-                        : deserializerStorage.get(jsonObject.getInt("entity_id"), type);
 
-                dataUpdate.setEntityType(type);
-                dataUpdate.setEntity(entity);
+        if (!operationType.equals("TRUNCATE")) {
+
+            String className = jsonObject.getString("class_name");
+            Class type       = null;
+            try {
+                type = classResolver.fromName(className);
+            } catch (ClassNotFoundException e) {
+                Log.w(Constants.LOG_TAG, String.format("It wasn't possible to deserialize json for className %s", className, e));
+                return null;
             }
+
+            RealmObject entity = !operationType.equals("DELETE") && !className.equals("MySchedule")
+                    ? deserializer.deserialize(jsonObject.get("entity").toString(), type)
+                    : deserializerStorage.get(jsonObject.getInt("entity_id"), type);
+
+            dataUpdate.setEntityType(type);
+            dataUpdate.setEntity(entity);
+
             dataUpdate.setEntityClassName(className);
         }
 
@@ -111,10 +110,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
                 dataUpdate.setOperation(DataOperation.Truncate);
                 break;
         }
-        return dataUpdate;
-    }
 
-    private boolean isClassNameKnownIgnored(String className) {
-        return className == "PresentationVideo" || className == "SummitHotel" ;
+        return dataUpdate;
     }
 }
