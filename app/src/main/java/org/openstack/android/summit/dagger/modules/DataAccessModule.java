@@ -121,8 +121,8 @@ public class DataAccessModule {
     }
 
     @Provides
-    IVenueRoomDeserializer providesVenueRoomDeserializer(IDeserializerStorage deserializerStorage) {
-        return new VenueRoomDeserializer(deserializerStorage);
+    IVenueRoomDeserializer providesVenueRoomDeserializer(IDeserializerStorage deserializerStorage, IVenueFloorDeserializer venueFloorDeserializer) {
+        return new VenueRoomDeserializer(deserializerStorage, venueFloorDeserializer);
     }
 
     @Provides
