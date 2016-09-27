@@ -19,7 +19,6 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
-import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -33,19 +32,16 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.security.oidc.AuthCodeResponse;
 import org.openstack.android.summit.common.security.oidc.OpenIdConnectProtocol;
-import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.net.CookiePolicy;
-import java.net.HttpCookie;
-import java.net.URI;
 import java.security.InvalidParameterException;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * An Activity that is launched by the Authenticator for requesting authorisation from the user and
@@ -58,11 +54,10 @@ import javax.inject.Inject;
  * After the Authorization Token has successfully been obtained, we use the single-use token to
  * fetch an ID Token, an Access Token and a Refresh Token. We create an Account and persist these
  * tokens.
- *
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
-    public static final String KEY_AUTH_URL       = "org.openstack.android.summit.KEY_AUTH_URL";
+    public static final String KEY_AUTH_URL = "org.openstack.android.summit.KEY_AUTH_URL";
     public static final String KEY_IS_NEW_ACCOUNT = "org.openstack.android.summit.KEY_IS_NEW_ACCOUNT";
     public static final String KEY_ACCOUNT_OBJECT = "org.openstack.android.summit.KEY_ACCOUNT_OBJECT";
 
@@ -72,7 +67,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private boolean isNewAccount;
     private boolean workflowCompleted = false;
 
-    public void setWorkflowCompleted(){
+    public void setWorkflowCompleted() {
         workflowCompleted = true;
     }
 
@@ -89,21 +84,26 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         accountManager = AccountManager.get(this);
         ((OpenStackSummitApplication) getApplication()).getApplicationComponent().inject(this);
-        Bundle extras = getIntent().getExtras();
 
         // Are we supposed to create a new account or renew the authorisation of an old one?
-        isNewAccount = extras.getBoolean(KEY_IS_NEW_ACCOUNT, false);
+        isNewAccount = getIntent().getBooleanExtra(KEY_IS_NEW_ACCOUNT, false);
 
         // In case we're renewing authorisation, we also got an Account object that we're supposed
         // to work with.
-        account = extras.getParcelable(KEY_ACCOUNT_OBJECT);
+        account = getIntent().getParcelableExtra(KEY_ACCOUNT_OBJECT);
 
         // Fetch the authentication URL that was given to us by the calling activity
-        String authUrl = extras.getString(KEY_AUTH_URL) + "&nonce=" + String.valueOf(new Date().getTime());
+        String authUrl = getIntent().getStringExtra(KEY_AUTH_URL) + "&nonce=" + String.valueOf(new Date().getTime());
 
-        Log.d(TAG, String.format("Initiated activity for getting authorisation with URL '%s'.",
-                authUrl));
+        Log.d(TAG, String.format("Initiated activity for getting authorisation with URL '%s'.", authUrl));
 
+        if (authUrl == null) {
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getResources().getString(R.string.error_message_title))
+                    .setContentText(getResources().getString(R.string.login_error_message))
+                    .show();
+            return;
+        }
         // Initialise the WebView
         WebView webView = (WebView) findViewById(R.id.WebView);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -118,9 +118,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     /**
-     *  CustomWebViewClient
+     * CustomWebViewClient
      */
-    private static  class CustomWebViewClient extends WebViewClient {
+    private static class CustomWebViewClient extends WebViewClient {
 
         private final String TAG = getClass().getSimpleName();
 
@@ -129,9 +129,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         private IOIDCConfigurationManager oidcConfigurationManager;
 
         public CustomWebViewClient(AuthenticatorActivity activity, IOIDCConfigurationManager oidcConfigurationManager) {
-            authActivity                  = new WeakReference<>(activity);
+            authActivity = new WeakReference<>(activity);
             this.oidcConfigurationManager = oidcConfigurationManager;
-            clientConfig                  = (OIDCNativeClientConfiguration) oidcConfigurationManager.buildConfiguration(OIDCClientConfiguration.ODICAccountType.NativeAccount);
+            clientConfig = (OIDCNativeClientConfiguration) oidcConfigurationManager.buildConfiguration(OIDCClientConfiguration.ODICAccountType.NativeAccount);
         }
 
         @Override
@@ -155,11 +155,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         }
 
         @Override
-        public void onPageFinished(WebView view, String url){
+        public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             String cookies = CookieManager.getInstance().getCookie(url);
-            if(cookies != null) {
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) flushCookies();
+            if (cookies != null) {
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    flushCookies();
                 else CookieSyncManager.getInstance().sync();
             }
         }
@@ -174,9 +175,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
             super.onPageStarted(view, urlString, favicon);
 
-            Uri url                    = Uri.parse(urlString);
+            Uri url = Uri.parse(urlString);
             Set<String> parameterNames = url.getQueryParameterNames();
-            String extractedFragment   = url.getEncodedFragment();
+            String extractedFragment = url.getEncodedFragment();
 
             if (parameterNames.contains("error")) {
                 view.stopLoading();
@@ -241,8 +242,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                             break;
                         }
                     }
-                }
-                catch (InvalidParameterException ipEx){
+                } catch (InvalidParameterException ipEx) {
                     Log.e(TAG, ipEx.getMessage());
                 }
             }
@@ -529,7 +529,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public void onDestroy() {
         super.onDestroy();
         Log.d(Constants.LOG_TAG, "AuthenticatorActivity.onDestroy");
-        if(!workflowCompleted){
+        if (!workflowCompleted) {
             // was canceled ... inform it
             Intent intent = new Intent(Constants.LOG_IN_CANCELLED_EVENT);
             LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);

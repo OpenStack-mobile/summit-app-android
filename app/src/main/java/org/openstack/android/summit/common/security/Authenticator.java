@@ -67,8 +67,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
                              String authTokenType, String[] requiredFeatures, Bundle options) {
 
-        Log.d(TAG, String.format("addAccount called with accountType %s, authTokenType %s.",
-                accountType, authTokenType));
+        Log.d(TAG, String.format("addAccount called with accountType %s, authTokenType %s.", accountType, authTokenType));
 
         Bundle result = new Bundle();
 
@@ -180,7 +179,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
         Intent intent = new Intent(context, AuthenticatorActivity.class);
         // Generate a new authorisation URL
         AuthCodeRequest request = this.oidcProtocol.buildAuthRequest(clientConfig);
-        Log.d(TAG, String.format("Created new intent with authorisation URL '%s'.", request.toString()));
+        Log.d(TAG, String.format("Created new intent with auth URL '%s'.", request.toString()));
 
         intent.putExtra(AuthenticatorActivity.KEY_AUTH_URL, request.toString());
 

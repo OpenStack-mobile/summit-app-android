@@ -85,6 +85,7 @@
     <string name="switch_enable_notifications_subtext">Never show notifications from this app</string>
     <string name="feedback_disclaimer">* This feedback will be publicly available.</string>
     <string name="feedback_rate_session">Rate Session</string>
+    <string name="error_message_title">error</string>
     <string name="login_error_message">We sorry, there was an error with your login process, please try again.</string>
     <string name="notification_error_ssl_cert_invalid">Seems that there is some issue with SSL certificate. Do you want to continue?</string>
 </resources>
