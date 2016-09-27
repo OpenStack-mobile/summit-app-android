@@ -69,7 +69,7 @@ public class SecurityManager implements ISecurityManager {
 
                     if (accounts.length > 0) {
                         if ((token != null && currentMemberId == 0) || (token == null && currentMemberId != 0)) {
-                            logout(false);
+                            logout();
                         }
                     }
                 }
@@ -100,26 +100,34 @@ public class SecurityManager implements ISecurityManager {
     @Override
     public void login(final Activity context) {
         try{
+            Log.d(Constants.LOG_TAG, "SecurityManager.login");
+
             final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
             final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
-            Log.d(Constants.LOG_TAG, "SecurityManager.login");
-            Intent intent = new Intent(Constants.START_LOG_IN_EVENT);
-            LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-            if (accountManager.getAccountsByType(accountType).length == 0) {
-                // No account has been created, let's create one now
-                accountManager.addAccount(accountType, Authenticator.TOKEN_TYPE_ID, null, null,
-                        context, new AccountManagerCallback<Bundle>() {
-                            @Override
-                            public void run(AccountManagerFuture<Bundle> futureManager) {
-                                // Unless the account creation was cancelled, try logging in again
-                                // after the account has been created.
-                                if (futureManager.isCancelled()) return;
-                                login(context);
-                            }
-                        }, null);
-                return;
+            Intent intent                       = new Intent(Constants.START_LOG_IN_EVENT);
+            Account availableAccounts[]         = accountManager.getAccountsByType(accountType);
+            if(availableAccounts.length > 0){
+                removeAccount(availableAccounts[0]);
             }
-            bindCurrentUser();
+            LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+            accountManager.addAccount
+            (
+                accountType,
+                Authenticator.TOKEN_TYPE_ID,
+                null,
+                null,
+                context,
+                new AccountManagerCallback<Bundle>() {
+                    @Override
+                    public void run(AccountManagerFuture<Bundle> futureManager) {
+                        // Unless the account creation was cancelled, try logging in again
+                        // after the account has been created.
+                        if (futureManager.isCancelled()) return;
+                        bindCurrentUser();
+                    }
+                },
+                null
+            );
         }
         catch(SecurityException ex1){
             Log.w(Constants.LOG_TAG, ex1.getMessage());
@@ -156,35 +164,34 @@ public class SecurityManager implements ISecurityManager {
         memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
     }
 
-    @Override
-    public void logout() {
-        logout(true);
+    private void removeAccount(Account account){
+        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            accountManager.removeAccountExplicitly(account);
+            return;
+        }
+        accountManager.removeAccount(account, null, null);
     }
 
-    private void logout(boolean sendNotification) {
+    @Override
+    public void logout() {
 
         try {
             Context context                     = OpenStackSummitApplication.context;
             final AccountManager accountManager = AccountManager.get(context);
             final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
-            Account availableAccounts[] = accountManager.getAccountsByType(accountType);
+            Account availableAccounts[]         = accountManager.getAccountsByType(accountType);
 
             if (availableAccounts.length > 0) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                    accountManager.removeAccountExplicitly(availableAccounts[0]);
-                } else {
-                    accountManager.removeAccount(availableAccounts[0], null, null);
-                }
+                removeAccount(availableAccounts[0]);
             }
 
             member = null;
             session.setInt(Constants.CURRENT_MEMBER_ID, 0);
 
-            if (sendNotification) {
-                Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
-                LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-            }
+            Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
+            LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+
         }
         catch(SecurityException ex1){
             Log.w(Constants.LOG_TAG, ex1.getMessage());
