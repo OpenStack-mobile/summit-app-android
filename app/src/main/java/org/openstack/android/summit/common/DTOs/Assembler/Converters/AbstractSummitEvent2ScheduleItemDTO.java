@@ -53,7 +53,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         if (source.getPresentation() != null && source.getPresentation().getTrack() != null && source.getPresentation().getTrack().getTrackGroups().size() > 0) {
             scheduleItemDTO.setColor(source.getPresentation().getTrack().getTrackGroups().get(0).getColor());
         }
-        else{
+        else if(source.getEventType() != null ){
             // use the color of the event type
             scheduleItemDTO.setColor(source.getEventType().getColor());
         }
