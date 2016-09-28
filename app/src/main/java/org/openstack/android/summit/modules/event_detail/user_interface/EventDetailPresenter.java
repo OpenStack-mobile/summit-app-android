@@ -1,6 +1,7 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -256,18 +260,29 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public void addToCalendar() {
-        Intent intent = new Intent(Intent.ACTION_INSERT)
-                .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.Events.CALENDAR_ID, event.getId())
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStartDate().getMillis())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEndDate().getMillis())
-                .putExtra(CalendarContract.Events.TITLE, event.getName())
-                .putExtra(CalendarContract.Events.DESCRIPTION, android.text.Html.fromHtml(event.getEventDescription()).toString())
-                .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocationAddress())
-                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+        try {
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.Events.CALENDAR_ID, event.getId())
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStartDate().getMillis())
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEndDate().getMillis())
+                    .putExtra(CalendarContract.Events.TITLE, event.getName())
+                    .putExtra(CalendarContract.Events.DESCRIPTION, android.text.Html.fromHtml(event.getEventDescription()).toString())
+                    .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocationAddress())
+                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
 
-        //view.showAddToMyCalendar(false);
-        view.startActivity(intent);
+            //view.showAddToMyCalendar(false);
+            view.startActivity(intent);
+        }
+        catch(ActivityNotFoundException ex1){
+            view.showErrorMessage(view.getResources().getString(R.string.missing_activity_error));
+            Crashlytics.logException(ex1);
+            Log.w(Constants.LOG_TAG, ex1.getMessage());
+        }
+        catch(Exception ex){
+            Crashlytics.logException(ex);
+            Log.w(Constants.LOG_TAG, ex.getMessage());
+        }
     }
 
     private boolean getAllowNewFeedback() {

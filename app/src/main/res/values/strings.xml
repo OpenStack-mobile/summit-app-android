@@ -88,4 +88,5 @@
     <string name="error_message_title">error</string>
     <string name="login_error_message">We sorry, there was an error with your login process, please try again.</string>
     <string name="notification_error_ssl_cert_invalid">Seems that there is some issue with SSL certificate. Do you want to continue?</string>
+    <string name="missing_activity_error">You do not have installed any application to manage the requested action.</string>
 </resources>
