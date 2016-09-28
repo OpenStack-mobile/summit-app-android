@@ -172,81 +172,102 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         public void onPageStarted(WebView view, String urlString, Bitmap favicon) {
+            try {
+                super.onPageStarted(view, urlString, favicon);
 
-            super.onPageStarted(view, urlString, favicon);
+                Uri url                    = Uri.parse(urlString);
+                Set<String> parameterNames = url.getQueryParameterNames();
+                String extractedFragment   = url.getEncodedFragment();
 
-            Uri url = Uri.parse(urlString);
-            Set<String> parameterNames = url.getQueryParameterNames();
-            String extractedFragment = url.getEncodedFragment();
+                if (parameterNames.contains("error")) {
+                    view.stopLoading();
 
-            if (parameterNames.contains("error")) {
-                view.stopLoading();
+                    // In case of an error, the `error` parameter contains an ASCII identifier, e.g.
+                    // "temporarily_unavailable" and the `error_description` *may* contain a
+                    // human-readable description of the error.
+                    //
+                    // For a list of the error identifiers, see
+                    // http://tools.ietf.org/html/rfc6749#section-4.1.2.1
 
-                // In case of an error, the `error` parameter contains an ASCII identifier, e.g.
-                // "temporarily_unavailable" and the `error_description` *may* contain a
-                // human-readable description of the error.
-                //
-                // For a list of the error identifiers, see
-                // http://tools.ietf.org/html/rfc6749#section-4.1.2.1
+                    String error            = url.getQueryParameter("error");
+                    String errorDescription = url.getQueryParameter("error_description");
 
-                String error = url.getQueryParameter("error");
-                String errorDescription = url.getQueryParameter("error_description");
-
-                // If the user declines to authorise the app, there's no need to show an error
-                // message.
-                if (!error.equals("access_denied")) {
-                    authActivity.get().showErrorDialog(String.format("Error code: %s\n\n%s", error,
-                            errorDescription));
-                }
-                return;
-            }
-
-            if (urlString.startsWith(clientConfig.getReturnUrl())) {
-                // We won't need to keep loading anymore. This also prevents errors when using
-                // redirect URLs that don't have real protocols (like app://) that are just
-                // used for identification purposes in native apps.
-                view.stopLoading();
-                try {
-                    switch (clientConfig.getFlowType()) {
-                        case Implicit: {
-                            if (TextUtils.isEmpty(extractedFragment)) {
-                                throw new InvalidParameterException(String.format(
-                                        "urlString '%1$s' doesn't contain fragment part; can't extract tokens",
-                                        urlString));
-                            }
-                            CreateIdTokenFromFragmentPartTask task = new CreateIdTokenFromFragmentPartTask(authActivity.get());
-                            task.execute(extractedFragment);
-                            break;
-                        }
-                        case Hybrid: {
-                            if (TextUtils.isEmpty(extractedFragment)) {
-                                throw new InvalidParameterException(String.format(
-                                        "urlString '%1$s' doesn't contain fragment part; can't extract tokens",
-                                        urlString));
-                            }
-                            RequestIdTokenFromFragmentPartTask task = new RequestIdTokenFromFragmentPartTask(authActivity.get(), oidcConfigurationManager);
-                            task.execute(extractedFragment);
-                            break;
-                        }
-                        case AuthorizationCode:
-                        default: {
-                            // The URL will contain a `code` parameter when the user has been authenticated
-                            if (!parameterNames.contains("code")) {
-                                throw new InvalidParameterException(String.format(
-                                        "urlString '%1$s' doesn't contain code param; can't extract authCode",
-                                        urlString));
-                            }
-                            // Request the ID token
-                            RequestIdTokenTask task = new RequestIdTokenTask(authActivity.get(), oidcConfigurationManager);
-                            task.execute(url.getQueryParameter("code"));
-                            break;
-                        }
+                    // If the user declines to authorise the app, there's no need to show an error
+                    // message.
+                    if (!error.equals("access_denied")) {
+                        authActivity.get().showErrorDialog
+                        (
+                            String.format("Error code: %s\n\n%s", error, errorDescription)
+                        );
                     }
-                } catch (InvalidParameterException ipEx) {
-                    Log.e(TAG, ipEx.getMessage());
+                    return;
                 }
+
+                if (urlString.startsWith(clientConfig.getReturnUrl())) {
+                    // We won't need to keep loading anymore. This also prevents errors when using
+                    // redirect URLs that don't have real protocols (like app://) that are just
+                    // used for identification purposes in native apps.
+                    view.stopLoading();
+                    try {
+                        switch (clientConfig.getFlowType()) {
+                            case Implicit: {
+                                if (TextUtils.isEmpty(extractedFragment)) {
+                                    throw new InvalidParameterException(String.format(
+                                            "urlString '%1$s' doesn't contain fragment part; can't extract tokens",
+                                            urlString));
+                                }
+                                CreateIdTokenFromFragmentPartTask task = new CreateIdTokenFromFragmentPartTask(authActivity.get());
+                                task.execute(extractedFragment);
+                                break;
+                            }
+                            case Hybrid: {
+                                if (TextUtils.isEmpty(extractedFragment)) {
+                                    throw new InvalidParameterException(String.format(
+                                            "urlString '%1$s' doesn't contain fragment part; can't extract tokens",
+                                            urlString));
+                                }
+                                RequestIdTokenFromFragmentPartTask task = new RequestIdTokenFromFragmentPartTask(authActivity.get(), oidcConfigurationManager);
+                                task.execute(extractedFragment);
+                                break;
+                            }
+                            case AuthorizationCode:
+                            default: {
+                                // The URL will contain a `code` parameter when the user has been authenticated
+                                if (!parameterNames.contains("code")) {
+                                    throw new InvalidParameterException(String.format(
+                                            "urlString '%1$s' doesn't contain code param; can't extract authCode",
+                                            urlString));
+                                }
+                                // Request the ID token
+                                RequestIdTokenTask task = new RequestIdTokenTask(authActivity.get(), oidcConfigurationManager);
+                                task.execute(url.getQueryParameter("code"));
+                                break;
+                            }
+                        }
+                    } catch (InvalidParameterException ipEx) {
+                        Log.e(TAG, ipEx.getMessage());
+                    }
+                }
+                // else : should be an intermediate url, load it and keep going
             }
-            // else : should be an intermediate url, load it and keep going
+            catch(UnsupportedOperationException ex1){
+                view.stopLoading();
+                Crashlytics.log(ex1.getMessage()+ " URL "+urlString);
+                authActivity.get().showErrorDialog
+                (
+                    authActivity.get().getResources().getString(R.string.login_error_message)
+                );
+                Log.e(Constants.LOG_TAG, ex1.getMessage());
+            }
+            catch(Exception ex){
+                view.stopLoading();
+                Crashlytics.logException(ex);
+                authActivity.get().showErrorDialog
+                (
+                    authActivity.get().getResources().getString(R.string.login_error_message)
+                );
+                Log.e(Constants.LOG_TAG, ex.getMessage());
+            }
         }
     }
 
@@ -266,6 +287,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         @Override
         protected Boolean doInBackground(String... args) {
             try {
+                
                 String fragmentPart = args[0];
 
                 Uri tokenExtrationUrl = new Uri.Builder().encodedQuery(fragmentPart).build();
