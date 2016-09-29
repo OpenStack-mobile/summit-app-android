@@ -61,7 +61,7 @@ public class VideoPlayer extends RelativeLayout {
 
     public void loadVideo(final VideoDTO video){
 
-        if(video.getYouTubeId() == null ) return;
+        if(video.getYouTubeId() == null || video.getYouTubeId().isEmpty()) return;
 
         setVisibility(View.VISIBLE);
         thumbnail.setImageURI(YouTubeThumbnail.getUrlFromVideoId(video.getYouTubeId(), ThumbnailQuality.HIGH));

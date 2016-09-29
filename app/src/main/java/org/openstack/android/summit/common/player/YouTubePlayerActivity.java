@@ -11,12 +11,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.player.enums.PlayerOrientation;
 import org.openstack.android.summit.common.player.utils.AudioUtil;
 import org.openstack.android.summit.common.player.utils.StatusBarUtil;
@@ -81,28 +84,34 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity implements
 
     private void initialize() {
 
-        googleApiKey = configurationParamsManager.findConfigParamBy("common.player.YouTubePlayerActivity.API_KEY");
-        if (googleApiKey == null)
-            throw new InvalidParameterException("Google API key must not be null. Set your api key as meta data in AndroidManifest.xml file.");
+        try {
+            googleApiKey = configurationParamsManager.findConfigParamBy("common.player.YouTubePlayerActivity.API_KEY");
+            if (googleApiKey == null)
+                throw new InvalidParameterException("Google API key must not be null. Set your api key as meta data in AndroidManifest.xml file.");
 
-        videoId = getIntent().getStringExtra(EXTRA_VIDEO_ID);
+            videoId = getIntent().getStringExtra(EXTRA_VIDEO_ID);
 
-        if (videoId == null)
-            throw new InvalidParameterException("Video ID must not be null");
+            if (videoId == null)
+                throw new InvalidParameterException("Video ID must not be null");
 
-        playerStyle = (YouTubePlayer.PlayerStyle) getIntent().getSerializableExtra(EXTRA_PLAYER_STYLE);
+            playerStyle = (YouTubePlayer.PlayerStyle) getIntent().getSerializableExtra(EXTRA_PLAYER_STYLE);
 
-        if (playerStyle == null)
-            playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
+            if (playerStyle == null)
+                playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
 
-        orientation = (PlayerOrientation) getIntent().getSerializableExtra(EXTRA_ORIENTATION);
-        if (orientation == null)
-            orientation = PlayerOrientation.AUTO;
+            orientation = (PlayerOrientation) getIntent().getSerializableExtra(EXTRA_ORIENTATION);
+            if (orientation == null)
+                orientation = PlayerOrientation.AUTO;
 
-        showAudioUi = getIntent().getBooleanExtra(EXTRA_SHOW_AUDIO_UI, true);
-        handleError = getIntent().getBooleanExtra(EXTRA_HANDLE_ERROR, true);
-        animEnter   = getIntent().getIntExtra(EXTRA_ANIM_ENTER, 0);
-        animExit    = getIntent().getIntExtra(EXTRA_ANIM_EXIT, 0);
+            showAudioUi = getIntent().getBooleanExtra(EXTRA_SHOW_AUDIO_UI, true);
+            handleError = getIntent().getBooleanExtra(EXTRA_HANDLE_ERROR, true);
+            animEnter = getIntent().getIntExtra(EXTRA_ANIM_ENTER, 0);
+            animExit = getIntent().getIntExtra(EXTRA_ANIM_EXIT, 0);
+        }
+        catch (Exception ex){
+            Crashlytics.logException(ex);
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+        }
     }
 
     @Override
