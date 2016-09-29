@@ -42,7 +42,7 @@
             android:clickable="false"
             android:text=""/>
         <ImageView
-            android:layout_height="100dp"
+            android:layout_height="90dp"
             android:id="@+id/footer_logo"
             android:layout_width="191dp"
             android:layout_gravity="center_horizontal"

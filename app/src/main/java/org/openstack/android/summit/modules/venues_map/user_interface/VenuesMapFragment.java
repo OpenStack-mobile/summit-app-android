@@ -93,7 +93,7 @@ public class VenuesMapFragment extends BaseFragment<IVenuesMapPresenter> impleme
         this.venues = venues;
     }
 
-    private static final float zoomLevel = 18.0f;
+    private static final float zoomLevel = 16.0f;
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
