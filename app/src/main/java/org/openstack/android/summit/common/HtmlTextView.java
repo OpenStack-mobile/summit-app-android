@@ -3,6 +3,7 @@ package org.openstack.android.summit.common;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -15,7 +16,11 @@ import android.widget.ScrollView;
  */
 public class HtmlTextView extends ScrollView {
 
-    private static final int WEB_VIEW_ID = 0x152004;
+    private final static int WEB_VIEW_ID = 0x152004;
+    private final static String BaseUrl  = "file:///android_asset/";
+    private final static String MimeType = "text/html; charset=utf-8";
+    private final static String Encoding = "UTF-8";
+
     private WebView webView;
     private Context context;
 
@@ -73,10 +78,14 @@ public class HtmlTextView extends ScrollView {
     }
 
     public void setText(String body) {
+
         if (body.isEmpty()) return;
         StringBuilder html = new StringBuilder();
         html.append("<html>");
         html.append("<head>");
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            html.append("<base href=\""+BaseUrl+"\">");
+
         html.append("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
         html.append("<link href=\"css/htmltextview.css\" rel=\"stylesheet\" type=\"text/css\">");
         html.append("</head>");
@@ -84,6 +93,11 @@ public class HtmlTextView extends ScrollView {
         html.append(body);
         html.append("</body>");
         html.append("</html>");
-        webView.loadDataWithBaseURL("file:///android_asset/", html.toString(), "text/html; charset=utf-8", "UTF-8", null);
+
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2){
+            webView.loadData(html.toString(), MimeType , Encoding);
+            return;
+        }
+        webView.loadDataWithBaseURL(BaseUrl, html.toString(), MimeType, Encoding, null);
     }
 }

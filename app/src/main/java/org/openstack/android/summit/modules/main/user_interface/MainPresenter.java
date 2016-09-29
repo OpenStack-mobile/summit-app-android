@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -43,6 +44,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter) {
         super(interactor, wireframe);
         this.appLinkRouter = appLinkRouter;
+        if (BuildConfig.FLAVOR.contains(Constants.FLAVOR_BETA) || BuildConfig.FLAVOR.contains(Constants.FLAVOR_DEV)) {
+            trustEveryone();
+        }
     }
 
     @Override
