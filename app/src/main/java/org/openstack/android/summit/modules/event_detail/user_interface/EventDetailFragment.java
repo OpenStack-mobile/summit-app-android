@@ -182,10 +182,9 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
         ImageView starRateImage = (ImageView)view.findViewById(controlId);
         if (starRate <= selectedRate) {
             starRateImage.setImageResource(R.drawable.star_color);
+            return;
         }
-        else {
-            starRateImage.setImageResource(R.drawable.star_ligth_grey);
-        }
+        starRateImage.setImageResource(R.drawable.star_ligth_grey);
     }
 
     @Override

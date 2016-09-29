@@ -70,6 +70,7 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
     @Override
     public void presentEventRsvpView(String rsvpLink, IBaseView context) {
         //before check if we are trying to see a custom rsvp
+        if(rsvpLink == null || rsvpLink.isEmpty()) return;
         Uri uri  = Uri.parse(rsvpLink);
         Intent i = null;
         if(this.appLinkRouter.isCustomRSVPLink(uri)){
