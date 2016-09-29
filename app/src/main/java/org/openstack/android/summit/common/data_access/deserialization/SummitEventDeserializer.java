@@ -12,8 +12,10 @@ import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
+import org.openstack.android.summit.common.entities.TicketType;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.Date;
 
@@ -129,7 +131,11 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             }
         }
 
-        Summit summit  = deserializerStorage.get(summitId, Summit.class);
+        Summit summit  = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
+
+        if(summit == null)
+            summit  = deserializerStorage.get(summitId, Summit.class);
+
         summitEvent.setSummit(summit);
 
         if(!deserializerStorage.exist(summitEvent, SummitEvent.class))

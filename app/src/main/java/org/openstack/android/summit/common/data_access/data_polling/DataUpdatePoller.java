@@ -48,7 +48,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private static final String KEY_SET_FROM_DATE       = "KEY_SET_FROM_DATE";
     private static final String KEY_LAST_WIPE_EVENT_ID  = "KEY_LAST_WIPE_EVENT_ID";
     private static final String KEY_LAST_EVENT_ID       = "KEY_LAST_EVENT_ID";
-    private static final int EntityEventUpdatesPageSize = 100;
+    private static final int EntityEventUpdatesPageSize = 50;
 
     public DataUpdatePoller(ISecurityManager securityManager, ITokenManagerFactory tokenManagerFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, ISession session, IHttpFactory httpFactory) {
 
