@@ -89,13 +89,13 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
             return null;
         }
 
-        String title = pushData.optString("title", "OpenStack");
-        String alert = pushData.optString("alert", "PushNotification received.");
-        String tickerText = String.format(Locale.getDefault(), "%s: %s", title, alert);
-        Bundle extras = intent.getExtras();
-        Random random = new Random();
+        String title                 = pushData.optString("title", "OpenStack");
+        String alert                 = pushData.optString("alert", "PushNotification received.");
+        String tickerText            = String.format(Locale.getDefault(), "%s: %s", title, alert);
+        Bundle extras                = intent.getExtras();
+        Random random                = new Random();
         int contentIntentRequestCode = random.nextInt();
-        int deleteIntentRequestCode = random.nextInt();
+        int deleteIntentRequestCode  = random.nextInt();
 
         // Security consideration: To protect the app from tampering, we require that intent filters
         // not be exported. To protect the app from information leaks, we restrict the packages which
@@ -117,7 +117,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
 
         // The purpose of setDefaults(PushNotification.DEFAULT_ALL) is to inherit notification properties
         // from system defaults
-        Builder builder = new Builder(context);
+        Builder builder    = new Builder(context);
         BigTextStyle style = new BigTextStyle();
         style.setBigContentTitle(title).bigText(alert);
 
@@ -144,10 +144,14 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
         ParseAnalytics.trackAppOpenedInBackground(intent);
         Integer notificationId = 0;
         try {
-            JSONObject pushData = new JSONObject(intent.getStringExtra(KEY_PUSH_DATA));
-            notificationId = pushData.optInt("id", 0);
-            if (notificationId > 0)
-                interactor.markAsOpen(notificationId);
+            String data         = intent.getStringExtra(KEY_PUSH_DATA);
+            if(data != null && !data.isEmpty()) {
+                JSONObject pushData = new JSONObject(data);
+                notificationId = pushData.optInt("id", 0);
+
+                if (notificationId > 0)
+                    interactor.markAsOpen(notificationId);
+            }
 
         } catch (JSONException e) {
             Log.e(Constants.LOG_TAG, "Unexpected JSONException when receiving push data: ", e);
