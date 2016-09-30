@@ -36,13 +36,13 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity implements
         YouTubePlayer.PlayerStateChangeListener {
 
     private static final int RECOVERY_DIALOG_REQUEST = 1;
-    public static final String EXTRA_VIDEO_ID        = "video_id";
-    public static final String EXTRA_PLAYER_STYLE    = "player_style";
-    public static final String EXTRA_ORIENTATION     = "orientation";
-    public static final String EXTRA_SHOW_AUDIO_UI   = "show_audio_ui";
-    public static final String EXTRA_HANDLE_ERROR    = "handle_error";
-    public static final String EXTRA_ANIM_ENTER      = "anim_enter";
-    public static final String EXTRA_ANIM_EXIT       = "anim_exit";
+    public static final String EXTRA_VIDEO_ID      = "video_id";
+    public static final String EXTRA_PLAYER_STYLE  = "player_style";
+    public static final String EXTRA_ORIENTATION   = "orientation";
+    public static final String EXTRA_SHOW_AUDIO_UI = "show_audio_ui";
+    public static final String EXTRA_HANDLE_ERROR  = "handle_error";
+    public static final String EXTRA_ANIM_ENTER    = "anim_enter";
+    public static final String EXTRA_ANIM_EXIT     = "anim_exit";
 
     private String googleApiKey;
     private String videoId;
@@ -61,34 +61,52 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((OpenStackSummitApplication)getApplication()).getApplicationComponent().inject(this);
-        initialize();
+        ((OpenStackSummitApplication) getApplication()).getApplicationComponent().inject(this);
+
+        initialize(savedInstanceState);
 
         playerView = new YouTubePlayerView(this);
         playerView.initialize(googleApiKey, this);
 
         addContentView
-        (
-            playerView,
-            new FrameLayout.LayoutParams
-            (
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-        );
+                (
+                        playerView,
+                        new FrameLayout.LayoutParams
+                                (
+                                        FrameLayout.LayoutParams.MATCH_PARENT,
+                                        FrameLayout.LayoutParams.MATCH_PARENT
+                                )
+                );
 
         playerView.setBackgroundResource(android.R.color.black);
 
         StatusBarUtil.hide(this);
     }
 
-    private void initialize() {
+    private void initialize(Bundle savedInstanceState) {
 
         try {
             googleApiKey = configurationParamsManager.findConfigParamBy("common.player.YouTubePlayerActivity.API_KEY");
             if (googleApiKey == null)
                 throw new InvalidParameterException("Google API key must not be null. Set your api key as meta data in AndroidManifest.xml file.");
 
+            if (savedInstanceState != null) {
+
+                videoId = savedInstanceState.getString(EXTRA_VIDEO_ID);
+
+                if (videoId == null)
+                    throw new InvalidParameterException("Video ID must not be null");
+
+                showAudioUi = savedInstanceState.getBoolean(EXTRA_SHOW_AUDIO_UI);
+                handleError = savedInstanceState.getBoolean(EXTRA_ANIM_EXIT);
+                animEnter   = savedInstanceState.getInt(EXTRA_ANIM_ENTER);
+                animExit    = savedInstanceState.getInt(EXTRA_ANIM_EXIT);
+                playerStyle = (YouTubePlayer.PlayerStyle) savedInstanceState.getSerializable(EXTRA_PLAYER_STYLE);
+                orientation = (PlayerOrientation) savedInstanceState.getSerializable(EXTRA_ORIENTATION);
+
+                return;
+            }
+            // get from current intent
             videoId = getIntent().getStringExtra(EXTRA_VIDEO_ID);
 
             if (videoId == null)
@@ -107,11 +125,24 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity implements
             handleError = getIntent().getBooleanExtra(EXTRA_HANDLE_ERROR, true);
             animEnter = getIntent().getIntExtra(EXTRA_ANIM_ENTER, 0);
             animExit = getIntent().getIntExtra(EXTRA_ANIM_EXIT, 0);
-        }
-        catch (Exception ex){
+
+        } catch (Exception ex) {
             Crashlytics.logException(ex);
             Log.e(Constants.LOG_TAG, ex.getMessage());
         }
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(EXTRA_VIDEO_ID, videoId);
+        outState.putSerializable(EXTRA_PLAYER_STYLE, playerStyle);
+        outState.putSerializable(EXTRA_ORIENTATION, orientation);
+        outState.putBoolean(EXTRA_SHOW_AUDIO_UI, showAudioUi);
+        outState.putBoolean(EXTRA_ANIM_EXIT, handleError);
+        outState.putInt(EXTRA_ANIM_ENTER, animEnter);
+        outState.putInt(EXTRA_ANIM_EXIT, animExit);
     }
 
     @Override
