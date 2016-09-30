@@ -35,7 +35,10 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
         int venueId = jsonObject.getInt("id");
-        Venue venue = deserializerStorage.exist(venueId, Venue.class) ? deserializerStorage.get(venueId, Venue.class) :new Venue();
+        Venue venue = deserializerStorage.exist(venueId, Venue.class) ?
+                      deserializerStorage.get(venueId, Venue.class) :
+                      new Venue();
+
         venue.setId(venueId);
         venue.setName(jsonObject.getString("name"));
         venue.setLocationDescription(

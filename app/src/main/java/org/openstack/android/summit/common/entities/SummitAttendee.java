@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.entities;
 
+import java.util.ArrayList;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -32,7 +34,17 @@ public class SummitAttendee extends RealmObject implements IEntity {
     }
 
     public RealmList<SummitEvent> getScheduledEvents() {
+
+        if(scheduledEvents == null) scheduledEvents  = new RealmList<>();
         return scheduledEvents;
+    }
+
+    public ArrayList<Integer> getScheduleEventIds(){
+        ArrayList<Integer> res = new ArrayList<>();
+        for(SummitEvent event: getScheduledEvents()){
+            res.add(event.getId());
+        }
+        return res;
     }
 
     public void setScheduledEvents(RealmList<SummitEvent> scheduledEvents) {
@@ -40,6 +52,7 @@ public class SummitAttendee extends RealmObject implements IEntity {
     }
 
     public RealmList<SummitEvent> getBookmarkedEvents() {
+        if(bookmarkedEvents == null) bookmarkedEvents = new RealmList<>();
         return bookmarkedEvents;
     }
 
@@ -48,6 +61,7 @@ public class SummitAttendee extends RealmObject implements IEntity {
     }
 
     public RealmList<TicketType> getTicketTypes() {
+        if(ticketTypes == null) ticketTypes = new RealmList<>();
         return ticketTypes;
     }
 

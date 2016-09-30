@@ -59,6 +59,7 @@ public class Member extends RealmObject implements IPerson {
     }
 
     public RealmList<Feedback> getFeedback() {
+        if(feedback == null) feedback = new RealmList<>();
         return feedback;
     }
 

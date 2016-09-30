@@ -32,6 +32,7 @@ public class Track extends RealmObject implements INamedEntity {
     }
 
     public RealmList<TrackGroup> getTrackGroups() {
+        if(trackGroups == null) trackGroups = new RealmList<>();
         return trackGroups;
     }
 

@@ -40,9 +40,9 @@ public class TokenManagerServiceAccount implements ITokenManager {
     @Override
     public String getToken() throws TokenGenerationException {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(OpenStackSummitApplication.context);
-        String token = settings.getString(TOKEN_SERVICE_ACCOUNT, "");
+        String token               = settings.getString(TOKEN_SERVICE_ACCOUNT, "");
 
-        if (token == "" || token == null) {
+        if (token == null || token.isEmpty()) {
 
             TokenResponse tokenResponse = null;
             try {
@@ -52,6 +52,8 @@ public class TokenManagerServiceAccount implements ITokenManager {
             }
             SharedPreferences.Editor editor = settings.edit();
             token                           = tokenResponse.getAccessToken();
+            if(token == null || token.isEmpty())
+                throw new TokenGenerationException("token is null from token response!");
             editor.putString(TOKEN_SERVICE_ACCOUNT, token);
             editor.apply();
         }

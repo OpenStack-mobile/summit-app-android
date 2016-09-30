@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -28,17 +29,24 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
         String[] missedFields = validateRequiredFields(new String[] {"id", "name", "track_groups"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
         int trackId = jsonObject.getInt("id");
-        Track track = deserializerStorage.exist(trackId, Track.class) ? deserializerStorage.get(trackId, Track.class) : new Track();
+        Track track = deserializerStorage.exist(trackId, Track.class) ?
+                deserializerStorage.get(trackId, Track.class) :
+                new Track();
+
         track.setId(trackId);
         track.setName(jsonObject.getString("name"));
         track.getTrackGroups().clear();
+
         if (shouldDeserializeTrackGroups) {
             int trackGroupId;
             TrackGroup trackGroup;
             JSONArray jsonArrayTrackGroups = jsonObject.getJSONArray("track_groups");
             for (int i = 0; i < jsonArrayTrackGroups.length(); i++) {
                 trackGroupId = jsonArrayTrackGroups.getInt(i);
-                trackGroup   = deserializerStorage.get(trackGroupId, TrackGroup.class);
+                //first check db, and then cache storage
+                trackGroup   = RealmFactory.getSession().where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
+                if(trackGroup == null) trackGroup   = deserializerStorage.get(trackGroupId, TrackGroup.class);
+
                 track.getTrackGroups().add(trackGroup);
             }
         }

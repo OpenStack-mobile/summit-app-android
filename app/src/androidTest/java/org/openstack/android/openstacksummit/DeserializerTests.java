@@ -54,18 +54,45 @@ public class DeserializerTests  extends InstrumentationTestCase {
                 summit.setId(1);
                 summit.setName("test summit");
 
-                summit = session.copyToRealmOrUpdate(summit);
-
                 SummitEvent event = new SummitEvent();
                 event.setId(1);
                 event.setName("test event");
                 event.setSummit(summit);
+                summit.getEvents().add(event);
 
-                event = session.copyToRealmOrUpdate(event);
+                SummitEvent event2 = new SummitEvent();
+                event2.setId(2);
+                event2.setName("test event2");
+                event2.setSummit(summit);
+                summit.getEvents().add(event2);
 
+                summit  = session.copyToRealmOrUpdate(summit);
+                event   = session.copyToRealmOrUpdate(event);
+                event2  = session.copyToRealmOrUpdate(event2);
                 return Void.getInstance();
             }
         });
+    }
+
+    @Test
+    public void sameSummitObject(){
+        try {
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    Summit summit       = session.where(Summit.class).equalTo("id", 1).findFirst();
+                    SummitEvent event1  = summit.getEvents().get(0);
+                    event1  = session.where(SummitEvent.class).equalTo("id", 1).findFirst();
+                    Summit summit1      = event1.getSummit();
+                    SummitEvent event2  = session.where(SummitEvent.class).equalTo("id", 2).findFirst();
+                    Summit summit2      = event2.getSummit();
+                    return Void.getInstance();
+                }
+            });
+        }
+        catch (Exception ex){
+
+        }
     }
 
     @Test

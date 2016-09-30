@@ -39,8 +39,8 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     private double averageRate;
     private EventType eventType;
     private RealmList<SummitType> summitTypes = new RealmList<>();
-    private RealmList<Company> sponsors = new RealmList<>();
-    private RealmList<Tag> tags = new RealmList<>();
+    private RealmList<Company> sponsors       = new RealmList<>();
+    private RealmList<Tag> tags               = new RealmList<>();
     private Presentation presentation;
     private Venue venue;
     private VenueRoom venueRoom;
@@ -103,6 +103,7 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     }
 
     public RealmList<SummitType> getSummitTypes() {
+        if(summitTypes == null) summitTypes = new RealmList<>();
         return summitTypes;
     }
 
@@ -111,6 +112,7 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     }
 
     public RealmList<Company> getSponsors() {
+        if(sponsors == null) sponsors = new RealmList<>();
         return sponsors;
     }
 
@@ -143,6 +145,7 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     }
 
     public RealmList<Tag> getTags() {
+        if(tags == null) tags = new RealmList<>();
         return tags;
     }
 

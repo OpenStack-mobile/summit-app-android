@@ -9,6 +9,7 @@ import org.openstack.android.summit.common.entities.PresentationSlide;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -45,7 +46,10 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
         int presentationId = jsonObject.getInt("id");
-        Presentation presentation = deserializerStorage.exist(presentationId, Presentation.class) ? deserializerStorage.get(presentationId, Presentation.class) : new Presentation();
+        Presentation presentation = deserializerStorage.exist(presentationId, Presentation.class) ?
+                deserializerStorage.get(presentationId, Presentation.class) :
+                new Presentation();
+
         presentation.setId(presentationId);
 
         if(!deserializerStorage.exist(presentation, Presentation.class)) {
@@ -56,7 +60,10 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
                 !jsonObject.isNull("level") ? jsonObject.getString("level") : null
         );
 
-        Track track = deserializerStorage.get(jsonObject.getInt("track_id"), Track.class);
+        int trackId    = jsonObject.getInt("track_id");
+        //first check db, and then cache storage
+        Track track    = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
+        if(track == null) track = deserializerStorage.get(trackId, Track.class);
         presentation.setTrack(track);
 
         PresentationSpeaker presentationSpeaker;

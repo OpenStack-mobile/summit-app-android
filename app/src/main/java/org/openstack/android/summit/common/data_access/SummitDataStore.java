@@ -81,7 +81,7 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override
                 public Void callback(Realm session) throws Exception {
-                    Summit summit = session.where(Summit.class).findFirst();
+                    Summit summit = session.where(Summit.class).equalTo("id", dataUpdateEntity.getId()).findFirst();
                     if(summit == null) throw new InvalidParameterException("missing current summit!");
                     summit.setName(dataUpdateEntity.getName());
                     summit.setStartShowingVenuesDate(dataUpdateEntity.getStartShowingVenuesDate());

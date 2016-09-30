@@ -7,6 +7,7 @@ import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -43,10 +44,6 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
         trackGroup.setDescription(jsonObject.getString("description"));
         trackGroup.setColor(jsonObject.getString("color"));
 
-        if(!deserializerStorage.exist(trackGroup, TrackGroup.class)) {
-            deserializerStorage.add(trackGroup, TrackGroup.class);
-        }
-
         Track track               = null;
         int trackId               = 0;
         JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
@@ -56,7 +53,9 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
 
             if (jsonArrayTracks.optInt(i) > 0) {
                 trackId = jsonArrayTracks.getInt(i);
-                track   = deserializerStorage.get(trackId, Track.class);
+                //first check db, and then cache storage
+                track   = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
+                if(track == null) track = deserializerStorage.get(trackId, Track.class);
             }
             else {
                 track = trackDeserializer.deserialize(jsonArrayTracks.getJSONObject(i).toString());

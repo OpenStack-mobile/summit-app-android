@@ -33,8 +33,11 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
 
         String[] missedFields = validateRequiredFields(new String[]{"id"}, jsonObject);
         handleMissedFieldsIfAny(missedFields);
-        int attendeeId = jsonObject.getInt("id");
-        SummitAttendee summitAttendee = deserializerStorage.exist(attendeeId, SummitAttendee.class) ? deserializerStorage.get(attendeeId, SummitAttendee.class) : new SummitAttendee();
+        int attendeeId                = jsonObject.getInt("id");
+        SummitAttendee summitAttendee = deserializerStorage.exist(attendeeId, SummitAttendee.class) ?
+                deserializerStorage.get(attendeeId, SummitAttendee.class) :
+                new SummitAttendee();
+
         summitAttendee.setId(attendeeId);
 
         // added here so it's available on child deserialization
@@ -45,11 +48,13 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         SummitEvent summitEvent;
         int summitEventId = 0;
         JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
+
         summitAttendee.getScheduledEvents().clear();
+
         for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
             try {
                 summitEventId = jsonArraySummitEvents.getInt(i);
-                summitEvent     = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", summitEventId).findFirst();
+                summitEvent   = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", summitEventId).findFirst();
                 if (summitEvent != null) {
                     summitAttendee.getScheduledEvents().add(summitEvent);
                 }
@@ -62,7 +67,9 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         TicketType ticketType;
         int ticketTypeId;
         JSONArray jsonArrayTicketTypes = jsonObject.getJSONArray("tickets");
+
         summitAttendee.getTicketTypes().clear();
+
         for (int i = 0; i < jsonArrayTicketTypes.length(); i++) {
             ticketTypeId = jsonArrayTicketTypes.getInt(i);
             ticketType   = RealmFactory.getSession().where(TicketType.class).equalTo("id", ticketTypeId).findFirst();

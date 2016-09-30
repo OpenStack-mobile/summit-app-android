@@ -28,6 +28,7 @@ public class Presentation extends RealmObject implements IEntity {
     private SummitEvent summitEvent;
 
     public RealmList<PresentationSlide> getSlides() {
+        if(slides == null) slides = new RealmList<>();
         return slides;
     }
 
@@ -36,6 +37,7 @@ public class Presentation extends RealmObject implements IEntity {
     }
 
     public RealmList<PresentationLink> getLinks() {
+        if(links == null) links = new RealmList<>();
         return links;
     }
 
@@ -44,6 +46,7 @@ public class Presentation extends RealmObject implements IEntity {
     }
 
     public RealmList<PresentationVideo> getVideos() {
+        if(videos == null) videos = new RealmList<>();
         return videos;
     }
 
@@ -76,6 +79,7 @@ public class Presentation extends RealmObject implements IEntity {
     }
 
     public RealmList<PresentationSpeaker> getSpeakers() {
+        if(speakers == null) speakers = new RealmList<>();
         return speakers;
     }
 

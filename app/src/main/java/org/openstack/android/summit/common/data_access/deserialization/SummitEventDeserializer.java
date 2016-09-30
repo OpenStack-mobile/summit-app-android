@@ -102,13 +102,16 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
 
         if (jsonObject.has("location_id") && !jsonObject.isNull("location_id")) {
             int locationId = jsonObject.getInt("location_id");
-            if (deserializerStorage.exist(locationId, Venue.class)){
-                Venue venue = deserializerStorage.get(locationId, Venue.class);
+            Venue venue = RealmFactory.getSession().where(Venue.class).equalTo("id", locationId).findFirst();
+            if(venue == null) venue = deserializerStorage.get(locationId, Venue.class);
+            if (venue != null){
                 summitEvent.setVenue(venue);
             }
-            else if (deserializerStorage.exist(locationId, VenueRoom.class)) {
-                VenueRoom venueRoom = deserializerStorage.get(locationId, VenueRoom.class);
-                summitEvent.setVenueRoom(venueRoom);
+            else {
+                VenueRoom venueRoom  = RealmFactory.getSession().where(VenueRoom.class).equalTo("id", locationId).findFirst();
+                if(venueRoom == null) venueRoom = deserializerStorage.get(locationId, VenueRoom.class);
+                if(venueRoom != null)
+                    summitEvent.setVenueRoom(venueRoom);
             }
         }
 
@@ -130,11 +133,12 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
                 summitEvent.getTags().add(tag);
             }
         }
-
-        Summit summit  = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
+        //first check db, and then cache storage
+        Summit summit = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
+        if(summit == null) summit  = deserializerStorage.get(summitId, Summit.class);
 
         if(summit == null)
-            summit  = deserializerStorage.get(summitId, Summit.class);
+            throw new JSONException(String.format("Can't deserialize event id %d (summit not found)!", eventId));
 
         summitEvent.setSummit(summit);
 

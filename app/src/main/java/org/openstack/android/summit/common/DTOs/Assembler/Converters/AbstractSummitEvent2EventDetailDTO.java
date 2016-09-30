@@ -13,7 +13,6 @@ import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Tag;
 
-
 /**
  * Created by Claudio Redi on 1/21/2016.
  */
@@ -30,7 +29,8 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             convertInternal(source, eventDetailDTO);
 
             if (source.getVenueRoom() != null) {
-                eventDetailDTO.setVenueId(source.getVenueRoom().getVenue().getId());
+                if(source.getVenueRoom().getVenue() != null)
+                    eventDetailDTO.setVenueId(source.getVenueRoom().getVenue().getId());
                 eventDetailDTO.setVenueRoomId(source.getVenueRoom().getId());
                 if (source.getVenueRoom().getFloor() != null) {
                     eventDetailDTO.setVenueFloorId(source.getVenueRoom().getFloor().getId());

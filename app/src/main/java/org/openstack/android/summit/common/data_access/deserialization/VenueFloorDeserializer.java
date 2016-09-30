@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -31,15 +32,17 @@ public class VenueFloorDeserializer  extends BaseDeserializer implements IVenueF
 
         int floorId           = jsonObject.getInt("id");
         VenueFloor venueFloor = deserializerStorage.exist(floorId, VenueFloor.class) ?
-                deserializerStorage.get(floorId, VenueFloor.class) :
-                new VenueFloor();
+                                deserializerStorage.get(floorId, VenueFloor.class) :
+                                new VenueFloor();
 
         venueFloor.setId(floorId);
         venueFloor.setName(jsonObject.getString("name"));
         venueFloor.setDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : null);
         venueFloor.setNumber(jsonObject.getInt("number"));
         int venueId = jsonObject.getInt("venue_id");
-        Venue venue = deserializerStorage.get(venueId, Venue.class);
+        //first check db, and then cache storage
+        Venue venue = RealmFactory.getSession().where(Venue.class).equalTo("id", venueId).findFirst();
+        if(venue == null) venue = deserializerStorage.get(venueId, Venue.class);
         venueFloor.setVenue(venue);
 
         if(jsonObject.has("image")){

@@ -41,6 +41,7 @@ import io.realm.RealmObject;
 public class DeserializerStorage implements IDeserializerStorage {
 
     private static final Object lock = new Object();
+    private static final int DeepCopyMaxDepth = 1;
     private Map<Class, Map<Integer, IEntity>> deserializedEntityDictionary = new HashMap<Class, Map<Integer, IEntity>>();
 
     @Override
@@ -181,8 +182,9 @@ public class DeserializerStorage implements IDeserializerStorage {
 
         if(type == Presentation.class){
             Presentation presentation  = (Presentation) entity;
-            if(presentation.getTrack() != null)
+            if(presentation.getTrack() != null) {
                 add(presentation.getTrack(), Track.class, false);
+            }
 
             if(presentation.getModerator() != null)
                 add(presentation.getModerator(), PresentationSpeaker.class, false);
@@ -211,10 +213,10 @@ public class DeserializerStorage implements IDeserializerStorage {
         }
 
         if (detachedEntity == null) {
-            Realm session = RealmFactory.getSession();
+            Realm session   = RealmFactory.getSession();
             T managedEntity = session .where(type).equalTo("id", id).findFirst();
             if(managedEntity != null) {
-                detachedEntity = session.copyFromRealm(managedEntity);
+                detachedEntity = session.copyFromRealm(managedEntity, DeepCopyMaxDepth);
                 add(detachedEntity, type);
             }
         }
@@ -236,7 +238,7 @@ public class DeserializerStorage implements IDeserializerStorage {
         if(list.isEmpty()){
             Realm session = RealmFactory.getSession();
             list = session.where(type).findAll();
-            list = session.copyFromRealm(list);
+            list = session.copyFromRealm(list, DeepCopyMaxDepth);
             for(T entity: list)
                 this.add(entity, type);
         }

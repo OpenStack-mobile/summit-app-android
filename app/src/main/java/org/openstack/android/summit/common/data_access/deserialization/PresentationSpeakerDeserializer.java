@@ -15,7 +15,7 @@ public class PresentationSpeakerDeserializer extends BaseDeserializer implements
 
     @Inject
     public PresentationSpeakerDeserializer(IPersonDeserializer personDeserializer, IDeserializerStorage deserializerStorage) {
-        this.personDeserializer = personDeserializer;
+        this.personDeserializer  = personDeserializer;
         this.deserializerStorage = deserializerStorage;
     }
 
@@ -26,7 +26,11 @@ public class PresentationSpeakerDeserializer extends BaseDeserializer implements
         String[] missedFields = validateRequiredFields(new String[]{"id"}, jsonObject);
         handleMissedFieldsIfAny(missedFields);
         int speakerId = jsonObject.getInt("id");
-        PresentationSpeaker presentationSpeaker = deserializerStorage.exist(speakerId, PresentationSpeaker.class) ? deserializerStorage.get(speakerId, PresentationSpeaker.class) : new PresentationSpeaker();
+
+        PresentationSpeaker presentationSpeaker = deserializerStorage.exist(speakerId, PresentationSpeaker.class) ?
+                deserializerStorage.get(speakerId, PresentationSpeaker.class)
+                : new PresentationSpeaker();
+
         personDeserializer.deserialize(presentationSpeaker, jsonObject);
 
         if (!deserializerStorage.exist(presentationSpeaker, PresentationSpeaker.class)) {

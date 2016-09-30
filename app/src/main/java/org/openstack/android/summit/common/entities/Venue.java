@@ -25,6 +25,7 @@ public class Venue extends RealmObject implements INamedEntity {
     private RealmList<VenueFloor> floors = new RealmList<>();
 
     public RealmList<VenueFloor> getFloors() {
+        if(floors == null) floors = new RealmList<>();
         return floors;
     }
 
@@ -121,6 +122,7 @@ public class Venue extends RealmObject implements INamedEntity {
     }
 
     public RealmList<Image> getMaps() {
+        if(maps == null) maps = new RealmList<>();
         return maps;
     }
 
@@ -129,6 +131,7 @@ public class Venue extends RealmObject implements INamedEntity {
     }
 
     public RealmList<Image> getImages() {
+        if(images == null) images = new RealmList<>();
         return images;
     }
 

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.security.InvalidParameterException;
 
@@ -35,28 +36,35 @@ public class VenueRoomDeserializer extends BaseDeserializer implements IVenueRoo
         }
 
         int roomId = jsonObject.getInt("id");
-        VenueRoom venueRoom = deserializerStorage.exist(roomId, VenueRoom.class) ? deserializerStorage.get(roomId, VenueRoom.class) : new VenueRoom();
+        VenueRoom venueRoom = deserializerStorage.exist(roomId, VenueRoom.class) ?
+                deserializerStorage.get(roomId, VenueRoom.class)
+                : new VenueRoom();
+
         venueRoom.setId(roomId);
         venueRoom.setName(jsonObject.getString("name"));
         venueRoom.setCapacity(jsonObject.has("capacity")&& !jsonObject.isNull("capacity") ? jsonObject.getInt("capacity") : 0);
         venueRoom.setLocationDescription(jsonObject.getString("description"));
 
         int venueId = jsonObject.getInt("venue_id");
-        Venue venue = deserializerStorage.get(venueId, Venue.class);
+        //first check db, and then cache storage
+        Venue venue = RealmFactory.getSession().where(Venue.class).equalTo("id", venueId).findFirst();
+        if(venue == null) venue = deserializerStorage.get(venueId, Venue.class);
         venueRoom.setVenue(venue);
 
         if(!jsonObject.isNull("floor_id")){
-            int floorId = jsonObject.getInt("floor_id");
-            VenueFloor floor = deserializerStorage.get(floorId, VenueFloor.class);
+            int floorId      = jsonObject.getInt("floor_id");
+            //first check db, and then cache storage
+            VenueFloor floor = RealmFactory.getSession().where(VenueFloor.class).equalTo("id", floorId).findFirst();
+            if(floor == null) floor = deserializerStorage.get(floorId, VenueFloor.class);
             venueRoom.setFloor(floor);
         }
 
         if(jsonObject.has("floor")){
             JSONObject jsonObjectFloor = jsonObject.getJSONObject("floor");
-            VenueFloor floor           = deserializerStorage.get(jsonObjectFloor.optInt("id"), VenueFloor.class);
-            if(floor == null){
-                floor = floorDeserializer.deserialize(jsonObjectFloor.toString());
-            }
+            //first check db, and then cache storage
+            VenueFloor floor = RealmFactory.getSession().where(VenueFloor.class).equalTo("id", jsonObjectFloor.optInt("id")).findFirst();
+            if(floor == null) floor = deserializerStorage.get(jsonObjectFloor.optInt("id"), VenueFloor.class);
+            if(floor == null) floor = floorDeserializer.deserialize(jsonObjectFloor.toString());
             venueRoom.setFloor(floor);
         }
 

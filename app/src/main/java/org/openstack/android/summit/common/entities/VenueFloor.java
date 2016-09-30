@@ -17,6 +17,7 @@ public class VenueFloor extends RealmObject implements INamedEntity {
     private Venue venue;
 
     public RealmList<VenueRoom> getRooms() {
+        if(rooms == null) rooms = new RealmList<>();
         return rooms;
     }
 

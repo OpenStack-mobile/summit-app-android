@@ -16,6 +16,7 @@ import org.openstack.android.summit.common.push_notifications.IPushNotifications
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -49,15 +50,20 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
 
         final Member loggedInMember   = securityManager.getCurrentMember();
         // we do a copy in case that the activity died and the realm instances get closed
-        final Member detachedMember   = RealmFactory.getSession().copyFromRealm(loggedInMember);
         final SummitEvent summitEvent = summitEventDataStore.getByIdLocal(eventId);
-        final int    summitId         = summitEvent.getSummit().getId();
+        final int summitId                = summitEvent.getSummit().getId();
+        final int memberId                = loggedInMember.getId();
+        final int speakerId               = loggedInMember.getSpeakerRole() != null ? loggedInMember.getSpeakerRole().getId() : 0;
+        final int attendeeId              = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getId() : 0;
+        final ArrayList<Integer> scheduleEventsIds = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getScheduleEventIds(): null;
+
 
         IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
             public void onSucceedWithoutData() {
                 //remove channel
-                pushNotificationsManager.subscribeMember(detachedMember, summitId);
+                pushNotificationsManager.subscribeMember(memberId, summitId, speakerId, attendeeId, scheduleEventsIds);
+                scheduleEventsIds.clear();
                 interactorAsyncOperationListener.onSucceed();
             }
 
@@ -77,17 +83,20 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
             return;
         }
 
-        final Member loggedInMember   = securityManager.getCurrentMember();
-        // we do a copy in case that the activity died and the realm instances get closed
-        final Member detachedMember   = RealmFactory.getSession().copyFromRealm(loggedInMember);
-        final SummitEvent summitEvent = summitEventDataStore.getByIdLocal(eventId);
-        final int summitId            = summitEvent.getSummit().getId();
+        final Member loggedInMember       = securityManager.getCurrentMember();
+        final SummitEvent summitEvent     = summitEventDataStore.getByIdLocal(eventId);
+        final int summitId                = summitEvent.getSummit().getId();
+        final int memberId                = loggedInMember.getId();
+        final int speakerId               = loggedInMember.getSpeakerRole() != null ? loggedInMember.getSpeakerRole().getId() : 0;
+        final int attendeeId              = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getId() : 0;
+        final ArrayList<Integer> scheduleEventsIds = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getScheduleEventIds(): null;
 
         IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
             public void onSucceedWithoutData() {
                 // remove channel
-                pushNotificationsManager.subscribeMember(detachedMember, summitId);
+                pushNotificationsManager.subscribeMember(memberId, summitId, speakerId, attendeeId, scheduleEventsIds);
+                scheduleEventsIds.clear();
                 interactorAsyncOperationListener.onSucceed();
             }
 

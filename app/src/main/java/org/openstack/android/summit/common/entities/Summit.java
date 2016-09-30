@@ -60,14 +60,14 @@ public class Summit extends RealmObject implements INamedEntity {
     private String schedulePageUrl;
     private String scheduleEventDetailUrl;
 
-    private RealmList<SummitType> types = new RealmList<>();
+    private RealmList<SummitType> types       = new RealmList<>();
     private RealmList<TicketType> ticketTypes = new RealmList<>();
-    private RealmList<Venue> venues = new RealmList<>();
-    private RealmList<VenueRoom> venueRooms = new RealmList<>();
-    private RealmList<SummitEvent> events = new RealmList<>();
+    private RealmList<Venue> venues           = new RealmList<>();
+    private RealmList<VenueRoom> venueRooms   = new RealmList<>();
+    private RealmList<SummitEvent> events     = new RealmList<>();
     private RealmList<TrackGroup> trackGroups = new RealmList<>();
-    private RealmList<Track> tracks = new RealmList<>();
-    private RealmList<EventType> eventTypes = new RealmList<>();
+    private RealmList<Track> tracks           = new RealmList<>();
+    private RealmList<EventType> eventTypes   = new RealmList<>();
 
     public int getId() {
         return id;
@@ -109,6 +109,7 @@ public class Summit extends RealmObject implements INamedEntity {
     }
 
     public RealmList<SummitType> getTypes() {
+        if(types == null) types = new RealmList<>();
         return types;
     }
 
@@ -117,6 +118,7 @@ public class Summit extends RealmObject implements INamedEntity {
     }
 
     public RealmList<TicketType> getTicketTypes() {
+        if(ticketTypes == null) ticketTypes = new RealmList<>();
         return ticketTypes;
     }
 
@@ -125,6 +127,7 @@ public class Summit extends RealmObject implements INamedEntity {
     }
 
     public RealmList<Venue> getVenues() {
+        if(venues == null) venues = new RealmList<>();
         return venues;
     }
 
@@ -133,6 +136,7 @@ public class Summit extends RealmObject implements INamedEntity {
     }
 
     public RealmList<SummitEvent> getEvents() {
+        if(events == null) events = new RealmList<>();
         return events;
     }
 
@@ -141,6 +145,7 @@ public class Summit extends RealmObject implements INamedEntity {
     }
 
     public RealmList<TrackGroup> getTrackGroups() {
+        if(trackGroups == null) trackGroups = new RealmList<>();
         return trackGroups;
     }
 
@@ -157,6 +162,7 @@ public class Summit extends RealmObject implements INamedEntity {
     }
 
     public RealmList<EventType> getEventTypes() {
+        if(eventTypes == null) eventTypes = new RealmList<>();
         return eventTypes;
     }
 
@@ -173,6 +179,7 @@ public class Summit extends RealmObject implements INamedEntity {
     }
 
     public RealmList<Track> getTracks() {
+        if(tracks == null) tracks = new RealmList<>();
         return tracks;
     }
 
@@ -181,6 +188,7 @@ public class Summit extends RealmObject implements INamedEntity {
     }
 
     public RealmList<VenueRoom> getVenueRooms() {
+        if(venueRooms == null) venueRooms = new RealmList<>();
         return venueRooms;
     }
 

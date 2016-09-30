@@ -12,6 +12,8 @@ import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
+import java.util.ArrayList;
+
 /**
  * Created by Claudio Redi on 2/12/2016.
  */
@@ -55,8 +57,14 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         int summitId = summit.getId();
 
         if (securityManager.isLoggedIn()){
-            Member member = securityManager.getCurrentMember();
-            pushNotificationsManager.subscribeMember(member, summitId);
+            Member loggedInMember       = securityManager.getCurrentMember();
+            int memberId                = loggedInMember.getId();
+            int speakerId               = loggedInMember.getSpeakerRole()  != null ? loggedInMember.getSpeakerRole().getId() : 0;
+            int attendeeId              = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getId() : 0;
+            ArrayList<Integer> scheduleEventsIds = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getScheduleEventIds(): null;
+            pushNotificationsManager.subscribeMember(memberId, summitId, speakerId, attendeeId, scheduleEventsIds);
+            scheduleEventsIds.clear();
+            scheduleEventsIds           = null;
             return;
         }
 
