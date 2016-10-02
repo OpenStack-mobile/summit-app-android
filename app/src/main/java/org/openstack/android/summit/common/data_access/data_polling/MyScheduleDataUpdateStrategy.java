@@ -25,6 +25,7 @@ public class MyScheduleDataUpdateStrategy extends DataUpdateStrategy {
         Member currentMember = securityManager.getCurrentMember();
 
         if(currentMember == null) return;
+        if(currentMember.getAttendeeRole() == null) return;
 
         switch (dataUpdate.getOperation()) {
             case DataOperation.Insert:
