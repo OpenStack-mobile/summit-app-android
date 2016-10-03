@@ -39,9 +39,9 @@ public class SummitRemoteDataStore extends BaseRemoteDataStore implements ISummi
                     try {
                         Summit summit = deserializer.deserialize(data, Summit.class);
                         dataStoreOperationListener.onSucceedWithSingleData(summit);
-                    } catch (JSONException e) {
-                        Crashlytics.logException(e);
-                        Log.e(Constants.LOG_TAG,"Error deserializing summit", e);
+                    } catch (Exception ex) {
+                        Crashlytics.logException(ex);
+                        Log.e(Constants.LOG_TAG,"Error deserializing summit", ex);
                         String friendlyError = Constants.GENERIC_ERROR_MSG;
                         dataStoreOperationListener.onError(friendlyError);
                     }

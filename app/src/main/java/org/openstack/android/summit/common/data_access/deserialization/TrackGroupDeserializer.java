@@ -45,22 +45,17 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
         trackGroup.setColor(jsonObject.getString("color"));
 
         Track track               = null;
-        int trackId               = 0;
         JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
         trackGroup.getTracks().clear();
 
         for (int i = 0; i < jsonArrayTracks.length(); i++) {
 
-            if (jsonArrayTracks.optInt(i) > 0) {
-                trackId = jsonArrayTracks.getInt(i);
-                //first check db, and then cache storage
-                track   = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
-                if(track == null) track = deserializerStorage.get(trackId, Track.class);
-            }
-            else {
-                track = trackDeserializer.deserialize(jsonArrayTracks.getJSONObject(i).toString());
-            }
+            track =  (jsonArrayTracks.optInt(i) > 0) ?
+                    deserializerStorage.get(jsonArrayTracks.optInt(i), Track.class):
+                    trackDeserializer.deserialize(jsonArrayTracks.getJSONObject(i).toString());
+
             if(track == null) continue;
+
             track.getTrackGroups().add(trackGroup);
             trackGroup.getTracks().add(track);
         }

@@ -28,10 +28,11 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
 
         String[] missedFields = validateRequiredFields(new String[] {"id", "name", "track_groups"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
+
         int trackId = jsonObject.getInt("id");
         Track track = deserializerStorage.exist(trackId, Track.class) ?
-                deserializerStorage.get(trackId, Track.class) :
-                new Track();
+                      deserializerStorage.get(trackId, Track.class) :
+                      new Track();
 
         track.setId(trackId);
         track.setName(jsonObject.getString("name"));
@@ -41,13 +42,15 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
             int trackGroupId;
             TrackGroup trackGroup;
             JSONArray jsonArrayTrackGroups = jsonObject.getJSONArray("track_groups");
+
             for (int i = 0; i < jsonArrayTrackGroups.length(); i++) {
                 trackGroupId = jsonArrayTrackGroups.getInt(i);
                 //first check db, and then cache storage
                 trackGroup   = RealmFactory.getSession().where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
-                if(trackGroup == null) trackGroup   = deserializerStorage.get(trackGroupId, TrackGroup.class);
-
-                track.getTrackGroups().add(trackGroup);
+                if(trackGroup == null)
+                    trackGroup = deserializerStorage.get(trackGroupId, TrackGroup.class);
+                if(trackGroup != null)
+                    track.getTrackGroups().add(trackGroup);
             }
         }
 
