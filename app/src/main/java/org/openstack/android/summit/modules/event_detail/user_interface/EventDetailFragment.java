@@ -91,7 +91,7 @@ public class EventDetailFragment extends BaseFragment<IEventDetailPresenter> imp
                     int entityId           = intent.getIntExtra(Constants.DATA_UPDATE_ENTITY_ID, 0);
                     String entityClassName = intent.getStringExtra(Constants.DATA_UPDATE_ENTITY_CLASS);
                     Log.d(Constants.LOG_TAG, "DATA_UPDATE_UPDATED_ENTITY_EVENT");
-                    if(entityClassName.equals("Presentation") || entityClassName.equals("SummitEvent"))
+                    if(entityClassName != null && (entityClassName.equals("Presentation") || entityClassName.equals("SummitEvent")))
                         presenter.updateUI();
                 }
 
