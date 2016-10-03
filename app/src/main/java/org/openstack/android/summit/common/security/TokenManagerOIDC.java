@@ -6,6 +6,7 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -22,9 +23,10 @@ import java.io.IOException;
 public class TokenManagerOIDC implements ITokenManager {
     @Override
     public String getToken() throws TokenGenerationException {
+        String token                        = null;
         final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-        Account account = getOIDCAccount();
-        String token = null;
+        Account account                     = getOIDCAccount();
+
         if (account != null) {
             AccountManagerFuture<Bundle> futureManager = accountManager.getAuthToken(account, Authenticator.TOKEN_TYPE_ACCESS, null, true, null, null);
             try {
@@ -46,10 +48,22 @@ public class TokenManagerOIDC implements ITokenManager {
     }
 
     private Account getOIDCAccount() {
-        final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-        final String accountType = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
-        Account availableAccounts[] = accountManager.getAccountsByType(accountType);
-        Account account = availableAccounts.length > 0 ? availableAccounts[0] : null;
+        Account account = null;
+        try {
+            final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
+            final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
+            Account availableAccounts[]         = accountManager.getAccountsByType(accountType);
+            account                             = availableAccounts.length > 0 ? availableAccounts[0] : null;
+
+        }
+        catch (SecurityException ex1){
+            Log.e(Constants.LOG_TAG, ex1.getMessage());
+            Crashlytics.logException(ex1);
+        }
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
         return account;
     }
 }

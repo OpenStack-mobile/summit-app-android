@@ -220,10 +220,12 @@ public class SecurityManager implements ISecurityManager {
         catch(SecurityException ex1){
             Log.w(Constants.LOG_TAG, ex1.getMessage());
             Crashlytics.logException(ex1);
+            member = null;
         }
         catch(Exception ex){
             Log.e(Constants.LOG_TAG, ex.getMessage());
             Crashlytics.logException(ex);
+            member = null;
         }
         return member;
     }

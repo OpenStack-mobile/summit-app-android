@@ -5,7 +5,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.github.kevinsawicki.http.HttpRequest;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
@@ -16,19 +15,13 @@ import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.network.Http;
-import org.openstack.android.summit.common.network.HttpTask;
-import org.openstack.android.summit.common.network.HttpTaskConfig;
-import org.openstack.android.summit.common.network.IHttp;
 import org.openstack.android.summit.common.network.IHttpFactory;
-import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.security.ITokenManager;
 import org.openstack.android.summit.common.security.ITokenManagerFactory;
 import org.openstack.android.summit.common.security.TokenManagerFactory;
 
-import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
 import java.util.Map;
 

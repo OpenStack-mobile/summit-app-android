@@ -80,7 +80,6 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
             presentation.getSpeakers().add(presentationSpeaker);
         }
 
-
         if(jsonObject.has("slides")){
             presentation.getSlides().clear();
             JSONArray slides = jsonObject.getJSONArray("slides");
