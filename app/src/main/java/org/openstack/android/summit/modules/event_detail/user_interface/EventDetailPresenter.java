@@ -45,7 +45,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     private List<FeedbackDTO> feedbackList = new ArrayList<>();
     private boolean loadingFeedback;
     private boolean loadedAllFeedback;
-    private int feedbackPage = 1;
+    private int feedbackPage           = 1;
     private int feedbackObjectsPerPage = 5;
     private boolean loadingFeedbackAverage;
 
@@ -66,6 +66,12 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     @Override
     public void onCreateView(Bundle savedInstanceState) {
         super.onCreateView(savedInstanceState);
+        updateUI();
+    }
+
+    @Override
+    public void updateUI(){
+
         event = interactor.getEventDetail(eventId != null ? eventId : 0);
 
         if (event == null) {
@@ -81,6 +87,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
             view.showInfoMessage("Event not found!");
             return;
         }
+
         loadedAllFeedback  = false;
         myFeedbackForEvent = interactor.getMyFeedbackForEvent(eventId);
         view.setName(event.getName());
@@ -120,7 +127,6 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
             loadAverageFeedback();
         }
     }
-
     @Override
     public void onResume() {
         super.onResume();

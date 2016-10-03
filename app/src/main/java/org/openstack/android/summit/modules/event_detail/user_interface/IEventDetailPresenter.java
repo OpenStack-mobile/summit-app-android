@@ -30,4 +30,6 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> 
     Intent createShareIntent();
 
     void addToCalendar();
+
+    void updateUI();
 }

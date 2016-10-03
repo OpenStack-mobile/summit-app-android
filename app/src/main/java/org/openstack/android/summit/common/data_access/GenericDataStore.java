@@ -42,11 +42,11 @@ public class GenericDataStore implements IGenericDataStore {
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override
                 public Void callback(Realm session) throws Exception {
-                T realmEntity  = session.copyToRealmOrUpdate(entity);
-                if (delegate != null) {
-                    delegate.onSucceedWithSingleData(realmEntity);
-                }
-                return Void.getInstance();
+                    T realmEntity  = session.copyToRealmOrUpdate(entity);
+                    if (delegate != null) {
+                        delegate.onSucceedWithSingleData(realmEntity);
+                    }
+                    return Void.getInstance();
                 }
             });
         }

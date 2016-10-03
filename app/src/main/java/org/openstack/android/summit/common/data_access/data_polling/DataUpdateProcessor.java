@@ -92,7 +92,8 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
 
             dataUpdate.setEntityType(type);
             dataUpdate.setEntity(entity);
-
+            if(jsonObject.has("entity_id"))
+                dataUpdate.setEntityId(jsonObject.getInt("entity_id"));
             dataUpdate.setEntityClassName(className);
         }
 

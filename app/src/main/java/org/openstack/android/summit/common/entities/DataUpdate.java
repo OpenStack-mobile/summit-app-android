@@ -18,6 +18,16 @@ public class DataUpdate extends RealmObject implements IEntity {
     private int operation;
     private Date date;
     private String entityClassName;
+
+    public int getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(int entityId) {
+        this.entityId = entityId;
+    }
+
+    private int entityId;
     @Ignore
     private Class entityType;
     @Ignore

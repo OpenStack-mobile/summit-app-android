@@ -34,4 +34,9 @@ public class Constants {
     public static final String FLAVOR_DEV                           = "development";
     public static final String FLAVOR_BETA                          = "beta";
     public static final String SETTING_BLOCK_NOTIFICATIONS_KEY      = "BlockNotificationsSetting";
+    public static final String DATA_UPDATE_ADDED_ENTITY_EVENT       = "data-update-added-entity";
+    public static final String DATA_UPDATE_UPDATED_ENTITY_EVENT     = "data-update-updated-entity";
+    public static final String DATA_UPDATE_DELETED_ENTITY_EVENT     = "data-update-deleted-entity";
+    public static final String DATA_UPDATE_ENTITY_ID                = "data-update-entity-id";
+    public static final String DATA_UPDATE_ENTITY_CLASS             = "data-update-entity-class";
 }

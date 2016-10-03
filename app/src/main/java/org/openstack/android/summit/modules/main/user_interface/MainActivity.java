@@ -30,7 +30,6 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.InitialDataLoadingActivity;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
@@ -222,6 +221,7 @@ public class MainActivity
         } else {
             onLoginProcess = savedInstanceState.getBoolean(Constants.ON_LOGGING_PROCESS, false);
         }
+
         // bind local broadcast receiver
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.START_LOG_IN_EVENT);
