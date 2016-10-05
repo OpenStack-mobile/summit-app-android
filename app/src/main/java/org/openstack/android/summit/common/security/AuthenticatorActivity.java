@@ -16,11 +16,15 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
@@ -135,6 +139,15 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         }
 
         @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            super.onReceivedHttpError(view, request, errorResponse);
+            WebView webView = (WebView) authActivity.get().findViewById(R.id.WebView);
+            ProgressBar progressBar = (ProgressBar) authActivity.get().findViewById(R.id.ProgressBar);
+            webView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(authActivity.get());
             builder.setMessage(R.string.notification_error_ssl_cert_invalid);
@@ -157,6 +170,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            WebView webView = (WebView) authActivity.get().findViewById(R.id.WebView);
+            ProgressBar progressBar = (ProgressBar) authActivity.get().findViewById(R.id.ProgressBar);
+            webView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+
             String cookies = CookieManager.getInstance().getCookie(url);
             if (cookies != null) {
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -174,7 +192,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         public void onPageStarted(WebView view, String urlString, Bitmap favicon) {
             try {
                 super.onPageStarted(view, urlString, favicon);
-
+                WebView webView = (WebView) authActivity.get().findViewById(R.id.WebView);
+                ProgressBar progressBar = (ProgressBar) authActivity.get().findViewById(R.id.ProgressBar);
+                webView.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 Uri url                    = Uri.parse(urlString);
                 Set<String> parameterNames = url.getQueryParameterNames();
                 String extractedFragment   = url.getEncodedFragment();

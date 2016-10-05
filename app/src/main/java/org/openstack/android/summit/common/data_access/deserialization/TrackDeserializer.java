@@ -5,8 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
-import org.openstack.android.summit.common.entities.Venue;
-import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -46,9 +44,7 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
             for (int i = 0; i < jsonArrayTrackGroups.length(); i++) {
                 trackGroupId = jsonArrayTrackGroups.getInt(i);
                 //first check db, and then cache storage
-                trackGroup   = RealmFactory.getSession().where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
-                if(trackGroup == null)
-                    trackGroup = deserializerStorage.get(trackGroupId, TrackGroup.class);
+                trackGroup   = deserializerStorage.get(trackGroupId, TrackGroup.class);
                 if(trackGroup != null)
                     track.getTrackGroups().add(trackGroup);
             }

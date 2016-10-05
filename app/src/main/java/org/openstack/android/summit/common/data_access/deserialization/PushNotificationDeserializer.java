@@ -6,8 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.PushNotification;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.utils.RealmFactory;
-
 import java.util.Date;
 import javax.inject.Inject;
 
@@ -43,9 +41,8 @@ public class PushNotificationDeserializer extends BaseDeserializer implements IP
         pushNotification.setEventId(jsonObject.optInt("event_id",0));
 
         //first check db, and then cache storage
-        int summitId  = jsonObject.optInt("summit_id",0);
-        Summit summit = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
-        if(summit == null) summit  = deserializerStorage.get(summitId, Summit.class);
+        int summitId  = jsonObject.optInt("summit_id", 0);
+        Summit summit = deserializerStorage.get(summitId, Summit.class);
         if(summit != null){
             pushNotification.setSummit(summit);
         }

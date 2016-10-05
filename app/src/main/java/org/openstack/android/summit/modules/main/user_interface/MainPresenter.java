@@ -2,6 +2,8 @@ package org.openstack.android.summit.modules.main.user_interface;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
@@ -39,7 +41,6 @@ import bolts.AppLinkNavigation;
 public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMainWireframe> implements IMainPresenter {
 
     private IAppLinkRouter appLinkRouter;
-
 
     public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter) {
         super(interactor, wireframe);
@@ -89,7 +90,34 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //trustEveryone();
+
+        PackageInfo pInfo = null;
+
+        try {
+            pInfo = view.getApplicationContext().getPackageManager().getPackageInfo(view.getApplicationContext().getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            pInfo = null;
+        }
+        // check current build against storad build
+        if(pInfo != null){
+            int currentBuildNumber   = pInfo.versionCode;
+            int installedBuildNumber = interactor.getInstalledBuildNumber();
+            if(installedBuildNumber < currentBuildNumber){
+                Log.d(Constants.LOG_TAG, String.format("MainPresenter.onCreate: old version %d - new version %d", installedBuildNumber, currentBuildNumber));
+                interactor.setInstalledBuildNumber(currentBuildNumber);
+                // if we are updating version and data is already loaded cleaning it ...
+                if(interactor.isDataLoaded()) {
+                    Log.d(Constants.LOG_TAG, "MainPresenter.onCreate: upgrading data storage");
+                    this.disableDataUpdateService();
+                    interactor.upgradeStorage();
+                    return;
+                }
+            }
+        }
+        // normal flow, if data is loaded, enabled the data update services
+        if(interactor.isDataLoaded()){
+            enableDataUpdateService();
+        }
     }
 
     private boolean checkDeepLinks() {
@@ -256,8 +284,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
 
     @Override
     public void onDestroy() {
-        disableDataUpdateService();
         super.onDestroy();
+        //stop data updates services
+        disableDataUpdateService();
     }
 
     @Override

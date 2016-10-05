@@ -11,11 +11,13 @@ import org.openstack.android.summit.common.data_access.deserialization.INonConfi
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
+import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 
 import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
@@ -57,10 +59,19 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
 
         HttpTaskListener httpTaskListener = new HttpTaskListener() {
             @Override
-            public void onSucceed(String data) {
+            public void onSucceed(final String data) {
                 try {
-                    Member member = deserializer.deserialize(data, Member.class);
+
+                    Member member = RealmFactory.transaction(new RealmFactory.IRealmCallback<Member>() {
+                        @Override
+                        public Member callback(Realm session) throws Exception {
+                            Member member = deserializer.deserialize(data, Member.class);
+                            return session.copyToRealmOrUpdate(member);
+                        }
+                    });
+
                     dataStoreOperationListener.onSucceedWithSingleData(member);
+
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, "Error on member deserialization", e);

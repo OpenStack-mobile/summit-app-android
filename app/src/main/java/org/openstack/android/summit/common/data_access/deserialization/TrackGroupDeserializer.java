@@ -3,11 +3,8 @@ package org.openstack.android.summit.common.data_access.deserialization;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
-import org.openstack.android.summit.common.entities.Venue;
-import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 

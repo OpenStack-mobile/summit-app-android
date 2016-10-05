@@ -17,7 +17,6 @@ import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
-import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.Date;
 

@@ -9,4 +9,10 @@
         android:layout_height="fill_parent"
         android:id="@+id/WebView" />
 
+    <ProgressBar
+        android:id="@+id/ProgressBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" />
+
 </RelativeLayout>

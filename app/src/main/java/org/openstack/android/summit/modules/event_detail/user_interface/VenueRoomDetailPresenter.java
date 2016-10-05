@@ -58,6 +58,7 @@ public class VenueRoomDetailPresenter extends VenueDetailPresenter implements IV
 
         if (room.getFloorId() > 0)
             floor = interactor.getFloor(room.getFloorId());
+
         String locationName = venue.getName();
         if (floor != null)
             locationName += " - " + floor.getName();

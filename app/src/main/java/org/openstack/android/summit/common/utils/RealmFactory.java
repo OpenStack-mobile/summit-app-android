@@ -5,6 +5,9 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.DataAccessException;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -28,6 +31,18 @@ final public class RealmFactory {
             return Realm.getDefaultInstance();
         }
     };
+
+    private static final ThreadLocal<AtomicInteger> txCounter =
+            new ThreadLocal<AtomicInteger >() {
+            @Override
+            protected AtomicInteger  initialValue() {
+                return new AtomicInteger(0);
+            }
+    };
+
+    private static Integer decrementTxCounter(){ return txCounter.get().decrementAndGet() ;};
+
+    private static Integer incrementTxCounter(){ return txCounter.get().incrementAndGet() ;};
 
     public static Realm getSession() {
         return session.get();
@@ -56,16 +71,35 @@ final public class RealmFactory {
         T res         = null;
         try {
             session = getSession();
-            session.beginTransaction();
+            beginTransaction(session);
             res = callback.callback(session);
-            session.commitTransaction();
+            commitTransaction(session);
         } catch (Exception ex) {
-            session.cancelTransaction();
+            rollbackTransaction(session);
             Crashlytics.logException(ex);
             Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
             throw new DataAccessException(ex);
         }
         return res;
+    }
+
+    private static void beginTransaction(Realm session){
+        Integer counter = incrementTxCounter();
+        if(session != null && counter == 1)
+            session.beginTransaction();
+    }
+
+    private static void commitTransaction(Realm session){
+
+        Integer counter = decrementTxCounter();
+        if(session != null && counter == 0)
+            session.commitTransaction();
+    }
+
+    private static void rollbackTransaction(Realm session){
+        Integer counter = decrementTxCounter();
+        if(session != null && counter == 0)
+            session.cancelTransaction();
     }
 
     public interface IRealmCallback<T> {

@@ -17,6 +17,7 @@ import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,21 +61,21 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                 }
             };
 
-            Map<String,Object> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<>();
             params.put(ApiEndpointBuilder.EventIdParam, eventId);
             params.put(ApiEndpointBuilder.ExpandParam, "owner");
             params.put(ApiEndpointBuilder.PageParam, page);
-            params.put(ApiEndpointBuilder.PerPageParam,objectsPerPage);
+            params.put(ApiEndpointBuilder.PerPageParam, objectsPerPage);
 
             HttpTask httpTask = httpTaskFactory.create
-            (
-                AccountType.ServiceAccount,
-                ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.GetFeedback, params).toString(),
-                HttpRequest.METHOD_GET,
-                null,
-                null,
-                httpTaskListener
-            );
+                    (
+                            AccountType.ServiceAccount,
+                            ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.GetFeedback, params).toString(),
+                            HttpRequest.METHOD_GET,
+                            null,
+                            null,
+                            httpTaskListener
+                    );
             httpTask.execute();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -91,10 +92,17 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                 @Override
                 public void onSucceed(String data) {
                     try {
-                        JSONObject json = new JSONObject(data);
-                        SummitEvent summitEvent = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", json.getInt("id")).findFirst();
-                        Double averateRateFromServer = json.optDouble("avg_feedback_rate");
-                        updateAverageRateIfNecessary(summitEvent, averateRateFromServer);
+                        final JSONObject json = new JSONObject(data);
+
+                        SummitEvent summitEvent = RealmFactory.transaction(new RealmFactory.IRealmCallback<SummitEvent>() {
+                            @Override
+                            public SummitEvent callback(Realm session) throws Exception {
+                                SummitEvent summitEvent = session.where(SummitEvent.class).equalTo("id", json.getInt("id")).findFirst();
+                                Double avgRateFromServer = json.optDouble("avg_feedback_rate");
+                                updateAverageRateIfNecessary(summitEvent, avgRateFromServer);
+                                return summitEvent;
+                            }
+                        });
                         dataStoreOperationListener.onSucceedWithSingleData(summitEvent);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
@@ -111,20 +119,20 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                 }
             };
 
-            Map<String,Object> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<>();
             params.put(ApiEndpointBuilder.EventIdParam, eventId);
             params.put(ApiEndpointBuilder.FieldsParam, "id,avg_feedback_rate");
             params.put(ApiEndpointBuilder.RelationsParam, "none");
 
             HttpTask httpTask = httpTaskFactory.create
-            (
-                AccountType.ServiceAccount,
-                ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.GetPublishedEvent, params).toString(),
-                HttpRequest.METHOD_GET,
-                null,
-                null,
-                httpTaskListener
-            );
+                    (
+                            AccountType.ServiceAccount,
+                            ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.GetPublishedEvent, params).toString(),
+                            HttpRequest.METHOD_GET,
+                            null,
+                            null,
+                            httpTaskListener
+                    );
             httpTask.execute();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -134,17 +142,16 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
         }
     }
 
-    private void updateAverageRateIfNecessary(SummitEvent summitEvent, Double averateRateFromServer) {
-        try{
-            if (summitEvent != null && !averateRateFromServer.isNaN() && summitEvent.getAverageRate() != averateRateFromServer) {
-                RealmFactory.getSession().beginTransaction();
-                summitEvent.setAverageRate(averateRateFromServer);
-                RealmFactory.getSession().commitTransaction();
-            }
-        }
-        catch (Exception e) {
-            RealmFactory.getSession().cancelTransaction();
-            throw e;
+    private void updateAverageRateIfNecessary(final SummitEvent summitEvent, final Double averateRateFromServer) throws DataAccessException {
+        if (summitEvent != null && !averateRateFromServer.isNaN() && summitEvent.getAverageRate() != averateRateFromServer) {
+
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    summitEvent.setAverageRate(averateRateFromServer);
+                    return Void.getInstance();
+                }
+            });
         }
     }
 }

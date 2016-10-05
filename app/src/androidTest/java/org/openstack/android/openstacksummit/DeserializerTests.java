@@ -67,15 +67,92 @@ public class DeserializerTests  extends InstrumentationTestCase {
                 summit.getEvents().add(event2);
 
                 summit  = session.copyToRealmOrUpdate(summit);
-                event   = session.copyToRealmOrUpdate(event);
-                event2  = session.copyToRealmOrUpdate(event2);
+
                 return Void.getInstance();
             }
         });
     }
 
+
     @Test
-    public void sameSummitObject(){
+    public void createHierarchyTest(){
+        try {
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    final Summit summit       = session.where(Summit.class).equalTo("id", 1).findFirst();
+
+                    RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                        @Override
+                        public Void callback(Realm session) throws Exception {
+
+                            SummitEvent event = session.createObject(SummitEvent.class);
+                            event.setId(3);
+
+                            SummitEvent event2 = session.where(SummitEvent.class).equalTo("id", 3).findFirst();
+
+                            Assert.assertTrue(event2 != null);
+                            Assert.assertTrue(event2.getId() == event.getId());
+                            return Void.getInstance();
+                        }
+                    });
+                    return Void.getInstance();
+                }
+            });
+
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    SummitEvent event1  = session.where(SummitEvent.class).equalTo("id", 1).findFirst();
+
+                    Assert.assertTrue(event1.getName().equals("test event update"));
+                    return Void.getInstance();
+                }
+            });
+        }
+        catch (Exception ex){
+
+        }
+    }
+
+    @Test
+    public void updateEventTest(){
+        try {
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    final Summit summit       = session.where(Summit.class).equalTo("id", 1).findFirst();
+
+                    RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                        @Override
+                        public Void callback(Realm session) throws Exception {
+                            SummitEvent event1  = session.where(SummitEvent.class).equalTo("id", 1).findFirst();
+                            event1.setSummit(summit);
+                            event1.setName("test event update");
+                            return Void.getInstance();
+                        }
+                    });
+                    return Void.getInstance();
+                }
+            });
+
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    SummitEvent event1  = session.where(SummitEvent.class).equalTo("id", 1).findFirst();
+
+                    Assert.assertTrue(event1.getName().equals("test event update"));
+                    return Void.getInstance();
+                }
+            });
+        }
+        catch (Exception ex){
+
+        }
+    }
+
+    @Test
+    public void sameSummitObjectTest(){
         try {
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override

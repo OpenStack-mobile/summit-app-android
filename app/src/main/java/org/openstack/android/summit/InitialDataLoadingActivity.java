@@ -52,6 +52,7 @@ public class InitialDataLoadingActivity extends Activity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.retryButton.setOnClickListener");
                         doInitialDataLoading();
                     }
                 }
@@ -68,11 +69,11 @@ public class InitialDataLoadingActivity extends Activity {
         showErrorContainer(false);
 
         if (inProgress > 0) {
-            Log.d(Constants.LOG_TAG, "there is already another data loading process in place ...");
+            Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: there is already another data loading process in place ...");
             return;
         }
 
-        Log.d(Constants.LOG_TAG, "doing initial data loading ...");
+        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: doing initial data loading ...");
         inProgress = 1;
         InteractorAsyncOperationListener<SummitDTO> operationListener = new InteractorAsyncOperationListener<SummitDTO>() {
             @Override
@@ -81,12 +82,15 @@ public class InitialDataLoadingActivity extends Activity {
                 hideActivityIndicator();
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
+                Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: data loading done...");
                 finish();
             }
 
             @Override
             public void onError(String message) {
                 inProgress = 0;
+                Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: data loading error ...");
+
                 onFailedInitialLoad(message);
             }
         };
@@ -132,6 +136,7 @@ public class InitialDataLoadingActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
         hideActivityIndicator();
+        showErrorContainer(false);
         Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.onDestroy");
     }
 

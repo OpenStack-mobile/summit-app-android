@@ -1,14 +1,18 @@
 package org.openstack.android.summit.common.data_access;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import io.realm.RealmList;
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -28,23 +32,25 @@ public class TrackGroupDataStore extends GenericDataStore implements ITrackGroup
     }
 
     @Override
-    public void removeTrackGroupFromTracksLocal(int trackGroupId) {
-        TrackGroup trackGroup = RealmFactory.getSession().where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
-        if (trackGroup != null) {
-            List<Track> results = getTracks(trackGroupId);
-            try {
-                List<Track> tracks = new ArrayList<>();
-                tracks.addAll(results);
-                RealmFactory.getSession().beginTransaction();
-                for (Track track : tracks) {
-                    track.getTrackGroups().remove(trackGroup);
+    public void removeTrackGroupFromTracksLocal(final int trackGroupId) {
+        try {
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    TrackGroup trackGroup = session.where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
+                    if (trackGroup != null) {
+                        for (Track track : trackGroup.getTracks()) {
+                            track.getTrackGroups().remove(trackGroup);
+                        }
+                    }
+                    trackGroup.getTracks().clear();
+                    return Void.getInstance();
                 }
-                RealmFactory.getSession().commitTransaction();
-            }
-            catch (Exception e) {
-                RealmFactory.getSession().cancelTransaction();
-                throw e;
-            }
+            });
+        }
+        catch(Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
         }
     }
 }

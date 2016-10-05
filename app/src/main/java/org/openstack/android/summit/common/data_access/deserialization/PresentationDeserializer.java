@@ -9,8 +9,6 @@ import org.openstack.android.summit.common.entities.PresentationSlide;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.Track;
-import org.openstack.android.summit.common.utils.RealmFactory;
-
 import javax.inject.Inject;
 
 /**
@@ -62,8 +60,10 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
 
         int trackId    = jsonObject.getInt("track_id");
         //first check db, and then cache storage
-        Track track    = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
-        if(track == null) track = deserializerStorage.get(trackId, Track.class);
+        Track track    = deserializerStorage.get(trackId, Track.class);
+        if(track == null)
+            throw new JSONException(String.format("Can't deserialize presentation missing track %d", trackId));
+
         presentation.setTrack(track);
 
         PresentationSpeaker presentationSpeaker;

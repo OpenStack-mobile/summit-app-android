@@ -41,17 +41,20 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
 
             DataStoreOperationListener<Summit> remoteDelegate = new DataStoreOperationListener<Summit>() {
                 @Override
-                public void onSucceedWithSingleData(Summit data) {
+                public void onSucceedWithSingleData(final Summit data) {
                     try{
-                        RealmFactory.getSession().beginTransaction();
-                        Summit realmEntity = RealmFactory.getSession().copyToRealmOrUpdate(data);
-                        RealmFactory.getSession().commitTransaction();
+
+                        Summit realmEntity = RealmFactory.transaction(new RealmFactory.IRealmCallback<Summit>() {
+                            @Override
+                            public Summit callback(Realm session) throws Exception {
+                                return session.copyToRealmOrUpdate(data);
+                            }
+                        });
                         if (dataStoreOperationListener != null) {
                             dataStoreOperationListener.onSucceedWithSingleData(realmEntity);
                         }
                     }
                     catch (Exception e) {
-                        RealmFactory.getSession().cancelTransaction();
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG, e.getMessage(), e);
                         dataStoreOperationListener.onError(e.getMessage());

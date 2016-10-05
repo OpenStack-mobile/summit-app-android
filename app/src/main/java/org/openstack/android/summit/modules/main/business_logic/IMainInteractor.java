@@ -21,4 +21,10 @@ public interface IMainInteractor extends IBaseInteractor {
     boolean isMemberLogged();
 
     long getNotReadNotificationsCount();
+
+    void setInstalledBuildNumber(int buildNumber);
+
+    int getInstalledBuildNumber();
+
+    void upgradeStorage();
 }

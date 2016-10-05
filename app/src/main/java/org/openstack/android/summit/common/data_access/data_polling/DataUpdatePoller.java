@@ -38,9 +38,6 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private ISession session;
     private IHttpFactory httpFactory;
 
-    private static final String KEY_SET_FROM_DATE       = "KEY_SET_FROM_DATE";
-    private static final String KEY_LAST_WIPE_EVENT_ID  = "KEY_LAST_WIPE_EVENT_ID";
-    private static final String KEY_LAST_EVENT_ID       = "KEY_LAST_EVENT_ID";
     private static final int EntityEventUpdatesPageSize = 50;
 
     public DataUpdatePoller(ISecurityManager securityManager, ITokenManagerFactory tokenManagerFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, ISession session, IHttpFactory httpFactory) {
@@ -91,22 +88,22 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     }
 
     private long getFromDate() {
-        return session.getLong(KEY_SET_FROM_DATE);
+        return session.getLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE);
     }
 
     private void setFromDate(long fromDate) {
-        session.setLong(KEY_SET_FROM_DATE, fromDate);
+        session.setLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE, fromDate);
     }
 
     public String getUrl() {
 
-        long latestDataUpdateId       = session.getLong(KEY_LAST_EVENT_ID);
+        long latestDataUpdateId       = session.getLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID);
         long latestDataUpdateIdFromDB = dataUpdateDataStore.getLatestDataUpdate();
         Map<String, Object>params     = new HashMap<>();
 
         if(latestDataUpdateId < latestDataUpdateIdFromDB ){
             latestDataUpdateId = latestDataUpdateIdFromDB;
-            session.setLong(KEY_LAST_EVENT_ID, latestDataUpdateId);
+            session.setLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID, latestDataUpdateId);
         }
 
         if (latestDataUpdateId > 0){
@@ -135,19 +132,23 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private void clearDataIfTruncateEventExist() {
         DataUpdate dataUpdate = null;
         do {
-            long lastWipeEventId = session.getLong(KEY_LAST_WIPE_EVENT_ID);
+            long lastWipeEventId = session.getLong(Constants.KEY_DATA_UPDATE_LAST_WIPE_EVENT_ID);
             dataUpdate           = dataUpdateDataStore.getTruncateDataUpdate();
 
             if (dataUpdate != null) {
                 if (lastWipeEventId == 0 || lastWipeEventId < dataUpdate.getId()) {
 
-                    if(dataUpdateDataStore.getLatestDataUpdate() == 1)
-                        session.setLong(KEY_LAST_EVENT_ID, dataUpdate.getId());
-
-                    Log.d(Constants.LOG_TAG, "doing a wipe DB ...");
-                    session.setLong(KEY_LAST_WIPE_EVENT_ID, dataUpdate.getId());
+                    Log.d(Constants.LOG_TAG, "DataUpdatePoller.clearDataIfTruncateEventExist: doing a wipe DB ...");
+                    // reset state ...
+                    session.setLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID, 0);
+                    session.setLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE, 0);
+                    session.setLong(Constants.KEY_DATA_UPDATE_LAST_WIPE_EVENT_ID, dataUpdate.getId());
+                    // check login state ...
+                    if(securityManager.isLoggedIn()){
+                        securityManager.logout();
+                    }
                     dataUpdateDataStore.clearDataLocal();
-                    setFromDate(0L);
+                    // communicate the event
                     Intent intent = new Intent(Constants.WIPE_DATE_EVENT);
                     LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
                     return;

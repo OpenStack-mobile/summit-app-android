@@ -12,7 +12,13 @@ import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializerStorage;
 import org.openstack.android.summit.common.entities.DataUpdate;
+import org.openstack.android.summit.common.entities.PushNotification;
+import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 
+import java.security.InvalidParameterException;
+
+import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
@@ -48,13 +54,23 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
 
                 deserializerStorage.clear();
                 jsonObject = jsonArray.getJSONObject(i);
-                dataUpdate = deserialize(jsonObject.toString());
-                if (dataUpdate == null) continue;
-                IDataUpdateStrategy dataUpdateStrategy;
-                if (dataUpdate.getEntity() != null) {
-                    dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate.getEntityClassName());
-                    dataUpdateStrategy.process(dataUpdate);
-                }
+                final String jsonString = jsonObject.toString();
+                dataUpdate = RealmFactory.transaction(new RealmFactory.IRealmCallback<DataUpdate>() {
+                    @Override
+                    public DataUpdate callback(Realm session) throws Exception {
+                        DataUpdate dataUpdate = deserialize(jsonString);
+                        if (dataUpdate == null) return null;
+                        IDataUpdateStrategy dataUpdateStrategy;
+                        if (dataUpdate.getEntity() != null) {
+                            dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate.getEntityClassName());
+                            dataUpdateStrategy.process(dataUpdate);
+                        }
+                        return dataUpdate;
+                    }
+                });
+
+                if(dataUpdate == null) continue;
+
             } catch (Exception e) {
                 String errorMessage = jsonObject != null ? String.format("There was an error processing this data update: %s", jsonObject.toString()) : "";
                 Crashlytics.logException(new Exception(errorMessage, e));

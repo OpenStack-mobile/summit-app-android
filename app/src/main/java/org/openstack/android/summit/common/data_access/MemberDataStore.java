@@ -9,8 +9,11 @@ import org.openstack.android.summit.common.data_access.deserialization.DataStore
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
+import org.openstack.android.summit.common.entities.PushNotification;
 import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 import io.realm.Realm;
@@ -30,15 +33,9 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
         Log.d(Constants.LOG_TAG, "MemberDataStore.getLoggedInMemberOrigin");
         IDataStoreOperationListener<Member> remoteDataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
-            public void onSucceedWithSingleData(final Member detachedMember) {
+            public void onSucceedWithSingleData(Member member) {
                 try{
                     Log.d(Constants.LOG_TAG, "MemberDataStore.onSucceedWithSingleData");
-                    Member member = RealmFactory.transaction(new RealmFactory.IRealmCallback<Member>() {
-                        @Override
-                        public Member callback(Realm session) throws Exception {
-                           return session.copyToRealmOrUpdate(detachedMember);
-                        }
-                    });
                     dataStoreOperationListener.onSucceedWithSingleData(member);
                 }
                 catch (Exception e) {
@@ -88,20 +85,24 @@ public class MemberDataStore extends GenericDataStore implements IMemberDataStor
     public void addFeedback(final Member member, Feedback feedback, final IDataStoreOperationListener dataStoreOperationListener) {
         IDataStoreOperationListener<Feedback> remoteDataStoreOperationListener = new DataStoreOperationListener<Feedback>() {
             @Override
-            public void onSucceedWithSingleData(Feedback data) {
+            public void onSucceedWithSingleData(final Feedback data) {
                 super.onSucceedWithSingleData(data);
 
                 try {
-                    RealmFactory.getSession().beginTransaction();
-                    member.getFeedback().add(data);
-                    RealmFactory.getSession().commitTransaction();
+                    RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                        @Override
+                        public Void callback(Realm session) throws Exception {
+                            member.getFeedback().add(data);
+                            return Void.getInstance();
+                        }
+                    });
+                    dataStoreOperationListener.onSucceedWithSingleData(data);
                 }
-                catch (Exception e) {
-                    RealmFactory.getSession().cancelTransaction();
-                    throw e;
+                catch (Exception ex) {
+                    super.onError(ex.getMessage());
+                    Crashlytics.logException(ex);
+                    onError(ex.getMessage());
                 }
-
-                dataStoreOperationListener.onSucceedWithSingleData(data);
             }
 
             @Override

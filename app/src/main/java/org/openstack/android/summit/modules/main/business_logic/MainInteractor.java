@@ -1,8 +1,10 @@
 package org.openstack.android.summit.modules.main.business_logic;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -24,6 +26,7 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     private ISummitDataStore summitDataStore;
     private IReachability reachability;
     private IPushNotificationDataStore pushNotificationDataStore;
+    private ISession session;
 
     public MainInteractor
     (
@@ -32,7 +35,8 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         IPushNotificationsManager pushNotificationsManager,
         IDTOAssembler dtoAssembler,
         IReachability reachability,
-        IPushNotificationDataStore pushNotificationDataStore
+        IPushNotificationDataStore pushNotificationDataStore,
+        ISession session
     )
     {
         super(dtoAssembler);
@@ -41,6 +45,29 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         this.pushNotificationsManager  = pushNotificationsManager;
         this.reachability              = reachability;
         this.pushNotificationDataStore = pushNotificationDataStore;
+        this.session                   = session;
+    }
+
+    private final static String BuildNumber = "build-number";
+
+    @Override
+    public void setInstalledBuildNumber(int buildNumber){
+        session.setInt(BuildNumber, buildNumber);
+    }
+
+    @Override
+    public int getInstalledBuildNumber(){
+        return session.getInt(BuildNumber);
+    }
+
+    @Override
+    public void upgradeStorage() {
+        if(securityManager.isLoggedIn()){
+            securityManager.logout();
+        }
+        summitDataStore.clearDataLocal();
+        session.setLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID, 0);
+        session.setLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE, 0);
     }
 
     @Override

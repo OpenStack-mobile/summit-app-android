@@ -71,6 +71,7 @@ public class MainActivity
     private int selectedMenuItemId;
     private NavigationView navigationView;
     private boolean onLoginProcess = false;
+    private boolean onDataLoading  = false;
 
     private void cancelLoginProcess(){
         Log.d(Constants.LOG_TAG, "MainActivity.cancelLoginProcess");
@@ -89,7 +90,6 @@ public class MainActivity
 
                 if (intent.getAction() == Constants.WIPE_DATE_EVENT) {
                     Log.d(Constants.LOG_TAG, "WIPE_DATE_EVENT");
-                    securityManager.logout();
                     launchInitialDataLoadingActivity();
                 }
 
@@ -153,7 +153,7 @@ public class MainActivity
                         Log.d(Constants.LOG_TAG, "LOGGED_OUT_EVENT");
                         onLoggedOut();
                         if (!userClickedLogout) {
-                            showInfoMessage("Your login session expired");
+                            showInfoMessage(getResources().getString(R.string.session_expired_message));
                         }
                         userClickedLogout = false;
                         presenter.showEventsView();
@@ -181,10 +181,12 @@ public class MainActivity
     private static final int DATA_LOAD_REQUEST = 1;  // The request code
 
     private void launchInitialDataLoadingActivity() {
-        if (!presenter.isSummitDataLoaded()) {
+        if (!presenter.isSummitDataLoaded() && !onDataLoading) {
+            onDataLoading = true;
             // disable data updates ...
             presenter.disableDataUpdateService();
             Intent intent = new Intent(MainActivity.this, InitialDataLoadingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             Log.i(Constants.LOG_TAG, "starting InitialDataLoadingActivity ...");
             startActivityForResult(intent, DATA_LOAD_REQUEST);
         }
@@ -194,6 +196,7 @@ public class MainActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
         if (requestCode == DATA_LOAD_REQUEST) {
+            onDataLoading = false;
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Log.i(Constants.LOG_TAG, "Summit Data Loaded!");
@@ -210,17 +213,6 @@ public class MainActivity
         super.onCreate(savedInstanceState);
         getApplicationComponent().inject(this);
         presenter.setView(this);
-        presenter.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        securityManager.init();
-        ActionBarSetup();
-        NavigationMenuSetup(savedInstanceState);
-        if (savedInstanceState == null) {
-            Log.d(Constants.LOG_TAG, "MainActivity.onCreate - savedInstanceState == null");
-            presenter.shouldShowMainView();
-        } else {
-            onLoginProcess = savedInstanceState.getBoolean(Constants.ON_LOGGING_PROCESS, false);
-        }
 
         // bind local broadcast receiver
         IntentFilter intentFilter = new IntentFilter();
@@ -235,14 +227,24 @@ public class MainActivity
         intentFilter.addAction(Constants.WIPE_DATE_EVENT);
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
 
+        presenter.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        securityManager.init();
+        ActionBarSetup();
+        NavigationMenuSetup(savedInstanceState);
+        if (savedInstanceState == null) {
+            Log.d(Constants.LOG_TAG, "MainActivity.onCreate - savedInstanceState == null");
+            presenter.shouldShowMainView();
+        } else {
+            onLoginProcess = savedInstanceState.getBoolean(Constants.ON_LOGGING_PROCESS, false);
+        }
+
         if (onLoginProcess) {
             Log.d(Constants.LOG_TAG, "MainActivity.onCreate - its on logging process ...");
             cancelLoginProcess();
             showActivityIndicator();
             return;
         }
-        // normal flow enable data updates ...
-        presenter.enableDataUpdateService();
     }
 
     @Override
@@ -275,11 +277,13 @@ public class MainActivity
     @Override
     public void onDestroy() {
         Log.d(Constants.LOG_TAG, "MainActivity.onDestroy");
-        // unbind local broadcast receiver
+
         super.onDestroy();
         presenter.onDestroy();
+        // unbind local broadcast receiver
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
         hideActivityIndicator();
+        //close realm session for current thread
         RealmFactory.closeSession();
     }
 

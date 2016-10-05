@@ -39,4 +39,7 @@ public class Constants {
     public static final String DATA_UPDATE_DELETED_ENTITY_EVENT     = "data-update-deleted-entity";
     public static final String DATA_UPDATE_ENTITY_ID                = "data-update-entity-id";
     public static final String DATA_UPDATE_ENTITY_CLASS             = "data-update-entity-class";
+    public static final String KEY_DATA_UPDATE_SET_FROM_DATE        = "KEY_DATA_UPDATE_SET_FROM_DATE";
+    public static final String KEY_DATA_UPDATE_LAST_WIPE_EVENT_ID   = "KEY_DATA_UPDATE_LAST_WIPE_EVENT_ID";
+    public static final String KEY_DATA_UPDATE_LAST_EVENT_ID        = "KEY_DATA_UPDATE_LAST_EVENT_ID";
 }
