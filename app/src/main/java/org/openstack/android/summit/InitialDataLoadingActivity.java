@@ -1,6 +1,7 @@
 package org.openstack.android.summit;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,12 +13,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.DTOs.SummitDTO;
-import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
+import org.openstack.android.summit.common.data_updates.InitialDataIngestionService;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
-import org.openstack.android.summit.modules.general_schedule.business_logic.IGeneralScheduleInteractor;
-
-import javax.inject.Inject;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
@@ -29,19 +26,13 @@ import cc.cloudist.acplibrary.ACProgressFlower;
 public class InitialDataLoadingActivity extends Activity {
 
     private ACProgressFlower progressDialog;
-    private int inProgress = 0;
-    private final static String IN_PROGRESS_KEY = "InitialDataLoadingActivity.InProgress";
-    @Inject
-    IGeneralScheduleInteractor interactor;
+    private static final int REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getApplicationComponent().inject(this);
 
-        if (savedInstanceState != null) {
-            inProgress = savedInstanceState.getInt(IN_PROGRESS_KEY);
-        }
 
         setFinishOnTouchOutside(false);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -61,40 +52,41 @@ public class InitialDataLoadingActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(IN_PROGRESS_KEY, inProgress);
+        super.onSaveInstanceState(outState);
     }
 
     private void doInitialDataLoading() {
+        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading");
         showActivityIndicator();
         showErrorContainer(false);
 
-        if (inProgress > 0) {
-            Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: there is already another data loading process in place ...");
-            return;
+        if(InitialDataIngestionService.isRunning) return;
+
+        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: invoking service InitialDataIngestionService ");
+        Intent intent = InitialDataIngestionService.newIntent(this);
+        PendingIntent pending = createPendingResult(REQUEST_CODE, new Intent(), 0);
+        intent.putExtra(InitialDataIngestionService.PENDING_RESULT, pending);
+        startService(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int req, int res, Intent data) {
+        if (req == REQUEST_CODE) {
+            switch (res){
+                case InitialDataIngestionService.RESULT_CODE_OK:
+                    hideActivityIndicator();
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.onActivityResult: InitialDataIngestionService.RESULT_CODE_OK.");
+                    finish();
+                    break;
+                case InitialDataIngestionService.RESULT_CODE_ERROR:
+                    Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.onActivityResult: InitialDataIngestionService.RESULT_CODE_ERROR ");
+                    onFailedInitialLoad();
+                    break;
+            }
         }
-
-        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: doing initial data loading ...");
-        inProgress = 1;
-        InteractorAsyncOperationListener<SummitDTO> operationListener = new InteractorAsyncOperationListener<SummitDTO>() {
-            @Override
-            public void onSucceedWithData(SummitDTO summit) {
-                inProgress = 0;
-                hideActivityIndicator();
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: data loading done...");
-                finish();
-            }
-
-            @Override
-            public void onError(String message) {
-                inProgress = 0;
-                Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: data loading error ...");
-
-                onFailedInitialLoad(message);
-            }
-        };
-        interactor.getActiveSummit(operationListener);
+        super.onActivityResult(req, res, data);
     }
 
     public ApplicationComponent getApplicationComponent() {
@@ -122,7 +114,7 @@ public class InitialDataLoadingActivity extends Activity {
         }
     }
 
-    protected void onFailedInitialLoad(String message) {
+    protected void onFailedInitialLoad() {
         hideActivityIndicator();
         showErrorContainer(true);
     }

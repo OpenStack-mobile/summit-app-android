@@ -62,7 +62,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         //first check db, and then cache storage
         Track track    = deserializerStorage.get(trackId, Track.class);
         if(track == null)
-            throw new JSONException(String.format("Can't deserialize presentation missing track %d", trackId));
+            throw new JSONException(String.format("Can't deserialize presentation id %d missing track %d", presentationId , trackId));
 
         presentation.setTrack(track);
 

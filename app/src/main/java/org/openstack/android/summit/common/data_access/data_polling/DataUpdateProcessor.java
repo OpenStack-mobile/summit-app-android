@@ -12,11 +12,7 @@ import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializerStorage;
 import org.openstack.android.summit.common.entities.DataUpdate;
-import org.openstack.android.summit.common.entities.PushNotification;
 import org.openstack.android.summit.common.utils.RealmFactory;
-import org.openstack.android.summit.common.utils.Void;
-
-import java.security.InvalidParameterException;
 
 import io.realm.Realm;
 import io.realm.RealmObject;

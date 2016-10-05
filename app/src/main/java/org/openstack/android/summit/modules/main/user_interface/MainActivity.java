@@ -199,7 +199,7 @@ public class MainActivity
             onDataLoading = false;
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                Log.i(Constants.LOG_TAG, "Summit Data Loaded!");
+                Log.i(Constants.LOG_TAG, "MainActivity.onActivityResult: Summit Data Loaded!");
                 //re enable data update service
                 presenter.enableDataUpdateService();
                 presenter.shouldShowMainView();

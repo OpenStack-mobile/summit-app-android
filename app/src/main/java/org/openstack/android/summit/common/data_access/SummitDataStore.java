@@ -36,39 +36,26 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
             if (dataStoreOperationListener != null) {
                 dataStoreOperationListener.onSucceedWithSingleData(summits.get(0));
             }
+            return;
         }
-        else {
+        // empty DB ... we dont have active summit, get it from API
 
-            DataStoreOperationListener<Summit> remoteDelegate = new DataStoreOperationListener<Summit>() {
-                @Override
-                public void onSucceedWithSingleData(final Summit data) {
-                    try{
-
-                        Summit realmEntity = RealmFactory.transaction(new RealmFactory.IRealmCallback<Summit>() {
-                            @Override
-                            public Summit callback(Realm session) throws Exception {
-                                return session.copyToRealmOrUpdate(data);
-                            }
-                        });
-                        if (dataStoreOperationListener != null) {
-                            dataStoreOperationListener.onSucceedWithSingleData(realmEntity);
-                        }
-                    }
-                    catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.e(Constants.LOG_TAG, e.getMessage(), e);
-                        dataStoreOperationListener.onError(e.getMessage());
-                    }
+        DataStoreOperationListener<Summit> remoteDelegate = new DataStoreOperationListener<Summit>() {
+            @Override
+            public void onSucceedWithSingleData(final Summit summit) {
+                if (dataStoreOperationListener != null) {
+                    dataStoreOperationListener.onSucceedWithSingleData(summit);
                 }
+            }
 
-                @Override
-                public void onError(String message) {
-                    dataStoreOperationListener.onError(message);
-                }
-            };
+            @Override
+            public void onError(String message) {
+                dataStoreOperationListener.onError(message);
+            }
+        };
 
-            summitRemoteDataStore.getActive(remoteDelegate);
-        }
+        summitRemoteDataStore.getActive(remoteDelegate);
+
     }
 
     @Override
@@ -79,13 +66,14 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
 
     @Override
     public void updateActiveSummitFromDataUpdate(final Summit dataUpdateEntity) {
-        try{
+        try {
 
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override
                 public Void callback(Realm session) throws Exception {
                     Summit summit = session.where(Summit.class).equalTo("id", dataUpdateEntity.getId()).findFirst();
-                    if(summit == null) throw new InvalidParameterException("missing current summit!");
+                    if (summit == null)
+                        throw new InvalidParameterException("missing current summit!");
                     summit.setName(dataUpdateEntity.getName());
                     summit.setStartShowingVenuesDate(dataUpdateEntity.getStartShowingVenuesDate());
                     summit.setStartDate(dataUpdateEntity.getStartDate());
@@ -93,9 +81,8 @@ public class SummitDataStore extends GenericDataStore implements ISummitDataStor
                     return Void.getInstance();
                 }
             });
-        }
-        catch (Exception e) {
-           Crashlytics.logException(e);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
     }

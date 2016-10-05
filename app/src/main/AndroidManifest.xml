@@ -200,6 +200,11 @@
             android:exported="false">
         </service>
 
+        <service
+            android:name=".common.data_updates.InitialDataIngestionService"
+            android:exported="false">
+        </service>
+
     </application>
 
 </manifest>

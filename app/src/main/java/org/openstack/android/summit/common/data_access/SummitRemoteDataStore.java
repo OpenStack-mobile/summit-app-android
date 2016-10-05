@@ -5,7 +5,6 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.github.kevinsawicki.http.HttpRequest;
 
-import org.json.JSONException;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api_endpoints.ApiEndpointBuilder;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
@@ -14,9 +13,13 @@ import org.openstack.android.summit.common.network.HttpTask;
 import org.openstack.android.summit.common.network.HttpTaskListener;
 import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.security.AccountType;
+import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import io.realm.Realm;
 
 /**
  * Created by Claudio Redi on 11/17/2015.
@@ -35,10 +38,18 @@ public class SummitRemoteDataStore extends BaseRemoteDataStore implements ISummi
         try {
             HttpTaskListener httpTaskListener = new HttpTaskListener() {
                 @Override
-                public void onSucceed(String data) {
+                public void onSucceed(final String data) {
                     try {
-                        Summit summit = deserializer.deserialize(data, Summit.class);
-                        dataStoreOperationListener.onSucceedWithSingleData(summit);
+                        RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                            @Override
+                            public Void callback(Realm session) throws Exception {
+                                Summit summit = deserializer.deserialize(data, Summit.class);
+                                summit        = session.copyToRealmOrUpdate(summit);
+                                dataStoreOperationListener.onSucceedWithSingleData(summit);
+                                return Void.getInstance();
+                            }
+                        });
+
                     } catch (Exception ex) {
                         Crashlytics.logException(ex);
                         Log.e(Constants.LOG_TAG,"Error deserializing summit", ex);

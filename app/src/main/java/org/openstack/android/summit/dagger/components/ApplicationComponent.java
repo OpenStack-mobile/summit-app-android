@@ -6,6 +6,7 @@ package org.openstack.android.summit.dagger.components;
 
 import org.openstack.android.summit.InitialDataLoadingActivity;
 import org.openstack.android.summit.common.data_updates.DataUpdatesService;
+import org.openstack.android.summit.common.data_updates.InitialDataIngestionService;
 import org.openstack.android.summit.common.player.YouTubePlayerActivity;
 import org.openstack.android.summit.common.push_notifications.CustomParsePushBroadcastReceiver;
 import org.openstack.android.summit.common.security.AuthenticatorActivity;
@@ -113,4 +114,5 @@ public interface ApplicationComponent {
     void inject(PushNotificationDetailFragment pushNotificationDetailFragment);
     void inject(RSVPViewerActivity rsvpViewerActivity);
     void inject(SettingsFragment settingsFragment);
+    void inject(InitialDataIngestionService dataIngestionService);
 }
