@@ -141,6 +141,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
     @Override
     protected void onPushOpen(Context context, Intent intent) {
         // Send a Parse Analytics "push opened" event
+        if(intent.getExtras() == null ) return;
         ParseAnalytics.trackAppOpenedInBackground(intent);
         Integer notificationId = 0;
         try {
