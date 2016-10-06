@@ -12,7 +12,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
 import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -69,7 +71,7 @@ public class SecurityManager implements ISecurityManager {
 
                     if (accounts.length > 0) {
                         if ((token != null && currentMemberId == 0) || (token == null && currentMemberId != 0)) {
-                            logout();
+                            logout(true);
                         }
                     }
                 }
@@ -93,7 +95,7 @@ public class SecurityManager implements ISecurityManager {
     @Override
     public void handleIllegalState() {
         if (isLoggedIn()){
-            logout();
+            logout(true);
         }
     }
 
@@ -174,7 +176,7 @@ public class SecurityManager implements ISecurityManager {
     }
 
     @Override
-    public void logout() {
+    public void logout(boolean enabledDataUpdates) {
 
         try {
             Context context                     = OpenStackSummitApplication.context;
@@ -190,6 +192,7 @@ public class SecurityManager implements ISecurityManager {
             session.setInt(Constants.CURRENT_MEMBER_ID, 0);
 
             Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
+            intent.putExtra(Constants.EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT, enabledDataUpdates);
             LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
 
         }

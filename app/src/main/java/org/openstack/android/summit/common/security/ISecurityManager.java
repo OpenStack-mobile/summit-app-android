@@ -14,7 +14,7 @@ public interface ISecurityManager {
 
     void login(Activity context);
 
-    void logout();
+    void logout(boolean enabledDataUpdates);
 
     boolean isLoggedIn();
 

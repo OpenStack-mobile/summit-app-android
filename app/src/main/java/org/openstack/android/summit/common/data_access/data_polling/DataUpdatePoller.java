@@ -141,11 +141,10 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
                     Log.d(Constants.LOG_TAG, "DataUpdatePoller.clearDataIfTruncateEventExist: doing a wipe DB ...");
                     // reset state ...
                     session.setLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID, 0);
-                    session.setLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE, 0);
-                    session.setLong(Constants.KEY_DATA_UPDATE_LAST_WIPE_EVENT_ID, dataUpdate.getId());
+                    clearState(session);
                     // check login state ...
                     if(securityManager.isLoggedIn()){
-                        securityManager.logout();
+                        securityManager.logout(false);
                     }
                     dataUpdateDataStore.clearDataLocal();
                     // communicate the event
@@ -156,6 +155,12 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
                 dataUpdateDataStore.deleteDataUpdate(dataUpdate);
             }
         } while (dataUpdate != null);
+    }
+
+    public static void clearState(ISession session){
+        if(session == null ) return;
+        session.setLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID, 0);
+        session.setLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE, 0);
     }
 
 }

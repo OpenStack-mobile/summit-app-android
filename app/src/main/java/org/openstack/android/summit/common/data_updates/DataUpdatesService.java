@@ -45,6 +45,8 @@ public class DataUpdatesService extends IntentService {
         if (!reachability.isNetworkingAvailable(this)) {
             return;
         }
+        // if we are on data ingestion running , skip it this
+        if(InitialDataIngestionService.isRunning) return;
         // normal flow ...
         dataUpdatePoller.pollServer();
         RealmFactory.closeSession();

@@ -159,7 +159,8 @@ public class MainActivity
                         presenter.showEventsView();
                     }
                     finally {
-                        presenter.enableDataUpdateService();
+                        if(intent.getBooleanExtra(Constants.EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT, false))
+                            presenter.enableDataUpdateService();
                         cancelLoginProcess();
                     }
                     return;
@@ -376,7 +377,7 @@ public class MainActivity
                     // LOGOUT
                     userClickedLogout = true;
 
-                    securityManager.logout();
+                    securityManager.logout(true);
                 }
             });
 

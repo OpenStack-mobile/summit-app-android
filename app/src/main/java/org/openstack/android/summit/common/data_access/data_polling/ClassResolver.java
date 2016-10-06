@@ -3,12 +3,14 @@ package org.openstack.android.summit.common.data_access.data_polling;
 import android.util.Log;
 
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Image;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
+import org.openstack.android.summit.common.entities.VenueRoom;
 
 /**
  * Created by Claudio Redi on 2/8/2016.
@@ -45,6 +47,14 @@ public class ClassResolver implements IClassResolver {
 
         if (className.equals("MySchedule") || className.equals("Presentation")) {
             type = SummitEvent.class;
+        }
+
+        if (className.equals("SummitEventType")) {
+            type = EventType.class;
+        }
+
+        if (className.equals("SummitVenueRoom")) {
+            type = VenueRoom.class;
         }
 
         if (type == null) {

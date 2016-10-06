@@ -1,13 +1,13 @@
 package org.openstack.android.summit.modules.main.business_logic;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.IReachability;
@@ -62,12 +62,12 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
     @Override
     public void upgradeStorage() {
+        // clear data update state
+        DataUpdatePoller.clearState(session);
         if(securityManager.isLoggedIn()){
-            securityManager.logout();
+            securityManager.logout(false);
         }
         summitDataStore.clearDataLocal();
-        session.setLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID, 0);
-        session.setLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE, 0);
     }
 
     @Override
