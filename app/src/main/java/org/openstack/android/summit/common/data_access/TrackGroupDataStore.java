@@ -42,8 +42,8 @@ public class TrackGroupDataStore extends GenericDataStore implements ITrackGroup
                         for (Track track : trackGroup.getTracks()) {
                             track.getTrackGroups().remove(trackGroup);
                         }
+                        trackGroup.getTracks().clear();
                     }
-                    trackGroup.getTracks().clear();
                     return Void.getInstance();
                 }
             });
