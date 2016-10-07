@@ -83,19 +83,20 @@ public class InitialDataIngestionService extends IntentService {
         PendingIntent reply = intent.getParcelableExtra(PENDING_RESULT);
 
         try {
+
             isRunning  = true;
 
             if (!reachability.isNetworkingAvailable(this)) {
-                reply.send(this, RESULT_CODE_ERROR, result);
                 isRunning = false;
+                reply.send(this, RESULT_CODE_ERROR, result);
                 return;
             }
 
             if(interactor.isDataLoaded())
             {
                 Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: data already loaded !!!");
-                reply.send(this, RESULT_CODE_OK, result);
                 isRunning = false;
+                reply.send(this, RESULT_CODE_OK, result);
                 return;
             }
 
@@ -118,6 +119,8 @@ public class InitialDataIngestionService extends IntentService {
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override
                 public Void callback(Realm session) throws Exception {
+
+                    Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: deserializing summit data ...");
                     Summit summit = deserializer.deserialize(body);
                     session.copyToRealmOrUpdate(summit);
                     return Void.getInstance();

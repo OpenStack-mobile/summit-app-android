@@ -45,7 +45,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
-                jsonObject = jsonArray.getJSONObject(i);
+                jsonObject              = jsonArray.getJSONObject(i);
                 final String jsonString = jsonObject.toString();
                 dataUpdate = RealmFactory.transaction(new RealmFactory.IRealmCallback<DataUpdate>() {
                     @Override
