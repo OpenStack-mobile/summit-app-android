@@ -31,6 +31,8 @@ import org.openstack.android.summit.common.entities.PushNotification;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
+import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationsListInteractor;
 import org.openstack.android.summit.modules.settings.business_logic.ISettingsInteractor;
 
@@ -38,6 +40,8 @@ import java.util.Locale;
 import java.util.Random;
 
 import javax.inject.Inject;
+
+import io.realm.Realm;
 
 /**
  * Created by sebastian on 8/16/2016.
@@ -193,7 +197,7 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
-        String data = intent.getStringExtra(KEY_PUSH_DATA);
+        final String data = intent.getStringExtra(KEY_PUSH_DATA);
 
         if (data == null) {
             return;
@@ -224,12 +228,20 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
 
             Notification notification = getNotification(context, intent);
 
-            PushNotification pushNotification = deserializer.deserialize(data, PushNotification.class);
-            Member currentMember = securityManager.getCurrentMember();
-            if (currentMember != null)
-                pushNotification.setOwner(currentMember);
+            PushNotification pushNotification = RealmFactory.transaction(new RealmFactory.IRealmCallback<PushNotification>() {
+                @Override
+                public PushNotification callback(Realm session) throws Exception {
 
-            pushNotificationDataStore.saveOrUpdate(pushNotification, null, PushNotification.class);
+                    PushNotification pushNotification = deserializer.deserialize(data, PushNotification.class);
+                    Member currentMember = securityManager.getCurrentMember();
+                    if (currentMember != null)
+                        pushNotification.setOwner(currentMember);
+
+                    pushNotificationDataStore.saveOrUpdate(pushNotification, null, PushNotification.class);
+
+                    return pushNotification;
+                }
+            });
 
             if (notification != null) {
                 // Fire off the notification
