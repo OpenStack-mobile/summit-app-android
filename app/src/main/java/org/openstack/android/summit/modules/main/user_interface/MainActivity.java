@@ -516,11 +516,16 @@ public class MainActivity
         menuItem.setChecked(true);
     }
 
-    public void showErrorMessage(String message) {
-       new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-       .setTitleText("Oops...")
-       .setContentText(message)
-       .show();
+    public void showErrorMessage(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops...")
+                        .setContentText(message)
+                        .show();
+            }
+        });
     }
 
     @Override
@@ -529,11 +534,17 @@ public class MainActivity
     }
 
     @Override
-    public void showInfoMessage(String message, String title) {
-        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(title)
-                .setContentText(message)
-                .show();
+    public void showInfoMessage(final String message, final String title) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText(title)
+                        .setContentText(message)
+                        .show();
+
+            }
+        });
     }
 
     @Override
