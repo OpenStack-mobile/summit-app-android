@@ -411,18 +411,24 @@ public class MainActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        try {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        if (!drawer.isDrawerOpen(GravityCompat.START) && getFragmentManager().getBackStackEntryCount() == 0) {
-            super.onBackPressed();
+            if (!drawer.isDrawerOpen(GravityCompat.START) && getFragmentManager().getBackStackEntryCount() == 0) {
+                super.onBackPressed();
+            }
+
+            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                return;
+            }
+
+            drawer.closeDrawer(GravityCompat.START);
+            getFragmentManager().popBackStack();
         }
-
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            return;
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
+            Crashlytics.logException(ex);
         }
-
-        drawer.closeDrawer(GravityCompat.START);
-        getFragmentManager().popBackStack();
     }
 
     @Override
