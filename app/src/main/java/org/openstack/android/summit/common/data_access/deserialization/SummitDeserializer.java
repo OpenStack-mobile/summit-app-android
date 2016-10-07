@@ -17,6 +17,7 @@ import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.Date;
 
@@ -32,7 +33,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
     IVenueRoomDeserializer venueRoomDeserializer;
     ISummitEventDeserializer summitEventDeserializer;
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
-    IDeserializerStorage deserializerStorage;
+
     ITrackGroupDeserializer trackGroupDeserializer;
     ITrackDeserializer trackDeserializer;
 
@@ -43,8 +44,10 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                               ISummitEventDeserializer summitEventDeserializer,
                               IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                               ITrackGroupDeserializer trackGroupDeserializer,
-                              ITrackDeserializer trackDeserializer,
-                              IDeserializerStorage deserializerStorage){
+                              ITrackDeserializer trackDeserializer
+                              )
+
+    {
 
         this.genericDeserializer             = genericDeserializer;
         this.venueDeserializer               = venueDeserializer;
@@ -53,13 +56,10 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
         this.trackGroupDeserializer          = trackGroupDeserializer;
         this.trackDeserializer               = trackDeserializer;
-        this.deserializerStorage             = deserializerStorage;
     }
 
     @Override
     public Summit deserialize(String jsonString) throws JSONException {
-
-            deserializerStorage.clear();
 
             JSONObject jsonObject = new JSONObject(jsonString);
 
@@ -80,7 +80,8 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                 throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
             }
 
-            Summit summit = new Summit();
+            Summit summit =  RealmFactory.getSession().createObject(Summit.class);
+
             summit.setId(jsonObject.getInt("id"));
             summit.setName(jsonObject.getString("name"));
             summit.setStartDate(new Date(jsonObject.getInt("start_date") * 1000L));
@@ -95,8 +96,6 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
             summit.setScheduleEventDetailUrl(jsonObject.getString("schedule_event_detail_url"));
             summit.setInitialDataLoadDate(jsonObject.has("timestamp") ? new Date(jsonObject.getInt("timestamp") * 1000L) : null);
             summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date") * 1000L));
-
-            deserializerStorage.add(summit, Summit.class); // added here so it's available on child deserialization
 
             if (jsonObject.has("sponsors")) {
                 JSONObject jsonObjectSponsor;
@@ -186,12 +185,13 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                     if (isVenueRoom(jsonObjectVenueRoom)) {
 
                         Integer floorId = jsonObjectVenueRoom.optInt("floor_id");
-                        venueRoom = venueRoomDeserializer.deserialize(jsonObjectVenueRoom.toString());
+                        venueRoom       = venueRoomDeserializer.deserialize(jsonObjectVenueRoom.toString());
                         summit.getVenueRooms().add(venueRoom);
 
-                        if(floorId != null && deserializerStorage.exist(floorId, VenueFloor.class)){
-                            VenueFloor venueFloor = deserializerStorage.get(floorId, VenueFloor.class);
-                            venueFloor.getRooms().add(venueRoom);
+                        if(floorId != null){
+                            VenueFloor venueFloor = RealmFactory.getSession().where(VenueFloor.class).equalTo("id", floorId).findFirst();
+                            if(venueFloor != null)
+                                venueFloor.getRooms().add(venueRoom);
                         }
                     }
                 }

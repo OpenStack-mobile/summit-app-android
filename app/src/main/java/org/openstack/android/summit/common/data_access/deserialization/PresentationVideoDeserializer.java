@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.IPresentationMaterial;
 import org.openstack.android.summit.common.entities.PresentationVideo;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.Date;
 
@@ -12,8 +13,8 @@ import java.util.Date;
  */
 public class PresentationVideoDeserializer extends PresentationMaterialDeserializer implements IPresentationVideoDeserializer {
 
-    public PresentationVideoDeserializer(IDeserializerStorage deserializerStorage) {
-        super(deserializerStorage);
+    public PresentationVideoDeserializer() {
+        super();
     }
 
     @Override
@@ -26,16 +27,16 @@ public class PresentationVideoDeserializer extends PresentationMaterialDeseriali
         video.setHighlighted(jsonObject.getBoolean("highlighted"));
         video.setDateUploaded(new Date(jsonObject.getLong("data_uploaded") * 1000L));
         video.setViews(jsonObject.isNull("views")? 0 :  jsonObject.getLong("views"));
-        if(!deserializerStorage.exist(video, PresentationVideo.class)) {
-            deserializerStorage.add(video, PresentationVideo.class);
-        }
         return video;
     }
 
     @Override
     protected IPresentationMaterial buildMaterial(int materialId) {
-        return deserializerStorage.exist(materialId, PresentationVideo.class) ?
-                deserializerStorage.get(materialId, PresentationVideo.class) :
-                new PresentationVideo();
+
+        PresentationVideo video = RealmFactory.getSession().where(PresentationVideo.class).equalTo("id", materialId).findFirst();
+        if(video == null)
+            video = RealmFactory.getSession().createObject(PresentationVideo.class);
+
+        return video;
     }
 }

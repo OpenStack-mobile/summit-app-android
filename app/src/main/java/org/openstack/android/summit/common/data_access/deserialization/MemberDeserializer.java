@@ -12,6 +12,7 @@ import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitAttendee;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -24,22 +25,20 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
     ISummitAttendeeDeserializer summitAttendeeDeserializer;
     IFeedbackDeserializer feedbackDeserializer;
-    IDeserializerStorage deserializerStorage;
+
 
     @Inject
     public MemberDeserializer
-            (
-                    IPersonDeserializer personDeserializer,
-                    IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
-                    ISummitAttendeeDeserializer summitAttendeeDeserializer,
-                    IFeedbackDeserializer feedbackDeserializer,
-                    IDeserializerStorage deserializerStorage
-            ) {
-        this.personDeserializer = personDeserializer;
-        this.deserializerStorage = deserializerStorage;
-        this.feedbackDeserializer = feedbackDeserializer;
+    (
+        IPersonDeserializer personDeserializer,
+        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        ISummitAttendeeDeserializer summitAttendeeDeserializer,
+        IFeedbackDeserializer feedbackDeserializer
+    ) {
+        this.personDeserializer              = personDeserializer;
+        this.feedbackDeserializer            = feedbackDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
-        this.summitAttendeeDeserializer = summitAttendeeDeserializer;
+        this.summitAttendeeDeserializer      = summitAttendeeDeserializer;
     }
 
     @Override
@@ -49,13 +48,12 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
         String[] missedFields = validateRequiredFields(new String[]{"id"}, jsonObject);
         handleMissedFieldsIfAny(missedFields);
         int memberId = jsonObject.getInt("id");
-        Member member = deserializerStorage.exist(memberId, Member.class) ? deserializerStorage.get(memberId, Member.class) : new Member();
-        personDeserializer.deserialize(member, jsonObject);
 
-        // added here so it's available on child deserialization
-        if (!deserializerStorage.exist(member, Member.class)) {
-            deserializerStorage.add(member, Member.class);
-        }
+        Member member = RealmFactory.getSession().where(Member.class).equalTo("id", memberId).findFirst();
+        if(member == null)
+            member = RealmFactory.getSession().createObject(Member.class);
+
+        personDeserializer.deserialize(member, jsonObject);
 
         member.setSpeakerRole(null);
         if (jsonObject.has("speaker")) {

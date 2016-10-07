@@ -11,17 +11,19 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.TicketType;
+import org.openstack.android.summit.common.utils.RealmFactory;
+
 import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 11/16/2015.
  */
 public class SummitAttendeeDeserializer extends BaseDeserializer implements ISummitAttendeeDeserializer {
-    IDeserializerStorage deserializerStorage;
+
 
     @Inject
-    public SummitAttendeeDeserializer(IDeserializerStorage deserializerStorage) {
-        this.deserializerStorage = deserializerStorage;
+    public SummitAttendeeDeserializer() {
+
     }
 
     @Override
@@ -32,29 +34,26 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         String[] missedFields = validateRequiredFields(new String[]{"id"}, jsonObject);
         handleMissedFieldsIfAny(missedFields);
         int attendeeId                = jsonObject.getInt("id");
-        SummitAttendee summitAttendee = deserializerStorage.exist(attendeeId, SummitAttendee.class) ?
-                deserializerStorage.get(attendeeId, SummitAttendee.class) :
-                new SummitAttendee();
 
-        summitAttendee.setId(attendeeId);
 
-        // added here so it's available on child deserialization
-        if (!deserializerStorage.exist(summitAttendee, SummitAttendee.class)) {
-            deserializerStorage.add(summitAttendee, SummitAttendee.class);
-        }
+        SummitAttendee attendee = RealmFactory.getSession().where(SummitAttendee.class).equalTo("id", attendeeId).findFirst();
+        if(attendee == null)
+            attendee = RealmFactory.getSession().createObject(SummitAttendee.class);
+
+        attendee.setId(attendeeId);
 
         SummitEvent summitEvent;
         int summitEventId = 0;
         JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
 
-        summitAttendee.getScheduledEvents().clear();
+        attendee.getScheduledEvents().clear();
 
         for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
             try {
                 summitEventId = jsonArraySummitEvents.getInt(i);
-                summitEvent   = deserializerStorage.get(summitEventId, SummitEvent.class);
+                summitEvent   = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", summitEventId).findFirst();
                 if (summitEvent != null) {
-                    summitAttendee.getScheduledEvents().add(summitEvent);
+                    attendee.getScheduledEvents().add(summitEvent);
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -66,14 +65,14 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         int ticketTypeId;
         JSONArray jsonArrayTicketTypes = jsonObject.getJSONArray("tickets");
 
-        summitAttendee.getTicketTypes().clear();
+        attendee.getTicketTypes().clear();
 
         for (int i = 0; i < jsonArrayTicketTypes.length(); i++) {
             ticketTypeId = jsonArrayTicketTypes.getInt(i);
-            ticketType   =  deserializerStorage.get(ticketTypeId, TicketType.class);
-            summitAttendee.getTicketTypes().add(ticketType);
+            ticketType   = RealmFactory.getSession().where(TicketType.class).equalTo("id", ticketTypeId).findFirst();
+            attendee.getTicketTypes().add(ticketType);
         }
 
-        return summitAttendee;
+        return attendee;
     }
 }

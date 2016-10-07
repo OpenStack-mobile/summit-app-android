@@ -9,10 +9,8 @@ import org.openstack.android.summit.common.entities.IPresentationMaterial;
  */
 abstract public class PresentationMaterialDeserializer extends BaseDeserializer {
 
-    IDeserializerStorage deserializerStorage;
 
-    public PresentationMaterialDeserializer(IDeserializerStorage deserializerStorage) {
-        this.deserializerStorage = deserializerStorage;
+    public PresentationMaterialDeserializer() {
     }
 
     protected IPresentationMaterial internalDeserialize(String jsonString) throws JSONException {

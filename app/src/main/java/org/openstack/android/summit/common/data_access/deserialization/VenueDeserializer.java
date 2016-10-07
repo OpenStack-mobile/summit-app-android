@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Image;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -16,13 +17,11 @@ import javax.inject.Inject;
  */
 public class VenueDeserializer extends BaseDeserializer implements IVenueDeserializer {
     IGenericDeserializer genericDeserializer;
-    IDeserializerStorage deserializerStorage;
     IVenueFloorDeserializer venueFloorDeserializer;
 
     @Inject
-    public VenueDeserializer(IGenericDeserializer genericDeserializer, IDeserializerStorage deserializerStorage, IVenueFloorDeserializer venueFloorDeserializer){
+    public VenueDeserializer(IGenericDeserializer genericDeserializer, IVenueFloorDeserializer venueFloorDeserializer){
         this.genericDeserializer    = genericDeserializer;
-        this.deserializerStorage    = deserializerStorage;
         this.venueFloorDeserializer = venueFloorDeserializer;
     }
 
@@ -35,9 +34,10 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
         int venueId = jsonObject.getInt("id");
-        Venue venue = deserializerStorage.exist(venueId, Venue.class) ?
-                      deserializerStorage.get(venueId, Venue.class) :
-                      new Venue();
+
+        Venue venue = RealmFactory.getSession().where(Venue.class).equalTo("id", venueId).findFirst();
+        if(venue == null)
+            venue = RealmFactory.getSession().createObject(Venue.class);
 
         venue.setId(venueId);
         venue.setName(jsonObject.getString("name"));
@@ -98,10 +98,6 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
                 venue.getFloors().add(floor);
                 floor.setVenue(venue);
             }
-        }
-
-        if(!deserializerStorage.exist(venue, Venue.class)) {
-            deserializerStorage.add(venue, Venue.class);
         }
 
         return venue;

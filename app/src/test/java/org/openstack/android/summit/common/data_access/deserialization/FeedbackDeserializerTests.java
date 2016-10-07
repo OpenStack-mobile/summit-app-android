@@ -24,11 +24,10 @@ public class FeedbackDeserializerTests {
         // Arrange
         String jsonString = "{\"id\":1,\"rate\":5,\"note\":\"test review\",\"owner_id\":2,\"created_date\": 1447686387,\"event_id\":1}";
 
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
+
         SummitAttendee summitAttendee = new SummitAttendee();
         summitAttendee.setId(2);
-        when(deserializerStorageMock.get(2, SummitAttendee.class)).thenReturn(summitAttendee);
-        IFeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer(deserializerStorageMock);
+        IFeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
 
         // Act
         Feedback feedback = feedbackDeserializer.deserialize(jsonString);
@@ -46,9 +45,8 @@ public class FeedbackDeserializerTests {
         JSONObject jsonObjectMock = mock(JSONObject.class);
         when(jsonObjectMock.has(any(String.class))).thenReturn(false);
 
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
 
-        IFeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer(deserializerStorageMock);
+        IFeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
         String exceptionMessage = "";
         int exceptionCount = 0;
         int expectedExceptionCount = 1;
@@ -72,11 +70,9 @@ public class FeedbackDeserializerTests {
         // Arrange
         String jsonString = "{\"id\":1,\"rate\":5,\"review\":null,\"owner_id\":2,\"created_date\": 1447686387,\"event_id\":1}";
 
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         SummitAttendee summitAttendee = new SummitAttendee();
         summitAttendee.setId(2);
-        when(deserializerStorageMock.get(2, SummitAttendee.class)).thenReturn(summitAttendee);
-        IFeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer(deserializerStorageMock);
+        IFeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
 
         // Act
         Feedback feedback = feedbackDeserializer.deserialize(jsonString);

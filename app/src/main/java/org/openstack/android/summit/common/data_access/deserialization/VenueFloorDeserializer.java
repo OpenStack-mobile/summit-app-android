@@ -1,7 +1,7 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
 import android.text.TextUtils;
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Venue;
@@ -14,11 +14,10 @@ import javax.inject.Inject;
  * Created by sebastian on 7/26/2016.
  */
 public class VenueFloorDeserializer  extends BaseDeserializer implements IVenueFloorDeserializer {
-    IDeserializerStorage deserializerStorage;
 
     @Inject
-    public VenueFloorDeserializer(IDeserializerStorage deserializerStorage){
-        this.deserializerStorage = deserializerStorage;
+    public VenueFloorDeserializer(){
+
     }
 
     @Override
@@ -31,26 +30,23 @@ public class VenueFloorDeserializer  extends BaseDeserializer implements IVenueF
         }
 
         int floorId           = jsonObject.getInt("id");
-        VenueFloor venueFloor = deserializerStorage.exist(floorId, VenueFloor.class) ?
-                                deserializerStorage.get(floorId, VenueFloor.class) :
-                                new VenueFloor();
+
+        VenueFloor venueFloor = RealmFactory.getSession().where(VenueFloor.class).equalTo("id", floorId).findFirst();
+        if(venueFloor == null)
+            venueFloor = RealmFactory.getSession().createObject(VenueFloor.class);
 
         venueFloor.setId(floorId);
         venueFloor.setName(jsonObject.getString("name"));
         venueFloor.setDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : null);
         venueFloor.setNumber(jsonObject.getInt("number"));
         int venueId = jsonObject.getInt("venue_id");
-        //first check db, and then cache storage
+
         Venue venue = RealmFactory.getSession().where(Venue.class).equalTo("id", venueId).findFirst();
-        if(venue == null) venue = deserializerStorage.get(venueId, Venue.class);
+        if(venue == null) venue = RealmFactory.getSession().where(Venue.class).equalTo("id", venueId).findFirst();
         venueFloor.setVenue(venue);
 
         if(jsonObject.has("image")){
             venueFloor.setPictureUrl(!jsonObject.isNull("image")?jsonObject.getString("image"): null);
-        }
-
-        if(!deserializerStorage.exist(venueFloor, VenueFloor.class)) {
-            deserializerStorage.add(venueFloor, VenueFloor.class);
         }
 
         return venueFloor;

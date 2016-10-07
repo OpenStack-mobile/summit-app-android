@@ -5,18 +5,19 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.utils.RealmFactory;
+
 import java.util.Date;
+
 import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 11/12/2015.
  */
 public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackDeserializer {
-    IDeserializerStorage deserializerStorage;
 
     @Inject
-    public FeedbackDeserializer(IDeserializerStorage deserializerStorage) {
-        this.deserializerStorage = deserializerStorage;
+    public FeedbackDeserializer() {
     }
 
     @Override
@@ -26,9 +27,10 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
         String[] missedFields = validateRequiredFields(new String[]{"id", "rate", "created_date", "event_id"}, jsonObject);
         handleMissedFieldsIfAny(missedFields);
         int feedbackId    = jsonObject.getInt("id");
-        Feedback feedback = deserializerStorage.exist(feedbackId, Feedback.class) ?
-                            deserializerStorage.get(feedbackId, Feedback.class) :
-                            new Feedback();
+
+        Feedback feedback = RealmFactory.getSession().where(Feedback.class).equalTo("id", feedbackId).findFirst();
+        if(feedback == null)
+            feedback = RealmFactory.getSession().createObject(Feedback.class);
 
         feedback.setId(jsonObject.getInt("id"));
         feedback.setRate(jsonObject.getInt("rate"));
@@ -40,7 +42,7 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
 
         if (jsonObject.has("member_id")) {
             int memberId = jsonObject.getInt("member_id");
-            Member member = deserializerStorage.get(memberId, Member.class);
+            Member member =  RealmFactory.getSession().where(Member.class).equalTo("id", memberId).findFirst();
             if (member != null)
                 feedback.setOwner(member);
         } else if (jsonObject.has("owner")) {
@@ -55,17 +57,12 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
             throw new JSONException(String.format("Can't deserialize owner for feedback with id %d", feedback.getId()));
 
         int eventId       = jsonObject.getInt("event_id");
-        //first check db, and then cache storage
-        SummitEvent event = deserializerStorage.get(eventId, SummitEvent.class);
+        SummitEvent event = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst();
 
         feedback.setEvent(event);
 
         if (feedback.getEvent() == null)
             throw new JSONException(String.format("Can't deserialize event for feedback with id %d", feedback.getId()));
-
-        if (!deserializerStorage.exist(feedback, Feedback.class)) {
-            deserializerStorage.add(feedback, Feedback.class);
-        }
 
         return feedback;
 

@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -12,12 +13,11 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 1/20/2016.
  */
 public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGroupDeserializer {
-    IDeserializerStorage deserializerStorage;
+
     ITrackDeserializer trackDeserializer;
 
     @Inject
-    public TrackGroupDeserializer(IDeserializerStorage deserializerStorage, ITrackDeserializer trackDeserializer){
-        this.deserializerStorage = deserializerStorage;
+    public TrackGroupDeserializer(ITrackDeserializer trackDeserializer){
         this.trackDeserializer = trackDeserializer;
     }
 
@@ -28,11 +28,10 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
         String[] missedFields = validateRequiredFields(new String[] {"id", "name", "color", "tracks"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
         int groupId           = jsonObject.getInt("id");
-        TrackGroup trackGroup = deserializerStorage.exist(groupId, TrackGroup.class) ?
-                deserializerStorage.get(groupId, TrackGroup.class) :
-                new TrackGroup();
 
-        deserializerStorage.add(trackGroup, TrackGroup.class); // added here so it's available on child deserialization
+        TrackGroup trackGroup = RealmFactory.getSession().where(TrackGroup.class).equalTo("id", groupId).findFirst();
+        if(trackGroup == null)
+            trackGroup = RealmFactory.getSession().createObject(TrackGroup.class);
 
         trackDeserializer.setShouldDeserializeTrackGroups(false);
 
@@ -48,7 +47,7 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
         for (int i = 0; i < jsonArrayTracks.length(); i++) {
 
             track =  (jsonArrayTracks.optInt(i) > 0) ?
-                    deserializerStorage.get(jsonArrayTracks.optInt(i), Track.class):
+                    RealmFactory.getSession().where(Track.class).equalTo("id", jsonArrayTracks.optInt(i)).findFirst() :
                     trackDeserializer.deserialize(jsonArrayTracks.getJSONObject(i).toString());
 
             if(track == null) continue;

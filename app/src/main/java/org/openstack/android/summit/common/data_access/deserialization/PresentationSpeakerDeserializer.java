@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.data_access.deserialization;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -11,12 +12,10 @@ import javax.inject.Inject;
  */
 public class PresentationSpeakerDeserializer extends BaseDeserializer implements IPresentationSpeakerDeserializer {
     IPersonDeserializer personDeserializer;
-    IDeserializerStorage deserializerStorage;
 
     @Inject
-    public PresentationSpeakerDeserializer(IPersonDeserializer personDeserializer, IDeserializerStorage deserializerStorage) {
+    public PresentationSpeakerDeserializer(IPersonDeserializer personDeserializer) {
         this.personDeserializer  = personDeserializer;
-        this.deserializerStorage = deserializerStorage;
     }
 
     @Override
@@ -27,16 +26,12 @@ public class PresentationSpeakerDeserializer extends BaseDeserializer implements
         handleMissedFieldsIfAny(missedFields);
         int speakerId = jsonObject.getInt("id");
 
-        PresentationSpeaker presentationSpeaker = deserializerStorage.exist(speakerId, PresentationSpeaker.class) ?
-                deserializerStorage.get(speakerId, PresentationSpeaker.class)
-                : new PresentationSpeaker();
+        PresentationSpeaker speaker = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", speakerId).findFirst();
+        if(speaker == null)
+            speaker = RealmFactory.getSession().createObject(PresentationSpeaker.class);
 
-        personDeserializer.deserialize(presentationSpeaker, jsonObject);
+        personDeserializer.deserialize(speaker, jsonObject);
 
-        if (!deserializerStorage.exist(presentationSpeaker, PresentationSpeaker.class)) {
-            deserializerStorage.add(presentationSpeaker, PresentationSpeaker.class);
-        }
-
-        return presentationSpeaker;
+        return speaker;
     }
 }

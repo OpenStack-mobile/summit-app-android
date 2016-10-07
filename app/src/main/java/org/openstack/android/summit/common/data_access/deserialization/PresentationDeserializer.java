@@ -9,13 +9,14 @@ import org.openstack.android.summit.common.entities.PresentationSlide;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.utils.RealmFactory;
+
 import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 11/13/2015.
  */
 public class PresentationDeserializer extends BaseDeserializer implements IPresentationDeserializer {
-    IDeserializerStorage deserializerStorage;
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
     IPresentationLinkDeserializer presentationLinkDeserializer;
     IPresentationVideoDeserializer presentationVideoDeserializer;
@@ -25,12 +26,10 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
     public PresentationDeserializer
     (
         IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
-        IDeserializerStorage deserializerStorage,
         IPresentationLinkDeserializer presentationLinkDeserializer,
         IPresentationVideoDeserializer presentationVideoDeserializer,
         IPresentationSlideDeserializer presentationSlideDeserializer
     ){
-        this.deserializerStorage             = deserializerStorage;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
         this.presentationLinkDeserializer    = presentationLinkDeserializer;
         this.presentationVideoDeserializer   = presentationVideoDeserializer;
@@ -44,15 +43,12 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         String[] missedFields = validateRequiredFields(new String[] {"id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
         int presentationId = jsonObject.getInt("id");
-        Presentation presentation = deserializerStorage.exist(presentationId, Presentation.class) ?
-                deserializerStorage.get(presentationId, Presentation.class) :
-                new Presentation();
+
+        Presentation presentation = RealmFactory.getSession().where(Presentation.class).equalTo("id", presentationId).findFirst();
+        if(presentation == null)
+            presentation = RealmFactory.getSession().createObject(Presentation.class);
 
         presentation.setId(presentationId);
-
-        if(!deserializerStorage.exist(presentation, Presentation.class)) {
-            deserializerStorage.add(presentation, Presentation.class);
-        }
 
         presentation.setLevel(
                 !jsonObject.isNull("level") ? jsonObject.getString("level") : null
@@ -60,7 +56,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
 
         int trackId    = jsonObject.getInt("track_id");
         //first check db, and then cache storage
-        Track track    = deserializerStorage.get(trackId, Track.class);
+        Track track    = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
         if(track == null)
             throw new JSONException(String.format("Can't deserialize presentation id %d missing track %d", presentationId , trackId));
 
@@ -74,7 +70,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         for (int i = 0; i < jsonArraySpeakers.length(); i++) {
             speakerId = jsonArraySpeakers.optInt(i);
             presentationSpeaker = (speakerId > 0) ?
-                    deserializerStorage.get(speakerId, PresentationSpeaker.class) :
+                    RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", speakerId).findFirst():
                     presentationSpeakerDeserializer.deserialize(jsonArraySpeakers.getJSONObject(i).toString());
             if(presentationSpeaker == null) continue;
             presentation.getSpeakers().add(presentationSpeaker);
@@ -123,7 +119,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         }
 
         if (!jsonObject.isNull("moderator_speaker_id")) {
-            presentationSpeaker = deserializerStorage.get(jsonObject.getInt("moderator_speaker_id"), PresentationSpeaker.class);
+            presentationSpeaker = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", jsonObject.getInt("moderator_speaker_id")).findFirst();
             presentation.setModerator(presentationSpeaker);
         }
 

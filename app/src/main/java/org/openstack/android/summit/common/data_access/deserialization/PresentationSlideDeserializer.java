@@ -4,14 +4,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.IPresentationMaterial;
 import org.openstack.android.summit.common.entities.PresentationSlide;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 /**
  * Created by sebastian on 8/10/2016.
  */
 public class PresentationSlideDeserializer extends PresentationMaterialDeserializer implements IPresentationSlideDeserializer {
 
-    public PresentationSlideDeserializer(IDeserializerStorage deserializerStorage) {
-        super(deserializerStorage);
+    public PresentationSlideDeserializer() {
+        super();
     }
 
     @Override
@@ -24,16 +25,14 @@ public class PresentationSlideDeserializer extends PresentationMaterialDeseriali
         handleMissedFieldsIfAny(missedFields);
 
         slide.setLink(jsonObject.getString("link"));
-        if(!deserializerStorage.exist(slide, PresentationSlide.class)) {
-            deserializerStorage.add(slide, PresentationSlide.class);
-        }
         return slide;
     }
 
     @Override
     protected IPresentationMaterial buildMaterial(int materialId) {
-        return deserializerStorage.exist(materialId, PresentationSlide.class) ?
-                deserializerStorage.get(materialId, PresentationSlide.class) :
-                new PresentationSlide();
+        PresentationSlide slide = RealmFactory.getSession().where(PresentationSlide.class).equalTo("id", materialId).findFirst();
+        if(slide == null)
+            slide = RealmFactory.getSession().createObject(PresentationSlide.class);
+        return slide;
     }
 }

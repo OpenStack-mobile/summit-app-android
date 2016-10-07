@@ -22,14 +22,12 @@ public class TrackGroupTests {
         // Arrange
         String jsonString = "{\"id\":2,\"name\":\"CIO / Business Leader\",\"color\":\"#0d37c3\",\"description\":\"track group description\",\"tracks\":[\"2\"]}";
 
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         int trackId = 2;
         Track track = new Track();
         track.setId(trackId);
-        when(deserializerStorageMock.get(trackId, Track.class)).thenReturn(track);
 
         TrackDeserializer trackDeserializerMock = mock(TrackDeserializer.class);
-        TrackGroupDeserializer trackGroupDeserializer = new TrackGroupDeserializer(deserializerStorageMock, trackDeserializerMock);
+        TrackGroupDeserializer trackGroupDeserializer = new TrackGroupDeserializer(trackDeserializerMock);
 
         // Act
         TrackGroup trackGroup = trackGroupDeserializer.deserialize(jsonString);
@@ -46,14 +44,12 @@ public class TrackGroupTests {
         // Arrange
         String jsonString = "{\"id\":2,\"name\":\"CIO / Business Leader\",\"color\":\"#0d37c3\",\"description\":\"track group description\",\"tracks\":[]}";
 
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         int trackId = 2;
         Track track = new Track();
         track.setId(trackId);
-        when(deserializerStorageMock.get(trackId, Track.class)).thenReturn(track);
 
         TrackDeserializer trackDeserializerMock = mock(TrackDeserializer.class);
-        TrackGroupDeserializer trackGroupDeserializer = new TrackGroupDeserializer(deserializerStorageMock, trackDeserializerMock);
+        TrackGroupDeserializer trackGroupDeserializer = new TrackGroupDeserializer(trackDeserializerMock);
 
         // Act
         TrackGroup trackGroup = trackGroupDeserializer.deserialize(jsonString);

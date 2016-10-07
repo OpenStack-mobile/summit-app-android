@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
-import org.openstack.android.summit.common.data_access.deserialization.IDeserializerStorage;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
@@ -26,14 +25,13 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
     IDataUpdateDataStore       dataUpdateDataStore;
     IDataUpdateStrategyFactory dataUpdateStrategyFactory;
     IClassResolver             classResolver;
-    IDeserializerStorage       deserializerStorage;
 
-    public DataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore, IClassResolver classResolver, IDeserializerStorage deserializerStorage) {
+
+    public DataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore, IClassResolver classResolver) {
         this.deserializer              = deserializer;
         this.dataUpdateStrategyFactory = dataUpdateStrategyFactory;
         this.dataUpdateDataStore       = dataUpdateDataStore;
         this.classResolver             = classResolver;
-        this.deserializerStorage       = deserializerStorage;
     }
 
     @Override
@@ -47,8 +45,6 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
-
-                deserializerStorage.clear();
                 jsonObject = jsonArray.getJSONObject(i);
                 final String jsonString = jsonObject.toString();
                 dataUpdate = RealmFactory.transaction(new RealmFactory.IRealmCallback<DataUpdate>() {
@@ -101,7 +97,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
 
             RealmObject entity = !operationType.equals("DELETE") && !className.equals("MySchedule")
                     ? deserializer.deserialize(jsonObject.get("entity").toString(), type)
-                    : deserializerStorage.get(jsonObject.getInt("entity_id"), type);
+                    : (RealmObject)RealmFactory.getSession().where(type).equalTo("id", jsonObject.getInt("entity_id")).findFirst() ;
 
             dataUpdate.setEntityType(type);
             dataUpdate.setEntity(entity);

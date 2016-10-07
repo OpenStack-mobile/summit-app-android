@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 
@@ -12,12 +13,11 @@ import javax.inject.Inject;
  * Created by Claudio Redi on 2/9/2016.
  */
 public class TrackDeserializer extends BaseDeserializer implements ITrackDeserializer {
-    private IDeserializerStorage deserializerStorage;
     private boolean shouldDeserializeTrackGroups = true;
 
     @Inject
-    public TrackDeserializer(IDeserializerStorage deserializerStorage){
-        this.deserializerStorage = deserializerStorage;
+    public TrackDeserializer(){
+
     }
 
     @Override
@@ -28,9 +28,10 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
         handleMissedFieldsIfAny(missedFields);
 
         int trackId = jsonObject.getInt("id");
-        Track track = deserializerStorage.exist(trackId, Track.class) ?
-                      deserializerStorage.get(trackId, Track.class) :
-                      new Track();
+
+        Track track = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
+        if(track == null)
+            track = RealmFactory.getSession().createObject(Track.class);
 
         track.setId(trackId);
         track.setName(jsonObject.getString("name"));
@@ -43,15 +44,10 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
 
             for (int i = 0; i < jsonArrayTrackGroups.length(); i++) {
                 trackGroupId = jsonArrayTrackGroups.getInt(i);
-                //first check db, and then cache storage
-                trackGroup   = deserializerStorage.get(trackGroupId, TrackGroup.class);
+                trackGroup   = RealmFactory.getSession().where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
                 if(trackGroup != null)
                     track.getTrackGroups().add(trackGroup);
             }
-        }
-
-        if(!deserializerStorage.exist(track, Track.class)) {
-            deserializerStorage.add(track, Track.class);
         }
 
         return track;

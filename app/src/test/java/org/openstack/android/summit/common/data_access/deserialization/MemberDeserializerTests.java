@@ -32,12 +32,11 @@ public class MemberDeserializerTests {
         SummitAttendeeDeserializer summitAttendeeDeserializer = mock(SummitAttendeeDeserializer.class);
         PersonDeserializer personDeserializer = mock(PersonDeserializer.class);
         FeedbackDeserializer feedbackDeserializer = mock(FeedbackDeserializer.class);
-        DeserializerStorage deserializerStorage = mock(DeserializerStorage.class);
 
         SummitAttendee summitAttendee = new SummitAttendee();
         when(summitAttendeeDeserializer.deserialize(eq(jsonString))).thenReturn(summitAttendee);
 
-        IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer,presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, deserializerStorage);
+        IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer,presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
 
         // Act
         Member member = memberDeserializer.deserialize(jsonString);
@@ -57,11 +56,10 @@ public class MemberDeserializerTests {
         SummitAttendeeDeserializer summitAttendeeDeserializer = mock(SummitAttendeeDeserializer.class);
         PersonDeserializer personDeserializer = mock(PersonDeserializer.class);
         FeedbackDeserializer feedbackDeserializer = mock(FeedbackDeserializer.class);
-        DeserializerStorage deserializerStorage = mock(DeserializerStorage.class);
         SummitAttendee summitAttendee = new SummitAttendee();
         when(summitAttendeeDeserializer.deserialize(eq(jsonString))).thenReturn(summitAttendee);
 
-        IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, deserializerStorage);
+        IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
 
         // Act
         Member member = memberDeserializer.deserialize(jsonString);

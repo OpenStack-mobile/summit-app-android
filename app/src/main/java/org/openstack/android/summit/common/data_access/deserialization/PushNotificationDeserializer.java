@@ -6,7 +6,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.PushNotification;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.utils.RealmFactory;
+
 import java.util.Date;
+
 import javax.inject.Inject;
 
 /**
@@ -14,11 +17,9 @@ import javax.inject.Inject;
  */
 public class PushNotificationDeserializer extends BaseDeserializer implements IPushNotificationDeserializer {
 
-    IDeserializerStorage deserializerStorage;
-
     @Inject
-    public PushNotificationDeserializer(IDeserializerStorage deserializerStorage){
-        this.deserializerStorage = deserializerStorage;
+    public PushNotificationDeserializer(){
+
     }
 
     @Override
@@ -31,7 +32,7 @@ public class PushNotificationDeserializer extends BaseDeserializer implements IP
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
 
-        PushNotification pushNotification = new PushNotification();
+        PushNotification pushNotification =  RealmFactory.getSession().createObject(PushNotification.class);
         pushNotification.setReceived(new Date());
         pushNotification.setOpened(false);
         pushNotification.setId(jsonObject.getInt("id"));
@@ -40,9 +41,9 @@ public class PushNotificationDeserializer extends BaseDeserializer implements IP
         pushNotification.setType(jsonObject.optString("type",""));
         pushNotification.setEventId(jsonObject.optInt("event_id",0));
 
-        //first check db, and then cache storage
+
         int summitId  = jsonObject.optInt("summit_id", 0);
-        Summit summit = deserializerStorage.get(summitId, Summit.class);
+        Summit summit = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
         if(summit != null){
             pushNotification.setSummit(summit);
         }

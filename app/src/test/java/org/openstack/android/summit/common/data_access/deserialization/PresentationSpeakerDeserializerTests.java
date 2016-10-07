@@ -21,9 +21,8 @@ public class PresentationSpeakerDeserializerTests {
         // Arrange
         String jsonString = "{\"id\":8,\"first_name\":\"Anthony\",\"last_name\":\"Bettini\",\"title\":\"Founder & CEO\",\"bio\":\"<p>Anthony Bettini is the Founder &amp; CEO of FlawCheck.<\\/p>\",\"irc\":\"irc\",\"twitter\":\"AnthonyBettini\",\"member_id\":36219,\"presentations\":[3591],\"pic\":\"http://pic.com/pic.jpg\",\"gender\":null}";
         PersonDeserializer personDeserializer = new PersonDeserializer();
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
 
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer, deserializerStorageMock);
+        IPresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
 
         // Act
         PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonString);
@@ -47,8 +46,7 @@ public class PresentationSpeakerDeserializerTests {
         // Arrange
         String jsonString = "{\"id\":8,\"first_name\":\"Anthony\",\"last_name\":\"Bettini\",\"title\":null,\"bio\":null,\"irc\":null,\"twitter\":null,\"member_id\":null,\"presentations\":[3591],\"pic\":null,\"gender\":null}";
         PersonDeserializer personDeserializer = new PersonDeserializer();
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer, deserializerStorageMock);
+        IPresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
 
         // Act
         PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonString);
@@ -73,9 +71,8 @@ public class PresentationSpeakerDeserializerTests {
         String jsonString = "{\"id\":8,\"first_name\":\"Anthony\",\"last_name\":\"Bettini\"}";
 
         PersonDeserializer personDeserializer = new PersonDeserializer();
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
 
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer, deserializerStorageMock);
+        IPresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
 
         // Act
         PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonString);

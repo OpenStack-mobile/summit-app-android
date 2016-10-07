@@ -44,11 +44,9 @@ import org.openstack.android.summit.common.data_access.data_polling.SummitVenueI
 import org.openstack.android.summit.common.data_access.data_polling.TrackGroupDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.VenueLocationsDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.deserialization.Deserializer;
-import org.openstack.android.summit.common.data_access.deserialization.DeserializerStorage;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.GenericDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
-import org.openstack.android.summit.common.data_access.deserialization.IDeserializerStorage;
 import org.openstack.android.summit.common.data_access.deserialization.IFeedbackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IGenericDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IMemberDeserializer;
@@ -104,11 +102,6 @@ import dagger.Provides;
 @Module
 public class DataAccessModule {
 
-    @Provides
-    @Singleton
-    IDeserializerStorage providesDeserializerStorage() {
-        return new DeserializerStorage();
-    }
 
     @Provides
     IPersonDeserializer providesPersonDeserializer() {
@@ -116,18 +109,18 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitEventDeserializer providesSummitEventDeserializer(IGenericDeserializer genericDeserializer, IPresentationDeserializer presentationDeserializer, IDeserializerStorage deserializerStorage) {
-        return new SummitEventDeserializer(genericDeserializer, presentationDeserializer, deserializerStorage);
+    ISummitEventDeserializer providesSummitEventDeserializer(IGenericDeserializer genericDeserializer, IPresentationDeserializer presentationDeserializer) {
+        return new SummitEventDeserializer(genericDeserializer, presentationDeserializer);
     }
 
     @Provides
-    IVenueRoomDeserializer providesVenueRoomDeserializer(IDeserializerStorage deserializerStorage, IVenueFloorDeserializer venueFloorDeserializer) {
-        return new VenueRoomDeserializer(deserializerStorage, venueFloorDeserializer);
+    IVenueRoomDeserializer providesVenueRoomDeserializer(IVenueFloorDeserializer venueFloorDeserializer) {
+        return new VenueRoomDeserializer(venueFloorDeserializer);
     }
 
     @Provides
-    IVenueDeserializer providesVenueDeserializer(IGenericDeserializer genericDeserializer, IDeserializerStorage deserializerStorage, IVenueFloorDeserializer venueFloorDeserializer) {
-        return new VenueDeserializer(genericDeserializer, deserializerStorage, venueFloorDeserializer);
+    IVenueDeserializer providesVenueDeserializer(IGenericDeserializer genericDeserializer, IVenueFloorDeserializer venueFloorDeserializer) {
+        return new VenueDeserializer(genericDeserializer, venueFloorDeserializer);
     }
 
     @Provides
@@ -137,73 +130,72 @@ public class DataAccessModule {
                                                    ISummitEventDeserializer summitEventDeserializer,
                                                    IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                                                    ITrackGroupDeserializer trackGroupDeserializer,
-                                                   ITrackDeserializer trackDeserializer,
-                                                   IDeserializerStorage deserializerStorage) {
-        return new SummitDeserializer(genericDeserializer, venueDeserializer, venueRoomDeserializer, summitEventDeserializer, presentationSpeakerDeserializer, trackGroupDeserializer, trackDeserializer, deserializerStorage);
+                                                   ITrackDeserializer trackDeserializer)
+    {
+        return new SummitDeserializer(genericDeserializer, venueDeserializer, venueRoomDeserializer, summitEventDeserializer, presentationSpeakerDeserializer, trackGroupDeserializer, trackDeserializer);
     }
 
     @Provides
-    IPresentationLinkDeserializer providesPresentationLinkDeserializer(IDeserializerStorage deserializerStorage) {
-        return new PresentationLinkDeserializer(deserializerStorage);
+    IPresentationLinkDeserializer providesPresentationLinkDeserializer() {
+        return new PresentationLinkDeserializer();
     }
 
     @Provides
-    IPresentationVideoDeserializer providesPresentationVideoDeserializer(IDeserializerStorage deserializerStorage) {
-        return new PresentationVideoDeserializer(deserializerStorage);
+    IPresentationVideoDeserializer providesPresentationVideoDeserializer() {
+        return new PresentationVideoDeserializer();
     }
 
     @Provides
-    IPresentationSlideDeserializer providesPresentationSlideDeserializer(IDeserializerStorage deserializerStorage) {
-        return new PresentationSlideDeserializer(deserializerStorage);
+    IPresentationSlideDeserializer providesPresentationSlideDeserializer() {
+        return new PresentationSlideDeserializer();
     }
 
     @Provides
     IPresentationDeserializer providesPresentationDeserializer
     (
         IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
-        IDeserializerStorage deserializerStorage,
         IPresentationLinkDeserializer presentationLinkDeserializer,
         IPresentationSlideDeserializer presentationSlideDeserializer,
         IPresentationVideoDeserializer presentationVideoDeserializer
     )
     {
-        return new PresentationDeserializer(presentationSpeakerDeserializer, deserializerStorage, presentationLinkDeserializer, presentationVideoDeserializer, presentationSlideDeserializer);
+        return new PresentationDeserializer(presentationSpeakerDeserializer, presentationLinkDeserializer, presentationVideoDeserializer, presentationSlideDeserializer);
     }
 
     @Provides
-    ISummitAttendeeDeserializer providesSummitAttendeeDeserializer(IDeserializerStorage deserializerStorage) {
-        return new SummitAttendeeDeserializer(deserializerStorage);
+    ISummitAttendeeDeserializer providesSummitAttendeeDeserializer() {
+        return new SummitAttendeeDeserializer();
     }
 
     @Provides
-    IPresentationSpeakerDeserializer providesPresentationSpeakerDeserializer(IPersonDeserializer personDeserializer, IDeserializerStorage deserializerStorage) {
-        return new PresentationSpeakerDeserializer(personDeserializer, deserializerStorage);
+    IPresentationSpeakerDeserializer providesPresentationSpeakerDeserializer(IPersonDeserializer personDeserializer) {
+        return new PresentationSpeakerDeserializer(personDeserializer);
     }
 
 
     @Provides
-    IPushNotificationDeserializer providesPushNotificationDeserializer(IDeserializerStorage deserializerStorage) {
-        return new PushNotificationDeserializer(deserializerStorage);
+    IPushNotificationDeserializer providesPushNotificationDeserializer() {
+        return new PushNotificationDeserializer();
     }
 
     @Provides
-    IVenueFloorDeserializer providesVenueFloorDeserializer(IDeserializerStorage deserializerStorage) {
-        return new VenueFloorDeserializer(deserializerStorage);
+    IVenueFloorDeserializer providesVenueFloorDeserializer() {
+        return new VenueFloorDeserializer();
     }
 
     @Provides
-    ITrackDeserializer providesTrackDeserializerDeserializer(IDeserializerStorage deserializerStorage) {
-        return new TrackDeserializer(deserializerStorage);
+    ITrackDeserializer providesTrackDeserializerDeserializer() {
+        return new TrackDeserializer();
     }
 
     @Provides
-    IFeedbackDeserializer providesFeedbackDeserializer(IDeserializerStorage deserializerStorage) {
-        return new FeedbackDeserializer(deserializerStorage);
+    IFeedbackDeserializer providesFeedbackDeserializer() {
+        return new FeedbackDeserializer();
     }
 
     @Provides
-    IGenericDeserializer providesGenericDeserializer(IDeserializerStorage deserializerStorage) {
-        return new GenericDeserializer(deserializerStorage);
+    IGenericDeserializer providesGenericDeserializer() {
+        return new GenericDeserializer();
     }
 
     @Provides
@@ -212,16 +204,15 @@ public class DataAccessModule {
         IPersonDeserializer personDeserializer,
         IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
         ISummitAttendeeDeserializer summitAttendeeDeserializer,
-        IFeedbackDeserializer feedbackDeserializer,
-        IDeserializerStorage deserializerStorage
+        IFeedbackDeserializer feedbackDeserializer
     )
     {
-        return new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer,deserializerStorage);
+        return new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
     }
 
     @Provides
-    ITrackGroupDeserializer providesTrackGroupDeserializer(IDeserializerStorage deserializerStorage, ITrackDeserializer trackDeserializer) {
-        return new TrackGroupDeserializer(deserializerStorage, trackDeserializer);
+    ITrackGroupDeserializer providesTrackGroupDeserializer(ITrackDeserializer trackDeserializer) {
+        return new TrackGroupDeserializer(trackDeserializer);
     }
 
     @Provides
@@ -343,6 +334,11 @@ public class DataAccessModule {
     }
 
     @Provides
+    IDataUpdateProcessor providesDataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore) {
+        return new DataUpdateProcessor(deserializer, dataUpdateStrategyFactory, dataUpdateDataStore, new ClassResolver());
+    }
+
+    @Provides
     IDataUpdateStrategyFactory providesDataUpdateStrategyFactory(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, ITrackGroupDataStore trackGroupDataStore, IVenueDataStore venueDataStore, ISecurityManager securityManager) {
         return new DataUpdateStrategyFactory(
                 new DataUpdateStrategy(genericDataStore),
@@ -353,11 +349,6 @@ public class DataAccessModule {
                 new PresentationMaterialDataUpdateStrategy(genericDataStore),
                 new VenueLocationsDataUpdateStrategy(genericDataStore)
         );
-    }
-
-    @Provides
-    IDataUpdateProcessor providesDataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore, IDeserializerStorage deserializerStorage) {
-        return new DataUpdateProcessor(deserializer, dataUpdateStrategyFactory, dataUpdateDataStore, new ClassResolver(), deserializerStorage);
     }
 
     @Provides

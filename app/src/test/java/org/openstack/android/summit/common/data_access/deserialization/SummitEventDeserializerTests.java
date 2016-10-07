@@ -31,32 +31,25 @@ public class SummitEventDeserializerTests {
     public void deserialize_validJSONForPresentationEventAndVenueRoomAssigned_returnsCorrectInstance() throws JSONException {
         // Arrange
         String jsonString = "{\"id\":4189,\"title\":\"A Day in the Life of an Openstack & Cloud Architect\",\"description\":\"Event Description\",\"start_date\":1445922900,\"end_date\":1445925300,\"location_id\":28,\"type_id\":1,\"class_name\":\"Presentation\",\"track_id\":5,\"moderator_speaker_id\":null,\"level\":\"Intermediate\",\"allow_feedback\":true,\"summit_types\":[1,2],\"sponsors\":[5],\"speakers\":[795,1873],\"tags\":[{\"id\":19,\"tag\":\"test_tag\"}],\"slides\":[],\"videos\":[]}";
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         int summitTypeId1 = 1;
         SummitType summitType1 = new SummitType();
         summitType1.setId(summitTypeId1);
-        when(deserializerStorageMock.get(summitTypeId1, SummitType.class)).thenReturn(summitType1);
 
         int summitTypeId2 = 2;
         SummitType summitType2 = new SummitType();
         summitType2.setId(summitTypeId2);
-        when(deserializerStorageMock.get(summitTypeId2, SummitType.class)).thenReturn(summitType2);
 
         int companyId = 5;
         Company company = new Company();
         company.setId(companyId);
-        when(deserializerStorageMock.get(companyId, Company.class)).thenReturn(company);
 
         int venueRoomId = 28;
         VenueRoom venueRoom = new VenueRoom();
         venueRoom.setId(venueRoomId);
-        when(deserializerStorageMock.exist(venueRoomId, VenueRoom.class)).thenReturn(true);
-        when(deserializerStorageMock.get(venueRoomId, VenueRoom.class)).thenReturn(venueRoom);
 
         int eventTypeId = 1;
         EventType eventType = new EventType();
         eventType.setId(eventTypeId);
-        when(deserializerStorageMock.get(eventTypeId, EventType.class)).thenReturn(eventType);
 
         GenericDeserializer genericDeserializerMock = mock(GenericDeserializer.class);
         int tagId = 5;
@@ -74,9 +67,8 @@ public class SummitEventDeserializerTests {
         summit.setId(1);
         ArrayList<Summit> summits = new ArrayList<>();
         summits.add(summit);
-        when(deserializerStorageMock.getAll(Summit.class)).thenReturn(summits);
 
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, deserializerStorageMock);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock);
 
         // Act
         SummitEvent summitEvent = summitEventDeserializer.deserialize(jsonString);
@@ -106,27 +98,21 @@ public class SummitEventDeserializerTests {
     public void deserialize_validJSONForNonPresentationEventAndVenueAssigned_returnsCorrectInstance() throws JSONException {
         // Arrange
         String jsonString = "{\"id\":4189,\"title\":\"A Day in the Life of an Openstack & Cloud Architect\",\"description\":\"Event Description\",\"start_date\":1445922900,\"end_date\":1445925300,\"location_id\":28,\"type_id\":2,\"class_name\":\"Presentation\",\"track_id\":null,\"moderator_speaker_id\":null,\"level\":\"Intermediate\",\"allow_feedback\":false,\"summit_types\":[1,2],\"sponsors\":[],\"speakers\":[],\"tags\":[{\"id\":19,\"tag\":\"test_tag\"}],\"slides\":[],\"videos\":[]}";
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         int summitTypeId1 = 1;
         SummitType summitType1 = new SummitType();
         summitType1.setId(summitTypeId1);
-        when(deserializerStorageMock.get(summitTypeId1, SummitType.class)).thenReturn(summitType1);
 
         int summitTypeId2 = 2;
         SummitType summitType2 = new SummitType();
         summitType2.setId(summitTypeId2);
-        when(deserializerStorageMock.get(summitTypeId2, SummitType.class)).thenReturn(summitType2);
 
         int venueId = 28;
         Venue venue = new Venue();
         venue.setId(venueId);
-        when(deserializerStorageMock.exist(venueId, Venue.class)).thenReturn(true);
-        when(deserializerStorageMock.get(venueId, Venue.class)).thenReturn(venue);
 
         int eventTypeId = 2;
         EventType eventType = new EventType();
         eventType.setId(eventTypeId);
-        when(deserializerStorageMock.get(eventTypeId, EventType.class)).thenReturn(eventType);
 
         GenericDeserializer genericDeserializerMock = mock(GenericDeserializer.class);
         int tagId = 5;
@@ -136,13 +122,12 @@ public class SummitEventDeserializerTests {
 
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
 
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, deserializerStorageMock);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock);
 
         Summit summit = new Summit();
         summit.setId(1);
         ArrayList<Summit> summits = new ArrayList<>();
         summits.add(summit);
-        when(deserializerStorageMock.getAll(Summit.class)).thenReturn(summits);
 
         // Act
         SummitEvent summitEvent = summitEventDeserializer.deserialize(jsonString);
@@ -170,11 +155,10 @@ public class SummitEventDeserializerTests {
     public void deserialize_invalidJSONWithAllRequiredFieldsMissled_throwsJSONException() throws JSONException {
         String jsonString = "{}";
 
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
         GenericDeserializer genericDeserializerMock = mock(GenericDeserializer.class);
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
 
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, deserializerStorageMock);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock);
         String exceptionMessage = "";
         int exceptionCount = 0;
         int expectedExceptionCount = 1;
@@ -197,27 +181,22 @@ public class SummitEventDeserializerTests {
     public void deserialize_validJSONWithNullDescription_returnsInstanceWithEmptyDescription() throws JSONException {
         // Arrange
         String jsonString = "{\"id\":4189,\"title\":\"A Day in the Life of an Openstack & Cloud Architect\",\"description\":null,\"start_date\":1445922900,\"end_date\":1445925300,\"location_id\":28,\"type_id\":2,\"class_name\":\"Presentation\",\"track_id\":null,\"moderator_speaker_id\":null,\"level\":\"Intermediate\",\"allow_feedback\":false,\"summit_types\":[1,2],\"sponsors\":[],\"speakers\":[],\"tags\":[{\"id\":19,\"tag\":\"test_tag\"}],\"slides\":[],\"videos\":[]}";
-        DeserializerStorage deserializerStorageMock = mock(DeserializerStorage.class);
+
         int summitTypeId1 = 1;
         SummitType summitType1 = new SummitType();
         summitType1.setId(summitTypeId1);
-        when(deserializerStorageMock.get(summitTypeId1, SummitType.class)).thenReturn(summitType1);
 
         int summitTypeId2 = 2;
         SummitType summitType2 = new SummitType();
         summitType2.setId(summitTypeId2);
-        when(deserializerStorageMock.get(summitTypeId2, SummitType.class)).thenReturn(summitType2);
 
         int venueId = 28;
         Venue venue = new Venue();
         venue.setId(venueId);
-        when(deserializerStorageMock.exist(venueId, Venue.class)).thenReturn(true);
-        when(deserializerStorageMock.get(venueId, Venue.class)).thenReturn(venue);
 
         int eventTypeId = 2;
         EventType eventType = new EventType();
         eventType.setId(eventTypeId);
-        when(deserializerStorageMock.get(eventTypeId, EventType.class)).thenReturn(eventType);
 
         GenericDeserializer genericDeserializerMock = mock(GenericDeserializer.class);
         int tagId = 5;
@@ -229,11 +208,10 @@ public class SummitEventDeserializerTests {
         summit.setId(1);
         ArrayList<Summit> summits = new ArrayList<>();
         summits.add(summit);
-        when(deserializerStorageMock.getAll(Summit.class)).thenReturn(summits);
 
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
 
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, deserializerStorageMock);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock);
 
         // Act
         SummitEvent summitEvent = summitEventDeserializer.deserialize(jsonString);

@@ -11,17 +11,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.openstack.android.summit.common.data_access.deserialization.DeserializerStorage;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IMemberDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.MemberDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PersonDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitAttendeeDeserializer;
-import org.openstack.android.summit.common.entities.Feedback;
+import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
@@ -116,6 +114,26 @@ public class DeserializerTests  extends InstrumentationTestCase {
     }
 
     @Test
+    public void basicDeserializeRealm(){
+        try {
+            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
+                @Override
+                public Void callback(Realm session) throws Exception {
+                    String jsonString = "{ \"id\":1, \"name\":\"test\"}";
+                    EventType eventType1 = session.createObjectFromJson(EventType.class, jsonString);
+
+                    EventType eventType2 = session.where(EventType.class).equalTo("id", 1).findFirst();
+                    return Void.getInstance();
+                }
+            });
+
+        }
+        catch (Exception ex){
+
+        }
+    }
+
+    @Test
     public void updateEventTest(){
         try {
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
@@ -181,13 +199,12 @@ public class DeserializerTests  extends InstrumentationTestCase {
                 @Override
                 public Void callback(Realm session) throws Exception {
 
-                    DeserializerStorage deserializerStorage = new DeserializerStorage();
-                    SummitAttendeeDeserializer summitAttendeeDeserializer = new SummitAttendeeDeserializer(deserializerStorage);
+                    SummitAttendeeDeserializer summitAttendeeDeserializer = new SummitAttendeeDeserializer();
                     PersonDeserializer personDeserializer = new PersonDeserializer();
-                    FeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer(deserializerStorage);
-                    PresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer, deserializerStorage);
+                    FeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
+                    PresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
 
-                    IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, deserializerStorage);
+                    IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
 
 
                     Member member = memberDeserializer.deserialize(json);
@@ -200,13 +217,12 @@ public class DeserializerTests  extends InstrumentationTestCase {
                 @Override
                 public Void callback(Realm session) throws Exception {
 
-                    DeserializerStorage deserializerStorage = new DeserializerStorage();
-                    SummitAttendeeDeserializer summitAttendeeDeserializer = new SummitAttendeeDeserializer(deserializerStorage);
+                    SummitAttendeeDeserializer summitAttendeeDeserializer = new SummitAttendeeDeserializer();
                     PersonDeserializer personDeserializer = new PersonDeserializer();
-                    FeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer(deserializerStorage);
-                    PresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer, deserializerStorage);
+                    FeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
+                    PresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
 
-                    IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, deserializerStorage);
+                    IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
 
 
                     Member member = memberDeserializer.deserialize(json);
