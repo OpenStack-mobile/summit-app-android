@@ -64,8 +64,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public static final String KEY_AUTH_URL       = "org.openstack.android.summit.KEY_AUTH_URL";
     public static final String KEY_IS_NEW_ACCOUNT = "org.openstack.android.summit.KEY_IS_NEW_ACCOUNT";
     public static final String KEY_ACCOUNT_OBJECT = "org.openstack.android.summit.KEY_ACCOUNT_OBJECT";
+    public static final String LAST_AUTH_CODE     = "org.openstack.android.summit.LAST_AUTH_CODE";
 
-    private final String TAG = getClass().getSimpleName();
     private AccountManager accountManager;
     private Account account;
     private boolean isNewAccount;
@@ -99,7 +99,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         // Fetch the authentication URL that was given to us by the calling activity
         String authUrl = getIntent().getStringExtra(KEY_AUTH_URL) + "&nonce=" + String.valueOf(new Date().getTime());
 
-        Log.d(TAG, String.format("Initiated activity for getting authorisation with URL '%s'.", authUrl));
+        Log.d(Constants.LOG_TAG, String.format("Initiated activity for getting authorisation with URL '%s'.", authUrl));
 
         if (authUrl == null) {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
@@ -192,13 +192,16 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         public void onPageStarted(WebView view, String urlString, Bitmap favicon) {
             try {
                 super.onPageStarted(view, urlString, favicon);
-                WebView webView = (WebView) authActivity.get().findViewById(R.id.WebView);
+
+                WebView webView         = (WebView) authActivity.get().findViewById(R.id.WebView);
                 ProgressBar progressBar = (ProgressBar) authActivity.get().findViewById(R.id.ProgressBar);
-                webView.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
+                ISession session        = authActivity.get().session;
                 Uri url                    = Uri.parse(urlString);
                 Set<String> parameterNames = url.getQueryParameterNames();
                 String extractedFragment   = url.getEncodedFragment();
+
+                webView.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
 
                 if (parameterNames.contains("error")) {
                     view.stopLoading();
@@ -255,13 +258,24 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                             default: {
                                 // The URL will contain a `code` parameter when the user has been authenticated
                                 if (!parameterNames.contains("code")) {
-                                    throw new InvalidParameterException(String.format(
+                                    throw new InvalidParameterException
+                                    (
+                                        String.format
+                                        (
                                             "urlString '%1$s' doesn't contain code param; can't extract authCode",
-                                            urlString));
+                                            urlString
+                                        )
+                                    );
                                 }
+                                String authCode       = url.getQueryParameter("code");
+                                String formerAuthCode = session.getString(LAST_AUTH_CODE);
+                                // avoid double redeem of code.
+                                if(formerAuthCode != null && authCode != null && formerAuthCode.equals(authCode))
+                                    return;
+                                session.setString(LAST_AUTH_CODE, authCode);
                                 // Request the ID token
                                 RequestIdTokenTask task = new RequestIdTokenTask(authActivity.get(), oidcConfigurationManager);
-                                task.execute(url.getQueryParameter("code"));
+                                task.execute(authCode);
                                 break;
                             }
                         }
@@ -449,7 +463,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         private OIDCNativeClientConfiguration clientConfig;
         private OpenIdConnectProtocol oidcProtocol;
-        private final String TAG = getClass().getSimpleName();
         private WeakReference<AuthenticatorActivity> authActivity;
 
         public RequestIdTokenTask(AuthenticatorActivity activity, IOIDCConfigurationManager oidcConfigurationManager) {
@@ -462,16 +475,16 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         @Override
         protected Boolean doInBackground(String... args) {
             try {
-                String authToken = args[0];
+                String authCode = args[0];
                 IdTokenResponse response;
 
                 Log.d(Constants.LOG_TAG, "RequestIdTokenTask : Requesting ID token.");
 
                 try {
-                    response = oidcProtocol.makeTokenRequest(new AuthCodeResponse(clientConfig, authToken));
+                    response = oidcProtocol.makeTokenRequest(new AuthCodeResponse(clientConfig, authCode));
                 } catch (IOException e) {
                     Crashlytics.logException(e);
-                    Log.e(TAG, e.getMessage(), e);
+                    Log.e(Constants.LOG_TAG, e.getMessage(), e);
                     return false;
                 }
 
@@ -510,7 +523,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private void createAccount(IdTokenResponse response) {
-        Log.d(TAG, "Creating account.");
+        Log.d(Constants.LOG_TAG, "Creating account.");
 
         String accountType = getString(R.string.ACCOUNT_TYPE);
 
@@ -534,7 +547,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             accountId = response.parseIdToken().getPayload().getSubject();
         } catch (IOException e) {
             Crashlytics.logException(e);
-            Log.e(TAG, "Could not get ID Token subject.");
+            Log.e(Constants.LOG_TAG, "Could not get ID Token subject.");
         }
 
         account = new Account(String.format("%s (%s)", accountName, accountId), accountType);
@@ -543,7 +556,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         // Store the tokens in the account
         setTokens(response);
 
-        Log.d(TAG, "Account created.");
+        Log.d(Constants.LOG_TAG, "Account created.");
     }
 
     private void setTokens(IdTokenResponse response) {
@@ -583,7 +596,5 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
         }
     }
-
-
 }
 

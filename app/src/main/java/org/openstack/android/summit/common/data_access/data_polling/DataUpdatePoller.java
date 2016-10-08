@@ -63,6 +63,11 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             if (url == null) {
                 return;
             }
+
+            if(summitDataStore.getActiveLocal() == null){
+                return;
+            }
+
             AccountType accountType    = securityManager.isLoggedIn() ? AccountType.OIDC : AccountType.ServiceAccount;
             ITokenManager tokenManager = null;
 

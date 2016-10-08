@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.DataUpdate;
+import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import io.realm.Realm;
@@ -37,20 +38,23 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
     @Override
     public void process(String json) throws JSONException {
 
-        JSONArray jsonArray = new JSONArray(json);
+        JSONArray jsonArray   = new JSONArray(json);
         JSONObject jsonObject = null;
         DataUpdate dataUpdate = null;
 
         Log.d(Constants.LOG_TAG, String.format("Thread %s Data updates : %s", Thread.currentThread().getName(), jsonArray.toString(4)));
 
         for (int i = 0; i < jsonArray.length(); i++) {
+
             try {
+
                 jsonObject              = jsonArray.getJSONObject(i);
                 final String jsonString = jsonObject.toString();
+
                 dataUpdate = RealmFactory.transaction(new RealmFactory.IRealmCallback<DataUpdate>() {
                     @Override
                     public DataUpdate callback(Realm session) throws Exception {
-
+                        if(session.where(Summit.class).findFirst() == null ) return null;
                         DataUpdate dataUpdate = deserialize(jsonString);
                         if (dataUpdate == null) return null;
                         IDataUpdateStrategy dataUpdateStrategy;

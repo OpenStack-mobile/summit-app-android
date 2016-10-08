@@ -214,7 +214,8 @@ public class MainActivity
         super.onCreate(savedInstanceState);
         getApplicationComponent().inject(this);
         presenter.setView(this);
-
+        // kill any data updates enabled
+        presenter.disableDataUpdateService();
         // bind local broadcast receiver
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.START_LOG_IN_EVENT);
