@@ -61,7 +61,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
-    public static final String KEY_AUTH_URL = "org.openstack.android.summit.KEY_AUTH_URL";
+    public static final String KEY_AUTH_URL       = "org.openstack.android.summit.KEY_AUTH_URL";
     public static final String KEY_IS_NEW_ACCOUNT = "org.openstack.android.summit.KEY_IS_NEW_ACCOUNT";
     public static final String KEY_ACCOUNT_OBJECT = "org.openstack.android.summit.KEY_ACCOUNT_OBJECT";
 
@@ -552,20 +552,25 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_REFRESH, response.getRefreshToken());
     }
 
-    private void showErrorDialog(String message) {
-        new AlertDialog.Builder(AuthenticatorActivity.this)
-                .setTitle("Sorry, there was an error")
-                .setMessage(message)
-                .setCancelable(true)
-                .setNeutralButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        finish();
-                    }
-                })
-                .create()
-                .show();
+    private void showErrorDialog(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new AlertDialog.Builder(AuthenticatorActivity.this)
+                        .setTitle("Sorry, there was an error")
+                        .setMessage(message)
+                        .setCancelable(true)
+                        .setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                finish();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        });
     }
 
     @Override
