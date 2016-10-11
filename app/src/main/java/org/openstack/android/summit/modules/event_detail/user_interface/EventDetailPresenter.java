@@ -90,6 +90,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
         loadedAllFeedback  = false;
         myFeedbackForEvent = interactor.getMyFeedbackForEvent(eventId);
+
         view.setName(event.getName());
         view.setTrack(event.getTrack());
         view.setDate(event.getDateTime());
@@ -97,7 +98,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setCredentials(event.getCredentials());
         view.setLevel(event.getLevel());
         view.setSponsors(event.getSponsors());
-        view.setSpeakers(event.getSpeakers());
+        view.setSpeakers(event.getModeratorAndSpeakers());
         view.setScheduled(interactor.isEventScheduledByLoggedMember(eventId));
         view.setIsScheduledStatusVisible(interactor.isMemberLoggedAndConfirmedAttendee());
         view.setAllowNewFeedback(getAllowNewFeedback());
@@ -313,7 +314,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public void buildSpeakerListItem(PersonItemView personItemView, int position) {
-        PersonListItemDTO personListItemDTO = event.getSpeakers().get(position);
+        PersonListItemDTO personListItemDTO = event.getModeratorAndSpeakers().get(position);
         personItemView.setName(personListItemDTO.getName());
         personItemView.setTitle(personListItemDTO.getTitle());
         personItemView.setIsModerator(
@@ -337,7 +338,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public void showSpeakerProfile(int position) {
-        PersonListItemDTO speaker = event.getSpeakers().get(position);
+        PersonListItemDTO speaker = event.getModeratorAndSpeakers().get(position);
         wireframe.showSpeakerProfile(speaker.getId(), view);
     }
 

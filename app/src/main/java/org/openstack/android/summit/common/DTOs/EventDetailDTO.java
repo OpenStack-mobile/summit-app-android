@@ -98,6 +98,16 @@ public class EventDetailDTO extends ScheduleItemDTO {
         this.tags = tags;
     }
 
+    public List<PersonListItemDTO> getModeratorAndSpeakers() {
+        // speakers ...
+        List<PersonListItemDTO> speakersList = new ArrayList<>();
+        if(getModerator() != null )
+            speakersList.add(getModerator());
+        if(getSpeakers() != null && getSpeakers().size() > 0)
+            speakersList.addAll(getSpeakers());
+        return speakersList;
+    }
+
     public List<PersonListItemDTO> getSpeakers() {
         return speakers;
     }

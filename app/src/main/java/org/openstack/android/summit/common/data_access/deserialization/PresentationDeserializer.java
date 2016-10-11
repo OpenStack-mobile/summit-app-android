@@ -118,9 +118,24 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
             }
         }
 
-        if (!jsonObject.isNull("moderator_speaker_id")) {
-            presentationSpeaker = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", jsonObject.getInt("moderator_speaker_id")).findFirst();
-            presentation.setModerator(presentationSpeaker);
+        if (jsonObject.has("moderator")) {
+            JSONObject jsonObjectModerator = jsonObject.getJSONObject("moderator");
+            int moderatorId                = jsonObjectModerator.getInt("id");
+            // check local db
+            PresentationSpeaker moderator  = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", moderatorId).findFirst();
+            // if not create it
+            if(moderator == null)
+                moderator = presentationSpeakerDeserializer.deserialize(jsonObjectModerator.toString());
+
+            if(moderator != null)
+                presentation.setModerator(moderator);
+        }
+        else if (jsonObject.has("moderator_speaker_id") && !jsonObject.isNull("moderator_speaker_id")) {
+
+            PresentationSpeaker moderator = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", jsonObject.getInt("moderator_speaker_id")).findFirst();
+
+            if(moderator != null)
+                presentation.setModerator(moderator);
         }
 
         return presentation;

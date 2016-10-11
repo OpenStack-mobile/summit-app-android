@@ -148,6 +148,7 @@ public class SecurityManager implements ISecurityManager {
             @Override
             public void onSucceedWithSingleData(Member data) {
                 Log.d(Constants.LOG_TAG, "SecurityManager.onSucceedWithSingleData");
+
                 member = data;
                 session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
 
