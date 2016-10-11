@@ -9,6 +9,7 @@ import java.util.List;
  * Created by Claudio Redi on 1/27/2016.
  */
 public interface ISpeakerPresentationsInteractor extends IScheduleInteractor {
+
     int getCurrentMemberSpeakerId();
 
     List<ScheduleItemDTO> getSpeakerPresentations(int speakerId, DateTime startDate, DateTime endDate);

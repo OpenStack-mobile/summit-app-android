@@ -199,6 +199,8 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
                 .or()
                 .contains("presentation.speakers.fullName", searchTerm, Case.INSENSITIVE)
                 .or()
+                .contains("presentation.moderator.fullName", searchTerm, Case.INSENSITIVE)
+                .or()
                 .contains("presentation.level", searchTerm, Case.INSENSITIVE);
 
         RealmResults<SummitEvent> results = query.findAll();
@@ -208,10 +210,15 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
 
     @Override
     public List<SummitEvent> getSpeakerEvents(int speakerId, DateTime startDate, DateTime endDate) {
+
         RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class)
                 .greaterThanOrEqualTo("start", startDate.toDate())
                 .lessThanOrEqualTo("end", endDate.toDate())
-                .equalTo("presentation.speakers.id", speakerId);
+                .beginGroup()
+                    .equalTo("presentation.speakers.id", speakerId)
+                    .or()
+                    .equalTo("presentation.moderator.id", speakerId)
+                .endGroup();
 
         return query.findAllSorted(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
     }
