@@ -18,6 +18,7 @@ public class AboutWireframe implements IAboutWireframe {
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, aboutFragment)
+                .addToBackStack(null)
                 .commit();
     }
 

@@ -416,6 +416,8 @@ public class MainActivity
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
             if (!drawer.isDrawerOpen(GravityCompat.START) && getFragmentManager().getBackStackEntryCount() == 0) {
+                // set events tab ...
+                navigationView.getMenu().findItem(R.id.nav_events).setChecked(true);
                 super.onBackPressed();
             }
 
