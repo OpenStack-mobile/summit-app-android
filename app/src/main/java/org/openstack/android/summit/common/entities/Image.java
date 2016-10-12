@@ -11,7 +11,8 @@ import io.realm.annotations.PrimaryKey;
 public class Image extends RealmObject implements IEntity {
     @PrimaryKey
     private int id;
-    private String imageUrl;
+
+    private String image_url;
 
     public int getId() {
         return id;
@@ -23,11 +24,11 @@ public class Image extends RealmObject implements IEntity {
 
     @JSONField(name="image_url")
     public String getImageUrl() {
-        return imageUrl;
+        return image_url;
     }
 
     @JSONField(name="image_url")
     public void setImageUrl(String url) {
-        this.imageUrl = url;
+        this.image_url = url;
     }
 }
