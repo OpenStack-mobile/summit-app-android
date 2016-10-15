@@ -1,6 +1,5 @@
 package org.openstack.android.summit.modules.speakers_list;
 
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import org.openstack.android.summit.R;
@@ -8,7 +7,6 @@ import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
-import org.openstack.android.summit.modules.speakers_list.user_interface.ISpeakerListView;
 import org.openstack.android.summit.modules.speakers_list.user_interface.SpeakerListFragment;
 
 /**
@@ -27,13 +25,11 @@ public class SpeakerListWireframe extends BaseWireframe implements ISpeakerListW
 
         SpeakerListFragment speakerListFragment = new SpeakerListFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount()> 0)
-            fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryCount() - 1, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         fragmentManager
                 .beginTransaction()
                     .replace(R.id.frame_layout_content, speakerListFragment)
-                    //.addToBackStack(null)
+                    .addToBackStack(null)
                 .commitAllowingStateLoss();
     }
 

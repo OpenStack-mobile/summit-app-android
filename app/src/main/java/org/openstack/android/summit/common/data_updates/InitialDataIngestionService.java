@@ -25,6 +25,7 @@ import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
 import org.openstack.android.summit.modules.general_schedule.business_logic.IGeneralScheduleInteractor;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -114,6 +115,7 @@ public class InitialDataIngestionService extends IntentService {
             config.setDelegate(null);
             config.setHttp(httpFactory.create(tokenManager));
             Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: getting summit data ...");
+
             final String body = config.getHttp().GET(config.getUrl());
 
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
@@ -131,10 +133,10 @@ public class InitialDataIngestionService extends IntentService {
             reply.send(this, RESULT_CODE_OK, result);
         }
         catch (Exception ex) {
-            Log.e(Constants.LOG_TAG, ex.getMessage());
-            Crashlytics.logException(ex);
             try
             {
+                Log.e(Constants.LOG_TAG, ex.getMessage());
+                Crashlytics.logException(ex);
                 isRunning = false;
                 reply.send(this, RESULT_CODE_ERROR, result);
             }

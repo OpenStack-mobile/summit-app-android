@@ -1,7 +1,6 @@
 package org.openstack.android.summit.modules.push_notifications_inbox;
 
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
@@ -24,12 +23,11 @@ final public class PushPushNotificationsWireframe extends BaseWireframe implemen
     public void presentNotificationsListView(IBaseView context) {
         PushPushNotificationsListFragment notificationsListFragment = new PushPushNotificationsListFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount()> 0)
-            fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryCount() - 1, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
         fragmentManager
                 .beginTransaction()
                     .replace(R.id.frame_layout_content, notificationsListFragment)
-                    //.addToBackStack(null)
+                    .addToBackStack(null)
                 .commitAllowingStateLoss();
     }
 
