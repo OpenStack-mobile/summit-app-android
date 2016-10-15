@@ -26,8 +26,8 @@ final public class PushPushNotificationsWireframe extends BaseWireframe implemen
 
         fragmentManager
                 .beginTransaction()
-                    .replace(R.id.frame_layout_content, notificationsListFragment)
-                    .addToBackStack(null)
+                    .replace(R.id.frame_layout_content, notificationsListFragment, "nav_notifications")
+                    .addToBackStack("nav_notifications")
                 .commitAllowingStateLoss();
     }
 

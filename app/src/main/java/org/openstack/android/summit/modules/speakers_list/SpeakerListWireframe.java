@@ -28,8 +28,8 @@ public class SpeakerListWireframe extends BaseWireframe implements ISpeakerListW
 
         fragmentManager
                 .beginTransaction()
-                    .replace(R.id.frame_layout_content, speakerListFragment)
-                    .addToBackStack(null)
+                    .replace(R.id.frame_layout_content, speakerListFragment, "nav_speakers")
+                    .addToBackStack("nav_speakers")
                 .commitAllowingStateLoss();
     }
 

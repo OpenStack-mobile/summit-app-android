@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.about.user_interface.AboutFragment;
-import org.openstack.android.summit.modules.events.user_interface.EventsFragment;
 
 /**
  * Created by Claudio Redi on 4/1/2016.
@@ -17,9 +16,8 @@ public class AboutWireframe implements IAboutWireframe {
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.frame_layout_content, aboutFragment)
-                .addToBackStack(null)
+                .replace(R.id.frame_layout_content, aboutFragment, "nav_about")
+                .addToBackStack("nav_about")
                 .commit();
     }
-
 }

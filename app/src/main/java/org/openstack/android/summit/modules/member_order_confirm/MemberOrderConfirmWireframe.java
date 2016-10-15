@@ -15,7 +15,8 @@ public class MemberOrderConfirmWireframe implements IMemberOrderConfirmWireframe
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.frame_layout_content, memberOrderConfirmFragment)
+                .replace(R.id.frame_layout_content, memberOrderConfirmFragment, "nav_my_profile")
+                .addToBackStack("nav_my_profile")
                 .commitAllowingStateLoss();
     }
 }

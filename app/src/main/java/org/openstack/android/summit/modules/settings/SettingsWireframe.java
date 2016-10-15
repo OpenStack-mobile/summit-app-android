@@ -22,8 +22,8 @@ public class SettingsWireframe implements ISettingsWireframe {
 
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.frame_layout_content, fragment)
-                .addToBackStack(null)
+                .replace(R.id.frame_layout_content, fragment, "nav_settings")
+                .addToBackStack("nav_settings")
                 .commitAllowingStateLoss();
     }
 }

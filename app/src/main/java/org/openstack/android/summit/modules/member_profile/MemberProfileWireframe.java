@@ -39,7 +39,8 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                    .replace(R.id.frame_layout_content, memberProfileFragment)
+                    .replace(R.id.frame_layout_content, memberProfileFragment,"nav_my_profile")
+                    .addToBackStack("nav_my_profile")
                 .commitAllowingStateLoss();
     }
 

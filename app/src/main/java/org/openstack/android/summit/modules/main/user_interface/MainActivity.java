@@ -57,7 +57,7 @@ public class MainActivity
 
     @Inject
     // TODO: this should be moved to interactor. It's necessary to know how to deal with the Activiy parameter on login
-            ISecurityManager securityManager;
+    ISecurityManager securityManager;
 
     @Inject
     IReachability reachability;
@@ -317,7 +317,7 @@ public class MainActivity
         drawer.setDrawerListener(toggle);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setHomeButtonEnabled(true);
-        //calling sync state is neccesary or else your hamburger icon wont show up
+        //calling sync state is necessary or else your hamburger icon wont show up
         toggle.syncState();
 
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -332,7 +332,11 @@ public class MainActivity
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                setupNavigationIcons();
+              setupNavigationIcons();
+              if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                  int id      = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getId();
+                  String name = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+              }
             }
         });
     }
@@ -417,11 +421,37 @@ public class MainActivity
 
             if (!drawer.isDrawerOpen(GravityCompat.START) && getFragmentManager().getBackStackEntryCount() == 0) {
                 // set events tab ...
-                navigationView.getMenu().findItem(R.id.nav_events).setChecked(true);
                 super.onBackPressed();
             }
 
-            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+            // default checked events ...
+            int menuItemId     = R.id.nav_events;
+            if(backStackCount > 0){
+                String currentEntryName = getSupportFragmentManager().getBackStackEntryAt(backStackCount - 1).getName();
+
+                if(currentEntryName.equals("nav_venues")){
+                    menuItemId = R.id.nav_venues;
+                }
+                if(currentEntryName.equals("nav_about")){
+                    menuItemId = R.id.nav_about;
+                }
+                if(currentEntryName.equals("nav_notifications")){
+                    menuItemId = R.id.nav_notifications;
+                }
+                if(currentEntryName.equals("nav_my_profile")){
+                    menuItemId = R.id.nav_my_profile;
+                }
+                if(currentEntryName.equals("nav_settings")){
+                    menuItemId = R.id.nav_settings;
+                }
+                if(currentEntryName.equals("nav_speakers")){
+                    menuItemId = R.id.nav_speakers;
+                }
+            }
+            navigationView.getMenu().findItem(menuItemId).setChecked(true);
+
+            if (backStackCount == 1) {
                 return;
             }
 
@@ -433,6 +463,7 @@ public class MainActivity
             Crashlytics.logException(ex);
         }
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

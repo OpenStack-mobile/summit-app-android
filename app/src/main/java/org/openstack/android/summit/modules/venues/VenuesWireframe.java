@@ -16,8 +16,8 @@ public class VenuesWireframe implements IVenuesWireframe {
 
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.frame_layout_content, venuesFragment)
-                .addToBackStack(null)
+                .replace(R.id.frame_layout_content, venuesFragment, "nav_venues")
+                .addToBackStack("nav_venues")
                 .commitAllowingStateLoss();
     }
 }
