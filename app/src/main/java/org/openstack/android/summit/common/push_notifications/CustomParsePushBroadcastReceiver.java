@@ -233,7 +233,8 @@ public class CustomParsePushBroadcastReceiver extends ParsePushBroadcastReceiver
                 public PushNotification callback(Realm session) throws Exception {
 
                     PushNotification pushNotification = deserializer.deserialize(data, PushNotification.class);
-                    Member currentMember = securityManager.getCurrentMember();
+                    Member currentMember              = securityManager.getCurrentMember();
+
                     if (currentMember != null)
                         pushNotification.setOwner(currentMember);
 

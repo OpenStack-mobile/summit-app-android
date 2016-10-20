@@ -32,10 +32,12 @@ public class PushPushNotificationsListFragment
         implements IPushNotificationsListView {
 
     private static final String SEARCH_KEY = "search-key-push-notification-list";
+    private String searchQuery             = "";
+
     private PushNotificationListAdapter listAdapter;
     private SearchView searchView;
     private SearchView.OnQueryTextListener queryTextListener;
-    private String searchQuery = "";
+
 
     public PushPushNotificationsListFragment() {
         // Required empty public constructor
@@ -121,6 +123,7 @@ public class PushPushNotificationsListFragment
     @Override
     public void onResume() {
         super.onResume();
+        presenter.onResume();
         setTitle(getResources().getString(R.string.notifications));
     }
 
@@ -213,18 +216,21 @@ public class PushPushNotificationsListFragment
 
     @Override
     public void setNotifications(List<PushNotificationListItemDTO> notifications) {
+        if(listAdapter == null) return;
         listAdapter.clear();
         listAdapter.addAll(notifications);
         updateState();
     }
 
     @Override
-    public void refresh() {
+    public void refresh()
+    {
+        if(listAdapter == null) return;
         listAdapter.notifyDataSetChanged();
     }
 
     private void updateState() {
-        if(emptyMessage == null || notificationsList == null) return;
+        if(emptyMessage == null || notificationsList == null || listAdapter == null) return;
         boolean show = listAdapter.isEmpty();
         emptyMessage.setVisibility(show ? View.VISIBLE : View.GONE);
         notificationsList.setVisibility(show ? View.GONE : View.VISIBLE);

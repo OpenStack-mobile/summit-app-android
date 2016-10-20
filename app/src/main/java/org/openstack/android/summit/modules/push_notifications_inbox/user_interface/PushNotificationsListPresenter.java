@@ -28,25 +28,34 @@ public class PushNotificationsListPresenter extends BasePresenter<IPushNotificat
     private final int OBJECTS_PER_PAGE     = 20;
     private Boolean loadedAllNotifications = false;
     private String  term                   = "";
-
+    private boolean resetState             = false;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
                 if(intent.getAction().contains(Constants.PUSH_NOTIFICATION_RECEIVED)){
-                    resetState();
-                    loadData();
+                    resetState = true;
                     return;
                 }
 
                 if(intent.getAction().contains(Constants.PUSH_NOTIFICATION_DELETED)){
-                    resetState();
-                    loadData();
+
+                    resetState = true;
                     return;
                 }
         }
     };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(resetState){
+            resetState();
+            loadData();
+            resetState = false;
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

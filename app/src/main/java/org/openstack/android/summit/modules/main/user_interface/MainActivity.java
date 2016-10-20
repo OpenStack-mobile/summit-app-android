@@ -428,24 +428,25 @@ public class MainActivity
             // default checked events ...
             int menuItemId     = R.id.nav_events;
             if(backStackCount > 0){
+
                 String currentEntryName = getSupportFragmentManager().getBackStackEntryAt(backStackCount - 1).getName();
 
-                if(currentEntryName.equals("nav_venues")){
+                if(currentEntryName != null && currentEntryName.equals("nav_venues")){
                     menuItemId = R.id.nav_venues;
                 }
-                if(currentEntryName.equals("nav_about")){
+                if(currentEntryName != null && currentEntryName.equals("nav_about")){
                     menuItemId = R.id.nav_about;
                 }
-                if(currentEntryName.equals("nav_notifications")){
+                if(currentEntryName != null && currentEntryName.equals("nav_notifications")){
                     menuItemId = R.id.nav_notifications;
                 }
-                if(currentEntryName.equals("nav_my_profile")){
+                if(currentEntryName != null && currentEntryName.equals("nav_my_profile")){
                     menuItemId = R.id.nav_my_profile;
                 }
-                if(currentEntryName.equals("nav_settings")){
+                if(currentEntryName != null && currentEntryName.equals("nav_settings")){
                     menuItemId = R.id.nav_settings;
                 }
-                if(currentEntryName.equals("nav_speakers")){
+                if(currentEntryName != null && currentEntryName.equals("nav_speakers")){
                     menuItemId = R.id.nav_speakers;
                 }
             }
