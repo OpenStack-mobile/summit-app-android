@@ -91,7 +91,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PackageInfo pInfo = null;
+        /*PackageInfo pInfo = null;
 
         try {
             pInfo = view.getApplicationContext().getPackageManager().getPackageInfo(view.getApplicationContext().getPackageName(), 0);
@@ -113,7 +113,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                     return;
                 }
             }
-        }
+        }*/
         // normal flow, if data is loaded, enabled the data update services
         if(interactor.isDataLoaded()){
             enableDataUpdateService();

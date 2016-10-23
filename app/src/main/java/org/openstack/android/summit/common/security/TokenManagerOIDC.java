@@ -3,10 +3,7 @@ package org.openstack.android.summit.common.security;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -14,8 +11,6 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
-
-import java.io.IOException;
 
 /**
  * Created by Claudio Redi on 12/8/2015.

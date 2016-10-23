@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
+
+import com.crashlytics.android.Crashlytics;
+
 import org.joda.time.DateTime;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
@@ -19,6 +21,7 @@ import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperat
 import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
 import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,12 +41,14 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     private boolean isFirstTime               = true;
     protected boolean hasToCheckDisabledDates = true;
+
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             onResume();
         }
     };
+
     protected SummitDTO currentSummit         = null;
 
     public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
@@ -81,44 +86,55 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void onResume() {
-        super.onResume();
-        if(!interactor.isDataLoaded()) return;
+        try {
+            super.onResume();
+            if (!interactor.isDataLoaded()) return;
 
-        currentSummit                = interactor.getLocalActiveSummit();
-        if(currentSummit == null) return;
-        DateTime startDate           = currentSummit.getLocalStartDate().withTime(0,0,0,0);
-        DateTime endDate             = currentSummit.getLocalEndDate().withTime(23, 59, 59, 999);
-        // check if current time is on summit time
-        List<DateTime> pastDates     = shouldHidePastTalks() ? currentSummit.getPastDates(): new ArrayList<DateTime>();
-        List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
-        // now merge past dates with inactive dates
-        inactiveDates.removeAll(pastDates);
-        inactiveDates.addAll(pastDates);
-        Collections.sort(inactiveDates);
+            currentSummit = interactor.getLocalActiveSummit();
 
-        if (isFirstTime) {
-            view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
-            DateTime scheduleStartDate = currentSummit.getLocalScheduleStartDate();
-            boolean foundDate          = false;
+            if (currentSummit == null) return;
 
-            for(DateTime dt: inactiveDates){
-                if(dt.compareTo(scheduleStartDate) == 0)
-                {
-                    foundDate = true;
-                    break;
+            DateTime startDate = currentSummit.getLocalStartDate().withTime(0, 0, 0, 0);
+            DateTime endDate = currentSummit.getLocalEndDate().withTime(23, 59, 59, 999);
+            // check if current time is on summit time
+            List<DateTime> pastDates = shouldHidePastTalks() ? currentSummit.getPastDates() : new ArrayList<DateTime>();
+            List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
+            // now merge past dates with inactive dates
+            inactiveDates.removeAll(pastDates);
+            inactiveDates.addAll(pastDates);
+            Collections.sort(inactiveDates);
+
+            if (isFirstTime) {
+
+                view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
+                DateTime scheduleStartDate = currentSummit.getLocalScheduleStartDate();
+                boolean foundDate = false;
+
+                for (DateTime dt : inactiveDates) {
+                    if (dt.compareTo(scheduleStartDate) == 0) {
+                        foundDate = true;
+                        break;
+                    }
                 }
+
+                if (!foundDate) {
+                    view.setSelectedDate(currentSummit.getScheduleStartDay());
+                }
+
+                if (currentSummit.isCurrentDateTimeInsideSummitRange()) {
+                    view.setSelectedDate(currentSummit.getCurrentLocalTime().withTime(0, 0, 0, 0).getDayOfMonth());
+                }
+            } else {
+                view.setDisabledDates(inactiveDates);
             }
 
-            if(!foundDate){
-                view.setSelectedDate(currentSummit.getScheduleStartDay());
-            }
+            isFirstTime = false;
+            reloadSchedule();
+            view.hideActivityIndicator();
         }
-        else {
-            view.setDisabledDates(inactiveDates);
+        catch(Exception ex){
+            Crashlytics.logException(ex);
         }
-        isFirstTime = false;
-        reloadSchedule();
-        view.hideActivityIndicator();
     }
 
     @Override

@@ -27,20 +27,10 @@ public class SummitDTO extends NamedDTO {
     }
 
     public int getScheduleStartDay() {
-        DateTime auxStartDate     = new DateTime(startDate).withTime(0, 0, 0, 0);
-        DateTime auxEndDate       = new DateTime(endDate).withTime(0, 0, 0, 0);
-        DateTime auxStartSchedule = new DateTime(scheduleStartDate).withTime(0, 0, 0, 0);
-        int day = auxStartSchedule.getDayOfMonth();
-        do {
-            if (auxStartDate.getMillis() == auxStartSchedule.getMillis()) {
-                break;
-            }
-            ++day;
-            auxStartDate = auxStartDate.plusDays(1);
-        } while (auxStartDate.getMillis() <= auxEndDate.getMillis());
-        return day;
+        DateTimeZone summitTimeZone = DateTimeZone.forID(getTimeZone());
+        DateTime auxStartSchedule   = new DateTime(scheduleStartDate, summitTimeZone).withTime(0, 0, 0, 0);
+        return auxStartSchedule.getDayOfMonth();
     }
-
 
     public Date getStartDate() {
         return startDate;
