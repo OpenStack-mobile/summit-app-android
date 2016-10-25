@@ -42,11 +42,18 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
         try {
             HttpTaskListener httpTaskListener = new HttpTaskListener() {
                 @Override
-                public void onSucceed(String data) {
+                public void onSucceed(final String data) {
                     try {
-                        List<Feedback> feedbackList = deserializer.deserializePage(data, Feedback.class);
+
+                        List<Feedback> feedbackList = RealmFactory.transaction(new RealmFactory.IRealmCallback<List<Feedback> >() {
+                            @Override
+                            public List<Feedback> callback(Realm session) throws Exception {
+                               return deserializer.deserializePage(data, Feedback.class);
+                            }
+                        });
+
                         dataStoreOperationListener.onSucceedWithDataCollection(feedbackList);
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.e(Constants.LOG_TAG, "Error deserializing feedback", e);
                         String friendlyError = Constants.GENERIC_ERROR_MSG;
