@@ -152,7 +152,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
                     event.getEndDate().getMillis(),
                     String.format("\"%s\"", event.getName()));
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 return true;
             }
             return false;
