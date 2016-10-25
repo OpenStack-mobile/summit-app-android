@@ -123,7 +123,7 @@ public class PushNotificationDetailFragment
 
     @Override
     public void close() {
-        getFragmentManager().popBackStackImmediate();
+        getFragmentManager().popBackStack();
     }
 
     @Override
