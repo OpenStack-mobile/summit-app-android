@@ -76,7 +76,6 @@ public class GenericDataStore implements IGenericDataStore {
             });
         }
         catch (Exception ex) {
-            RealmFactory.getSession().cancelTransaction();
             Crashlytics.logException(ex);
             Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
             String friendlyError = Constants.GENERIC_ERROR_MSG;
