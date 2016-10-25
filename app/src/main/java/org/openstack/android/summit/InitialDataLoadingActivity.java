@@ -26,7 +26,8 @@ import cc.cloudist.acplibrary.ACProgressFlower;
 public class InitialDataLoadingActivity extends Activity {
 
     private ACProgressFlower progressDialog;
-    private static final int REQUEST_CODE = 0;
+    private static final int REQUEST_CODE = 0xFF45;
+    private PendingIntent pending         = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class InitialDataLoadingActivity extends Activity {
 
         Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: invoking service InitialDataIngestionService ");
         Intent intent = InitialDataIngestionService.newIntent(this);
-        PendingIntent pending = createPendingResult(REQUEST_CODE, new Intent(), 0);
+        pending       = createPendingResult(REQUEST_CODE, new Intent(), 0);
         intent.putExtra(InitialDataIngestionService.PENDING_RESULT, pending);
         startService(intent);
     }

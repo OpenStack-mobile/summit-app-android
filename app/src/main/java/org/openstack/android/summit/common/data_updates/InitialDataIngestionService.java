@@ -83,6 +83,8 @@ public class InitialDataIngestionService extends IntentService {
         Intent result       = new Intent();
         PendingIntent reply = intent.getParcelableExtra(PENDING_RESULT);
 
+        if(reply == null) return;
+
         try {
 
             isRunning  = true;
@@ -135,18 +137,16 @@ public class InitialDataIngestionService extends IntentService {
         catch (Exception ex) {
             try
             {
-                Log.e(Constants.LOG_TAG, ex.getMessage());
-                Crashlytics.logException(ex);
                 isRunning = false;
                 reply.send(this, RESULT_CODE_ERROR, result);
             }
             catch (PendingIntent.CanceledException ex2){
-                Log.e(Constants.LOG_TAG, ex2.getMessage());
                 Crashlytics.logException(ex2);
             }
         }
         finally {
             isRunning = false;
+            RealmFactory.closeSession();
         }
     }
 
