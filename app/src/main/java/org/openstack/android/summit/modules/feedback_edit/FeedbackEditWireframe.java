@@ -2,6 +2,8 @@ package org.openstack.android.summit.modules.feedback_edit;
 
 import android.support.v4.app.FragmentManager;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.Constants;
@@ -35,7 +37,12 @@ public class FeedbackEditWireframe extends BaseWireframe implements IFeedbackEdi
 
     @Override
     public void backToPreviousView(IBaseView context) {
-        FragmentManager fragmentManager = context.getSupportFragmentManager();
-        fragmentManager.popBackStack();
+        try {
+            FragmentManager fragmentManager = context.getSupportFragmentManager();
+            fragmentManager.popBackStack();
+        }
+        catch(Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 }
