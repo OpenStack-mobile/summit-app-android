@@ -67,7 +67,8 @@ public class GenericDataStore implements IGenericDataStore {
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override
                 public Void callback(Realm session) throws Exception {
-                session.where(type).equalTo("id", id).findFirst().deleteFromRealm();
+                T object = session.where(type).equalTo("id", id).findFirst()   ;
+                if(object != null) object.deleteFromRealm();
                 if (delegate != null) {
                     delegate.onSucceedWithoutData();
                 }
