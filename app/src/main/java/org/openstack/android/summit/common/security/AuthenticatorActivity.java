@@ -569,19 +569,29 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(AuthenticatorActivity.this)
-                        .setTitle("Sorry, there was an error")
-                        .setMessage(message)
-                        .setCancelable(true)
-                        .setNeutralButton("Close", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                                finish();
-                            }
-                        })
-                        .create()
-                        .show();
+                try {
+                    AuthenticatorActivity context = AuthenticatorActivity.this;
+                    if(!context.isFinishing())
+                    {
+                        new AlertDialog.Builder(context)
+                                .setTitle("Sorry, there was an error")
+                                .setMessage(message)
+                                .setCancelable(true)
+                                .setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                        finish();
+                                    }
+                                })
+                                .create()
+                                .show();
+                    }
+
+                }
+                catch(Exception ex){
+                    Crashlytics.logException(ex);
+                }
             }
         });
     }

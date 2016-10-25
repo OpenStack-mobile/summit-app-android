@@ -555,10 +555,13 @@ public class MainActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Oops...")
-                        .setContentText(message)
-                        .show();
+                MainActivity context = MainActivity.this;
+                if(!context.isFinishing()) {
+                    new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText(message)
+                            .show();
+                }
             }
         });
     }
@@ -573,10 +576,13 @@ public class MainActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(title)
-                        .setContentText(message)
-                        .show();
+                MainActivity context = MainActivity.this;
+                if(!context.isFinishing()) {
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(title)
+                            .setContentText(message)
+                            .show();
+                }
 
             }
         });
