@@ -32,7 +32,6 @@ import javax.inject.Inject;
 public class SecurityManager implements ISecurityManager {
 
     private IMemberDataStore memberDataStore;
-    private Member member;
     private ISession session;
     private ITokenManager tokenManager;
 
@@ -146,10 +145,10 @@ public class SecurityManager implements ISecurityManager {
         Log.d(Constants.LOG_TAG, "SecurityManager.bindCurrentUser");
         IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
             @Override
-            public void onSucceedWithSingleData(Member data) {
+            public void onSucceedWithSingleData(Member member) {
                 Log.d(Constants.LOG_TAG, "SecurityManager.onSucceedWithSingleData");
 
-                member = data;
+
                 session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
 
                 Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
@@ -189,7 +188,6 @@ public class SecurityManager implements ISecurityManager {
                 removeAccount(availableAccounts[0]);
             }
 
-            member = null;
             session.setInt(Constants.CURRENT_MEMBER_ID, 0);
 
             Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
@@ -219,19 +217,17 @@ public class SecurityManager implements ISecurityManager {
 
             if(currentMemberId == 0) return null;
 
-            member = memberDataStore.getByIdLocal(currentMemberId);
+            return memberDataStore.getByIdLocal(currentMemberId);
         }
         catch(SecurityException ex1){
             Log.w(Constants.LOG_TAG, ex1.getMessage());
             Crashlytics.logException(ex1);
-            member = null;
         }
         catch(Exception ex){
             Log.e(Constants.LOG_TAG, ex.getMessage());
             Crashlytics.logException(ex);
-            member = null;
         }
-        return member;
+        return null;
     }
 
     @Override
@@ -241,6 +237,7 @@ public class SecurityManager implements ISecurityManager {
 
     @Override
     public boolean isLoggedInAndConfirmedAttendee() {
-        return isLoggedIn() && member.getAttendeeRole() != null;
+        Member member = getCurrentMember();
+        return member != null && member.getAttendeeRole() != null;
     }
 }
