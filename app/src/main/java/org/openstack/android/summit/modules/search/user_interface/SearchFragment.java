@@ -253,11 +253,13 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
 
     @Override
     public void hideActivityIndicator() {
-        LinearLayout saerchResultContainer = (LinearLayout)view.findViewById(R.id.search_results_container);
-        saerchResultContainer.setVisibility(View.VISIBLE);
+        if(view != null) {
+            LinearLayout saerchResultContainer = (LinearLayout) view.findViewById(R.id.search_results_container);
+            saerchResultContainer.setVisibility(View.VISIBLE);
 
-        LinearLayout subsectionBar = (LinearLayout)view.findViewById(R.id.search_results_subsection_bar);
-        subsectionBar.setVisibility(View.VISIBLE);
+            LinearLayout subsectionBar = (LinearLayout) view.findViewById(R.id.search_results_subsection_bar);
+            subsectionBar.setVisibility(View.VISIBLE);
+        }
         super.hideActivityIndicator();
     }
 
