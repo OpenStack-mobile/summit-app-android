@@ -30,7 +30,7 @@ public class PresentationMaterialDataUpdateStrategy extends DataUpdateStrategy  
         final String className      = dataUpdate.getEntityClassName();
         switch (dataUpdate.getOperation()) {
             case DataOperation.Insert:
-                JSONObject entityJSON = dataUpdate.getOriginalJSON().optJSONObject("entity");
+                final JSONObject entityJSON = dataUpdate.getOriginalJSON().optJSONObject("entity");
                 if(entityJSON == null) return;
                 final Integer presentation_id = entityJSON.optInt("presentation_id");
 
@@ -53,6 +53,7 @@ public class PresentationMaterialDataUpdateStrategy extends DataUpdateStrategy  
                             }
                             if (className.equals("PresentationVideo")) {
                                 PresentationVideo video = (PresentationVideo) dataUpdate.getEntity();
+                                video.setYouTubeId(entityJSON.getString("youtube_id"));
                                 video.setPresentation(managedPresentation);
                                 managedPresentation.getVideos().add(video);
                             }
@@ -71,14 +72,25 @@ public class PresentationMaterialDataUpdateStrategy extends DataUpdateStrategy  
                 }
                 break;
             case DataOperation.Update:
-                if(className.equals("PresentationSlide")){
-                    genericDataStore.saveOrUpdate((PresentationSlide)dataUpdate.getEntity(), null, PresentationSlide.class);
+                try {
+                    final JSONObject entityJSONUpdate = dataUpdate.getOriginalJSON().optJSONObject("entity");
+                    if (entityJSONUpdate == null) return;
+
+                    if (className.equals("PresentationSlide")) {
+                        genericDataStore.saveOrUpdate((PresentationSlide) dataUpdate.getEntity(), null, PresentationSlide.class);
+                    }
+                    if (className.equals("PresentationVideo")) {
+                        PresentationVideo video = (PresentationVideo) dataUpdate.getEntity();
+                        video.setYouTubeId(entityJSONUpdate.getString("youtube_id"));
+                        genericDataStore.saveOrUpdate(video, null, PresentationVideo.class);
+                    }
+                    if (className.equals("PresentationLink")) {
+                        genericDataStore.saveOrUpdate((PresentationLink) dataUpdate.getEntity(), null, PresentationLink.class);
+                    }
                 }
-                if(className.equals("PresentationVideo")){
-                    genericDataStore.saveOrUpdate((PresentationVideo)dataUpdate.getEntity(), null, PresentationVideo.class);
-                }
-                if(className.equals("PresentationLink")){
-                    genericDataStore.saveOrUpdate((PresentationLink)dataUpdate.getEntity(), null, PresentationLink.class);
+                catch (Exception ex){
+                    Crashlytics.logException(ex);
+                    Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
                 }
                 break;
             case DataOperation.Delete:
