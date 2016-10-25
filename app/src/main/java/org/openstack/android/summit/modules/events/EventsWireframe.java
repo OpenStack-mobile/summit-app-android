@@ -3,6 +3,8 @@ package org.openstack.android.summit.modules.events;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.events.user_interface.EventsFragment;
@@ -21,16 +23,24 @@ public class EventsWireframe implements IEventsWireframe {
 
     @Override
     public void presentEventsView(IBaseView context) {
-        EventsFragment eventsFragment   = new EventsFragment();
-        FragmentManager fragmentManager = context.getSupportFragmentManager();
+        try {
+            EventsFragment eventsFragment   = new EventsFragment();
+            FragmentManager fragmentManager = context.getSupportFragmentManager();
 
-        if (fragmentManager.getBackStackEntryCount()> 0)
-            fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryCount() - 1, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            // clean backs stack entries ...
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                FragmentManager.BackStackEntry first = fragmentManager.getBackStackEntryAt(0);
+                fragmentManager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
 
-        fragmentManager
-                .beginTransaction()
+            fragmentManager
+                    .beginTransaction()
                     .replace(R.id.frame_layout_content, eventsFragment)
-                .commitAllowingStateLoss();
+                    .commitAllowingStateLoss();
+        }
+        catch (Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 
     @Override
