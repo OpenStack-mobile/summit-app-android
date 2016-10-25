@@ -388,7 +388,36 @@ public class MainActivity
 
             memberNameTextView = (TextView) headerView.findViewById(R.id.member_name_textview);
             memberProfileImageView = (SimpleDraweeView) headerView.findViewById(R.id.member_profile_pic_imageview);
+            memberProfileImageView.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
+                            if (!reachability.isNetworkingAvailable(MainActivity.this)) {
+                                showErrorMessage(getResources().getString(R.string.login_disallowed_no_connectivity));
+                                return;
+                            }
+
+                            presenter.disableDataUpdateService();
+
+                            if (!presenter.isSummitDataLoaded()) {
+                                showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
+                                launchInitialDataLoadingActivity();
+                                return;
+                            }
+
+                            // LOGIN
+                            if (!securityManager.isLoggedIn()) {
+                                securityManager.login(MainActivity.this);
+                                return;
+                            }
+
+                            // go to my summit ?
+                            closeMenuDrawer();
+                            presenter.showMyProfileView();
+                        }
+                    }
+            );
             EditText searchText = (EditText) headerView.findViewById(R.id.nav_header_search_edittext);
             searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -497,11 +526,14 @@ public class MainActivity
             presenter.showAboutView();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        closeMenuDrawer();
         return true;
     }
 
+    private void closeMenuDrawer(){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
 
     public ApplicationComponent getApplicationComponent() {
         return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
