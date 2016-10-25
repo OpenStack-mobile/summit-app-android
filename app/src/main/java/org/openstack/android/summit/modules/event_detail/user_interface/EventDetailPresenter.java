@@ -268,7 +268,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     @Override
     public void addToCalendar() {
         try {
-            Intent intent = new Intent(Intent.ACTION_INSERT)
+            Intent intent = new Intent(Intent.ACTION_EDIT)
                     .setData(CalendarContract.Events.CONTENT_URI)
                     .putExtra(CalendarContract.Events.CALENDAR_ID, event.getId())
                     .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStartDate().getMillis())
@@ -278,7 +278,6 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
                     .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocationAddress())
                     .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
 
-            //view.showAddToMyCalendar(false);
             view.startActivity(intent);
         }
         catch(ActivityNotFoundException ex1){
