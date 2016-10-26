@@ -2,6 +2,8 @@ package org.openstack.android.summit.modules.venue_detail;
 
 import android.support.v4.app.FragmentManager;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.Constants;
@@ -25,27 +27,37 @@ public class VenueDetailWireframe extends BaseWireframe implements IVenueDetailW
     }
 
     public void presentVenueDetailView(NamedDTO venue, IBaseView context) {
-        VenueDetailFragment venueDetailFragment = new VenueDetailFragment();
-        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_VENUE, venue.getId());
-        navigationParametersStore.remove(Constants.NAVIGATION_PARAMETER_ROOM);
-        FragmentManager fragmentManager = context.getSupportFragmentManager();
-        fragmentManager
-                .beginTransaction()
+        try {
+            VenueDetailFragment venueDetailFragment = new VenueDetailFragment();
+            navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_VENUE, venue.getId());
+            navigationParametersStore.remove(Constants.NAVIGATION_PARAMETER_ROOM);
+            FragmentManager fragmentManager = context.getSupportFragmentManager();
+            fragmentManager
+                    .beginTransaction()
                     .replace(R.id.frame_layout_content, venueDetailFragment)
                     .addToBackStack(null)
-                .commit();
+                    .commitAllowingStateLoss();
+        }
+        catch(Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 
     public void presentLocationDetailView(NamedDTO location, IBaseView context) {
-        VenueRoomDetailFragment locationDetailFragment = new VenueRoomDetailFragment();
-        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_ROOM, location.getId());
-        navigationParametersStore.remove(Constants.NAVIGATION_PARAMETER_VENUE);
-        FragmentManager fragmentManager = context.getSupportFragmentManager();
-        fragmentManager
-                .beginTransaction()
+        try {
+            VenueRoomDetailFragment locationDetailFragment = new VenueRoomDetailFragment();
+            navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_ROOM, location.getId());
+            navigationParametersStore.remove(Constants.NAVIGATION_PARAMETER_VENUE);
+            FragmentManager fragmentManager = context.getSupportFragmentManager();
+            fragmentManager
+                    .beginTransaction()
                     .replace(R.id.frame_layout_content, locationDetailFragment)
                     .addToBackStack(null)
-                .commit();
+                    .commitAllowingStateLoss();
+        }
+        catch(Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 
     public void showVenueMapView(VenueDTO venueDTO, IBaseView context) {

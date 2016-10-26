@@ -488,13 +488,16 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     return false;
                 }
 
-                if (authActivity.get().isNewAccount) {
-                    authActivity.get().createAccount(response);
+                AuthenticatorActivity activity = authActivity.get();
+                if(activity == null) return false;
+
+                if (activity.isNewAccount) {
+                    activity.createAccount(response);
                 } else {
-                    authActivity.get().setTokens(response);
+                    activity.setTokens(response);
                 }
 
-                authActivity.get().setWorkflowCompleted();
+                activity.setWorkflowCompleted();
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.e(Constants.LOG_TAG, "Error executing API request", e);
@@ -506,8 +509,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected void onPostExecute(Boolean wasSuccess) {
+
+            AuthenticatorActivity activity = authActivity.get();
+            if(activity == null) return;
+
             if (!wasSuccess) {
-                authActivity.get().showErrorDialog("Could not get ID Token.");
+                activity.showErrorDialog("Could not get ID Token.");
                 return;
             }
             // The account manager still wants the following information back
@@ -516,9 +523,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, authActivity.get().account.name);
             intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, authActivity.get().account.type);
             Log.d(Constants.LOG_TAG, "RequestIdTokenTask.onPostExecute");
-            authActivity.get().setAccountAuthenticatorResult(intent.getExtras());
-            authActivity.get().setResult(RESULT_OK, intent);
-            authActivity.get().finish();
+            activity.setAccountAuthenticatorResult(intent.getExtras());
+            activity.setResult(RESULT_OK, intent);
+            activity.finish();
         }
     }
 
