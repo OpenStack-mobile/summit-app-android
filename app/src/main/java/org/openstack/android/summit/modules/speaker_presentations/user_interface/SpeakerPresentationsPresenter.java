@@ -18,9 +18,10 @@ import java.util.List;
  * Created by Claudio Redi on 1/27/2016.
  */
 public class SpeakerPresentationsPresenter
-        extends SchedulePresenter<ISpeakerPresentationsView, ISpeakerPresentationsInteractor, ISpeakerPresentationsWireframe>
-        implements ISpeakerPresentationsPresenter
-{
+        extends SchedulePresenter<ISpeakerPresentationsView,
+        ISpeakerPresentationsInteractor,
+        ISpeakerPresentationsWireframe>
+        implements ISpeakerPresentationsPresenter {
 
     private Integer speakerId;
     private Boolean isMyProfile;
@@ -32,16 +33,26 @@ public class SpeakerPresentationsPresenter
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isMyProfile = (savedInstanceState != null) ?
-                savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, false) :
-                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, Boolean.class);
+        try {
+            isMyProfile = (savedInstanceState != null) ?
+                    savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, false) :
+                    wireframe.getParameter(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, Boolean.class);
+        }
+        catch(Exception ex){
+            isMyProfile = false;
+        }
 
-        if (isMyProfile != null && isMyProfile) {
-            speakerId = interactor.getCurrentMemberSpeakerId();
-        } else {
-            speakerId = (savedInstanceState != null) ?
-                    savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_SPEAKER, 0) :
-                    wireframe.getParameter(Constants.NAVIGATION_PARAMETER_SPEAKER, Integer.class);
+        try{
+            if (isMyProfile != null && isMyProfile) {
+                speakerId = interactor.getCurrentMemberSpeakerId();
+            } else {
+                speakerId = (savedInstanceState != null) ?
+                        savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_SPEAKER, 0) :
+                        wireframe.getParameter(Constants.NAVIGATION_PARAMETER_SPEAKER, Integer.class);
+            }
+        }
+        catch(Exception ex){
+            speakerId = 0;
         }
     }
 
@@ -58,7 +69,12 @@ public class SpeakerPresentationsPresenter
 
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
-        return interactor.getSpeakerPresentationScheduleDatesWithoutEvents(speakerId != null ? speakerId : 0, startDate, endDate);
+        return interactor.getSpeakerPresentationScheduleDatesWithoutEvents
+        (
+            speakerId != null ? speakerId : 0,
+            startDate,
+            endDate
+        );
     }
 
     @Override
