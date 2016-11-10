@@ -13,7 +13,12 @@ public class TokenManagerFactory implements ITokenManagerFactory {
     TokenManagerServiceAccount tokenManagerServiceAccount;
 
     @Inject
-    public TokenManagerFactory(TokenManagerOIDC tokenManagerOIDC, TokenManagerServiceAccount tokenManagerServiceAccount) {
+    public TokenManagerFactory
+    (
+        TokenManagerOIDC tokenManagerOIDC,
+        TokenManagerServiceAccount tokenManagerServiceAccount
+    )
+    {
         this.tokenManagerOIDC           = tokenManagerOIDC;
         this.tokenManagerServiceAccount = tokenManagerServiceAccount;
     }

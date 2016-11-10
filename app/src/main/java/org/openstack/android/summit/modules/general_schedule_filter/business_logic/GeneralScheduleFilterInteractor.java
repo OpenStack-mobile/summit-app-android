@@ -100,7 +100,7 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
 
     @Override
     public SummitDTO getActiveSummit() {
-        Summit summit = summitDataStore.getActiveLocal();
+        Summit summit = summitDataStore.getActive();
         return (summit != null) ? dtoAssembler.createDTO(summit, SummitDTO.class):null;
     }
 }

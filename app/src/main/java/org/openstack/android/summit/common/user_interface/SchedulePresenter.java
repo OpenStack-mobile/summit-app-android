@@ -90,7 +90,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             super.onResume();
             if (!interactor.isDataLoaded()) return;
 
-            currentSummit = interactor.getLocalActiveSummit();
+            currentSummit = interactor.getActiveSummit();
 
             if (currentSummit == null) return;
 

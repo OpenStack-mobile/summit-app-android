@@ -85,21 +85,27 @@ final public class RealmFactory {
 
     private static void beginTransaction(Realm session){
         Integer counter = incrementTxCounter();
-        if(session != null && counter == 1)
+        if(session != null && counter == 1) {
+            Log.d(Constants.LOG_TAG, "RealmFactory.beginTransaction");
             session.beginTransaction();
+        }
     }
 
     private static void commitTransaction(Realm session){
 
         Integer counter = decrementTxCounter();
-        if(session != null && counter == 0)
+        if(session != null && counter == 0) {
+            Log.d(Constants.LOG_TAG, "RealmFactory.commitTransaction");
             session.commitTransaction();
+        }
     }
 
     private static void rollbackTransaction(Realm session){
         Integer counter = decrementTxCounter();
-        if(session != null && counter == 0)
+        if(session != null && counter == 0) {
+            Log.d(Constants.LOG_TAG, "RealmFactory.rollbackTransaction");
             session.cancelTransaction();
+        }
     }
 
     public interface IRealmCallback<T> {

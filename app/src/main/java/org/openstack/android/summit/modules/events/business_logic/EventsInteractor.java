@@ -23,12 +23,12 @@ public class EventsInteractor  extends BaseInteractor implements IEventsInteract
 
     @Override
     public boolean isDataLoaded() {
-        return summitDataStore.getActiveLocal() != null;
+        return summitDataStore.getActive() != null;
     }
 
     @Override
     public SummitDTO getLocalActiveSummit(){
-        Summit currentSummit = summitDataStore.getActiveLocal();
+        Summit currentSummit = summitDataStore.getActive();
         if(currentSummit == null) return null;
         return dtoAssembler.createDTO(currentSummit, SummitDTO.class);
     }

@@ -27,7 +27,7 @@ public class GeneralScheduleInteractor extends ScheduleInteractor implements IGe
 
     @Override
     public boolean isDataLoaded() {
-        return summitDataStore.getActiveLocal() != null;
+        return summitDataStore.getActive() != null;
     }
 
     @Override

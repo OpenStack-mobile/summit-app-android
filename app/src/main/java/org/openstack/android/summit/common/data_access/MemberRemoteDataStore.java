@@ -1,66 +1,80 @@
 package org.openstack.android.summit.common.data_access;
 
 import android.util.Log;
+
 import com.crashlytics.android.Crashlytics;
-import com.github.kevinsawicki.http.HttpRequest;
-import org.json.JSONObject;
+
+import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.api_endpoints.ApiEndpointBuilder;
+import org.openstack.android.summit.common.api.IMembersApi;
+import org.openstack.android.summit.common.api.ISummitEventsApi;
+import org.openstack.android.summit.common.api.ISummitExternalOrdersApi;
+import org.openstack.android.summit.common.api.SummitEventFeedbackRequest;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.INonConfirmedSummitAttendeeDeserializer;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
-import org.openstack.android.summit.common.entities.SummitEvent;
-import org.openstack.android.summit.common.network.HttpTask;
-import org.openstack.android.summit.common.network.HttpTaskListener;
-import org.openstack.android.summit.common.network.IHttpTaskFactory;
-import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.utils.RealmFactory;
-import org.openstack.android.summit.common.utils.Void;
 
-import java.security.spec.InvalidParameterSpecException;
-import java.util.HashMap;
+import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.realm.Realm;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by Claudio Redi on 12/16/2015.
  */
 public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMemberRemoteDataStore {
 
-    private String userInfoEndpointUrl;
-
-    public String getUserInfoEndpointUrl() {
-        return userInfoEndpointUrl;
-    }
-
-    public void setUserInfoEndpointUrl(String userInfoEndpointUrl) {
-        this.userInfoEndpointUrl = userInfoEndpointUrl;
-    }
-
-    private IDeserializer deserializer;
-    private IHttpTaskFactory httpTaskFactory;
+    private IDeserializer                           deserializer;
     private INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer;
+    private Retrofit                                restClient;
+    private IMembersApi                             memberApi;
+    private ISummitEventsApi                        summitEventsApi;
+    private ISummitExternalOrdersApi                summitExternalOrdersApi;
 
     @Inject
-    public MemberRemoteDataStore(INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer, IHttpTaskFactory httpTaskFactory, IDeserializer deserializer) {
+    public MemberRemoteDataStore
+    (
+        INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,
+        IDeserializer deserializer,
+        @Named("MemberProfile") Retrofit restClient
+    )
+    {
         this.nonConfirmedSummitAttendeeDeserializer = nonConfirmedSummitAttendeeDeserializer;
-        this.httpTaskFactory                        = httpTaskFactory;
         this.deserializer                           = deserializer;
+        this.restClient                             = restClient;
+        this.memberApi                              = restClient.create(IMembersApi.class);
+        this.summitEventsApi                        = restClient.create(ISummitEventsApi.class);
+        this.summitExternalOrdersApi                = restClient.create(ISummitExternalOrdersApi.class);
     }
 
     @Override
     public void getMemberInfo(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
 
-        HttpTaskListener httpTaskListener = new HttpTaskListener() {
+        Call<ResponseBody> call = memberApi.info("current", "attendee,speaker,feedback");
+
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onSucceed(final String data) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
+
+                    if(!response.isSuccessful())
+                        throw new Exception("invalid http code!");
+
+                    final String data = response.body().string();
+
+                    if(data == null || data.isEmpty()) throw new InvalidParameterException("body is empty!");
 
                     Member member = RealmFactory.transaction(new RealmFactory.IRealmCallback<Member>() {
                         @Override
@@ -71,8 +85,8 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                     });
 
                     dataStoreOperationListener.onSucceedWithSingleData(member);
-
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, "Error on member deserialization", e);
                     String friendlyError = Constants.GENERIC_ERROR_MSG;
@@ -81,154 +95,167 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
             }
 
             @Override
-            public void onError(Throwable error) {
-                dataStoreOperationListener.onError(error.getMessage());
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                dataStoreOperationListener.onError(t.getMessage());
             }
-        };
-
-        HashMap<String,Object> params = new HashMap<>();
-        params.put(ApiEndpointBuilder.ExpandParam, "attendee,speaker,feedback");
-
-        HttpTask httpTask = null;
-        try {
-            httpTask = httpTaskFactory.create
-                    (
-                            AccountType.OIDC,
-                            ApiEndpointBuilder.getInstance().buildEndpoint
-                            (
-                                getBaseResourceServerUrl(),
-                                "current",
-                                ApiEndpointBuilder.EndpointType.GetMemberInfo,
-                                params
-                            ).toString(),
-                            HttpRequest.METHOD_GET,
-                            null,
-                            null,
-                            httpTaskListener
-                    );
-        }
-        catch (InvalidParameterSpecException e) {
-            Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG, e.getMessage(), e);
-        }
-        httpTask.execute();
+        });
     }
 
     @Override
     public void getAttendeesForTicketOrder(String orderNumber, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener) {
-        HttpTaskListener httpTaskListener = new HttpTaskListener() {
+
+        Call<ResponseBody> call = this.summitExternalOrdersApi.get("current", orderNumber.trim());
+
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onSucceed(String data) {
-                try {
-                    List<NonConfirmedSummitAttendee> nonConfirmedSummitAttendeeList = nonConfirmedSummitAttendeeDeserializer.deserializeArray(data);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try
+                {
+                    if(!response.isSuccessful())
+                    {
+                        switch (response.code()){
+                            case 412:
+                                dataStoreOperationListener.onError
+                                (
+                                    OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error)
+                                );
+                                return;
+                            case 404:
+                                dataStoreOperationListener.onError
+                                (
+                                    OpenStackSummitApplication.context.getString(R.string.redeem_external_order_not_found_error)
+                                );
+                                return;
+                            default:
+                                throw new Exception
+                                        (
+                                                String.format
+                                                (
+                                                    "getAttendeesForTicketOrder: http error %d",
+                                                    response.code()
+                                                )
+                                        );
+                        }
+                    }
+
+                    List<NonConfirmedSummitAttendee> nonConfirmedSummitAttendeeList = nonConfirmedSummitAttendeeDeserializer.deserializeArray(response.body().string());
                     dataStoreOperationListener.onSucceedWithDataCollection(nonConfirmedSummitAttendeeList);
                 }
-                catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.e(Constants.LOG_TAG, e.getMessage(), e);
+                catch (Exception ex){
+                    Crashlytics.logException(ex);
+                    Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
                     String friendlyError = Constants.GENERIC_ERROR_MSG;
                     dataStoreOperationListener.onError(friendlyError);
                 }
             }
 
             @Override
-            public void onError(Throwable error) {
-                dataStoreOperationListener.onError(error.getMessage());
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                dataStoreOperationListener.onError(t.getMessage());
             }
-        };
-
-        Map<String,Object> params = new HashMap<>();
-        params.put(ApiEndpointBuilder.OrderNumberParam, orderNumber.trim());
-
-        HttpTask httpTask = null;
-        try {
-            httpTask = httpTaskFactory.create(
-                    AccountType.OIDC,
-                    ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.GetExternalOrder, params).toString(),
-                    HttpRequest.METHOD_GET,
-                    HttpRequest.CONTENT_TYPE_JSON,
-                    null,
-                    httpTaskListener);
-        } catch (InvalidParameterSpecException e) {
-            Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG, e.getMessage(), e);
-        }
-        httpTask.execute();
+        });
     }
 
-    public void selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener) {
-        HttpTaskListener httpTaskListener = new HttpTaskListener() {
+    public void selectAttendeeFromOrderList
+    (
+        String orderNumber,
+        int externalAttendeeId,
+        final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener
+    )
+    {
+
+        Call<ResponseBody> call = this.summitExternalOrdersApi.confirm("current", orderNumber.trim(), externalAttendeeId);
+
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onSucceed(String data) {
-                dataStoreOperationListener.onSucceedWithoutData();
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try{
+
+                    if(!response.isSuccessful())
+                    {
+                        switch (response.code()){
+                            case 412:
+                                dataStoreOperationListener.onError
+                                (
+                                    OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error)
+                                );
+                                return;
+                            case 404:
+                                dataStoreOperationListener.onError
+                                (
+                                    OpenStackSummitApplication.context.getString(R.string.redeem_external_order_attendee_does_not_exists_error)
+                                );
+                                return;
+                            default:
+                                throw new Exception
+                                        (
+                                                String.format
+                                                        (
+                                                                "selectAttendeeFromOrderList: http error %d",
+                                                                response.code()
+                                                        )
+                                        );
+                        }
+                    }
+
+                    dataStoreOperationListener.onSucceedWithoutData();
+                }
+                catch (Exception ex){
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    Crashlytics.logException(ex);
+                    dataStoreOperationListener.onError(friendlyError);
+                }
             }
 
             @Override
-            public void onError(Throwable error) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 String friendlyError = Constants.GENERIC_ERROR_MSG;
-                Crashlytics.logException(error);
+                Crashlytics.logException(t);
                 dataStoreOperationListener.onError(friendlyError);
             }
-        };
-
-        Map<String,Object> params = new HashMap<>();
-        params.put(ApiEndpointBuilder.OrderNumberParam, orderNumber.trim());
-        params.put(ApiEndpointBuilder.ExternalAttendeeIdParam, externalAttendeeId);
-
-        HttpTask httpTask = null;
-        try {
-            httpTask = httpTaskFactory.create(
-                    AccountType.OIDC,
-                    ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.ConfirmExternalOrder, params).toString(),
-                    HttpRequest.METHOD_POST,
-                    HttpRequest.CONTENT_TYPE_JSON,
-                    null,
-                    httpTaskListener);
-            httpTask.execute();
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG, e.getMessage(), e);
-        }
-
+        });
     }
 
     @Override
     public void addFeedback(final Feedback feedback, final IDataStoreOperationListener<Feedback> dataStoreOperationListener) {
 
-        HttpTaskListener httpTaskListener = new HttpTaskListener() {
+        int eventId             = feedback.getEvent().getId();
+        Call<ResponseBody> call = this.summitEventsApi.postEventFeedback
+        (
+            "current",
+            eventId,
+            new SummitEventFeedbackRequest
+            (
+                feedback.getRate(),
+                feedback.getReview()
+            )
+        );
+
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onSucceed(String data) {
-                feedback.setId(Integer.parseInt(data));
-                dataStoreOperationListener.onSucceedWithSingleData(feedback);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try{
+
+                    if(!response.isSuccessful())
+                        throw new Exception(String.format("addFeedback: http error code %d", response.code()));
+
+                    feedback.setId(Integer.parseInt(response.body().string()));
+                    dataStoreOperationListener.onSucceedWithSingleData(feedback);
+
+                }
+                catch (Exception ex){
+                    Crashlytics.logException(ex);
+                    String friendlyError = Constants.GENERIC_ERROR_MSG;
+                    dataStoreOperationListener.onError(friendlyError);
+                }
             }
 
             @Override
-            public void onError(Throwable error) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Crashlytics.logException(t);
                 String friendlyError = Constants.GENERIC_ERROR_MSG;
                 dataStoreOperationListener.onError(friendlyError);
             }
-        };
-        HttpTask httpTask         = null;
-        Map<String,Object> params = new HashMap<>();
-        params.put(ApiEndpointBuilder.EventIdParam, feedback.getEvent().getId());
-
-        try {
-            JSONObject feedbackJson = new JSONObject();
-            feedbackJson.put("rate", feedback.getRate());
-            feedbackJson.put("note", JSONObject.quote(feedback.getReview()));
-
-            httpTask = httpTaskFactory.create(
-                    AccountType.OIDC,
-                    ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.AddFeedback, params).toString(),
-                    HttpRequest.METHOD_POST,
-                    HttpRequest.CONTENT_TYPE_JSON,
-                    feedbackJson.toString(),
-                    httpTaskListener);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.e(Constants.LOG_TAG, e.getMessage(), e);
-        }
-        httpTask.execute();
+        });
     }
-
 }

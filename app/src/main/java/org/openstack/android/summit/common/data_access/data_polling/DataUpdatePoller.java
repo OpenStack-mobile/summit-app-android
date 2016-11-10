@@ -9,21 +9,21 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
-import org.openstack.android.summit.common.api_endpoints.ApiEndpointBuilder;
+import org.openstack.android.summit.common.api.ISummitEntityEventsApi;
 import org.openstack.android.summit.common.data_access.BaseRemoteDataStore;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.network.IHttpFactory;
-import org.openstack.android.summit.common.security.AccountType;
 import org.openstack.android.summit.common.security.ISecurityManager;
-import org.openstack.android.summit.common.security.ITokenManager;
-import org.openstack.android.summit.common.security.ITokenManagerFactory;
-import org.openstack.android.summit.common.security.TokenManagerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by Claudio Redi on 2/5/2016.
@@ -31,24 +31,35 @@ import java.util.Map;
 public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdatePoller {
 
     private ISecurityManager securityManager;
-    private ITokenManagerFactory tokenManagerFactory;
     private IDataUpdateProcessor dataUpdateProcessor;
     private IDataUpdateDataStore dataUpdateDataStore;
     private ISummitDataStore summitDataStore;
     private ISession session;
-    private IHttpFactory httpFactory;
+    private Retrofit restClientUserProfile;
+    private Retrofit restClientServiceProfile;
 
     private static final int EntityEventUpdatesPageSize = 50;
 
-    public DataUpdatePoller(ISecurityManager securityManager, ITokenManagerFactory tokenManagerFactory, IDataUpdateProcessor dataUpdateProcessor, IDataUpdateDataStore dataUpdateDataStore, ISummitDataStore summitDataStore, ISession session, IHttpFactory httpFactory) {
+    @Inject
+    public DataUpdatePoller
+    (
+            ISecurityManager securityManager,
+            IDataUpdateProcessor dataUpdateProcessor,
+            IDataUpdateDataStore dataUpdateDataStore,
+            ISummitDataStore summitDataStore,
+            ISession session,
+            @Named("MemberProfile") Retrofit restClientUserProfile,
+            @Named("ServiceProfile") Retrofit restClientServiceProfile
+    )
+    {
 
-        this.securityManager     = securityManager;
-        this.tokenManagerFactory = tokenManagerFactory;
-        this.dataUpdateProcessor = dataUpdateProcessor;
-        this.dataUpdateDataStore = dataUpdateDataStore;
-        this.summitDataStore     = summitDataStore;
-        this.session             = session;
-        this.httpFactory         = httpFactory;
+        this.securityManager          = securityManager;
+        this.dataUpdateProcessor      = dataUpdateProcessor;
+        this.dataUpdateDataStore      = dataUpdateDataStore;
+        this.summitDataStore          = summitDataStore;
+        this.session                  = session;
+        this.restClientUserProfile    = restClientUserProfile;
+        this.restClientServiceProfile = restClientServiceProfile;
     }
 
     @Override
@@ -58,32 +69,25 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
 
             Log.d(Constants.LOG_TAG, "Polling server for data updates");
 
-            String url = getUrl();
+            Retrofit restClient     = securityManager.isLoggedIn() ?
+                    this.restClientUserProfile :
+                    this.restClientServiceProfile;
 
-            if (url == null) {
+            Call<ResponseBody> call = getCall(restClient.create(ISummitEntityEventsApi.class));
+
+            if (call == null) {
                 return;
             }
 
-            if(summitDataStore.getActiveLocal() == null){
+            if(summitDataStore.getActive() == null){
                 return;
             }
 
-            AccountType accountType    = securityManager.isLoggedIn() ? AccountType.OIDC : AccountType.ServiceAccount;
-            ITokenManager tokenManager = null;
+            Response<ResponseBody> response = call.execute();
 
-            switch (accountType){
-                case OIDC:
-                    tokenManager = tokenManagerFactory.Create(TokenManagerFactory.TokenManagerType.OIDC);
-                    break;
-                case ServiceAccount:
-                    tokenManager = tokenManagerFactory.Create(TokenManagerFactory.TokenManagerType.ServiceAccount);
-                    break;
-                default:
-                    tokenManager = tokenManagerFactory.Create(TokenManagerFactory.TokenManagerType.ServiceAccount);
-                    break;
-            }
+            if(!response.isSuccessful()) return;
 
-            dataUpdateProcessor.process(httpFactory.create(tokenManager).GET(url));
+            dataUpdateProcessor.process(response.body().string());
             clearDataIfTruncateEventExist();
 
         } catch (Exception e) {
@@ -100,11 +104,10 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         session.setLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE, fromDate);
     }
 
-    public String getUrl() {
+    private Call<ResponseBody> getCall(ISummitEntityEventsApi api) {
 
         long latestDataUpdateId       = session.getLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID);
         long latestDataUpdateIdFromDB = dataUpdateDataStore.getLatestDataUpdate();
-        Map<String, Object>params     = new HashMap<>();
 
         if(latestDataUpdateId < latestDataUpdateIdFromDB ){
             latestDataUpdateId = latestDataUpdateIdFromDB;
@@ -112,23 +115,20 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         }
 
         if (latestDataUpdateId > 0){
-            params.put(ApiEndpointBuilder.LimitParam, EntityEventUpdatesPageSize);
-            params.put(ApiEndpointBuilder.LastEventIdParam, latestDataUpdateId);
-            return ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(), "current", ApiEndpointBuilder.EndpointType.EntityEvents, params ).toString();
+            return api.get("current", null, latestDataUpdateId, EntityEventUpdatesPageSize);
         }
 
         long fromDate = getFromDate();
         if (fromDate == 0) {
-            Summit summit = summitDataStore.getActiveLocal();
+            Summit summit = summitDataStore.getActive();
             if (summit != null) {
                 fromDate = summit.getInitialDataLoadDate().getTime() / 1000L;
                 setFromDate(fromDate);
             }
         }
+
         if (fromDate != 0) {
-            params.put(ApiEndpointBuilder.LimitParam, EntityEventUpdatesPageSize);
-            params.put(ApiEndpointBuilder.FromDateParam, fromDate);
-            return ApiEndpointBuilder.getInstance().buildEndpoint(getBaseResourceServerUrl(),"current", ApiEndpointBuilder.EndpointType.EntityEvents, params ).toString();
+            return api.get("current", fromDate, null, EntityEventUpdatesPageSize);
         }
 
         return null;

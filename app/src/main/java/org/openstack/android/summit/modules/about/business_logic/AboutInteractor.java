@@ -18,7 +18,7 @@ public class AboutInteractor extends BaseInteractor implements IAboutInteractor 
     }
 
     public SummitDTO getActiveSummit() {
-        Summit summit = summitDataStore.getActiveLocal();
+        Summit summit = summitDataStore.getActive();
         SummitDTO dto = dtoAssembler.createDTO(summit, SummitDTO.class);
         return dto;
     }

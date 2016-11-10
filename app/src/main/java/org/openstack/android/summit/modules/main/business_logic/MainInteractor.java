@@ -79,7 +79,7 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
     @Override
     public void subscribeToPushNotifications() {
-        Summit summit = summitDataStore.getActiveLocal();
+        Summit summit = summitDataStore.getActive();
         if(summit == null) return;
         int summitId = summit.getId();
 
@@ -98,7 +98,7 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
     @Override
     public boolean isDataLoaded() {
-        return summitDataStore.getActiveLocal() != null;
+        return summitDataStore.getActive() != null;
     }
 
     @Override

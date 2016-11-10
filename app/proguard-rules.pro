@@ -51,3 +51,16 @@
 }
 
 -keep class bolts.** { *; }
+
+# Retrofit
+
+-dontwarn retrofit2.**
+
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+
+-dontwarn okhttp3.*
+-dontwarn rx.**
+-keep class javax.inject.** { *; }
+-keep class javax.xml.stream.** { *; }

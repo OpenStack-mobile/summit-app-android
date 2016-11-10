@@ -7,31 +7,24 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.github.kevinsawicki.http.HttpRequest;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.api_endpoints.ApiEndpointBuilder;
+import org.openstack.android.summit.common.api.ISummitApi;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitDeserializer;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.network.HttpTaskConfig;
-import org.openstack.android.summit.common.network.IHttpFactory;
 import org.openstack.android.summit.common.network.IReachability;
-import org.openstack.android.summit.common.security.IOIDCConfigurationManager;
-import org.openstack.android.summit.common.security.ITokenManager;
-import org.openstack.android.summit.common.security.ITokenManagerFactory;
-import org.openstack.android.summit.common.security.TokenManagerFactory;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
 import org.openstack.android.summit.modules.general_schedule.business_logic.IGeneralScheduleInteractor;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.realm.Realm;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
 
 /**
  * Created by sebastian on 10/5/2016.
@@ -42,8 +35,7 @@ public class InitialDataIngestionService extends IntentService {
     public static final String PENDING_RESULT = "pending_result";
     public static final int RESULT_CODE_OK    = 0xFF01;
     public static final int RESULT_CODE_ERROR = 0xFF02;
-
-    public static boolean isRunning = false;
+    public static boolean isRunning           = false;
 
     @Inject
     IReachability reachability;
@@ -52,16 +44,11 @@ public class InitialDataIngestionService extends IntentService {
     IGeneralScheduleInteractor interactor;
 
     @Inject
-    ITokenManagerFactory tokenManagerFactory;
-
-    @Inject
-    IHttpFactory httpFactory;
-
-    @Inject
     ISummitDeserializer deserializer;
 
     @Inject
-    IOIDCConfigurationManager ioidcConfigurationManager;
+    @Named("ServiceProfile")
+    Retrofit restClient;
 
     public static Intent newIntent(Context context) {
         return new Intent(context, InitialDataIngestionService.class);
@@ -80,14 +67,15 @@ public class InitialDataIngestionService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+
         Intent result       = new Intent();
         PendingIntent reply = intent.getParcelableExtra(PENDING_RESULT);
 
-        if(reply == null) return;
+        if (reply == null) return;
 
         try {
 
-            isRunning  = true;
+            isRunning = true;
 
             if (!reachability.isNetworkingAvailable(this)) {
                 isRunning = false;
@@ -95,37 +83,28 @@ public class InitialDataIngestionService extends IntentService {
                 return;
             }
 
-            if(interactor.isDataLoaded())
-            {
+            if (interactor.isDataLoaded()) {
                 Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: data already loaded !!!");
                 isRunning = false;
                 reply.send(this, RESULT_CODE_OK, result);
                 return;
             }
 
-            HttpTaskConfig config        = new HttpTaskConfig();
-            Map<String,Object> params    = new HashMap<>();
-            String resourceServerBaseUrl = ioidcConfigurationManager.getResourceServerBaseUrl();
-            ITokenManager tokenManager   = tokenManagerFactory.Create(TokenManagerFactory.TokenManagerType.ServiceAccount);
-
-            params.put(ApiEndpointBuilder.ExpandParam,"locations,sponsors,summit_types,event_types,presentation_categories,schedule" );
-
-            config.setUrl(ApiEndpointBuilder.getInstance().buildEndpoint(resourceServerBaseUrl, "current", ApiEndpointBuilder.EndpointType.GetSummit, params).toString());
-            config.setMethod(HttpRequest.METHOD_GET);
-            config.setContentType(null);
-            config.setContent(null);
-            config.setDelegate(null);
-            config.setHttp(httpFactory.create(tokenManager));
             Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: getting summit data ...");
 
-            final String body = config.getHttp().GET(config.getUrl());
+            Call<ResponseBody> call = restClient.create(ISummitApi.class).getSummit("current", "locations,sponsors,summit_types,event_types,presentation_categories,schedule");
+
+            final retrofit2.Response<ResponseBody> response = call.execute();
+
+            if (!response.isSuccessful())
+                throw new Exception(String.format("InitialDataIngestionService: invalid http code %d", response.code()));
 
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override
                 public Void callback(Realm session) throws Exception {
 
                     Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: deserializing summit data ...");
-                    Summit summit = deserializer.deserialize(body);
+                    Summit summit = deserializer.deserialize(response.body().string());
                     session.copyToRealmOrUpdate(summit);
                     return Void.getInstance();
                 }
@@ -133,18 +112,15 @@ public class InitialDataIngestionService extends IntentService {
 
             Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: summit data loaded !!!");
             reply.send(this, RESULT_CODE_OK, result);
-        }
-        catch (Exception ex) {
-            try
-            {
+
+        } catch (Exception ex) {
+            try {
                 isRunning = false;
                 reply.send(this, RESULT_CODE_ERROR, result);
-            }
-            catch (PendingIntent.CanceledException ex2){
+            } catch (PendingIntent.CanceledException ex2) {
                 Crashlytics.logException(ex2);
             }
-        }
-        finally {
+        } finally {
             isRunning = false;
             RealmFactory.closeSession();
         }

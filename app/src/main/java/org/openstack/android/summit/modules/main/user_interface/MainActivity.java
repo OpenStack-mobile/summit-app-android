@@ -231,7 +231,7 @@ public class MainActivity
 
         presenter.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        securityManager.init();
+
         ActionBarSetup();
         NavigationMenuSetup(savedInstanceState);
         if (savedInstanceState == null) {
@@ -247,6 +247,7 @@ public class MainActivity
             showActivityIndicator();
             return;
         }
+        securityManager.init();
     }
 
     @Override

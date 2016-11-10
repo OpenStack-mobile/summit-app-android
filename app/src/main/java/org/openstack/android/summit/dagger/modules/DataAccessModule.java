@@ -14,7 +14,6 @@ import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteData
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
-import org.openstack.android.summit.common.data_access.ISummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
 import org.openstack.android.summit.common.data_access.IVenueDataStore;
 import org.openstack.android.summit.common.data_access.MemberDataStore;
@@ -26,7 +25,6 @@ import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataS
 import org.openstack.android.summit.common.data_access.SummitDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventRemoteDataStore;
-import org.openstack.android.summit.common.data_access.SummitRemoteDataStore;
 import org.openstack.android.summit.common.data_access.TrackGroupDataStore;
 import org.openstack.android.summit.common.data_access.VenueDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
@@ -83,18 +81,16 @@ import org.openstack.android.summit.common.data_access.deserialization.TrackGrou
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
-import org.openstack.android.summit.common.network.IHttpFactory;
-import org.openstack.android.summit.common.network.IHttpTaskFactory;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.network.Reachability;
-import org.openstack.android.summit.common.security.IOIDCConfigurationManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
-import org.openstack.android.summit.common.security.ITokenManagerFactory;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit2.Retrofit;
 
 /**
  * Created by Claudio Redi on 11/3/2015.
@@ -255,23 +251,19 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitRemoteDataStore providesSummitRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer, IOIDCConfigurationManager ioidcConfigurationManager) {
-        SummitRemoteDataStore store = new SummitRemoteDataStore(httpTaskFactory, deserializer);
-        store.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
-        return store;
+    ISummitDataStore providesSummitDataStore() {
+        return new SummitDataStore();
     }
 
     @Provides
-    ISummitDataStore providesSummitDataStore(ISummitRemoteDataStore summitRemoteDataStore) {
-        return new SummitDataStore(summitRemoteDataStore);
-    }
-
-    @Provides
-    IMemberRemoteDataStore providesMemberRemoteDataStore(INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,  IHttpTaskFactory httpTaskFactory, IDeserializer deserializer, IOIDCConfigurationManager ioidcConfigurationManager) {
-        MemberRemoteDataStore store = new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, httpTaskFactory, deserializer);
-        store.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
-        store.setUserInfoEndpointUrl(ioidcConfigurationManager.buildIdentityProviderUrls().getUserInfoEndpoint());
-        return store;
+    IMemberRemoteDataStore providesMemberRemoteDataStore
+    (
+                    INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,
+                    IDeserializer deserializer,
+                    @Named("MemberProfile") Retrofit restClient
+    )
+    {
+        return new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, deserializer, restClient);
     }
 
     @Provides
@@ -295,17 +287,17 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitEventRemoteDataStore providesSummitEventRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer, IOIDCConfigurationManager ioidcConfigurationManager) {
-        SummitEventRemoteDataStore store = new SummitEventRemoteDataStore(httpTaskFactory, deserializer);
-        store.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
-        return store;
+    ISummitEventRemoteDataStore providesSummitEventRemoteDataStore(IDeserializer deserializer, @Named("ServiceProfile") Retrofit restClient) {
+        return new SummitEventRemoteDataStore(deserializer, restClient);
     }
 
     @Provides
-    ISummitAttendeeRemoteDataStore providesSummitAttendeeRemoteDataStore(IHttpTaskFactory httpTaskFactory, IDeserializer deserializer, IOIDCConfigurationManager ioidcConfigurationManager) {
-        SummitAttendeeRemoteDataStore store = new SummitAttendeeRemoteDataStore(httpTaskFactory, deserializer);
-        store.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
-        return store;
+    ISummitAttendeeRemoteDataStore providesSummitAttendeeRemoteDataStore
+    (
+        @Named("MemberProfile") Retrofit restClient
+    )
+    {
+        return new SummitAttendeeRemoteDataStore(restClient);
     }
 
     @Provides
@@ -356,25 +348,23 @@ public class DataAccessModule {
     IDataUpdatePoller providesDataUpdatePoller
     (
                     ISecurityManager securityManager,
-                    ITokenManagerFactory tokenManagerFactory,
                     IDataUpdateProcessor dataUpdateProcessor,
                     IDataUpdateDataStore dataUpdateDataStore,
                     ISummitDataStore summitDataStore,
                     ISession session,
-                    IOIDCConfigurationManager ioidcConfigurationManager,
-                    IHttpFactory httpFactory
+                    @Named("MemberProfile") Retrofit restClientUserProfile,
+                    @Named("ServiceProfile") Retrofit restClientServiceProfile
+
     ) {
-        DataUpdatePoller poller = new DataUpdatePoller(
+        return new DataUpdatePoller(
                 securityManager,
-                tokenManagerFactory,
                 dataUpdateProcessor,
                 dataUpdateDataStore,
                 summitDataStore,
                 session,
-                httpFactory
+                restClientUserProfile,
+                restClientServiceProfile
         );
-        poller.setBaseResourceServerUrl(ioidcConfigurationManager.getResourceServerBaseUrl());
-        return poller;
     }
 
     @Provides

@@ -1,24 +1,21 @@
 package org.openstack.android.summit.common.business_logic;
 
-import android.util.Log;
 import org.joda.time.DateTime;
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
-import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
-import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
 
 /**
@@ -33,14 +30,14 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session) {
         super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, pushNotificationsManager);
         this.summitDataStore = summitDataStore;
-        this.session         = session;
+        this.session = session;
     }
 
     @Override
     public List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues) {
         return createDTOList(
                 summitEventDataStore.getByFilterLocal
-                (
+                        (
                                 startDate,
                                 endDate,
                                 eventTypes,
@@ -50,7 +47,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                                 tags,
                                 levels,
                                 venues
-                ),
+                        ),
                 ScheduleItemDTO.class
         );
     }
@@ -60,8 +57,8 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
         ArrayList<DateTime> inactiveDates = new ArrayList<>();
         List<SummitEvent> events;
 
-        while(startDate.isBefore(endDate)) {
-           events = summitEventDataStore.getByFilterLocal(
+        while (startDate.isBefore(endDate)) {
+            events = summitEventDataStore.getByFilterLocal(
                     startDate.withTime(0, 0, 0, 0),
                     startDate.withTime(23, 59, 59, 999),
                     eventTypes,
@@ -70,7 +67,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                     tracks,
                     tags,
                     levels,
-                   venues);
+                    venues);
             if (events.size() == 0) {
                 inactiveDates.add(startDate);
             }
@@ -87,41 +84,15 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     }
 
     @Override
-    public SummitDTO getLocalActiveSummit(){
-        Summit currentSummit = summitDataStore.getActiveLocal();
-        if(currentSummit == null) return null;
+    public SummitDTO getActiveSummit() {
+        Summit currentSummit = summitDataStore.getActive();
+        if (currentSummit == null) return null;
         return dtoAssembler.createDTO(currentSummit, SummitDTO.class);
     }
 
     @Override
     public boolean isDataLoaded() {
-        return summitDataStore.getActiveLocal() != null;
+        return summitDataStore.getActive() != null;
     }
 
-    @Override
-    public void getActiveSummit(final IInteractorAsyncOperationListener<SummitDTO> delegate) {
-        DataStoreOperationListener<Summit> dataStoreOperationListener = new DataStoreOperationListener<Summit>() {
-            @Override
-            public void onSucceedWithSingleData(Summit data) {
-                if (delegate != null) {
-                    try{
-                        SummitDTO summitDTO = dtoAssembler.createDTO(data, SummitDTO.class);
-                        delegate.onSucceedWithData(summitDTO);
-                    } catch (Exception e) {
-                        String friendlyError = "Error getting summit information";
-                        Log.e(Constants.LOG_TAG, friendlyError, e);
-                        delegate.onError(friendlyError);
-                    }
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                if (delegate != null) {
-                    delegate.onError(message);
-                }
-            }
-        };
-        summitDataStore.getActive(dataStoreOperationListener);
-    }
 }

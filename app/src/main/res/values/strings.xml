@@ -91,4 +91,7 @@
     <string name="missing_activity_error">You do not have installed any application to manage the requested action.</string>
     <string name="generic_error_message">There was an error performing this operation.</string>
     <string name="session_expired_message">Your session has expired.</string>
+    <string name="redeem_external_order_not_found_error">Eventbrite order number not found or does not exists!.</string>
+    <string name="redeem_external_order_already_done_error">EventBrite Order already redeem!.</string>
+    <string name="redeem_external_order_attendee_does_not_exists_error">Eventbrite attendee is not registered!.</string>
 </resources>

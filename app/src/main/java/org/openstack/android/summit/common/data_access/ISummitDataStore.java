@@ -1,6 +1,5 @@
 package org.openstack.android.summit.common.data_access;
 
-import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Summit;
 
 /**
@@ -8,9 +7,7 @@ import org.openstack.android.summit.common.entities.Summit;
  */
 public interface ISummitDataStore extends IGenericDataStore {
 
-    void getActive(IDataStoreOperationListener<Summit> dataStoreOperationListener);
-
-    Summit getActiveLocal();
+    Summit getActive();
 
     void updateActiveSummitFromDataUpdate(Summit dataUpdateEntity);
 }

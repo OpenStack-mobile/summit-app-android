@@ -16,6 +16,7 @@ import org.openstack.android.summit.dagger.modules.FeedbackEditModule;
 import org.openstack.android.summit.dagger.modules.MainModule;
 import org.openstack.android.summit.dagger.modules.MemberOrderConfirmModule;
 import org.openstack.android.summit.dagger.modules.PushNotificationsInboxModule;
+import org.openstack.android.summit.dagger.modules.RestApiModule;
 import org.openstack.android.summit.dagger.modules.SettingsModule;
 import org.openstack.android.summit.dagger.modules.VenueMapModule;
 import org.openstack.android.summit.modules.about.user_interface.AboutFragment;
@@ -77,8 +78,9 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class, PushNotificationsInboxModule.class, SettingsModule.class} )
+@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class, PushNotificationsInboxModule.class, SettingsModule.class, RestApiModule.class} )
 public interface ApplicationComponent {
+
     void inject(MainActivity mainActivity);
     void inject(InitialDataLoadingActivity initialDataLoadingActivity);
     void inject(EventsFragment eventsFragment);

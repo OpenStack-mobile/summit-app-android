@@ -18,6 +18,7 @@ import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.components.DaggerApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
+import org.openstack.android.summit.dagger.modules.RestApiModule;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
@@ -32,7 +33,9 @@ public class OpenStackSummitApplication extends Application {
     
     @Override public void onCreate() {
         super.onCreate();
+
         JodaTimeAndroid.init(this);
+
         Fabric.with(
                 this,
                 new Crashlytics.Builder()

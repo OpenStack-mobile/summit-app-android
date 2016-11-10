@@ -222,7 +222,11 @@ dependencies {
     // http://facebook.github.io/stetho and https://github.com/uPhyca/stetho-realm
     compile 'com.facebook.stetho:stetho:1.1.1'
     compile 'com.uphyca:stetho_realm:0.9.0'
-
+    // retrofit (REST API)
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     // Espresso Dependencies
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'

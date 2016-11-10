@@ -31,9 +31,18 @@ import javax.inject.Inject;
  */
 public class SecurityManager implements ISecurityManager {
 
+    enum SecurityManagerState {
+        IDLE,
+        LOGGED_OUT,
+        ON_LOGIN_PROCESS,
+        LOGGED_IN,
+    }
     private IMemberDataStore memberDataStore;
-    private ISession session;
-    private ITokenManager tokenManager;
+    private ISession         session;
+    private ITokenManager    tokenManager;
+
+    // internal state
+    private SecurityManagerState state  = SecurityManagerState.IDLE;
 
     @Inject
     public SecurityManager(ITokenManager tokenManager, final IMemberDataStore memberDataStore, final ISession session) {
@@ -63,6 +72,7 @@ public class SecurityManager implements ISecurityManager {
             @Override
             protected void onPostExecute(String token) {
                 try{
+                    if(state == SecurityManagerState.ON_LOGIN_PROCESS) return;
                     final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
                     final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
                     int currentMemberId                 = session.getInt(Constants.CURRENT_MEMBER_ID);
@@ -101,6 +111,8 @@ public class SecurityManager implements ISecurityManager {
     @Override
     public void login(final Activity context) {
         try{
+            state = SecurityManagerState.ON_LOGIN_PROCESS;
+
             Log.d(Constants.LOG_TAG, "SecurityManager.login");
 
             final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
@@ -133,10 +145,12 @@ public class SecurityManager implements ISecurityManager {
         catch(SecurityException ex1){
             Log.w(Constants.LOG_TAG, ex1.getMessage());
             Crashlytics.logException(ex1);
+            state = SecurityManagerState.IDLE;
         }
         catch(Exception ex){
             Log.e(Constants.LOG_TAG, ex.getMessage());
             Crashlytics.logException(ex);
+            state = SecurityManagerState.IDLE;
         }
     }
 
@@ -153,6 +167,7 @@ public class SecurityManager implements ISecurityManager {
 
                 Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
                 LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+                state = SecurityManagerState.LOGGED_IN;
             }
 
             @Override
@@ -161,8 +176,10 @@ public class SecurityManager implements ISecurityManager {
                 Intent intent = new Intent(Constants.LOG_IN_ERROR_EVENT);
                 intent.putExtra(Constants.LOG_IN_ERROR_MESSAGE, message);
                 LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+                state = SecurityManagerState.IDLE;
             }
         };
+
         memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
     }
 
