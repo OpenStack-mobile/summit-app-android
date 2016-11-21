@@ -116,17 +116,6 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                     }
                 }
 
-                if (jsonObject.has("summit_types")) {
-                    SummitType summitType;
-                    JSONObject jsonObjectSummitType;
-                    JSONArray jsonArraySummitTypes = jsonObject.getJSONArray("summit_types");
-                    for (int i = 0; i < jsonArraySummitTypes.length(); i++) {
-                        jsonObjectSummitType = jsonArraySummitTypes.getJSONObject(i);
-                        summitType = genericDeserializer.deserialize(jsonObjectSummitType.toString(), SummitType.class);
-                        summit.getTypes().add(summitType);
-                    }
-                }
-
                 if (jsonObject.has("ticket_types")) {
                     TicketType ticketType;
                     JSONObject jsonObjectTicketType;

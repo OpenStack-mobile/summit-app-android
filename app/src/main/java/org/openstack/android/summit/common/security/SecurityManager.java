@@ -37,6 +37,7 @@ public class SecurityManager implements ISecurityManager {
         ON_LOGIN_PROCESS,
         LOGGED_IN,
     }
+
     private IMemberDataStore memberDataStore;
     private ISession         session;
     private ITokenManager    tokenManager;
@@ -73,6 +74,7 @@ public class SecurityManager implements ISecurityManager {
             protected void onPostExecute(String token) {
                 try{
                     if(state == SecurityManagerState.ON_LOGIN_PROCESS) return;
+
                     final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
                     final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
                     int currentMemberId                 = session.getInt(Constants.CURRENT_MEMBER_ID);
@@ -119,10 +121,15 @@ public class SecurityManager implements ISecurityManager {
             final String accountType            = context.getString(R.string.ACCOUNT_TYPE);
             Intent intent                       = new Intent(Constants.START_LOG_IN_EVENT);
             Account availableAccounts[]         = accountManager.getAccountsByType(accountType);
+
             if(availableAccounts.length > 0){
                 removeAccount(availableAccounts[0]);
             }
-            LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+
+            LocalBroadcastManager
+                    .getInstance(OpenStackSummitApplication.context)
+                    .sendBroadcast(intent);
+
             accountManager.addAccount
             (
                 accountType,

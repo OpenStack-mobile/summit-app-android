@@ -8,6 +8,7 @@ import io.realm.RealmList;
  * Created by Claudio Redi on 12/28/2015.
  */
 public interface ISummitEvent extends INamedEntity {
+
     Date getStart();
 
     void setStart(Date start);
@@ -27,10 +28,6 @@ public interface ISummitEvent extends INamedEntity {
     EventType getEventType();
 
     void setEventType(EventType eventType);
-
-    RealmList<SummitType> getSummitTypes();
-
-    void setSummitTypes(RealmList<SummitType> summitTypes);
 
     RealmList<Company> getSponsors();
 
@@ -55,4 +52,9 @@ public interface ISummitEvent extends INamedEntity {
     Summit getSummit();
 
     void setSummit(Summit summit);
+
+    Track getTrack();
+
+    void setTrack(Track track);
+
 }

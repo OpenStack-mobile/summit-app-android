@@ -48,7 +48,6 @@ public class PresentationDeserializerTests {
         // Assert
         Assert.assertEquals(4189, presentation.getId());
         Assert.assertEquals("Intermediate", presentation.getLevel());
-        Assert.assertEquals(track, presentation.getTrack());
         Assert.assertEquals(2, presentation.getSpeakers().size());
         Assert.assertEquals(presentationSpeaker1, presentation.getSpeakers().get(0));
         Assert.assertEquals(presentationSpeaker2, presentation.getSpeakers().get(1));
@@ -112,7 +111,6 @@ public class PresentationDeserializerTests {
         // Assert
         Assert.assertEquals(4189, presentation.getId());
         Assert.assertNull(presentation.getLevel());
-        Assert.assertEquals(track, presentation.getTrack());
         Assert.assertEquals(2, presentation.getSpeakers().size());
         Assert.assertEquals(presentationSpeaker1, presentation.getSpeakers().get(0));
         Assert.assertEquals(presentationSpeaker2, presentation.getSpeakers().get(1));

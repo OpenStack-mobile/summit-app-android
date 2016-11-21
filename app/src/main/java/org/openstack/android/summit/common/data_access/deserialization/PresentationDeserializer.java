@@ -54,14 +54,6 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
                 !jsonObject.isNull("level") ? jsonObject.getString("level") : null
         );
 
-        int trackId    = jsonObject.getInt("track_id");
-        //first check db, and then cache storage
-        Track track    = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
-        if(track == null)
-            throw new JSONException(String.format("Can't deserialize presentation id %d missing track %d", presentationId , trackId));
-
-        presentation.setTrack(track);
-
         PresentationSpeaker presentationSpeaker;
         int speakerId;
         JSONArray jsonArraySpeakers = jsonObject.getJSONArray("speakers");

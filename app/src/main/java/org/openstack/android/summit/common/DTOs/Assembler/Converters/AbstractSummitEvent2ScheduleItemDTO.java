@@ -17,6 +17,7 @@ import org.openstack.android.summit.common.entities.Venue;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 
@@ -45,13 +46,13 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         String credentials = getCredentials(source);
         scheduleItemDTO.setCredentials(credentials);
         scheduleItemDTO.setTrack(
-                source.getPresentation() != null && source.getPresentation().getTrack() != null
-                        ? source.getPresentation().getTrack().getName()
+         source.getTrack() != null
+                        ? source.getTrack().getName()
                         : null
         );
 
-        if (source.getPresentation() != null && source.getPresentation().getTrack() != null && source.getPresentation().getTrack().getTrackGroups().size() > 0) {
-            scheduleItemDTO.setColor(source.getPresentation().getTrack().getTrackGroups().get(0).getColor());
+        if (source.getTrack() != null && source.getTrack().getTrackGroups().size() > 0) {
+            scheduleItemDTO.setColor(source.getTrack().getTrackGroups().get(0).getColor());
         }
         else if(source.getEventType() != null ){
             // use the color of the event type
@@ -180,17 +181,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
     }
 
     private String getCredentials(S summitEvent) {
-        String credentials = "";
-
-        if (summitEvent.getSummitTypes().size() > 0) {
-            String separator = "";
-            for(SummitType summitType: summitEvent.getSummitTypes()) {
-                credentials += separator + summitType.getName();
-                separator = ", ";
-            }
-        }
-
-        return credentials;
+       return "";
     }
 
     @Override

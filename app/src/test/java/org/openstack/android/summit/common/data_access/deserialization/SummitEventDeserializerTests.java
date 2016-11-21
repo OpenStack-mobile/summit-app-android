@@ -83,9 +83,6 @@ public class SummitEventDeserializerTests {
         Assert.assertEquals(eventType, summitEvent.getEventType());
         Assert.assertEquals(venueRoom, summitEvent.getVenueRoom());
         Assert.assertNull(summitEvent.getVenue());
-        Assert.assertEquals(2, summitEvent.getSummitTypes().size());
-        Assert.assertEquals(summitType1, summitEvent.getSummitTypes().get(0));
-        Assert.assertEquals(summitType2, summitEvent.getSummitTypes().get(1));
         Assert.assertEquals(1, summitEvent.getTags().size());
         Assert.assertEquals(tag, summitEvent.getTags().get(0));
         Assert.assertEquals(1, summitEvent.getSponsors().size());
@@ -142,9 +139,6 @@ public class SummitEventDeserializerTests {
         Assert.assertEquals(eventType, summitEvent.getEventType());
         Assert.assertEquals(venue, summitEvent.getVenue());
         Assert.assertNull(summitEvent.getVenueRoom());
-        Assert.assertEquals(2, summitEvent.getSummitTypes().size());
-        Assert.assertEquals(summitType1, summitEvent.getSummitTypes().get(0));
-        Assert.assertEquals(summitType2, summitEvent.getSummitTypes().get(1));
         Assert.assertEquals(1, summitEvent.getTags().size());
         Assert.assertEquals(tag, summitEvent.getTags().get(0));
         Assert.assertEquals(0, summitEvent.getSponsors().size());

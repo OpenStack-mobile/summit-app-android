@@ -18,6 +18,7 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     private String eventDescription;
     private String rsvpLink;
     private int    headCount;
+    private Track track;
 
     public String getRsvpLink() {
         return rsvpLink;
@@ -38,7 +39,6 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     private Boolean allowFeedback;
     private double averageRate;
     private EventType eventType;
-    private RealmList<SummitType> summitTypes = new RealmList<>();
     private RealmList<Company> sponsors       = new RealmList<>();
     private RealmList<Tag> tags               = new RealmList<>();
     private Presentation presentation;
@@ -102,15 +102,6 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
         this.eventType = eventType;
     }
 
-    public RealmList<SummitType> getSummitTypes() {
-        if(summitTypes == null) summitTypes = new RealmList<>();
-        return summitTypes;
-    }
-
-    public void setSummitTypes(RealmList<SummitType> summitTypes) {
-        this.summitTypes = summitTypes;
-    }
-
     public RealmList<Company> getSponsors() {
         if(sponsors == null) sponsors = new RealmList<>();
         return sponsors;
@@ -147,6 +138,14 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     public RealmList<Tag> getTags() {
         if(tags == null) tags = new RealmList<>();
         return tags;
+    }
+
+    public Track getTrack() {
+        return track;
+    }
+
+    public void setTrack(Track track) {
+        this.track = track;
     }
 
     public void setTags(RealmList<Tag> tags) {

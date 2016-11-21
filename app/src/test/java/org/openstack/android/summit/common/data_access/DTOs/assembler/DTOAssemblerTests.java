@@ -119,7 +119,6 @@ public class DTOAssemblerTests {
 
         Presentation presentation = new Presentation();
         presentation.setId(2000);
-        presentation.setTrack(track);
 
         SummitEvent summitEvent = new SummitEvent();
         summitEvent.setId(4);
@@ -131,8 +130,6 @@ public class DTOAssemblerTests {
         summitEvent.getSponsors().add(company2);
         summitEvent.setEventType(eventType);
         summitEvent.setVenueRoom(venueRoom);
-        summitEvent.getSummitTypes().add(summitType1);
-        summitEvent.getSummitTypes().add(summitType2);
         summitEvent.setPresentation(presentation);
 
         // Act
@@ -234,7 +231,6 @@ public class DTOAssemblerTests {
 
         Presentation presentation = new Presentation();
         presentation.setId(2000);
-        presentation.setTrack(track);
         presentation.getSpeakers().add(presentationSpeaker1);
         presentation.getSpeakers().add(presentationSpeaker2);
         presentation.setModerator(presentationSpeaker2);
@@ -249,8 +245,6 @@ public class DTOAssemblerTests {
         summitEvent.getSponsors().add(company2);
         summitEvent.setEventType(eventType);
         summitEvent.setVenueRoom(venueRoom);
-        summitEvent.getSummitTypes().add(summitType1);
-        summitEvent.getSummitTypes().add(summitType2);
         summitEvent.setPresentation(presentation);
         summitEvent.getTags().add(tag1);
         summitEvent.getTags().add(tag2);

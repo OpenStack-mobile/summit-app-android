@@ -19,7 +19,6 @@ public class Presentation extends RealmObject implements IEntity {
     @PrimaryKey
     private int id;
     private String level;
-    private Track track;
     private RealmList<PresentationSpeaker> speakers = new RealmList<>();
     private RealmList<PresentationSlide> slides     = new RealmList<>();
     private RealmList<PresentationVideo> videos     = new RealmList<>();
@@ -68,14 +67,6 @@ public class Presentation extends RealmObject implements IEntity {
 
     public void setLevel(String level) {
         this.level = level;
-    }
-
-    public Track getTrack() {
-        return track;
-    }
-
-    public void setTrack(Track track) {
-        this.track = track;
     }
 
     public RealmList<PresentationSpeaker> getSpeakers() {

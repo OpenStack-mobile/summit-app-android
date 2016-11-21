@@ -12,6 +12,7 @@ import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
+import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
 import org.openstack.android.summit.common.utils.RealmFactory;
@@ -35,8 +36,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
     }
 
     @Override
-    public SummitEvent deserialize(String jsonString) throws JSONException {
-        JSONObject jsonObject = new JSONObject(jsonString);
+    public SummitEvent deserialize(String jsonString) throws JSONException {JSONObject jsonObject = new JSONObject(jsonString);
 
         String[] missedFields = validateRequiredFields(new String[] {"id","summit_id"},  jsonObject);
         handleMissedFieldsIfAny(missedFields);
@@ -63,27 +63,6 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             summitEvent.setEventType(eventType);
         }
 
-        if (jsonObject.has("summit_types")) {
-            SummitType summitType = null;
-            int summitTypeId;
-            JSONArray jsonArraySummitTypes = jsonObject.getJSONArray("summit_types");
-            summitEvent.getSummitTypes().clear();
-            for (int i = 0; i < jsonArraySummitTypes.length(); i++) {
-                summitTypeId = jsonArraySummitTypes.getInt(i);
-                try {
-                    summitType = RealmFactory.getSession().where(SummitType.class).equalTo("id", summitTypeId).findFirst();
-                    if(summitType == null) continue;
-                    summitEvent.getSummitTypes().add(summitType);
-                }
-                catch (Exception e) {
-                    Crashlytics.setInt("summitTypeId", summitTypeId);
-                    Crashlytics.setBool("isSummitTypeNull", summitType == null);
-                    Crashlytics.logException(e);
-                    throw e;
-                }
-            }
-        }
-
         if (jsonObject.has("sponsors")) {
             Company company;
             int sponsorId;
@@ -94,7 +73,6 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
                 company = (sponsorId > 0) ?
                         RealmFactory.getSession().where(Company.class).equalTo("id", sponsorId).findFirst():
                         genericDeserializer.deserialize(jsonArraySponsors.getJSONObject(i).toString(), Company.class);
-
                 if(company == null) continue;
                 summitEvent.getSponsors().add(company);
             }
@@ -113,7 +91,17 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             }
         }
 
-        if (jsonObject.has("track_id") && !jsonObject.isNull("track_id")) {
+        int trackId    = jsonObject.getInt("track_id");
+        if(trackId > 0) {
+            //first check db, and then cache storage
+            Track track = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
+            if (track != null)
+                summitEvent.setTrack(track);
+        }
+
+        if (jsonObject.has("class_name") &&
+                !jsonObject.isNull("class_name") &&
+                jsonObject.getString("class_name").startsWith("Presentation")) {
             Presentation presentation = presentationDeserializer.deserialize(jsonString);
             summitEvent.setPresentation(presentation);
             presentation.setSummitEvent(summitEvent);

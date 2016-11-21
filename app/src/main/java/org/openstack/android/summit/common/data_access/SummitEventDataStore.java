@@ -29,14 +29,14 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     @Override
     public long countByTrackGroup(int trackGroupId){
         RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
-        query = query.equalTo("presentation.track.trackGroups.id", trackGroupId);
+        query = query.equalTo("track.trackGroups.id", trackGroupId);
         return query.count();
     }
 
     @Override
     public long countByTrack(int trackId){
         RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
-        query = query.equalTo("presentation.track.id", trackId);
+        query = query.equalTo("track.id", trackId);
         return query.count();
     }
 
@@ -139,7 +139,7 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
                 if (!isFirst) {
                     query = query.or();
                 }
-                query = query.equalTo("presentation.track.id", trackId);
+                query = query.equalTo("track.id", trackId);
                 isFirst = false;
             }
             query.endGroup();
@@ -152,7 +152,7 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
                 if (!isFirst) {
                     query = query.or();
                 }
-                query = query.equalTo("presentation.track.trackGroups.id", trackGroupId);
+                query = query.equalTo("track.trackGroups.id", trackGroupId);
                 isFirst = false;
             }
             query.endGroup();
