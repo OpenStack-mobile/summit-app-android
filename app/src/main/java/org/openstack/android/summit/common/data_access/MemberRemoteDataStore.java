@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.api.IMembersApi;
 import org.openstack.android.summit.common.api.ISummitEventsApi;
 import org.openstack.android.summit.common.api.ISummitExternalOrdersApi;
 import org.openstack.android.summit.common.api.SummitEventFeedbackRequest;
+import org.openstack.android.summit.common.api.SummitSelector;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.INonConfirmedSummitAttendeeDeserializer;
 import org.openstack.android.summit.common.entities.Feedback;
@@ -62,7 +63,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
     @Override
     public void getMemberInfo(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
 
-        Call<ResponseBody> call = memberApi.info("current", "attendee,speaker,feedback");
+        Call<ResponseBody> call = memberApi.info(SummitSelector.getCurrentSummitId(), "attendee,speaker,feedback");
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -104,7 +105,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
     @Override
     public void getAttendeesForTicketOrder(String orderNumber, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener) {
 
-        Call<ResponseBody> call = this.summitExternalOrdersApi.get("current", orderNumber.trim());
+        Call<ResponseBody> call = this.summitExternalOrdersApi.get(SummitSelector.getCurrentSummitId(), orderNumber.trim());
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -164,7 +165,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
     )
     {
 
-        Call<ResponseBody> call = this.summitExternalOrdersApi.confirm("current", orderNumber.trim(), externalAttendeeId);
+        Call<ResponseBody> call = this.summitExternalOrdersApi.confirm(SummitSelector.getCurrentSummitId(), orderNumber.trim(), externalAttendeeId);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -222,7 +223,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
         int eventId             = feedback.getEvent().getId();
         Call<ResponseBody> call = this.summitEventsApi.postEventFeedback
         (
-            "current",
+            "7",
             eventId,
             new SummitEventFeedbackRequest
             (

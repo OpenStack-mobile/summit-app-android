@@ -91,9 +91,8 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             }
         }
 
-        int trackId    = jsonObject.getInt("track_id");
+        int trackId = jsonObject.has("track_id") ? jsonObject.getInt("track_id") : 0;
         if(trackId > 0) {
-            //first check db, and then cache storage
             Track track = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
             if (track != null)
                 summitEvent.setTrack(track);

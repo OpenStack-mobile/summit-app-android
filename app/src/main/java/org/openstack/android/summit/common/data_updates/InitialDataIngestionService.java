@@ -11,6 +11,7 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitApi;
+import org.openstack.android.summit.common.api.SummitSelector;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitDeserializer;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.IReachability;
@@ -92,7 +93,7 @@ public class InitialDataIngestionService extends IntentService {
 
             Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: getting summit data ...");
 
-            Call<ResponseBody> call = restClient.create(ISummitApi.class).getSummit("current", "locations,sponsors,summit_types,event_types,presentation_categories,schedule");
+            Call<ResponseBody> call = restClient.create(ISummitApi.class).getSummit(SummitSelector.getCurrentSummitId(), "schedule");
 
             final retrofit2.Response<ResponseBody> response = call.execute();
 

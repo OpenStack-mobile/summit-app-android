@@ -10,6 +10,7 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitEntityEventsApi;
+import org.openstack.android.summit.common.api.SummitSelector;
 import org.openstack.android.summit.common.data_access.BaseRemoteDataStore;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -115,7 +116,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         }
 
         if (latestDataUpdateId > 0){
-            return api.get("current", null, latestDataUpdateId, EntityEventUpdatesPageSize);
+            return api.get(SummitSelector.getCurrentSummitId(), null, latestDataUpdateId, EntityEventUpdatesPageSize);
         }
 
         long fromDate = getFromDate();
@@ -128,7 +129,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         }
 
         if (fromDate != 0) {
-            return api.get("current", fromDate, null, EntityEventUpdatesPageSize);
+            return api.get(SummitSelector.getCurrentSummitId(), fromDate, null, EntityEventUpdatesPageSize);
         }
 
         return null;

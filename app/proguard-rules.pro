@@ -62,5 +62,6 @@
 
 -dontwarn okhttp3.*
 -dontwarn rx.**
+-dontwarn okio.**
 -keep class javax.inject.** { *; }
 -keep class javax.xml.stream.** { *; }

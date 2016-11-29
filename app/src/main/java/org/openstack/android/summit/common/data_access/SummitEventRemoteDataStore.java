@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitEventsApi;
+import org.openstack.android.summit.common.api.SummitSelector;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -42,7 +43,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
     @Override
     public void getFeedback(int eventId, int page, int objectsPerPage, final IDataStoreOperationListener<Feedback> dataStoreOperationListener) {
 
-        Call<ResponseBody> call = this.summitEventsApi.getEventFeedback("current", eventId, "owner", page, objectsPerPage);
+        Call<ResponseBody> call = this.summitEventsApi.getEventFeedback(SummitSelector.getCurrentSummitId(), eventId, "owner", page, objectsPerPage);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -79,7 +80,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
     @Override
     public void getAverageFeedback(int eventId, final IDataStoreOperationListener<SummitEvent> dataStoreOperationListener) {
 
-        Call<ResponseBody> call = this.summitEventsApi.getPublishedEvent("current", eventId, "id,avg_feedback_rate", "none");
+        Call<ResponseBody> call = this.summitEventsApi.getPublishedEvent(SummitSelector.getCurrentSummitId(), eventId, "id,avg_feedback_rate", "none");
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
