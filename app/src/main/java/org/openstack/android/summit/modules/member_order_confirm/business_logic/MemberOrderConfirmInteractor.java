@@ -3,10 +3,12 @@ package org.openstack.android.summit.modules.member_order_confirm.business_logic
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.NonConfirmedSummitAttendeeDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 import org.openstack.android.summit.common.network.IReachability;
@@ -21,8 +23,8 @@ public class MemberOrderConfirmInteractor extends BaseInteractor implements IMem
     IReachability reachability;
     ISecurityManager securityManager;
 
-    public MemberOrderConfirmInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public MemberOrderConfirmInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.memberRemoteDataStore = memberRemoteDataStore;
         this.reachability = reachability;
         this.securityManager = securityManager;

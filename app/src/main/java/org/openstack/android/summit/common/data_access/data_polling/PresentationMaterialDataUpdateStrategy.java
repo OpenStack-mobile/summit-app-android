@@ -5,6 +5,7 @@ import com.crashlytics.android.Crashlytics;
 
 import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Presentation;
@@ -21,8 +22,8 @@ import io.realm.Realm;
  */
 public class PresentationMaterialDataUpdateStrategy extends DataUpdateStrategy  {
 
-    public PresentationMaterialDataUpdateStrategy(IGenericDataStore genericDataStore) {
-        super(genericDataStore);
+    public PresentationMaterialDataUpdateStrategy(IGenericDataStore genericDataStore, ISummitSelector summitSelector) {
+        super(genericDataStore, summitSelector);
     }
 
     @Override

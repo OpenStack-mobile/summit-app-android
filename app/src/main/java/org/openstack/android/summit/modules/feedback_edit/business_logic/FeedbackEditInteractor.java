@@ -3,11 +3,13 @@ package org.openstack.android.summit.modules.feedback_edit.business_logic;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IMemberDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
@@ -21,13 +23,14 @@ import java.util.Date;
  * Created by Claudio Redi on 2/17/2016.
  */
 public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackEditInteractor {
+
     IMemberDataStore memberDataStore;
     IGenericDataStore genericDataStore;
     ISecurityManager securityManager;
     IReachability reachability;
 
-    public FeedbackEditInteractor(IMemberDataStore memberDataStore, IGenericDataStore genericDataStore, ISecurityManager securityManager, IReachability reachability, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public FeedbackEditInteractor(IMemberDataStore memberDataStore, IGenericDataStore genericDataStore, ISecurityManager securityManager, IReachability reachability, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.memberDataStore  = memberDataStore;
         this.securityManager  = securityManager;
         this.genericDataStore = genericDataStore;

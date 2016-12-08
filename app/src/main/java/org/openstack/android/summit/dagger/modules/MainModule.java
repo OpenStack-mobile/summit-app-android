@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -12,10 +13,14 @@ import org.openstack.android.summit.modules.about.IAboutWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.main.MainWireframe;
+import org.openstack.android.summit.modules.main.business_logic.DataLoadingInteractor;
+import org.openstack.android.summit.modules.main.business_logic.IDataLoadingInteractor;
 import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
 import org.openstack.android.summit.modules.main.business_logic.MainInteractor;
+import org.openstack.android.summit.modules.main.user_interface.IDataLoadingPresenter;
 import org.openstack.android.summit.modules.main.user_interface.IMainPresenter;
 import org.openstack.android.summit.modules.main.user_interface.MainPresenter;
+import org.openstack.android.summit.modules.main.user_interface.SummitListDataLoadingPresenter;
 import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
@@ -23,6 +28,8 @@ import org.openstack.android.summit.modules.search.ISearchWireframe;
 import org.openstack.android.summit.modules.settings.ISettingsWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.venues.IVenuesWireframe;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -39,12 +46,23 @@ public class MainModule {
     }
 
     @Provides
-    IMainInteractor providesMainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability, IPushNotificationDataStore pushNotificationDataStore, ISession session) {
-        return new MainInteractor(summitDataStore, securityManager, pushNotificationsManager, dtoAssembler, reachability, pushNotificationDataStore, session);
+    IMainInteractor providesMainInteractor(ISummitDataStore summitDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability, IPushNotificationDataStore pushNotificationDataStore, ISession session, ISummitSelector summitSelector) {
+        return new MainInteractor(summitDataStore, securityManager, pushNotificationsManager, dtoAssembler, reachability, pushNotificationDataStore, session, summitSelector);
     }
 
     @Provides
     IMainPresenter providesMainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter) {
         return new MainPresenter(interactor, wireframe, appLinkRouter);
+    }
+
+    @Provides
+    IDataLoadingInteractor providesDataLoadingInteractor(IDTOAssembler dtoAssembler, ISummitSelector summitSelector, ISummitDataStore summitDataStore) {
+        return new DataLoadingInteractor(dtoAssembler, summitSelector, summitDataStore);
+    }
+
+    @Provides
+    @Named("SummitListDataLoading")
+    IDataLoadingPresenter providesDataLoadingPresenter(IDataLoadingInteractor dataLoadingInteractor, ISummitSelector summitSelector){
+        return new SummitListDataLoadingPresenter(dataLoadingInteractor, null, summitSelector);
     }
 }

@@ -29,7 +29,13 @@ public class GeneralScheduleFilterPresenter
 
     private final String KEY_SELECTED_TAGS = "KEY_SELECTED_TAGS";
 
-    public GeneralScheduleFilterPresenter(IGeneralScheduleFilterInteractor interactor, IGeneralScheduleFilterWireframe wireframe, IScheduleFilter scheduleFilter) {
+    public GeneralScheduleFilterPresenter
+    (
+        IGeneralScheduleFilterInteractor interactor,
+        IGeneralScheduleFilterWireframe wireframe,
+        IScheduleFilter scheduleFilter
+    )
+    {
         super(interactor, wireframe);
         this.scheduleFilter = scheduleFilter;
     }

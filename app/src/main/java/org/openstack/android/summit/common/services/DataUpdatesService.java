@@ -1,4 +1,4 @@
-package org.openstack.android.summit.common.data_updates;
+package org.openstack.android.summit.common.services;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -46,7 +46,7 @@ public class DataUpdatesService extends IntentService {
             return;
         }
         // if we are on data ingestion running , skip it this
-        if(InitialDataIngestionService.isRunning) return;
+        if(SummitDataIngestionService.isRunning) return;
         // normal flow ...
         dataUpdatePoller.pollServer();
         RealmFactory.closeSession();

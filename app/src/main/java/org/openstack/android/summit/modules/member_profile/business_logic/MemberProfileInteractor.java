@@ -3,8 +3,10 @@ package org.openstack.android.summit.modules.member_profile.business_logic;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.DTOs.PersonDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -17,8 +19,8 @@ public class MemberProfileInteractor extends BaseInteractor implements IMemberPr
     protected ISecurityManager securityManager;
     protected IGenericDataStore genericDataStore;
 
-    public MemberProfileInteractor(IGenericDataStore genericDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public MemberProfileInteractor(IGenericDataStore genericDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.securityManager = securityManager;
         this.genericDataStore = genericDataStore;
     }

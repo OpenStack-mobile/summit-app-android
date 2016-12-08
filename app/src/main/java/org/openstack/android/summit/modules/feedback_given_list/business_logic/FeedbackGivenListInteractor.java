@@ -2,7 +2,9 @@ package org.openstack.android.summit.modules.feedback_given_list.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
@@ -17,8 +19,8 @@ import java.util.List;
 public class FeedbackGivenListInteractor extends BaseInteractor implements IFeedbackGivenListInteractor {
     ISecurityManager securityManager;
 
-    public FeedbackGivenListInteractor(ISecurityManager securityManager, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public FeedbackGivenListInteractor(ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.securityManager = securityManager;
     }
 

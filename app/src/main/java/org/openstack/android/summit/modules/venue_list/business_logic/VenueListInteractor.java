@@ -2,8 +2,11 @@ package org.openstack.android.summit.modules.venue_list.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.VenueDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.IVenueDataStore;
 import org.openstack.android.summit.common.entities.Venue;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,39 +15,22 @@ import java.util.List;
  * Created by Claudio Redi on 2/11/2016.
  */
 public class VenueListInteractor extends BaseInteractor implements IVenueListInteractor {
-    private IGenericDataStore genericDataStore;
 
-    public VenueListInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
-        this.genericDataStore = genericDataStore;
+    private IVenueDataStore venueDataStore;
+
+    public VenueListInteractor(IVenueDataStore venueDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        super(dtoAssembler, summitSelector, summitDataStore);
+        this.venueDataStore = venueDataStore;
     }
 
     @Override
     public List<VenueDTO> getInternalVenues() {
-        List<Venue> venues = genericDataStore.getAllLocal(Venue.class);
-        List<Venue> internalVenues = new ArrayList<>();
-        for (Venue venue: venues) {
-            if (venue.getIsInternal()) {
-                internalVenues.add(venue);
-            }
-        }
-
-        List<VenueDTO> dtos = createDTOList(internalVenues, VenueDTO.class);
-        return dtos;
+        return createDTOList(venueDataStore.getInternalsBySummit(summitSelector.getCurrentSummitId()), VenueDTO.class);
     }
 
     @Override
     public List<VenueDTO> getExternalVenues() {
-        List<Venue> venues = genericDataStore.getAllLocal(Venue.class);
-        List<Venue> externalVenues = new ArrayList<>();
-        for (Venue venue: venues) {
-            if (!venue.getIsInternal()) {
-                externalVenues.add(venue);
-            }
-        }
-
-        List<VenueDTO> dtos = createDTOList(externalVenues, VenueDTO.class);
-        return dtos;
+        return createDTOList(venueDataStore.getExternalBySummit(summitSelector.getCurrentSummitId()), VenueDTO.class);
     }
 
 }

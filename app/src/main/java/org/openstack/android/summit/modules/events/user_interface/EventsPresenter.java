@@ -60,7 +60,7 @@ public class EventsPresenter extends BasePresenter<IEventsView, IEventsInteracto
         // set the default enabled filter
         if(!this.interactor.isDataLoaded()) return;
 
-        SummitDTO currentSummit = interactor.getLocalActiveSummit();
+        SummitDTO currentSummit = interactor.getActiveSummit();
         if (currentSummit.isCurrentDateTimeInsideSummitRange()) {
                 if (!scheduleFilter.isTypeSet(FilterSectionType.HidePastTalks))
                     scheduleFilter.setTypeValues(FilterSectionType.HidePastTalks, true);

@@ -3,13 +3,14 @@ package org.openstack.android.summit.modules.main.business_logic;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
+import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -23,7 +24,6 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
     private ISecurityManager securityManager;
     private IPushNotificationsManager pushNotificationsManager;
-    private ISummitDataStore summitDataStore;
     private IReachability reachability;
     private IPushNotificationDataStore pushNotificationDataStore;
     private ISession session;
@@ -36,11 +36,11 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         IDTOAssembler dtoAssembler,
         IReachability reachability,
         IPushNotificationDataStore pushNotificationDataStore,
-        ISession session
+        ISession session,
+        ISummitSelector summitSelector
     )
     {
-        super(dtoAssembler);
-        this.summitDataStore           = summitDataStore;
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.securityManager           = securityManager;
         this.pushNotificationsManager  = pushNotificationsManager;
         this.reachability              = reachability;
@@ -79,7 +79,7 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
     @Override
     public void subscribeToPushNotifications() {
-        Summit summit = summitDataStore.getActive();
+        SummitDTO summit = this.getActiveSummit();
         if(summit == null) return;
         int summitId = summit.getId();
 
@@ -94,11 +94,6 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         }
 
         pushNotificationsManager.subscribeAnonymous(summitId);
-    }
-
-    @Override
-    public boolean isDataLoaded() {
-        return summitDataStore.getActive() != null;
     }
 
     @Override

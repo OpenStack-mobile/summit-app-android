@@ -13,8 +13,8 @@ import retrofit2.http.Path;
 public interface ISummitExternalOrdersApi {
 
     @GET("v1/summits/{summit_id}/external-orders/{external_order_number}")
-    Call<ResponseBody> get(@Path("summit_id") String summitId, @Path("external_order_number") String externalOrderNumber);
+    Call<ResponseBody> get(@Path("summit_id") int summitId, @Path("external_order_number") String externalOrderNumber);
 
     @POST("v1/summits/{summit_id}/external-orders/{external_order_number}/external-attendees/{external_attendee_id}/confirm")
-    Call<ResponseBody> confirm(@Path("summit_id") String summitId, @Path("external_order_number") String externalOrderNumber, @Path("external_attendee_id") Integer externalAttendeeId);
+    Call<ResponseBody> confirm(@Path("summit_id") int summitId, @Path("external_order_number") String externalOrderNumber, @Path("external_attendee_id") Integer externalAttendeeId);
 }

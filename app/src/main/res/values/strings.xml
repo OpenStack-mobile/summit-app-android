@@ -37,9 +37,12 @@
     <string name="feedback">Leave a Review</string>
     <string name="about">About</string>
     <string name="send">Send</string>
-    <string name="load_more">Load More</string>
     <string name="no_data_message">There was a problem loading summit information. If there is no internet connection active, please wait until it is available and click "retry" to load information.</string>
+    <string name="new_data_message">There is a new Summit Available. Do you want to download it now?</string>
     <string name="retry">Retry</string>
+    <string name="load_more">Load More</string>
+    <string name="yes">Yes</string>
+    <string name="not_now">Not now</string>
     <string name="no_summit_data">Can\'t perform operation until summit information is available</string>
     <string name="external_venues">External Venues</string>
     <string name="login_disallowed_no_connectivity">There is no network connectivity. Login can\'t be performed</string>

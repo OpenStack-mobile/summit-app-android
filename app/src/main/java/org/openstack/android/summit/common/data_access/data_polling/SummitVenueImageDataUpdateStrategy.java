@@ -6,6 +6,7 @@ import com.crashlytics.android.Crashlytics;
 
 import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IVenueDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
@@ -22,8 +23,8 @@ import io.realm.Realm;
 public class SummitVenueImageDataUpdateStrategy extends DataUpdateStrategy {
     IVenueDataStore venueDataStore;
 
-    public SummitVenueImageDataUpdateStrategy(IGenericDataStore genericDataStore, IVenueDataStore venueDataStore) {
-        super(genericDataStore);
+    public SummitVenueImageDataUpdateStrategy(IGenericDataStore genericDataStore, IVenueDataStore venueDataStore, ISummitSelector summitSelector) {
+        super(genericDataStore, summitSelector);
         this.venueDataStore = venueDataStore;
     }
 

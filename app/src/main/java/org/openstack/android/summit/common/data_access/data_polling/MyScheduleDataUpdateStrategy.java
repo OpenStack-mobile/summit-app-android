@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.data_access.data_polling;
 
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
@@ -14,8 +15,8 @@ public class MyScheduleDataUpdateStrategy extends DataUpdateStrategy {
     ISecurityManager securityManager;
     ISummitAttendeeDataStore summitAttendeeDataStore;
 
-    public MyScheduleDataUpdateStrategy(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISecurityManager securityManager) {
-        super(genericDataStore);
+    public MyScheduleDataUpdateStrategy(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISecurityManager securityManager, ISummitSelector summitSelector) {
+        super(genericDataStore, summitSelector);
         this.summitAttendeeDataStore = summitAttendeeDataStore;
         this.securityManager = securityManager;
     }

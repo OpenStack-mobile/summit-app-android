@@ -5,19 +5,34 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.IEntity;
+import org.openstack.android.summit.common.entities.ISummitOwned;
+import org.openstack.android.summit.common.entities.Summit;
+
+import io.realm.RealmObject;
 
 /**
  * Created by Claudio Redi on 2/8/2016.
  */
 public class DataUpdateStrategy implements IDataUpdateStrategy {
     protected IGenericDataStore genericDataStore;
+    protected ISummitSelector   summitSelector;
 
-
-    public DataUpdateStrategy(IGenericDataStore genericDataStore) {
+    public DataUpdateStrategy(IGenericDataStore genericDataStore, ISummitSelector   summitSelector) {
         this.genericDataStore = genericDataStore;
+        this.summitSelector   = summitSelector;
+    }
+
+    protected void setSummit(RealmObject entity){
+        // set Summit if the entity supports it ...
+        Summit summit = genericDataStore.getByIdLocal(summitSelector.getCurrentSummitId(), Summit.class);
+        if(summit == null) return;
+        if(entity instanceof ISummitOwned){
+            ((ISummitOwned) entity).setSummit(summit);
+        }
     }
 
     @Override
@@ -27,7 +42,9 @@ public class DataUpdateStrategy implements IDataUpdateStrategy {
             switch (dataUpdate.getOperation()) {
                 case DataOperation.Insert:
                 case DataOperation.Update:
-                    genericDataStore.saveOrUpdate(dataUpdate.getEntity(), null, dataUpdate.getEntityType());
+                    RealmObject entity = dataUpdate.getEntity();
+                    setSummit(entity);
+                    genericDataStore.saveOrUpdate(entity, null, dataUpdate.getEntityType());
                     String event  = dataUpdate.getOperation() == DataOperation.Insert ?
                             Constants.DATA_UPDATE_ADDED_ENTITY_EVENT :
                             Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT ;

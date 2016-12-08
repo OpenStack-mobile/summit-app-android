@@ -7,8 +7,10 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PushNotification;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -27,8 +29,15 @@ public class PushNotificationsListInteractor extends BaseInteractor implements I
 
     private IPushNotificationDataStore pushNotificationDataStore;
 
-    public PushNotificationsListInteractor(IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public PushNotificationsListInteractor
+    (
+        IPushNotificationDataStore pushNotificationDataStore,
+        IDTOAssembler dtoAssembler,
+        ISummitDataStore summitDataStore,
+        ISummitSelector summitSelector
+    )
+    {
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.pushNotificationDataStore = pushNotificationDataStore;
     }
 

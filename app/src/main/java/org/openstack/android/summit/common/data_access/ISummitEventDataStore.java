@@ -16,7 +16,7 @@ public interface ISummitEventDataStore {
 
     List<String> getPresentationLevelsLocal();
 
-    List<SummitEvent> getBySearchTerm(String searchTerm);
+    List<SummitEvent> getBySearchTerm(int summitId, String searchTerm);
 
     List<SummitEvent> getSpeakerEvents(int speakerId, DateTime startDate, DateTime endDate);
 

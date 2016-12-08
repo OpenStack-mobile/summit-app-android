@@ -19,16 +19,15 @@ import io.realm.RealmResults;
  * Created by Claudio Redi on 2/25/2016.
  */
 public class TrackGroupDataStore extends GenericDataStore implements ITrackGroupDataStore {
+
     @Override
     public List<TrackGroup> getTrackGroupsForTrack(String trackName) {
-        RealmResults<TrackGroup> trackGroups = RealmFactory.getSession().where(TrackGroup.class).equalTo("tracks.name", trackName).findAll();
-        return trackGroups;
+        return RealmFactory.getSession().where(TrackGroup.class).equalTo("tracks.name", trackName).findAll();
     }
 
     @Override
     public List<Track> getTracks(int trackGroupId) {
-        RealmResults<Track> tracks = RealmFactory.getSession().where(Track.class).equalTo("trackGroups.id", trackGroupId).findAll();
-        return tracks;
+        return RealmFactory.getSession().where(Track.class).equalTo("trackGroups.id", trackGroupId).findAll();
     }
 
     @Override
@@ -52,5 +51,10 @@ public class TrackGroupDataStore extends GenericDataStore implements ITrackGroup
             Log.e(Constants.LOG_TAG, ex.getMessage());
             Crashlytics.logException(ex);
         }
+    }
+
+    @Override
+    public List<TrackGroup> getAllBySummit(int summitId) {
+        return RealmFactory.getSession().where(TrackGroup.class).equalTo("summit.id", summitId).findAllSorted("name");
     }
 }

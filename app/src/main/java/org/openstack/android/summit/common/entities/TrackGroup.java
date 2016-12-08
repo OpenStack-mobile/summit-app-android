@@ -7,13 +7,14 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Claudio Redi on 1/20/2016.
  */
-public class TrackGroup extends RealmObject implements INamedEntity {
+public class TrackGroup extends RealmObject implements INamedEntity, ISummitOwned {
     @PrimaryKey
     private int id;
     private String name;
     private String description;
     private String color;
     private RealmList<Track> tracks = new RealmList<>();
+    private Summit summit;
 
     public int getId() {
         return id;
@@ -54,5 +55,15 @@ public class TrackGroup extends RealmObject implements INamedEntity {
 
     public void setTracks(RealmList<Track> tracks) {
         this.tracks = tracks;
+    }
+
+    @Override
+    public Summit getSummit() {
+        return summit;
+    }
+
+    @Override
+    public void setSummit(Summit summit) {
+        this.summit = summit;
     }
 }

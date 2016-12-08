@@ -1,10 +1,6 @@
 package org.openstack.android.summit.common.entities;
 
-import org.joda.time.DateTime;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -59,15 +55,26 @@ public class Summit extends RealmObject implements INamedEntity {
     private String pageUrl;
     private String schedulePageUrl;
     private String scheduleEventDetailUrl;
+    private boolean isScheduleLoaded;
 
-    private RealmList<SummitType> types       = new RealmList<>();
-    private RealmList<TicketType> ticketTypes = new RealmList<>();
-    private RealmList<Venue> venues           = new RealmList<>();
-    private RealmList<VenueRoom> venueRooms   = new RealmList<>();
-    private RealmList<SummitEvent> events     = new RealmList<>();
-    private RealmList<TrackGroup> trackGroups = new RealmList<>();
-    private RealmList<Track> tracks           = new RealmList<>();
-    private RealmList<EventType> eventTypes   = new RealmList<>();
+    public boolean isScheduleLoaded() {
+        return isScheduleLoaded;
+    }
+
+    public void setScheduleLoaded(boolean scheduleLoaded) {
+        isScheduleLoaded = scheduleLoaded;
+    }
+
+    private RealmList<SummitType> types             = new RealmList<>();
+    private RealmList<TicketType> ticketTypes       = new RealmList<>();
+    private RealmList<Venue> venues                 = new RealmList<>();
+    private RealmList<VenueRoom> venueRooms         = new RealmList<>();
+    private RealmList<SummitEvent> events           = new RealmList<>();
+    private RealmList<TrackGroup> trackGroups       = new RealmList<>();
+    private RealmList<Track> tracks                 = new RealmList<>();
+    private RealmList<EventType> eventTypes         = new RealmList<>();
+    private RealmList<Company> sponsors             = new RealmList<>();
+    private RealmList<PresentationSpeaker> speakers = new RealmList<>();
 
     public int getId() {
         return id;
@@ -194,5 +201,21 @@ public class Summit extends RealmObject implements INamedEntity {
 
     public void setVenueRooms(RealmList<VenueRoom> venueRooms) {
         this.venueRooms = venueRooms;
+    }
+
+    public RealmList<Company> getSponsors() {
+        return sponsors;
+    }
+
+    public void setSponsors(RealmList<Company> sponsors) {
+        this.sponsors = sponsors;
+    }
+
+    public RealmList<PresentationSpeaker> getSpeakers() {
+        return speakers;
+    }
+
+    public void setSpeakers(RealmList<PresentationSpeaker> speakers) {
+        this.speakers = speakers;
     }
 }

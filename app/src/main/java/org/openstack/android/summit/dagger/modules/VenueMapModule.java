@@ -2,7 +2,9 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.modules.venue_map.business_logic.VenueMapInteractor;
 import org.openstack.android.summit.modules.venue_map.user_interface.IVenueMapPresenter;
 import org.openstack.android.summit.modules.venue_map.user_interface.VenueMapFragment;
@@ -30,8 +32,8 @@ public class VenueMapModule {
     }
 
     @Provides
-    IVenueMapInteractor providesVenueMapInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler) {
-        return new VenueMapInteractor(genericDataStore, dtoAssembler);
+    IVenueMapInteractor providesVenueMapInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new VenueMapInteractor(genericDataStore, dtoAssembler, summitDataStore, summitSelector);
     }
 
     @Provides

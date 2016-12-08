@@ -1,7 +1,10 @@
 package org.openstack.android.summit.common.api;
 
+import android.util.Log;
+
 import com.crashlytics.android.Crashlytics;
 
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.ITokenManager;
 
 import java.io.IOException;
@@ -44,6 +47,7 @@ public class OAuth2AccessTokenInterceptor implements Interceptor {
         }
         catch (Exception ex){
             Crashlytics.logException(ex);
+            Log.d(Constants.LOG_TAG,ex.getMessage(), ex);
             throw new IOException();
         }
     }

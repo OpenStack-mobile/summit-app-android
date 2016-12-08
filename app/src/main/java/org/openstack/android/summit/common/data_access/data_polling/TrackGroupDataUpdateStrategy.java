@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.data_access.data_polling;
 
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
@@ -12,8 +13,8 @@ import org.openstack.android.summit.common.entities.TrackGroup;
 public class TrackGroupDataUpdateStrategy extends DataUpdateStrategy {
     private ITrackGroupDataStore trackGroupDataStore;
 
-    public TrackGroupDataUpdateStrategy(IGenericDataStore genericDataStore, ITrackGroupDataStore trackGroupDataStore) {
-        super(genericDataStore);
+    public TrackGroupDataUpdateStrategy(IGenericDataStore genericDataStore, ITrackGroupDataStore trackGroupDataStore, ISummitSelector summitSelector) {
+        super(genericDataStore, summitSelector);
         this.trackGroupDataStore = trackGroupDataStore;
     }
 

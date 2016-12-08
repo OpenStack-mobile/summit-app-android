@@ -3,9 +3,12 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.IScheduleFilter;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
+import org.openstack.android.summit.common.data_access.IVenueDataStore;
 import org.openstack.android.summit.modules.general_schedule_filter.GeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.business_logic.GeneralScheduleFilterInteractor;
@@ -33,8 +36,26 @@ public class GeneralScheduleFilterModule {
     }
 
     @Provides
-    IGeneralScheduleFilterInteractor providesGeneralScheduleFilterInteractor(ISummitDataStore summitDataStore, ISummitEventDataStore summitEventDataStore, IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler) {
-        return new GeneralScheduleFilterInteractor(summitDataStore, summitEventDataStore, genericDataStore, dtoAssembler);
+    IGeneralScheduleFilterInteractor providesGeneralScheduleFilterInteractor
+    (
+        ISummitDataStore summitDataStore,
+        ISummitEventDataStore summitEventDataStore,
+        IGenericDataStore genericDataStore,
+        ITrackGroupDataStore trackGroupDataStore,
+        IVenueDataStore venueDataStore,
+        IDTOAssembler dtoAssembler,
+        ISummitSelector summitSelector
+    ) {
+        return new GeneralScheduleFilterInteractor
+        (
+            summitDataStore,
+            summitEventDataStore,
+            genericDataStore,
+            venueDataStore,
+            trackGroupDataStore,
+            dtoAssembler,
+            summitSelector
+        );
     }
 
     @Provides

@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.IScheduleFilter;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.modules.events.EventsWireframe;
@@ -32,8 +33,14 @@ public class EventsModule {
     }
 
     @Provides
-    IEventsInteractor providesEventsInteractor(ISummitDataStore summitDataStore, IReachability reachability, IDTOAssembler dtoAssembler) {
-        return new EventsInteractor(summitDataStore, reachability, dtoAssembler);
+    IEventsInteractor providesEventsInteractor
+    (
+        ISummitDataStore summitDataStore,
+        IReachability reachability,
+        IDTOAssembler dtoAssembler,
+        ISummitSelector  summitSelector
+    ) {
+        return new EventsInteractor(summitDataStore, reachability, dtoAssembler, summitSelector);
     }
 
     @Provides

@@ -8,9 +8,6 @@ import org.openstack.android.summit.common.business_logic.IBaseInteractor;
  */
 public interface IEventsInteractor extends IBaseInteractor {
 
-    boolean isDataLoaded();
-
     boolean isNetworkingAvailable();
 
-    SummitDTO getLocalActiveSummit();
 }

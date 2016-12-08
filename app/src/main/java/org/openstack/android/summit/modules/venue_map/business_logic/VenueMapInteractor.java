@@ -3,8 +3,10 @@ package org.openstack.android.summit.modules.venue_map.business_logic;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.VenueDTO;
 import org.openstack.android.summit.common.DTOs.VenueListItemDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.Venue;
 
 /**
@@ -13,8 +15,8 @@ import org.openstack.android.summit.common.entities.Venue;
 public class VenueMapInteractor extends BaseInteractor implements IVenueMapInteractor {
     private IGenericDataStore genericDataStore;
 
-    public VenueMapInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public VenueMapInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.genericDataStore = genericDataStore;
     }
 

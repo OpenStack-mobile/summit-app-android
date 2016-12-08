@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.ISession;
@@ -41,8 +42,8 @@ public class TrackScheduleModule {
     }
 
     @Provides
-    ITrackScheduleInteractor providesTrackScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session) {
-        return new TrackScheduleInteractor(summitEventDataStore, summitDataStore, summitAttendeeDataStore, genericDataStore, dtoAssembler, securityManager, pushNotificationsManager, session);
+    ITrackScheduleInteractor providesTrackScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector) {
+        return new TrackScheduleInteractor(summitEventDataStore, summitDataStore, summitAttendeeDataStore, genericDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
     }
 
     @Provides

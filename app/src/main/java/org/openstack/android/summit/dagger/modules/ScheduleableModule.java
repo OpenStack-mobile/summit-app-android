@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
 import org.openstack.android.summit.common.business_logic.ScheduleableInteractor;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
@@ -20,8 +21,8 @@ import dagger.Provides;
 @Module
 public class ScheduleableModule {
     @Provides
-    IScheduleableInteractor providesScheduleableInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager) {
-        return new ScheduleableInteractor(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, pushNotificationsManager);
+    IScheduleableInteractor providesScheduleableInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISummitSelector summitSelector) {
+        return new ScheduleableInteractor(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, pushNotificationsManager, summitSelector);
     }
 
     @Provides

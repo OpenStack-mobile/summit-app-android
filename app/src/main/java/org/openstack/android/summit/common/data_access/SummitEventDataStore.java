@@ -191,17 +191,19 @@ public class SummitEventDataStore extends GenericDataStore implements ISummitEve
     }
 
     @Override
-    public List<SummitEvent> getBySearchTerm(String searchTerm) {
-        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class)
-                .contains("name", searchTerm, Case.INSENSITIVE)
-                .or()
-                .contains("tags.tag", searchTerm, Case.INSENSITIVE)
-                .or()
-                .contains("presentation.speakers.fullName", searchTerm, Case.INSENSITIVE)
-                .or()
-                .contains("presentation.moderator.fullName", searchTerm, Case.INSENSITIVE)
-                .or()
-                .contains("presentation.level", searchTerm, Case.INSENSITIVE);
+    public List<SummitEvent> getBySearchTerm(int summitId, String searchTerm) {
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class).equalTo("summit.id", summitId)
+                .beginGroup()
+                    .contains("name", searchTerm, Case.INSENSITIVE)
+                    .or()
+                    .contains("tags.tag", searchTerm, Case.INSENSITIVE)
+                    .or()
+                    .contains("presentation.speakers.fullName", searchTerm, Case.INSENSITIVE)
+                    .or()
+                    .contains("presentation.moderator.fullName", searchTerm, Case.INSENSITIVE)
+                    .or()
+                    .contains("presentation.level", searchTerm, Case.INSENSITIVE)
+                .endGroup();
 
         RealmResults<SummitEvent> results = query.findAll();
         results = results.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });

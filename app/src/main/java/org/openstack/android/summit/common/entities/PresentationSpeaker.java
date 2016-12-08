@@ -8,6 +8,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Claudio Redi on 11/4/2015.
  */
 public class PresentationSpeaker extends RealmObject implements IPerson {
+
     @PrimaryKey
     private int id;
     private String firstName;
@@ -108,4 +109,5 @@ public class PresentationSpeaker extends RealmObject implements IPerson {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
 }

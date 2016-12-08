@@ -8,6 +8,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by sebastian on 8/20/2016.
  */
 public class PushNotification extends RealmObject implements IEntity {
+
     @PrimaryKey
     private int id;
     private String subject;

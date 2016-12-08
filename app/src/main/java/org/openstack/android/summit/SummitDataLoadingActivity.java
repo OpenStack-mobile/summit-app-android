@@ -13,17 +13,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.data_updates.InitialDataIngestionService;
+import org.openstack.android.summit.common.services.SummitDataIngestionService;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
 
 /**
- * InitialDataLoadingActivity
+ * SummitDataLoadingActivity
  * Do the summit data initial loading
  */
-public class InitialDataLoadingActivity extends Activity {
+public class SummitDataLoadingActivity extends Activity {
 
     private ACProgressFlower progressDialog;
     private static final int REQUEST_CODE = 0xFF45;
@@ -44,7 +44,7 @@ public class InitialDataLoadingActivity extends Activity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.retryButton.setOnClickListener");
+                        Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.retryButton.setOnClickListener");
                         doInitialDataLoading();
                     }
                 }
@@ -57,16 +57,16 @@ public class InitialDataLoadingActivity extends Activity {
     }
 
     private void doInitialDataLoading() {
-        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading");
+        Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.doInitialDataLoading");
         showActivityIndicator();
         showErrorContainer(false);
 
-        if(InitialDataIngestionService.isRunning) return;
+        if(SummitDataIngestionService.isRunning) return;
 
-        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.doInitialDataLoading: invoking service InitialDataIngestionService ");
-        Intent intent = InitialDataIngestionService.newIntent(this);
+        Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.doInitialDataLoading: invoking service SummitDataIngestionService ");
+        Intent intent = SummitDataIngestionService.newIntent(this);
         pending       = createPendingResult(REQUEST_CODE, new Intent(), 0);
-        intent.putExtra(InitialDataIngestionService.PENDING_RESULT, pending);
+        intent.putExtra(SummitDataIngestionService.PENDING_RESULT, pending);
         startService(intent);
     }
 
@@ -74,15 +74,15 @@ public class InitialDataLoadingActivity extends Activity {
     protected void onActivityResult(int req, int res, Intent data) {
         if (req == REQUEST_CODE) {
             switch (res){
-                case InitialDataIngestionService.RESULT_CODE_OK:
+                case SummitDataIngestionService.RESULT_CODE_OK:
                     hideActivityIndicator();
                     Intent intent = new Intent();
                     setResult(RESULT_OK, intent);
-                    Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.onActivityResult: InitialDataIngestionService.RESULT_CODE_OK.");
+                    Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.onActivityResult: SummitDataIngestionService.RESULT_CODE_OK.");
                     finish();
                     break;
-                case InitialDataIngestionService.RESULT_CODE_ERROR:
-                    Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.onActivityResult: InitialDataIngestionService.RESULT_CODE_ERROR ");
+                case SummitDataIngestionService.RESULT_CODE_ERROR:
+                    Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.onActivityResult: SummitDataIngestionService.RESULT_CODE_ERROR ");
                     onFailedInitialLoad();
                     break;
             }
@@ -130,7 +130,7 @@ public class InitialDataLoadingActivity extends Activity {
         super.onDestroy();
         hideActivityIndicator();
         showErrorContainer(false);
-        Log.d(Constants.LOG_TAG, "InitialDataLoadingActivity.onDestroy");
+        Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.onDestroy");
     }
 
 }

@@ -43,4 +43,5 @@ public class Constants {
     public static final String KEY_DATA_UPDATE_LAST_WIPE_EVENT_ID     = "KEY_DATA_UPDATE_LAST_WIPE_EVENT_ID";
     public static final String KEY_DATA_UPDATE_LAST_EVENT_ID          = "KEY_DATA_UPDATE_LAST_EVENT_ID";
     public static final String EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT = "EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT";
+    public static final String CURRENT_SUMMIT_ID                      = "CURRENT_SESSION_ID";
 }
