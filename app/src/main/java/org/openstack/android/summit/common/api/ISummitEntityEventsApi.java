@@ -15,7 +15,7 @@ public interface ISummitEntityEventsApi {
     @GET("v1/summits/{summit_id}/entity-events")
     public Call<ResponseBody> get
     (
-        @Path("summit_id") String summitId,
+        @Path("summit_id") int summitId,
         @Query("from_date") Long fromDateEpoch,
         @Query("last_event_id") Long fromEventId,
         @Query("limit") Integer limit

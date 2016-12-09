@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.general_schedule.business_logic;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
@@ -20,15 +21,33 @@ public class GeneralScheduleInteractor extends ScheduleInteractor implements IGe
 
     IReachability reachability;
 
-    public GeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IReachability reachability) {
-        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session);
+    public GeneralScheduleInteractor
+    (
+        ISummitEventDataStore summitEventDataStore,
+        ISummitDataStore summitDataStore,
+        ISummitAttendeeDataStore summitAttendeeDataStore,
+        IDTOAssembler dtoAssembler,
+        ISecurityManager securityManager,
+        IPushNotificationsManager pushNotificationsManager,
+        ISession session,
+        IReachability reachability,
+        ISummitSelector summitSelector
+    ) {
+        super
+        (
+            summitEventDataStore,
+            summitDataStore,
+            summitAttendeeDataStore,
+            dtoAssembler,
+            securityManager,
+            pushNotificationsManager,
+            session,
+            summitSelector
+        );
         this.reachability = reachability;
     }
 
-    @Override
-    public boolean isDataLoaded() {
-        return summitDataStore.getActive() != null;
-    }
+
 
     @Override
     public boolean isNetworkingAvailable() {

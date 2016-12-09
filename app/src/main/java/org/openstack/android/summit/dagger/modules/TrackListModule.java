@@ -2,8 +2,10 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.IScheduleFilter;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.api.ISummitSelector;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.ITrackDataStore;
 import org.openstack.android.summit.modules.track_list.ITrackListWireframe;
 import org.openstack.android.summit.modules.track_list.TrackListWireframe;
 import org.openstack.android.summit.modules.track_list.business_logic.ITrackListInteractor;
@@ -32,8 +34,15 @@ public class TrackListModule {
     }
 
     @Provides
-    ITrackListInteractor providesTrackListInteractor(IDTOAssembler dtoAssembler, IGenericDataStore genericDataStore, ISummitEventDataStore summitEventDataStore) {
-        return new TrackListInteractor(dtoAssembler, genericDataStore, summitEventDataStore);
+    ITrackListInteractor providesTrackListInteractor
+    (
+        IDTOAssembler dtoAssembler,
+        ISummitEventDataStore summitEventDataStore,
+        ITrackDataStore trackDataStore,
+        ISummitDataStore summitDataStore,
+        ISummitSelector summitSelector
+    ) {
+        return new TrackListInteractor(dtoAssembler, summitEventDataStore, trackDataStore, summitDataStore, summitSelector);
     }
 
     @Provides

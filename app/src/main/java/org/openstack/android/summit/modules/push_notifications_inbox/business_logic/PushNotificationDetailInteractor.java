@@ -3,8 +3,10 @@ package org.openstack.android.summit.modules.push_notifications_inbox.business_l
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.PushNotificationDetailDTO;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.PushNotification;
 
 /**
@@ -16,8 +18,14 @@ public class PushNotificationDetailInteractor
 
     private IPushNotificationDataStore dataStore;
 
-    public PushNotificationDetailInteractor(IPushNotificationDataStore dataStore, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public PushNotificationDetailInteractor
+    (
+        IPushNotificationDataStore dataStore,
+        IDTOAssembler dtoAssembler,
+        ISummitDataStore summitDataStore,
+        ISummitSelector summitSelector
+    ) {
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.dataStore = dataStore;
     }
 

@@ -2,14 +2,15 @@ package org.openstack.android.summit.modules.general_schedule_filter.business_lo
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
-import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
+import org.openstack.android.summit.common.data_access.IVenueDataStore;
 import org.openstack.android.summit.common.entities.EventType;
-import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.TrackGroup;
@@ -27,21 +28,25 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
 
     private IGenericDataStore genericDataStore;
     private ISummitEventDataStore summitEventDataStore;
-    private ISummitDataStore summitDataStore;
+    private IVenueDataStore venueDataStore;
+    private ITrackGroupDataStore trackGroupDataStore;
 
     public GeneralScheduleFilterInteractor
     (
         ISummitDataStore summitDataStore,
         ISummitEventDataStore summitEventDataStore,
         IGenericDataStore genericDataStore,
-        IDTOAssembler dtoAssembler
+        IVenueDataStore venueDataStore,
+        ITrackGroupDataStore trackGroupDataStore,
+        IDTOAssembler dtoAssembler,
+        ISummitSelector summitSelector
     )
     {
-        super(dtoAssembler);
-
-        this.summitDataStore      = summitDataStore;
+        super(dtoAssembler, summitSelector, summitDataStore);
+        this.venueDataStore       = venueDataStore;
         this.genericDataStore     = genericDataStore;
         this.summitEventDataStore = summitEventDataStore;
+        this.trackGroupDataStore  = trackGroupDataStore;
     }
 
     @Override
@@ -73,13 +78,13 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
 
     @Override
     public List<NamedDTO> getVenues() {
-        List<Venue> venues = genericDataStore.getAllLocal(Venue.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
+        List<Venue> venues = venueDataStore.getInternalsBySummit(summitSelector.getCurrentSummitId());
         return createDTOList(venues, NamedDTO.class);
     }
 
     @Override
     public List<TrackGroupDTO> getTrackGroups() {
-        List<TrackGroup> trackGroups = genericDataStore.getAllLocal(TrackGroup.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
+        List<TrackGroup> trackGroups = trackGroupDataStore.getAllBySummit(summitSelector.getCurrentSummitId());
         List<TrackGroup> results = new ArrayList<>();
         for(TrackGroup trackGroup: trackGroups){
             if ( summitEventDataStore.countByTrackGroup(trackGroup.getId()) > 0)
@@ -98,9 +103,4 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
         return dtos;
     }
 
-    @Override
-    public SummitDTO getActiveSummit() {
-        Summit summit = summitDataStore.getActive();
-        return (summit != null) ? dtoAssembler.createDTO(summit, SummitDTO.class):null;
-    }
 }

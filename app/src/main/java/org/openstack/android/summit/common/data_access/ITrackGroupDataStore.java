@@ -15,4 +15,6 @@ public interface ITrackGroupDataStore extends IGenericDataStore {
     List<Track> getTracks(int trackGroupId);
 
     void removeTrackGroupFromTracksLocal(int trackGroupId);
+
+    List<TrackGroup> getAllBySummit(int summitId);
 }

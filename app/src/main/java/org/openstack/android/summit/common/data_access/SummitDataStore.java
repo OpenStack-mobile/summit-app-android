@@ -13,17 +13,22 @@ import java.security.InvalidParameterException;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.Sort;
 
 /**
  * Created by Claudio Redi on 11/17/2015.
  */
 public class SummitDataStore extends GenericDataStore implements ISummitDataStore {
 
+    @Override
+    public Summit getLatest() {
+        List<Summit> summits = RealmFactory.getSession().where(Summit.class).findAllSorted("startDate", Sort.DESCENDING);
+        return summits.size() > 0 ? summits.get(0) : null;
+    }
 
     @Override
-    public Summit getActive() {
-        List<Summit> summits = getAllLocal(Summit.class);
-        return summits.size() > 0 ? summits.get(0) : null;
+    public Summit getById(int summitId) {
+        return RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
     }
 
     @Override

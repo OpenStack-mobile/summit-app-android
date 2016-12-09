@@ -78,7 +78,11 @@
         </activity>
 
         <activity
-            android:name=".InitialDataLoadingActivity"
+            android:name=".SummitDataLoadingActivity"
+            android:theme="@style/AppTheme.InitialLoadActivity"/>
+
+        <activity
+            android:name=".SummitsListDataLoaderActivity"
             android:theme="@style/AppTheme.InitialLoadActivity"/>
 
         <activity android:name=".common.player.YouTubePlayerActivity"
@@ -196,12 +200,17 @@
         </receiver>
 
         <service
-            android:name=".common.data_updates.DataUpdatesService"
+            android:name=".common.services.DataUpdatesService"
             android:exported="false">
         </service>
 
         <service
-            android:name=".common.data_updates.InitialDataIngestionService"
+            android:name=".common.services.SummitDataIngestionService"
+            android:exported="false">
+        </service>
+
+        <service
+            android:name=".common.services.SummitsListIngestionService"
             android:exported="false">
         </service>
 

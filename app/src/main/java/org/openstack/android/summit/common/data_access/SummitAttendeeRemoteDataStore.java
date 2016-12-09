@@ -6,6 +6,7 @@ import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitEventsApi;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.api.SummitSelector;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -26,15 +27,18 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
 
     private Retrofit restClient;
     private ISummitEventsApi summitEventsApi;
+    private ISummitSelector summitSelector;
 
     @Inject
     public SummitAttendeeRemoteDataStore
     (
-        @Named("MemberProfile") Retrofit restClient
+        @Named("MemberProfile") Retrofit restClient,
+        ISummitSelector summitSelector
     )
     {
         this.restClient      = restClient;
         this.summitEventsApi = restClient.create(ISummitEventsApi.class);
+        this.summitSelector  = summitSelector;
     }
 
     @Override
@@ -45,7 +49,7 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
         final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener
     )
     {
-        Call<ResponseBody> call = summitEventsApi.addToMySchedule(SummitSelector.getCurrentSummitId(), summitEvent.getId());
+        Call<ResponseBody> call = summitEventsApi.addToMySchedule(summitSelector.getCurrentSummitId(), summitEvent.getId());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -79,7 +83,7 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
     )
     {
 
-        Call<ResponseBody> call = summitEventsApi.removeFromMySchedule(SummitSelector.getCurrentSummitId(), summitEvent.getId());
+        Call<ResponseBody> call = summitEventsApi.removeFromMySchedule(summitSelector.getCurrentSummitId(), summitEvent.getId());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

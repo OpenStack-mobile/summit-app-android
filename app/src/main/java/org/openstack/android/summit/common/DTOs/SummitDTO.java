@@ -28,7 +28,7 @@ public class SummitDTO extends NamedDTO {
 
     public int getScheduleStartDay() {
         DateTimeZone summitTimeZone = DateTimeZone.forID(getTimeZone());
-        DateTime auxStartSchedule   = new DateTime(scheduleStartDate, summitTimeZone).withTime(0, 0, 0, 0);
+        DateTime auxStartSchedule   = new DateTime(scheduleStartDate.getTime(), summitTimeZone).withTime(0, 0, 0, 0);
         return auxStartSchedule.getDayOfMonth();
     }
 
@@ -70,7 +70,7 @@ public class SummitDTO extends NamedDTO {
 
     public DateTime getLocalScheduleStartDate(){
         DateTimeZone summitTimeZone = DateTimeZone.forID(getTimeZone());
-        return new DateTime(getScheduleStartDate(), summitTimeZone).withTime(0,0,0,0);
+        return new DateTime(getScheduleStartDate().getTime(), summitTimeZone).withTime(0,0,0,0);
     }
 
     public DateTime convertFromUTCToLocal(DateTime dateTime) {

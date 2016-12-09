@@ -1,13 +1,13 @@
 package org.openstack.android.summit.common.data_access;
 
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Case;
-import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -18,9 +18,10 @@ import io.realm.Sort;
 public class PresentationSpeakerDataStore extends GenericDataStore implements IPresentationSpeakerDataStore {
 
     @Override
-    public List<PresentationSpeaker> getByFilterLocal(String searchTerm, int page, int objectsPerPage) {
-        RealmQuery<PresentationSpeaker> query = RealmFactory.getSession().where(PresentationSpeaker.class);
-        query.isNotNull("fullName");
+    public List<PresentationSpeaker> getByFilterLocal(int summitId, String searchTerm, int page, int objectsPerPage) {
+
+        Summit summit = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
+        RealmQuery<PresentationSpeaker> query = summit.getSpeakers().where().isNotNull("fullName");
 
         if (searchTerm != null && !searchTerm.isEmpty()) {
             query.contains("fullName", searchTerm, Case.INSENSITIVE);

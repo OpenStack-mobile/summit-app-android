@@ -2,7 +2,9 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
@@ -32,8 +34,8 @@ public class MemberProfileModule {
     }
 
     @Provides
-    IMemberProfileInteractor providesMemberProfileInteractor(IGenericDataStore genericDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler) {
-        return new MemberProfileInteractor(genericDataStore, securityManager, dtoAssembler);
+    IMemberProfileInteractor providesMemberProfileInteractor(IGenericDataStore genericDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new MemberProfileInteractor(genericDataStore, securityManager, dtoAssembler, summitDataStore, summitSelector);
     }
 
     @Provides

@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
@@ -26,9 +27,29 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     private ISession session;
     private final String PUSH_NOTIFICATIONS_SUBSCRIBED_KEY = "PUSH_NOTIFICATIONS_SUBSCRIBED_KEY";
 
+
     @Inject
-    public ScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session) {
-        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, dtoAssembler, securityManager, pushNotificationsManager);
+    public ScheduleInteractor
+    (
+            ISummitEventDataStore summitEventDataStore,
+            ISummitDataStore summitDataStore,
+            ISummitAttendeeDataStore summitAttendeeDataStore,
+            IDTOAssembler dtoAssembler,
+            ISecurityManager securityManager,
+            IPushNotificationsManager pushNotificationsManager,
+            ISession session,
+            ISummitSelector summitSelector
+    ) {
+        super
+        (
+            summitEventDataStore,
+            summitAttendeeDataStore,
+            summitDataStore,
+            dtoAssembler,
+            securityManager,
+            pushNotificationsManager,
+            summitSelector
+        );
         this.summitDataStore = summitDataStore;
         this.session = session;
     }
@@ -81,18 +102,6 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     public boolean eventExist(int id) {
         SummitEvent summitEvent = summitEventDataStore.getByIdLocal(id);
         return summitEvent != null;
-    }
-
-    @Override
-    public SummitDTO getActiveSummit() {
-        Summit currentSummit = summitDataStore.getActive();
-        if (currentSummit == null) return null;
-        return dtoAssembler.createDTO(currentSummit, SummitDTO.class);
-    }
-
-    @Override
-    public boolean isDataLoaded() {
-        return summitDataStore.getActive() != null;
     }
 
 }

@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.DataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.GenericDataStore;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
@@ -14,6 +15,7 @@ import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteData
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
+import org.openstack.android.summit.common.data_access.ITrackDataStore;
 import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
 import org.openstack.android.summit.common.data_access.IVenueDataStore;
 import org.openstack.android.summit.common.data_access.MemberDataStore;
@@ -25,6 +27,7 @@ import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataS
 import org.openstack.android.summit.common.data_access.SummitDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventRemoteDataStore;
+import org.openstack.android.summit.common.data_access.TrackDataStore;
 import org.openstack.android.summit.common.data_access.TrackGroupDataStore;
 import org.openstack.android.summit.common.data_access.VenueDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
@@ -260,10 +263,11 @@ public class DataAccessModule {
     (
                     INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,
                     IDeserializer deserializer,
-                    @Named("MemberProfile") Retrofit restClient
+                    @Named("MemberProfile") Retrofit restClient,
+                    ISummitSelector summitSelector
     )
     {
-        return new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, deserializer, restClient);
+        return new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, deserializer, restClient, summitSelector);
     }
 
     @Provides
@@ -287,17 +291,20 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitEventRemoteDataStore providesSummitEventRemoteDataStore(IDeserializer deserializer, @Named("ServiceProfile") Retrofit restClient) {
-        return new SummitEventRemoteDataStore(deserializer, restClient);
+    ISummitEventRemoteDataStore providesSummitEventRemoteDataStore(IDeserializer deserializer,
+                                                                   @Named("ServiceProfile") Retrofit restClient,
+                                                                   ISummitSelector summitSelector) {
+        return new SummitEventRemoteDataStore(deserializer, restClient, summitSelector);
     }
 
     @Provides
     ISummitAttendeeRemoteDataStore providesSummitAttendeeRemoteDataStore
     (
-        @Named("MemberProfile") Retrofit restClient
+        @Named("MemberProfile") Retrofit restClient,
+        ISummitSelector summitSelector
     )
     {
-        return new SummitAttendeeRemoteDataStore(restClient);
+        return new SummitAttendeeRemoteDataStore(restClient, summitSelector);
     }
 
     @Provides
@@ -326,20 +333,23 @@ public class DataAccessModule {
     }
 
     @Provides
+    ITrackDataStore providesTrackDataStore(){ return new TrackDataStore(); }
+
+    @Provides
     IDataUpdateProcessor providesDataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore) {
         return new DataUpdateProcessor(deserializer, dataUpdateStrategyFactory, dataUpdateDataStore, new ClassResolver());
     }
 
     @Provides
-    IDataUpdateStrategyFactory providesDataUpdateStrategyFactory(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, ITrackGroupDataStore trackGroupDataStore, IVenueDataStore venueDataStore, ISecurityManager securityManager) {
+    IDataUpdateStrategyFactory providesDataUpdateStrategyFactory(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, ITrackGroupDataStore trackGroupDataStore, IVenueDataStore venueDataStore, ISecurityManager securityManager, ISummitSelector summitSelector) {
         return new DataUpdateStrategyFactory(
-                new DataUpdateStrategy(genericDataStore),
-                new MyScheduleDataUpdateStrategy(genericDataStore, summitAttendeeDataStore, securityManager),
-                new SummitDataUpdateStrategy(genericDataStore, summitDataStore),
-                new TrackGroupDataUpdateStrategy(genericDataStore, trackGroupDataStore),
-                new SummitVenueImageDataUpdateStrategy(genericDataStore, venueDataStore),
-                new PresentationMaterialDataUpdateStrategy(genericDataStore),
-                new VenueLocationsDataUpdateStrategy(genericDataStore)
+                new DataUpdateStrategy(genericDataStore, summitSelector),
+                new MyScheduleDataUpdateStrategy(genericDataStore, summitAttendeeDataStore, securityManager, summitSelector),
+                new SummitDataUpdateStrategy(genericDataStore, summitDataStore, summitSelector),
+                new TrackGroupDataUpdateStrategy(genericDataStore, trackGroupDataStore, summitSelector),
+                new SummitVenueImageDataUpdateStrategy(genericDataStore, venueDataStore, summitSelector),
+                new PresentationMaterialDataUpdateStrategy(genericDataStore, summitSelector),
+                new VenueLocationsDataUpdateStrategy(genericDataStore, summitSelector)
         );
     }
 
@@ -353,7 +363,8 @@ public class DataAccessModule {
                     ISummitDataStore summitDataStore,
                     ISession session,
                     @Named("MemberProfile") Retrofit restClientUserProfile,
-                    @Named("ServiceProfile") Retrofit restClientServiceProfile
+                    @Named("ServiceProfile") Retrofit restClientServiceProfile,
+                    ISummitSelector summitSelector
 
     ) {
         return new DataUpdatePoller(
@@ -363,7 +374,8 @@ public class DataAccessModule {
                 summitDataStore,
                 session,
                 restClientUserProfile,
-                restClientServiceProfile
+                restClientServiceProfile,
+                summitSelector
         );
     }
 

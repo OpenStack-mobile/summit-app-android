@@ -5,9 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.openstack.android.summit.BuildConfig;
+import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.api.OAuth2AccessTokenAuthenticator;
 import org.openstack.android.summit.common.api.OAuth2AccessTokenInterceptor;
 import org.openstack.android.summit.common.api.OAuth2AccessTokenPostSendStrategy;
+import org.openstack.android.summit.common.api.SummitSelector;
 import org.openstack.android.summit.common.security.IOIDCConfigurationManager;
 import org.openstack.android.summit.common.security.ITokenManagerFactory;
 import org.openstack.android.summit.common.security.TokenManagerFactory;
@@ -82,6 +85,12 @@ public class RestApiModule {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         return gsonBuilder.create();
+    }
+
+    @Provides
+    @Singleton
+    public ISummitSelector providesSummitSelector(ISession session){
+        return new SummitSelector(session);
     }
 
     @Provides

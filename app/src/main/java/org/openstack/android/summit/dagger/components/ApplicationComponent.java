@@ -4,13 +4,15 @@ package org.openstack.android.summit.dagger.components;
  * Created by claudio on 11/3/2015.
  */
 
-import org.openstack.android.summit.InitialDataLoadingActivity;
-import org.openstack.android.summit.common.data_updates.DataUpdatesService;
-import org.openstack.android.summit.common.data_updates.InitialDataIngestionService;
+import org.openstack.android.summit.SummitDataLoadingActivity;
+import org.openstack.android.summit.SummitsListDataLoaderActivity;
+import org.openstack.android.summit.common.services.DataUpdatesService;
+import org.openstack.android.summit.common.services.SummitDataIngestionService;
 import org.openstack.android.summit.common.player.YouTubePlayerActivity;
 import org.openstack.android.summit.common.push_notifications.CustomParsePushBroadcastReceiver;
 import org.openstack.android.summit.common.security.AuthenticatorActivity;
 import org.openstack.android.summit.common.security.AuthenticatorService;
+import org.openstack.android.summit.common.services.SummitsListIngestionService;
 import org.openstack.android.summit.dagger.modules.AboutModule;
 import org.openstack.android.summit.dagger.modules.FeedbackEditModule;
 import org.openstack.android.summit.dagger.modules.MainModule;
@@ -82,7 +84,7 @@ import dagger.Component;
 public interface ApplicationComponent {
 
     void inject(MainActivity mainActivity);
-    void inject(InitialDataLoadingActivity initialDataLoadingActivity);
+    void inject(SummitDataLoadingActivity summitDataLoadingActivity);
     void inject(EventsFragment eventsFragment);
     void inject(GeneralScheduleFragment generalScheduleFragment);
     void inject(LevelListFragment levelListFragment);
@@ -116,5 +118,7 @@ public interface ApplicationComponent {
     void inject(PushNotificationDetailFragment pushNotificationDetailFragment);
     void inject(RSVPViewerActivity rsvpViewerActivity);
     void inject(SettingsFragment settingsFragment);
-    void inject(InitialDataIngestionService dataIngestionService);
+    void inject(SummitDataIngestionService dataIngestionService);
+    void inject(SummitsListIngestionService summitsListIngestionService);
+    void inject(SummitsListDataLoaderActivity summitsListDataLoaderActivity);
 }

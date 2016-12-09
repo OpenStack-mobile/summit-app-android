@@ -7,7 +7,9 @@ import org.openstack.android.summit.common.entities.Summit;
  */
 public interface ISummitDataStore extends IGenericDataStore {
 
-    Summit getActive();
+    Summit getLatest();
+
+    Summit getById(int summitId);
 
     void updateActiveSummitFromDataUpdate(Summit dataUpdateEntity);
 }

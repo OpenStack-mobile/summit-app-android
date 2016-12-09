@@ -2,10 +2,12 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.ITrackDataStore;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
@@ -38,8 +40,18 @@ public class SearchModule {
     }
 
     @Provides
-    ISearchInteractor providesSearchInteractor(IScheduleableInteractor scheduleableInteractor, ISummitEventDataStore summitEventDataStore, IGenericDataStore genericDataStore, IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler) {
-        return new SearchInteractor(scheduleableInteractor, summitEventDataStore, genericDataStore, presentationSpeakerDataStore, dtoAssembler);
+    ISearchInteractor providesSearchInteractor
+    (
+        IScheduleableInteractor scheduleableInteractor,
+        ISummitEventDataStore summitEventDataStore,
+        ITrackDataStore trackDataStore,
+        IPresentationSpeakerDataStore presentationSpeakerDataStore,
+        IDTOAssembler dtoAssembler,
+        ISummitDataStore summitDataStore,
+        ISummitSelector summitSelector
+    )
+    {
+        return new SearchInteractor(scheduleableInteractor, summitEventDataStore, trackDataStore, presentationSpeakerDataStore, dtoAssembler, summitDataStore, summitSelector);
     }
 
     @Provides

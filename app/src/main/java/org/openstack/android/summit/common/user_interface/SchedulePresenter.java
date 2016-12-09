@@ -95,9 +95,10 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             if (currentSummit == null) return;
 
             DateTime startDate = currentSummit.getLocalStartDate().withTime(0, 0, 0, 0);
-            DateTime endDate = currentSummit.getLocalEndDate().withTime(23, 59, 59, 999);
+            DateTime endDate   = currentSummit.getLocalEndDate().withTime(23, 59, 59, 999);
+
             // check if current time is on summit time
-            List<DateTime> pastDates = shouldHidePastTalks() ? currentSummit.getPastDates() : new ArrayList<DateTime>();
+            List<DateTime> pastDates     = shouldHidePastTalks() ? currentSummit.getPastDates() : new ArrayList<DateTime>();
             List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
             // now merge past dates with inactive dates
             inactiveDates.removeAll(pastDates);

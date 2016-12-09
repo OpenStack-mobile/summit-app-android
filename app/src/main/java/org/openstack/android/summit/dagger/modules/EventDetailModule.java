@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
@@ -40,8 +41,8 @@ public class EventDetailModule {
     }
 
     @Provides
-    IEventDetailInteractor providesEventDetailInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager) {
-        return new EventDetailInteractor(summitEventDataStore, summitAttendeeDataStore, summitDataStore, new Reachability(), dtoAssembler, securityManager, pushNotificationsManager);
+    IEventDetailInteractor providesEventDetailInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISummitSelector summitSelector) {
+        return new EventDetailInteractor(summitEventDataStore, summitAttendeeDataStore, summitDataStore, new Reachability(), dtoAssembler, securityManager, pushNotificationsManager, summitSelector);
     }
 
     @Provides

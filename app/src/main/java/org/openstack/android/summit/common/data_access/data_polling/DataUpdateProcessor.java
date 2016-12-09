@@ -54,7 +54,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
                 dataUpdate = RealmFactory.transaction(new RealmFactory.IRealmCallback<DataUpdate>() {
                     @Override
                     public DataUpdate callback(Realm session) throws Exception {
-                        if(session.where(Summit.class).findFirst() == null ) return null;
+
                         DataUpdate dataUpdate = deserialize(jsonString);
                         if (dataUpdate == null) return null;
                         IDataUpdateStrategy dataUpdateStrategy;

@@ -2,8 +2,10 @@ package org.openstack.android.summit.modules.speakers_list.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 
 import java.util.List;
@@ -14,16 +16,23 @@ import java.util.List;
 public class SpeakerListInteractor extends BaseInteractor implements ISpeakerListInteractor {
     IPresentationSpeakerDataStore presentationSpeakerDataStore;
 
-    public SpeakerListInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler) {
-        super(dtoAssembler);
+    public SpeakerListInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.presentationSpeakerDataStore = presentationSpeakerDataStore;
     }
 
     @Override
     public List<PersonListItemDTO> getSpeakers(int page, int objectsPerPage) {
-        List<PresentationSpeaker> speakers = presentationSpeakerDataStore.getByFilterLocal(null, page, objectsPerPage);
+        String searchTerm = null;
 
-        List<PersonListItemDTO> dtos = createDTOList(speakers, PersonListItemDTO.class);
-        return dtos;
+        List<PresentationSpeaker> speakers = presentationSpeakerDataStore.getByFilterLocal
+        (
+            summitSelector.getCurrentSummitId(),
+            searchTerm,
+            page,
+            objectsPerPage
+        );
+
+        return createDTOList(speakers, PersonListItemDTO.class);
     }
 }

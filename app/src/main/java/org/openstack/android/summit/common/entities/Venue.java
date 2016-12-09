@@ -7,7 +7,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Claudio Redi on 11/4/2015.
  */
-public class Venue extends RealmObject implements INamedEntity {
+public class Venue extends RealmObject implements INamedEntity, ISummitOwned {
     @PrimaryKey
     private int id;
     private String name;
@@ -23,6 +23,7 @@ public class Venue extends RealmObject implements INamedEntity {
     private RealmList<Image> maps        = new RealmList<>();
     private RealmList<Image> images      = new RealmList<>();
     private RealmList<VenueFloor> floors = new RealmList<>();
+    private Summit summit;
 
     public RealmList<VenueFloor> getFloors() {
         if(floors == null) floors = new RealmList<>();
@@ -137,5 +138,15 @@ public class Venue extends RealmObject implements INamedEntity {
 
     public void setImages(RealmList<Image> images) {
         this.images = images;
+    }
+
+    @Override
+    public Summit getSummit() {
+        return summit;
+    }
+
+    @Override
+    public void setSummit(Summit summit) {
+        this.summit = summit;
     }
 }

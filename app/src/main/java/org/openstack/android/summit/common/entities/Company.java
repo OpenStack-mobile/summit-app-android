@@ -26,4 +26,5 @@ public class Company extends RealmObject implements INamedEntity {
     public void setName(String name) {
         this.name = name;
     }
+
 }

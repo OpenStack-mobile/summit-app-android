@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.modules.about.AboutWireframe;
 import org.openstack.android.summit.modules.about.IAboutWireframe;
@@ -29,8 +30,14 @@ public class AboutModule {
     }
 
     @Provides
-    IAboutInteractor providesAboutInteractor(ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler) {
-        return new AboutInteractor(summitDataStore, dtoAssembler);
+    IAboutInteractor providesAboutInteractor
+    (
+        ISummitDataStore summitDataStore,
+        IDTOAssembler dtoAssembler,
+        ISummitSelector summitSelector
+    )
+    {
+        return new AboutInteractor(summitDataStore, dtoAssembler, summitSelector);
     }
 
     @Provides

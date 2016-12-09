@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.entities.PresentationLink;
 import org.openstack.android.summit.common.entities.PresentationSlide;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.PresentationVideo;
+import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
@@ -54,6 +55,14 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
                 !jsonObject.isNull("level") ? jsonObject.getString("level") : null
         );
 
+        int summitId            = jsonObject.optInt("summit_id");
+
+        //first check db, and then cache storage
+        Summit summit  =  RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
+
+        if(summit == null)
+            throw new JSONException(String.format("Can't deserialize presentation id %d (summit not found)!", presentationId));
+
         PresentationSpeaker presentationSpeaker;
         int speakerId;
         JSONArray jsonArraySpeakers = jsonObject.getJSONArray("speakers");
@@ -66,6 +75,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
                     presentationSpeakerDeserializer.deserialize(jsonArraySpeakers.getJSONObject(i).toString());
             if(presentationSpeaker == null) continue;
             presentation.getSpeakers().add(presentationSpeaker);
+            summit.getSpeakers().add(presentationSpeaker);
         }
 
         if(jsonObject.has("slides")){
@@ -119,15 +129,19 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
             if(moderator == null)
                 moderator = presentationSpeakerDeserializer.deserialize(jsonObjectModerator.toString());
 
-            if(moderator != null)
+            if(moderator != null) {
                 presentation.setModerator(moderator);
+                summit.getSpeakers().add(moderator);
+            }
         }
         else if (jsonObject.has("moderator_speaker_id") && !jsonObject.isNull("moderator_speaker_id")) {
 
             PresentationSpeaker moderator = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", jsonObject.getInt("moderator_speaker_id")).findFirst();
 
-            if(moderator != null)
+            if(moderator != null) {
                 presentation.setModerator(moderator);
+                summit.getSpeakers().add(moderator);
+            }
         }
 
         return presentation;

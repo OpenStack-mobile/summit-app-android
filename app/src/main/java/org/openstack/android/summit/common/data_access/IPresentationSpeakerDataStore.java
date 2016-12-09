@@ -8,5 +8,5 @@ import java.util.List;
  * Created by Claudio Redi on 1/13/2016.
  */
 public interface IPresentationSpeakerDataStore extends IGenericDataStore {
-    List<PresentationSpeaker> getByFilterLocal(String searchTerm, int page, int objectsPerPage);
+    List<PresentationSpeaker> getByFilterLocal(int summitId, String searchTerm, int page, int objectsPerPage);
 }

@@ -10,6 +10,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Claudio Redi on 11/4/2015.
  */
 public class SummitEvent extends RealmObject implements ISummitEvent {
+
     @PrimaryKey
     private int    id;
     private String name;
@@ -152,10 +153,12 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
         this.tags = tags;
     }
 
+    @Override
     public Summit getSummit() {
         return summit;
     }
 
+    @Override
     public void setSummit(Summit summit) {
         this.summit = summit;
     }

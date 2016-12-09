@@ -2,7 +2,9 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
@@ -52,13 +54,13 @@ public class PushNotificationsInboxModule {
     }
 
     @Provides
-    IPushNotificationsListInteractor providesNotificationsListInteractor(IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler) {
-        return new PushNotificationsListInteractor(pushNotificationDataStore, dtoAssembler);
+    IPushNotificationsListInteractor providesNotificationsListInteractor(IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new PushNotificationsListInteractor(pushNotificationDataStore, dtoAssembler, summitDataStore, summitSelector);
     }
 
     @Provides
-    IPushNotificationDetailInteractor providesPushNotificationDetailInteractor(IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler) {
-        return new PushNotificationDetailInteractor(pushNotificationDataStore, dtoAssembler);
+    IPushNotificationDetailInteractor providesPushNotificationDetailInteractor(IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new PushNotificationDetailInteractor(pushNotificationDataStore, dtoAssembler, summitDataStore, summitSelector);
     }
 
     @Provides

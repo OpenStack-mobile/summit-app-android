@@ -1,4 +1,4 @@
-package org.openstack.android.summit.common.data_updates;
+package org.openstack.android.summit.common.services;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -11,7 +11,7 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitApi;
-import org.openstack.android.summit.common.api.SummitSelector;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitDeserializer;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.IReachability;
@@ -31,7 +31,7 @@ import retrofit2.Retrofit;
  * Created by sebastian on 10/5/2016.
  */
 
-public class InitialDataIngestionService extends IntentService {
+public class SummitDataIngestionService extends IntentService {
 
     public static final String PENDING_RESULT = "pending_result";
     public static final int RESULT_CODE_OK    = 0xFF01;
@@ -48,11 +48,14 @@ public class InitialDataIngestionService extends IntentService {
     ISummitDeserializer deserializer;
 
     @Inject
+    ISummitSelector summitSelector;
+
+    @Inject
     @Named("ServiceProfile")
     Retrofit restClient;
 
     public static Intent newIntent(Context context) {
-        return new Intent(context, InitialDataIngestionService.class);
+        return new Intent(context, SummitDataIngestionService.class);
     }
 
     @Override
@@ -61,8 +64,8 @@ public class InitialDataIngestionService extends IntentService {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public InitialDataIngestionService() {
-        super("InitialDataIngestionService");
+    public SummitDataIngestionService() {
+        super("SummitDataIngestionService");
         this.setIntentRedelivery(true);
     }
 
@@ -84,34 +87,29 @@ public class InitialDataIngestionService extends IntentService {
                 return;
             }
 
-            if (interactor.isDataLoaded()) {
-                Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: data already loaded !!!");
-                isRunning = false;
-                reply.send(this, RESULT_CODE_OK, result);
-                return;
-            }
+            Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: getting summit data ...");
 
-            Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: getting summit data ...");
-
-            Call<ResponseBody> call = restClient.create(ISummitApi.class).getSummit(SummitSelector.getCurrentSummitId(), "schedule");
+            Call<ResponseBody> call = restClient.create(ISummitApi.class).getSummit(summitSelector.getCurrentSummitId(), "schedule");
 
             final retrofit2.Response<ResponseBody> response = call.execute();
 
             if (!response.isSuccessful())
-                throw new Exception(String.format("InitialDataIngestionService: invalid http code %d", response.code()));
+                throw new Exception(String.format("SummitDataIngestionService: invalid http code %d", response.code()));
+
+            final String body = response.body().string();
 
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override
                 public Void callback(Realm session) throws Exception {
 
-                    Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: deserializing summit data ...");
-                    Summit summit = deserializer.deserialize(response.body().string());
+                    Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: deserializing summit data ...");
+                    Summit summit = deserializer.deserialize(body);
                     session.copyToRealmOrUpdate(summit);
                     return Void.getInstance();
                 }
             });
 
-            Log.d(Constants.LOG_TAG, "InitialDataIngestionService.onHandleIntent: summit data loaded !!!");
+            Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: summit data loaded !!!");
             reply.send(this, RESULT_CODE_OK, result);
 
         } catch (Exception ex) {

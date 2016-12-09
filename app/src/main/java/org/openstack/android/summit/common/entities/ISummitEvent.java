@@ -7,7 +7,7 @@ import io.realm.RealmList;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
-public interface ISummitEvent extends INamedEntity {
+public interface ISummitEvent extends INamedEntity, ISummitOwned {
 
     Date getStart();
 

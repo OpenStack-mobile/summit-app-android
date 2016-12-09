@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.business_logic;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitDataStore;
@@ -14,7 +15,6 @@ import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
-import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,16 +27,24 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     protected ISecurityManager          securityManager;
     protected ISummitEventDataStore     summitEventDataStore;
     protected ISummitAttendeeDataStore  summitAttendeeDataStore;
-    protected ISummitDataStore          summitDataStore;
     protected IPushNotificationsManager pushNotificationsManager;
 
-    public ScheduleableInteractor(ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager) {
-        super(dtoAssembler);
+
+    public ScheduleableInteractor
+    (
+            ISummitEventDataStore summitEventDataStore,
+            ISummitAttendeeDataStore summitAttendeeDataStore,
+            ISummitDataStore summitDataStore,
+            IDTOAssembler dtoAssembler,
+            ISecurityManager securityManager,
+            IPushNotificationsManager pushNotificationsManager,
+            ISummitSelector summitSelector
+    ) {
+        super(dtoAssembler, summitSelector, summitDataStore);
 
         this.securityManager          = securityManager;
         this.summitEventDataStore     = summitEventDataStore;
         this.summitAttendeeDataStore  = summitAttendeeDataStore;
-        this.summitDataStore          = summitDataStore;
         this.pushNotificationsManager = pushNotificationsManager;
     }
 
@@ -145,7 +153,10 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
 
     @Override
     public boolean shouldShowVenues() {
-        Summit summit = summitDataStore.getActive();
-        return summit != null && summit.getStartShowingVenuesDate() != null && summit.getStartShowingVenuesDate().getTime() < new Date().getTime();
+        Summit summit = summitDataStore.getById(summitSelector.getCurrentSummitId());
+
+        return  summit != null &&
+                summit.getStartShowingVenuesDate() != null &&
+                summit.getStartShowingVenuesDate().getTime() < new Date().getTime();
     }
 }

@@ -30,9 +30,10 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import org.openstack.android.summit.InitialDataLoadingActivity;
+import org.openstack.android.summit.SummitDataLoadingActivity;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.SummitsListDataLoaderActivity;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -56,7 +57,6 @@ public class MainActivity
     IMainPresenter presenter;
 
     @Inject
-    // TODO: this should be moved to interactor. It's necessary to know how to deal with the Activiy parameter on login
     ISecurityManager securityManager;
 
     @Inject
@@ -70,8 +70,9 @@ public class MainActivity
     private boolean userClickedLogout;
     private int selectedMenuItemId;
     private NavigationView navigationView;
-    private boolean onLoginProcess = false;
-    private boolean onDataLoading  = false;
+    private boolean onLoginProcess   = false;
+    private boolean onDataLoading    = false;
+    private boolean loadedSummitList = false;
 
     private void cancelLoginProcess(){
         Log.d(Constants.LOG_TAG, "MainActivity.cancelLoginProcess");
@@ -90,7 +91,7 @@ public class MainActivity
 
                 if (intent.getAction() == Constants.WIPE_DATE_EVENT) {
                     Log.d(Constants.LOG_TAG, "WIPE_DATE_EVENT");
-                    launchInitialDataLoadingActivity();
+                    launchSummitListDataLoadingActivity();
                 }
 
                 if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_RECEIVED)) {
@@ -180,17 +181,30 @@ public class MainActivity
     };
 
     private static final int DATA_LOAD_REQUEST = 1;  // The request code
+    private static final int SUMMITS_LIST_DATA_LOAD_REQUEST =2;
 
     private void launchInitialDataLoadingActivity() {
-        if (!presenter.isSummitDataLoaded() && !onDataLoading) {
+        if (!onDataLoading) {
             onDataLoading = true;
             // disable data updates ...
             presenter.disableDataUpdateService();
-            Intent intent = new Intent(MainActivity.this, InitialDataLoadingActivity.class);
+            Intent intent = new Intent(MainActivity.this, SummitDataLoadingActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            Log.i(Constants.LOG_TAG, "starting InitialDataLoadingActivity ...");
+            Log.i(Constants.LOG_TAG, "starting SummitDataLoadingActivity ...");
             startActivityForResult(intent, DATA_LOAD_REQUEST);
         }
+    }
+
+    private void launchSummitListDataLoadingActivity(){
+        if(loadedSummitList) return;
+        onDataLoading = true;
+        // disable data updates ...
+        presenter.disableDataUpdateService();
+
+        Intent intent = new Intent(MainActivity.this, SummitsListDataLoaderActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        Log.i(Constants.LOG_TAG, "starting SummitsListDataLoaderActivity ...");
+        startActivityForResult(intent, SUMMITS_LIST_DATA_LOAD_REQUEST);
     }
 
     @Override
@@ -204,6 +218,19 @@ public class MainActivity
                 //re enable data update service
                 presenter.enableDataUpdateService();
                 presenter.shouldShowMainView();
+            }
+        }
+        if(requestCode == SUMMITS_LIST_DATA_LOAD_REQUEST){
+            onDataLoading    = false;
+            loadedSummitList = true;
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Log.i(Constants.LOG_TAG, "MainActivity.onActivityResult: Summit Data Loaded!");
+                //re enable data update service
+                presenter.enableDataUpdateService();
+            }
+            if(resultCode == SummitsListDataLoaderActivity.RESULT_OK_FIRE_SUMMIT_DATA_LOADING){
+                launchInitialDataLoadingActivity();
             }
         }
     }
@@ -263,7 +290,7 @@ public class MainActivity
             toggleMenuLogo(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
             super.onResume();
             presenter.onResume();
-            launchInitialDataLoadingActivity();
+            launchSummitListDataLoadingActivity();
             setupNavigationIcons();
         } catch (Exception ex) {
             Crashlytics.logException(ex);
@@ -370,7 +397,7 @@ public class MainActivity
 
                     if (!presenter.isSummitDataLoaded()) {
                         showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
-                        launchInitialDataLoadingActivity();
+                        launchSummitListDataLoadingActivity();
                         return;
                     }
 
@@ -387,7 +414,7 @@ public class MainActivity
                 }
             });
 
-            memberNameTextView = (TextView) headerView.findViewById(R.id.member_name_textview);
+            memberNameTextView     = (TextView) headerView.findViewById(R.id.member_name_textview);
             memberProfileImageView = (SimpleDraweeView) headerView.findViewById(R.id.member_profile_pic_imageview);
             memberProfileImageView.setOnClickListener(
                     new View.OnClickListener() {
@@ -403,7 +430,7 @@ public class MainActivity
 
                             if (!presenter.isSummitDataLoaded()) {
                                 showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
-                                launchInitialDataLoadingActivity();
+                                launchSummitListDataLoadingActivity();
                                 return;
                             }
 

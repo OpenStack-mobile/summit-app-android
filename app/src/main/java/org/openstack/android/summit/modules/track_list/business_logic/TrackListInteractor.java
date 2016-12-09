@@ -2,35 +2,44 @@ package org.openstack.android.summit.modules.track_list.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.TrackDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.ITrackDataStore;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
-import io.realm.Sort;
 
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
 public class TrackListInteractor extends BaseInteractor implements ITrackListInteractor {
 
-    private IDTOAssembler dtoAssembler;
-    private IGenericDataStore genericDataStore;
     private ISummitEventDataStore summitEventDataStore;
+    private ITrackDataStore trackDataStore;
 
     @Inject
-    public TrackListInteractor(IDTOAssembler dtoAssembler, IGenericDataStore genericDataStore, ISummitEventDataStore summitEventDataStore) {
-        super(dtoAssembler);
-        this.genericDataStore     = genericDataStore;
+    public TrackListInteractor
+    (
+            IDTOAssembler dtoAssembler,
+            ISummitEventDataStore summitEventDataStore,
+            ITrackDataStore trackDataStore,
+            ISummitDataStore summitDataStore,
+            ISummitSelector summitSelector
+    ) {
+        super(dtoAssembler, summitSelector, summitDataStore);
         this.summitEventDataStore = summitEventDataStore;
+        this.trackDataStore       = trackDataStore;
     }
 
     @Override
     public List<TrackDTO> getTracks(List<Integer> trackGroups) {
-        List<Track> tracks              = genericDataStore.getAllLocal(Track.class, new String[] { "name" }, new Sort[] { Sort.ASCENDING });
+        List<Track> tracks              = trackDataStore.getAllOrderedByName(summitSelector.getCurrentSummitId());
         ArrayList<Track> filteredTracks = new ArrayList<>();
 
         for(Track track: tracks) {

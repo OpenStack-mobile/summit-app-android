@@ -13,5 +13,9 @@ import retrofit2.http.Query;
 public interface ISummitApi {
 
     @GET("v1/summits/{summit_id}")
-    public Call<ResponseBody> getSummit(@Path("summit_id") String summitId, @Query("expand") String expand);
+    Call<ResponseBody> getSummit(@Path("summit_id") int summitId, @Query("expand") String expand);
+
+    @GET("v1/summits")
+    Call<ResponseBody> getSummits();
+
 }

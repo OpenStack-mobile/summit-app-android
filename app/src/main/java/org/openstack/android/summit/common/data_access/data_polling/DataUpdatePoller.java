@@ -10,6 +10,7 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitEntityEventsApi;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.api.SummitSelector;
 import org.openstack.android.summit.common.data_access.BaseRemoteDataStore;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
@@ -38,6 +39,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private ISession session;
     private Retrofit restClientUserProfile;
     private Retrofit restClientServiceProfile;
+    private ISummitSelector summitSelector;
 
     private static final int EntityEventUpdatesPageSize = 50;
 
@@ -50,7 +52,8 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             ISummitDataStore summitDataStore,
             ISession session,
             @Named("MemberProfile") Retrofit restClientUserProfile,
-            @Named("ServiceProfile") Retrofit restClientServiceProfile
+            @Named("ServiceProfile") Retrofit restClientServiceProfile,
+            ISummitSelector summitSelector
     )
     {
 
@@ -61,6 +64,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         this.session                  = session;
         this.restClientUserProfile    = restClientUserProfile;
         this.restClientServiceProfile = restClientServiceProfile;
+        this.summitSelector           = summitSelector;
     }
 
     @Override
@@ -77,10 +81,6 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             Call<ResponseBody> call = getCall(restClient.create(ISummitEntityEventsApi.class));
 
             if (call == null) {
-                return;
-            }
-
-            if(summitDataStore.getActive() == null){
                 return;
             }
 
@@ -116,12 +116,12 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         }
 
         if (latestDataUpdateId > 0){
-            return api.get(SummitSelector.getCurrentSummitId(), null, latestDataUpdateId, EntityEventUpdatesPageSize);
+            return api.get(summitSelector.getCurrentSummitId(), null, latestDataUpdateId, EntityEventUpdatesPageSize);
         }
 
         long fromDate = getFromDate();
         if (fromDate == 0) {
-            Summit summit = summitDataStore.getActive();
+            Summit summit = summitDataStore.getById(summitSelector.getCurrentSummitId());
             if (summit != null) {
                 fromDate = summit.getInitialDataLoadDate().getTime() / 1000L;
                 setFromDate(fromDate);
@@ -129,7 +129,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         }
 
         if (fromDate != 0) {
-            return api.get(SummitSelector.getCurrentSummitId(), fromDate, null, EntityEventUpdatesPageSize);
+            return api.get(summitSelector.getCurrentSummitId(), fromDate, null, EntityEventUpdatesPageSize);
         }
 
         return null;

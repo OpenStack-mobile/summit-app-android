@@ -19,10 +19,10 @@ import javax.inject.Inject;
  */
 public class SpeakerListPresenter extends BasePresenter<ISpeakerListView, ISpeakerListInteractor, ISpeakerListWireframe> implements ISpeakerListPresenter {
 
-    List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();
-    private int page = 1;
+    List<PersonListItemDTO> speakers   = new ArrayList<PersonListItemDTO>();
+    private int page                   = 1;
     private final int OBJECTS_PER_PAGE = 20;
-    private Boolean loadedAllSpeakers = false;
+    private Boolean loadedAllSpeakers  = false;
 
     @Inject
     public SpeakerListPresenter(ISpeakerListInteractor interactor, ISpeakerListWireframe wireframe) {
