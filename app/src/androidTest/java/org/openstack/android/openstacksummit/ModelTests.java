@@ -36,17 +36,13 @@ import io.realm.RealmConfiguration;
 @LargeTest
 public class ModelTests extends InstrumentationTestCase {
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
-
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        File tempFolder = testFolder.newFolder("realmdata");
-        Realm.setDefaultConfiguration( new RealmConfiguration.Builder(tempFolder)
+        Realm.setDefaultConfiguration( new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
+                .inMemory()
                 .build());
-        //Realm.setDefaultConfiguration(RealmFactory.buildDefaultConfiguration(getInstrumentation().getContext()));
     }
 
     @Test

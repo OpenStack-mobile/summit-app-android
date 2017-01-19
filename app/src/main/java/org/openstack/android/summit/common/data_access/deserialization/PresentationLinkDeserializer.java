@@ -30,7 +30,7 @@ public class PresentationLinkDeserializer extends PresentationMaterialDeserializ
 
         PresentationLink link = RealmFactory.getSession().where(PresentationLink.class).equalTo("id", materialId).findFirst();
         if(link == null)
-            link = RealmFactory.getSession().createObject(PresentationLink.class);
+            link = RealmFactory.getSession().createObject(PresentationLink.class, materialId);
 
         return link;
     }

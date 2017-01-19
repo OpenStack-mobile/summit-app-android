@@ -11,7 +11,6 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.DataUpdate;
-import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import io.realm.Realm;

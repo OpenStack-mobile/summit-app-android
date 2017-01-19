@@ -35,9 +35,8 @@ public class VenueRoomDeserializer extends BaseDeserializer implements IVenueRoo
 
         VenueRoom venueRoom = RealmFactory.getSession().where(VenueRoom.class).equalTo("id", roomId).findFirst();
         if(venueRoom == null)
-            venueRoom = RealmFactory.getSession().createObject(VenueRoom.class);
+            venueRoom = RealmFactory.getSession().createObject(VenueRoom.class, roomId);
 
-        venueRoom.setId(roomId);
         venueRoom.setName(jsonObject.getString("name"));
         venueRoom.setCapacity(jsonObject.has("capacity")&& !jsonObject.isNull("capacity") ? jsonObject.getInt("capacity") : 0);
         venueRoom.setLocationDescription(jsonObject.getString("description"));

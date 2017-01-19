@@ -18,9 +18,9 @@ abstract public class PresentationMaterialDeserializer extends BaseDeserializer 
 
         String[] missedFields = validateRequiredFields(new String[]{"id", "display_on_site", "featured", "presentation_id"}, jsonObject);
         handleMissedFieldsIfAny(missedFields);
-        int materialId = jsonObject.getInt("id");
+        int materialId                 = jsonObject.getInt("id");
         IPresentationMaterial material = buildMaterial(materialId);
-        material.setId(materialId);
+
         material.setName(jsonObject.isNull("order") ? null : jsonObject.getString("name"));
         material.setDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : null);
         material.setDisplayOnSite(jsonObject.getBoolean("display_on_site"));

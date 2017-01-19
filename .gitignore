@@ -15,3 +15,5 @@ app/fabric.properties
 Thumbs.db
 crashlytics-build.properties
 projectFilesBackup
+/summit-app.local.properties
+/app/google-services.json

@@ -32,7 +32,7 @@ public class PresentationSlideDeserializer extends PresentationMaterialDeseriali
     protected IPresentationMaterial buildMaterial(int materialId) {
         PresentationSlide slide = RealmFactory.getSession().where(PresentationSlide.class).equalTo("id", materialId).findFirst();
         if(slide == null)
-            slide = RealmFactory.getSession().createObject(PresentationSlide.class);
+            slide = RealmFactory.getSession().createObject(PresentationSlide.class, materialId);
         return slide;
     }
 }

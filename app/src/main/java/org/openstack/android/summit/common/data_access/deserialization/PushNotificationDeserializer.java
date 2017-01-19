@@ -32,10 +32,9 @@ public class PushNotificationDeserializer extends BaseDeserializer implements IP
             throw new JSONException("Following fields are missed " + TextUtils.join(",", missedFields));
         }
 
-        PushNotification pushNotification =  RealmFactory.getSession().createObject(PushNotification.class);
+        PushNotification pushNotification =  RealmFactory.getSession().createObject(PushNotification.class, jsonObject.getInt("id"));
         pushNotification.setReceived(new Date());
         pushNotification.setOpened(false);
-        pushNotification.setId(jsonObject.getInt("id"));
         pushNotification.setSubject(jsonObject.optString("title","OpenStack Summit Notification"));
         pushNotification.setBody(jsonObject.optString("alert",""));
         pushNotification.setType(jsonObject.optString("type",""));

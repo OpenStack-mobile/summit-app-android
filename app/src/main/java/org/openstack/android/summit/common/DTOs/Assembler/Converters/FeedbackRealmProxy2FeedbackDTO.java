@@ -1,7 +1,5 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
-import org.openstack.android.summit.common.entities.Feedback;
-
 import io.realm.FeedbackRealmProxy;
 
 /**

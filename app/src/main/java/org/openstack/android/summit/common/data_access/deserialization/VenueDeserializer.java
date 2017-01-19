@@ -37,9 +37,8 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
 
         Venue venue = RealmFactory.getSession().where(Venue.class).equalTo("id", venueId).findFirst();
         if(venue == null)
-            venue = RealmFactory.getSession().createObject(Venue.class);
+            venue = RealmFactory.getSession().createObject(Venue.class, venueId);
 
-        venue.setId(venueId);
         venue.setName(jsonObject.getString("name"));
         venue.setLocationDescription(
                 !jsonObject.isNull("description") ? jsonObject.getString("description") : null

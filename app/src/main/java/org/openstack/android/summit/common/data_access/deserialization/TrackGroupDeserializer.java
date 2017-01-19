@@ -31,11 +31,10 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
 
         TrackGroup trackGroup = RealmFactory.getSession().where(TrackGroup.class).equalTo("id", groupId).findFirst();
         if(trackGroup == null)
-            trackGroup = RealmFactory.getSession().createObject(TrackGroup.class);
+            trackGroup = RealmFactory.getSession().createObject(TrackGroup.class, groupId);
 
         trackDeserializer.setShouldDeserializeTrackGroups(false);
 
-        trackGroup.setId(groupId);
         trackGroup.setName(jsonObject.getString("name"));
         trackGroup.setDescription(jsonObject.getString("description"));
         trackGroup.setColor(jsonObject.getString("color"));

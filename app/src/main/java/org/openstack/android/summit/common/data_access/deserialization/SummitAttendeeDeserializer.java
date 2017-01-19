@@ -38,9 +38,7 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
 
         SummitAttendee attendee = RealmFactory.getSession().where(SummitAttendee.class).equalTo("id", attendeeId).findFirst();
         if(attendee == null)
-            attendee = RealmFactory.getSession().createObject(SummitAttendee.class);
-
-        attendee.setId(attendeeId);
+            attendee = RealmFactory.getSession().createObject(SummitAttendee.class, attendeeId);
 
         SummitEvent summitEvent;
         int summitEventId = 0;

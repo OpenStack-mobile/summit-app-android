@@ -20,7 +20,6 @@ public class DeserializerTests  {
     public void deserialize_companyAndJSONIsValid_returnsCorrectCompanyInstance() throws JSONException {
         // Arrange
         Company company = new Company();
-        company.setId(1);
         company.setName("test");
         String jsonString = "{ \"id\":1, \"name\":\"test\"}";
         GenericDeserializer genericDeserializerMock = mock(GenericDeserializer.class);

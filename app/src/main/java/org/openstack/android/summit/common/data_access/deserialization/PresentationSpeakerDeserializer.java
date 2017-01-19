@@ -28,7 +28,7 @@ public class PresentationSpeakerDeserializer extends BaseDeserializer implements
 
         PresentationSpeaker speaker = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", speakerId).findFirst();
         if(speaker == null)
-            speaker = RealmFactory.getSession().createObject(PresentationSpeaker.class);
+            speaker = RealmFactory.getSession().createObject(PresentationSpeaker.class, speakerId);
 
         personDeserializer.deserialize(speaker, jsonObject);
 

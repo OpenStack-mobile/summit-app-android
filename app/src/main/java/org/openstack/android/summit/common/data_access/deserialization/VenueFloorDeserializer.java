@@ -33,9 +33,8 @@ public class VenueFloorDeserializer  extends BaseDeserializer implements IVenueF
 
         VenueFloor venueFloor = RealmFactory.getSession().where(VenueFloor.class).equalTo("id", floorId).findFirst();
         if(venueFloor == null)
-            venueFloor = RealmFactory.getSession().createObject(VenueFloor.class);
+            venueFloor = RealmFactory.getSession().createObject(VenueFloor.class, floorId);
 
-        venueFloor.setId(floorId);
         venueFloor.setName(jsonObject.getString("name"));
         venueFloor.setDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : null);
         venueFloor.setNumber(jsonObject.getInt("number"));

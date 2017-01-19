@@ -47,9 +47,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
 
         Presentation presentation = RealmFactory.getSession().where(Presentation.class).equalTo("id", presentationId).findFirst();
         if(presentation == null)
-            presentation = RealmFactory.getSession().createObject(Presentation.class);
-
-        presentation.setId(presentationId);
+            presentation = RealmFactory.getSession().createObject(Presentation.class, presentationId);
 
         presentation.setLevel(
                 !jsonObject.isNull("level") ? jsonObject.getString("level") : null

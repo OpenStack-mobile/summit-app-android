@@ -31,9 +31,8 @@ public class TrackDeserializer extends BaseDeserializer implements ITrackDeseria
 
         Track track = RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst();
         if(track == null)
-            track = RealmFactory.getSession().createObject(Track.class);
+            track = RealmFactory.getSession().createObject(Track.class, trackId);
 
-        track.setId(trackId);
         track.setName(jsonObject.getString("name"));
         track.getTrackGroups().clear();
 

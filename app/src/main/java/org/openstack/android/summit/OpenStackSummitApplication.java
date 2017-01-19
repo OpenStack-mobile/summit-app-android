@@ -18,8 +18,6 @@ import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.components.DaggerApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
-import org.openstack.android.summit.dagger.modules.RestApiModule;
-
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 

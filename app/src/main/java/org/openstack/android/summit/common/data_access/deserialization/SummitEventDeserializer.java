@@ -46,9 +46,8 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         SummitEvent summitEvent = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst();
 
         if(summitEvent == null)
-            summitEvent = RealmFactory.getSession().createObject(SummitEvent.class);
+            summitEvent = RealmFactory.getSession().createObject(SummitEvent.class, eventId);
 
-        summitEvent.setId(eventId);
         summitEvent.setName(jsonObject.optString("title"));
         summitEvent.setAllowFeedback(jsonObject.optBoolean("allow_feedback"));
         summitEvent.setStart(new Date(jsonObject.optLong("start_date") * 1000L));

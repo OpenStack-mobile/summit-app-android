@@ -57,6 +57,7 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
         Member member           = securityManager.getCurrentMember();
         SummitEvent summitEvent = genericDataStore.getByIdLocal(eventId, SummitEvent.class);
         final Feedback feedback = new Feedback();
+
         feedback.setEvent(summitEvent);
         feedback.setOwner(member);
         feedback.setRate(rate);

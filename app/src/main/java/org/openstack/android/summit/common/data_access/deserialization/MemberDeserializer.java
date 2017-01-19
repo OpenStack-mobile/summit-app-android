@@ -51,7 +51,7 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
 
         Member member = RealmFactory.getSession().where(Member.class).equalTo("id", memberId).findFirst();
         if(member == null)
-            member = RealmFactory.getSession().createObject(Member.class);
+            member = RealmFactory.getSession().createObject(Member.class, memberId);
 
         personDeserializer.deserialize(member, jsonObject);
 

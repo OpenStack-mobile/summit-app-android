@@ -1,3 +1,21 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+def generateFireBaseJsonConfiguration(file) {
+    def properties   = loadPropertiesFile(file)
+    def templateFile = new File("google-services.json.template")
+    def json         = new JsonSlurper().parseText(templateFile.text)
+
+    //populate properties
+    json.project_info.project_number = properties['FirebaseProjectInfoNumber']
+    json.project_info.firebase_url   = properties['FirebaseProjectInfoUrl']
+    json.project_info.project_id     = properties['FirebaseProjectInfoId']
+    json.project_info.storage_bucket = properties['FirebaseProjectInfoBucket']
+
+    def jsonFile = new File("app/google-services.json")
+    jsonFile.write(JsonOutput.toJson(json))
+}
+
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -220,8 +238,8 @@ dependencies {
         developmentCompile "org.openstack.android.summit.safestorage:safe_storage_debug@aar"
     }
     // http://facebook.github.io/stetho and https://github.com/uPhyca/stetho-realm
-    compile 'com.facebook.stetho:stetho:1.1.1'
-    compile 'com.uphyca:stetho_realm:0.9.0'
+    compile 'com.facebook.stetho:stetho:1.4.2'
+    compile 'com.uphyca:stetho_realm:2.0.0'
     // retrofit (REST API)
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.2'

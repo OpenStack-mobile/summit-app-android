@@ -35,7 +35,7 @@ public class PresentationVideoDeserializer extends PresentationMaterialDeseriali
 
         PresentationVideo video = RealmFactory.getSession().where(PresentationVideo.class).equalTo("id", materialId).findFirst();
         if(video == null)
-            video = RealmFactory.getSession().createObject(PresentationVideo.class);
+            video = RealmFactory.getSession().createObject(PresentationVideo.class, materialId);
 
         return video;
     }

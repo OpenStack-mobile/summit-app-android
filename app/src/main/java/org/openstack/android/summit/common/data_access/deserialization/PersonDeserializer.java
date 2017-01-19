@@ -10,7 +10,7 @@ import org.openstack.android.summit.common.entities.IPerson;
 public class PersonDeserializer extends BaseDeserializer implements IPersonDeserializer {
     @Override
     public void deserialize(IPerson person, JSONObject jsonObject) throws JSONException {
-        person.setId(jsonObject.getInt("id"));
+
         person.setFirstName(
                 !jsonObject.isNull("first_name") ? jsonObject.getString("first_name") : null
         );

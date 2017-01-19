@@ -30,9 +30,8 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
 
         Feedback feedback = RealmFactory.getSession().where(Feedback.class).equalTo("id", feedbackId).findFirst();
         if(feedback == null)
-            feedback = RealmFactory.getSession().createObject(Feedback.class);
+            feedback = RealmFactory.getSession().createObject(Feedback.class, feedbackId);
 
-        feedback.setId(jsonObject.getInt("id"));
         feedback.setRate(jsonObject.getInt("rate"));
         feedback.setReview(
                 !jsonObject.isNull("note") ? jsonObject.getString("note") : null
@@ -51,9 +50,8 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
             Member member = RealmFactory.getSession().where(Member.class).equalTo("id", memberId).findFirst();
 
             if(member == null)
-                member = RealmFactory.getSession().createObject(Member.class);
+                member = RealmFactory.getSession().createObject(Member.class, memberId);
 
-            member.setId(jsonMember.getInt("id"));
             member.setFullName(jsonMember.getString("first_name") + " " + jsonMember.getString("last_name"));
 
             feedback.setOwner(member);
