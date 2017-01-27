@@ -6,8 +6,10 @@ import org.openstack.android.summit.common.DTOs.VenueFloorDTO;
 import org.openstack.android.summit.common.DTOs.VenueRoomDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueFloorDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueRoomDataStore;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
@@ -19,34 +21,48 @@ import java.util.List;
  */
 public class VenueDetailInteractor extends BaseInteractor implements IVenueDetailInteractor {
 
-    IGenericDataStore genericDataStore;
+    private IVenueDataStore venueDataStore;
+    private IVenueRoomDataStore venueRoomDataStore;
+    private IVenueFloorDataStore venueFloorDataStore;
 
-    public VenueDetailInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+    public VenueDetailInteractor
+    (
+        IVenueDataStore venueDataStore,
+        IVenueRoomDataStore venueRoomDataStore,
+        IVenueFloorDataStore venueFloorDataStore,
+        IDTOAssembler dtoAssembler,
+        ISummitDataStore summitDataStore,
+        ISummitSelector summitSelector
+    )
+    {
         super(dtoAssembler, summitSelector, summitDataStore);
-        this.genericDataStore = genericDataStore;
+
+        this.venueDataStore      = venueDataStore;
+        this.venueRoomDataStore  = venueRoomDataStore;
+        this.venueFloorDataStore = venueFloorDataStore;
     }
 
     @Override
     public VenueDTO getVenue(int venueId) {
-        Venue venue = genericDataStore.getByIdLocal(venueId, Venue.class);
+        Venue venue = venueDataStore.getById(venueId);
         return venue != null ? dtoAssembler.createDTO(venue, VenueDTO.class):null;
     }
 
     @Override
     public VenueRoomDTO getRoom(int roomId) {
-        VenueRoom room = genericDataStore.getByIdLocal(roomId, VenueRoom.class);
+        VenueRoom room = venueRoomDataStore.getById(roomId);
         return (room != null) ? dtoAssembler.createDTO(room, VenueRoomDTO.class) : null;
     }
 
     @Override
     public VenueFloorDTO getFloor(int floorId) {
-        VenueFloor floor = genericDataStore.getByIdLocal(floorId, VenueFloor.class);
+        VenueFloor floor = venueFloorDataStore.getById(floorId);
         return ( floor != null ) ? dtoAssembler.createDTO(floor, VenueFloorDTO.class) : null;
     }
 
     @Override
     public List<VenueRoomDTO> getVenueRooms(int venueId) {
-        List<VenueRoom> venueRooms = genericDataStore.getAllLocal(VenueRoom.class);
+        List<VenueRoom> venueRooms = venueRoomDataStore.getAll();
         List<VenueRoom> filteredVenueRooms = new ArrayList<>();
         for (VenueRoom venueRoom: venueRooms) {
             if (venueRoom.getVenue().getId() == venueId) {
@@ -58,7 +74,7 @@ public class VenueDetailInteractor extends BaseInteractor implements IVenueDetai
 
     @Override
     public List<VenueFloorDTO> getVenueFloors(int venueId) {
-        Venue venue = genericDataStore.getByIdLocal(venueId, Venue.class);
+        Venue venue = venueDataStore.getById(venueId);
         return  createDTOList(venue.getFloors().sort("number"), VenueFloorDTO.class);
     }
 }

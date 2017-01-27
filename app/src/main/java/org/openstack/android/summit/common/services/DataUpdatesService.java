@@ -46,7 +46,7 @@ public class DataUpdatesService extends IntentService {
             return;
         }
         // if we are on data ingestion running , skip it this
-        if(SummitDataIngestionService.isRunning) return;
+        if(SummitDataIngestionService.isRunning()) return;
         // normal flow ...
         dataUpdatePoller.pollServer();
         RealmFactory.closeSession();

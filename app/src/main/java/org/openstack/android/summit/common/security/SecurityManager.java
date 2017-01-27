@@ -20,7 +20,7 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.IMemberDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 
@@ -164,7 +164,7 @@ public class SecurityManager implements ISecurityManager {
     @Override
     public void bindCurrentUser(){
         Log.d(Constants.LOG_TAG, "SecurityManager.bindCurrentUser");
-        IDataStoreOperationListener<Member> dataStoreOperationListener = new DataStoreOperationListener<Member>() {
+        IDataStoreOperationListener<Member> callback = new DataStoreOperationListener<Member>() {
             @Override
             public void onSucceedWithSingleData(Member member) {
                 Log.d(Constants.LOG_TAG, "SecurityManager.onSucceedWithSingleData");
@@ -187,7 +187,7 @@ public class SecurityManager implements ISecurityManager {
             }
         };
 
-        memberDataStore.getLoggedInMemberOrigin(dataStoreOperationListener);
+        memberDataStore.getLoggedInMember(callback);
     }
 
     private void removeAccount(Account account){
@@ -241,7 +241,7 @@ public class SecurityManager implements ISecurityManager {
 
             if(currentMemberId == 0) return null;
 
-            return memberDataStore.getByIdLocal(currentMemberId);
+            return memberDataStore.getById(currentMemberId);
         }
         catch(SecurityException ex1){
             Log.w(Constants.LOG_TAG, ex1.getMessage());

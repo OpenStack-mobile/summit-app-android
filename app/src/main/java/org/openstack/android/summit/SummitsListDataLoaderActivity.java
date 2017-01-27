@@ -94,7 +94,7 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
         showActivityIndicator();
         showErrorContainer(false);
 
-        if(SummitsListIngestionService.isRunning) return;
+        if(SummitsListIngestionService.isRunning()) return;
 
         Log.d(Constants.LOG_TAG, "SummitsListDataLoaderActivity.doInitialDataLoading: invoking service SummitsListIngestionService ");
         Intent intent = SummitsListIngestionService.newIntent(this);

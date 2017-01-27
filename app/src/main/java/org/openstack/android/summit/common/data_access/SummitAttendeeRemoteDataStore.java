@@ -7,7 +7,6 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitEventsApi;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.api.SummitSelector;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 

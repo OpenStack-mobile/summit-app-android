@@ -3,9 +3,9 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
@@ -65,4 +65,5 @@ public class MainModule {
     IDataLoadingPresenter providesDataLoadingPresenter(IDataLoadingInteractor dataLoadingInteractor, ISummitSelector summitSelector){
         return new SummitListDataLoadingPresenter(dataLoadingInteractor, null, summitSelector);
     }
+
 }

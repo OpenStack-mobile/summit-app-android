@@ -6,29 +6,42 @@ import android.support.v4.content.LocalBroadcastManager;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.SummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.strategies.DeleteRealmStrategy;
+import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
+import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
+import org.openstack.android.summit.common.data_access.repositories.strategies.SaveOrUpdateRealmStrategy;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.IEntity;
 import org.openstack.android.summit.common.entities.ISummitOwned;
 import org.openstack.android.summit.common.entities.Summit;
-
 import io.realm.RealmObject;
 
 /**
  * Created by Claudio Redi on 2/8/2016.
  */
 public class DataUpdateStrategy implements IDataUpdateStrategy {
-    protected IGenericDataStore genericDataStore;
-    protected ISummitSelector   summitSelector;
 
-    public DataUpdateStrategy(IGenericDataStore genericDataStore, ISummitSelector   summitSelector) {
-        this.genericDataStore = genericDataStore;
-        this.summitSelector   = summitSelector;
+    protected ISummitSelector summitSelector;
+
+    protected ISummitDataStore summitDataStore;
+
+    protected ISaveOrUpdateStrategy saveOrUpdateStrategy;
+
+    protected IDeleteStrategy deleteStrategy;
+
+    public DataUpdateStrategy(ISummitSelector summitSelector) {
+        this.summitSelector       = summitSelector;
+        this.saveOrUpdateStrategy = new SaveOrUpdateRealmStrategy();
+        this.deleteStrategy       = new DeleteRealmStrategy();
+        this.summitDataStore      = new SummitDataStore(this.saveOrUpdateStrategy, this.deleteStrategy);
+
     }
 
     protected void setSummit(RealmObject entity){
         // set Summit if the entity supports it ...
-        Summit summit = genericDataStore.getByIdLocal(summitSelector.getCurrentSummitId(), Summit.class);
+        Summit summit = this.summitDataStore.getById(this.summitSelector.getCurrentSummitId());
         if(summit == null) return;
         if(entity instanceof ISummitOwned){
             ((ISummitOwned) entity).setSummit(summit);
@@ -44,7 +57,7 @@ public class DataUpdateStrategy implements IDataUpdateStrategy {
                 case DataOperation.Update:
                     RealmObject entity = dataUpdate.getEntity();
                     setSummit(entity);
-                    genericDataStore.saveOrUpdate(entity, null, dataUpdate.getEntityType());
+                    this.saveOrUpdateStrategy.saveOrUpdate(entity, dataUpdate.getEntityType(), null);
                     String event  = dataUpdate.getOperation() == DataOperation.Insert ?
                             Constants.DATA_UPDATE_ADDED_ENTITY_EVENT :
                             Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT ;
@@ -56,7 +69,7 @@ public class DataUpdateStrategy implements IDataUpdateStrategy {
                 break;
                 case DataOperation.Delete:
                     int entityId = ((IEntity) dataUpdate.getEntity()).getId();
-                    genericDataStore.delete(entityId, null, dataUpdate.getEntityType());
+                    deleteStrategy.delete(entityId, dataUpdate.getEntityType());
                     intent = new Intent( Constants.DATA_UPDATE_DELETED_ENTITY_EVENT);
                     intent.putExtra(Constants.DATA_UPDATE_ENTITY_ID, dataUpdate.getEntityId());
                     intent.putExtra(Constants.DATA_UPDATE_ENTITY_CLASS, dataUpdate.getEntityClassName());

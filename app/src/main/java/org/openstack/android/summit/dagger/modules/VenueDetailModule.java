@@ -3,8 +3,10 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueFloorDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueRoomDataStore;
 import org.openstack.android.summit.modules.event_detail.user_interface.IVenueRoomDetailPresenter;
 import org.openstack.android.summit.modules.event_detail.user_interface.VenueRoomDetailPresenter;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
@@ -34,8 +36,21 @@ public class VenueDetailModule {
     }
 
     @Provides
-    IVenueDetailInteractor providesVenueDetailInteractor(IGenericDataStore genericDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new VenueDetailInteractor(genericDataStore, dtoAssembler, summitDataStore, summitSelector);
+    IVenueDetailInteractor providesVenueDetailInteractor(IVenueDataStore venueDataStore,
+                                                         IVenueRoomDataStore venueRoomDataStore,
+                                                         IVenueFloorDataStore venueFloorDataStore,
+                                                         IDTOAssembler dtoAssembler,
+                                                         ISummitDataStore summitDataStore,
+                                                         ISummitSelector summitSelector) {
+        return new VenueDetailInteractor
+                (
+                        venueDataStore,
+                        venueRoomDataStore,
+                        venueFloorDataStore,
+                        dtoAssembler,
+                        summitDataStore,
+                        summitSelector
+                );
     }
 
     @Provides

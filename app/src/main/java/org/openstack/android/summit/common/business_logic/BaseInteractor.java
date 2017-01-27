@@ -3,7 +3,7 @@ package org.openstack.android.summit.common.business_logic;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.entities.IEntity;
 import org.openstack.android.summit.common.entities.Summit;
 

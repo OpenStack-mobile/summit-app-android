@@ -36,7 +36,19 @@ public class SummitDataIngestionService extends IntentService {
     public static final String PENDING_RESULT = "pending_result";
     public static final int RESULT_CODE_OK    = 0xFF01;
     public static final int RESULT_CODE_ERROR = 0xFF02;
-    public static boolean isRunning           = false;
+    private static boolean isRunning          = false;
+
+    public static boolean isRunning(){
+        synchronized (SummitDataIngestionService.class){
+            return isRunning;
+        }
+    }
+
+    private static void setRunning(boolean state){
+        synchronized (SummitDataIngestionService.class){
+            isRunning = state;
+        }
+    }
 
     @Inject
     IReachability reachability;
@@ -79,10 +91,10 @@ public class SummitDataIngestionService extends IntentService {
 
         try {
 
-            isRunning = true;
+            setRunning(true);
 
             if (!reachability.isNetworkingAvailable(this)) {
-                isRunning = false;
+                setRunning(false);
                 reply.send(this, RESULT_CODE_ERROR, result);
                 return;
             }
@@ -114,13 +126,13 @@ public class SummitDataIngestionService extends IntentService {
 
         } catch (Exception ex) {
             try {
-                isRunning = false;
+                setRunning(false);
                 reply.send(this, RESULT_CODE_ERROR, result);
             } catch (PendingIntent.CanceledException ex2) {
                 Crashlytics.logException(ex2);
             }
         } finally {
-            isRunning = false;
+            setRunning(false);
             RealmFactory.closeSession();
         }
     }
@@ -128,6 +140,6 @@ public class SummitDataIngestionService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isRunning = false;
+        setRunning(false);
     }
 }

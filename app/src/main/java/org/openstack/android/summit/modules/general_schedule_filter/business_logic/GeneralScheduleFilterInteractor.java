@@ -5,11 +5,13 @@ import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
-import org.openstack.android.summit.common.data_access.IVenueDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IEventTypeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitTypeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITagDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITrackGroupDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
@@ -26,7 +28,9 @@ import io.realm.Sort;
  */
 public class GeneralScheduleFilterInteractor extends BaseInteractor implements IGeneralScheduleFilterInteractor {
 
-    private IGenericDataStore genericDataStore;
+    private ISummitTypeDataStore summitTypeDataStore;
+    private ITagDataStore        tagDataStore;
+    private IEventTypeDataStore  eventTypeDataStore;
     private ISummitEventDataStore summitEventDataStore;
     private IVenueDataStore venueDataStore;
     private ITrackGroupDataStore trackGroupDataStore;
@@ -35,23 +39,28 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
     (
         ISummitDataStore summitDataStore,
         ISummitEventDataStore summitEventDataStore,
-        IGenericDataStore genericDataStore,
         IVenueDataStore venueDataStore,
         ITrackGroupDataStore trackGroupDataStore,
+        ISummitTypeDataStore summitTypeDataStore,
+        IEventTypeDataStore eventTypeDataStore,
+        ITagDataStore tagDataStore,
         IDTOAssembler dtoAssembler,
         ISummitSelector summitSelector
     )
     {
         super(dtoAssembler, summitSelector, summitDataStore);
+
         this.venueDataStore       = venueDataStore;
-        this.genericDataStore     = genericDataStore;
         this.summitEventDataStore = summitEventDataStore;
+        this.summitTypeDataStore  = summitTypeDataStore;
+        this.eventTypeDataStore   = eventTypeDataStore;
+        this.tagDataStore         = tagDataStore;
         this.trackGroupDataStore  = trackGroupDataStore;
     }
 
     @Override
     public List<NamedDTO> getSummitTypes() {
-        List<SummitType> summitTypes = genericDataStore.getAllLocal(SummitType.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
+        List<SummitType> summitTypes = summitTypeDataStore.getAll(new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
         List<SummitType> results     =  new ArrayList<>();
         for(SummitType summitType: summitTypes){
             if ( summitEventDataStore.countBySummitType(summitType.getId()) > 0)
@@ -62,7 +71,7 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
 
     @Override
     public List<NamedDTO> getEventTypes() {
-        List<EventType> eventTypes = genericDataStore.getAllLocal(EventType.class, new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
+        List<EventType> eventTypes = eventTypeDataStore.getAll(new String[] { "name"}, new Sort[]{ Sort.ASCENDING });
         List<EventType> results    = new ArrayList<>();
         for(EventType eventType: eventTypes){
             if ( summitEventDataStore.countByEventType(eventType.getId()) > 0)
@@ -73,7 +82,7 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
 
     @Override
     public List<String> getLevels() {
-        return summitEventDataStore.getPresentationLevelsLocal();
+        return summitEventDataStore.getPresentationLevels();
     }
 
     @Override
@@ -95,7 +104,7 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
 
     @Override
     public List<String> getTags() {
-        List<Tag> tags = genericDataStore.getAllLocal(Tag.class);
+        List<Tag> tags = tagDataStore.getAll();
         List<String> dtos = new ArrayList<>();
         for (Tag tag: tags) {
             dtos.add(tag.getTag());

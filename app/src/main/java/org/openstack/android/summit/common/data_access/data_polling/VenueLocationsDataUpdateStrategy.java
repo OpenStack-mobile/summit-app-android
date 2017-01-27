@@ -7,7 +7,9 @@ import com.crashlytics.android.Crashlytics;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueFloorDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueRoomDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
@@ -22,8 +24,23 @@ import io.realm.Realm;
  */
 public class VenueLocationsDataUpdateStrategy extends DataUpdateStrategy {
 
-    public VenueLocationsDataUpdateStrategy(IGenericDataStore genericDataStore, ISummitSelector summitSelector) {
-        super(genericDataStore, summitSelector);
+    private IVenueDataStore venueDataStore;
+    private IVenueFloorDataStore venueFloorDataStore;
+    private IVenueRoomDataStore venueRoomDataStore;
+
+    public VenueLocationsDataUpdateStrategy
+    (
+        IVenueDataStore venueDataStore,
+        IVenueFloorDataStore venueFloorDataStore,
+        IVenueRoomDataStore venueRoomDataStore,
+        ISummitSelector summitSelector
+    )
+    {
+        super(summitSelector);
+
+        this.venueDataStore      = venueDataStore;
+        this.venueRoomDataStore  = venueRoomDataStore;
+        this.venueFloorDataStore = venueFloorDataStore;
     }
 
     @Override
@@ -52,8 +69,8 @@ public class VenueLocationsDataUpdateStrategy extends DataUpdateStrategy {
                             if (venueId == 0)
                                 throw new DataUpdateException("It wasn't possible to find venue_id on data update json");
 
-                            Venue managedVenue      = genericDataStore.getByIdLocal(venueId, Venue.class);
-                            VenueFloor managedFloor = genericDataStore.getByIdLocal(floorId, VenueFloor.class);
+                            Venue managedVenue      = venueDataStore.getById(venueId);
+                            VenueFloor managedFloor = venueFloorDataStore.getById(floorId);
 
                             if (managedVenue == null)
                                 throw new DataUpdateException(String.format("Venue with id %d not found", venueId));
@@ -84,21 +101,20 @@ public class VenueLocationsDataUpdateStrategy extends DataUpdateStrategy {
                 break;
             case DataOperation.Update:
                 if (className.equals("SummitVenueFloor")) {
-                    genericDataStore.saveOrUpdate((VenueFloor) dataUpdate.getEntity(), null, VenueFloor.class);
+                    venueFloorDataStore.saveOrUpdate((VenueFloor) dataUpdate.getEntity());
                 }
                 if (className.equals("SummitVenueRoom")) {
-                    genericDataStore.saveOrUpdate((VenueRoom) dataUpdate.getEntity(), null, VenueRoom.class);
+                    venueRoomDataStore.saveOrUpdate((VenueRoom) dataUpdate.getEntity());
                 }
                 break;
             case DataOperation.Delete:
                 if (className.equals("SummitVenueFloor")) {
-                    genericDataStore.delete(((VenueFloor) dataUpdate.getEntity()).getId(), null, VenueFloor.class);
+                    venueFloorDataStore.delete(((VenueFloor) dataUpdate.getEntity()).getId());
                 }
                 if (className.equals("SummitVenueRoom")) {
-                    genericDataStore.delete(((VenueRoom) dataUpdate.getEntity()).getId(), null, VenueRoom.class);
+                    venueRoomDataStore.delete(((VenueRoom) dataUpdate.getEntity()).getId());
                 }
-
-                break;
+             break;
         }
     }
 }

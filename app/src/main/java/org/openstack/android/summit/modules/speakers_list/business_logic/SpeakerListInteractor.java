@@ -4,8 +4,8 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class SpeakerListInteractor extends BaseInteractor implements ISpeakerLis
     public List<PersonListItemDTO> getSpeakers(int page, int objectsPerPage) {
         String searchTerm = null;
 
-        List<PresentationSpeaker> speakers = presentationSpeakerDataStore.getByFilterLocal
+        List<PresentationSpeaker> speakers = presentationSpeakerDataStore.getByFilter
         (
             summitSelector.getCurrentSummitId(),
             searchTerm,

@@ -5,9 +5,9 @@ import org.openstack.android.summit.common.DTOs.PushNotificationDetailDTO;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.entities.PushNotification;
+import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.entities.notifications.PushNotification;
 
 /**
  * Created by sebastian on 8/22/2016.
@@ -31,14 +31,14 @@ public class PushNotificationDetailInteractor
 
     @Override
     public PushNotificationDetailDTO getPushNotificationDetail(int pushNotificationId) {
-        PushNotification entity = dataStore.getByIdLocal(pushNotificationId, PushNotification.class);
+        PushNotification entity = dataStore.getById(pushNotificationId);
         if(entity == null) return null;
         return dtoAssembler.createDTO(entity, PushNotificationDetailDTO.class);
     }
 
     @Override
     public void deleteNotification(PushNotificationListItemDTO notification) {
-        dataStore.delete(notification.getId(), null, PushNotification.class);
+        dataStore.delete(notification.getId());
     }
 
 }

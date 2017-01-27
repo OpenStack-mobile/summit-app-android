@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.utils.RealmFactory;
@@ -73,7 +73,7 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
                 Log.e(Constants.LOG_TAG, errorMessage, e);
             } finally {
                 if (dataUpdate != null) {
-                    dataUpdateDataStore.saveOrUpdate(dataUpdate, null, DataUpdate.class);
+                    dataUpdateDataStore.saveOrUpdate(dataUpdate);
                 }
             }
         }

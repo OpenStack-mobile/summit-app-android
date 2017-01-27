@@ -8,10 +8,10 @@ import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
-import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.ITrackDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITrackDataStore;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
@@ -102,7 +102,7 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
 
     @Override
     public List<PersonListItemDTO> getSpeakersBySearchTerm(String searchTerm) {
-        List<PresentationSpeaker> speakers = presentationSpeakerDataStore.getByFilterLocal
+        List<PresentationSpeaker> speakers = presentationSpeakerDataStore.getByFilter
         (
             summitSelector.getCurrentSummitId(),
             searchTerm,

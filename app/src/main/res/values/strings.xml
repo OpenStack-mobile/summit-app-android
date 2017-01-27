@@ -97,4 +97,5 @@
     <string name="redeem_external_order_not_found_error">Eventbrite order number not found or does not exists!.</string>
     <string name="redeem_external_order_already_done_error">EventBrite Order already redeem!.</string>
     <string name="redeem_external_order_attendee_does_not_exists_error">Eventbrite attendee is not registered!.</string>
+    <string name="push_notification_default_title">OpenStack Notification</string>
 </resources>

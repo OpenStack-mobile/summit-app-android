@@ -8,7 +8,7 @@ import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 import org.openstack.android.summit.common.network.IReachability;

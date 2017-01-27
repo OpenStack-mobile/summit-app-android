@@ -8,9 +8,9 @@ import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.ScheduleableInteractor;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -47,7 +47,7 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
 
     @Override
     public EventDetailDTO getEventDetail(int eventId) {
-        SummitEvent summitEvent  = summitEventDataStore.getByIdLocal(eventId);
+        SummitEvent summitEvent  = summitEventDataStore.getById(eventId);
         return summitEvent != null ? dtoAssembler.createDTO(summitEvent, EventDetailDTO.class):null;
     }
 

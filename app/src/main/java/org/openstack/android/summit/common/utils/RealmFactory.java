@@ -52,7 +52,7 @@ final public class RealmFactory {
 
     public static void closeSession(){
         Realm realmSession = session.get();
-        if(!realmSession.isClosed()) {
+        if(realmSession != null && !realmSession.isClosed()) {
             Log.d(Constants.LOG_TAG, String.format("Closing Realm instance for thread %s", Thread.currentThread().getName()));
             realmSession.close();
         }
@@ -60,7 +60,7 @@ final public class RealmFactory {
     }
 
     /**
-     * Reference couting is provide by RealmCache ( internal class)
+     * Reference counting is provide by RealmCache ( internal class)
      *
      * @param callback
      * @param <T>

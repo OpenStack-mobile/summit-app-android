@@ -61,7 +61,7 @@ public class SummitDataLoadingActivity extends Activity {
         showActivityIndicator();
         showErrorContainer(false);
 
-        if(SummitDataIngestionService.isRunning) return;
+        if(SummitDataIngestionService.isRunning()) return;
 
         Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.doInitialDataLoading: invoking service SummitDataIngestionService ");
         Intent intent = SummitDataIngestionService.newIntent(this);

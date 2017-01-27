@@ -13,4 +13,12 @@ public interface IPushNotificationsManager {
 
     void unSubscribe();
 
+    void subscribeToTeam(int teamId);
+
+    void unsubscribeFromTeam(int teamId);
+
+    void subscribeToEvent(int eventId);
+
+    void unsubscribeFromEvent(int eventId);
+
 }
