@@ -3,13 +3,11 @@ package org.openstack.android.summit.common.business_logic;
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
-import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -57,7 +55,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     @Override
     public List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues) {
         return createDTOList(
-                summitEventDataStore.getByFilterLocal
+                summitEventDataStore.getByFilter
                         (
                                 startDate,
                                 endDate,
@@ -79,7 +77,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
         List<SummitEvent> events;
 
         while (startDate.isBefore(endDate)) {
-            events = summitEventDataStore.getByFilterLocal(
+            events = summitEventDataStore.getByFilter(
                     startDate.withTime(0, 0, 0, 0),
                     startDate.withTime(23, 59, 59, 999),
                     eventTypes,
@@ -100,7 +98,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
 
     @Override
     public boolean eventExist(int id) {
-        SummitEvent summitEvent = summitEventDataStore.getByIdLocal(id);
+        SummitEvent summitEvent = summitEventDataStore.getById(id);
         return summitEvent != null;
     }
 

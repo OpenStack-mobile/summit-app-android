@@ -1,7 +1,7 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
-import org.openstack.android.summit.common.entities.PushNotification;
+import org.openstack.android.summit.common.entities.notifications.PushNotification;
 
 /**
  * Created by sebastian on 8/20/2016.

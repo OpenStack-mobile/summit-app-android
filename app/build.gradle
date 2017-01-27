@@ -6,11 +6,18 @@ def generateFireBaseJsonConfiguration(file) {
     def templateFile = new File("google-services.json.template")
     def json         = new JsonSlurper().parseText(templateFile.text)
 
-    //populate properties
-    json.project_info.project_number = properties['FirebaseProjectInfoNumber']
-    json.project_info.firebase_url   = properties['FirebaseProjectInfoUrl']
-    json.project_info.project_id     = properties['FirebaseProjectInfoId']
-    json.project_info.storage_bucket = properties['FirebaseProjectInfoBucket']
+    // populate properties
+    json.project_info.project_number                            = properties['FirebaseProjectInfoNumber']
+    json.project_info.firebase_url                              = properties['FirebaseProjectInfoUrl']
+    json.project_info.project_id                                = properties['FirebaseProjectInfoId']
+    json.project_info.storage_bucket                            = properties['FirebaseProjectInfoBucket']
+    json.client[0].client_info.mobilesdk_app_id                 =  properties['FirebaseClientInfoMobileSDKAppId']
+    json.client[0].client_info.android_client_info.package_name = "org.openstack.android.summit"
+    json.client[0].api_key[0].current_key                       = properties['FirebaseClientApiKeyCurrent']
+    json.client[0].oauth_client[0].client_id                    = properties['FirebaseClientOAUTH2ClientClientId1']
+    json.client[0].oauth_client[0].client_type                  = 3
+    json.client[0].oauth_client[1].client_id                    = properties['FirebaseClientOAUTH2ClientClientId2']
+    json.client[0].oauth_client[1].client_type                  = 3
 
     def jsonFile = new File("app/google-services.json")
     jsonFile.write(JsonOutput.toJson(json))
@@ -109,13 +116,16 @@ android {
     }
     productFlavors {
         development {
+            generateFireBaseJsonConfiguration("../summit-app.debug.properties")
             ext.betaDistributionEmails = getPropertyFromFile("../summit-app.debug.properties", "BetaDistributionEmails")
             manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
         }
         production {
+            generateFireBaseJsonConfiguration("../summit-app.properties")
             manifestPlaceholders = expandManifest("production", "../summit-app.properties")
         }
         beta {
+            generateFireBaseJsonConfiguration("../summit-app.debug.properties")
             manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
         }
     }
@@ -148,21 +158,19 @@ android {
     }
 }
 
-// Assists in working with annotation processors for Android Studio.
-apply plugin: 'com.neenbedankt.android-apt'
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'joda-time:joda-time:2.9.4'
-    // Dagger 2 and Compiler
-    compile 'com.google.dagger:dagger:2.2'
-    apt "com.google.dagger:dagger-compiler:2.2"
-    // Needed for @Generated annotation (missing in Java <= 1.6; therefore, Android)
-    compile 'javax.annotation:jsr250-api:1.0'
-    // Google's OAuth library for OpenID Connect
+    compile 'com.google.code.gson:gson:2.7'
 
+    // Dagger 2 and Compiler
+    // https://github.com/google/dagger
+    compile 'com.google.dagger:dagger:2.8'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
+
+    // Google's OAuth library for OpenID Connect
     // See https://code.google.com/p/google-oauth-java-client/wiki/Setup
     compile('com.google.oauth-client:google-oauth-client:1.22.0') {
         exclude group: 'xpp3', module: 'xpp3'
@@ -173,9 +181,6 @@ dependencies {
     compile 'com.google.api-client:google-api-client-android:1.21.0'
     // Google's JSON parsing, could be replaced with Jackson
     compile 'com.google.api-client:google-api-client-gson:1.21.0'
-    // Easier HTTP requests, not necessarily needed
-    compile 'com.github.kevinsawicki:http-request:6.0'
-    compile 'com.alibaba:fastjson:1.2.+'
     compile 'org.modelmapper:modelmapper:0.7.5'
     compile('com.github.claudioredi:Ranger:da908aa') {
         exclude module: 'joda-time'
@@ -197,13 +202,11 @@ dependencies {
     // Tags
     compile 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
     // google maps
-    compile 'com.google.android.gms:play-services-maps:9.2.1'
-    // push notifications
-    compile 'com.parse.bolts:bolts-android:1.+'
-    compile 'com.parse:parse-android:1.+'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
     // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION: due oo many method references: (max is 65536)
+    // https://github.com/BoltsFramework/Bolts-Android
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.parse.bolts:bolts-applinks:1.+'
+    compile 'com.parse.bolts:bolts-applinks:1.4.0'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
     // material design spiner
     compile('com.weiwangcn.betterspinner:library-material:1.1.0') {
@@ -221,8 +224,8 @@ dependencies {
     testCompile 'org.powermock:powermock-classloading-xstream:1.6.5'
 
     androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support:support-annotations:23.1.1'
 
     if (file('libs/safe_storage.aar').exists()) {
@@ -242,8 +245,8 @@ dependencies {
     compile 'com.uphyca:stetho_realm:2.0.0'
     // retrofit (REST API)
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.okhttp3:okhttp:3.4.2'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.2'
+    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     // Espresso Dependencies
     androidTestCompile 'com.android.support.test:runner:0.5'
@@ -261,6 +264,11 @@ dependencies {
             force 'com.android.support:support-annotations:23.0.1'
         }
     }
+
+    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
 }
 
 apply plugin: 'realm-android'
+
+apply plugin: 'com.google.gms.google-services'

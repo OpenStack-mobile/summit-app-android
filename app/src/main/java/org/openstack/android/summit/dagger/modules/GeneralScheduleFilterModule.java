@@ -4,11 +4,13 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
-import org.openstack.android.summit.common.data_access.IVenueDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IEventTypeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitTypeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITagDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITrackGroupDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
 import org.openstack.android.summit.modules.general_schedule_filter.GeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.business_logic.GeneralScheduleFilterInteractor;
@@ -40,7 +42,9 @@ public class GeneralScheduleFilterModule {
     (
         ISummitDataStore summitDataStore,
         ISummitEventDataStore summitEventDataStore,
-        IGenericDataStore genericDataStore,
+        ISummitTypeDataStore summitTypeDataStore,
+        IEventTypeDataStore eventTypeDataStore,
+        ITagDataStore tagDataStore,
         ITrackGroupDataStore trackGroupDataStore,
         IVenueDataStore venueDataStore,
         IDTOAssembler dtoAssembler,
@@ -50,9 +54,11 @@ public class GeneralScheduleFilterModule {
         (
             summitDataStore,
             summitEventDataStore,
-            genericDataStore,
             venueDataStore,
             trackGroupDataStore,
+            summitTypeDataStore,
+            eventTypeDataStore,
+            tagDataStore,
             dtoAssembler,
             summitSelector
         );

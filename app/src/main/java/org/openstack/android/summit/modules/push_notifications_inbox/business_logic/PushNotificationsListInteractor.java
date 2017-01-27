@@ -9,11 +9,11 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.PushNotification;
-import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.notifications.IPushNotification;
+import org.openstack.android.summit.common.entities.notifications.PushNotification;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
 
@@ -43,13 +43,13 @@ public class PushNotificationsListInteractor extends BaseInteractor implements I
 
     @Override
     public List<PushNotificationListItemDTO> getNotifications(String term, Member member, int page, int objectsPerPage) {
-        List<PushNotification> notifications = pushNotificationDataStore.getByFilterLocal(term, member, page, objectsPerPage);
+        List<IPushNotification> notifications = pushNotificationDataStore.getByFilter(term, member, page, objectsPerPage);
         return createDTOList(notifications, PushNotificationListItemDTO.class);
     }
 
     @Override
     public void deleteNotification(PushNotificationListItemDTO notification) {
-        pushNotificationDataStore.delete(notification.getId(), null, PushNotification.class);
+        pushNotificationDataStore.delete(notification.getId());
     }
 
     @Override
@@ -58,7 +58,7 @@ public class PushNotificationsListInteractor extends BaseInteractor implements I
             RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                 @Override
                 public Void callback(Realm session) throws Exception {
-                    PushNotification entity = pushNotificationDataStore.getByIdLocal(notificationId, PushNotification.class);
+                    PushNotification entity = pushNotificationDataStore.getById(notificationId);
                     if (entity == null)
                         throw new InvalidParameterException("missing push notification!");
                     entity.setOpened(true);

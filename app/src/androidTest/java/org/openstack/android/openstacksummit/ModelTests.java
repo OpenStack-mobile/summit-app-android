@@ -3,27 +3,18 @@ package org.openstack.android.openstacksummit;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.widget.RelativeLayout;
-
-import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.openstack.android.summit.common.data_access.GenericDataStore;
-import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
-
-import java.io.File;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;

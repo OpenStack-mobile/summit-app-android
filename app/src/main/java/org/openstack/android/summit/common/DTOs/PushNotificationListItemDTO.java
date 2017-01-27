@@ -30,13 +30,6 @@ public class PushNotificationListItemDTO extends NamedDTO {
         this.opened = opened;
     }
 
-    private int id;
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
     private String subject;
     private String body;
     private boolean opened;

@@ -14,7 +14,7 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitApi;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitDeserializer;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.network.IReachability;
@@ -34,12 +34,24 @@ import retrofit2.Retrofit;
 
 public class SummitsListIngestionService extends IntentService {
 
-    public static final String PENDING_RESULT = "pending_result";
+    public static final String PENDING_RESULT                           = "pending_result";
     public static final int RESULT_CODE_OK                              = 0xFF03;
     public static final int RESULT_CODE_OK_INITIAL_LOADING              = 0xFF04;
     public static final int RESULT_CODE_OK_NEW_SUMMIT_AVAILABLE_LOADING = 0xFF05;
     public static final int RESULT_CODE_ERROR                           = 0xFF06;
-    public static boolean isRunning                                     = false;
+    private static boolean isRunning                                    = false;
+
+    public static boolean isRunning(){
+        synchronized (SummitsListIngestionService.class){
+            return isRunning;
+        }
+    }
+
+    private static void setRunning(boolean state){
+        synchronized (SummitsListIngestionService.class){
+            isRunning = state;
+        }
+    }
 
     @Inject
     IReachability reachability;
@@ -82,10 +94,10 @@ public class SummitsListIngestionService extends IntentService {
 
         try {
 
-            isRunning = true;
+            setRunning(true);
 
             if (!reachability.isNetworkingAvailable(this)) {
-                isRunning = false;
+                setRunning(false);
                 reply.send(this, RESULT_CODE_ERROR, result);
                 return;
             }
@@ -99,7 +111,7 @@ public class SummitsListIngestionService extends IntentService {
             if (!response.isSuccessful())
                 throw new Exception(String.format("SummitsListIngestionService: invalid http code %d", response.code()));
 
-            final String body = response.body().string();
+            final String body           = response.body().string();
             final JSONObject jsonObject = new JSONObject(body);
 
             int res = RealmFactory.transaction(new RealmFactory.IRealmCallback<Integer>() {
@@ -134,16 +146,15 @@ public class SummitsListIngestionService extends IntentService {
             });
             Log.d(Constants.LOG_TAG, "SummitsListIngestionService.onHandleIntent: summit data loaded !!!");
             reply.send(this, res, result);
-
         } catch (Exception ex) {
             try {
-                isRunning = false;
+                setRunning(false);
                 reply.send(this, RESULT_CODE_ERROR, result);
             } catch (PendingIntent.CanceledException ex2) {
                 Crashlytics.logException(ex2);
             }
         } finally {
-            isRunning = false;
+            setRunning(false);
             RealmFactory.closeSession();
         }
     }
@@ -151,7 +162,7 @@ public class SummitsListIngestionService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isRunning = false;
+        setRunning(false);
     }
 
 }

@@ -5,9 +5,9 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
@@ -15,8 +15,6 @@ import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
-
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -49,29 +47,20 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     }
 
     @Override
-    public void addEventToLoggedInMemberSchedule(int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
+    public void addEventToLoggedInMemberSchedule(final int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
 
         if (!securityManager.isLoggedInAndConfirmedAttendee()) {
             interactorAsyncOperationListener.onError(OpenStackSummitApplication.context.getResources().getString(R.string.no_logged_in_user));
             return;
         }
 
-        final Member loggedInMember   = securityManager.getCurrentMember();
-        // we do a copy in case that the activity died and the realm instances get closed
-        final SummitEvent summitEvent = summitEventDataStore.getByIdLocal(eventId);
-        final int summitId                = summitEvent.getSummit().getId();
-        final int memberId                = loggedInMember.getId();
-        final int speakerId               = loggedInMember.getSpeakerRole() != null ? loggedInMember.getSpeakerRole().getId() : 0;
-        final int attendeeId              = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getId() : 0;
-        final ArrayList<Integer> scheduleEventsIds = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getScheduleEventIds(): null;
-
+        final Member loggedInMember       = securityManager.getCurrentMember();
+        final SummitEvent summitEvent     = summitEventDataStore.getById(eventId);
 
         IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
             public void onSucceedWithoutData() {
-                //remove channel
-                pushNotificationsManager.subscribeMember(memberId, summitId, speakerId, attendeeId, scheduleEventsIds);
-                scheduleEventsIds.clear();
+                 pushNotificationsManager.subscribeToEvent(eventId);
                 interactorAsyncOperationListener.onSucceed();
             }
 
@@ -85,26 +74,20 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     }
 
     @Override
-    public void removeEventFromLoggedInMemberSchedule(int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
+    public void removeEventFromLoggedInMemberSchedule(final int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
         if (!securityManager.isLoggedInAndConfirmedAttendee()) {
             interactorAsyncOperationListener.onError(OpenStackSummitApplication.context.getResources().getString(R.string.no_logged_in_user));
             return;
         }
 
         final Member loggedInMember       = securityManager.getCurrentMember();
-        final SummitEvent summitEvent     = summitEventDataStore.getByIdLocal(eventId);
-        final int summitId                = summitEvent.getSummit().getId();
-        final int memberId                = loggedInMember.getId();
-        final int speakerId               = loggedInMember.getSpeakerRole() != null ? loggedInMember.getSpeakerRole().getId() : 0;
-        final int attendeeId              = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getId() : 0;
-        final ArrayList<Integer> scheduleEventsIds = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getScheduleEventIds(): null;
+        final SummitEvent summitEvent     = summitEventDataStore.getById(eventId);
 
         IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
             @Override
             public void onSucceedWithoutData() {
                 // remove channel
-                pushNotificationsManager.subscribeMember(memberId, summitId, speakerId, attendeeId, scheduleEventsIds);
-                scheduleEventsIds.clear();
+                pushNotificationsManager.unsubscribeFromEvent(eventId);
                 interactorAsyncOperationListener.onSucceed();
             }
 

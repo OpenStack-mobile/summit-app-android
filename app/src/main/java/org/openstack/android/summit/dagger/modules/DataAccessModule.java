@@ -2,34 +2,58 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.DataUpdateDataStore;
-import org.openstack.android.summit.common.data_access.GenericDataStore;
-import org.openstack.android.summit.common.data_access.IDataUpdateDataStore;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
-import org.openstack.android.summit.common.data_access.IMemberDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IImageDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationLinkDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationSlideDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationVideoDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.DataUpdateDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.EventPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.EventTypeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IDataUpdateDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IEventPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IEventTypeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.IPushNotificationDataStore;
-import org.openstack.android.summit.common.data_access.IPresentationSpeakerDataStore;
-import org.openstack.android.summit.common.data_access.ISummitAttendeeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
-import org.openstack.android.summit.common.data_access.ITrackDataStore;
-import org.openstack.android.summit.common.data_access.ITrackGroupDataStore;
-import org.openstack.android.summit.common.data_access.IVenueDataStore;
-import org.openstack.android.summit.common.data_access.MemberDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitTypeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITagDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITeamDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITeamPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITrackDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ITrackGroupDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueFloorDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IVenueRoomDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.ImageDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.MemberDataStore;
 import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.PushNotificationDataStore;
-import org.openstack.android.summit.common.data_access.PresentationSpeakerDataStore;
-import org.openstack.android.summit.common.data_access.SummitAttendeeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.PresentationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.PresentationLinkDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.PresentationSlideDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.PresentationVideoDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.PushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.PresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.SummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataStore;
-import org.openstack.android.summit.common.data_access.SummitDataStore;
-import org.openstack.android.summit.common.data_access.SummitEventDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.SummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.SummitEventDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventRemoteDataStore;
-import org.openstack.android.summit.common.data_access.TrackDataStore;
-import org.openstack.android.summit.common.data_access.TrackGroupDataStore;
-import org.openstack.android.summit.common.data_access.VenueDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.SummitTypeDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.TagDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.TeamDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.TeamPushNotificationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.TrackDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.TrackGroupDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.VenueDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.VenueFloorDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.VenueRoomDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdateProcessor;
@@ -58,7 +82,6 @@ import org.openstack.android.summit.common.data_access.deserialization.IPresenta
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationSlideDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationSpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationVideoDeserializer;
-import org.openstack.android.summit.common.data_access.deserialization.IPushNotificationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitEventDeserializer;
@@ -75,7 +98,6 @@ import org.openstack.android.summit.common.data_access.deserialization.Presentat
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSlideDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationVideoDeserializer;
-import org.openstack.android.summit.common.data_access.deserialization.PushNotificationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitEventDeserializer;
@@ -84,6 +106,10 @@ import org.openstack.android.summit.common.data_access.deserialization.TrackGrou
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
+import org.openstack.android.summit.common.data_access.repositories.strategies.DeleteRealmStrategy;
+import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
+import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
+import org.openstack.android.summit.common.data_access.repositories.strategies.SaveOrUpdateRealmStrategy;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -101,6 +127,12 @@ import retrofit2.Retrofit;
 @Module
 public class DataAccessModule {
 
+
+    @Provides
+    ISaveOrUpdateStrategy providesSaveOrUpdateStrategy(){ return new SaveOrUpdateRealmStrategy(); }
+
+    @Provides
+    IDeleteStrategy providesDeleteStrategy(){ return new DeleteRealmStrategy(); }
 
     @Provides
     IPersonDeserializer providesPersonDeserializer() {
@@ -171,12 +203,6 @@ public class DataAccessModule {
         return new PresentationSpeakerDeserializer(personDeserializer);
     }
 
-
-    @Provides
-    IPushNotificationDeserializer providesPushNotificationDeserializer() {
-        return new PushNotificationDeserializer();
-    }
-
     @Provides
     IVenueFloorDeserializer providesVenueFloorDeserializer() {
         return new VenueFloorDeserializer();
@@ -232,30 +258,29 @@ public class DataAccessModule {
                                        ITrackDeserializer trackDeserializer,
                                        IVenueRoomDeserializer venueRoomDeserializer,
                                        IVenueDeserializer venueDeserializer,
-                                       IVenueFloorDeserializer venueFloorDeserializer,
-                                       IPushNotificationDeserializer pushNotificationDeserializer
+                                       IVenueFloorDeserializer venueFloorDeserializer
                                        )
     {
         return new Deserializer(genericDeserializer,
-                feedbackDeserializer,
-                memberDeserializer,
-                presentationDeserializer,
-                presentationSpeakerDeserializer,
-                summitAttendeeDeserializer,
-                summitDeserializer,
-                summitEventDeserializer,
-                trackGroupDeserializer,
-                trackDeserializer,
-                venueRoomDeserializer,
-                venueDeserializer,
-                venueFloorDeserializer,
-                pushNotificationDeserializer
+                    feedbackDeserializer,
+                    memberDeserializer,
+                    presentationDeserializer,
+                    presentationSpeakerDeserializer,
+                    summitAttendeeDeserializer,
+                    summitDeserializer,
+                    summitEventDeserializer,
+                    trackGroupDeserializer,
+                    trackDeserializer,
+                    venueRoomDeserializer,
+                    venueDeserializer,
+                    venueFloorDeserializer
                 );
     }
 
     @Provides
-    ISummitDataStore providesSummitDataStore() {
-        return new SummitDataStore();
+    ISummitDataStore providesSummitDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                             IDeleteStrategy deleteStrategy) {
+        return new SummitDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
@@ -271,23 +296,21 @@ public class DataAccessModule {
     }
 
     @Provides
-    IGenericDataStore providesGenericDataStore() {
-        return new GenericDataStore();
+    ITrackGroupDataStore providesTrackGroupDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                     IDeleteStrategy deleteStrategy) {
+        return new TrackGroupDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
-    ITrackGroupDataStore providesTrackGroupDataStore() {
-        return new TrackGroupDataStore();
+    IMemberDataStore providesMemberDataStore(IMemberRemoteDataStore memberRemoteDataStore,ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                             IDeleteStrategy deleteStrategy) {
+        return new MemberDataStore(memberRemoteDataStore, saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
-    IMemberDataStore providesMemberDataStore(IMemberRemoteDataStore memberRemoteDataStore) {
-        return new MemberDataStore(memberRemoteDataStore);
-    }
-
-    @Provides
-    ISummitEventDataStore providesSummitEventDataStore(ISummitEventRemoteDataStore summitEventRemoteDataStore) {
-        return new SummitEventDataStore(summitEventRemoteDataStore);
+    ISummitEventDataStore providesSummitEventDataStore(ISummitEventRemoteDataStore summitEventRemoteDataStore, ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                       IDeleteStrategy deleteStrategy) {
+        return new SummitEventDataStore(summitEventRemoteDataStore, saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
@@ -308,32 +331,45 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitAttendeeDataStore providesSummitAttendeeDataStore(ISummitAttendeeRemoteDataStore summitAttendeeRemoteDataStore) {
-        return new SummitAttendeeDataStore(summitAttendeeRemoteDataStore);
+    ISummitAttendeeDataStore providesSummitAttendeeDataStore(ISummitAttendeeRemoteDataStore summitAttendeeRemoteDataStore, ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                             IDeleteStrategy deleteStrategy) {
+        return new SummitAttendeeDataStore(summitAttendeeRemoteDataStore, saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
-    IPresentationSpeakerDataStore providesPresentationSpeakerDataStore() {
-        return new PresentationSpeakerDataStore();
+    IPresentationSpeakerDataStore providesPresentationSpeakerDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                                       IDeleteStrategy deleteStrategy) {
+        return new PresentationSpeakerDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
-    IPushNotificationDataStore providesNotificationDataStore() {
-        return new PushNotificationDataStore();
+    IPushNotificationDataStore providesNotificationDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                             IDeleteStrategy deleteStrategy) {
+        return new PushNotificationDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
-    IDataUpdateDataStore providesDataUpdateDataStore() {
-        return new DataUpdateDataStore();
+    IDataUpdateDataStore providesDataUpdateDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                     IDeleteStrategy deleteStrategy) {
+        return new DataUpdateDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
-    IVenueDataStore providesVenueDataStore() {
-        return new VenueDataStore();
+    IVenueDataStore providesVenueDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                           IDeleteStrategy deleteStrategy) {
+        return new VenueDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
-    ITrackDataStore providesTrackDataStore(){ return new TrackDataStore(); }
+    ITrackDataStore providesTrackDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                           IDeleteStrategy deleteStrategy)
+    { return new TrackDataStore(saveOrUpdateStrategy, deleteStrategy); }
+
+    @Provides
+    IImageDataStore providesImageDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                           IDeleteStrategy deleteStrategy)
+    { return new ImageDataStore(saveOrUpdateStrategy, deleteStrategy); }
+
 
     @Provides
     IDataUpdateProcessor providesDataUpdateProcessor(IDeserializer deserializer, IDataUpdateStrategyFactory dataUpdateStrategyFactory, IDataUpdateDataStore dataUpdateDataStore) {
@@ -341,15 +377,40 @@ public class DataAccessModule {
     }
 
     @Provides
-    IDataUpdateStrategyFactory providesDataUpdateStrategyFactory(IGenericDataStore genericDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, ITrackGroupDataStore trackGroupDataStore, IVenueDataStore venueDataStore, ISecurityManager securityManager, ISummitSelector summitSelector) {
+    IDataUpdateStrategyFactory providesDataUpdateStrategyFactory
+    (
+            ISaveOrUpdateStrategy saveOrUpdateStrategy,
+            IDeleteStrategy deleteStrategy,
+            ISummitAttendeeDataStore summitAttendeeDataStore,
+            ISummitDataStore summitDataStore,
+            ITrackGroupDataStore trackGroupDataStore,
+            IVenueDataStore venueDataStore,
+            IVenueRoomDataStore venueRoomDataStore,
+            IVenueFloorDataStore venueFloorDataStore,
+            IImageDataStore imageDataStore,
+            IPresentationDataStore presentationDataStore,
+            IPresentationVideoDataStore presentationVideoDataStore,
+            IPresentationSlideDataStore presentationSlideDataStore,
+            IPresentationLinkDataStore presentationLinkDataStore,
+            ISecurityManager securityManager,
+            ISummitSelector summitSelector
+    )
+    {
         return new DataUpdateStrategyFactory(
-                new DataUpdateStrategy(genericDataStore, summitSelector),
-                new MyScheduleDataUpdateStrategy(genericDataStore, summitAttendeeDataStore, securityManager, summitSelector),
-                new SummitDataUpdateStrategy(genericDataStore, summitDataStore, summitSelector),
-                new TrackGroupDataUpdateStrategy(genericDataStore, trackGroupDataStore, summitSelector),
-                new SummitVenueImageDataUpdateStrategy(genericDataStore, venueDataStore, summitSelector),
-                new PresentationMaterialDataUpdateStrategy(genericDataStore, summitSelector),
-                new VenueLocationsDataUpdateStrategy(genericDataStore, summitSelector)
+                new DataUpdateStrategy(summitSelector),
+                new MyScheduleDataUpdateStrategy(summitAttendeeDataStore, securityManager, summitSelector),
+                new SummitDataUpdateStrategy(summitDataStore, summitSelector),
+                new TrackGroupDataUpdateStrategy(trackGroupDataStore, summitSelector),
+                new SummitVenueImageDataUpdateStrategy(imageDataStore, venueDataStore, summitSelector),
+                new PresentationMaterialDataUpdateStrategy
+                        (
+                                presentationDataStore,
+                                presentationSlideDataStore,
+                                presentationVideoDataStore,
+                                presentationLinkDataStore,
+                                summitSelector
+                        ),
+                new VenueLocationsDataUpdateStrategy(venueDataStore, venueFloorDataStore, venueRoomDataStore, summitSelector)
         );
     }
 
@@ -384,4 +445,108 @@ public class DataAccessModule {
     IReachability providesReachability() {
         return new Reachability();
     }
+
+    @Provides
+    ITeamDataStore providesTeamDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                         IDeleteStrategy deleteStrategy)
+    {
+        return new TeamDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    IVenueFloorDataStore providesVenueFloorDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                     IDeleteStrategy deleteStrategy)
+    {
+        return new VenueFloorDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    IVenueRoomDataStore providesVenueRoomDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                   IDeleteStrategy deleteStrategy)
+    {
+        return new VenueRoomDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    ISummitTypeDataStore providesSummitTypeDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                     IDeleteStrategy deleteStrategy)
+    {
+        return new SummitTypeDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    IEventTypeDataStore providesEventTypeDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                   IDeleteStrategy deleteStrategy)
+    {
+        return new EventTypeDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    ITagDataStore providesTagDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                       IDeleteStrategy deleteStrategy)
+    {
+        return new TagDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    ITeamPushNotificationDataStore providesTeamPushNotificationDataStore
+    (
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    )
+    {
+        return new TeamPushNotificationDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    IEventPushNotificationDataStore providesEventPushNotificationDataStore
+    (
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    )
+    {
+        return new EventPushNotificationDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    IPresentationDataStore providesPresentationDataStore
+    (
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    )
+    {
+        return new PresentationDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+
+    @Provides
+    IPresentationLinkDataStore providesPresentationLinkDataStore
+    (
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    )
+    {
+        return new PresentationLinkDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    IPresentationVideoDataStore providesPresentationVideoDataStore
+    (
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    )
+    {
+        return new PresentationVideoDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    IPresentationSlideDataStore providesPresentationSlideDataStore
+    (
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    )
+    {
+        return new PresentationSlideDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
 }

@@ -1,4 +1,5 @@
 package org.openstack.android.summit.common.data_access.data_polling;
+
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -6,7 +7,10 @@ import com.crashlytics.android.Crashlytics;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationLinkDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationSlideDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IPresentationVideoDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.PresentationLink;
@@ -22,8 +26,25 @@ import io.realm.Realm;
  */
 public class PresentationMaterialDataUpdateStrategy extends DataUpdateStrategy  {
 
-    public PresentationMaterialDataUpdateStrategy(IGenericDataStore genericDataStore, ISummitSelector summitSelector) {
-        super(genericDataStore, summitSelector);
+    private IPresentationDataStore presentationDataStore;
+    private IPresentationSlideDataStore presentationSlideDataStore;
+    private IPresentationVideoDataStore presentationVideoDataStore;
+    private IPresentationLinkDataStore presentationLinkDataStore;
+
+    public PresentationMaterialDataUpdateStrategy
+    (
+        IPresentationDataStore presentationDataStore,
+        IPresentationSlideDataStore presentationSlideDataStore,
+        IPresentationVideoDataStore presentationVideoDataStore,
+        IPresentationLinkDataStore presentationLinkDataStore,
+        ISummitSelector summitSelector
+    ) {
+        super(summitSelector);
+
+        this.presentationDataStore      = presentationDataStore;
+        this.presentationSlideDataStore = presentationSlideDataStore;
+        this.presentationVideoDataStore = presentationVideoDataStore;
+        this.presentationLinkDataStore  = presentationLinkDataStore;
     }
 
     @Override
@@ -43,7 +64,7 @@ public class PresentationMaterialDataUpdateStrategy extends DataUpdateStrategy  
                     RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
                         @Override
                         public Void callback(Realm session) throws Exception {
-                            Presentation managedPresentation = genericDataStore.getByIdLocal(presentation_id, Presentation.class);
+                            Presentation managedPresentation = presentationDataStore.getById(presentation_id);
                             if (managedPresentation == null)
                                 throw new DataUpdateException(String.format("Presentation with id %d not found", presentation_id));
 
@@ -78,15 +99,15 @@ public class PresentationMaterialDataUpdateStrategy extends DataUpdateStrategy  
                     if (entityJSONUpdate == null) return;
 
                     if (className.equals("PresentationSlide")) {
-                        genericDataStore.saveOrUpdate((PresentationSlide) dataUpdate.getEntity(), null, PresentationSlide.class);
+                        presentationSlideDataStore.saveOrUpdate((PresentationSlide) dataUpdate.getEntity());
                     }
                     if (className.equals("PresentationVideo")) {
                         PresentationVideo video = (PresentationVideo) dataUpdate.getEntity();
                         video.setYouTubeId(entityJSONUpdate.getString("youtube_id"));
-                        genericDataStore.saveOrUpdate(video, null, PresentationVideo.class);
+                        presentationVideoDataStore.saveOrUpdate(video);
                     }
                     if (className.equals("PresentationLink")) {
-                        genericDataStore.saveOrUpdate((PresentationLink) dataUpdate.getEntity(), null, PresentationLink.class);
+                        presentationLinkDataStore.saveOrUpdate((PresentationLink) dataUpdate.getEntity());
                     }
                 }
                 catch (Exception ex){
@@ -96,13 +117,13 @@ public class PresentationMaterialDataUpdateStrategy extends DataUpdateStrategy  
                 break;
             case DataOperation.Delete:
                 if(className.equals("PresentationSlide")){
-                    genericDataStore.delete(((PresentationSlide)dataUpdate.getEntity()).getId(), null, PresentationSlide.class);
+                    presentationSlideDataStore.delete(((PresentationSlide)dataUpdate.getEntity()).getId());
                 }
                 if(className.equals("PresentationVideo")){
-                    genericDataStore.delete(((PresentationVideo)dataUpdate.getEntity()).getId(), null, PresentationVideo.class);
+                    presentationVideoDataStore.delete(((PresentationVideo)dataUpdate.getEntity()).getId());
                 }
                 if(className.equals("PresentationLink")){
-                    genericDataStore.delete(((PresentationLink)dataUpdate.getEntity()).getId(), null, PresentationLink.class);
+                    presentationLinkDataStore.delete(((PresentationLink)dataUpdate.getEntity()).getId());
                 }
                 break;
         }

@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitEventsApi;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.api.SummitSelector;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -34,7 +33,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
     private IDeserializer    deserializer;
     private Retrofit         restClient;
     private ISummitEventsApi summitEventsApi;
-    private ISummitSelector summitSelector;
+    private ISummitSelector  summitSelector;
 
     public SummitEventRemoteDataStore(IDeserializer deserializer,
                                       @Named("ServiceProfile") Retrofit restClient,

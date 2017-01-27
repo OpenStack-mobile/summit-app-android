@@ -8,8 +8,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
-import com.parse.Parse;
-import com.parse.ParseInstallation;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -51,8 +49,6 @@ public class OpenStackSummitApplication extends Application {
 
         Fresco.initialize(context);
 
-        Parse.initialize(this);
-        ParseInstallation.getCurrentInstallation().saveInBackground();
         if(BuildConfig.DEBUG) {
             // enable Stetho (http://facebook.github.io/stetho) and realm plugin
             // chrome://inspect/#devices

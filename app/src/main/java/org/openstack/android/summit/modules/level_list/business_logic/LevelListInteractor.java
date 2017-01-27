@@ -3,8 +3,8 @@ package org.openstack.android.summit.modules.level_list.business_logic;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.ISummitEventDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -22,6 +22,6 @@ public class LevelListInteractor extends BaseInteractor implements ILevelListInt
 
     @Override
     public List<String> getLevels() {
-        return summitEventDataStore.getPresentationLevelsLocal();
+        return summitEventDataStore.getPresentationLevels();
     }
 }

@@ -3,9 +3,9 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.IGenericDataStore;
-import org.openstack.android.summit.common.data_access.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.feedback_edit.FeedbackEditWireframe;
@@ -35,8 +35,8 @@ public class FeedbackEditModule {
     }
 
     @Provides
-    IFeedbackEditInteractor providesFeedbackEditInteractor(IMemberDataStore memberDataStore, IGenericDataStore genericDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new FeedbackEditInteractor(memberDataStore, genericDataStore, securityManager, new Reachability(), dtoAssembler, summitDataStore, summitSelector);
+    IFeedbackEditInteractor providesFeedbackEditInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new FeedbackEditInteractor(memberDataStore, summitEventDataStore, securityManager, new Reachability(), dtoAssembler, summitDataStore, summitSelector);
     }
 
     @Provides

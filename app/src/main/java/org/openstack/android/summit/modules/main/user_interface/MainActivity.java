@@ -236,6 +236,12 @@ public class MainActivity
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(Constants.LOG_TAG, "MainActivity.onCreate");
         super.onCreate(savedInstanceState);
@@ -262,25 +268,24 @@ public class MainActivity
         ActionBarSetup();
         NavigationMenuSetup(savedInstanceState);
         if (savedInstanceState == null) {
+            // first time
             Log.d(Constants.LOG_TAG, "MainActivity.onCreate - savedInstanceState == null");
             presenter.shouldShowMainView();
-        } else {
-            onLoginProcess = savedInstanceState.getBoolean(Constants.ON_LOGGING_PROCESS, false);
         }
 
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
         if (onLoginProcess) {
-            Log.d(Constants.LOG_TAG, "MainActivity.onCreate - its on logging process ...");
+            Log.d(Constants.LOG_TAG, "MainActivity.onStart - its on logging process ...");
             cancelLoginProcess();
             showActivityIndicator();
             return;
         }
         securityManager.init();
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
+        Log.d(Constants.LOG_TAG, "MainActivity.onStart - its on regular process ...");
     }
 
     @Override
@@ -295,6 +300,25 @@ public class MainActivity
         } catch (Exception ex) {
             Crashlytics.logException(ex);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
+        Log.d(Constants.LOG_TAG, "MainActivity.onSaveInstanceState");
+        outState.putBoolean(Constants.ON_LOGGING_PROCESS, onLoginProcess);
+        outState.putBoolean(Constants.ON_DATA_LOADING_PROCESS, onDataLoading);
+        outState.putBoolean(Constants.LOADED_SUMMITS_LIST, loadedSummitList);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(Constants.LOG_TAG, "MainActivity.onRestoreInstanceState");
+        onLoginProcess   = savedInstanceState.getBoolean(Constants.ON_LOGGING_PROCESS, false);
+        onDataLoading    = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
+        loadedSummitList = savedInstanceState.getBoolean(Constants.LOADED_SUMMITS_LIST, false);
     }
 
     @Override
@@ -520,16 +544,6 @@ public class MainActivity
             Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
             Crashlytics.logException(ex);
         }
-    }
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        presenter.onSaveInstanceState(outState);
-        Log.d(Constants.LOG_TAG, "MainActivity.onSaveInstanceState");
-        if (onLoginProcess)
-            outState.putBoolean(Constants.ON_LOGGING_PROCESS, onLoginProcess);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

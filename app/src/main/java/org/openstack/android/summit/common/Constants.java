@@ -44,4 +44,6 @@ public class Constants {
     public static final String KEY_DATA_UPDATE_LAST_EVENT_ID          = "KEY_DATA_UPDATE_LAST_EVENT_ID";
     public static final String EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT = "EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT";
     public static final String CURRENT_SUMMIT_ID                      = "CURRENT_SESSION_ID";
+    static public final String ON_DATA_LOADING_PROCESS                = "on-data-loading-process";
+    static public final String LOADED_SUMMITS_LIST                    = "loaded-summits-list";
 }
