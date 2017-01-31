@@ -12,8 +12,20 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
     IDataUpdateStrategy venueImageDataUpdateStrategy;
     IDataUpdateStrategy presentationMaterialDataUpdateStrategy;
     IDataUpdateStrategy venueLocationsDataUpdateStrategy;
+    IDataUpdateStrategy summitGroupEventDataUpdateStrategy;
 
-    public DataUpdateStrategyFactory(IDataUpdateStrategy genericDataUpdateProcessStrategy, IDataUpdateStrategy myScheduleDataUpdateStrategy, IDataUpdateStrategy summitDataUpdateStrategy, IDataUpdateStrategy trackGroupDataUpdateStrategy, IDataUpdateStrategy venueImageDataUpdateStrategy, IDataUpdateStrategy presentationMaterialDataUpdateStrategy, IDataUpdateStrategy venueLocationsDataUpdateStrategy) {
+    public DataUpdateStrategyFactory
+    (
+        IDataUpdateStrategy genericDataUpdateProcessStrategy,
+        IDataUpdateStrategy myScheduleDataUpdateStrategy,
+        IDataUpdateStrategy summitDataUpdateStrategy,
+        IDataUpdateStrategy trackGroupDataUpdateStrategy,
+        IDataUpdateStrategy venueImageDataUpdateStrategy,
+        IDataUpdateStrategy presentationMaterialDataUpdateStrategy,
+        IDataUpdateStrategy venueLocationsDataUpdateStrategy,
+        IDataUpdateStrategy summitGroupEventDataUpdateStrategy
+    )
+    {
         this.genericDataUpdateProcessStrategy       = genericDataUpdateProcessStrategy;
         this.myScheduleDataUpdateStrategy           = myScheduleDataUpdateStrategy;
         this.summitDataUpdateStrategy               = summitDataUpdateStrategy;
@@ -21,6 +33,7 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
         this.venueImageDataUpdateStrategy           = venueImageDataUpdateStrategy;
         this.presentationMaterialDataUpdateStrategy = presentationMaterialDataUpdateStrategy;
         this.venueLocationsDataUpdateStrategy       = venueLocationsDataUpdateStrategy;
+        this.summitGroupEventDataUpdateStrategy     = summitGroupEventDataUpdateStrategy;
     }
 
     @Override
@@ -45,6 +58,9 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
             case "PresentationLink":
             case "PresentationSlide":
                 dataUpdateProcessStrategy = presentationMaterialDataUpdateStrategy;
+                break;
+            case "SummitGroupEvent":
+                dataUpdateProcessStrategy = summitGroupEventDataUpdateStrategy;
                 break;
             case "SummitVenueFloor":
             case "SummitVenueRoom":

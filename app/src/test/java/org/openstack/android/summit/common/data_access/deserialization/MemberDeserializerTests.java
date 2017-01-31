@@ -30,13 +30,14 @@ public class MemberDeserializerTests {
         when(presentationSpeakerDeserializer.deserialize(eq(speakerJsonString))).thenReturn(presentationSpeaker);
 
         SummitAttendeeDeserializer summitAttendeeDeserializer = mock(SummitAttendeeDeserializer.class);
+        SummitEventDeserializer SummitEventDeserializer = mock(SummitEventDeserializer.class);
         PersonDeserializer personDeserializer = mock(PersonDeserializer.class);
         FeedbackDeserializer feedbackDeserializer = mock(FeedbackDeserializer.class);
 
         SummitAttendee summitAttendee = new SummitAttendee();
         when(summitAttendeeDeserializer.deserialize(eq(jsonString))).thenReturn(summitAttendee);
 
-        IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer,presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
+        IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer,presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, SummitEventDeserializer);
 
         // Act
         Member member = memberDeserializer.deserialize(jsonString);
@@ -56,10 +57,11 @@ public class MemberDeserializerTests {
         SummitAttendeeDeserializer summitAttendeeDeserializer = mock(SummitAttendeeDeserializer.class);
         PersonDeserializer personDeserializer = mock(PersonDeserializer.class);
         FeedbackDeserializer feedbackDeserializer = mock(FeedbackDeserializer.class);
+        SummitEventDeserializer SummitEventDeserializer = mock(SummitEventDeserializer.class);
         SummitAttendee summitAttendee = new SummitAttendee();
         when(summitAttendeeDeserializer.deserialize(eq(jsonString))).thenReturn(summitAttendee);
 
-        IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
+        IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, SummitEventDeserializer);
 
         // Act
         Member member = memberDeserializer.deserialize(jsonString);

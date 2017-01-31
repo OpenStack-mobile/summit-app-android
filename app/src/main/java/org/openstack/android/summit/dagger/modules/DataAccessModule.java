@@ -2,6 +2,9 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
+import org.openstack.android.summit.common.data_access.data_polling.SummitGroupEventDataUpdateStrategy;
+import org.openstack.android.summit.common.data_access.deserialization.SummitGroupEventDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.IGroupEventDeserializer;
 import org.openstack.android.summit.common.data_access.repositories.IImageDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationLinkDataStore;
@@ -140,8 +143,13 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitEventDeserializer providesSummitEventDeserializer(IGenericDeserializer genericDeserializer, IPresentationDeserializer presentationDeserializer) {
-        return new SummitEventDeserializer(genericDeserializer, presentationDeserializer);
+    IGroupEventDeserializer providesGroupEventDeserializer() {
+        return new SummitGroupEventDeserializer();
+    }
+
+    @Provides
+    ISummitEventDeserializer providesSummitEventDeserializer(IGenericDeserializer genericDeserializer, IPresentationDeserializer presentationDeserializer, IGroupEventDeserializer groupEventDeserializer) {
+        return new SummitEventDeserializer(genericDeserializer, presentationDeserializer, groupEventDeserializer);
     }
 
     @Provides
@@ -229,10 +237,18 @@ public class DataAccessModule {
         IPersonDeserializer personDeserializer,
         IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
         ISummitAttendeeDeserializer summitAttendeeDeserializer,
-        IFeedbackDeserializer feedbackDeserializer
+        IFeedbackDeserializer feedbackDeserializer,
+        ISummitEventDeserializer summitEventDeserializer
     )
     {
-        return new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
+        return new MemberDeserializer
+        (
+            personDeserializer,
+            presentationSpeakerDeserializer,
+            summitAttendeeDeserializer,
+            feedbackDeserializer,
+            summitEventDeserializer
+        );
     }
 
     @Provides
@@ -258,23 +274,27 @@ public class DataAccessModule {
                                        ITrackDeserializer trackDeserializer,
                                        IVenueRoomDeserializer venueRoomDeserializer,
                                        IVenueDeserializer venueDeserializer,
-                                       IVenueFloorDeserializer venueFloorDeserializer
+                                       IVenueFloorDeserializer venueFloorDeserializer,
+                                       IGroupEventDeserializer groupEventDeserializer
                                        )
     {
-        return new Deserializer(genericDeserializer,
-                    feedbackDeserializer,
-                    memberDeserializer,
-                    presentationDeserializer,
-                    presentationSpeakerDeserializer,
-                    summitAttendeeDeserializer,
-                    summitDeserializer,
-                    summitEventDeserializer,
-                    trackGroupDeserializer,
-                    trackDeserializer,
-                    venueRoomDeserializer,
-                    venueDeserializer,
-                    venueFloorDeserializer
-                );
+        return new Deserializer
+        (
+            genericDeserializer,
+            feedbackDeserializer,
+            memberDeserializer,
+            presentationDeserializer,
+            presentationSpeakerDeserializer,
+            summitAttendeeDeserializer,
+            summitDeserializer,
+            summitEventDeserializer,
+            trackGroupDeserializer,
+            trackDeserializer,
+            venueRoomDeserializer,
+            venueDeserializer,
+            venueFloorDeserializer,
+            groupEventDeserializer
+        );
     }
 
     @Provides
@@ -308,9 +328,15 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitEventDataStore providesSummitEventDataStore(ISummitEventRemoteDataStore summitEventRemoteDataStore, ISaveOrUpdateStrategy saveOrUpdateStrategy,
-                                                       IDeleteStrategy deleteStrategy) {
-        return new SummitEventDataStore(summitEventRemoteDataStore, saveOrUpdateStrategy, deleteStrategy);
+    ISummitEventDataStore providesSummitEventDataStore
+    (
+        ISecurityManager securityManager,
+        ISummitEventRemoteDataStore summitEventRemoteDataStore,
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    )
+    {
+        return new SummitEventDataStore(securityManager, summitEventRemoteDataStore, saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
@@ -403,14 +429,15 @@ public class DataAccessModule {
                 new TrackGroupDataUpdateStrategy(trackGroupDataStore, summitSelector),
                 new SummitVenueImageDataUpdateStrategy(imageDataStore, venueDataStore, summitSelector),
                 new PresentationMaterialDataUpdateStrategy
-                        (
-                                presentationDataStore,
-                                presentationSlideDataStore,
-                                presentationVideoDataStore,
-                                presentationLinkDataStore,
-                                summitSelector
-                        ),
-                new VenueLocationsDataUpdateStrategy(venueDataStore, venueFloorDataStore, venueRoomDataStore, summitSelector)
+                (
+                    presentationDataStore,
+                    presentationSlideDataStore,
+                    presentationVideoDataStore,
+                    presentationLinkDataStore,
+                    summitSelector
+                ),
+                new VenueLocationsDataUpdateStrategy(venueDataStore, venueFloorDataStore, venueRoomDataStore, summitSelector),
+                new SummitGroupEventDataUpdateStrategy(securityManager, summitSelector)
         );
     }
 

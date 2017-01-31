@@ -18,10 +18,11 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
+import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
+import org.openstack.android.summit.common.data_access.repositories.impl.MemberDataStore;
 import org.openstack.android.summit.common.entities.Member;
 
 import javax.inject.Inject;
@@ -39,16 +40,22 @@ public class SecurityManager implements ISecurityManager {
     }
 
     private IMemberDataStore memberDataStore;
-    private ISession         session;
+    private IPrincipalIdentity identity;
     private ITokenManager    tokenManager;
 
     // internal state
     private SecurityManagerState state  = SecurityManagerState.IDLE;
 
     @Inject
-    public SecurityManager(ITokenManager tokenManager, final IMemberDataStore memberDataStore, final ISession session) {
+    public SecurityManager
+    (
+        ITokenManager tokenManager,
+        IMemberDataStore memberDataStore,
+        IPrincipalIdentity identity
+    )
+    {
         this.memberDataStore = memberDataStore;
-        this.session         = session;
+        this.identity        = identity;
         this.tokenManager    = tokenManager;
     }
 
@@ -77,7 +84,7 @@ public class SecurityManager implements ISecurityManager {
 
                     final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
                     final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
-                    int currentMemberId                 = session.getInt(Constants.CURRENT_MEMBER_ID);
+                    int currentMemberId                 = identity.getCurrentMemberId();
                     Account[] accounts                  = accountManager.getAccountsByType(accountType);
 
                     if (accounts.length > 0) {
@@ -170,7 +177,7 @@ public class SecurityManager implements ISecurityManager {
                 Log.d(Constants.LOG_TAG, "SecurityManager.onSucceedWithSingleData");
 
 
-                session.setInt(Constants.CURRENT_MEMBER_ID, member.getId());
+                identity.setCurrentMemberId(member.getId());
 
                 Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
                 LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
@@ -212,7 +219,7 @@ public class SecurityManager implements ISecurityManager {
                 removeAccount(availableAccounts[0]);
             }
 
-            session.setInt(Constants.CURRENT_MEMBER_ID, 0);
+            identity.clearCurrentMember();
 
             Intent intent = new Intent(Constants.LOGGED_OUT_EVENT);
             intent.putExtra(Constants.EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT, enabledDataUpdates);
@@ -237,11 +244,10 @@ public class SecurityManager implements ISecurityManager {
 
             if(accountManager.getAccountsByType(accountType).length == 0) return null;
 
-            int currentMemberId = session.getInt(Constants.CURRENT_MEMBER_ID);
-
-            if(currentMemberId == 0) return null;
-
-            return memberDataStore.getById(currentMemberId);
+            if(identity.getCurrentMemberId() > 0){
+                return memberDataStore.getById(identity.getCurrentMemberId());
+            }
+            return null;
         }
         catch(SecurityException ex1){
             Log.w(Constants.LOG_TAG, ex1.getMessage());

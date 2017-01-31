@@ -23,6 +23,7 @@ public class Member extends RealmObject implements IPerson {
     private String irc;
     private String email;
     private RealmList<Feedback> feedback = new RealmList<>();
+    private RealmList<SummitGroupEvent> groupEvents = new RealmList<>();
 
     public PresentationSpeaker getSpeakerRole() {
         return speakerRole;
@@ -138,5 +139,18 @@ public class Member extends RealmObject implements IPerson {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void clearGroupEvents(){
+        this.groupEvents.clear();
+    }
+
+    public RealmList<SummitGroupEvent> getGroupEvents(){
+        return this.groupEvents;
+    }
+
+    public void addGroupEvent(SummitGroupEvent groupEvent){
+        this.groupEvents.add(groupEvent);
+        groupEvent.setOwner(this);
     }
 }

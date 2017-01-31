@@ -1,9 +1,9 @@
 package org.openstack.android.summit.common.services;
 
 import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -33,7 +33,7 @@ import retrofit2.Retrofit;
 
 public class SummitDataIngestionService extends IntentService {
 
-    public static final String PENDING_RESULT = "pending_result";
+    public static final String ACTION         = "org.openstack.android.summit.common.services.SummitDataIngestionService.Action";
     public static final int RESULT_CODE_OK    = 0xFF01;
     public static final int RESULT_CODE_ERROR = 0xFF02;
     private static boolean isRunning          = false;
@@ -81,13 +81,15 @@ public class SummitDataIngestionService extends IntentService {
         this.setIntentRedelivery(true);
     }
 
+    private void sendResult(Intent result , int code){
+        result.putExtra("res", code);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(result);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        Intent result       = new Intent();
-        PendingIntent reply = intent.getParcelableExtra(PENDING_RESULT);
-
-        if (reply == null) return;
+        Intent result  = new Intent(ACTION);
 
         try {
 
@@ -95,7 +97,7 @@ public class SummitDataIngestionService extends IntentService {
 
             if (!reachability.isNetworkingAvailable(this)) {
                 setRunning(false);
-                reply.send(this, RESULT_CODE_ERROR, result);
+                sendResult(result, RESULT_CODE_ERROR);
                 return;
             }
 
@@ -122,15 +124,12 @@ public class SummitDataIngestionService extends IntentService {
             });
 
             Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: summit data loaded !!!");
-            reply.send(this, RESULT_CODE_OK, result);
+            sendResult(result, RESULT_CODE_OK);
 
         } catch (Exception ex) {
-            try {
-                setRunning(false);
-                reply.send(this, RESULT_CODE_ERROR, result);
-            } catch (PendingIntent.CanceledException ex2) {
-                Crashlytics.logException(ex2);
-            }
+            setRunning(false);
+            sendResult(result, RESULT_CODE_ERROR);
+            Crashlytics.logException(ex);
         } finally {
             setRunning(false);
             RealmFactory.closeSession();

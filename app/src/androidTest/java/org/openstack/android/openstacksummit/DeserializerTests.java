@@ -7,24 +7,27 @@ import android.test.suitebuilder.annotation.LargeTest;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.GenericDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.SummitGroupEventDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IMemberDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.MemberDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PersonDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.PresentationDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.PresentationLinkDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.PresentationSlideDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSpeakerDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.PresentationVideoDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitAttendeeDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.SummitEventDeserializer;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
-
-import java.io.File;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -201,8 +204,13 @@ public class DeserializerTests  extends InstrumentationTestCase {
                     PersonDeserializer personDeserializer = new PersonDeserializer();
                     FeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
                     PresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
-
-                    IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
+                    SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(new GenericDeserializer(), new PresentationDeserializer(
+                            new PresentationSpeakerDeserializer(new PersonDeserializer()),
+                            new PresentationLinkDeserializer(),
+                            new PresentationVideoDeserializer(),
+                            new PresentationSlideDeserializer()
+                    ), new SummitGroupEventDeserializer());
+                    IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, summitEventDeserializer);
 
 
                     Member member = memberDeserializer.deserialize(json);
@@ -220,7 +228,14 @@ public class DeserializerTests  extends InstrumentationTestCase {
                     FeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
                     PresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
 
-                    IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer);
+                    SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(new GenericDeserializer(), new PresentationDeserializer(
+                            new PresentationSpeakerDeserializer(new PersonDeserializer()),
+                            new PresentationLinkDeserializer(),
+                            new PresentationVideoDeserializer(),
+                            new PresentationSlideDeserializer()
+                    ), new SummitGroupEventDeserializer());
+
+                    IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, summitEventDeserializer);
 
 
                     Member member = memberDeserializer.deserialize(json);

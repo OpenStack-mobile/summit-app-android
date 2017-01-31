@@ -3,6 +3,7 @@ package org.openstack.android.summit.dagger.modules;
 import android.content.Context;
 
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.common.security.SecurityManager;
@@ -25,8 +26,14 @@ public class SecurityModule {
 
     @Provides
     @Singleton
-    ISecurityManager providesSecurityManager(IMemberDataStore memberDataStore, ISession session) {
-        return new SecurityManager(new TokenManagerOIDC(), memberDataStore, session);
+    IPrincipalIdentity providesPrincipalIdentity(ISession session){
+        return new PrincipalIdentity(session);
+    }
+
+    @Provides
+    @Singleton
+    ISecurityManager providesSecurityManager(IMemberDataStore memberDataStore, IPrincipalIdentity identity) {
+        return new SecurityManager(new TokenManagerOIDC(), memberDataStore, identity);
     }
 
     @Provides

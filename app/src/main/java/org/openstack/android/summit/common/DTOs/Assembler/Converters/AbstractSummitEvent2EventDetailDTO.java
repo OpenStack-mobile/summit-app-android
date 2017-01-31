@@ -42,7 +42,7 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             eventDetailDTO.setAllowFeedback(source.getAllowFeedback());
             eventDetailDTO.setStarted(isStarted(source));
             eventDetailDTO.setTags(getTags(source));
-            eventDetailDTO.setEventDescription(source.getEventDescription());
+            eventDetailDTO.setEventDescription(source.getDescription());
             eventDetailDTO.setAverageRate(source.getAverageRate());
             eventDetailDTO.setHeadCount(source.getHeadCount());
             eventDetailDTO.setRsvpLink(source.getRsvpLink());

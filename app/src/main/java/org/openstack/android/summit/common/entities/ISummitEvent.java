@@ -17,25 +17,21 @@ public interface ISummitEvent extends INamedEntity, ISummitOwned {
 
     void setEnd(Date end);
 
-    String getEventDescription();
+    String getDescription();
 
-    void setEventDescription(String eventDescription);
+    void setDescription(String description);
 
     Boolean getAllowFeedback();
 
     void setAllowFeedback(Boolean allowFeedback);
 
-    EventType getEventType();
+    EventType getType();
 
-    void setEventType(EventType eventType);
+    void setType(EventType type);
 
     RealmList<Company> getSponsors();
 
     void setSponsors(RealmList<Company> sponsors);
-
-    Presentation getPresentation();
-
-    void setPresentation(Presentation presentation);
 
     Venue getVenue();
 
@@ -56,5 +52,9 @@ public interface ISummitEvent extends INamedEntity, ISummitOwned {
     Track getTrack();
 
     void setTrack(Track track);
+
+    String getClassName();
+
+    void setClassName(String className);
 
 }

@@ -1,11 +1,13 @@
 package org.openstack.android.summit;
 
 import android.app.Activity;
-import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -26,8 +28,6 @@ import cc.cloudist.acplibrary.ACProgressFlower;
 public class SummitDataLoadingActivity extends Activity {
 
     private ACProgressFlower progressDialog;
-    private static final int REQUEST_CODE = 0xFF45;
-    private PendingIntent pending         = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class SummitDataLoadingActivity extends Activity {
         setFinishOnTouchOutside(false);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_initial_data_loading_activity);
-        doInitialDataLoading();
+
         Button retryButton = (Button) this.findViewById(R.id.initial_data_loading_retry_button);
         retryButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -49,6 +49,27 @@ public class SummitDataLoadingActivity extends Activity {
                     }
                 }
         );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(SummitDataIngestionService.ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(serviceReceiver, filter);
+        doInitialDataLoading();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(serviceReceiver);
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideActivityIndicator();
+        showErrorContainer(false);
+        Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.onDestroy");
     }
 
     @Override
@@ -65,21 +86,25 @@ public class SummitDataLoadingActivity extends Activity {
 
         Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.doInitialDataLoading: invoking service SummitDataIngestionService ");
         Intent intent = SummitDataIngestionService.newIntent(this);
-        pending       = createPendingResult(REQUEST_CODE, new Intent(), 0);
-        intent.putExtra(SummitDataIngestionService.PENDING_RESULT, pending);
         startService(intent);
     }
 
-    @Override
-    protected void onActivityResult(int req, int res, Intent data) {
-        if (req == REQUEST_CODE) {
-            switch (res){
+    public void finishOk() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    private BroadcastReceiver serviceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int resultCode = intent.getIntExtra("res", RESULT_CANCELED);
+
+            switch (resultCode){
                 case SummitDataIngestionService.RESULT_CODE_OK:
+                    Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.onActivityResult: SummitDataIngestionService.RESULT_CODE_OK ");
                     hideActivityIndicator();
-                    Intent intent = new Intent();
-                    setResult(RESULT_OK, intent);
-                    Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.onActivityResult: SummitDataIngestionService.RESULT_CODE_OK.");
-                    finish();
+                    finishOk();
                     break;
                 case SummitDataIngestionService.RESULT_CODE_ERROR:
                     Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.onActivityResult: SummitDataIngestionService.RESULT_CODE_ERROR ");
@@ -87,9 +112,7 @@ public class SummitDataLoadingActivity extends Activity {
                     break;
             }
         }
-        super.onActivityResult(req, res, data);
-    }
-
+    };
     public ApplicationComponent getApplicationComponent() {
         return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
     }
@@ -125,12 +148,6 @@ public class SummitDataLoadingActivity extends Activity {
         container.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        hideActivityIndicator();
-        showErrorContainer(false);
-        Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.onDestroy");
-    }
+
 
 }

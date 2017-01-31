@@ -16,10 +16,21 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     private String name;
     private Date   start;
     private Date   end;
-    private String eventDescription;
+    private String description;
     private String rsvpLink;
     private int    headCount;
-    private Track track;
+    private Track  track;
+    private String  class_name;
+    private Boolean allowFeedback;
+    private double averageRate;
+    private EventType type;
+    private RealmList<Company> sponsors       = new RealmList<>();
+    private RealmList<Tag> tags               = new RealmList<>();
+    private Presentation presentation;
+    private Venue venue;
+    private VenueRoom venueRoom;
+    private Summit summit;
+    private SummitGroupEvent groupEvent;
 
     public String getRsvpLink() {
         return rsvpLink;
@@ -36,16 +47,6 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     public void setHeadCount(int headCount) {
         this.headCount = headCount;
     }
-
-    private Boolean allowFeedback;
-    private double averageRate;
-    private EventType eventType;
-    private RealmList<Company> sponsors       = new RealmList<>();
-    private RealmList<Tag> tags               = new RealmList<>();
-    private Presentation presentation;
-    private Venue venue;
-    private VenueRoom venueRoom;
-    private Summit summit;
 
     public int getId() {
         return id;
@@ -79,12 +80,12 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
         this.end = end;
     }
 
-    public String getEventDescription() {
-        return eventDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getAllowFeedback() {
@@ -95,12 +96,12 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
         this.allowFeedback = allowFeedback;
     }
 
-    public EventType getEventType() {
-        return eventType;
+    public EventType getType() {
+        return type;
     }
 
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
+    public void setType(EventType type) {
+        this.type = type;
     }
 
     public RealmList<Company> getSponsors() {
@@ -149,6 +150,16 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
         this.track = track;
     }
 
+    @Override
+    public String getClassName() {
+        return class_name;
+    }
+
+    @Override
+    public void setClassName(String class_name) {
+        this.class_name = class_name;
+    }
+
     public void setTags(RealmList<Tag> tags) {
         this.tags = tags;
     }
@@ -169,5 +180,13 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
 
     public void setAverageRate(double averageRate) {
         this.averageRate = averageRate;
+    }
+
+    public void setGroupEvent(SummitGroupEvent groupEvent){
+        this.groupEvent = groupEvent;
+    }
+
+    public SummitGroupEvent getGroupEvent(){
+        return this.groupEvent;
     }
 }

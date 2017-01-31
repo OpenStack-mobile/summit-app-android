@@ -45,7 +45,9 @@ public class ClassResolver implements IClassResolver {
             type = Image.class;
         }
 
-        if (className.equals("MySchedule") || className.equals("Presentation")) {
+        if (className.equals("MySchedule") ||
+            className.equals("Presentation") ||
+            className.equals("SummitGroupEvent")) {
             type = SummitEvent.class;
         }
 

@@ -2,11 +2,14 @@ package org.openstack.android.summit;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -33,9 +36,7 @@ import cc.cloudist.acplibrary.ACProgressFlower;
 public class SummitsListDataLoaderActivity extends Activity implements IDataLoadingView {
 
     private ACProgressFlower progressDialog;
-    private static final int REQUEST_CODE                      = 0xFF56;
     public static final int RESULT_OK_FIRE_SUMMIT_DATA_LOADING = 0XFF57;
-    private PendingIntent pending                              = null;
 
 
     @Inject
@@ -50,7 +51,6 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_initial_data_loading_activity);
         presenter.setView(this);
-        doDataLoading();
         Button retryButton = (Button) this.findViewById(R.id.initial_data_loading_retry_button);
 
         retryButton.setOnClickListener(
@@ -84,8 +84,25 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(SummitsListIngestionService.ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(serviceReceiver, filter);
+        doDataLoading();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(serviceReceiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideActivityIndicator();
+        showErrorContainer(false);
+        Log.d(Constants.LOG_TAG, "SummitsListDataLoaderActivity.onDestroy");
     }
 
     @Override
@@ -98,29 +115,15 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
 
         Log.d(Constants.LOG_TAG, "SummitsListDataLoaderActivity.doInitialDataLoading: invoking service SummitsListIngestionService ");
         Intent intent = SummitsListIngestionService.newIntent(this);
-        pending       = createPendingResult(REQUEST_CODE, new Intent(), 0);
-        intent.putExtra(SummitsListIngestionService.PENDING_RESULT, pending);
         startService(intent);
     }
 
-    @Override
-    public void finishOk() {
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
-        finish();
-    }
+    private BroadcastReceiver serviceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int resultCode = intent.getIntExtra("res", RESULT_CANCELED);
 
-    @Override
-    public void finishOkWithNewData() {
-        Intent intent2 = new Intent();
-        setResult(RESULT_OK_FIRE_SUMMIT_DATA_LOADING, intent2);
-        finish();
-    }
-
-    @Override
-    protected void onActivityResult(int req, int res, Intent data) {
-        if (req == REQUEST_CODE) {
-            switch (res){
+            switch (resultCode){
                 case SummitsListIngestionService.RESULT_CODE_OK:
                     Log.d(Constants.LOG_TAG, "SummitsListDataLoaderActivity.onActivityResult: SummitDataIngestionService.RESULT_CODE_OK.");
                     hideActivityIndicator();
@@ -141,8 +144,7 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
                     break;
             }
         }
-        super.onActivityResult(req, res, data);
-    }
+    };
 
     private void showQuestionContainer(boolean show) {
         LinearLayout container = (LinearLayout) this.findViewById(R.id.initial_data_loading_question);
@@ -213,11 +215,17 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        hideActivityIndicator();
-        showErrorContainer(false);
-        Log.d(Constants.LOG_TAG, "SummitsListDataLoaderActivity.onDestroy");
+    public void finishOk() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void finishOkWithNewData() {
+        Intent intent2 = new Intent();
+        setResult(RESULT_OK_FIRE_SUMMIT_DATA_LOADING, intent2);
+        finish();
     }
 
 }
