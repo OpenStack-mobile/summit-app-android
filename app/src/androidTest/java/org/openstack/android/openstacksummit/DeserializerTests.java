@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.GenericDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.SummitEventWithFileDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitGroupEventDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IMemberDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.MemberDeserializer;
@@ -204,12 +205,13 @@ public class DeserializerTests  extends InstrumentationTestCase {
                     PersonDeserializer personDeserializer = new PersonDeserializer();
                     FeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
                     PresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
+
                     SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(new GenericDeserializer(), new PresentationDeserializer(
                             new PresentationSpeakerDeserializer(new PersonDeserializer()),
                             new PresentationLinkDeserializer(),
                             new PresentationVideoDeserializer(),
                             new PresentationSlideDeserializer()
-                    ), new SummitGroupEventDeserializer());
+                    ), new SummitGroupEventDeserializer(), new SummitEventWithFileDeserializer());
                     IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, summitEventDeserializer);
 
 
@@ -233,7 +235,7 @@ public class DeserializerTests  extends InstrumentationTestCase {
                             new PresentationLinkDeserializer(),
                             new PresentationVideoDeserializer(),
                             new PresentationSlideDeserializer()
-                    ), new SummitGroupEventDeserializer());
+                    ), new SummitGroupEventDeserializer(), new SummitEventWithFileDeserializer());
 
                     IMemberDeserializer memberDeserializer = new MemberDeserializer(personDeserializer, presentationSpeakerDeserializer, summitAttendeeDeserializer, feedbackDeserializer, summitEventDeserializer);
 

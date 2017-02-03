@@ -3,6 +3,8 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.data_polling.SummitGroupEventDataUpdateStrategy;
+import org.openstack.android.summit.common.data_access.deserialization.ISummitEventWithFileDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.SummitEventWithFileDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitGroupEventDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IGroupEventDeserializer;
 import org.openstack.android.summit.common.data_access.repositories.IImageDataStore;
@@ -148,8 +150,15 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitEventDeserializer providesSummitEventDeserializer(IGenericDeserializer genericDeserializer, IPresentationDeserializer presentationDeserializer, IGroupEventDeserializer groupEventDeserializer) {
-        return new SummitEventDeserializer(genericDeserializer, presentationDeserializer, groupEventDeserializer);
+    ISummitEventDeserializer providesSummitEventDeserializer
+    (
+        IGenericDeserializer genericDeserializer,
+        IPresentationDeserializer presentationDeserializer,
+        IGroupEventDeserializer groupEventDeserializer,
+        ISummitEventWithFileDeserializer eventWithFileDeserializer
+    )
+    {
+        return new SummitEventDeserializer(genericDeserializer, presentationDeserializer, groupEventDeserializer, eventWithFileDeserializer);
     }
 
     @Provides
@@ -214,6 +223,11 @@ public class DataAccessModule {
     @Provides
     IVenueFloorDeserializer providesVenueFloorDeserializer() {
         return new VenueFloorDeserializer();
+    }
+
+    @Provides
+    ISummitEventWithFileDeserializer providesSummitEventWithFileDeserializer(){
+        return new SummitEventWithFileDeserializer();
     }
 
     @Provides

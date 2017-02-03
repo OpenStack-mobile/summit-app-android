@@ -12,6 +12,8 @@ import org.openstack.android.summit.common.entities.ISummitEventType;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
@@ -46,8 +48,16 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
 
     @Override
     public long countByTrackGroup(int trackGroupId){
+        TrackGroup group = RealmFactory.getSession().where(TrackGroup.class).equalTo("id", trackGroupId).findFirst();
+        List<Integer> trackIds = new ArrayList<>();
+        for(Track track : group.getTracks()){
+            trackIds.add(track.getId());
+        }
+
+        if(trackIds.size() == 0) return 0;
+
         RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
-        query = query.equalTo("track.trackGroups.id", trackGroupId);
+        query = query.in("track.id", trackIds.toArray(new Integer[trackIds.size()]));
         return query.count();
     }
 
@@ -61,7 +71,7 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
     @Override
     public long countByEventType(int eventTypeId){
         RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
-        query = query.equalTo("eventType.id", eventTypeId);
+        query = query.equalTo("type.id", eventTypeId);
         return query.count();
     }
 

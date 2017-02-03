@@ -11,6 +11,6 @@ public class ISummitEventType {
         Presentation,
         SummitGroupEvent,
         TeamEvent,
-
+        SummitEventWithFile,
     }
 }

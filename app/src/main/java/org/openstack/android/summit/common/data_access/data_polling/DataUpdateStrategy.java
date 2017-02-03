@@ -36,7 +36,6 @@ public class DataUpdateStrategy implements IDataUpdateStrategy {
         this.saveOrUpdateStrategy = new SaveOrUpdateRealmStrategy();
         this.deleteStrategy       = new DeleteRealmStrategy();
         this.summitDataStore      = new SummitDataStore(this.saveOrUpdateStrategy, this.deleteStrategy);
-
     }
 
     protected void setSummit(RealmObject entity){

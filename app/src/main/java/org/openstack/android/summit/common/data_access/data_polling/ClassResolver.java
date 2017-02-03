@@ -47,7 +47,8 @@ public class ClassResolver implements IClassResolver {
 
         if (className.equals("MySchedule") ||
             className.equals("Presentation") ||
-            className.equals("SummitGroupEvent")) {
+            className.equals("SummitGroupEvent") ||
+            className.equals("SummitEventWithFile")) {
             type = SummitEvent.class;
         }
 

@@ -68,7 +68,7 @@ public class SummitEventDeserializerTests {
         ArrayList<Summit> summits = new ArrayList<>();
         summits.add(summit);
         SummitGroupEventDeserializer summitGroupEventDeserializer = mock(SummitGroupEventDeserializer.class);
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer, mock(SummitEventWithFileDeserializer.class));
 
         // Act
         SummitEvent summitEvent = summitEventDeserializer.deserialize(jsonString);
@@ -120,7 +120,7 @@ public class SummitEventDeserializerTests {
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
         SummitGroupEventDeserializer summitGroupEventDeserializer = mock(SummitGroupEventDeserializer.class);
 
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer, mock(SummitEventWithFileDeserializer.class));
 
         Summit summit = new Summit();
         summit.setId(1);
@@ -154,7 +154,7 @@ public class SummitEventDeserializerTests {
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
         SummitGroupEventDeserializer summitGroupEventDeserializer = mock(SummitGroupEventDeserializer.class);
 
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer, mock(SummitEventWithFileDeserializer.class));
         String exceptionMessage = "";
         int exceptionCount = 0;
         int expectedExceptionCount = 1;
@@ -207,7 +207,7 @@ public class SummitEventDeserializerTests {
 
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
         SummitGroupEventDeserializer summitGroupEventDeserializer = mock(SummitGroupEventDeserializer.class);
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer, mock(SummitEventWithFileDeserializer.class));
 
         // Act
         SummitEvent summitEvent = summitEventDeserializer.deserialize(jsonString);

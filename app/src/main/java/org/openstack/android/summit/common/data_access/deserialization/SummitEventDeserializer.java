@@ -12,6 +12,7 @@ import org.openstack.android.summit.common.entities.ISummitGroupEvent;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.SummitEventWithFile;
 import org.openstack.android.summit.common.entities.SummitGroupEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
@@ -32,18 +33,21 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
     IGenericDeserializer genericDeserializer;
     IPresentationDeserializer presentationDeserializer;
     IGroupEventDeserializer  groupEventDeserializer;
+    ISummitEventWithFileDeserializer summitEventWithFileDeserializer;
 
     @Inject
     public SummitEventDeserializer
     (
         IGenericDeserializer genericDeserializer,
         IPresentationDeserializer presentationDeserializer,
-        IGroupEventDeserializer  groupEventDeserializer
+        IGroupEventDeserializer  groupEventDeserializer,
+        ISummitEventWithFileDeserializer summitEventWithFileDeserializer
     )
     {
-        this.genericDeserializer      = genericDeserializer;
-        this.presentationDeserializer = presentationDeserializer;
-        this.groupEventDeserializer   = groupEventDeserializer;
+        this.genericDeserializer             = genericDeserializer;
+        this.presentationDeserializer        = presentationDeserializer;
+        this.groupEventDeserializer          = groupEventDeserializer;
+        this.summitEventWithFileDeserializer = summitEventWithFileDeserializer;
     }
 
     @Override
@@ -138,6 +142,15 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             summitEvent.setGroupEvent(groupEvent);
             groupEvent.setEvent(summitEvent);
             groupEvent.setClassName(ISummitEventType.Type.SummitGroupEvent.toString());
+        }
+
+        if (jsonObject.has("class_name") &&
+                !jsonObject.isNull("class_name") &&
+                jsonObject.getString("class_name").startsWith("SummitEventWithFile")) {
+            SummitEventWithFile eventWithFile = summitEventWithFileDeserializer.deserialize(jsonString);
+            summitEvent.setSummitEventWithFile(eventWithFile);
+            eventWithFile.setEvent(summitEvent);
+            eventWithFile.setClassName(ISummitEventType.Type.SummitEventWithFile.toString());
         }
 
         if (jsonObject.has("tags")) {

@@ -31,6 +31,7 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     private VenueRoom venueRoom;
     private Summit summit;
     private SummitGroupEvent groupEvent;
+    private SummitEventWithFile eventWithFile;
 
     public String getRsvpLink() {
         return rsvpLink;
@@ -188,5 +189,13 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
 
     public SummitGroupEvent getGroupEvent(){
         return this.groupEvent;
+    }
+
+    public void setSummitEventWithFile(SummitEventWithFile eventWithFile){
+        this.eventWithFile = eventWithFile;
+    }
+
+    public SummitEventWithFile getSummitEventWithFile(){
+        return this.eventWithFile;
     }
 }

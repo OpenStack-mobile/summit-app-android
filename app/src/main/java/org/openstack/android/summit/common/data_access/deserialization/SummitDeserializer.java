@@ -72,10 +72,6 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                         "start_date",
                         "end_date",
                         "time_zone",
-                        "start_showing_venues_date",
-                        "page_url",
-                        "schedule_page_url",
-                        "schedule_event_detail_url"
                 }, jsonObject);
 
         if (missedFields.length > 0) {
@@ -98,11 +94,20 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                 summit.getStartDate()
         );
         summit.setTimeZone(jsonObject.getJSONObject("time_zone").getString("name"));
-        summit.setPageUrl(jsonObject.getString("page_url"));
-        summit.setSchedulePageUrl(jsonObject.getString("schedule_page_url"));
-        summit.setScheduleEventDetailUrl(jsonObject.getString("schedule_event_detail_url"));
+
+        if(!jsonObject.isNull("page_url"))
+            summit.setPageUrl(jsonObject.getString("page_url"));
+
+        if(!jsonObject.isNull("schedule_page_url"))
+            summit.setSchedulePageUrl(jsonObject.getString("schedule_page_url"));
+
+        if(!jsonObject.isNull("schedule_event_detail_url"))
+            summit.setScheduleEventDetailUrl(jsonObject.getString("schedule_event_detail_url"));
+
         summit.setInitialDataLoadDate(jsonObject.has("timestamp") ? new Date(jsonObject.getInt("timestamp") * 1000L) : null);
-        summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date") * 1000L));
+
+        if(!jsonObject.isNull("start_showing_venues_date"))
+            summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date") * 1000L));
 
         // if its a new summit , then deserialize the entire hierarchy ...
         if (jsonObject.has("sponsors")) {
