@@ -12,6 +12,8 @@ import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitAttendee;
+import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.SummitGroupEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
@@ -25,6 +27,7 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
     ISummitAttendeeDeserializer summitAttendeeDeserializer;
     IFeedbackDeserializer feedbackDeserializer;
+    ISummitEventDeserializer eventDeserializer;
 
 
     @Inject
@@ -33,12 +36,14 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
         IPersonDeserializer personDeserializer,
         IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
         ISummitAttendeeDeserializer summitAttendeeDeserializer,
-        IFeedbackDeserializer feedbackDeserializer
+        IFeedbackDeserializer feedbackDeserializer,
+        ISummitEventDeserializer eventDeserializer
     ) {
         this.personDeserializer              = personDeserializer;
         this.feedbackDeserializer            = feedbackDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
         this.summitAttendeeDeserializer      = summitAttendeeDeserializer;
+        this.eventDeserializer               = eventDeserializer;
     }
 
     @Override
@@ -82,6 +87,23 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.e(Constants.LOG_TAG, String.format("Error deserializing feedback %s", jsonObjectFeedback.toString()), e);
+                }
+            }
+        }
+
+        if (jsonObject.has("groups_events")) {
+            JSONArray jsonArrayEventGroups = jsonObject.getJSONArray("groups_events");
+            JSONObject jsonObjectGroupEvent;
+            SummitEvent event;
+            member.clearGroupEvents();
+            for (int i = 0; i < jsonArrayEventGroups.length(); i++) {
+                jsonObjectGroupEvent = jsonArrayEventGroups.getJSONObject(i);
+                try {
+                    event = eventDeserializer.deserialize(jsonObjectGroupEvent.toString());
+                    member.addGroupEvent(event.getGroupEvent());
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.e(Constants.LOG_TAG, String.format("Error deserializing group event %s", jsonObjectGroupEvent.toString()), e);
                 }
             }
         }

@@ -13,7 +13,7 @@ import org.openstack.android.summit.common.entities.IEntity;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
-import org.openstack.android.summit.common.entities.notifications.PushNotification;
+import org.openstack.android.summit.common.entities.SummitGroupEvent;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -48,40 +48,44 @@ public class Deserializer implements IDeserializer {
     IVenueDeserializer venueDeserializer;
     IVenueFloorDeserializer venueFloorDeserializer;
     IVenueRoomDeserializer venueRoomDeserializer;
+    IGroupEventDeserializer groupEventDeserializer;
 
     public Deserializer()
     {
     }
 
     @Inject
-    public Deserializer(IGenericDeserializer genericDeserializer,
-                        IFeedbackDeserializer feedbackDeserializer,
-                        IMemberDeserializer memberDeserializer,
-                        IPresentationDeserializer presentationDeserializer,
-                        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
-                        ISummitAttendeeDeserializer summitAttendeeDeserializer,
-                        ISummitDeserializer summitDeserializer,
-                        ISummitEventDeserializer summitEventDeserializer,
-                        ITrackGroupDeserializer trackGroupDeserializer,
-                        ITrackDeserializer trackDeserializer,
-                        IVenueRoomDeserializer venueRoomDeserializer,
-                        IVenueDeserializer venueDeserializer,
-                        IVenueFloorDeserializer venueFloorDeserializer
+    public Deserializer(
+        IGenericDeserializer genericDeserializer,
+        IFeedbackDeserializer feedbackDeserializer,
+        IMemberDeserializer memberDeserializer,
+        IPresentationDeserializer presentationDeserializer,
+        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        ISummitAttendeeDeserializer summitAttendeeDeserializer,
+        ISummitDeserializer summitDeserializer,
+        ISummitEventDeserializer summitEventDeserializer,
+        ITrackGroupDeserializer trackGroupDeserializer,
+        ITrackDeserializer trackDeserializer,
+        IVenueRoomDeserializer venueRoomDeserializer,
+        IVenueDeserializer venueDeserializer,
+        IVenueFloorDeserializer venueFloorDeserializer,
+        IGroupEventDeserializer groupEventDeserializer
     )
     {
-        this.genericDeserializer = genericDeserializer;
-        this.feedbackDeserializer = feedbackDeserializer;
-        this.memberDeserializer = memberDeserializer;
-        this.presentationDeserializer = presentationDeserializer;
+        this.genericDeserializer             = genericDeserializer;
+        this.feedbackDeserializer            = feedbackDeserializer;
+        this.memberDeserializer              = memberDeserializer;
+        this.presentationDeserializer        = presentationDeserializer;
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
-        this.summitAttendeeDeserializer = summitAttendeeDeserializer;
-        this.summitDeserializer = summitDeserializer;
-        this.summitEventDeserializer = summitEventDeserializer;
-        this.trackGroupDeserializer = trackGroupDeserializer;
-        this.trackDeserializer = trackDeserializer;
-        this.venueDeserializer = venueDeserializer;
-        this.venueRoomDeserializer = venueRoomDeserializer;
-        this.venueFloorDeserializer = venueFloorDeserializer;
+        this.summitAttendeeDeserializer      = summitAttendeeDeserializer;
+        this.summitDeserializer              = summitDeserializer;
+        this.summitEventDeserializer         = summitEventDeserializer;
+        this.trackGroupDeserializer          = trackGroupDeserializer;
+        this.trackDeserializer               = trackDeserializer;
+        this.venueDeserializer               = venueDeserializer;
+        this.venueRoomDeserializer           = venueRoomDeserializer;
+        this.venueFloorDeserializer          = venueFloorDeserializer;
+        this.groupEventDeserializer          = groupEventDeserializer;
     }
 
     @Override
@@ -107,6 +111,9 @@ public class Deserializer implements IDeserializer {
         }
         else if (type == SummitEvent.class) {
             return (T)summitEventDeserializer.deserialize(jsonString);
+        }
+        else if (type == SummitGroupEvent.class) {
+            return (T)groupEventDeserializer.deserialize(jsonString);
         }
         else if (type == TrackGroup.class) {
             return (T)trackGroupDeserializer.deserialize(jsonString);

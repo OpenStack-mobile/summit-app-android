@@ -11,13 +11,11 @@ import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
-import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Venue;
 
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 
@@ -40,7 +38,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         scheduleItemDTO.setLocation(getLocation(source));
         scheduleItemDTO.setLocationAddress(getLocationAddress(source));
         scheduleItemDTO.setRoom(source.getVenueRoom() != null ?source.getVenueRoom().getName() : null);
-        scheduleItemDTO.setEventType(source.getEventType() != null ? source.getEventType().getName() : "");
+        scheduleItemDTO.setEventType(source.getType() != null ? source.getType().getName() : "");
         String sponsors = getSponsors(source);
         scheduleItemDTO.setSponsors(sponsors);
         String credentials = getCredentials(source);
@@ -54,9 +52,9 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         if (source.getTrack() != null && source.getTrack().getTrackGroups().size() > 0) {
             scheduleItemDTO.setColor(source.getTrack().getTrackGroups().get(0).getColor());
         }
-        else if(source.getEventType() != null ){
+        else if(source.getType() != null ){
             // use the color of the event type
-            scheduleItemDTO.setColor(source.getEventType().getColor());
+            scheduleItemDTO.setColor(source.getType().getColor());
         }
     }
 

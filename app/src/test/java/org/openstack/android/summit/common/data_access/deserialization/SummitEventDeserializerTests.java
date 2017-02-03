@@ -67,8 +67,8 @@ public class SummitEventDeserializerTests {
         summit.setId(1);
         ArrayList<Summit> summits = new ArrayList<>();
         summits.add(summit);
-
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock);
+        SummitGroupEventDeserializer summitGroupEventDeserializer = mock(SummitGroupEventDeserializer.class);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer);
 
         // Act
         SummitEvent summitEvent = summitEventDeserializer.deserialize(jsonString);
@@ -76,11 +76,11 @@ public class SummitEventDeserializerTests {
         // Assert
         Assert.assertEquals(4189, summitEvent.getId());
         Assert.assertEquals("A Day in the Life of an Openstack & Cloud Architect", summitEvent.getName());
-        Assert.assertEquals("Event Description", summitEvent.getEventDescription());
+        Assert.assertEquals("Event Description", summitEvent.getDescription());
         Assert.assertTrue(summitEvent.getAllowFeedback());
         Assert.assertEquals(1445922900000L, summitEvent.getStart().getTime());
         Assert.assertEquals(1445925300000L, summitEvent.getEnd().getTime());
-        Assert.assertEquals(eventType, summitEvent.getEventType());
+        Assert.assertEquals(eventType, summitEvent.getType());
         Assert.assertEquals(venueRoom, summitEvent.getVenueRoom());
         Assert.assertNull(summitEvent.getVenue());
         Assert.assertEquals(1, summitEvent.getTags().size());
@@ -88,7 +88,7 @@ public class SummitEventDeserializerTests {
         Assert.assertEquals(1, summitEvent.getSponsors().size());
         Assert.assertEquals(company, summitEvent.getSponsors().get(0));
         Assert.assertEquals(presentation, summitEvent.getPresentation());
-        Assert.assertEquals(4189, summitEvent.getPresentation().getSummitEvent().getId());
+        Assert.assertEquals(4189, summitEvent.getPresentation().getEvent().getId());
     }
 
     @Test
@@ -118,8 +118,9 @@ public class SummitEventDeserializerTests {
         when(genericDeserializerMock.deserialize(eq("{\"id\":19,\"tag\":\"test_tag\"}"), eq(Tag.class))).thenReturn(tag);
 
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
+        SummitGroupEventDeserializer summitGroupEventDeserializer = mock(SummitGroupEventDeserializer.class);
 
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer);
 
         Summit summit = new Summit();
         summit.setId(1);
@@ -132,11 +133,11 @@ public class SummitEventDeserializerTests {
         // Assert
         Assert.assertEquals(4189, summitEvent.getId());
         Assert.assertEquals("A Day in the Life of an Openstack & Cloud Architect", summitEvent.getName());
-        Assert.assertEquals("Event Description", summitEvent.getEventDescription());
+        Assert.assertEquals("Event Description", summitEvent.getDescription());
         Assert.assertFalse(summitEvent.getAllowFeedback());
         Assert.assertEquals(1445922900000L, summitEvent.getStart().getTime());
         Assert.assertEquals(1445925300000L, summitEvent.getEnd().getTime());
-        Assert.assertEquals(eventType, summitEvent.getEventType());
+        Assert.assertEquals(eventType, summitEvent.getType());
         Assert.assertEquals(venue, summitEvent.getVenue());
         Assert.assertNull(summitEvent.getVenueRoom());
         Assert.assertEquals(1, summitEvent.getTags().size());
@@ -151,8 +152,9 @@ public class SummitEventDeserializerTests {
 
         GenericDeserializer genericDeserializerMock = mock(GenericDeserializer.class);
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
+        SummitGroupEventDeserializer summitGroupEventDeserializer = mock(SummitGroupEventDeserializer.class);
 
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer);
         String exceptionMessage = "";
         int exceptionCount = 0;
         int expectedExceptionCount = 1;
@@ -204,14 +206,14 @@ public class SummitEventDeserializerTests {
         summits.add(summit);
 
         PresentationDeserializer presentationDeserializerMock = mock(PresentationDeserializer.class);
-
-        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock);
+        SummitGroupEventDeserializer summitGroupEventDeserializer = mock(SummitGroupEventDeserializer.class);
+        SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(genericDeserializerMock, presentationDeserializerMock, summitGroupEventDeserializer);
 
         // Act
         SummitEvent summitEvent = summitEventDeserializer.deserialize(jsonString);
 
         // Assert
-        Assert.assertEquals("", summitEvent.getEventDescription());
+        Assert.assertEquals("", summitEvent.getDescription());
     }
 
 }

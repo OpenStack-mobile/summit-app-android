@@ -7,9 +7,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
+import org.openstack.android.summit.common.entities.ISummitEventType;
+import org.openstack.android.summit.common.entities.ISummitGroupEvent;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.SummitGroupEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.Track;
@@ -28,11 +31,19 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
 
     IGenericDeserializer genericDeserializer;
     IPresentationDeserializer presentationDeserializer;
+    IGroupEventDeserializer  groupEventDeserializer;
 
     @Inject
-    public SummitEventDeserializer(IGenericDeserializer genericDeserializer, IPresentationDeserializer presentationDeserializer){
+    public SummitEventDeserializer
+    (
+        IGenericDeserializer genericDeserializer,
+        IPresentationDeserializer presentationDeserializer,
+        IGroupEventDeserializer  groupEventDeserializer
+    )
+    {
         this.genericDeserializer      = genericDeserializer;
         this.presentationDeserializer = presentationDeserializer;
+        this.groupEventDeserializer   = groupEventDeserializer;
     }
 
     @Override
@@ -52,7 +63,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         summitEvent.setAllowFeedback(jsonObject.optBoolean("allow_feedback"));
         summitEvent.setStart(new Date(jsonObject.optLong("start_date") * 1000L));
         summitEvent.setEnd(new Date(jsonObject.optLong("end_date") * 1000L));
-        summitEvent.setEventDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : "");
+        summitEvent.setDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : "");
         summitEvent.setAverageRate(!jsonObject.isNull("avg_feedback_rate") ? jsonObject.getDouble("avg_feedback_rate") : 0);
         summitEvent.setRsvpLink(!jsonObject.isNull("rsvp_link") ? jsonObject.getString("rsvp_link") : null);
         summitEvent.setHeadCount(!jsonObject.isNull("head_count") ? jsonObject.getInt("head_count") : 0);
@@ -64,10 +75,11 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
             throw new JSONException(String.format("Can't deserialize event id %d (summit not found)!", eventId));
 
         summitEvent.setSummit(summit);
+        summitEvent.setClassName(ISummitEventType.Type.SummitEvent.toString());
 
         if (jsonObject.has("type_id")) {
             EventType eventType = RealmFactory.getSession().where(EventType.class).equalTo("id", jsonObject.getInt("type_id")).findFirst();
-            summitEvent.setEventType(eventType);
+            summitEvent.setType(eventType);
         }
 
         if (jsonObject.has("sponsors")) {
@@ -115,7 +127,17 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
                 jsonObject.getString("class_name").startsWith("Presentation")) {
             Presentation presentation = presentationDeserializer.deserialize(jsonString);
             summitEvent.setPresentation(presentation);
-            presentation.setSummitEvent(summitEvent);
+            presentation.setEvent(summitEvent);
+            presentation.setClassName(ISummitEventType.Type.Presentation.toString());
+        }
+
+        if (jsonObject.has("class_name") &&
+                !jsonObject.isNull("class_name") &&
+                jsonObject.getString("class_name").startsWith("SummitGroupEvent")) {
+            SummitGroupEvent groupEvent = groupEventDeserializer.deserialize(jsonString);
+            summitEvent.setGroupEvent(groupEvent);
+            groupEvent.setEvent(summitEvent);
+            groupEvent.setClassName(ISummitEventType.Type.SummitGroupEvent.toString());
         }
 
         if (jsonObject.has("tags")) {

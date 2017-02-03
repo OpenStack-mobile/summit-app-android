@@ -128,7 +128,7 @@ public class DTOAssemblerTests {
         summitEvent.setSummit(summit);
         summitEvent.getSponsors().add(company1);
         summitEvent.getSponsors().add(company2);
-        summitEvent.setEventType(eventType);
+        summitEvent.setType(eventType);
         summitEvent.setVenueRoom(venueRoom);
         summitEvent.setPresentation(presentation);
 
@@ -243,7 +243,7 @@ public class DTOAssemblerTests {
         summitEvent.setSummit(summit);
         summitEvent.getSponsors().add(company1);
         summitEvent.getSponsors().add(company2);
-        summitEvent.setEventType(eventType);
+        summitEvent.setType(eventType);
         summitEvent.setVenueRoom(venueRoom);
         summitEvent.setPresentation(presentation);
         summitEvent.getTags().add(tag1);

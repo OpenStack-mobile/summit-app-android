@@ -1,9 +1,9 @@
 package org.openstack.android.summit.common.services;
 
 import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -34,7 +34,7 @@ import retrofit2.Retrofit;
 
 public class SummitsListIngestionService extends IntentService {
 
-    public static final String PENDING_RESULT                           = "pending_result";
+    public static final String ACTION                                   = "org.openstack.android.summit.common.services.SummitsListIngestionService.Action";
     public static final int RESULT_CODE_OK                              = 0xFF03;
     public static final int RESULT_CODE_OK_INITIAL_LOADING              = 0xFF04;
     public static final int RESULT_CODE_OK_NEW_SUMMIT_AVAILABLE_LOADING = 0xFF05;
@@ -84,21 +84,22 @@ public class SummitsListIngestionService extends IntentService {
         this.setIntentRedelivery(true);
     }
 
+    private void sendResult(Intent result , int code){
+        result.putExtra("res", code);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(result);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        Intent result       = new Intent();
-        PendingIntent reply = intent.getParcelableExtra(PENDING_RESULT);
-
-        if (reply == null) return;
-
+        Intent result = new Intent(ACTION);
         try {
 
             setRunning(true);
 
             if (!reachability.isNetworkingAvailable(this)) {
                 setRunning(false);
-                reply.send(this, RESULT_CODE_ERROR, result);
+                sendResult(result, RESULT_CODE_ERROR);
                 return;
             }
 
@@ -145,14 +146,11 @@ public class SummitsListIngestionService extends IntentService {
                 }
             });
             Log.d(Constants.LOG_TAG, "SummitsListIngestionService.onHandleIntent: summit data loaded !!!");
-            reply.send(this, res, result);
+            sendResult(result, res);
         } catch (Exception ex) {
-            try {
-                setRunning(false);
-                reply.send(this, RESULT_CODE_ERROR, result);
-            } catch (PendingIntent.CanceledException ex2) {
-                Crashlytics.logException(ex2);
-            }
+            setRunning(false);
+            sendResult(result, RESULT_CODE_ERROR);
+            Crashlytics.logException(ex);
         } finally {
             setRunning(false);
             RealmFactory.closeSession();

@@ -8,8 +8,11 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitEvent
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
 import org.openstack.android.summit.common.entities.Feedback;
+import org.openstack.android.summit.common.entities.ISummitEventType;
+import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.ArrayList;
@@ -25,13 +28,21 @@ import io.realm.Sort;
  */
 public class SummitEventDataStore extends GenericDataStore<SummitEvent> implements ISummitEventDataStore {
 
-    ISummitEventRemoteDataStore summitEventRemoteDataStore;
+    private ISummitEventRemoteDataStore summitEventRemoteDataStore;
+    private ISecurityManager securityManager;
 
-    public SummitEventDataStore(ISummitEventRemoteDataStore summitEventRemoteDataStore, ISaveOrUpdateStrategy saveOrUpdateStrategy, IDeleteStrategy deleteStrategy) {
+    public SummitEventDataStore
+    (
+        ISecurityManager securityManager,
+        ISummitEventRemoteDataStore summitEventRemoteDataStore,
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    )
+    {
         super(SummitEvent.class, saveOrUpdateStrategy, deleteStrategy);
+        this.securityManager            = securityManager;
         this.summitEventRemoteDataStore = summitEventRemoteDataStore;
     }
-
 
     @Override
     public long countByTrackGroup(int trackGroupId){
@@ -86,17 +97,33 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
                 .lessThanOrEqualTo("end", endDate.toDate());
 
         boolean isFirst;
+        Member currentMember = securityManager.getCurrentMember();
+
 
         isFirst = true;
         if (eventTypes != null) {
             query.beginGroup();
-            for (int eventTypeId : eventTypes) {
-                if (!isFirst) {
-                    query = query.or();
+                for (int eventTypeId : eventTypes) {
+                    if (!isFirst) {
+                        query = query.or();
+                    }
+                    query = query.equalTo("type.id", eventTypeId);
+                    isFirst = false;
                 }
-                query = query.equalTo("eventType.id", eventTypeId);
-                isFirst = false;
-            }
+            query.endGroup();
+        }
+
+        if(currentMember == null){
+            query = query.notEqualTo("class_name", ISummitEventType.Type.SummitGroupEvent.toString());
+        }
+        else{
+            query.beginGroup();
+                query = query.in("class_name", new String[]{ ISummitEventType.Type.SummitEvent.toString(), ISummitEventType.Type.Presentation.toString()});
+                query = query.or();
+                    query.beginGroup();
+                        query = query.equalTo("class_name", ISummitEventType.Type.SummitGroupEvent.toString());
+                        query = query.equalTo("groupEvent.owner.id", currentMember.getId());
+                    query.endGroup();
             query.endGroup();
         }
 
