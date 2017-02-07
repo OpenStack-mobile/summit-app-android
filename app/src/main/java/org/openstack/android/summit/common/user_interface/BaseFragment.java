@@ -2,20 +2,17 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import org.openstack.android.summit.BuildConfig;
-import org.openstack.android.summit.OpenStackSummitApplication;
-import org.openstack.android.summit.modules.events.user_interface.IEventsView;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
@@ -29,6 +26,7 @@ import javax.inject.Inject;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressFlower;
+import cc.cloudist.acplibrary.ACProgressPie;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -37,7 +35,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public abstract class BaseFragment<P extends IBasePresenter> extends Fragment implements IBaseView {
 
     private ScheduledFuture<?> activityIndicatorTask;
-    private ACProgressFlower progressDialog;
+    private ACProgressPie progressDialog;
     private boolean showActivityIndicator;
     private boolean isActivityIndicatorVisible;
     protected View view;
@@ -108,11 +106,11 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
                         if (!showActivityIndicator) {
                             return;
                         }
-                        progressDialog = new ACProgressFlower.Builder(getActivity())
-                                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                                .themeColor(Color.WHITE)
-                                .text("Please wait...")
-                                .fadeColor(Color.DKGRAY).build();
+                        progressDialog = new ACProgressPie.Builder(getActivity())
+                                .ringColor(Color.WHITE)
+                                .pieColor(Color.WHITE)
+                                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                                .build();
                         progressDialog.setCancelable(false);
                         progressDialog.show();
                     }
@@ -222,5 +220,15 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
     public View getView() {
         if(view != null) return view;
         return super.getView();
+    }
+
+    @Override
+    public void finish(){
+        getActivity().finish();
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode){
+        super.startActivityForResult(intent, requestCode);
     }
 }

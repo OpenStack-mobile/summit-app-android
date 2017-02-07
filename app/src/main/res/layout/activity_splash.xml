@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:id="@+id/splash_main_container" android:background="@color/colorPrimary">
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:src="@drawable/summit_logo"
+        tools:layout_gravity="center_horizontal"
+        android:id="@+id/splash_logo"
+        android:layout_marginTop="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:layout_weight="0.5"
+        android:visibility="invisible"
+        android:id="@+id/splash_summit_info_container"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/splash_summit_dates"
+            android:text="MAY 8TH - 11TH , 2017"
+            style="@style/AppTheme.summitDates"
+            android:gravity="center_vertical|center"
+            android:layout_marginBottom="10dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/splash_summit_name"
+            android:text="Barcelona"
+            style="@style/AppTheme.summitName"
+            tools:gravity="fill_vertical|center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:layout_margin="10dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_splash_login"
+            style="@style/AppTheme.SplashLoginButton"
+            android:text="@string/splash_login_button_txt" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_splash_guest"
+            style="@style/AppTheme.SplashGuestButton"
+            android:text="@string/splash_guest_button_txt"/>
+    </LinearLayout>
+</LinearLayout>

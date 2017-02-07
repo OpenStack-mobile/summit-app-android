@@ -4,6 +4,8 @@ package org.openstack.android.summit.dagger.components;
  * Created by claudio on 11/3/2015.
  */
 
+import org.openstack.android.summit.dagger.modules.SplashModule;
+import org.openstack.android.summit.modules.splash.user_interface.SplashActivity;
 import org.openstack.android.summit.SummitDataLoadingActivity;
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
 import org.openstack.android.summit.common.push_notifications.PushNotificationsBroadcastReceiver;
@@ -81,7 +83,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class, PushNotificationsInboxModule.class, SettingsModule.class, RestApiModule.class, PushNotificationsModule.class} )
+@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class, PushNotificationsInboxModule.class, SettingsModule.class, RestApiModule.class, PushNotificationsModule.class, SplashModule.class} )
 public interface ApplicationComponent {
 
     void inject(MainActivity mainActivity);
@@ -123,4 +125,5 @@ public interface ApplicationComponent {
     void inject(SummitsListDataLoaderActivity summitsListDataLoaderActivity);
     void inject(PushNotificationReceiverService pushNotificationReceiverService);
     void inject(PushNotificationsBroadcastReceiver pushNotificationsBroadcastReceiver);
+    void inject(SplashActivity splashActivity);
 }

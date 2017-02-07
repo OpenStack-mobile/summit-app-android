@@ -46,4 +46,5 @@ public class Constants {
     public static final String CURRENT_SUMMIT_ID                      = "CURRENT_SESSION_ID";
     static public final String ON_DATA_LOADING_PROCESS                = "on-data-loading-process";
     static public final String LOADED_SUMMITS_LIST                    = "loaded-summits-list";
+    static public final String START_EXTERNAL_LOGIN                   = "start-external-login";
 }

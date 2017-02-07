@@ -1,7 +1,6 @@
 package org.openstack.android.summit;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.services.SummitDataIngestionService;
 import org.openstack.android.summit.common.services.SummitsListIngestionService;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.modules.main.user_interface.IDataLoadingPresenter;
@@ -27,7 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
-import cc.cloudist.acplibrary.ACProgressFlower;
+import cc.cloudist.acplibrary.ACProgressPie;
 
 /**
  * Created by smarcet on 12/5/16.
@@ -35,9 +33,8 @@ import cc.cloudist.acplibrary.ACProgressFlower;
 
 public class SummitsListDataLoaderActivity extends Activity implements IDataLoadingView {
 
-    private ACProgressFlower progressDialog;
+    private ACProgressPie progressDialog;
     public static final int RESULT_OK_FIRE_SUMMIT_DATA_LOADING = 0XFF57;
-
 
     @Inject
     @Named("SummitListDataLoading")
@@ -166,11 +163,11 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
 
     @Override
     public void showActivityIndicator() {
-        progressDialog = new ACProgressFlower.Builder(getActivity())
-                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                .themeColor(Color.WHITE)
-                .text("Please wait...")
-                .fadeColor(Color.DKGRAY).build();
+        progressDialog = new ACProgressPie.Builder(this)
+                .ringColor(Color.WHITE)
+                .pieColor(Color.WHITE)
+                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                .build();
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
