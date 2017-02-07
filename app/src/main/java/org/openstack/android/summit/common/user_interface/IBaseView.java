@@ -32,4 +32,8 @@ public interface IBaseView {
 
     Context getApplicationContext();
 
+    void finish();
+
+    void startActivityForResult(Intent intent, int requestCode);
+
 }

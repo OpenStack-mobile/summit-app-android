@@ -19,7 +19,7 @@ import org.openstack.android.summit.common.services.SummitDataIngestionService;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
-import cc.cloudist.acplibrary.ACProgressFlower;
+import cc.cloudist.acplibrary.ACProgressPie;
 
 /**
  * SummitDataLoadingActivity
@@ -27,7 +27,7 @@ import cc.cloudist.acplibrary.ACProgressFlower;
  */
 public class SummitDataLoadingActivity extends Activity {
 
-    private ACProgressFlower progressDialog;
+    private ACProgressPie progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,11 +122,11 @@ public class SummitDataLoadingActivity extends Activity {
     }
 
     private void showActivityIndicator() {
-        progressDialog = new ACProgressFlower.Builder(getActivity())
-                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                .themeColor(Color.WHITE)
-                .text("Please wait...")
-                .fadeColor(Color.DKGRAY).build();
+        progressDialog =  new ACProgressPie.Builder(this)
+                .ringColor(Color.WHITE)
+                .pieColor(Color.WHITE)
+                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                .build();
         progressDialog.setCancelable(false);
         progressDialog.show();
     }

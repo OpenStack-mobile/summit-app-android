@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
@@ -24,7 +25,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
@@ -45,6 +45,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -71,6 +73,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private boolean isNewAccount;
     private boolean workflowCompleted = false;
 
+    private ACProgressPie progressDialog;
+
     public void setWorkflowCompleted() {
         workflowCompleted = true;
     }
@@ -80,6 +84,24 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @Inject
     ISession session;
+
+    public void showActivityIndicator() {
+        if(progressDialog != null) return;
+        progressDialog = new ACProgressPie.Builder(this)
+                .ringColor(Color.WHITE)
+                .pieColor(Color.WHITE)
+                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                .build();
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    public void hideActivityIndicator() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,9 +164,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
             super.onReceivedHttpError(view, request, errorResponse);
             WebView webView = (WebView) authActivity.get().findViewById(R.id.WebView);
-            ProgressBar progressBar = (ProgressBar) authActivity.get().findViewById(R.id.ProgressBar);
+            authActivity.get().hideActivityIndicator();
             webView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -170,10 +191,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            authActivity.get().hideActivityIndicator();
             WebView webView = (WebView) authActivity.get().findViewById(R.id.WebView);
-            ProgressBar progressBar = (ProgressBar) authActivity.get().findViewById(R.id.ProgressBar);
             webView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
+
 
             String cookies = CookieManager.getInstance().getCookie(url);
             if (cookies != null) {
@@ -193,15 +214,15 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             try {
                 super.onPageStarted(view, urlString, favicon);
 
-                WebView webView         = (WebView) authActivity.get().findViewById(R.id.WebView);
-                ProgressBar progressBar = (ProgressBar) authActivity.get().findViewById(R.id.ProgressBar);
-                ISession session        = authActivity.get().session;
+                WebView webView           = (WebView) authActivity.get().findViewById(R.id.WebView);
+
+                ISession session           = authActivity.get().session;
                 Uri url                    = Uri.parse(urlString);
                 Set<String> parameterNames = url.getQueryParameterNames();
                 String extractedFragment   = url.getEncodedFragment();
 
                 webView.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
+                authActivity.get().showActivityIndicator();
 
                 if (parameterNames.contains("error")) {
                     view.stopLoading();
@@ -607,6 +628,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public void onDestroy() {
         super.onDestroy();
         Log.d(Constants.LOG_TAG, "AuthenticatorActivity.onDestroy");
+        hideActivityIndicator();
         if (!workflowCompleted) {
             // was canceled ... inform it
             Intent intent = new Intent(Constants.LOG_IN_CANCELLED_EVENT);

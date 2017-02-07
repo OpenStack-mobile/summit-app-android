@@ -109,7 +109,6 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         boolean isFirst;
         Member currentMember = securityManager.getCurrentMember();
 
-
         isFirst = true;
         if (eventTypes != null) {
             query.beginGroup();
@@ -128,7 +127,11 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         }
         else{
             query.beginGroup();
-                query = query.in("class_name", new String[]{ ISummitEventType.Type.SummitEvent.toString(), ISummitEventType.Type.Presentation.toString()});
+                query = query.in("class_name", new String[]{
+                        ISummitEventType.Type.SummitEvent.toString(),
+                        ISummitEventType.Type.Presentation.toString(),
+                        ISummitEventType.Type.SummitEventWithFile.toString()
+                });
                 query = query.or();
                     query.beginGroup();
                         query = query.equalTo("class_name", ISummitEventType.Type.SummitGroupEvent.toString());

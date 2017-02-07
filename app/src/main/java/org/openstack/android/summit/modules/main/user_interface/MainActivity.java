@@ -46,7 +46,7 @@ import org.openstack.android.summit.modules.main.exceptions.MissingMemberExcepti
 import javax.inject.Inject;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
-import cc.cloudist.acplibrary.ACProgressFlower;
+import cc.cloudist.acplibrary.ACProgressPie;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity
@@ -62,7 +62,7 @@ public class MainActivity
     @Inject
     IReachability reachability;
 
-    private ACProgressFlower progressDialog;
+    private ACProgressPie progressDialog;
     private Button loginButton;
     private TextView memberNameTextView;
     private SimpleDraweeView memberProfileImageView;
@@ -295,8 +295,12 @@ public class MainActivity
             toggleMenuLogo(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
             super.onResume();
             presenter.onResume();
-            launchSummitListDataLoadingActivity();
             setupNavigationIcons();
+            Intent intent = getIntent();
+            if(intent != null && intent.getBooleanExtra(Constants.START_EXTERNAL_LOGIN, false) == true && !onLoginProcess){
+                intent.removeExtra(Constants.START_EXTERNAL_LOGIN);
+                this.loginButton.performClick();
+            }
         } catch (Exception ex) {
             Crashlytics.logException(ex);
         }
@@ -421,7 +425,7 @@ public class MainActivity
 
                     if (!presenter.isSummitDataLoaded()) {
                         showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
-                        launchSummitListDataLoadingActivity();
+                        launchInitialDataLoadingActivity();
                         return;
                     }
 
@@ -454,7 +458,7 @@ public class MainActivity
 
                             if (!presenter.isSummitDataLoaded()) {
                                 showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
-                                launchSummitListDataLoadingActivity();
+                                launchInitialDataLoadingActivity();
                                 return;
                             }
 
@@ -705,11 +709,11 @@ public class MainActivity
                     hideActivityIndicator();
                 }
                 Log.d(Constants.LOG_TAG, "MainActivity.showActivityIndicator");
-                progressDialog = new ACProgressFlower.Builder(MainActivity.this)
-                        .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                        .themeColor(Color.WHITE)
-                        .text(getResources().getString(R.string.please_wait))
-                        .fadeColor(Color.DKGRAY).build();
+                progressDialog = new ACProgressPie.Builder(MainActivity.this)
+                        .ringColor(Color.WHITE)
+                        .pieColor(Color.WHITE)
+                        .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                        .build();
                 progressDialog.setCancelable(false);
                 progressDialog.show();
             }
