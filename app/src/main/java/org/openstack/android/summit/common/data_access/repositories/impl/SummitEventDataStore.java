@@ -103,7 +103,7 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
     {
 
         RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class)
-                .greaterThanOrEqualTo("start", startDate.toDate())
+                .greaterThanOrEqualTo("end", startDate.toDate())
                 .lessThanOrEqualTo("end", endDate.toDate());
 
         boolean isFirst;
