@@ -21,4 +21,18 @@ public interface IPushNotificationsManager {
 
     void unsubscribeFromEvent(int eventId);
 
+    void subscribeMember(int memberId);
+
+    void subscribeSummit(int summitId);
+
+    void subscribeEveryone();
+
+    void subscribeAttendees();
+
+    void subscribeSpeakers();
+
+    boolean isMemberSubscribed();
+
+    boolean isAnonymousSubscribed();
+
 }

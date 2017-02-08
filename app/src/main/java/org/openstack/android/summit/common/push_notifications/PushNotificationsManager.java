@@ -1,9 +1,10 @@
 package org.openstack.android.summit.common.push_notifications;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import org.modelmapper.internal.objenesis.ObjenesisException;
+import org.openstack.android.summit.common.Constants;
 
 /**
  * Created by Claudio Redi on 2/22/2016.
@@ -30,30 +31,87 @@ public class PushNotificationsManager implements IPushNotificationsManager {
         int attendeeId,
         ArrayList<Integer> scheduleEventsIds
     ) {
+
         synchronized (this.lock) {
             if (isMemberSubscribed) return;
-            if (!channels.isEmpty()) unSubscribe();
-            channels.add(EveryoneChannelSlug);
-            channels.add(String.format(SummitChannelSlug, summitId));
-            channels.add(String.format(MemberChannelSlug, memberId));
+            Log.d(Constants.LOG_TAG, "PushNotificationsManager.subscribeMember");
+            subscribeEveryone();
+            subscribeMember(memberId);
+            subscribeSummit(summitId);
 
             if (attendeeId > 0) {
 
-                channels.add(AttendeesChannelSlug);
+               subscribeAttendees();
                 if (scheduleEventsIds != null) {
                     for (Integer eventId : scheduleEventsIds) {
-                        channels.add(String.format(EventChannelSlug, eventId));
+                        subscribeToEvent(eventId);
                     }
                 }
             }
 
             if (speakerId > 0) {
-                channels.add(SpeakersChannelSlug);
+               subscribeSpeakers();
             }
-
-            for (String channel : channels)
-                FirebaseMessaging.getInstance().subscribeToTopic(channel);
             isMemberSubscribed = true;
+        }
+    }
+
+    @Override
+    public boolean isMemberSubscribed(){
+        synchronized (this.lock) {
+            return this.isMemberSubscribed;
+        }
+    }
+
+    @Override
+    public boolean isAnonymousSubscribed(){
+        synchronized (this.lock) {
+            return this.isAnonymousSubscribed;
+        }
+    }
+
+    @Override
+    public void subscribeMember(int memberId){
+        synchronized (this.lock) {
+            if (channels.contains(String.format(MemberChannelSlug,  memberId))) return;
+            channels.add(String.format(MemberChannelSlug, memberId));
+            FirebaseMessaging.getInstance().subscribeToTopic(String.format(MemberChannelSlug, memberId));
+        }
+    }
+
+    @Override
+    public void subscribeSummit(int summitId){
+        synchronized (this.lock) {
+            if (channels.contains(String.format(SummitChannelSlug,  summitId))) return;
+            channels.add(String.format(SummitChannelSlug, summitId));
+            FirebaseMessaging.getInstance().subscribeToTopic(String.format(SummitChannelSlug, summitId));
+        }
+    }
+
+    @Override
+    public void subscribeEveryone(){
+        synchronized (this.lock) {
+            if (channels.contains(EveryoneChannelSlug)) return;
+            channels.add(EveryoneChannelSlug);
+            FirebaseMessaging.getInstance().subscribeToTopic(EveryoneChannelSlug);
+        }
+    }
+
+    @Override
+    public void subscribeAttendees(){
+        synchronized (this.lock) {
+            if (channels.contains(AttendeesChannelSlug)) return;
+            channels.add(AttendeesChannelSlug);
+            FirebaseMessaging.getInstance().subscribeToTopic(AttendeesChannelSlug);
+        }
+    }
+
+    @Override
+    public void subscribeSpeakers(){
+        synchronized (this.lock) {
+            if (channels.contains(SpeakersChannelSlug)) return;
+            channels.add(SpeakersChannelSlug);
+            FirebaseMessaging.getInstance().subscribeToTopic(SpeakersChannelSlug);
         }
     }
 
@@ -92,22 +150,21 @@ public class PushNotificationsManager implements IPushNotificationsManager {
         }
     }
 
+    @Override
     public void subscribeAnonymous(int summitId) {
+
         synchronized (this.lock) {
             if(isAnonymousSubscribed) return;
-            if(!channels.isEmpty()) unSubscribe();
-            channels.add(EveryoneChannelSlug);
-            channels.add(String.format(SummitChannelSlug, summitId));
-
-            for(String channel:channels)
-                FirebaseMessaging.getInstance().subscribeToTopic(channel);
-
+            Log.d(Constants.LOG_TAG, "PushNotificationsManager.subscribeAnonymous");
+            subscribeEveryone();
+            subscribeSummit(summitId);
             isAnonymousSubscribed = true;
         }
     }
 
     @Override
     public void unSubscribe() {
+        Log.d(Constants.LOG_TAG, "PushNotificationsManager.unSubscribe");
         synchronized (this.lock) {
             for (String channel : channels)
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(channel);

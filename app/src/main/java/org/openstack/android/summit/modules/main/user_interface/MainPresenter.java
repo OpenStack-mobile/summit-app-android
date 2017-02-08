@@ -260,7 +260,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         view.setMemberName("");
         view.setLoginButtonText(view.getResources().getText(R.string.log_in).toString());
         view.setProfilePic(null);
+        interactor.unSubscribeToPushNotifications();
         interactor.subscribeToPushNotifications();
+        updateNotificationCounter();
     }
 
     @Override
@@ -271,7 +273,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         view.setLoginButtonText(view.getResources().getText(R.string.log_out).toString());
         view.setProfilePic(Uri.parse(member.getPictureUrl()));
         view.toggleMenu(false);
+        interactor.unSubscribeToPushNotifications();
         interactor.subscribeToPushNotifications();
+        updateNotificationCounter();
     }
 
     @Override

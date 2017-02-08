@@ -27,4 +27,6 @@ public interface IMainInteractor extends IBaseInteractor {
     int getInstalledBuildNumber();
 
     void upgradeStorage();
+
+    void unSubscribeToPushNotifications();
 }

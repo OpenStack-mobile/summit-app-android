@@ -1,6 +1,9 @@
 package org.openstack.android.summit.modules.main.business_logic;
 
+import android.util.Log;
+
 import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
@@ -79,21 +82,29 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
     @Override
     public void subscribeToPushNotifications() {
+        Log.d(Constants.LOG_TAG, "MainInteractor.subscribeToPushNotifications");
         SummitDTO summit = this.getActiveSummit();
         if(summit == null) return;
         int summitId = summit.getId();
 
-        if (securityManager.isLoggedIn()){
-            Member loggedInMember       = securityManager.getCurrentMember();
-            int memberId                = loggedInMember.getId();
-            int speakerId               = loggedInMember.getSpeakerRole()  != null ? loggedInMember.getSpeakerRole().getId() : 0;
-            int attendeeId              = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getId() : 0;
+        if (securityManager.isLoggedIn() && !pushNotificationsManager.isMemberSubscribed()){
+            Member loggedInMember                = securityManager.getCurrentMember();
+            int memberId                         = loggedInMember.getId();
+            int speakerId                        = loggedInMember.getSpeakerRole()  != null ? loggedInMember.getSpeakerRole().getId() : 0;
+            int attendeeId                       = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getId() : 0;
             ArrayList<Integer> scheduleEventsIds = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getScheduleEventIds(): null;
             pushNotificationsManager.subscribeMember(memberId, summitId, speakerId, attendeeId, scheduleEventsIds);
             return;
         }
 
-        pushNotificationsManager.subscribeAnonymous(summitId);
+        if(!securityManager.isLoggedIn() && !pushNotificationsManager.isAnonymousSubscribed())
+            pushNotificationsManager.subscribeAnonymous(summitId);
+    }
+
+    @Override
+    public void unSubscribeToPushNotifications() {
+        Log.d(Constants.LOG_TAG, "MainInteractor.unSubscribeToPushNotifications");
+        pushNotificationsManager.unSubscribe();
     }
 
     @Override
