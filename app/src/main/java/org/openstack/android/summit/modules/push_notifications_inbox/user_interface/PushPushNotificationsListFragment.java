@@ -2,26 +2,33 @@ package org.openstack.android.summit.modules.push_notifications_inbox.user_inter
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.SparseBooleanArray;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import org.joda.time.DateTime;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
-import org.openstack.android.summit.common.user_interface.InfiniteScrollListener;
+import org.openstack.android.summit.common.user_interface.recycler_view.DividerItemDecoration;
+import org.openstack.android.summit.common.user_interface.recycler_view.EndlessRecyclerViewScrollListener;
+import org.openstack.android.summit.common.user_interface.recycler_view.RecyclerViewArrayAdapter;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,8 +42,12 @@ public class PushPushNotificationsListFragment
     private String searchQuery             = "";
 
     private PushNotificationListAdapter listAdapter;
+    LinearLayoutManager layoutManager;
     private SearchView searchView;
     private SearchView.OnQueryTextListener queryTextListener;
+    private RecyclerView notificationsList;
+    private TextView emptyMessage;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
 
     public PushPushNotificationsListFragment() {
@@ -62,6 +73,11 @@ public class PushPushNotificationsListFragment
             searchQuery = searchView.getQuery().toString();
             outState.putString(SEARCH_KEY, searchQuery);
         }
+    }
+
+    protected ActionMode startSupportActionMode(ActionMode.Callback callback){
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        return activity.startSupportActionMode(callback);
     }
 
     @Override
@@ -124,91 +140,35 @@ public class PushPushNotificationsListFragment
     public void onResume() {
         super.onResume();
         presenter.onResume();
-        setTitle(getResources().getString(R.string.notifications));
     }
-
-    private ListView notificationsList;
-    private TextView emptyMessage;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view         = inflater.inflate(R.layout.fragment_notifications_list, container, false);
         this.view         = view;
-        notificationsList = (ListView)view.findViewById(R.id.list_notifications);
-        listAdapter       = new PushNotificationListAdapter(getContext());
+        notificationsList = (RecyclerView)view.findViewById(R.id.list_notifications);
+
+        layoutManager     = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        notificationsList.setLayoutManager(layoutManager);
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
+        notificationsList.addItemDecoration(itemDecoration);
+        listAdapter       = new PushNotificationListAdapter();
         emptyMessage      = (TextView)view.findViewById(R.id.list_notifications_empty_message);
 
         notificationsList.setAdapter(listAdapter);
-        notificationsList.setOnScrollListener(new InfiniteScrollListener(presenter.getObjectsPerPage()) {
+        notificationsList.setItemAnimator(new DefaultItemAnimator());
+
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
-            public void loadMore(int page, int totalItemsCount) {
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
                 presenter.loadData();
             }
-        });
+        };
 
-        notificationsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            presenter.showNotification(position);
-            }
-        });
-
-        notificationsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        // Capture ListView item click
-        notificationsList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode,
-                                                  int position, long id, boolean checked) {
-                // Capture total checked items
-                final int checkedCount = notificationsList.getCheckedItemCount();
-                // Set the CAB title according to total checked items
-                mode.setTitle(checkedCount + " Selected");
-                // Calls toggleSelection method from ListViewAdapter Class
-                listAdapter.toggleSelection(position);
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_item_push_notification_delete:
-                        // Calls getSelectedIds method from ListViewAdapter Class
-                        SparseBooleanArray selected = listAdapter.getSelectedIds();
-                        // Captures all selected ids with a loop
-                        for (int i = (selected.size() - 1); i >= 0; i--) {
-                            if (selected.valueAt(i)) {
-                                PushNotificationListItemDTO selectedItem = listAdapter.getItem(selected.keyAt(i));
-                                // Remove selected items following the ids
-                                presenter.onRemovePushNotification(selectedItem);
-                                listAdapter.remove(selectedItem);
-                                updateState();
-                            }
-                        }
-                        // Close CAB
-                        mode.finish();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.push_notifications, menu);
-                return true;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                listAdapter.removeSelection();
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                // TODO Auto-generated method stub
-                return false;
-            }
-        });
-
+        notificationsList.addOnScrollListener(scrollListener);
         super.onCreateView(inflater, container, savedInstanceState);
 
         return view;
@@ -227,6 +187,7 @@ public class PushPushNotificationsListFragment
     {
         if(listAdapter == null) return;
         listAdapter.notifyDataSetChanged();
+        scrollListener.resetState();
     }
 
     private void updateState() {
@@ -236,70 +197,116 @@ public class PushPushNotificationsListFragment
         notificationsList.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
-    private class PushNotificationListAdapter extends ArrayAdapter<PushNotificationListItemDTO> {
+    private class PushNotificationListAdapter
+            extends
+            RecyclerViewArrayAdapter<PushNotificationListItemDTO,
+                    PushNotificationListAdapter.PushNotificationViewHolder>
+    {
+        public PushNotificationListAdapter(){
+            super();
+            removedAllItemsCallback = new PushNotificationListAdapter.RemovedAllItemsCallback(){
 
-        private SparseBooleanArray selectedItems;
+                @Override
+                public void removedAll() {
+                    updateState();
+                }
+            };
 
-        public PushNotificationListAdapter(Context context) {
-            super(context, 0);
-            selectedItems = new SparseBooleanArray();
-        }
+            removedItemCallback = new PushNotificationListAdapter.RemovedItemCallback<PushNotificationListItemDTO>(){
 
-        public void removeSelection() {
-            selectedItems = new SparseBooleanArray();
-            notifyDataSetChanged();
-        }
-
-        public void toggleSelection(int position) {
-            selectView(position, !selectedItems.get(position));
-        }
-
-        public void selectView(int position, boolean value) {
-            if (value)
-                selectedItems.put(position, value);
-            else
-                selectedItems.delete(position);
-            notifyDataSetChanged();
-        }
-
-        public int getSelectedCount() {
-            return selectedItems.size();
-        }
-
-        public SparseBooleanArray getSelectedIds() {
-            return selectedItems;
+                @Override
+                public void removed(PushNotificationListItemDTO item) {
+                    presenter.onRemovePushNotification(item);
+                }
+            };
         }
 
         @Override
-        public View getView(final int position, View view, ViewGroup parent) {
-
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (view == null) {
-                view = LayoutInflater.from(getContext()).inflate(R.layout.item_push_notification_list, parent, false);
-            }
-
-            final PushNotificationItemView itemView = new PushNotificationItemView(view);
-
-            presenter.buildItem(itemView, position);
-
-            if (selectedItems.get(position)) {
-                view.setSelected(true);
-                view.setPressed(true);
-                view.setBackgroundColor(getResources().getColor(R.color.choice_mode_multiple_pressed_color));
-            }
-            else
-            {
-                view.setSelected(false);
-                view.setPressed(false);
-                view.setBackgroundColor(getResources().getColor(R.color.white));
-            }
-
-            return view;
+        public PushNotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.
+                    from(parent.getContext()).
+                    inflate(R.layout.item_push_notification_list,
+                            parent,
+                            false);
+            return new PushNotificationListAdapter.PushNotificationViewHolder(itemView);
         }
 
         @Override
-        public int getCount() {
-            return super.getCount();
-        };
+        public void onBindViewHolder(PushNotificationViewHolder holder, int position) {
+            presenter.buildItem(holder, position);
+            holder.itemView.setActivated(isItemChecked(position));
+        }
+
+        public class PushNotificationViewHolder
+                extends RecyclerView.ViewHolder
+                implements IPushNotificationItemView, View.OnClickListener,View.OnLongClickListener
+        {
+
+            TextView subject;
+            TextView receivedDate;
+            TextView body;
+
+            public PushNotificationViewHolder(View itemView) {
+                super(itemView);
+                subject      = (TextView) itemView.findViewById(R.id.item_push_notification_subject);
+                receivedDate = (TextView) itemView.findViewById(R.id.item_push_notification_received_date);
+                body         = (TextView) itemView.findViewById(R.id.item_push_notification_body);
+
+                // events handlers
+                itemView.setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
+                itemView.setLongClickable(true);
+            }
+
+            @Override
+            public void setSubject(String subject) {
+                this.subject.setText(subject);
+            }
+
+            @Override
+            public void setBody(String body) {
+                this.body.setText(body);
+            }
+
+            @Override
+            public void setOpened(boolean isOpened) {
+                if(isOpened){
+                    this.subject.setTypeface(null, Typeface.NORMAL);
+                    return;
+                }
+                this.subject.setTypeface(null, Typeface.BOLD);
+            }
+
+            @Override
+            public void setReceivedDate(Date receivedDate) {
+                DateTime nowBegin = new DateTime().withTime(0,0,0,0);
+                DateTime nowEnd   = new DateTime().withTime(23,59,59,0);
+                DateFormat df     = receivedDate.after(nowBegin.toDate()) && receivedDate.before(nowEnd.toDate()) ?
+                        new SimpleDateFormat("hh:mm a") :
+                        new SimpleDateFormat("E d");
+                this.receivedDate.setText(df.format(receivedDate));
+            }
+
+            @Override
+            public void onClick(View v) {
+                if(isOnSelectionMode())
+                {
+                   finishSelectionMode();
+                }
+                presenter.showNotification(getAdapterPosition());
+            }
+
+            @Override
+            public boolean onLongClick(View v) {
+                if(!isOnSelectionMode()) {
+                    setActionMode(startSupportActionMode(deleteCallback));
+                }
+                toggleSelection(getAdapterPosition());
+                actionMode.setTitle(getSelectedCount() + " Selected");
+                return true;
+            }
+        }
+
     }
+
 }

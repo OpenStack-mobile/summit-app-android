@@ -16,19 +16,11 @@ import org.openstack.android.summit.common.security.ISecurityManager;
  */
 public class MemberProfileInteractor extends BaseInteractor implements IMemberProfileInteractor {
 
-    protected ISecurityManager securityManager;
-    protected IPresentationSpeakerDataStore presentationSpeakerDataStore;
+     protected IPresentationSpeakerDataStore presentationSpeakerDataStore;
 
     public MemberProfileInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(dtoAssembler, summitSelector, summitDataStore);
-        this.securityManager = securityManager;
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.presentationSpeakerDataStore = presentationSpeakerDataStore;
-    }
-
-    @Override
-    public MemberDTO getCurrentMember() {
-        Member member = securityManager.getCurrentMember();
-        return (member != null) ? dtoAssembler.createDTO(member, MemberDTO.class) : null;
     }
 
     @Override
@@ -37,8 +29,4 @@ public class MemberProfileInteractor extends BaseInteractor implements IMemberPr
         return (presentationSpeaker != null) ? dtoAssembler.createDTO(presentationSpeaker, PersonDTO.class) : null;
     }
 
-    @Override
-    public boolean isLoggedInAndConfirmedAttendee() {
-        return securityManager.isLoggedInAndConfirmedAttendee();
-    }
 }

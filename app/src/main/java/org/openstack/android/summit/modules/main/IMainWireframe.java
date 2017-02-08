@@ -13,7 +13,7 @@ public interface IMainWireframe {
 
     void showSpeakerListView(IBaseView context);
 
-    void showNotificationsListView(IBaseView context);
+    void showInboxView(IBaseView context);
 
     void showSearchView(String searchTerm, IBaseView context);
 

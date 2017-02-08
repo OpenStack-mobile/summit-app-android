@@ -11,9 +11,9 @@
             android:title="@string/nav_item_venues" />
         <item android:id="@+id/nav_my_profile" android:icon="@drawable/profile"
             android:title="@string/nav_item_my_summit" android:visible="false" />
-        <item android:id="@+id/nav_notifications"
+        <item android:id="@+id/nav_inbox"
             android:icon="@drawable/notifications"
-            android:title="@string/nav_item_notifications"
+            android:title="@string/nav_item_inbox"
             app:showAsAction="always"
             app:actionLayout="@layout/nav_menu_item_badge"/>
         <item android:id="@+id/nav_settings"

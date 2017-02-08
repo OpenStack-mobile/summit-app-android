@@ -8,9 +8,7 @@ import org.openstack.android.summit.common.business_logic.IBaseInteractor;
  * Created by Claudio Redi on 1/26/2016.
  */
 public interface IMemberProfileInteractor extends IBaseInteractor {
-    MemberDTO getCurrentMember();
 
     PersonDTO getPresentationSpeaker(int speakerId);
 
-    boolean isLoggedInAndConfirmedAttendee();
 }

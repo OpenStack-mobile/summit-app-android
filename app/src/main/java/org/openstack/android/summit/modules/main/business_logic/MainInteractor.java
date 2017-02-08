@@ -5,7 +5,6 @@ import android.util.Log;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
-import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
  */
 public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
-    private ISecurityManager securityManager;
     private IPushNotificationsManager pushNotificationsManager;
     private IReachability reachability;
     private IPushNotificationDataStore pushNotificationDataStore;
@@ -43,8 +41,7 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         ISummitSelector summitSelector
     )
     {
-        super(dtoAssembler, summitSelector, summitDataStore);
-        this.securityManager           = securityManager;
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.pushNotificationsManager  = pushNotificationsManager;
         this.reachability              = reachability;
         this.pushNotificationDataStore = pushNotificationDataStore;
@@ -71,13 +68,6 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
             securityManager.logout(false);
         }
         summitDataStore.clearDataLocal();
-    }
-
-    @Override
-    public MemberDTO getCurrentMember() {
-        Member member = securityManager.getCurrentMember();
-        if(member == null) return null;
-        return dtoAssembler.createDTO(member, MemberDTO.class);
     }
 
     @Override
@@ -110,16 +100,6 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     @Override
     public boolean isNetworkingAvailable() {
         return reachability.isNetworkingAvailable(OpenStackSummitApplication.context);
-    }
-
-    @Override
-    public boolean isLoggedInAndConfirmedAttendee() {
-        return securityManager.isLoggedInAndConfirmedAttendee();
-    }
-
-    @Override
-    public boolean isMemberLogged() {
-        return securityManager.isLoggedIn();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.business_logic;
 
+import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 
 /**
@@ -12,4 +13,11 @@ public interface IBaseInteractor {
     SummitDTO getActiveSummit();
 
     SummitDTO getLatestSummit();
+
+    boolean isLoggedIn();
+
+    boolean isLoggedInAndConfirmedAttendee();
+
+    MemberDTO getCurrentMember();
+
 }

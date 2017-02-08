@@ -17,7 +17,18 @@ import javax.inject.Inject;
  */
 public class LevelScheduleInteractor extends ScheduleInteractor implements ILevelScheduleInteractor {
     @Inject
-    public LevelScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector) {
+    public LevelScheduleInteractor
+    (
+        ISummitEventDataStore summitEventDataStore,
+        ISummitDataStore summitDataStore,
+        ISummitAttendeeDataStore summitAttendeeDataStore,
+        IDTOAssembler dtoAssembler,
+        ISecurityManager securityManager,
+        IPushNotificationsManager pushNotificationsManager,
+        ISession session,
+        ISummitSelector summitSelector
+    )
+    {
         super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
     }
 }

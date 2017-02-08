@@ -29,15 +29,16 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     @Inject
     public ScheduleInteractor
     (
-            ISummitEventDataStore summitEventDataStore,
-            ISummitDataStore summitDataStore,
-            ISummitAttendeeDataStore summitAttendeeDataStore,
-            IDTOAssembler dtoAssembler,
-            ISecurityManager securityManager,
-            IPushNotificationsManager pushNotificationsManager,
-            ISession session,
-            ISummitSelector summitSelector
-    ) {
+        ISummitEventDataStore summitEventDataStore,
+        ISummitDataStore summitDataStore,
+        ISummitAttendeeDataStore summitAttendeeDataStore,
+        IDTOAssembler dtoAssembler,
+        ISecurityManager securityManager,
+        IPushNotificationsManager pushNotificationsManager,
+        ISession session,
+        ISummitSelector summitSelector
+    )
+    {
         super
         (
             summitEventDataStore,

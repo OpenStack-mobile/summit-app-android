@@ -21,14 +21,17 @@ import java.util.List;
 /**
  * Created by sebastian on 8/19/2016.
  */
-public class PushNotificationsListPresenter extends BasePresenter<IPushNotificationsListView, IPushNotificationsListInteractor, IPushNotificationsWireframe>
+public class PushNotificationsListPresenter
+        extends BasePresenter<IPushNotificationsListView, IPushNotificationsListInteractor, IPushNotificationsWireframe>
         implements IPushNotificationsListPresenter {
 
-    private int page                       = 1;
-    private final int OBJECTS_PER_PAGE     = 20;
-    private Boolean loadedAllNotifications = false;
-    private String  term                   = "";
-    private boolean resetState             = false;
+    private int page                                = 1;
+    private final int OBJECTS_PER_PAGE              = 20;
+    private Boolean loadedAllNotifications          = false;
+    private String  term                            = "";
+    private boolean resetState                      = false;
+    List<PushNotificationListItemDTO> notifications = new ArrayList<PushNotificationListItemDTO>();
+    private ISecurityManager securityManager;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -80,9 +83,6 @@ public class PushNotificationsListPresenter extends BasePresenter<IPushNotificat
         loadData();
     }
 
-    List<PushNotificationListItemDTO> notifications = new ArrayList<PushNotificationListItemDTO>();
-    private ISecurityManager securityManager;
-
     public PushNotificationsListPresenter(ISecurityManager securityManager, IPushNotificationsListInteractor interactor, IPushNotificationsWireframe wireframe) {
         super(interactor, wireframe);
         this.securityManager = securityManager;
@@ -102,6 +102,7 @@ public class PushNotificationsListPresenter extends BasePresenter<IPushNotificat
         List<PushNotificationListItemDTO> notificationsPage = interactor.getNotifications(term, securityManager.getCurrentMember(), page, OBJECTS_PER_PAGE);
         notifications.addAll(notificationsPage);
         view.setNotifications(notifications);
+        view.refresh();
         loadedAllNotifications = notificationsPage.size() < OBJECTS_PER_PAGE;
         page++;
     }

@@ -3,6 +3,8 @@ package org.openstack.android.summit.modules.main;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.about.IAboutWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
+import org.openstack.android.summit.modules.inbox.IInboxWireframe;
+import org.openstack.android.summit.modules.inbox.InboxWireframe;
 import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
@@ -30,9 +32,11 @@ public class MainWireframe implements IMainWireframe {
 
     IAboutWireframe aboutWireframe;
 
-    IPushNotificationsWireframe notificationsWireframe;
+    IInboxWireframe inboxWireframe;
 
     ISettingsWireframe settingsWireframe;
+
+    IPushNotificationsWireframe pushNotificationsWireframe;
 
     public MainWireframe(IEventsWireframe eventsWireframe,
                          ISpeakerListWireframe speakerListWireframe,
@@ -41,7 +45,8 @@ public class MainWireframe implements IMainWireframe {
                          IVenuesWireframe venuesWireframe,
                          IMemberOrderConfirmWireframe memberOrderConfirmWireframe,
                          IAboutWireframe aboutWireframe,
-                         IPushNotificationsWireframe notificationsWireframe,
+                         IPushNotificationsWireframe pushNotificationsWireframe,
+                         IInboxWireframe inboxWireframe,
                          ISettingsWireframe settingsWireframe
                          ) {
 
@@ -52,7 +57,8 @@ public class MainWireframe implements IMainWireframe {
         this.venuesWireframe             = venuesWireframe;
         this.memberOrderConfirmWireframe = memberOrderConfirmWireframe;
         this.aboutWireframe              = aboutWireframe;
-        this.notificationsWireframe      = notificationsWireframe;
+        this.inboxWireframe              = inboxWireframe;
+        this.pushNotificationsWireframe  = pushNotificationsWireframe;
         this.settingsWireframe           = settingsWireframe;
     }
 
@@ -69,8 +75,8 @@ public class MainWireframe implements IMainWireframe {
     }
 
     @Override
-    public void showNotificationsListView(IBaseView context) {
-        notificationsWireframe.presentNotificationsListView(context);
+    public void showInboxView(IBaseView context) {
+        inboxWireframe.presentInboxView(context);
     }
 
     public void showSearchView(String searchTerm, IBaseView context) {
@@ -104,8 +110,8 @@ public class MainWireframe implements IMainWireframe {
 
     @Override
     public void showPushNotification(int pushNotificationId, IBaseView context) {
-        notificationsWireframe.presentNotificationsListView(context);
-        notificationsWireframe.showNotification(pushNotificationId, context);
+        pushNotificationsWireframe.presentNotificationsListView(context);
+        pushNotificationsWireframe.showNotification(pushNotificationId, context);
     }
 
     @Override

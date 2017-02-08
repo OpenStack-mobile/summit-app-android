@@ -34,7 +34,7 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
 
     void showEventView(int eventId);
 
-    void showNotificationView();
+    void showInboxView();
 
     void enableDataUpdateService();
 

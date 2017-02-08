@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.about.IAboutWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
+import org.openstack.android.summit.modules.inbox.IInboxWireframe;
 import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.main.MainWireframe;
 import org.openstack.android.summit.modules.main.business_logic.DataLoadingInteractor;
@@ -41,8 +42,8 @@ import dagger.Provides;
 public class MainModule {
 
     @Provides
-    IMainWireframe providesMainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IMemberOrderConfirmWireframe memberOrderConfirmWireframe, IAboutWireframe aboutWireframe, IPushNotificationsWireframe nofificationsWireframe, ISettingsWireframe settingsWireframe) {
-        return new MainWireframe(eventsWireframe, speakerListWireframe, memberProfileWireframe, searchWireframe, venuesWireframe, memberOrderConfirmWireframe, aboutWireframe, nofificationsWireframe, settingsWireframe);
+    IMainWireframe providesMainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IMemberOrderConfirmWireframe memberOrderConfirmWireframe, IAboutWireframe aboutWireframe, IPushNotificationsWireframe nofificationsWireframe, ISettingsWireframe settingsWireframe, IInboxWireframe inboxWireframe) {
+        return new MainWireframe(eventsWireframe, speakerListWireframe, memberProfileWireframe, searchWireframe, venuesWireframe, memberOrderConfirmWireframe, aboutWireframe, nofificationsWireframe, inboxWireframe, settingsWireframe);
     }
 
     @Provides
@@ -56,8 +57,8 @@ public class MainModule {
     }
 
     @Provides
-    IDataLoadingInteractor providesDataLoadingInteractor(IDTOAssembler dtoAssembler, ISummitSelector summitSelector, ISummitDataStore summitDataStore) {
-        return new DataLoadingInteractor(dtoAssembler, summitSelector, summitDataStore);
+    IDataLoadingInteractor providesDataLoadingInteractor(ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitSelector summitSelector, ISummitDataStore summitDataStore) {
+        return new DataLoadingInteractor(securityManager, dtoAssembler, summitSelector, summitDataStore);
     }
 
     @Provides

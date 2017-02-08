@@ -10,7 +10,5 @@ import org.openstack.android.summit.common.business_logic.IBaseInteractor;
 
 public interface ISplashInteractor extends IBaseInteractor {
 
-    boolean isMemberLogged();
-
     void login(Context context);
 }

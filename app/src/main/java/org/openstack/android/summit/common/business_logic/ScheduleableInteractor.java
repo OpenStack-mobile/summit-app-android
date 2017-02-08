@@ -22,7 +22,6 @@ import java.util.Date;
  */
 public class ScheduleableInteractor extends BaseInteractor implements IScheduleableInteractor {
 
-    protected ISecurityManager          securityManager;
     protected ISummitEventDataStore     summitEventDataStore;
     protected ISummitAttendeeDataStore  summitAttendeeDataStore;
     protected IPushNotificationsManager pushNotificationsManager;
@@ -38,9 +37,7 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
             IPushNotificationsManager pushNotificationsManager,
             ISummitSelector summitSelector
     ) {
-        super(dtoAssembler, summitSelector, summitDataStore);
-
-        this.securityManager          = securityManager;
+        super(securityManager,dtoAssembler, summitSelector, summitDataStore);
         this.summitEventDataStore     = summitEventDataStore;
         this.summitAttendeeDataStore  = summitAttendeeDataStore;
         this.pushNotificationsManager = pushNotificationsManager;
@@ -124,15 +121,6 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
         return found;
     }
 
-    @Override
-    public boolean isMemberLogged() {
-        return securityManager.isLoggedIn();
-    }
-
-    @Override
-    public boolean isMemberLoggedAndConfirmedAttendee() {
-        return securityManager.isLoggedInAndConfirmedAttendee();
-    }
 
     @Override
     public boolean shouldShowVenues() {

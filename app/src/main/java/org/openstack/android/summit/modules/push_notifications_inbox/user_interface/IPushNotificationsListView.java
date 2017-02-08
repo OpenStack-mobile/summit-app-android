@@ -12,4 +12,5 @@ public interface IPushNotificationsListView extends IBaseView {
     void setNotifications(List<PushNotificationListItemDTO> notifications);
 
     void refresh();
+
 }

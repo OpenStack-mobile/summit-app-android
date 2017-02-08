@@ -15,6 +15,7 @@ import org.openstack.android.summit.common.data_access.repositories.ITrackDataSt
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
 
     public SearchInteractor
     (
+        ISecurityManager securityManager,
         IScheduleableInteractor scheduleableInteractor,
         ISummitEventDataStore summitEventDataStore,
         ITrackDataStore trackDataStore,
@@ -40,7 +42,7 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
         ISummitSelector summitSelector
     )
     {
-        super(dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.scheduleableInteractor       = scheduleableInteractor;
         this.summitEventDataStore         = summitEventDataStore;
         this.trackDataStore               = trackDataStore;
@@ -60,16 +62,6 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     @Override
     public boolean isEventScheduledByLoggedMember(int eventId) {
         return scheduleableInteractor.isEventScheduledByLoggedMember(eventId);
-    }
-
-    @Override
-    public boolean isMemberLoggedAndConfirmedAttendee() {
-        return scheduleableInteractor.isMemberLoggedAndConfirmedAttendee();
-    }
-
-    @Override
-    public boolean isMemberLogged() {
-        return scheduleableInteractor.isMemberLogged();
     }
 
     @Override

@@ -19,15 +19,14 @@ import java.util.List;
  * Created by Claudio Redi on 3/27/2016.
  */
 public class MemberOrderConfirmInteractor extends BaseInteractor implements IMemberOrderConfirmInteractor {
+
     IMemberRemoteDataStore memberRemoteDataStore;
     IReachability reachability;
-    ISecurityManager securityManager;
 
     public MemberOrderConfirmInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.memberRemoteDataStore = memberRemoteDataStore;
         this.reachability = reachability;
-        this.securityManager = securityManager;
     }
 
     @Override

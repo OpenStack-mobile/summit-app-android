@@ -70,7 +70,7 @@
     <string name="average_rating">Average Rating</string>
     <string name="loading_ratings_and_reviews">Loading Ratings &amp; Reviews...</string>
     <string name="title_activity_initial_data_loading_activiy">InitialDataLoadingActiviy</string>
-    <string name="nav_item_notifications">NOTIFICATIONS</string>
+    <string name="nav_item_inbox">INBOX</string>
     <string name="nav_item_settings">SETTINGS</string>
     <string name="nav_item_about">ABOUT</string>
     <string name="nav_item_my_summit">MY SUMMIT</string>
@@ -100,4 +100,5 @@
     <string name="push_notification_default_title">OpenStack Notification</string>
     <string name="splash_login_button_txt">login with openstackid</string>
     <string name="splash_guest_button_txt">continue as guest</string>
+    <string name="inbox">Inbox</string>
 </resources>

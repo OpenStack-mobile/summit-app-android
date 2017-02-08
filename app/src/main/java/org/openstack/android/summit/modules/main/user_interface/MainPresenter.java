@@ -76,7 +76,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         updateNotificationCounter();
         checkDeepLinks();
         interactor.subscribeToPushNotifications();
-        view.toggleMyProfileMenuItem(interactor.isMemberLogged());
+        view.toggleMyProfileMenuItem(interactor.isLoggedIn());
     }
 
     @Override
@@ -144,7 +144,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
                     }
                     if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewNotification) {
                         if (!deepLinkInfo.hasParam()) return false;
-                        view.setMenuItemChecked(R.id.nav_notifications);
+                        view.setMenuItemChecked(R.id.nav_inbox);
                         this.wireframe.showPushNotification(deepLinkInfo.getParamAsInt(), this.view);
                         return true;
                     }
@@ -184,12 +184,12 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     }
 
     @Override
-    public void showNotificationView() {
+    public void showInboxView() {
         if (!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
-        wireframe.showNotificationsListView(view);
+        wireframe.showInboxView(view);
     }
 
     @Override

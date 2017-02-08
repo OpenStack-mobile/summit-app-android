@@ -522,8 +522,8 @@ public class MainActivity
                 if(currentEntryName != null && currentEntryName.equals("nav_about")){
                     menuItemId = R.id.nav_about;
                 }
-                if(currentEntryName != null && currentEntryName.equals("nav_notifications")){
-                    menuItemId = R.id.nav_notifications;
+                if(currentEntryName != null && currentEntryName.equals("nav_inbox")){
+                    menuItemId = R.id.nav_inbox;
                 }
                 if(currentEntryName != null && currentEntryName.equals("nav_my_profile")){
                     menuItemId = R.id.nav_my_profile;
@@ -564,8 +564,8 @@ public class MainActivity
             presenter.showVenuesView();
         } else if (selectedMenuItemId == R.id.nav_my_profile) {
             presenter.showMyProfileView();
-        } else if (selectedMenuItemId == R.id.nav_notifications) {
-            presenter.showNotificationView();
+        } else if (selectedMenuItemId == R.id.nav_inbox) {
+            presenter.showInboxView();
         } else if (selectedMenuItemId == R.id.nav_settings) {
             presenter.showSettingsView();
         } else if (selectedMenuItemId == R.id.nav_about) {
@@ -680,7 +680,7 @@ public class MainActivity
     public void updateNotificationCounter(Long value) {
         BadgeCounterMenuItemDecorator badge = new BadgeCounterMenuItemDecorator
                 (
-                        navigationView.getMenu().findItem(R.id.nav_notifications),
+                        navigationView.getMenu().findItem(R.id.nav_inbox),
                         R.id.txt_counter
                 );
         if (value > 0) {

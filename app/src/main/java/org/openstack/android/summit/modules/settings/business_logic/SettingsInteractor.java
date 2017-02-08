@@ -6,6 +6,7 @@ import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 /**
  * Created by sebastian on 9/19/2016.
@@ -16,13 +17,14 @@ public class SettingsInteractor extends BaseInteractor implements ISettingsInter
 
     public SettingsInteractor
     (
+        ISecurityManager securityManager,
         IDTOAssembler dtoAssembler,
         ISummitSelector summitSelector,
         ISummitDataStore summitDataStore,
         ISession session
     )
     {
-        super(dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.session = session;
     }
 

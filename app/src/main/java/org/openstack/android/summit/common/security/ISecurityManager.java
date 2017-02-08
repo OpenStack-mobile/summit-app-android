@@ -16,9 +16,9 @@ public interface ISecurityManager {
 
     void logout(boolean enabledDataUpdates);
 
-    boolean isLoggedIn();
-
     Member getCurrentMember();
+
+    boolean isLoggedIn();
 
     boolean isLoggedInAndConfirmedAttendee();
 

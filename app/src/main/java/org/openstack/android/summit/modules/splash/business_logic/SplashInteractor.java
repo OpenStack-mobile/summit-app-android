@@ -15,7 +15,6 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 
 public class SplashInteractor extends BaseInteractor implements ISplashInteractor {
 
-    private ISecurityManager securityManager;
 
     public SplashInteractor
     (
@@ -25,13 +24,8 @@ public class SplashInteractor extends BaseInteractor implements ISplashInteracto
         ISummitSelector summitSelector
     )
     {
-        super(dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.securityManager = securityManager;
-    }
-
-    @Override
-    public boolean isMemberLogged() {
-        return securityManager.isLoggedIn();
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 /**
  * Created by Claudio Redi on 2/11/2016.
@@ -16,8 +17,16 @@ public class VenueMapInteractor extends BaseInteractor implements IVenueMapInter
 
     private IVenueDataStore venueDataStore;
 
-    public VenueMapInteractor(IVenueDataStore venueDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(dtoAssembler, summitSelector, summitDataStore);
+    public VenueMapInteractor
+    (
+        ISecurityManager securityManager,
+        IVenueDataStore venueDataStore,
+        IDTOAssembler dtoAssembler,
+        ISummitDataStore summitDataStore,
+        ISummitSelector summitSelector
+    )
+    {
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.venueDataStore = venueDataStore;
     }
 

@@ -17,11 +17,16 @@ import java.util.List;
  * Created by Claudio Redi on 1/27/2016.
  */
 public class FeedbackGivenListInteractor extends BaseInteractor implements IFeedbackGivenListInteractor {
-    ISecurityManager securityManager;
 
-    public FeedbackGivenListInteractor(ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(dtoAssembler, summitSelector, summitDataStore);
-        this.securityManager = securityManager;
+    public FeedbackGivenListInteractor
+    (
+        ISecurityManager securityManager,
+        IDTOAssembler dtoAssembler,
+        ISummitDataStore summitDataStore,
+        ISummitSelector summitSelector
+    )
+    {
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
     }
 
     @Override

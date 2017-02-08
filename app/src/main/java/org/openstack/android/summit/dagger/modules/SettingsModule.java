@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.settings.ISettingsWireframe;
 import org.openstack.android.summit.modules.settings.SettingsWireframe;
 import org.openstack.android.summit.modules.settings.business_logic.ISettingsInteractor;
@@ -31,8 +32,8 @@ public class SettingsModule {
     }
 
     @Provides
-    ISettingsInteractor providesSettingsInteractor(IDTOAssembler dtoAssembler, ISession session, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new SettingsInteractor(dtoAssembler, summitSelector, summitDataStore, session);
+    ISettingsInteractor providesSettingsInteractor(ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISession session, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new SettingsInteractor(securityManager, dtoAssembler, summitSelector, summitDataStore, session);
     }
 
     @Provides

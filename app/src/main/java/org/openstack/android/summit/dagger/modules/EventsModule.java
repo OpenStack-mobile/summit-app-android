@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.network.IReachability;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.events.EventsWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.events.business_logic.EventsInteractor;
@@ -35,12 +36,13 @@ public class EventsModule {
     @Provides
     IEventsInteractor providesEventsInteractor
     (
+        ISecurityManager securityManager,
         ISummitDataStore summitDataStore,
         IReachability reachability,
         IDTOAssembler dtoAssembler,
         ISummitSelector  summitSelector
     ) {
-        return new EventsInteractor(summitDataStore, reachability, dtoAssembler, summitSelector);
+        return new EventsInteractor(securityManager, summitDataStore, reachability, dtoAssembler, summitSelector);
     }
 
     @Provides

@@ -100,10 +100,10 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setSponsors(event.getSponsors());
         view.setSpeakers(event.getModeratorAndSpeakers());
         view.setScheduled(interactor.isEventScheduledByLoggedMember(eventId));
-        view.setIsScheduledStatusVisible(interactor.isMemberLoggedAndConfirmedAttendee());
+        view.setIsScheduledStatusVisible(interactor.isLoggedInAndConfirmedAttendee());
         view.setAllowNewFeedback(getAllowNewFeedback());
         view.setTags(event.getTags());
-        view.setAllowRsvp(event.getAllowRsvp() && interactor.isMemberLoggedAndConfirmedAttendee());
+        view.setAllowRsvp(event.getAllowRsvp() && interactor.isLoggedInAndConfirmedAttendee());
         view.hasMyFeedback(myFeedbackForEvent != null);
 
         if (event.getVideo() != null && event.getVideo().getYouTubeId() != null) {
@@ -292,7 +292,7 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     }
 
     private boolean getAllowNewFeedback() {
-        return event.getAllowFeedback() && event.isStarted() && interactor.isMemberLogged() &&
+        return event.getAllowFeedback() && event.isStarted() && interactor.isLoggedIn() &&
                 myFeedbackForEvent == null;
     }
 

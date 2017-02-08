@@ -1,10 +1,11 @@
-package org.openstack.android.summit.modules.push_notifications.business_logic;
+package org.openstack.android.summit.modules.push_notifications_inbox.business_logic;
 
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IEventPushNotificationDataStore;
@@ -15,6 +16,7 @@ import org.openstack.android.summit.common.entities.notifications.EventPushNotif
 import org.openstack.android.summit.common.entities.notifications.IPushNotification;
 import org.openstack.android.summit.common.entities.notifications.PushNotification;
 import org.openstack.android.summit.common.entities.notifications.TeamPushNotification;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import io.realm.Realm;
@@ -29,14 +31,17 @@ public class PushNotificationInteractor extends BaseInteractor implements IPushN
     private ITeamPushNotificationDataStore teamPushNotificationDataStore;
     private IEventPushNotificationDataStore eventPushNotificationDataStore;
 
-    public PushNotificationInteractor(
-            IPushNotificationDataStore pushNotificationDataStore,
-            ITeamPushNotificationDataStore teamPushNotificationDataStore,
-            IEventPushNotificationDataStore eventPushNotificationDataStore,
-            ISummitDataStore summitDataStore,
-            ISummitSelector summitSelector
+    public PushNotificationInteractor
+    (
+        ISecurityManager securityManager,
+        IDTOAssembler dtoAssembler,
+        IPushNotificationDataStore pushNotificationDataStore,
+        ITeamPushNotificationDataStore teamPushNotificationDataStore,
+        IEventPushNotificationDataStore eventPushNotificationDataStore,
+        ISummitDataStore summitDataStore,
+        ISummitSelector summitSelector
     ){
-        super(null, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.pushNotificationDataStore = pushNotificationDataStore;
         this.teamPushNotificationDataStore = teamPushNotificationDataStore;
         this.eventPushNotificationDataStore = eventPushNotificationDataStore;
