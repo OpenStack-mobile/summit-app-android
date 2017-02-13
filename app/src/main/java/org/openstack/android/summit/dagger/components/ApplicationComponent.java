@@ -6,6 +6,7 @@ package org.openstack.android.summit.dagger.components;
 
 import org.openstack.android.summit.dagger.modules.InboxModule;
 import org.openstack.android.summit.dagger.modules.SplashModule;
+import org.openstack.android.summit.dagger.modules.TeamsModule;
 import org.openstack.android.summit.modules.inbox.user_interface.InboxFragment;
 import org.openstack.android.summit.modules.splash.user_interface.SplashActivity;
 import org.openstack.android.summit.SummitDataLoadingActivity;
@@ -73,6 +74,7 @@ import org.openstack.android.summit.modules.search.user_interface.SearchFragment
 import org.openstack.android.summit.modules.settings.user_interface.SettingsFragment;
 import org.openstack.android.summit.modules.speaker_presentations.user_interface.SpeakerPresentationsFragment;
 import org.openstack.android.summit.modules.speakers_list.user_interface.SpeakerListFragment;
+import org.openstack.android.summit.modules.teams_notifications_inbox.user_interface.TeamsListFragment;
 import org.openstack.android.summit.modules.track_list.user_interface.TrackListFragment;
 import org.openstack.android.summit.modules.track_schedule.user_interface.TrackScheduleFragment;
 import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailFragment;
@@ -85,7 +87,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
-@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class, PushNotificationsInboxModule.class, SettingsModule.class, RestApiModule.class, PushNotificationsModule.class, SplashModule.class, InboxModule.class} )
+@Component(modules = { ApplicationModule.class, MainModule.class, DataAccessModule.class, EventsModule.class, EventDetailModule.class, DTOAssemblerModule.class, SecurityModule.class, GeneralScheduleModule.class, TrackListModule.class, LevelListModule.class, LevelScheduleModule.class, TrackScheduleModule.class, SpeakerListModule.class, SearchModule.class, ScheduleableModule.class, BaseModule.class, EventDetailModule.class, MemberProfileModule.class, PersonalScheduleModule.class, MemberProfileDetailModule.class, SpeakerPresentationsModule.class, FeedbackGivenListModule.class, GeneralScheduleFilterModule.class, VenuesModule.class, VenueListModule.class, VenuesMapModule.class, VenueDetailModule.class, VenueMapModule.class, FeedbackEditModule.class, MemberOrderConfirmModule.class, AboutModule.class, PushNotificationsInboxModule.class, SettingsModule.class, RestApiModule.class, PushNotificationsModule.class, SplashModule.class, InboxModule.class, TeamsModule.class}  )
 public interface ApplicationComponent {
 
     void inject(MainActivity mainActivity);
@@ -129,4 +131,5 @@ public interface ApplicationComponent {
     void inject(SplashActivity splashActivity);
     void inject(InboxFragment inboxFragment);
     void inject(PushPushNotificationsListFragment pushPushNotificationsListFragment);
+    void inject(TeamsListFragment teamsListFragment);
 }

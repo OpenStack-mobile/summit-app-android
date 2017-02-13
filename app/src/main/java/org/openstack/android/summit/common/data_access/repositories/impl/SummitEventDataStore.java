@@ -2,7 +2,7 @@ package org.openstack.android.summit.common.data_access.repositories.impl;
 
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.remote.ISummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;

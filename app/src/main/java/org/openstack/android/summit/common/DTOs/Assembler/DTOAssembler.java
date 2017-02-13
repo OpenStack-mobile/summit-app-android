@@ -18,6 +18,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitEvent
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitEvent2ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitEventRealmProxy2EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitEventRealmProxy2ScheduleItemDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.TeamRealmProxy2TeamDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.Venue2VenueDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueFloorRealmProxy2VenueFloorDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueRealmProxy2VenueDTO;
@@ -56,6 +57,7 @@ public class DTOAssembler implements IDTOAssembler {
         modelMapper.addConverter(new PushNotificationRealmProxy2PushNotificationListItemDTO());
         modelMapper.addConverter(new PushNotification2PushNotificationDetailDTO());
         modelMapper.addConverter(new PushNotificationRealmProxy2PushNotificationDetailDTO());
+        modelMapper.addConverter(new TeamRealmProxy2TeamDTO());
     }
 
     @Override

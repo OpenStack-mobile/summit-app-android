@@ -19,10 +19,8 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.repositories.impl.MemberDataStore;
 import org.openstack.android.summit.common.entities.Member;
 
 import javax.inject.Inject;

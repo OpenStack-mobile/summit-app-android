@@ -19,14 +19,15 @@ import org.openstack.android.summit.common.data_access.repositories.IDataUpdateD
 import org.openstack.android.summit.common.data_access.repositories.IEventPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IEventTypeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.remote.TeamRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.remote.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
-import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.remote.ISummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.remote.ISummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitTypeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ITagDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ITeamDataStore;
@@ -38,7 +39,7 @@ import org.openstack.android.summit.common.data_access.repositories.IVenueFloorD
 import org.openstack.android.summit.common.data_access.repositories.IVenueRoomDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.ImageDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.MemberDataStore;
-import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.remote.MemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationLinkDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationSlideDataStore;
@@ -46,10 +47,10 @@ import org.openstack.android.summit.common.data_access.repositories.impl.Present
 import org.openstack.android.summit.common.data_access.repositories.impl.PushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.SummitAttendeeDataStore;
-import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.remote.SummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.SummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.SummitEventDataStore;
-import org.openstack.android.summit.common.data_access.SummitEventRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.remote.SummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.SummitTypeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.TagDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.TeamDataStore;
@@ -111,6 +112,7 @@ import org.openstack.android.summit.common.data_access.deserialization.TrackGrou
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
+import org.openstack.android.summit.common.data_access.repositories.remote.ITeamRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.DeleteRealmStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
@@ -588,6 +590,15 @@ public class DataAccessModule {
     )
     {
         return new PresentationSlideDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    ITeamRemoteDataStore providesTeamRemoteDataStore(
+        @Named("MemberProfileRXJava2") Retrofit restClient,
+        IDeserializer deserializer
+    )
+    {
+        return new TeamRemoteDataStore(restClient, deserializer);
     }
 
 }

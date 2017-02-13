@@ -1,4 +1,4 @@
-package org.openstack.android.summit.common.data_access;
+package org.openstack.android.summit.common.data_access.repositories.impl.remote;
 
 import android.util.Log;
 
@@ -7,6 +7,8 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitEventsApi;
 import org.openstack.android.summit.common.api.ISummitSelector;
+import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
+import org.openstack.android.summit.common.data_access.repositories.remote.ISummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 

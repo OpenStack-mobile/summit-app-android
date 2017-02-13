@@ -23,6 +23,10 @@ import com.crashlytics.android.Crashlytics;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by smarcet on 2/3/17.
  */
@@ -59,21 +63,9 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
         presenter.setView(this);
         presenter.onCreate(savedInstanceState);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.loginClicked(v);
-            }
+        loginButton.setOnClickListener( v -> presenter.loginClicked(v));
 
-        });
-
-        guestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.guestClicked(v);
-            }
-
-        });
+        guestButton.setOnClickListener(v-> presenter.guestClicked(v));
 
     }
 

@@ -14,6 +14,7 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.SlidingTabLayout;
 import org.openstack.android.summit.modules.push_notifications_inbox.user_interface.PushPushNotificationsListFragment;
+import org.openstack.android.summit.modules.teams_notifications_inbox.user_interface.TeamsListFragment;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,9 @@ public class InboxFragment
 
     @Inject
     PushPushNotificationsListFragment pushPushNotificationsListFragment;
+
+    @Inject
+    TeamsListFragment teamsListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +104,7 @@ public class InboxFragment
                 case 0:
                     return pushPushNotificationsListFragment;
                 case 1:
-                    return pushPushNotificationsListFragment;
+                    return teamsListFragment;
 
             }
             return null;

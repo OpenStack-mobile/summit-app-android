@@ -74,7 +74,12 @@ final public class OIDCConfigurationManager extends ConfigurationParamsManager i
                     String.format("%s/summits/write", rsBaseUrl),
                     String.format("%s/summits/read-external-orders", rsBaseUrl),
                     String.format("%s/summits/confirm-external-orders", rsBaseUrl),
-                    String.format("%s/me/read", rsBaseUrl)
+                    String.format("%s/me/read", rsBaseUrl),
+                    String.format("%s/teams/read", rsBaseUrl),
+                    String.format("%s/teams/write", rsBaseUrl),
+                    String.format("%s/members/read", rsBaseUrl),
+                    String.format("%s/members/invitations/read", rsBaseUrl),
+                    String.format("%s/members/invitations/write", rsBaseUrl),
                 };
             }
             case ServiceAccount:{

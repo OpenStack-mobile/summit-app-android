@@ -1,4 +1,4 @@
-package org.openstack.android.summit.common.data_access;
+package org.openstack.android.summit.common.data_access.repositories.impl.remote;
 
 import android.util.Log;
 
@@ -12,6 +12,8 @@ import org.openstack.android.summit.common.api.ISummitEventsApi;
 import org.openstack.android.summit.common.api.ISummitExternalOrdersApi;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.api.SummitEventFeedbackRequest;
+import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
+import org.openstack.android.summit.common.data_access.repositories.remote.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.INonConfirmedSummitAttendeeDeserializer;
 import org.openstack.android.summit.common.entities.Feedback;

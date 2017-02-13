@@ -1,12 +1,13 @@
-package org.openstack.android.summit.common.data_access;
+package org.openstack.android.summit.common.data_access.repositories.remote;
 
+import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
 /**
  * Created by Claudio Redi on 2/19/2016.
  */
-public interface ISummitEventRemoteDataStore {
+public interface ISummitEventRemoteDataStore extends IBaseRemoteDataStore {
 
     void getFeedback(int eventId, int page, int objectsPerPage, IDataStoreOperationListener<Feedback> dataStoreOperationListener);
 

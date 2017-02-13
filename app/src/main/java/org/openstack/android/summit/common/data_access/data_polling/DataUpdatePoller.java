@@ -11,7 +11,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitEntityEventsApi;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.BaseRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.remote.BaseRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.entities.DataUpdate;

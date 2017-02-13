@@ -6,7 +6,7 @@ import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
+import org.openstack.android.summit.common.data_access.repositories.remote.ISummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;

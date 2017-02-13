@@ -1,5 +1,6 @@
-package org.openstack.android.summit.common.data_access;
+package org.openstack.android.summit.common.data_access.repositories.remote;
 
+import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
@@ -7,7 +8,7 @@ import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 /**
  * Created by Claudio Redi on 12/16/2015.
  */
-public interface IMemberRemoteDataStore {
+public interface IMemberRemoteDataStore extends IBaseRemoteDataStore {
 
     void getMemberInfo(final IDataStoreOperationListener<Member> dataStoreOperationListener);
 

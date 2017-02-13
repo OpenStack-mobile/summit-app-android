@@ -18,7 +18,6 @@ public class InboxPresenter
 
     @Override
     public int getTabsToShow() {
-        /*return interactor.isLoggedIn() ? 2 : 1;*/
-        return 1;
+        return interactor.isLoggedIn() ? 2 : 1;
     }
 }

@@ -65,3 +65,5 @@
 -dontwarn okio.**
 -keep class javax.inject.** { *; }
 -keep class javax.xml.stream.** { *; }
+
+-dontwarn java.lang.invoke.*
