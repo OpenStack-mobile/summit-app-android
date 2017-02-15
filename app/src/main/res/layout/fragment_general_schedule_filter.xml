@@ -11,27 +11,6 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <LinearLayout android:id="@+id/hide_past_talks_header" style="@style/AppTheme.SubsectionHeader">
-                <TextView
-                    style="@style/AppTheme.SubsectionHeader.Text"
-                    android:text="@string/past_talks"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/hide_past_talks_container"
-                android:orientation="vertical"
-                android:background="@color/openStackDarkBlue"
-                android:padding="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-               <CheckBox
-                   android:id="@+id/hide_past_talks"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:background="@color/white"
-                   android:text="@string/past_talks_hide"
-                   android:textColor="@color/openStackDarkGray"
-                   android:checked="false"/>
-            </LinearLayout>
             <LinearLayout style="@style/AppTheme.SubsectionHeader">
                 <TextView
                     style="@style/AppTheme.SubsectionHeader.Text"
@@ -52,7 +31,6 @@
                     android:textColorHint="@color/openStackGray"
                     android:hint="Filter terms"
                     style="@style/AutoCompleteTextViewAppTheme" />
-
                 <me.kaede.tagview.TagView
                     android:id="@+id/filter_tags_list"
                     android:layout_width="match_parent"

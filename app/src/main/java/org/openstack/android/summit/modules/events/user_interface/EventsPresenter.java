@@ -1,27 +1,14 @@
 package org.openstack.android.summit.modules.events.user_interface;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
-import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.events.business_logic.IEventsInteractor;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.TimeZone;
 
 import javax.inject.Inject;
 
@@ -59,15 +46,6 @@ public class EventsPresenter extends BasePresenter<IEventsView, IEventsInteracto
         super.onResume();
         // set the default enabled filter
         if(!this.interactor.isDataLoaded()) return;
-
-        SummitDTO currentSummit = interactor.getActiveSummit();
-        if (currentSummit.isCurrentDateTimeInsideSummitRange()) {
-                if (!scheduleFilter.isTypeSet(FilterSectionType.HidePastTalks))
-                    scheduleFilter.setTypeValues(FilterSectionType.HidePastTalks, true);
-        }
-        else {
-            scheduleFilter.clearTypeValues(FilterSectionType.HidePastTalks);
-        }
 
         view.setShowActiveFilterIndicator(scheduleFilter.hasActiveFilters());
     }

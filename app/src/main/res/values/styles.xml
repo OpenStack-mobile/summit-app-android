@@ -282,4 +282,12 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="AppTheme.NowButton">
+        <item name="android:textColor">@drawable/material_now_button_text</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:background">@drawable/material_now_button</item>
+    </style>
+
+
 </resources>

@@ -100,4 +100,5 @@
     <string name="push_notification_default_title">OpenStack Notification</string>
     <string name="splash_login_button_txt">login with openstackid</string>
     <string name="splash_guest_button_txt">continue as guest</string>
+    <string name="now">NOW</string>
 </resources>

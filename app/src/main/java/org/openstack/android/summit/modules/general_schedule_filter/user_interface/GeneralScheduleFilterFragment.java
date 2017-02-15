@@ -28,7 +28,9 @@ import me.kaede.tagview.TagView;
 /**
  * Created by Claudio Redi on 2/1/2016.
  */
-public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralScheduleFilterPresenter> implements IGeneralScheduleFilterView {
+public class GeneralScheduleFilterFragment
+        extends BaseFragment<IGeneralScheduleFilterPresenter>
+        implements IGeneralScheduleFilterView {
 
     private SummitTypeListAdapter summitTypeListAdapter;
     private TrackGroupListAdapter trackGroupListAdapter;
@@ -46,14 +48,6 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_general_schedule_filter, container, false);
-
-        final CheckBox hidePastTalks = (CheckBox) view.findViewById(R.id.hide_past_talks);
-        hidePastTalks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.toggleHidePastTalks(hidePastTalks.isChecked());
-            }
-        });
 
         LinearListView summitTypesList = (LinearListView) view.findViewById(R.id.filter_summit_types_list);
         summitTypeListAdapter = new SummitTypeListAdapter(getContext());
@@ -150,20 +144,6 @@ public class GeneralScheduleFilterFragment extends BaseFragment<IGeneralSchedule
         tagView.addTag(tag);
 
         tagsTextView.setText("");
-    }
-
-    @Override
-    public void toggleShowPastTalks(boolean isChecked) {
-        CheckBox hidePastTalks = (CheckBox) view.findViewById(R.id.hide_past_talks);
-        hidePastTalks.setChecked(isChecked);
-    }
-
-    @Override
-    public void showShowPastTalks(boolean show) {
-        LinearLayout header = (LinearLayout) view.findViewById(R.id.hide_past_talks_header);
-        LinearLayout container = (LinearLayout) view.findViewById(R.id.hide_past_talks_container);
-        header.setVisibility(show ? View.VISIBLE : View.GONE);
-        container.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override

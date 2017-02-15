@@ -6,7 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ToggleButton;
+
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.user_interface.ScheduleFragment;
@@ -14,7 +17,8 @@ import org.openstack.android.summit.common.user_interface.ScheduleFragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePresenter> implements IGeneralScheduleView {
+public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePresenter>
+        implements IGeneralScheduleView {
 
     public GeneralScheduleFragment() {
         // Required empty public constructor
@@ -35,7 +39,7 @@ public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(Constants.LOG_TAG, "GeneralScheduleFragment.onCreateView");
-        view = inflater.inflate(R.layout.fragment_general_schedule, container, false);
+        view      = inflater.inflate(R.layout.fragment_general_schedule, container, false);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

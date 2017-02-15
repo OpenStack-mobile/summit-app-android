@@ -1,13 +1,11 @@
 package org.openstack.android.summit.modules.general_schedule.user_interface;
 
 import org.joda.time.DateTime;
-import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
-import org.openstack.android.summit.modules.events.user_interface.IEventsPresenter;
 import org.openstack.android.summit.modules.general_schedule.IGeneralScheduleWireframe;
 import org.openstack.android.summit.modules.general_schedule.business_logic.IGeneralScheduleInteractor;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
@@ -39,8 +37,8 @@ public class GeneralSchedulePresenter extends SchedulePresenter<GeneralScheduleF
         List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
         List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels       = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags         = (List<String>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<String> filtersOnLevels       = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String> filtersOnTags         = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
         List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         List<ScheduleItemDTO> events = interactor.getScheduleEvents(
@@ -55,4 +53,5 @@ public class GeneralSchedulePresenter extends SchedulePresenter<GeneralScheduleF
                 filtersOnVenues);
         return events;
     }
+
 }

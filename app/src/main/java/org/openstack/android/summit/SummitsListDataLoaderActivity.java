@@ -163,6 +163,7 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
 
     @Override
     public void showActivityIndicator() {
+        hideActivityIndicator();
         progressDialog = new ACProgressPie.Builder(this)
                 .ringColor(Color.WHITE)
                 .pieColor(Color.WHITE)

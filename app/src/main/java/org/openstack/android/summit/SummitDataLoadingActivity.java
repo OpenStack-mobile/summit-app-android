@@ -41,12 +41,9 @@ public class SummitDataLoadingActivity extends Activity {
 
         Button retryButton = (Button) this.findViewById(R.id.initial_data_loading_retry_button);
         retryButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.retryButton.setOnClickListener");
-                        doInitialDataLoading();
-                    }
+                v -> {
+                    Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.retryButton.setOnClickListener");
+                    doInitialDataLoading();
                 }
         );
     }
@@ -122,6 +119,7 @@ public class SummitDataLoadingActivity extends Activity {
     }
 
     private void showActivityIndicator() {
+        hideActivityIndicator();
         progressDialog =  new ACProgressPie.Builder(this)
                 .ringColor(Color.WHITE)
                 .pieColor(Color.WHITE)
@@ -147,7 +145,5 @@ public class SummitDataLoadingActivity extends Activity {
         LinearLayout container = (LinearLayout) this.findViewById(R.id.initial_data_loading_no_conectivity);
         container.setVisibility(show ? View.VISIBLE : View.GONE);
     }
-
-
 
 }

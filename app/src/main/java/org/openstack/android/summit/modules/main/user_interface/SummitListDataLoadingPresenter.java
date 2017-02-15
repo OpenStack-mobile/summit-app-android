@@ -18,14 +18,20 @@ implements IDataLoadingPresenter {
 
     private ISummitSelector summitSelector;
 
-    public SummitListDataLoadingPresenter(IDataLoadingInteractor interactor, IBaseWireframe wireframe, ISummitSelector summitSelector) {
+    public SummitListDataLoadingPresenter
+    (
+        IDataLoadingInteractor interactor,
+        IBaseWireframe wireframe,
+        ISummitSelector summitSelector
+    )
+    {
         super(interactor, wireframe);
         this.summitSelector = summitSelector;
     }
 
     @Override
     public boolean shouldShowLoadingDataError() {
-        return false;
+        return !interactor.isDataLoaded();
     }
 
     @Override

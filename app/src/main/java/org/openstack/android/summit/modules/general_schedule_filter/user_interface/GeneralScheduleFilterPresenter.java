@@ -117,14 +117,6 @@ public class GeneralScheduleFilterPresenter
         view.showLevels(levels);
         view.showVenues(venues);
         view.bindTags(tags);
-        view.showShowPastTalks(false);
-
-        if (scheduleFilter.isTypeSet(FilterSectionType.HidePastTalks)) {
-            view.showShowPastTalks(true);
-            List<Boolean> filtersOnPassTalks = (List<Boolean>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks);
-            boolean hidePastTalks = filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty() ? filtersOnPassTalks.get(0) : false;
-            view.toggleShowPastTalks(hidePastTalks);
-        }
 
         for (Object tag : scheduleFilter.getSelections().get(FilterSectionType.Tag)) {
             view.addTag((String) tag);
@@ -297,14 +289,6 @@ public class GeneralScheduleFilterPresenter
         scheduleFilter.getSelections().get(FilterSectionType.Tag).remove(filterItemPosition);
     }
 
-    @Override
-    public void toggleHidePastTalks(boolean hidePastTalks) {
-        SingleFilterSelection filterSection = (SingleFilterSelection) scheduleFilter.getFilterSections().get(4);
-        filterSection.setValue(hidePastTalks);
-        scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks).clear();
-        if (hidePastTalks)
-            scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks).add(hidePastTalks);
-    }
 
     public void toggleSelection(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, MultiFilterSection filterSection, int position) {
         FilterSectionItem filterItem = filterSection.getItems().get(position);

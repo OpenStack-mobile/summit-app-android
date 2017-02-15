@@ -27,8 +27,6 @@ public interface IGeneralScheduleFilterPresenter extends IBasePresenter<IGeneral
 
     void removeTag(String tagToDelete);
 
-    void toggleHidePastTalks(boolean hidePastTalks);
-
     void buildSummitTypeFilterItem(GeneralScheduleFilterItemView item, int position);
 
     void toggleSelectionSummitType(IGeneralScheduleFilterItemView item, int position);

@@ -30,5 +30,14 @@ public interface IScheduleView extends IBaseView {
 
     void showEmptyMessage(boolean show);
 
+    void setNowButtonVisibility(int visibility);
+
+    void setNowButtonState(boolean isChecked);
+
+    void setNowButtonListener();
+
+    void clearNowButtonListener();
+
+    boolean getNowButtonState();
 
 }

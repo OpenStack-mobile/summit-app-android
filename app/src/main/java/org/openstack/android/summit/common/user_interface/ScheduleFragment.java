@@ -10,10 +10,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.andressantibanez.ranger.Ranger;
 
@@ -33,12 +35,15 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     protected List<ScheduleItemDTO> events;
     protected ListView scheduleList;
     protected Ranger ranger;
+    protected ToggleButton nowButton;
 
     protected Parcelable listState            = null;
     private static final String LIST_STATE    = "SCHEDULE_LIST_STATE";
     protected Integer     selectedDay         = null;
     private static final String SELECTED_DAY  = "SCHEDULE_SELECTED_DAY";
-
+    private CompoundButton.OnCheckedChangeListener toggleListener = (buttonView, isChecked) -> {
+        presenter.setHidePastTalks(isChecked);
+    };
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -77,15 +82,41 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         scheduleList.setAdapter(scheduleListAdapter);
 
         ranger = (Ranger) view.findViewById(R.id.ranger_summit);
-        ranger.setDayViewOnClickListener(new Ranger.DayViewOnClickListener() {
-            @Override
-            public void onDaySelected(DateTime date) {
-                presenter.reloadSchedule();
-            }
-        });
+        ranger.setDayViewOnClickListener(date -> presenter.reloadSchedule());
+
+        nowButton = (ToggleButton) view.findViewById(R.id.now_filter_button);
+        nowButton.setOnCheckedChangeListener(toggleListener);
 
         presenter.onCreateView(savedInstanceState);
         return view;
+    }
+
+    @Override
+    public void setNowButtonListener(){
+        nowButton.setOnCheckedChangeListener(toggleListener);
+    }
+
+    @Override
+    public void clearNowButtonListener(){
+        nowButton.setOnCheckedChangeListener(null);
+    }
+
+    @Override
+    public boolean getNowButtonState() {
+        if(nowButton == null) return false;
+        return nowButton.isChecked();
+    }
+
+    @Override
+    public void setNowButtonVisibility(int visibility) {
+        if(nowButton == null) return;
+        nowButton.setVisibility(visibility);
+    }
+
+    @Override
+    public void setNowButtonState(boolean isChecked){
+        if(nowButton == null) return;
+        nowButton.setChecked(isChecked);
     }
 
     @Override
@@ -141,12 +172,14 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
     @Override
     public void setStartAndEndDateWithParts(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay) {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        if(ranger == null) return;
         ranger.setStartAndEndDateWithParts(startYear, startMonth, startDay, endYear, endMonth, endDay);
     }
 
     @Override
     public void setStartAndEndDateWithDisabledDates(DateTime startDate, DateTime endDate, List<DateTime> disabledDates) {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        if(ranger == null) return;
         ranger.setStartAndEndDateWithDisabledDates(startDate, endDate, disabledDates);
     }
 
@@ -168,28 +201,34 @@ public class ScheduleFragment<P extends ISchedulePresenter> extends BaseFragment
         listEmptyMessageTextView.setVisibility(show? View.VISIBLE: View.GONE );
     }
 
+
     @Override
     public DateTime getSelectedDate() {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        if(ranger == null) return null;
         return ranger.getSelectedDate();
     }
 
     @Override
     public void setSelectedDate(int day){
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        if(ranger == null) return;
         ranger.setSelectedDay(day, true);
     }
 
     @Override
     public void reloadSchedule() {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        if(ranger == null) return;
         ((LinearLayout)ranger.getParent()).setVisibility(View.VISIBLE);
         scheduleListAdapter.notifyDataSetChanged();
     }
 
+
     @Override
     public void setDisabledDates(List<DateTime> disabledDates) {
         Ranger ranger = (Ranger) view.findViewById(R.id.ranger_summit);
+        if(ranger == null) return;
         ranger.setDisabledDates(disabledDates);
     }
 

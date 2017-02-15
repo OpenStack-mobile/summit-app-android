@@ -23,9 +23,5 @@ public interface IGeneralScheduleFilterView extends IBaseView {
 
     void addTag(String tagText);
 
-    void toggleShowPastTalks(boolean isChecked);
-
-    void showShowPastTalks(boolean show);
-
     void showSummitTypes(List<NamedDTO> summitTypes);
 }

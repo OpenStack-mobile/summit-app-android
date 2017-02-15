@@ -297,7 +297,10 @@ public class MainActivity
             presenter.onResume();
             setupNavigationIcons();
             Intent intent = getIntent();
-            if(intent != null && intent.getBooleanExtra(Constants.START_EXTERNAL_LOGIN, false) == true && !onLoginProcess){
+            if(intent != null
+                    && intent.getBooleanExtra(Constants.START_EXTERNAL_LOGIN, false) == true
+                    && !securityManager.isLoggedIn()
+                    && !onLoginProcess){
                 intent.removeExtra(Constants.START_EXTERNAL_LOGIN);
                 this.loginButton.performClick();
             }
