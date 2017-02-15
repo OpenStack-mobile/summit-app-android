@@ -59,21 +59,9 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
         presenter.setView(this);
         presenter.onCreate(savedInstanceState);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.loginClicked(v);
-            }
+        loginButton.setOnClickListener(v -> presenter.loginClicked(v));
 
-        });
-
-        guestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.guestClicked(v);
-            }
-
-        });
+        guestButton.setOnClickListener(v -> presenter.guestClicked(v));
 
     }
 
