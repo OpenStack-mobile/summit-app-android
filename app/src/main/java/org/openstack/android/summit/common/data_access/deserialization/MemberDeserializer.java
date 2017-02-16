@@ -29,7 +29,6 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
     IFeedbackDeserializer feedbackDeserializer;
     ISummitEventDeserializer eventDeserializer;
 
-
     @Inject
     public MemberDeserializer
     (
@@ -106,6 +105,30 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
                     Log.e(Constants.LOG_TAG, String.format("Error deserializing group event %s", jsonObjectGroupEvent.toString()), e);
                 }
             }
+        }
+
+        // favorites
+
+        if (jsonObject.has("favorite_summit_events")) {
+
+            int summitEventId = 0;
+            SummitEvent summitEvent;
+            JSONArray jsonArrayFavoriteEvents = jsonObject.getJSONArray("favorite_summit_events");
+            member.getFavoriteEvents().clear();
+
+            for (int i = 0; i < jsonArrayFavoriteEvents.length(); i++) {
+                try {
+                    summitEventId = jsonArrayFavoriteEvents.getInt(i);
+                    summitEvent   = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", summitEventId).findFirst();
+                    if (summitEvent != null) {
+                        member.getFavoriteEvents().add(summitEvent);
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.e(Constants.LOG_TAG, String.format("Error deserializing favorite event %s", summitEventId), e);
+                }
+            }
+
         }
 
         return member;

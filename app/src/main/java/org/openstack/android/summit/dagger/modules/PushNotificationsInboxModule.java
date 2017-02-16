@@ -54,13 +54,13 @@ public class PushNotificationsInboxModule {
     }
 
     @Provides
-    IPushNotificationsListInteractor providesNotificationsListInteractor(IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new PushNotificationsListInteractor(pushNotificationDataStore, dtoAssembler, summitDataStore, summitSelector);
+    IPushNotificationsListInteractor providesNotificationsListInteractor(ISecurityManager securityManager, IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new PushNotificationsListInteractor(securityManager, pushNotificationDataStore, dtoAssembler, summitDataStore, summitSelector);
     }
 
     @Provides
-    IPushNotificationDetailInteractor providesPushNotificationDetailInteractor(IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new PushNotificationDetailInteractor(pushNotificationDataStore, dtoAssembler, summitDataStore, summitSelector);
+    IPushNotificationDetailInteractor providesPushNotificationDetailInteractor(ISecurityManager securityManager, IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new PushNotificationDetailInteractor(securityManager, pushNotificationDataStore, dtoAssembler, summitDataStore, summitSelector);
     }
 
     @Provides

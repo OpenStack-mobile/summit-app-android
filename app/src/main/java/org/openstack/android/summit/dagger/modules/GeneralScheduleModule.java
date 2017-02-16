@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
+import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
@@ -42,10 +43,11 @@ public class GeneralScheduleModule {
     }
 
     @Provides
-    IGeneralScheduleInteractor providesGeneralScheduleInteractor(ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IReachability reachability, ISummitSelector summitSelector) {
+    IGeneralScheduleInteractor providesGeneralScheduleInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, IReachability reachability, ISummitSelector summitSelector) {
         return new GeneralScheduleInteractor
         (
                 summitEventDataStore,
+                memberDataStore,
                 summitDataStore,
                 summitAttendeeDataStore,
                 dtoAssembler,

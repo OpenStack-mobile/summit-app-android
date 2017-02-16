@@ -1,8 +1,5 @@
 package org.openstack.android.summit.common.security.oidc;
 
-import org.openstack.android.summit.common.security.OIDCClientConfiguration;
-import org.openstack.android.summit.common.security.OIDCNativeClientConfiguration;
-
 /**
  * Created by sebastian on 7/20/2016.
  */

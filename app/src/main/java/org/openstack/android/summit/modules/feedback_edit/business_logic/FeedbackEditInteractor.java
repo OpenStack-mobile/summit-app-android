@@ -26,15 +26,14 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
 
     IMemberDataStore memberDataStore;
     ISummitEventDataStore summitEventDataStore;
-    ISecurityManager securityManager;
     IReachability reachability;
 
     public FeedbackEditInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISecurityManager securityManager, IReachability reachability, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(dtoAssembler, summitSelector, summitDataStore);
-        this.memberDataStore  = memberDataStore;
-        this.securityManager  = securityManager;
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+
+        this.memberDataStore      = memberDataStore;
         this.summitEventDataStore = summitEventDataStore;
-        this.reachability     = reachability;
+        this.reachability         = reachability;
     }
 
     @Override

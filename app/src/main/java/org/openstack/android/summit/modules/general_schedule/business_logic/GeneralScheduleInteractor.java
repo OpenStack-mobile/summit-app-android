@@ -3,6 +3,7 @@ package org.openstack.android.summit.modules.general_schedule.business_logic;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.api.ISummitSelector;
+import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
@@ -22,6 +23,7 @@ public class GeneralScheduleInteractor extends ScheduleInteractor implements IGe
     public GeneralScheduleInteractor
     (
         ISummitEventDataStore summitEventDataStore,
+        IMemberDataStore memberDataStore,
         ISummitDataStore summitDataStore,
         ISummitAttendeeDataStore summitAttendeeDataStore,
         IDTOAssembler dtoAssembler,
@@ -36,6 +38,7 @@ public class GeneralScheduleInteractor extends ScheduleInteractor implements IGe
             summitEventDataStore,
             summitDataStore,
             summitAttendeeDataStore,
+            memberDataStore,
             dtoAssembler,
             securityManager,
             pushNotificationsManager,

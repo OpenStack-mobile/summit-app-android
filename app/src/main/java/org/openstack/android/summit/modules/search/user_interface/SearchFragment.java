@@ -2,16 +2,16 @@ package org.openstack.android.summit.modules.search.user_interface;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -26,23 +26,25 @@ import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.IPersonItemView;
 import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
-import org.openstack.android.summit.common.user_interface.ScheduleItemView;
 import org.openstack.android.summit.common.user_interface.SimpleListItemView;
+import org.openstack.android.summit.common.user_interface.recycler_view.DividerItemDecoration;
+import org.openstack.android.summit.common.user_interface.schedule_list.ScheduleListAdapter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+
 /**
  * Created by Claudio Redi on 1/14/2016.
  */
 public class SearchFragment extends BaseFragment<ISearchPresenter> implements ISearchView {
-    /*@Inject
-    ISearchPresenter presenter;*/
 
-    private ScheduleListAdapter scheduleListAdapter;
     private TrackListAdapter trackListAdapter;
     private SpeakerListAdapter speakerListAdapter;
+    private ScheduleListAdapter scheduleListAdapter;
+    private LinearLayoutManager layoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,16 +55,6 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search_result, container, false);
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                view.findViewById(R.id.search_results_events_list)
-                        .getParent()
-                        .requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
 
         EditText searchText = (EditText)view.findViewById(R.id.search_results_edittext);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -76,35 +68,29 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
             }
         });
 
-        LinearListView eventsList = (LinearListView)view.findViewById(R.id.search_results_events_list);
-        scheduleListAdapter = new ScheduleListAdapter(getContext());
+        RecyclerView eventsList = (RecyclerView)view.findViewById(R.id.search_results_events_list);
+        scheduleListAdapter     = new ScheduleListAdapter(presenter);
+        layoutManager           = new LinearLayoutManager(getContext());
+
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        eventsList.setLayoutManager(layoutManager);
+        eventsList.setHasFixedSize(true);
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
+
+        eventsList.addItemDecoration(itemDecoration);
+
         eventsList.setAdapter(scheduleListAdapter);
-        eventsList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(LinearListView parent, View view, int position, long id) {
-                presenter.showEventDetail(position);
-            }
-        });
 
         LinearListView trackList = (LinearListView)view.findViewById(R.id.search_results_tracks_list);
         trackListAdapter = new TrackListAdapter(getContext());
         trackList.setAdapter(trackListAdapter);
-        trackList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(LinearListView parent, View view, int position, long id) {
-                presenter.showTrackSchedule(position);
-            }
-        });
+        trackList.setOnItemClickListener((parent, view12, position, id) -> presenter.showTrackSchedule(position));
 
         LinearListView speakersList = (LinearListView)view.findViewById(R.id.search_results_speakers_list);
         speakerListAdapter = new SpeakerListAdapter(getContext());
         speakersList.setAdapter(speakerListAdapter);
-        speakersList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(LinearListView parent, View view, int position, long id) {
-                presenter.showSpeakerProfile(position);
-            }
-        });
+        speakersList.setOnItemClickListener((parent, view1, position, id) -> presenter.showSpeakerProfile(position));
 
         subsectionLinksSetup();
 
@@ -124,32 +110,24 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
 
     private void subsectionLinksSetup() {
         Button eventsButton = (Button)view.findViewById(R.id.search_results_events_subsection_button);
-        eventsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout eventsHeader = (LinearLayout)view.findViewById(R.id.search_results_events_subsection_header);
-                ScrollView scrollView = (ScrollView)view.findViewById(R.id.search_results_container_scroll);
-                scrollView.smoothScrollTo(0, eventsHeader.getTop());
-            }
+        eventsButton.setOnClickListener(v -> {
+            LinearLayout eventsHeader = (LinearLayout)view.findViewById(R.id.search_results_events_subsection_header);
+            ScrollView scrollView = (ScrollView)view.findViewById(R.id.search_results_container_scroll);
+            scrollView.smoothScrollTo(0, eventsHeader.getTop());
         });
 
         Button tracksButton = (Button)view.findViewById(R.id.search_results_tracks_subsection_button);
-        tracksButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout tracksHeader = (LinearLayout)view.findViewById(R.id.search_results_tracks_subsection_header);
-                ScrollView scrollView = (ScrollView)view.findViewById(R.id.search_results_container_scroll);
-                scrollView.smoothScrollTo(0, tracksHeader.getTop());
-            }
+        tracksButton.setOnClickListener(v -> {
+            LinearLayout tracksHeader = (LinearLayout)view.findViewById(R.id.search_results_tracks_subsection_header);
+            ScrollView scrollView = (ScrollView)view.findViewById(R.id.search_results_container_scroll);
+            scrollView.smoothScrollTo(0, tracksHeader.getTop());
         });
+
         Button speakersButton = (Button)view.findViewById(R.id.search_results_speakers_subsection_button);
-        speakersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout speakersHeader = (LinearLayout) view.findViewById(R.id.search_results_speakers_subsection_header);
-                ScrollView scrollView = (ScrollView) view.findViewById(R.id.search_results_container_scroll);
-                scrollView.smoothScrollTo(0, speakersHeader.getTop());
-            }
+        speakersButton.setOnClickListener(v -> {
+            LinearLayout speakersHeader = (LinearLayout) view.findViewById(R.id.search_results_speakers_subsection_header);
+            ScrollView scrollView = (ScrollView) view.findViewById(R.id.search_results_container_scroll);
+            scrollView.smoothScrollTo(0, speakersHeader.getTop());
         });
     }
 
@@ -164,7 +142,7 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
         Button eventsButton = (Button)view.findViewById(R.id.search_results_events_subsection_button);
         eventsButton.setText(String.format("%s (%d)", getResources().getString(R.string.events), events.size()));
 
-        LinearListView eventsList = (LinearListView)view.findViewById(R.id.search_results_events_list);
+        RecyclerView eventsList = (RecyclerView)view.findViewById(R.id.search_results_events_list);
         eventsList.setVisibility(View.VISIBLE);
     }
 
@@ -212,7 +190,7 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
         Button eventsButton = (Button)view.findViewById(R.id.search_results_events_subsection_button);
         eventsButton.setText(String.format("%s (0)", getResources().getString(R.string.events)));
 
-        LinearListView eventsList = (LinearListView)view.findViewById(R.id.search_results_events_list);
+        RecyclerView eventsList = (RecyclerView)view.findViewById(R.id.search_results_events_list);
         eventsList.setVisibility(View.GONE);
     }
 
@@ -261,42 +239,6 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
             subsectionBar.setVisibility(View.VISIBLE);
         }
         super.hideActivityIndicator();
-    }
-
-    private class ScheduleListAdapter extends ArrayAdapter<ScheduleItemDTO> {
-
-        public ScheduleListAdapter(Context context) {
-            super(context, 0);
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_schedule, parent, false);
-            }
-
-            final ScheduleItemView scheduleItemView = new ScheduleItemView(convertView);
-
-            ImageButton scheduleStatus = (ImageButton)convertView.findViewById(R.id.item_schedule_imagebutton_scheduled);
-            scheduleStatus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    presenter.toggleScheduleStatus(scheduleItemView, position);
-                }
-            });
-
-            presenter.buildScheduleItem(scheduleItemView, position);
-
-            // Return the completed view to render on screen
-            return convertView;
-        }
-
-        @Override
-        public int getCount() {
-            return super.getCount();
-        };
     }
 
     private class SpeakerListAdapter extends ArrayAdapter<PersonListItemDTO> {

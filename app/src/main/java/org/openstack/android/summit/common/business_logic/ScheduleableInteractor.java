@@ -5,44 +5,48 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
+import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
+import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
+
 import java.util.Date;
+
+import io.reactivex.Observable;
 
 /**
  * Created by Claudio Redi on 1/4/2016.
  */
 public class ScheduleableInteractor extends BaseInteractor implements IScheduleableInteractor {
 
-    protected ISecurityManager          securityManager;
     protected ISummitEventDataStore     summitEventDataStore;
     protected ISummitAttendeeDataStore  summitAttendeeDataStore;
     protected IPushNotificationsManager pushNotificationsManager;
-
+    protected IMemberDataStore          memberDataStore;
 
     public ScheduleableInteractor
     (
             ISummitEventDataStore summitEventDataStore,
             ISummitAttendeeDataStore summitAttendeeDataStore,
             ISummitDataStore summitDataStore,
+            IMemberDataStore memberDataStore,
             IDTOAssembler dtoAssembler,
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
             ISummitSelector summitSelector
     ) {
-        super(dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
 
-        this.securityManager          = securityManager;
         this.summitEventDataStore     = summitEventDataStore;
         this.summitAttendeeDataStore  = summitAttendeeDataStore;
+        this.memberDataStore          = memberDataStore;
         this.pushNotificationsManager = pushNotificationsManager;
     }
 
@@ -75,7 +79,7 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
 
     @Override
     public void removeEventFromLoggedInMemberSchedule(final int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
-        if (!securityManager.isLoggedInAndConfirmedAttendee()) {
+        if (!this.isMemberLoggedInAndConfirmedAttendee()) {
             interactorAsyncOperationListener.onError(OpenStackSummitApplication.context.getResources().getString(R.string.no_logged_in_user));
             return;
         }
@@ -103,7 +107,7 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     @Override
     public boolean isEventScheduledByLoggedMember(int eventId) {
 
-        if (!securityManager.isLoggedInAndConfirmedAttendee()) {
+        if (!this.isMemberLoggedInAndConfirmedAttendee()) {
             return false;
         }
 
@@ -125,16 +129,42 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     }
 
     @Override
-    public boolean isMemberLogged() {
-        return securityManager.isLoggedIn();
+    public boolean isEventFavoriteByLoggedMember(int eventId) {
+        if(!this.isMemberLoggedIn())
+            return false;
+
+        Member me = securityManager.getCurrentMember();
+
+        final SummitEvent summitEvent = summitEventDataStore.getById(eventId);
+        if(summitEvent == null)
+            return false;
+
+        return memberDataStore.isEventOnMyFavorites(me, summitEvent);
+
     }
 
     @Override
-    public boolean isMemberLoggedAndConfirmedAttendee() {
-        return securityManager.isLoggedInAndConfirmedAttendee();
+    public Observable<Boolean> addEventToMyFavorites(int eventId) {
+        if(!this.isMemberLoggedIn())
+            return Observable.just(false);
+        final SummitEvent summitEvent = summitEventDataStore.getById(eventId);
+        if(summitEvent == null)
+            return Observable.just(false);
+        return memberDataStore.addEventToMyFavorites(securityManager.getCurrentMember(), summitEvent);
     }
 
     @Override
+    public Observable<Boolean> removeEventFromMemberFavorites(int eventId) {
+        if(!this.isMemberLoggedIn())
+            return Observable.just(false);
+
+        final SummitEvent summitEvent = summitEventDataStore.getById(eventId);
+        if(summitEvent == null)
+            return Observable.just(false);
+
+        return memberDataStore.removeEventFromMyFavorites(securityManager.getCurrentMember() , summitEvent);
+    }
+
     public boolean shouldShowVenues() {
         Summit summit = summitDataStore.getById(summitSelector.getCurrentSummitId());
 

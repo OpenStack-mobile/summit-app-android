@@ -9,6 +9,7 @@ import org.openstack.android.summit.common.data_access.repositories.ITeamDataSto
 import org.openstack.android.summit.common.data_access.repositories.ITeamPushNotificationDataStore;
 import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
 import org.openstack.android.summit.common.entities.notifications.PushNotificationFactory;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.push_notifications.business_logic.IPushNotificationInteractor;
 import org.openstack.android.summit.modules.push_notifications.business_logic.PushNotificationInteractor;
 
@@ -24,6 +25,7 @@ public class PushNotificationsModule {
     @Provides
     IPushNotificationInteractor providesPushNotificationInteractor
     (
+            ISecurityManager securityManager,
             IPushNotificationDataStore pushNotificationDataStore,
             ITeamPushNotificationDataStore teamPushNotificationDataStore,
             IEventPushNotificationDataStore eventPushNotificationDataStore,
@@ -33,6 +35,7 @@ public class PushNotificationsModule {
     {
         return new PushNotificationInteractor
                 (
+                        securityManager,
                         pushNotificationDataStore,
                         teamPushNotificationDataStore,
                         eventPushNotificationDataStore,

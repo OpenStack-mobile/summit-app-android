@@ -7,6 +7,7 @@ import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ import java.util.List;
 public class SpeakerListInteractor extends BaseInteractor implements ISpeakerListInteractor {
     IPresentationSpeakerDataStore presentationSpeakerDataStore;
 
-    public SpeakerListInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(dtoAssembler, summitSelector, summitDataStore);
+    public SpeakerListInteractor(ISecurityManager securityManager, IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.presentationSpeakerDataStore = presentationSpeakerDataStore;
     }
 

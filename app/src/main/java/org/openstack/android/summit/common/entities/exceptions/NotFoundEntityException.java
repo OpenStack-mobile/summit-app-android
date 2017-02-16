@@ -5,4 +5,11 @@ package org.openstack.android.summit.common.entities.exceptions;
  */
 
 final public class NotFoundEntityException extends Exception {
+
+    public NotFoundEntityException() {
+    }
+
+    public NotFoundEntityException(String detailMessage) {
+        super(detailMessage);
+    }
 }

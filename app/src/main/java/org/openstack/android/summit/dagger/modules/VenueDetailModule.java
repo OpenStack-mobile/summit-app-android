@@ -7,6 +7,7 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitDataS
 import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IVenueFloorDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IVenueRoomDataStore;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.event_detail.user_interface.IVenueRoomDetailPresenter;
 import org.openstack.android.summit.modules.event_detail.user_interface.VenueRoomDetailPresenter;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
@@ -36,14 +37,18 @@ public class VenueDetailModule {
     }
 
     @Provides
-    IVenueDetailInteractor providesVenueDetailInteractor(IVenueDataStore venueDataStore,
-                                                         IVenueRoomDataStore venueRoomDataStore,
-                                                         IVenueFloorDataStore venueFloorDataStore,
-                                                         IDTOAssembler dtoAssembler,
-                                                         ISummitDataStore summitDataStore,
-                                                         ISummitSelector summitSelector) {
+    IVenueDetailInteractor providesVenueDetailInteractor(
+            ISecurityManager securityManager,
+            IVenueDataStore venueDataStore,
+            IVenueRoomDataStore venueRoomDataStore,
+            IVenueFloorDataStore venueFloorDataStore,
+            IDTOAssembler dtoAssembler,
+            ISummitDataStore summitDataStore,
+            ISummitSelector summitSelector
+    ) {
         return new VenueDetailInteractor
                 (
+                        securityManager,
                         venueDataStore,
                         venueRoomDataStore,
                         venueFloorDataStore,

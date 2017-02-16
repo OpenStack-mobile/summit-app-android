@@ -1,4 +1,4 @@
-package org.openstack.android.summit.common.security;
+package org.openstack.android.summit.common.security.oidc;
 
 /**
  * Created by sebastian on 7/18/2016.

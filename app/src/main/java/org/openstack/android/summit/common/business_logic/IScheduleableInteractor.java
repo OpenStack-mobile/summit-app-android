@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common.business_logic;
 
-import org.openstack.android.summit.common.IBaseWireframe;
+
+import io.reactivex.Observable;
 
 /**
  * Created by Claudio Redi on 1/5/2016.
@@ -13,9 +14,11 @@ public interface IScheduleableInteractor extends IBaseInteractor  {
 
     boolean isEventScheduledByLoggedMember(int eventId);
 
-    boolean isMemberLoggedAndConfirmedAttendee();
+    boolean isEventFavoriteByLoggedMember(int eventId);
 
-    boolean isMemberLogged();
+    Observable<Boolean> addEventToMyFavorites(int eventId);
+
+    Observable<Boolean> removeEventFromMemberFavorites(int eventId);
 
     boolean shouldShowVenues();
 }

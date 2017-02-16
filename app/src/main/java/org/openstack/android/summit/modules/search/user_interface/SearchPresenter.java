@@ -2,6 +2,8 @@ package org.openstack.android.summit.modules.search.user_interface;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
@@ -20,10 +22,16 @@ import org.openstack.android.summit.modules.search.business_logic.ISearchInterac
 
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 /**
  * Created by Claudio Redi on 1/14/2016.
  */
-public class SearchPresenter extends BasePresenter<ISearchView, ISearchInteractor, ISearchWireframe> implements ISearchPresenter {
+public class SearchPresenter
+        extends BasePresenter<ISearchView, ISearchInteractor, ISearchWireframe>
+        implements ISearchPresenter
+{
+
     private String searchTerm;
     private List<ScheduleItemDTO> events;
     private List<NamedDTO> tracks;
@@ -128,13 +136,16 @@ public class SearchPresenter extends BasePresenter<ISearchView, ISearchInteracto
         wireframe.showSpeakerProfile(speaker.getId(), view);
     }
 
-    public void buildScheduleItem(IScheduleItemView scheduleItemView, int position) {
+    @Override
+    public void buildItem(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = events.get(position);
         scheduleItemViewBuilder.build(
                 scheduleItemView,
                 scheduleItemDTO,
-                interactor.isMemberLoggedAndConfirmedAttendee(),
+                interactor.isMemberLoggedIn(),
+                interactor.isMemberLoggedInAndConfirmedAttendee(),
                 interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
+                interactor.isEventFavoriteByLoggedMember(scheduleItemDTO.getId()),
                 true,
                 interactor.shouldShowVenues()
         );
@@ -152,6 +163,34 @@ public class SearchPresenter extends BasePresenter<ISearchView, ISearchInteracto
         };
 
         scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor, interactorAsyncOperationListener);
+    }
+
+    @Override
+    public void toggleFavoriteStatus(IScheduleItemView scheduleItemView, int position) {
+        ScheduleItemDTO scheduleItemDTO = events.get(position);
+        // get former state
+        boolean formerFavoriteState     = scheduleItemView.getFavorite();
+        scheduleablePresenter
+                .toggleFavoriteStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe
+                        (
+                                (res) -> {
+                                    Toast.makeText(view.getApplicationContext(), formerFavoriteState ?
+                                                    "Removed from Favorites" : "Added to Favorites",
+                                            Toast.LENGTH_SHORT).show();
+                                },
+                                (ex) -> {
+                                    scheduleItemView.setFavorite(formerFavoriteState);
+                                    if(ex != null) {
+                                        Log.d(Constants.LOG_TAG, ex.getMessage());
+                                        view.showErrorMessage(ex.getMessage());
+                                        return;
+                                    }
+                                    view.showErrorMessage("Server Error");
+                                }
+
+                        );
     }
 
     @Override

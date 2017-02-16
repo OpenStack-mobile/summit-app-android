@@ -1,10 +1,8 @@
 package org.openstack.android.summit.common.user_interface;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,11 +16,11 @@ public interface IScheduleView extends IBaseView {
 
     void setDisabledDates(List<DateTime> disabledDates);
 
-    List<ScheduleItemDTO> getEvents();
-
     void setEvents(List<ScheduleItemDTO> events);
 
     DateTime getSelectedDate();
+
+    void setSelectedDate(int day, boolean notifyListeners);
 
     void setSelectedDate(int day);
 

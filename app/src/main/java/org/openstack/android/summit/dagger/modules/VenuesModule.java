@@ -3,6 +3,7 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.venues.IVenuesWireframe;
 import org.openstack.android.summit.modules.venues.VenuesWireframe;
 import org.openstack.android.summit.modules.venues.business_logic.IVenuesInteractor;
@@ -30,8 +31,8 @@ public class VenuesModule {
     }
 
     @Provides
-    IVenuesInteractor providesVenuesInteractor(IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new VenuesInteractor(dtoAssembler, summitSelector, summitDataStore);
+    IVenuesInteractor providesVenuesInteractor(ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new VenuesInteractor(securityManager, dtoAssembler, summitSelector, summitDataStore);
     }
 
     @Provides

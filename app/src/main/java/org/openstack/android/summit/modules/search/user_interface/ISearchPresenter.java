@@ -1,19 +1,13 @@
 package org.openstack.android.summit.modules.search.user_interface;
 
-import org.openstack.android.summit.common.user_interface.IBasePresenter;
 import org.openstack.android.summit.common.user_interface.IPersonItemView;
-import org.openstack.android.summit.common.user_interface.IScheduleItemView;
+import org.openstack.android.summit.common.user_interface.IScheduleListPresenter;
 import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
 
 /**
  * Created by Claudio Redi on 1/14/2016.
  */
-public interface ISearchPresenter extends IBasePresenter<ISearchView> {
-    void buildScheduleItem(IScheduleItemView scheduleItemView, int position);
-
-    void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position);
-
-    void showEventDetail(int position);
+public interface ISearchPresenter extends IScheduleListPresenter<ISearchView> {
 
     void search(String searchTerm);
 

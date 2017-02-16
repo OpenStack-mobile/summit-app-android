@@ -27,6 +27,9 @@ import org.openstack.android.summit.common.entities.Member;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by Claudio Redi on 12/7/2015.
  */
@@ -171,30 +174,24 @@ public class SecurityManager implements ISecurityManager {
     @Override
     public void bindCurrentUser(){
         Log.d(Constants.LOG_TAG, "SecurityManager.bindCurrentUser");
-        IDataStoreOperationListener<Member> callback = new DataStoreOperationListener<Member>() {
-            @Override
-            public void onSucceedWithSingleData(Member member) {
-                Log.d(Constants.LOG_TAG, "SecurityManager.onSucceedWithSingleData");
-
-
-                identity.setCurrentMemberId(member.getId());
-
-                Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
-                LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-                state = SecurityManagerState.LOGGED_IN;
-            }
-
-            @Override
-            public void onError(String message) {
-
-                Intent intent = new Intent(Constants.LOG_IN_ERROR_EVENT);
-                intent.putExtra(Constants.LOG_IN_ERROR_MESSAGE, message);
-                LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-                state = SecurityManagerState.IDLE;
-            }
-        };
-
-        memberDataStore.getLoggedInMember(callback);
+        memberDataStore.getLoggedInMember()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe
+                        (
+                                memberId -> {
+                                    identity.setCurrentMemberId(memberId);
+                                    Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
+                                    LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+                                    state = SecurityManagerState.LOGGED_IN;
+                                },
+                                (ex) -> {
+                                    Log.e(Constants.LOG_TAG, ex.toString());
+                                    Intent intent = new Intent(Constants.LOG_IN_ERROR_EVENT);
+                                    intent.putExtra(Constants.LOG_IN_ERROR_MESSAGE, ex.getMessage());
+                                    LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+                                    state = SecurityManagerState.IDLE;
+                                });
     }
 
     private void removeAccount(Account account){

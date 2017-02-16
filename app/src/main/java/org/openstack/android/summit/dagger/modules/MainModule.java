@@ -56,8 +56,8 @@ public class MainModule {
     }
 
     @Provides
-    IDataLoadingInteractor providesDataLoadingInteractor(IDTOAssembler dtoAssembler, ISummitSelector summitSelector, ISummitDataStore summitDataStore) {
-        return new DataLoadingInteractor(dtoAssembler, summitSelector, summitDataStore);
+    IDataLoadingInteractor providesDataLoadingInteractor(ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitSelector summitSelector, ISummitDataStore summitDataStore) {
+        return new DataLoadingInteractor(securityManager, dtoAssembler, summitSelector, summitDataStore);
     }
 
     @Provides

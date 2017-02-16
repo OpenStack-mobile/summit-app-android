@@ -16,6 +16,9 @@ import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 
 import org.openstack.android.summit.common.security.oidc.AuthCodeRequest;
+import org.openstack.android.summit.common.security.oidc.IOIDCConfigurationManager;
+import org.openstack.android.summit.common.security.oidc.OIDCClientConfiguration;
+import org.openstack.android.summit.common.security.oidc.OIDCNativeClientConfiguration;
 import org.openstack.android.summit.common.security.oidc.OpenIdConnectProtocol;
 import org.openstack.android.summit.common.security.oidc.RefreshTokenRequest;
 

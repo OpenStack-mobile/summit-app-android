@@ -19,11 +19,26 @@ public class Member extends RealmObject implements IPerson {
     private String title;
     private String pictureUrl;
     private String bio;
+
+    public void setGroupEvents(RealmList<SummitGroupEvent> groupEvents) {
+        this.groupEvents = groupEvents;
+    }
+
+    public RealmList<SummitEvent> getFavoriteEvents() {
+        return favoriteEvents;
+    }
+
+    public void setFavoriteEvents(RealmList<SummitEvent> favoriteEvents) {
+        favoriteEvents = favoriteEvents;
+    }
+
     private String twitter;
     private String irc;
     private String email;
     private RealmList<Feedback> feedback = new RealmList<>();
     private RealmList<SummitGroupEvent> groupEvents = new RealmList<>();
+    private RealmList<SummitEvent> favoriteEvents = new RealmList<>();
+
 
     public PresentationSpeaker getSpeakerRole() {
         return speakerRole;

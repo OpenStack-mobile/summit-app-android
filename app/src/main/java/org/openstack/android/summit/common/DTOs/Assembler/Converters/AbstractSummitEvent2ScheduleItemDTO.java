@@ -18,7 +18,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
@@ -56,6 +55,8 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
             // use the color of the event type
             scheduleItemDTO.setColor(source.getType().getColor());
         }
+
+        scheduleItemDTO.setSummitId(source.getSummit().getId());
     }
 
     private String getSponsors(S summitEvent) {

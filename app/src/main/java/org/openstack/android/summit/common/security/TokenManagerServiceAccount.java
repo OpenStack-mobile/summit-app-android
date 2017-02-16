@@ -2,26 +2,16 @@ package org.openstack.android.summit.common.security;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.api.client.auth.oauth2.TokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.BasicAuthentication;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.json.gson.GsonFactory;
 
-import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.oidc.AccessTokenRequest;
+import org.openstack.android.summit.common.security.oidc.IOIDCConfigurationManager;
+import org.openstack.android.summit.common.security.oidc.OIDCClientConfiguration;
 import org.openstack.android.summit.common.security.oidc.OpenIdConnectProtocol;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Claudio Redi on 12/8/2015.

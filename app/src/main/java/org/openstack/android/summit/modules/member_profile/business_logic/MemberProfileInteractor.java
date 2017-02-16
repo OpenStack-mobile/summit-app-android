@@ -16,12 +16,10 @@ import org.openstack.android.summit.common.security.ISecurityManager;
  */
 public class MemberProfileInteractor extends BaseInteractor implements IMemberProfileInteractor {
 
-    protected ISecurityManager securityManager;
     protected IPresentationSpeakerDataStore presentationSpeakerDataStore;
 
     public MemberProfileInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(dtoAssembler, summitSelector, summitDataStore);
-        this.securityManager = securityManager;
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.presentationSpeakerDataStore = presentationSpeakerDataStore;
     }
 

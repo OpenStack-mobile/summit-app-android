@@ -1,7 +1,6 @@
 package org.openstack.android.summit.common.security.oidc;
 
 import org.openstack.android.summit.common.security.IdentityProviderUrls;
-import org.openstack.android.summit.common.security.OIDCNativeClientConfiguration;
 
 /**
  * Created by sebastian on 7/20/2016.

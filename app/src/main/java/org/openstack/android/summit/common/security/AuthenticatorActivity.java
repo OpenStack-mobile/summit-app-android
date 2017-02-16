@@ -35,6 +35,9 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.security.oidc.AuthCodeResponse;
+import org.openstack.android.summit.common.security.oidc.IOIDCConfigurationManager;
+import org.openstack.android.summit.common.security.oidc.OIDCClientConfiguration;
+import org.openstack.android.summit.common.security.oidc.OIDCNativeClientConfiguration;
 import org.openstack.android.summit.common.security.oidc.OpenIdConnectProtocol;
 
 import java.io.IOException;

@@ -3,7 +3,7 @@ package org.openstack.android.summit.common.user_interface;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
-public interface IScheduleItemView extends IScheduleableView {
+public interface IScheduleItemView extends IScheduleableView, IFavoriteView {
 
     void setName(String name);
 
@@ -17,9 +17,13 @@ public interface IScheduleItemView extends IScheduleableView {
 
     void setColor(String color);
 
-    void setIsScheduledStatusVisible(Boolean isScheduledStatusVisible);
-
     void setLocation(String location);
 
     void showLocation(boolean show);
+
+    void shouldShowFavoritesOption(boolean show);
+
+    void shouldShowGoingToOption(boolean show);
+
+    void setContextualMenu();
 }

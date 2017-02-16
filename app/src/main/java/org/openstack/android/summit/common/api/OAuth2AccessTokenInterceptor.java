@@ -48,7 +48,7 @@ public class OAuth2AccessTokenInterceptor implements Interceptor {
         catch (Exception ex){
             Crashlytics.logException(ex);
             Log.d(Constants.LOG_TAG,ex.getMessage(), ex);
-            throw new IOException();
+            throw new IOException("invalid access token!.");
         }
     }
 }

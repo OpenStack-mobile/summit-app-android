@@ -17,15 +17,17 @@ import org.openstack.android.summit.common.data_access.deserialization.INonConfi
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
+import org.openstack.android.summit.common.entities.exceptions.NotFoundEntityException;
+import org.openstack.android.summit.common.entities.exceptions.ValidationException;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
-import java.security.InvalidParameterException;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import io.realm.Realm;
+import io.reactivex.Observable;
+import io.reactivex.exceptions.Exceptions;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,72 +39,51 @@ import retrofit2.Retrofit;
  */
 public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMemberRemoteDataStore {
 
-    private IDeserializer                           deserializer;
+    private IDeserializer deserializer;
     private INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer;
-    private Retrofit                                restClient;
-    private IMembersApi                             memberApi;
-    private ISummitEventsApi                        summitEventsApi;
-    private ISummitExternalOrdersApi                summitExternalOrdersApi;
-    private ISummitSelector                         summitSelector;
+    private Retrofit restClient;
+    private IMembersApi memberApi;
+    private ISummitEventsApi summitEventsApi;
+    private ISummitExternalOrdersApi summitExternalOrdersApi;
+    private ISummitSelector summitSelector;
 
     @Inject
     public MemberRemoteDataStore
-    (
-        INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,
-        IDeserializer deserializer,
-        @Named("MemberProfile") Retrofit restClient,
-        ISummitSelector summitSelector
-    )
-    {
+            (
+                    INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,
+                    IDeserializer deserializer,
+                    @Named("MemberProfile") Retrofit restClient,
+                    @Named("MemberProfileRXJava2") Retrofit restClientRxJava,
+                    ISummitSelector summitSelector
+            ) {
         this.nonConfirmedSummitAttendeeDeserializer = nonConfirmedSummitAttendeeDeserializer;
-        this.deserializer                           = deserializer;
-        this.restClient                             = restClient;
-        this.memberApi                              = restClient.create(IMembersApi.class);
-        this.summitEventsApi                        = restClient.create(ISummitEventsApi.class);
-        this.summitExternalOrdersApi                = restClient.create(ISummitExternalOrdersApi.class);
-        this.summitSelector                         = summitSelector;
+        this.deserializer = deserializer;
+        this.restClient = restClient;
+        this.memberApi = restClientRxJava.create(IMembersApi.class);
+        this.summitEventsApi = restClient.create(ISummitEventsApi.class);
+        this.summitExternalOrdersApi = restClient.create(ISummitExternalOrdersApi.class);
+        this.summitSelector = summitSelector;
     }
 
     @Override
-    public void getMemberInfo(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
+    public Observable<Member> getMemberInfo() {
 
-        Call<ResponseBody> call = memberApi.info(summitSelector.getCurrentSummitId(), "attendee,speaker,feedback");
+        return memberApi.info(summitSelector.getCurrentSummitId(), "attendee,speaker,feedback")
+                .map(response -> {
+                    Member member = null;
+                    try {
+                        final String data = response.body().string();
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-
-                    if(!response.isSuccessful())
-                        throw new Exception("invalid http code!");
-
-                    final String data = response.body().string();
-
-                    if(data == null || data.isEmpty()) throw new InvalidParameterException("body is empty!");
-
-                    Member member = RealmFactory.transaction(new RealmFactory.IRealmCallback<Member>() {
-                        @Override
-                        public Member callback(Realm session) throws Exception {
-                            Member member = deserializer.deserialize(data, Member.class);
-                            return session.copyToRealmOrUpdate(member);
-                        }
-                    });
-
-                    dataStoreOperationListener.onSucceedWithSingleData(member);
-                }
-                catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.e(Constants.LOG_TAG, "Error on member deserialization", e);
-                    String friendlyError = Constants.GENERIC_ERROR_MSG;
-                    dataStoreOperationListener.onError(friendlyError);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                dataStoreOperationListener.onError(t.getMessage());
-            }
-        });
+                        member = RealmFactory.transaction(session -> {
+                            return session.copyToRealmOrUpdate(deserializer.deserialize(data, Member.class));
+                        });
+                    } catch (Exception ex) {
+                        Crashlytics.logException(ex);
+                        Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
+                        throw Exceptions.propagate(ex);
+                    }
+                    return member;
+                });
     }
 
     @Override
@@ -113,39 +94,36 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try
-                {
-                    if(!response.isSuccessful())
-                    {
-                        switch (response.code()){
+                try {
+                    if (!response.isSuccessful()) {
+                        switch (response.code()) {
                             case 412:
                                 dataStoreOperationListener.onError
-                                (
-                                    OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error)
-                                );
+                                        (
+                                                OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error)
+                                        );
                                 return;
                             case 404:
                                 dataStoreOperationListener.onError
-                                (
-                                    OpenStackSummitApplication.context.getString(R.string.redeem_external_order_not_found_error)
-                                );
+                                        (
+                                                OpenStackSummitApplication.context.getString(R.string.redeem_external_order_not_found_error)
+                                        );
                                 return;
                             default:
                                 throw new Exception
                                         (
                                                 String.format
-                                                (
-                                                    "getAttendeesForTicketOrder: http error %d",
-                                                    response.code()
-                                                )
+                                                        (
+                                                                "getAttendeesForTicketOrder: http error %d",
+                                                                response.code()
+                                                        )
                                         );
                         }
                     }
 
                     List<NonConfirmedSummitAttendee> nonConfirmedSummitAttendeeList = nonConfirmedSummitAttendeeDeserializer.deserializeArray(response.body().string());
                     dataStoreOperationListener.onSucceedWithDataCollection(nonConfirmedSummitAttendeeList);
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     Crashlytics.logException(ex);
                     Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
                     String friendlyError = Constants.GENERIC_ERROR_MSG;
@@ -161,34 +139,32 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
     }
 
     public void selectAttendeeFromOrderList
-    (
-        String orderNumber,
-        int externalAttendeeId,
-        final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener
-    )
-    {
+            (
+                    String orderNumber,
+                    int externalAttendeeId,
+                    final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener
+            ) {
 
         Call<ResponseBody> call = this.summitExternalOrdersApi.confirm(summitSelector.getCurrentSummitId(), orderNumber.trim(), externalAttendeeId);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try{
+                try {
 
-                    if(!response.isSuccessful())
-                    {
-                        switch (response.code()){
+                    if (!response.isSuccessful()) {
+                        switch (response.code()) {
                             case 412:
                                 dataStoreOperationListener.onError
-                                (
-                                    OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error)
-                                );
+                                        (
+                                                OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error)
+                                        );
                                 return;
                             case 404:
                                 dataStoreOperationListener.onError
-                                (
-                                    OpenStackSummitApplication.context.getString(R.string.redeem_external_order_attendee_does_not_exists_error)
-                                );
+                                        (
+                                                OpenStackSummitApplication.context.getString(R.string.redeem_external_order_attendee_does_not_exists_error)
+                                        );
                                 return;
                             default:
                                 throw new Exception
@@ -203,8 +179,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                     }
 
                     dataStoreOperationListener.onSucceedWithoutData();
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     String friendlyError = Constants.GENERIC_ERROR_MSG;
                     Crashlytics.logException(ex);
                     dataStoreOperationListener.onError(friendlyError);
@@ -223,31 +198,30 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
     @Override
     public void addFeedback(final Feedback feedback, final IDataStoreOperationListener<Feedback> dataStoreOperationListener) {
 
-        int eventId             = feedback.getEvent().getId();
+        int eventId = feedback.getEvent().getId();
         Call<ResponseBody> call = this.summitEventsApi.postEventFeedback
-        (
-            summitSelector.getCurrentSummitId(),
-            eventId,
-            new SummitEventFeedbackRequest
-            (
-                feedback.getRate(),
-                feedback.getReview()
-            )
-        );
+                (
+                        summitSelector.getCurrentSummitId(),
+                        eventId,
+                        new SummitEventFeedbackRequest
+                                (
+                                        feedback.getRate(),
+                                        feedback.getReview()
+                                )
+                );
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try{
+                try {
 
-                    if(!response.isSuccessful())
+                    if (!response.isSuccessful())
                         throw new Exception(String.format("addFeedback: http error code %d", response.code()));
 
                     feedback.setId(Integer.parseInt(response.body().string()));
                     dataStoreOperationListener.onSucceedWithSingleData(feedback);
 
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     Crashlytics.logException(ex);
                     String friendlyError = Constants.GENERIC_ERROR_MSG;
                     dataStoreOperationListener.onError(friendlyError);
@@ -260,6 +234,86 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                 String friendlyError = Constants.GENERIC_ERROR_MSG;
                 dataStoreOperationListener.onError(friendlyError);
             }
+        });
+    }
+
+    @Override
+    public Observable<Boolean> addSummitEvent2Favorites(int summitId, int eventId) {
+        return memberApi.addToFavorites(summitId, eventId).map(response -> {
+            if (!response.isSuccessful()) {
+                switch (response.code()) {
+                    case 412:
+                        throw new ValidationException
+                                (
+                                        String.format
+                                                (
+                                                        OpenStackSummitApplication.context.getString(R.string.error_already_in_favorites),
+                                                        eventId
+                                                )
+                                );
+                    case 404:
+
+                        throw new NotFoundEntityException
+                                (
+                                        String.format
+                                                (
+                                                        OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                        eventId
+                                                )
+                                );
+                    default:
+
+                        throw new Exception
+                                (
+                                        String.format
+                                                (
+                                                        "addSummitEvent2Favorites: http error %d",
+                                                        response.code()
+                                                )
+                                );
+                }
+            }
+            return true;
+        });
+    }
+
+    @Override
+    public Observable<Boolean> removeSummitEventFromFavorites(int summitId, int eventId) {
+        return memberApi.removeFromFavorites(summitId, eventId).map(response -> {
+            if (!response.isSuccessful()) {
+                switch (response.code()) {
+                    case 412:
+                        new ValidationException
+                                (
+                                        String.format
+                                                (
+                                                        OpenStackSummitApplication.context.getString(R.string.error_not_in_favorites),
+                                                        eventId
+                                                )
+                                );
+                    case 404:
+
+                        throw new NotFoundEntityException
+                                (
+                                        String.format
+                                                (
+                                                        OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                        eventId
+                                                )
+                                );
+                    default:
+
+                        new Exception
+                                (
+                                        String.format
+                                                (
+                                                        "removeSummitEventFromFavorites: http error %d",
+                                                        response.code()
+                                                )
+                                );
+                }
+            }
+            return true;
         });
     }
 }

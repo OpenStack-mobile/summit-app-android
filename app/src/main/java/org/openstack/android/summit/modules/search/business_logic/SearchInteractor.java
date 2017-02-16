@@ -15,9 +15,12 @@ import org.openstack.android.summit.common.data_access.repositories.ITrackDataSt
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * Created by Claudio Redi on 1/14/2016.
@@ -31,6 +34,7 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
 
     public SearchInteractor
     (
+        ISecurityManager securityManager,
         IScheduleableInteractor scheduleableInteractor,
         ISummitEventDataStore summitEventDataStore,
         ITrackDataStore trackDataStore,
@@ -40,7 +44,7 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
         ISummitSelector summitSelector
     )
     {
-        super(dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.scheduleableInteractor       = scheduleableInteractor;
         this.summitEventDataStore         = summitEventDataStore;
         this.trackDataStore               = trackDataStore;
@@ -63,13 +67,18 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     }
 
     @Override
-    public boolean isMemberLoggedAndConfirmedAttendee() {
-        return scheduleableInteractor.isMemberLoggedAndConfirmedAttendee();
+    public boolean isEventFavoriteByLoggedMember(int eventId) {
+        return scheduleableInteractor.isEventFavoriteByLoggedMember(eventId);
     }
 
     @Override
-    public boolean isMemberLogged() {
-        return scheduleableInteractor.isMemberLogged();
+    public Observable<Boolean> addEventToMyFavorites(int eventId) {
+        return scheduleableInteractor.addEventToMyFavorites(eventId);
+    }
+
+    @Override
+    public Observable<Boolean> removeEventFromMemberFavorites(int eventId) {
+        return scheduleableInteractor.removeEventFromMemberFavorites(eventId);
     }
 
     @Override

@@ -1,6 +1,11 @@
-package org.openstack.android.summit.common.security;
+package org.openstack.android.summit.common.security.oidc;
 
 import android.util.Log;
+
+import org.openstack.android.summit.common.security.ConfigurationParamsManager;
+import org.openstack.android.summit.common.security.IConfigurationParamFinderStrategy;
+import org.openstack.android.summit.common.security.IDecoder;
+import org.openstack.android.summit.common.security.IdentityProviderUrls;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidParameterException;
@@ -67,20 +72,10 @@ final public class OIDCConfigurationManager extends ConfigurationParamsManager i
         String rsBaseUrl = this.getResourceServerBaseUrl();
         switch (accountType){
             case NativeAccount:{
-                return new String[] {
-                    "openid",
-                    "offline_access",
-                    String.format("%s/summits/read", rsBaseUrl),
-                    String.format("%s/summits/write", rsBaseUrl),
-                    String.format("%s/summits/read-external-orders", rsBaseUrl),
-                    String.format("%s/summits/confirm-external-orders", rsBaseUrl),
-                    String.format("%s/me/read", rsBaseUrl)
-                };
+                return NativeApplicationScopes.getScopes(rsBaseUrl);
             }
             case ServiceAccount:{
-                return new String[] {
-                    String.format("%s/summits/read", rsBaseUrl),
-                };
+                return ServiceApplicationScopes.getScopes(rsBaseUrl);
             }
         }
         return null;
