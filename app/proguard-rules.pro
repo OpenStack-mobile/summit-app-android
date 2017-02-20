@@ -33,6 +33,7 @@
 -keep class android.support.v7.widget.LinearLayoutManager { *; }
 -keep class android.support.v4.view.MenuItemCompat { *; }
 -keep class android.support.v7.widget.SearchView { *; }
+-keep class android.support.v7.view.menu.** { *; }
 -keepattributes *Annotation*,Signature
 -keep class org.openstack.** { *; }
 -keep class cn.pedant.SweetAlert.** { *; }
@@ -65,3 +66,4 @@
 -dontwarn okio.**
 -keep class javax.inject.** { *; }
 -keep class javax.xml.stream.** { *; }
+-dontwarn org.openstack.android.summit.common.user_interface.**
