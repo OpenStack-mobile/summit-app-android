@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitEventsApi;
 import org.openstack.android.summit.common.api.ISummitSelector;
@@ -54,9 +56,25 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try
                 {
-                    //TODO : check on 412 error
-                    if(response.isSuccessful())
-                        dataStoreOperationListener.onSucceedWithSingleData(summitAttendee);
+
+                    if(!response.isSuccessful()) {
+                        switch (response.code()) {
+                            case 412:
+                                dataStoreOperationListener.onError
+                                (
+                                    "Event already belongs to user schedule"
+                                );
+                                return;
+                            case 404:
+                                dataStoreOperationListener.onError
+                                (
+                                    "Event not found"
+                                );
+                                return;
+
+                        }
+                    }
+                    dataStoreOperationListener.onSucceedWithSingleData(summitAttendee);
                 }
                 catch(Exception ex){
                     Crashlytics.logException(ex);
@@ -88,9 +106,24 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try
                 {
-                    //TODO : check on 412 error
-                    if(response.isSuccessful())
-                        dataStoreOperationListener.onSucceedWithSingleData(summitAttendee);
+                    if(!response.isSuccessful()) {
+                        switch (response.code()) {
+                            case 412:
+                                dataStoreOperationListener.onError
+                                (
+                                    "Event does not belongs to user schedule"
+                                );
+                                return;
+                            case 404:
+                                dataStoreOperationListener.onError
+                                 (
+                                    "Event not found"
+                                 );
+                                return;
+
+                        }
+                    }
+                    dataStoreOperationListener.onSucceedWithSingleData(summitAttendee);
                 }
                 catch(Exception ex){
                     Crashlytics.logException(ex);

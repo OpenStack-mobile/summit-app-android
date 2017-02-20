@@ -1,6 +1,5 @@
 package org.openstack.android.summit.common.security.oidc;
 
-import org.openstack.android.summit.common.security.OIDCClientConfiguration;
 import java.util.Arrays;
 import java.util.List;
 

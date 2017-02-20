@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.common.security.oidc.IOIDCConfigurationManager;
 
 import javax.inject.Inject;
 

@@ -1,76 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white">
+    android:orientation="horizontal"
+    android:background="@android:color/white"
+    android:weightSum="1">
 
     <View
         android:id="@+id/item_schedule_view_color"
         android:layout_width="6dp"
         android:layout_height="match_parent"
-        android:background="@android:color/darker_gray"
-        android:layout_marginRight="12dp">
-    </View>
+        android:background="@android:color/darker_gray"/>
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/info_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_weight="0.80">
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/item_schedule_layout_time_and_name"
-                android:layout_weight=".95"
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/item_schedule_imageview_time"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/time"/>
+
+            <TextView android:id="@+id/item_schedule_textview_time"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:textSize="12sp"
+                android:textColor="@color/openStackDarkGray"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/item_schedule_imageview_time"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/time"/>
-
-                    <TextView android:id="@+id/item_schedule_textview_time"
-                        android:textSize="12sp"
-                        android:textColor="@color/openStackDarkGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_centerVertical="true" />
-
-                </LinearLayout>
-
-                <TextView android:id="@+id/item_schedule_textview_name"
-                    android:textSize="17sp"
-                    android:textColor="@android:color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
-
-            </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/item_schedule_imagebutton_scheduled"
-                android:layout_weight=".05"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="8dp"
-                android:scaleType="centerInside"
-                android:background="@android:color/transparent"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/unchecked" />
+                android:text="TBA"
+                />
 
         </LinearLayout>
+
+        <TextView android:id="@+id/item_schedule_textview_name"
+            android:textSize="17sp"
+            android:textColor="@android:color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is the title"
+            />
+
         <LinearLayout
             android:id="@+id/item_schedule_place_container"
             android:layout_marginTop="15dp"
@@ -90,9 +72,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:text="TBA"
                 android:layout_centerVertical="true" />
 
         </LinearLayout>
+        <TextView android:id="@+id/item_schedule_textview_track"
+            android:textSize="14sp"
+            android:textColor="@color/openStackGray"
+            android:layout_weight=".50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#VBrownTag"
+            />
+
+        <TextView android:id="@+id/item_schedule_textview_event_type"
+            android:textSize="14sp"
+            android:textColor="@color/openStackGray"
+            android:layout_weight=".50"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Presentation"
+            android:layout_marginRight="10dp"/>
 
         <TextView android:id="@+id/item_schedule_textview_sponsors"
             android:layout_height="wrap_content"
@@ -100,30 +100,46 @@
             android:layout_marginTop="5dp"
             style="@style/AppTheme.SponsorTextView" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
-
-            <TextView android:id="@+id/item_schedule_textview_track"
-                android:textSize="14sp"
-                android:textColor="@color/openStackGray"
-                android:layout_width="0dp"
-                android:layout_weight=".50"
-                android:layout_height="wrap_content" />
-
-            <TextView android:id="@+id/item_schedule_textview_event_type"
-                android:textSize="14sp"
-                android:textColor="@color/openStackGray"
-                android:layout_width="0dp"
-                android:layout_weight=".50"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:textAlignment="viewEnd"
-                android:layout_marginRight="10dp"/>
-
-        </LinearLayout>
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/state_container"
+        android:layout_width="0dp"
+        android:layout_weight="0.15"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/favorite_event"
+            android:visibility="gone"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_favorite"/>
+        <ImageView
+            android:id="@+id/going_event"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_event_available"/>
+    </FrameLayout>
+
+    <View
+        android:id="@+id/item_divider"
+        android:layout_width="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="match_parent"
+        android:background="#DDDDDD"/>
+
+    <TextView
+        android:id="@+id/textViewOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="&#8942;"
+        android:textAppearance="?android:textAppearanceLarge" />
+
+
 </LinearLayout>

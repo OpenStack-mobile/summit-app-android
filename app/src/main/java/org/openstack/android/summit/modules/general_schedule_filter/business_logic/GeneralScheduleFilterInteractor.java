@@ -17,6 +17,7 @@ import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
 
     public GeneralScheduleFilterInteractor
     (
+        ISecurityManager securityManager,
         ISummitDataStore summitDataStore,
         ISummitEventDataStore summitEventDataStore,
         IVenueDataStore venueDataStore,
@@ -48,7 +50,7 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
         ISummitSelector summitSelector
     )
     {
-        super(dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
 
         this.venueDataStore       = venueDataStore;
         this.summitEventDataStore = summitEventDataStore;

@@ -3,10 +3,11 @@ package org.openstack.android.summit.dagger.modules;
 import android.content.Context;
 
 import org.openstack.android.summit.common.ISession;
-import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.security.*;
 import org.openstack.android.summit.common.security.SecurityManager;
+import org.openstack.android.summit.common.security.oidc.IOIDCConfigurationManager;
+import org.openstack.android.summit.common.security.oidc.OIDCConfigurationManager;
 
 import javax.inject.Singleton;
 

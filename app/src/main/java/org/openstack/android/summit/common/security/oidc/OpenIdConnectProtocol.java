@@ -12,7 +12,7 @@ import com.google.api.client.http.BasicAuthentication;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.json.gson.GsonFactory;
 import org.openstack.android.summit.common.security.IdentityProviderUrls;
-import org.openstack.android.summit.common.security.OIDCNativeClientConfiguration;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;

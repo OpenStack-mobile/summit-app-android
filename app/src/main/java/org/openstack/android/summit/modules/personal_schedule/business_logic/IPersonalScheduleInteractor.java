@@ -11,6 +11,7 @@ import java.util.List;
  * Created by Claudio Redi on 1/27/2016.
  */
 public interface IPersonalScheduleInteractor extends IScheduleInteractor {
+
     List<ScheduleItemDTO> getCurrentMemberScheduledEvents(Date startDate, Date endDate);
 
     List<DateTime> getCurrentMemberScheduleDatesWithoutEvents(DateTime startDate, DateTime endDate);

@@ -6,6 +6,7 @@ import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ITrackDataStore;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.track_list.ITrackListWireframe;
 import org.openstack.android.summit.modules.track_list.TrackListWireframe;
 import org.openstack.android.summit.modules.track_list.business_logic.ITrackListInteractor;
@@ -36,13 +37,14 @@ public class TrackListModule {
     @Provides
     ITrackListInteractor providesTrackListInteractor
     (
+        ISecurityManager securityManager,
         IDTOAssembler dtoAssembler,
         ISummitEventDataStore summitEventDataStore,
         ITrackDataStore trackDataStore,
         ISummitDataStore summitDataStore,
         ISummitSelector summitSelector
     ) {
-        return new TrackListInteractor(dtoAssembler, summitEventDataStore, trackDataStore, summitDataStore, summitSelector);
+        return new TrackListInteractor(securityManager, dtoAssembler, summitEventDataStore, trackDataStore, summitDataStore, summitSelector);
     }
 
     @Provides

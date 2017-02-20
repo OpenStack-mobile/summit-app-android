@@ -39,8 +39,8 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
 
         feedback.setDate(new Date(jsonObject.getInt("created_date") * 1000L));
 
-        if (jsonObject.has("member_id")) {
-            int memberId = jsonObject.getInt("member_id");
+        if (jsonObject.has("owner_id")) {
+            int memberId = jsonObject.getInt("owner_id");
             Member member =  RealmFactory.getSession().where(Member.class).equalTo("id", memberId).findFirst();
             if (member != null)
                 feedback.setOwner(member);

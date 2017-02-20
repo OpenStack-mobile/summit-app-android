@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
+import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
@@ -32,6 +33,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
             ISummitEventDataStore summitEventDataStore,
             ISummitDataStore summitDataStore,
             ISummitAttendeeDataStore summitAttendeeDataStore,
+            IMemberDataStore memberDataStore,
             IDTOAssembler dtoAssembler,
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
@@ -43,6 +45,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
             summitEventDataStore,
             summitAttendeeDataStore,
             summitDataStore,
+            memberDataStore,
             dtoAssembler,
             securityManager,
             pushNotificationsManager,

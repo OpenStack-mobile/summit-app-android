@@ -12,6 +12,7 @@ import java.util.List;
  * Created by Claudio Redi on 1/14/2016.
  */
 public interface ISearchInteractor extends IScheduleableInteractor {
+
     List<ScheduleItemDTO> getEventsBySearchTerm(String searchTerm);
 
     List<NamedDTO> getTracksBySearchTerm(String searchTerm);

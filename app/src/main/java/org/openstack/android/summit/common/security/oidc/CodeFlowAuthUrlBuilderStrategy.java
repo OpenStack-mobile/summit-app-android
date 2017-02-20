@@ -2,7 +2,7 @@ package org.openstack.android.summit.common.security.oidc;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import org.openstack.android.summit.common.security.IdentityProviderUrls;
-import org.openstack.android.summit.common.security.OIDCNativeClientConfiguration;
+
 import java.util.Arrays;
 import java.util.List;
 

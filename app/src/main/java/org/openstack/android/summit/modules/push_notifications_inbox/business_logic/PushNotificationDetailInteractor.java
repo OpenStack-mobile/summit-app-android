@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.entities.notifications.PushNotification;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 /**
  * Created by sebastian on 8/22/2016.
@@ -20,12 +21,13 @@ public class PushNotificationDetailInteractor
 
     public PushNotificationDetailInteractor
     (
+        ISecurityManager securityManager,
         IPushNotificationDataStore dataStore,
         IDTOAssembler dtoAssembler,
         ISummitDataStore summitDataStore,
         ISummitSelector summitSelector
     ) {
-        super(dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.dataStore = dataStore;
     }
 

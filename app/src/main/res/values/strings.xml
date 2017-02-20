@@ -101,4 +101,16 @@
     <string name="splash_login_button_txt">login with openstackid</string>
     <string name="splash_guest_button_txt">continue as guest</string>
     <string name="now">NOW</string>
+    <string name="save_favorite">Save as Favorite</string>
+    <string name="remove_favorite">Remove from Favorites</string>
+    <string name="save_going">Going</string>
+    <string name="remove_going">Not Going</string>
+    <string name="cancel">Cancel</string>
+    <string name="removed_from_favorites">Removed from Favorites</string>
+    <string name="added_2_favorites">Saved as Favorites</string>
+    <string name="removed_from_going">Removed from Going Events</string>
+    <string name="added_2_going">Saved to Going Events</string>
+    <string name="error_not_in_favorites">Event %1$i is not in user Favorites!.</string>
+    <string name="error_event_not_found">Event %1$i not found!.</string>
+    <string name="error_already_in_favorites">Event %1$i is already in user Favorites!.</string>
 </resources>

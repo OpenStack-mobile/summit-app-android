@@ -25,7 +25,6 @@ import java.util.ArrayList;
  */
 public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
-    private ISecurityManager securityManager;
     private IPushNotificationsManager pushNotificationsManager;
     private IReachability reachability;
     private IPushNotificationDataStore pushNotificationDataStore;
@@ -43,8 +42,7 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         ISummitSelector summitSelector
     )
     {
-        super(dtoAssembler, summitSelector, summitDataStore);
-        this.securityManager           = securityManager;
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.pushNotificationsManager  = pushNotificationsManager;
         this.reachability              = reachability;
         this.pushNotificationDataStore = pushNotificationDataStore;

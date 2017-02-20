@@ -15,7 +15,6 @@ public class SummitAttendee extends RealmObject implements IEntity, ISummitOwned
     private Integer memberId;
     private RealmList<TicketType> ticketTypes       = new RealmList<>();
     private RealmList<SummitEvent> scheduledEvents  = new RealmList<>();
-    private RealmList<SummitEvent> bookmarkedEvents = new RealmList<>();
     private Summit summit;
     public int getId() {
         return id;
@@ -50,17 +49,7 @@ public class SummitAttendee extends RealmObject implements IEntity, ISummitOwned
     public void setScheduledEvents(RealmList<SummitEvent> scheduledEvents) {
         this.scheduledEvents = scheduledEvents;
     }
-
-    public RealmList<SummitEvent> getBookmarkedEvents() {
-        if(bookmarkedEvents == null) bookmarkedEvents = new RealmList<>();
-        return bookmarkedEvents;
-    }
-
-    public void setBookmarkedEvents(RealmList<SummitEvent> bookmarkedEvents) {
-        this.bookmarkedEvents = bookmarkedEvents;
-    }
-
-    public RealmList<TicketType> getTicketTypes() {
+   public RealmList<TicketType> getTicketTypes() {
         if(ticketTypes == null) ticketTypes = new RealmList<>();
         return ticketTypes;
     }

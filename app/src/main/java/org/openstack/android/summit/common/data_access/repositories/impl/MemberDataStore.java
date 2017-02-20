@@ -14,12 +14,16 @@ import org.openstack.android.summit.common.data_access.repositories.strategies.I
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
+import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import io.realm.RealmSchema;
 
 /**
  * Created by Claudio Redi on 12/16/2015.
@@ -27,35 +31,22 @@ import io.realm.Realm;
 public class MemberDataStore extends GenericDataStore<Member> implements IMemberDataStore {
     private IMemberRemoteDataStore memberRemoteDataStore;
 
-    public MemberDataStore(IMemberRemoteDataStore memberRemoteDataStore, ISaveOrUpdateStrategy saveOrUpdateStrategy, IDeleteStrategy deleteStrategy) {
+    public MemberDataStore
+    (
+        IMemberRemoteDataStore memberRemoteDataStore,
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    )
+    {
         super(Member.class, saveOrUpdateStrategy, deleteStrategy);
         this.memberRemoteDataStore = memberRemoteDataStore;
     }
 
     @Override
-    public void getLoggedInMember(final IDataStoreOperationListener<Member> dataStoreOperationListener) {
-        Log.d(Constants.LOG_TAG, "MemberDataStore.getLoggedInMemberOrigin");
-        IDataStoreOperationListener<Member> remoteDataStoreOperationListener = new DataStoreOperationListener<Member>() {
-            @Override
-            public void onSucceedWithSingleData(Member member) {
-                try{
-                    Log.d(Constants.LOG_TAG, "MemberDataStore.onSucceedWithSingleData");
-                    dataStoreOperationListener.onSucceedWithSingleData(member);
-                }
-                catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.e(Constants.LOG_TAG, e.getMessage(), e);
-                    String friendlyError = Constants.GENERIC_ERROR_MSG;
-                    dataStoreOperationListener.onError(friendlyError);
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                dataStoreOperationListener.onError(message);
-            }
-        };
-        memberRemoteDataStore.getMemberInfo(remoteDataStoreOperationListener);
+    public Observable<Integer> getLoggedInMember() {
+        return memberRemoteDataStore.getMemberInfo().map(member ->
+                member.getId()
+        );
     }
 
     public void getAttendeesForTicketOrder(String orderNumber, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener) {
@@ -112,6 +103,87 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
             }
         };
         memberRemoteDataStore.addFeedback(feedback, remoteDataStoreOperationListener);
+    }
+
+    @Override
+    public void addEventToMyFavoritesLocal(Member me, SummitEvent summitEvent) {
+        try {
+
+            RealmFactory.transaction(session -> {
+                if (me.getFavoriteEvents().where().equalTo("id", summitEvent.getId()).count() == 0){
+                    Log.d(Constants.LOG_TAG, String.format("adding event %s to my favorites", summitEvent.getId()));
+                    me.getFavoriteEvents().add(summitEvent);
+                }
+                return Void.getInstance();
+            });
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            Crashlytics.logException(e);
+        }
+    }
+
+    @Override
+    public void removeEventFromMyFavoritesLocal(Member me, SummitEvent summitEvent) {
+        try{
+            RealmFactory.transaction(session -> {
+                if (me.getFavoriteEvents().where().equalTo("id", summitEvent.getId()).count() > 0) {
+                    SummitEvent entityRealm = session.where(SummitEvent.class).equalTo("id", summitEvent.getId()).findFirst();
+                    Log.d(Constants.LOG_TAG, String.format("removing event %s to favorites ", summitEvent.getId()));
+                    me.getFavoriteEvents().remove(entityRealm);
+                }
+                return Void.getInstance();
+            });
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            Crashlytics.logException(e);
+        }
+    }
+
+    @Override
+    public Observable<Boolean> addEventToMyFavorites(Member me, SummitEvent summitEvent) {
+
+        int memberId = me.getId();
+        int eventId  = summitEvent.getId();
+
+        return memberRemoteDataStore
+                .addSummitEvent2Favorites(summitEvent.getSummit().getId(), summitEvent.getId())
+                .doOnNext( res -> {
+
+                    addEventToMyFavoritesLocal(
+                            getById(memberId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                })
+                .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Boolean> removeEventFromMyFavorites(Member me, SummitEvent summitEvent) {
+
+        int memberId = me.getId();
+        int eventId  = summitEvent.getId();
+
+        return memberRemoteDataStore
+                .removeSummitEventFromFavorites(summitEvent.getSummit().getId(), summitEvent.getId())
+                .doOnNext( res -> {
+
+                    removeEventFromMyFavoritesLocal(
+                            getById(memberId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                })
+                .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public boolean isEventOnMyFavorites(Member me, SummitEvent summitEvent) {
+        return RealmFactory.getSession()
+                .where(Member.class)
+                .equalTo("id", me.getId())
+                .equalTo("favoriteEvents.id", summitEvent.getId())
+                .count() > 0;
     }
 
 }

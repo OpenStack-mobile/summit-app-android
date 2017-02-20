@@ -21,13 +21,11 @@ import java.util.List;
 public class MemberOrderConfirmInteractor extends BaseInteractor implements IMemberOrderConfirmInteractor {
     IMemberRemoteDataStore memberRemoteDataStore;
     IReachability reachability;
-    ISecurityManager securityManager;
 
     public MemberOrderConfirmInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.memberRemoteDataStore = memberRemoteDataStore;
         this.reachability = reachability;
-        this.securityManager = securityManager;
     }
 
     @Override
@@ -54,19 +52,6 @@ public class MemberOrderConfirmInteractor extends BaseInteractor implements IMem
                 interactorAsyncOperationListener.onError(message);
             }
         };
-
-        /*List<NonConfirmedSummitAttendeeDTO> nonConfirmedSummitAttendees = new ArrayList<>();
-        NonConfirmedSummitAttendeeDTO nonConfirmedSummitAttendee = new NonConfirmedSummitAttendeeDTO();
-        nonConfirmedSummitAttendee.setId(12345678);
-        nonConfirmedSummitAttendee.setName("Claudio Redi");
-        nonConfirmedSummitAttendees.add(nonConfirmedSummitAttendee);
-
-        nonConfirmedSummitAttendee = new NonConfirmedSummitAttendeeDTO();
-        nonConfirmedSummitAttendee.setId(22345678);
-        nonConfirmedSummitAttendee.setName("Valentino Redi");
-        nonConfirmedSummitAttendees.add(nonConfirmedSummitAttendee);
-
-        interactorAsyncOperationListener.onSucceedWithData(nonConfirmedSummitAttendees);*/
 
         memberRemoteDataStore.getAttendeesForTicketOrder(orderNumber, dataStoreOperationListener);
     }

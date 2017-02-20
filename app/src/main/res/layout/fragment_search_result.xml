@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   >
     <EditText
         android:id="@+id/search_results_edittext"
         android:layout_width="match_parent"
@@ -44,7 +46,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/search_results_events_subsection_header"
@@ -54,13 +56,13 @@
                     android:text="@string/events"/>
 
             </LinearLayout>
-            <com.linearlistview.LinearListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/search_results_events_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:showDividers="middle"
-                app:dividerThickness="1dp" />
+                android:scrollbars="vertical"
+                android:background="#00222222"
+            />
             <TextView
                 android:id="@+id/search_results_empty_message_events_text"
                 style="@style/AppTheme.EmptyTextSearch"

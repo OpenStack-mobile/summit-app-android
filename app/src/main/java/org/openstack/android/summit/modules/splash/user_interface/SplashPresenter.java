@@ -78,8 +78,8 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
         super.onCreate(savedInstanceState);
         disableDataUpdateService();
 
-       view.setLoginButtonVisibility(!interactor.isMemberLogged());
-       view.setGuestButtonVisibility(!interactor.isMemberLogged());
+       view.setLoginButtonVisibility(!interactor.isMemberLoggedIn());
+       view.setGuestButtonVisibility(!interactor.isMemberLoggedIn());
        launchSummitListDataLoadingActivity();
     }
 
@@ -123,7 +123,7 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
                     Log.i(Constants.LOG_TAG, "SplashPresenter.onActivityResult: Summit Data Loaded!");
                     //re enable data update service
                     enableDataUpdateService();
-                    if(interactor.isMemberLogged()) {
+                    if(interactor.isMemberLoggedIn()) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -143,7 +143,7 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
                 // Make sure the request was successful
                 if (resultCode == Activity.RESULT_OK) {
                     Log.i(Constants.LOG_TAG, "SplashPresenter.onActivityResult: Summit Data Loaded!");
-                    if(interactor.isMemberLogged()) {
+                    if(interactor.isMemberLoggedIn()) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {

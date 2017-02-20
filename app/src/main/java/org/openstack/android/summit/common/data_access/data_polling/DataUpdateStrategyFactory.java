@@ -13,11 +13,13 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
     IDataUpdateStrategy presentationMaterialDataUpdateStrategy;
     IDataUpdateStrategy venueLocationsDataUpdateStrategy;
     IDataUpdateStrategy summitGroupEventDataUpdateStrategy;
+    IDataUpdateStrategy myFavoriteDataUpdateStrategy;
 
     public DataUpdateStrategyFactory
     (
         IDataUpdateStrategy genericDataUpdateProcessStrategy,
         IDataUpdateStrategy myScheduleDataUpdateStrategy,
+        IDataUpdateStrategy myFavoriteDataUpdateStrategy,
         IDataUpdateStrategy summitDataUpdateStrategy,
         IDataUpdateStrategy trackGroupDataUpdateStrategy,
         IDataUpdateStrategy venueImageDataUpdateStrategy,
@@ -34,6 +36,7 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
         this.presentationMaterialDataUpdateStrategy = presentationMaterialDataUpdateStrategy;
         this.venueLocationsDataUpdateStrategy       = venueLocationsDataUpdateStrategy;
         this.summitGroupEventDataUpdateStrategy     = summitGroupEventDataUpdateStrategy;
+        this.myFavoriteDataUpdateStrategy           = myFavoriteDataUpdateStrategy;
     }
 
     @Override
@@ -43,6 +46,9 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
         switch (className) {
             case "MySchedule":
                 dataUpdateProcessStrategy = myScheduleDataUpdateStrategy;
+                break;
+            case "MyFavorite":
+                dataUpdateProcessStrategy = myFavoriteDataUpdateStrategy;
                 break;
             case "Summit":
                 dataUpdateProcessStrategy = summitDataUpdateStrategy;

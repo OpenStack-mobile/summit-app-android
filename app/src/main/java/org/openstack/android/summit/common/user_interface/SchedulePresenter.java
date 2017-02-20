@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -22,11 +24,13 @@ import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperat
 import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
 import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
-import org.openstack.android.summit.modules.general_schedule_filter.user_interface.SingleFilterSelection;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Claudio Redi on 12/28/2015.
@@ -37,11 +41,9 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     protected List<ScheduleItemDTO> dayEvents;
     protected IScheduleFilter scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
-    private IScheduleItemViewBuilder scheduleItemViewBuilder;
+    protected IScheduleItemViewBuilder scheduleItemViewBuilder;
     protected IScheduleablePresenter scheduleablePresenter;
 
-
-    private boolean isFirstTime = true;
     protected boolean hasToCheckDisabledDates = true;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
@@ -87,42 +89,45 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     private void setRangerState() {
+
         currentSummit = interactor.getActiveSummit();
         if (currentSummit == null) return;
 
-        DateTime startDate = currentSummit.getLocalStartDate().withTime(0, 0, 0, 0);
-        DateTime endDate = currentSummit.getLocalEndDate().withTime(23, 59, 59, 999);
+        DateTime startDate          = currentSummit.getLocalStartDate().withTime(0, 0, 0, 0);
+        DateTime endDate            = currentSummit.getLocalEndDate().withTime(23, 59, 59, 999);
         boolean shouldHidePastTalks = view.getNowButtonState();
 
         view.setNowButtonVisibility(currentSummit.isCurrentDateTimeInsideSummitRange() ? View.VISIBLE : View.GONE);
 
 
         // check if current time is on summit time
-        List<DateTime> pastDates = shouldHidePastTalks ? currentSummit.getPastDates() : new ArrayList<DateTime>();
+        List<DateTime> pastDates     = shouldHidePastTalks ? currentSummit.getPastDates() : new ArrayList<DateTime>();
         List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
         // now merge past dates with inactive dates
         inactiveDates.removeAll(pastDates);
         inactiveDates.addAll(pastDates);
         Collections.sort(inactiveDates);
-
-
+        DateTime formerSelectedDate = view.getSelectedDate();
+        // set ranger states
         view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
-        DateTime scheduleStartDate = currentSummit.getLocalScheduleStartDate();
-        boolean foundDate = false;
+        DateTime scheduleStartDate        = currentSummit.getLocalScheduleStartDate();
+        boolean scheduleStartDateInactive = false;
 
         for (DateTime dt : inactiveDates) {
             if (dt.compareTo(scheduleStartDate) == 0) {
-                foundDate = true;
+                scheduleStartDateInactive = true;
                 break;
             }
         }
 
-        if (!foundDate) {
-            view.setSelectedDate(currentSummit.getScheduleStartDay());
+        if (!scheduleStartDateInactive && formerSelectedDate == null) {
+            view.setSelectedDate(currentSummit.getScheduleStartDay(), false);
         }
 
         if (currentSummit.isCurrentDateTimeInsideSummitRange()) {
-            view.setSelectedDate(currentSummit.getCurrentLocalTime().withTime(0, 0, 0, 0).getDayOfMonth());
+            int summitCurrentDay = currentSummit.getCurrentLocalTime().withTime(0, 0, 0, 0).getDayOfMonth();
+            if(formerSelectedDate == null || summitCurrentDay > formerSelectedDate.getDayOfMonth())
+                view.setSelectedDate(summitCurrentDay, false);
         }
 
         reloadSchedule();
@@ -158,12 +163,12 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
 
-        List<Integer> filtersOnEventTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
+        List<Integer> filtersOnEventTypes  = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
         List<Integer> filtersOnTrackGroups = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
         List<Integer> filtersOnSummitTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnVenues = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
+        List<String> filtersOnLevels       = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String> filtersOnTags         = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<Integer> filtersOnVenues      = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
 
         List<DateTime> inactiveDates = interactor.getDatesWithoutEvents(
                 startDate,
@@ -186,8 +191,10 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         scheduleItemViewBuilder.build(
                 scheduleItemView,
                 scheduleItemDTO,
-                interactor.isMemberLoggedAndConfirmedAttendee(),
+                interactor.isMemberLoggedIn(),
+                interactor.isMemberLoggedInAndConfirmedAttendee(),
                 interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
+                interactor.isEventFavoriteByLoggedMember(scheduleItemDTO.getId()),
                 false,
                 interactor.shouldShowVenues()
         );
@@ -196,7 +203,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     private DateTime getStartDateFilter(DateTime selectedDate) {
         boolean hidePastTalks = view.getNowButtonState();
         boolean selectedDayIsToday = selectedDate.isEqual(currentSummit.getCurrentLocalTime().withTime(0, 0, 0, 0));
-        int hour = (hidePastTalks && currentSummit.isCurrentDateTimeInsideSummitRange() && selectedDayIsToday) ? currentSummit.getCurrentLocalTime().getHourOfDay() : 0;
+        int hour   = (hidePastTalks && currentSummit.isCurrentDateTimeInsideSummitRange() && selectedDayIsToday) ? currentSummit.getCurrentLocalTime().getHourOfDay() : 0;
         int minute = (hidePastTalks && currentSummit.isCurrentDateTimeInsideSummitRange() && selectedDayIsToday) ? currentSummit.getCurrentLocalTime().getMinuteOfHour() : 0;
         int second = (hidePastTalks && currentSummit.isCurrentDateTimeInsideSummitRange() && selectedDayIsToday) ? currentSummit.getCurrentLocalTime().getSecondOfMinute() : 0;
         int millis = (hidePastTalks && currentSummit.isCurrentDateTimeInsideSummitRange() && selectedDayIsToday) ? currentSummit.getCurrentLocalTime().getMillisOfSecond() : 0;
@@ -208,21 +215,36 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
         DateTime selectedDate = view.getSelectedDate();
         if (selectedDate != null) {
+            view.showEmptyMessage(false);
+
             DateTime startDate = getStartDateFilter(selectedDate);
-            DateTime endDate = selectedDate.withTime(23, 59, 59, 999);
+            DateTime endDate   = selectedDate.withTime(23, 59, 59, 999);
 
             dayEvents = getScheduleEvents(startDate, endDate, interactor);
             view.setEvents(dayEvents);
             view.reloadSchedule();
+            return;
         }
+        view.showEmptyMessage(true);
     }
 
     protected abstract List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, I interactor);
 
+    @Override
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
+
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
+        if(scheduleItemDTO == null) return;
+        boolean formerState             = scheduleItemView.getScheduled();
 
         IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
+            @Override
+            public void onSucceed(){
+                Toast.makeText(view.getApplicationContext(), formerState ?
+                                view.getResources().getString(R.string.removed_from_going):
+                                view.getResources().getString(R.string.added_2_going),
+                        Toast.LENGTH_SHORT).show();
+            }
             @Override
             public void onError(String message) {
                 view.showErrorMessage(message);
@@ -230,6 +252,37 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         };
 
         scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor, interactorAsyncOperationListener);
+    }
+
+    @Override
+    public void toggleFavoriteStatus(IScheduleItemView scheduleItemView, int position) {
+
+        ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
+        if(scheduleItemDTO == null) return;
+        // get former state
+        boolean formerState             = scheduleItemView.getFavorite();
+        scheduleablePresenter
+                .toggleFavoriteStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe
+                        (
+                                (res) -> {
+                                    Toast.makeText(view.getApplicationContext(), formerState ?
+                                                    view.getResources().getString(R.string.removed_from_favorites):
+                                                    view.getResources().getString(R.string.added_2_favorites),
+                                            Toast.LENGTH_SHORT).show();
+                                },
+                                (ex) -> {
+                                    scheduleItemView.setFavorite(formerState);
+                                    if(ex != null) {
+                                        Log.d(Constants.LOG_TAG, ex.getMessage());
+                                        view.showErrorMessage(ex.getMessage());
+                                        return;
+                                    }
+                                    view.showErrorMessage("Server Error");
+                                }
+
+                        );
     }
 
     @Override

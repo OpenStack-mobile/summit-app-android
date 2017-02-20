@@ -12,20 +12,31 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         IScheduleItemView scheduleItemView,
         ScheduleItemDTO scheduleItemDTO,
         boolean isMemberLoggedIn,
+        boolean isMemberLoggedInAndAttendee,
         boolean isEventScheduledByLoggedMember,
-        boolean useFullDate, boolean showVenues
+        boolean isEventFavoriteByLoggedMember,
+        boolean useFullDate,
+        boolean showVenues
     ) {
         scheduleItemView.setName(scheduleItemDTO.getName());
         scheduleItemView.setTime(useFullDate ? scheduleItemDTO.getDateTime() : scheduleItemDTO.getTime());
         scheduleItemView.setSponsors(scheduleItemDTO.getSponsors());
         scheduleItemView.setEventType(scheduleItemDTO.getEventType().toUpperCase());
         scheduleItemView.setTrack(scheduleItemDTO.getTrack());
-        scheduleItemView.setIsScheduledStatusVisible(isMemberLoggedIn);
 
         if (isMemberLoggedIn) {
             scheduleItemView.setScheduled(isEventScheduledByLoggedMember);
+            scheduleItemView.setFavorite(isEventFavoriteByLoggedMember);
+            scheduleItemView.shouldShowFavoritesOption(true);
+            scheduleItemView.shouldShowGoingToOption(isMemberLoggedInAndAttendee);
         }
-
+        else{
+            scheduleItemView.setScheduled(false);
+            scheduleItemView.setFavorite(false);
+            scheduleItemView.shouldShowFavoritesOption(false);
+            scheduleItemView.shouldShowGoingToOption(false);
+        }
+        scheduleItemView.setContextualMenu();
         String color = scheduleItemDTO.getColor() != null && scheduleItemDTO.getColor() != ""
                 ? scheduleItemDTO.getColor()
                 : "";

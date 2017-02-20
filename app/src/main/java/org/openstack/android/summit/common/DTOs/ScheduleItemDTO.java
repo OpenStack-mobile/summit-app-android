@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
  * Created by Claudio Redi on 11/18/2015.
  */
 public class ScheduleItemDTO extends NamedDTO {
+
     private String time;
     private String dateTime;
     private String location;
@@ -17,6 +18,7 @@ public class ScheduleItemDTO extends NamedDTO {
     private String eventType;
     private String color;
     private String locationAddress;
+    private int summitId;
 
     public String getLocationAddress() {
         return locationAddress;
@@ -117,4 +119,8 @@ public class ScheduleItemDTO extends NamedDTO {
     public void setRoom(String room) {
         this.room = room;
     }
+
+    public void setSummitId(int summitId){ this.summitId = summitId;}
+
+    public int getSummitId(){ return this.summitId;}
 }

@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.speakers_list.SpeakerListWireframe;
@@ -33,8 +34,8 @@ public class SpeakerListModule {
     }
 
     @Provides
-    ISpeakerListInteractor providesSpeakerListInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new SpeakerListInteractor(presentationSpeakerDataStore, dtoAssembler, summitDataStore, summitSelector);
+    ISpeakerListInteractor providesSpeakerListInteractor(ISecurityManager securityManager, IPresentationSpeakerDataStore presentationSpeakerDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
+        return new SpeakerListInteractor(securityManager, presentationSpeakerDataStore, dtoAssembler, summitDataStore, summitSelector);
     }
 
     @Provides
