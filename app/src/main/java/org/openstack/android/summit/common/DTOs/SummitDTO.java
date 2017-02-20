@@ -6,6 +6,7 @@ import org.joda.time.DateTimeZone;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Claudio Redi on 11/18/2015.
@@ -17,6 +18,8 @@ public class SummitDTO extends NamedDTO {
     private String timeZone;
     private Date startShowingVenuesDate;
     private Date scheduleStartDate;
+
+    private List<WifiListItemDTO> wifiConnections = new ArrayList<WifiListItemDTO>();
 
     public Date getScheduleStartDate() {
         return scheduleStartDate;
@@ -117,5 +120,13 @@ public class SummitDTO extends NamedDTO {
 
     public void setStartShowingVenuesDate(Date startShowingVenuesDate) {
         this.startShowingVenuesDate = startShowingVenuesDate;
+    }
+
+    public List<WifiListItemDTO> getWifiConnections() {
+        return wifiConnections;
+    }
+
+    public void setWifiConnections(List<WifiListItemDTO> wifiConnections) {
+        this.wifiConnections = wifiConnections;
     }
 }

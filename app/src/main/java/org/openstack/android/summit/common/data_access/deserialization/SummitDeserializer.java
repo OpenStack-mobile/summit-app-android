@@ -13,6 +13,7 @@ import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
+import org.openstack.android.summit.common.entities.SummitWIFIConnection;
 import org.openstack.android.summit.common.entities.TicketType;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
@@ -38,6 +39,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
     IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
     ITrackGroupDeserializer trackGroupDeserializer;
     ITrackDeserializer trackDeserializer;
+    IWifiConnectionDeserializer wifiConnectionDeserializer;
 
     @Inject
     public SummitDeserializer
@@ -48,7 +50,8 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                     ISummitEventDeserializer summitEventDeserializer,
                     IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                     ITrackGroupDeserializer trackGroupDeserializer,
-                    ITrackDeserializer trackDeserializer
+                    ITrackDeserializer trackDeserializer,
+                    IWifiConnectionDeserializer wifiConnectionDeserializer
             ) {
 
         this.genericDeserializer             = genericDeserializer;
@@ -58,6 +61,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
         this.trackGroupDeserializer          = trackGroupDeserializer;
         this.trackDeserializer               = trackDeserializer;
+        this.wifiConnectionDeserializer      = wifiConnectionDeserializer;
     }
 
     @Override
@@ -224,6 +228,18 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                 summit.getEvents().add(summitEvent);
             }
             summit.setScheduleLoaded(true);
+        }
+
+        if (jsonObject.has("wifi_connections")) {
+            SummitWIFIConnection wifiConnection;
+            JSONObject jsonObjectWifiConnection;
+            summit.getWifiConnections().clear();
+            JSONArray jsonArrayWifiConnections = jsonObject.getJSONArray("wifi_connections");
+            for (int i = 0; i < jsonArrayWifiConnections.length(); i++) {
+                jsonObjectWifiConnection = jsonArrayWifiConnections.getJSONObject(i);
+                wifiConnection = wifiConnectionDeserializer.deserialize(jsonObjectWifiConnection.toString());
+                summit.getWifiConnections().add(wifiConnection);
+            }
         }
 
         return summit;

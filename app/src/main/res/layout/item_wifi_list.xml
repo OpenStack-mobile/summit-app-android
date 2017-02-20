@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/openStackDarkBlue">
+    <ImageView
+        android:id="@+id/item_wifi_list_wifi_icon"
+        style="@style/AppTheme.WifiIcon" />
+    <TextView
+        android:id="@+id/item_wifi_list_ssid"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_weight="1"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"
+        android:textIsSelectable="true"
+        android:text="Network"/>
+    <ImageView
+        android:id="@+id/item_wifi_list_password_icon"
+        style="@style/AppTheme.LockIcon" />
+    <TextView
+        android:id="@+id/item_wifi_list_password"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_weight="1"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"
+        android:textIsSelectable="true"
+        android:text="xxxxxxxx"/>
+</LinearLayout>

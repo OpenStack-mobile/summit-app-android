@@ -23,6 +23,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueFloorR
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueRealmProxy2VenueDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueRoomRealmProxy2VenueRoomDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.PushNotification2PushNotificationDetailDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.WifiConnection2WifiListItemDTO;
 
 import javax.inject.Inject;
 
@@ -56,6 +57,7 @@ public class DTOAssembler implements IDTOAssembler {
         modelMapper.addConverter(new PushNotificationRealmProxy2PushNotificationListItemDTO());
         modelMapper.addConverter(new PushNotification2PushNotificationDetailDTO());
         modelMapper.addConverter(new PushNotificationRealmProxy2PushNotificationDetailDTO());
+        modelMapper.addConverter(new WifiConnection2WifiListItemDTO());
     }
 
     @Override
