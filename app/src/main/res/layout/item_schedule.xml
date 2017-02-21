@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -14,13 +15,13 @@
 
     <LinearLayout
         android:id="@+id/info_container"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
-        android:layout_weight="0.80">
+        android:layout_weight="0.90">
 
         <LinearLayout
             android:layout_marginBottom="10dp"
@@ -36,7 +37,7 @@
             <TextView android:id="@+id/item_schedule_textview_time"
                 android:layout_marginLeft="5dp"
                 android:layout_centerVertical="true"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:textColor="@color/openStackDarkGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +68,7 @@
                 android:src="@drawable/map"/>
 
             <TextView android:id="@+id/item_schedule_textview_location"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:textColor="@color/openStackDarkGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,7 +78,7 @@
 
         </LinearLayout>
         <TextView android:id="@+id/item_schedule_textview_track"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@color/openStackGray"
             android:layout_weight=".50"
             android:layout_width="wrap_content"
@@ -86,7 +87,7 @@
             />
 
         <TextView android:id="@+id/item_schedule_textview_event_type"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@color/openStackGray"
             android:layout_weight=".50"
             android:layout_height="wrap_content"
@@ -104,43 +105,53 @@
 
     <FrameLayout
         android:id="@+id/state_container"
-        android:layout_width="0dp"
-        android:layout_weight="0.17"
+        android:layout_width="46dp"
+        android:layout_weight="0.05"
         android:layout_height="match_parent"
-        android:layout_marginRight="5dp"
         android:orientation="vertical">
         <ImageView
             android:id="@+id/favorite_event"
             android:visibility="gone"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_gravity="center_vertical"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:background="@drawable/ic_favorite"/>
         <ImageView
             android:id="@+id/going_event"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_gravity="center_vertical"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:background="@drawable/ic_event_available"/>
     </FrameLayout>
 
-    <View
-        android:id="@+id/item_divider"
-        android:layout_width="1dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_height="match_parent"
-        android:background="#DDDDDD"/>
-
-    <TextView
-        android:id="@+id/textViewOptions"
+    <LinearLayout
+        android:id="@+id/options_container"
+        android:layout_weight="0.05"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:text="&#8942;"
-        android:textAppearance="?android:textAppearanceLarge" />
+        android:layout_height="match_parent">
+        <View
+            android:id="@+id/item_divider"
+            android:layout_width="1dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_height="match_parent"
+            android:background="#DDDDDD"/>
+
+        <TextView
+            android:id="@+id/textViewOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:text="&#8942;"
+            android:textAppearance="?android:textAppearanceLarge" />
+    </LinearLayout>
+
 
 
 </LinearLayout>

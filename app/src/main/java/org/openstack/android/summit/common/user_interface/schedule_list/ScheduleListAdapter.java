@@ -105,6 +105,7 @@ public class ScheduleListAdapter
         private boolean scheduled;
         private boolean favorite;
         private TextView buttonViewOptions;
+        private LinearLayout optionsContainer;
         private ImageView favoriteEvent;
         private ImageView goingEvent;
         // callback
@@ -134,11 +135,12 @@ public class ScheduleListAdapter
             track = (TextView) itemView.findViewById(R.id.item_schedule_textview_track);
             locationContainer = (LinearLayout) itemView.findViewById(R.id.item_schedule_place_container);
             location = (TextView) itemView.findViewById(R.id.item_schedule_textview_location);
-            ;
+
             colorView = itemView.findViewById(R.id.item_schedule_view_color);
             buttonViewOptions = (TextView) itemView.findViewById(R.id.textViewOptions);
             favoriteEvent = (ImageView) itemView.findViewById(R.id.favorite_event);
             goingEvent = (ImageView) itemView.findViewById(R.id.going_event);
+            optionsContainer = (LinearLayout) itemView.findViewById(R.id.options_container);
             this.clickEventCallback = clickEventCallback;
             this.eventNotGoingCallback = eventNotGoingCallback;
             this.eventGoingCallback = eventGoingCallback;
@@ -215,7 +217,7 @@ public class ScheduleListAdapter
           if (buttonViewOptions == null) return;
 
                 if (showFavoritesMenuOption || showGoingMenuOption) {
-                    buttonViewOptions.setVisibility(View.VISIBLE);
+                    optionsContainer.setVisibility(View.VISIBLE);
                     buttonViewOptions.setOnClickListener(v -> {
 
                         MenuBuilder menuBuilder     = new MenuBuilder(buttonViewOptions.getContext());
@@ -292,7 +294,7 @@ public class ScheduleListAdapter
                     });
                     return;
                 }   // hide ... button
-                buttonViewOptions.setVisibility(View.GONE);
+                optionsContainer.setVisibility(View.GONE);
         }
 
         @Override

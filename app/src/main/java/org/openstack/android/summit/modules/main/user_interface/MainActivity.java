@@ -293,17 +293,21 @@ public class MainActivity
         try {
             Log.d(Constants.LOG_TAG, "MainActivity.onResume");
             toggleMenuLogo(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+
             super.onResume();
-            presenter.onResume();
-            setupNavigationIcons();
             Intent intent = getIntent();
             if(intent != null
-                    && intent.getBooleanExtra(Constants.START_EXTERNAL_LOGIN, false) == true
+                    && intent.getBooleanExtra(Constants.START_EXTERNAL_LOGIN, false)
                     && !securityManager.isLoggedIn()
                     && !onLoginProcess){
                 intent.removeExtra(Constants.START_EXTERNAL_LOGIN);
                 this.loginButton.performClick();
+                return;
             }
+
+            presenter.onResume();
+            setupNavigationIcons();
+
         } catch (Exception ex) {
             Crashlytics.logException(ex);
         }
@@ -415,34 +419,34 @@ public class MainActivity
             LinearLayout headerView = (LinearLayout) navigationView.inflateHeaderView(R.layout.nav_header_main);
             loginButton             = (Button) headerView.findViewById(R.id.login_button);
 
-            loginButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (!reachability.isNetworkingAvailable(MainActivity.this)) {
-                        showErrorMessage(getResources().getString(R.string.login_disallowed_no_connectivity));
-                        return;
-                    }
-
-                    presenter.disableDataUpdateService();
-
-                    if (!presenter.isSummitDataLoaded()) {
-                        showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
-                        launchInitialDataLoadingActivity();
-                        return;
-                    }
-
-                    // LOGIN
-                    if (!securityManager.isLoggedIn()) {
-                        securityManager.login(MainActivity.this);
-                        return;
-                    }
-
-                    // LOGOUT
-                    userClickedLogout = true;
-
-                    securityManager.logout(true);
+            loginButton.setOnClickListener(v -> {
+                showActivityIndicator();
+                if (!reachability.isNetworkingAvailable(MainActivity.this)) {
+                    hideActivityIndicator();
+                    showErrorMessage(getResources().getString(R.string.login_disallowed_no_connectivity));
+                    return;
                 }
+
+                presenter.disableDataUpdateService();
+
+                if (!presenter.isSummitDataLoaded()) {
+                    hideActivityIndicator();
+                    showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
+                    launchInitialDataLoadingActivity();
+                    return;
+                }
+
+                // LOGIN
+                if (!securityManager.isLoggedIn()) {
+                    securityManager.login(MainActivity.this);
+                    return;
+                }
+
+                // LOGOUT
+                userClickedLogout = true;
+
+                securityManager.logout(true);
+                hideActivityIndicator();
             });
 
             memberNameTextView     = (TextView) headerView.findViewById(R.id.member_name_textview);
@@ -705,34 +709,28 @@ public class MainActivity
 
     public void showActivityIndicator() {
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (progressDialog != null) {
-                    hideActivityIndicator();
-                }
-                Log.d(Constants.LOG_TAG, "MainActivity.showActivityIndicator");
-                progressDialog = new ACProgressPie.Builder(MainActivity.this)
-                        .ringColor(Color.WHITE)
-                        .pieColor(Color.WHITE)
-                        .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                        .build();
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+        runOnUiThread(() -> {
+            if (progressDialog != null) {
+                hideActivityIndicator();
             }
+            Log.d(Constants.LOG_TAG, "MainActivity.showActivityIndicator");
+            progressDialog = new ACProgressPie.Builder(MainActivity.this)
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            progressDialog.setCancelable(false);
+            progressDialog.show();
         });
     }
 
     public void hideActivityIndicator() {
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (progressDialog != null) {
-                    Log.d(Constants.LOG_TAG, "MainActivity.hideActivityIndicator");
-                    progressDialog.dismiss();
-                    progressDialog = null;
-                }
+        runOnUiThread(() -> {
+            if (progressDialog != null) {
+                Log.d(Constants.LOG_TAG, "MainActivity.hideActivityIndicator");
+                progressDialog.dismiss();
+                progressDialog = null;
             }
         });
 

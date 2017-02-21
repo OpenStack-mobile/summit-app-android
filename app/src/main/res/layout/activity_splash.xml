@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
-    android:id="@+id/splash_main_container" android:background="@color/colorPrimary">
+    android:id="@+id/splash_main_container"
+    android:background="@drawable/material_splash_gradient">
 
     <ImageView
         android:layout_width="300dp"
@@ -14,14 +15,14 @@
         android:src="@drawable/summit_logo"
         tools:layout_gravity="center_horizontal"
         android:id="@+id/splash_logo"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="60dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_margin="10dp"
-        android:layout_weight="0.5"
+        android:layout_weight="0.6"
         android:visibility="invisible"
         android:id="@+id/splash_summit_info_container"
         android:gravity="center_vertical">

@@ -147,15 +147,12 @@ public class SecurityManager implements ISecurityManager {
                 null,
                 null,
                 context,
-                new AccountManagerCallback<Bundle>() {
-                    @Override
-                    public void run(AccountManagerFuture<Bundle> futureManager) {
+                    futureManager -> {
                         // Unless the account creation was cancelled, try logging in again
                         // after the account has been created.
                         if (futureManager.isCancelled()) return;
                         bindCurrentUser();
-                    }
-                },
+                    },
                 null
             );
         }
@@ -174,24 +171,26 @@ public class SecurityManager implements ISecurityManager {
     @Override
     public void bindCurrentUser(){
         Log.d(Constants.LOG_TAG, "SecurityManager.bindCurrentUser");
+
         memberDataStore.getLoggedInMember()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe
-                        (
-                                memberId -> {
-                                    identity.setCurrentMemberId(memberId);
-                                    Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
-                                    LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-                                    state = SecurityManagerState.LOGGED_IN;
-                                },
-                                (ex) -> {
-                                    Log.e(Constants.LOG_TAG, ex.toString());
-                                    Intent intent = new Intent(Constants.LOG_IN_ERROR_EVENT);
-                                    intent.putExtra(Constants.LOG_IN_ERROR_MESSAGE, ex.getMessage());
-                                    LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
-                                    state = SecurityManagerState.IDLE;
-                                });
+                (
+                    memberId -> {
+                        identity.setCurrentMemberId(memberId);
+                        Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
+                        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+                        state = SecurityManagerState.LOGGED_IN;
+                    },
+                    (ex) -> {
+                        Log.e(Constants.LOG_TAG, ex.toString());
+                        Intent intent = new Intent(Constants.LOG_IN_ERROR_EVENT);
+                        intent.putExtra(Constants.LOG_IN_ERROR_MESSAGE, ex.getMessage());
+                        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
+                        state = SecurityManagerState.IDLE;
+                    }
+                );
     }
 
     private void removeAccount(Account account){
