@@ -1,12 +1,8 @@
 package org.openstack.android.summit.common.user_interface;
 
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
-import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
-
 import java.util.HashMap;
-
 import io.reactivex.Observable;
 
 /**
@@ -36,16 +32,14 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
     }
 
     @Override
-    public void toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor, IInteractorAsyncOperationListener<Void> interactorOperationListener) {
+    public Observable<Boolean> toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor)
+    {
 
         Boolean isScheduled = interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId());
 
-        if (isScheduled) {
-            removeEventFromSchedule(scheduleItemDTO, scheduleableView, interactor, interactorOperationListener);
-        }
-        else {
-            addEventToSchedule(scheduleItemDTO, scheduleableView, interactor, interactorOperationListener);
-        }
+        return isScheduled ?
+                removeEventFromSchedule(scheduleItemDTO, scheduleableView, interactor) :
+                addEventToSchedule(scheduleItemDTO, scheduleableView, interactor);
     }
 
     @Override
@@ -91,50 +85,32 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
     }
 
 
-    private void removeEventFromSchedule(ScheduleItemDTO scheduleItemDTO, final IScheduleableView scheduleableView, IScheduleableInteractor interactor, final IInteractorAsyncOperationListener<Void> interactorOperationListener) {
-
-        // update view
-        if(hasOp(scheduleItemDTO.getId(), "GOING_DEL")) return;
+    private Observable<Boolean> removeEventFromSchedule(ScheduleItemDTO scheduleItemDTO, final IScheduleableView scheduleableView, IScheduleableInteractor interactor)
+    {
+        if(hasOp(scheduleItemDTO.getId(), "GOING_DEL")) return Observable.just(false);
         addOp(scheduleItemDTO.getId(), "GOING_DEL");
         scheduleableView.setScheduled(false);
-        InteractorAsyncOperationListener<Void> internalInteractorOperationListener = new InteractorAsyncOperationListener<Void>() {
-            @Override
-            public void onSucceed() {
 
-                removeOp(scheduleItemDTO.getId(), "GOING_DEL");
-                interactorOperationListener.onSucceed();
-            }
-
-            @Override
-            public void onError(String message) {
-                removeOp(scheduleItemDTO.getId(), "GOING_DEL");
-                scheduleableView.setScheduled(!scheduleableView.getScheduled());
-                interactorOperationListener.onError(message);
-            }
-        };
-
-        interactor.removeEventFromLoggedInMemberSchedule(scheduleItemDTO.getId(), internalInteractorOperationListener);
+        return interactor
+                .removeEventFromLoggedInMemberSchedule(scheduleItemDTO.getId())
+                .doOnNext((res) ->  removeOp(scheduleItemDTO.getId(), "GOING_DEL"))
+                .doOnError((res) -> { removeOp(scheduleItemDTO.getId(), "GOING_DEL");});
     }
 
-    private void addEventToSchedule(ScheduleItemDTO scheduleItemDTO, final IScheduleableView scheduleableView, IScheduleableInteractor interactor, final IInteractorAsyncOperationListener<Void> interactorOperationListener) {
-        if(hasOp(scheduleItemDTO.getId(), "GOING_ADD")) return;
+    private Observable<Boolean> addEventToSchedule
+    (
+        ScheduleItemDTO scheduleItemDTO,
+        IScheduleableView scheduleableView,
+        IScheduleableInteractor interactor
+    )
+    {
+        if(hasOp(scheduleItemDTO.getId(), "GOING_ADD")) return Observable.just(false);
         addOp(scheduleItemDTO.getId(), "GOING_ADD");
         scheduleableView.setScheduled(true);
-        InteractorAsyncOperationListener<Void> internalInteractorOperationListener = new InteractorAsyncOperationListener<Void>() {
-            @Override
-            public void onSucceed() {
-                removeOp(scheduleItemDTO.getId(), "GOING_ADD");
-                interactorOperationListener.onSucceed();
-            }
 
-            @Override
-            public void onError(String message) {
-                removeOp(scheduleItemDTO.getId(), "GOING_ADD");
-                scheduleableView.setScheduled(!scheduleableView.getScheduled());
-                interactorOperationListener.onError(message);
-            }
-        };
-
-        interactor.addEventToLoggedInMemberSchedule(scheduleItemDTO.getId(), internalInteractorOperationListener);
+        return interactor
+                .addEventToLoggedInMemberSchedule(scheduleItemDTO.getId())
+                .doOnNext((res) ->  removeOp(scheduleItemDTO.getId(), "GOING_ADD"))
+                .doOnError((res) -> { removeOp(scheduleItemDTO.getId(), "GOING_ADD");});
     }
 }

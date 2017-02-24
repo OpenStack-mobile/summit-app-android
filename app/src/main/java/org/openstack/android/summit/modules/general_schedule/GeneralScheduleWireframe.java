@@ -1,11 +1,9 @@
 package org.openstack.android.summit.modules.general_schedule;
 
-import android.app.Activity;
-
 import org.openstack.android.summit.common.INavigationParametersStore;
-import org.openstack.android.summit.common.IScheduleWireframe;
 import org.openstack.android.summit.common.ScheduleWireframe;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 
 import javax.inject.Inject;
 
@@ -15,7 +13,12 @@ import javax.inject.Inject;
 public class GeneralScheduleWireframe extends ScheduleWireframe implements IGeneralScheduleWireframe {
 
     @Inject
-    public GeneralScheduleWireframe(IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
-        super(eventDetailWireframe, navigationParametersStore);
+    public GeneralScheduleWireframe
+    (   IRSVPWireframe rsvpWireframe,
+        IEventDetailWireframe eventDetailWireframe,
+        INavigationParametersStore navigationParametersStore
+    )
+    {
+        super(eventDetailWireframe, rsvpWireframe, navigationParametersStore);
     }
 }

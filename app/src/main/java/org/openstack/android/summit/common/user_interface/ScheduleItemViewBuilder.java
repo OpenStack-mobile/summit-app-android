@@ -16,7 +16,9 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         boolean isEventScheduledByLoggedMember,
         boolean isEventFavoriteByLoggedMember,
         boolean useFullDate,
-        boolean showVenues
+        boolean showVenues,
+        String rsvpLink,
+        boolean externalRSVP
     ) {
         scheduleItemView.setName(scheduleItemDTO.getName());
         scheduleItemView.setTime(useFullDate ? scheduleItemDTO.getDateTime() : scheduleItemDTO.getTime());
@@ -28,14 +30,17 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
             scheduleItemView.setScheduled(isEventScheduledByLoggedMember);
             scheduleItemView.setFavorite(isEventFavoriteByLoggedMember);
             scheduleItemView.shouldShowFavoritesOption(true);
-            scheduleItemView.shouldShowGoingToOption(isMemberLoggedInAndAttendee);
+            scheduleItemView.shouldShowGoingToOption(isMemberLoggedInAndAttendee && (rsvpLink == null || rsvpLink.isEmpty()));
+            scheduleItemView.shouldShowRSVPToOption(isMemberLoggedInAndAttendee && rsvpLink != null && !rsvpLink.isEmpty());
         }
         else{
             scheduleItemView.setScheduled(false);
             scheduleItemView.setFavorite(false);
             scheduleItemView.shouldShowFavoritesOption(false);
             scheduleItemView.shouldShowGoingToOption(false);
+            scheduleItemView.shouldShowRSVPToOption(false);
         }
+
         scheduleItemView.setContextualMenu();
         String color = scheduleItemDTO.getColor() != null && scheduleItemDTO.getColor() != ""
                 ? scheduleItemDTO.getColor()
@@ -46,5 +51,8 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         scheduleItemView.showLocation(showVenues);
         if(showVenues)
             scheduleItemView.setLocation(scheduleItemDTO.getLocation());
+
+        scheduleItemView.setRSVPLink(rsvpLink);
+        scheduleItemView.setExternalRSVP(externalRSVP);
     }
 }

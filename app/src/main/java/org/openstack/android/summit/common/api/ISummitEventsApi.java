@@ -15,12 +15,6 @@ import retrofit2.http.Query;
 
 public interface ISummitEventsApi {
 
-    @POST("v1/summits/{summit_id}/attendees/me/schedule/{event_id}")
-    public Call<ResponseBody> addToMySchedule(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
-
-    @DELETE("v1/summits/{summit_id}/attendees/me/schedule/{event_id}")
-    public Call<ResponseBody> removeFromMySchedule(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
-
     @GET("v1/summits/{summit_id}/events/{event_id}/published")
     public Call<ResponseBody> getPublishedEvent(@Path("summit_id") int summitId, @Path("event_id") Integer eventId, @Query("fields") String fields, @Query("relations") String relations);
 

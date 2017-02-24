@@ -22,6 +22,7 @@ import org.openstack.android.summit.modules.general_schedule.business_logic.IGen
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralScheduleFragment;
 import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralSchedulePresenter;
 import org.openstack.android.summit.modules.general_schedule.user_interface.IGeneralSchedulePresenter;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 
 import dagger.Module;
 import dagger.Provides;
@@ -38,8 +39,14 @@ public class GeneralScheduleModule {
     }
 
     @Provides
-    IGeneralScheduleWireframe providesGeneralScheduleWireframe(IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
-        return new GeneralScheduleWireframe(eventDetailWireframe, navigationParametersStore);
+    IGeneralScheduleWireframe providesGeneralScheduleWireframe
+    (
+            IEventDetailWireframe eventDetailWireframe,
+            IRSVPWireframe rsvpWireframe,
+            INavigationParametersStore navigationParametersStore
+    )
+    {
+        return new GeneralScheduleWireframe(rsvpWireframe, eventDetailWireframe, navigationParametersStore);
     }
 
     @Provides

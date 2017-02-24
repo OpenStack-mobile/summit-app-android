@@ -25,5 +25,15 @@ public interface IScheduleItemView extends IScheduleableView, IFavoriteView {
 
     void shouldShowGoingToOption(boolean show);
 
+    void shouldShowRSVPToOption(boolean show);
+
     void setContextualMenu();
+
+    boolean isExternalRSVP();
+
+    String getRSVPLink();
+
+    void setExternalRSVP(boolean externalRSVP);
+
+    void setRSVPLink(String link);
 }

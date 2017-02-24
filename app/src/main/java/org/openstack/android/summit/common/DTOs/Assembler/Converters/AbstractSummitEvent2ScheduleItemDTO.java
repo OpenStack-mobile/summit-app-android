@@ -57,6 +57,8 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         }
 
         scheduleItemDTO.setSummitId(source.getSummit().getId());
+        scheduleItemDTO.setRsvpLink(source.getRsvpLink());
+        scheduleItemDTO.setRsvpExternal(source.isRsvpExternal());
     }
 
     private String getSponsors(S summitEvent) {

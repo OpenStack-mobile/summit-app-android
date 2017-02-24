@@ -365,7 +365,7 @@ public class DataAccessModule {
     @Provides
     ISummitAttendeeRemoteDataStore providesSummitAttendeeRemoteDataStore
     (
-        @Named("MemberProfile") Retrofit restClient,
+        @Named("MemberProfileRXJava2") Retrofit restClient,
         ISummitSelector summitSelector
     )
     {

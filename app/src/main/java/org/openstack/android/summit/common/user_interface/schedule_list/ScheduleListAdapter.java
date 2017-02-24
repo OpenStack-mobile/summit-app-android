@@ -50,7 +50,8 @@ public class ScheduleListAdapter
                         (item, position) -> presenter.toggleScheduleStatus(item, position),
                         (item, position) -> presenter.toggleScheduleStatus(item, position),
                         (item, position) -> presenter.toggleFavoriteStatus(item, position),
-                        (item, position) -> presenter.toggleFavoriteStatus(item, position)
+                        (item, position) -> presenter.toggleFavoriteStatus(item, position),
+                        (item, position) -> presenter.toggleRSVPStatus(item, position)
                 );
     }
 
@@ -78,19 +79,7 @@ public class ScheduleListAdapter
             void action(int position);
         }
 
-        public interface OnSummitEventNotGoing {
-            void action(IScheduleItemView item, int position);
-        }
-
-        public interface OnSummitEventGoing {
-            void action(IScheduleItemView item, int position);
-        }
-
-        public interface OnSummitEventFavorite {
-            void action(IScheduleItemView item, int position);
-        }
-
-        public interface OnSummitEventRemoveFavorite {
+        public interface OnEventMenuAction {
             void action(IScheduleItemView item, int position);
         }
 
@@ -110,21 +99,26 @@ public class ScheduleListAdapter
         private ImageView goingEvent;
         // callback
         private OnSummitEventSelected clickEventCallback;
-        private OnSummitEventNotGoing eventNotGoingCallback;
-        private OnSummitEventGoing eventGoingCallback;
-        private OnSummitEventFavorite eventFavoriteCallback;
-        private OnSummitEventRemoveFavorite eventRemoveFavoriteCallback;
+        private OnEventMenuAction eventNotGoingCallback;
+        private OnEventMenuAction eventGoingCallback;
+        private OnEventMenuAction eventFavoriteCallback;
+        private OnEventMenuAction eventRemoveFavoriteCallback;
+        private OnEventMenuAction eventRSVPCallback;
         private boolean showFavoritesMenuOption;
         private boolean showGoingMenuOption;
+        private boolean showRSVPOption;
+        private boolean externalRSVP;
+        private String rsvpLink;
 
         public ScheduleItemViewHolder
                 (
                         View itemView,
                         OnSummitEventSelected clickEventCallback,
-                        OnSummitEventNotGoing eventNotGoingCallback,
-                        OnSummitEventGoing eventGoingCallback,
-                        OnSummitEventFavorite eventFavoriteCallback,
-                        OnSummitEventRemoveFavorite eventRemoveFavoriteCallback
+                        OnEventMenuAction eventNotGoingCallback,
+                        OnEventMenuAction eventGoingCallback,
+                        OnEventMenuAction eventFavoriteCallback,
+                        OnEventMenuAction eventRemoveFavoriteCallback,
+                        OnEventMenuAction eventRSVPCallback
                 ) {
 
             super(itemView);
@@ -136,16 +130,17 @@ public class ScheduleListAdapter
             locationContainer = (LinearLayout) itemView.findViewById(R.id.item_schedule_place_container);
             location = (TextView) itemView.findViewById(R.id.item_schedule_textview_location);
 
-            colorView = itemView.findViewById(R.id.item_schedule_view_color);
-            buttonViewOptions = (TextView) itemView.findViewById(R.id.textViewOptions);
-            favoriteEvent = (ImageView) itemView.findViewById(R.id.favorite_event);
-            goingEvent = (ImageView) itemView.findViewById(R.id.going_event);
-            optionsContainer = (LinearLayout) itemView.findViewById(R.id.options_container);
-            this.clickEventCallback = clickEventCallback;
-            this.eventNotGoingCallback = eventNotGoingCallback;
-            this.eventGoingCallback = eventGoingCallback;
-            this.eventFavoriteCallback = eventFavoriteCallback;
+            colorView                        = itemView.findViewById(R.id.item_schedule_view_color);
+            buttonViewOptions                = (TextView) itemView.findViewById(R.id.textViewOptions);
+            favoriteEvent                    = (ImageView) itemView.findViewById(R.id.favorite_event);
+            goingEvent                       = (ImageView) itemView.findViewById(R.id.going_event);
+            optionsContainer                 = (LinearLayout) itemView.findViewById(R.id.options_container);
+            this.clickEventCallback          = clickEventCallback;
+            this.eventNotGoingCallback       = eventNotGoingCallback;
+            this.eventGoingCallback          = eventGoingCallback;
+            this.eventFavoriteCallback       = eventFavoriteCallback;
             this.eventRemoveFavoriteCallback = eventRemoveFavoriteCallback;
+            this.eventRSVPCallback           = eventRSVPCallback;
             // events handlers
             itemView.setOnClickListener(this);
         }
@@ -213,6 +208,11 @@ public class ScheduleListAdapter
         }
 
         @Override
+        public void shouldShowRSVPToOption(boolean show) {
+            this.showRSVPOption = show;
+        }
+
+        @Override
         public void setContextualMenu() {
           if (buttonViewOptions == null) return;
 
@@ -244,6 +244,15 @@ public class ScheduleListAdapter
                             menuBuilder.findItem(R.id.schedule_item_menu_save_favorite_action).setVisible(false);
                         }
 
+                        if(showRSVPOption){
+                            menuBuilder.findItem(R.id.schedule_item_menu_save_rsvp_action).setVisible(!scheduled);
+                            menuBuilder.findItem(R.id.schedule_item_menu_save_going_action).setVisible(false);
+                            menuBuilder.findItem(R.id.schedule_item_menu_remove_going_action).setVisible(false);
+                        }
+                        else{
+                            menuBuilder.findItem(R.id.schedule_item_menu_save_rsvp_action).setVisible(false);
+                        }
+
                         menuBuilder.setCallback(new Callback() {
                             @Override
                             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
@@ -259,6 +268,12 @@ public class ScheduleListAdapter
                                     case R.id.schedule_item_menu_save_going_action: {
                                         if (eventGoingCallback != null) {
                                             eventGoingCallback.action(ScheduleItemViewHolder.this, getAdapterPosition());
+                                            return true;
+                                        }
+                                    }
+                                    case R.id.schedule_item_menu_save_rsvp_action: {
+                                        if (eventRSVPCallback != null) {
+                                            eventRSVPCallback.action(ScheduleItemViewHolder.this, getAdapterPosition());
                                             return true;
                                         }
                                     }
@@ -295,6 +310,26 @@ public class ScheduleListAdapter
                     return;
                 }   // hide ... button
                 optionsContainer.setVisibility(View.GONE);
+        }
+
+        @Override
+        public boolean isExternalRSVP() {
+            return this.externalRSVP;
+        }
+
+        @Override
+        public String getRSVPLink() {
+            return this.rsvpLink;
+        }
+
+        @Override
+        public void setExternalRSVP(boolean externalRSVP) {
+            this.externalRSVP = externalRSVP;
+        }
+
+        @Override
+        public void setRSVPLink(String link) {
+            this.rsvpLink = link;
         }
 
         @Override

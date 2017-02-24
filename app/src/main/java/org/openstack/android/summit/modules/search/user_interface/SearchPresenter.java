@@ -5,12 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
-import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.IPersonItemView;
 import org.openstack.android.summit.common.user_interface.IScheduleItemView;
@@ -139,7 +138,8 @@ public class SearchPresenter
     @Override
     public void buildItem(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = events.get(position);
-        scheduleItemViewBuilder.build(
+        scheduleItemViewBuilder.build
+        (
                 scheduleItemView,
                 scheduleItemDTO,
                 interactor.isMemberLoggedIn(),
@@ -147,22 +147,38 @@ public class SearchPresenter
                 interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
                 interactor.isEventFavoriteByLoggedMember(scheduleItemDTO.getId()),
                 true,
-                interactor.shouldShowVenues()
+                interactor.shouldShowVenues(),
+                scheduleItemDTO.getRsvpLink(),
+                scheduleItemDTO.isRsvpExternal()
         );
     }
 
     @Override
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
         ScheduleItemDTO scheduleItemDTO = events.get(position);
+        if(scheduleItemDTO == null) return;
+        boolean formerState             = scheduleItemView.getScheduled();
 
-        IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
-            @Override
-            public void onError(String message) {
-                view.showErrorMessage(message);
-            }
-        };
-
-        scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor, interactorAsyncOperationListener);
+        scheduleablePresenter
+                .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        ( res ) -> {
+                            Toast.makeText(view.getApplicationContext(), formerState ?
+                                            view.getResources().getString(R.string.removed_from_going):
+                                            view.getResources().getString(R.string.added_2_going),
+                                    Toast.LENGTH_SHORT).show();
+                        },
+                        (ex) -> {
+                            scheduleItemView.setScheduled(formerState);
+                            if(ex != null) {
+                                Log.d(Constants.LOG_TAG, ex.getMessage());
+                                view.showErrorMessage(ex.getMessage());
+                                return;
+                            }
+                            view.showErrorMessage("Server Error");
+                        }
+                );
     }
 
     @Override
@@ -191,6 +207,11 @@ public class SearchPresenter
                                 }
 
                         );
+    }
+
+    @Override
+    public void toggleRSVPStatus(IScheduleItemView scheduleItemView, int position) {
+
     }
 
     @Override

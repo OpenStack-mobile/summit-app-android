@@ -1,18 +1,13 @@
 package org.openstack.android.summit.common.business_logic;
 
-import org.openstack.android.summit.OpenStackSummitApplication;
-import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -51,57 +46,40 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     }
 
     @Override
-    public void addEventToLoggedInMemberSchedule(final int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
+    public Observable<Boolean> addEventToLoggedInMemberSchedule(int eventId)
+    {
 
         if (!securityManager.isLoggedInAndConfirmedAttendee()) {
-            interactorAsyncOperationListener.onError(OpenStackSummitApplication.context.getResources().getString(R.string.no_logged_in_user));
-            return;
+            return Observable.just(false);
         }
 
         final Member loggedInMember       = securityManager.getCurrentMember();
+
         final SummitEvent summitEvent     = summitEventDataStore.getById(eventId);
+        if(summitEvent == null)
+            return Observable.just(false);
 
-        IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
-            @Override
-            public void onSucceedWithoutData() {
-                 pushNotificationsManager.subscribeToEvent(eventId);
-                interactorAsyncOperationListener.onSucceed();
-            }
-
-            @Override
-            public void onError(String message) {
-                interactorAsyncOperationListener.onError(message);
-            }
-        };
-
-        summitAttendeeDataStore.addEventToMemberSchedule(loggedInMember.getAttendeeRole(), summitEvent, dataStoreOperationListener);
+        return summitAttendeeDataStore
+                .addEventToMemberSchedule(loggedInMember.getAttendeeRole(), summitEvent)
+                .doOnNext(res -> pushNotificationsManager.subscribeToEvent(eventId));
     }
 
     @Override
-    public void removeEventFromLoggedInMemberSchedule(final int eventId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
+    public Observable<Boolean> removeEventFromLoggedInMemberSchedule(int eventId)
+    {
         if (!this.isMemberLoggedInAndConfirmedAttendee()) {
-            interactorAsyncOperationListener.onError(OpenStackSummitApplication.context.getResources().getString(R.string.no_logged_in_user));
-            return;
+            return Observable.just(false);
         }
 
         final Member loggedInMember       = securityManager.getCurrentMember();
         final SummitEvent summitEvent     = summitEventDataStore.getById(eventId);
 
-        IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
-            @Override
-            public void onSucceedWithoutData() {
-                // remove channel
-                pushNotificationsManager.unsubscribeFromEvent(eventId);
-                interactorAsyncOperationListener.onSucceed();
-            }
+        if(summitEvent == null)
+            return Observable.just(false);
 
-            @Override
-            public void onError(String message) {
-                interactorAsyncOperationListener.onError(message);
-            }
-        };
-
-        summitAttendeeDataStore.removeEventFromMemberSchedule(loggedInMember.getAttendeeRole(), summitEvent, dataStoreOperationListener);
+        return summitAttendeeDataStore
+                .removeEventFromMemberSchedule(loggedInMember.getAttendeeRole(), summitEvent)
+                .doOnNext(res -> pushNotificationsManager.unsubscribeFromEvent(eventId));
     }
 
     @Override
@@ -147,9 +125,11 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     public Observable<Boolean> addEventToMyFavorites(int eventId) {
         if(!this.isMemberLoggedIn())
             return Observable.just(false);
+
         final SummitEvent summitEvent = summitEventDataStore.getById(eventId);
         if(summitEvent == null)
             return Observable.just(false);
+
         return memberDataStore.addEventToMyFavorites(securityManager.getCurrentMember(), summitEvent);
     }
 

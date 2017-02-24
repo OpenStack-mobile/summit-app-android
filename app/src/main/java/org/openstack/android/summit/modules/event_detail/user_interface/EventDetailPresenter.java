@@ -325,14 +325,8 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public void toggleScheduleStatus() {
-        IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
-            @Override
-            public void onError(String message) {
-                view.showErrorMessage(message);
-            }
-        };
 
-        scheduleablePresenter.toggleScheduledStatusForEvent(event, view, interactor, interactorAsyncOperationListener);
+        scheduleablePresenter.toggleScheduledStatusForEvent(event, view, interactor);
     }
 
     @Override

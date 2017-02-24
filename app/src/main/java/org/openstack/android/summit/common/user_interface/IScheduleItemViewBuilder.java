@@ -15,6 +15,8 @@ public interface IScheduleItemViewBuilder {
         boolean isEventScheduledByLoggedMember,
         boolean isEventFavoriteByLoggedMember,
         boolean useFullDate,
-        boolean showVenues
+        boolean showVenues,
+        String rsvpLink,
+        boolean externalRSVP
     );
 }

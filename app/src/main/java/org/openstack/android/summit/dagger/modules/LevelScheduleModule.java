@@ -22,6 +22,7 @@ import org.openstack.android.summit.modules.level_schedule.business_logic.LevelS
 import org.openstack.android.summit.modules.level_schedule.user_interface.ILevelSchedulePresenter;
 import org.openstack.android.summit.modules.level_schedule.user_interface.LevelScheduleFragment;
 import org.openstack.android.summit.modules.level_schedule.user_interface.LevelSchedulePresenter;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 
 import dagger.Module;
 import dagger.Provides;
@@ -37,8 +38,15 @@ public class LevelScheduleModule {
     }
 
     @Provides
-    ILevelScheduleWireframe providesLevelScheduleWireframe(IEventDetailWireframe eventDetailWireframe, IGeneralScheduleFilterWireframe generalScheduleFilterWireframe, INavigationParametersStore navigationParametersStore) {
-        return new LevelScheduleWireframe(eventDetailWireframe, generalScheduleFilterWireframe, navigationParametersStore);
+    ILevelScheduleWireframe providesLevelScheduleWireframe
+    (
+            IEventDetailWireframe eventDetailWireframe,
+            IGeneralScheduleFilterWireframe generalScheduleFilterWireframe,
+            IRSVPWireframe rsvpWireframe,
+            INavigationParametersStore navigationParametersStore
+    )
+    {
+        return new LevelScheduleWireframe(rsvpWireframe, eventDetailWireframe, generalScheduleFilterWireframe, navigationParametersStore);
     }
 
     @Provides

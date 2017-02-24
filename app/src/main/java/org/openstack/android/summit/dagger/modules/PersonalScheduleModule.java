@@ -21,6 +21,7 @@ import org.openstack.android.summit.modules.personal_schedule.business_logic.Per
 import org.openstack.android.summit.modules.personal_schedule.user_interface.IPersonalSchedulePresenter;
 import org.openstack.android.summit.modules.personal_schedule.user_interface.PersonalScheduleFragment;
 import org.openstack.android.summit.modules.personal_schedule.user_interface.PersonalSchedulePresenter;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 
 import dagger.Module;
 import dagger.Provides;
@@ -36,13 +37,31 @@ public class PersonalScheduleModule {
     }
 
     @Provides
-    IPersonalScheduleInteractor providesPersonalScheduleInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector) {
+    IPersonalScheduleInteractor providesPersonalScheduleInteractor
+    (
+            IMemberDataStore memberDataStore,
+            ISummitEventDataStore summitEventDataStore,
+            ISummitDataStore summitDataStore,
+            ISummitAttendeeDataStore summitAttendeeDataStore,
+            IDTOAssembler dtoAssembler,
+            ISecurityManager securityManager,
+            IPushNotificationsManager pushNotificationsManager,
+            ISession session,
+            ISummitSelector summitSelector
+    )
+    {
         return new PersonalScheduleInteractor(memberDataStore, summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
     }
 
     @Provides
-    IPersonalScheduleWireframe providesPersonalScheduleWireframe(IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
-        return new PersonalScheduleWireframe(eventDetailWireframe, navigationParametersStore);
+    IPersonalScheduleWireframe providesPersonalScheduleWireframe
+    (
+        IEventDetailWireframe eventDetailWireframe,
+        IRSVPWireframe rsvpWireframe,
+        INavigationParametersStore navigationParametersStore
+    )
+    {
+        return new PersonalScheduleWireframe(eventDetailWireframe, rsvpWireframe, navigationParametersStore);
     }
 
     @Provides

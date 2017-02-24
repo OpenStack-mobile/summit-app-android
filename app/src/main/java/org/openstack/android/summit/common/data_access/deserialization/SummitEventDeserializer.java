@@ -1,20 +1,16 @@
 package org.openstack.android.summit.common.data_access.deserialization;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.ISummitEventType;
-import org.openstack.android.summit.common.entities.ISummitGroupEvent;
 import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitEventWithFile;
 import org.openstack.android.summit.common.entities.SummitGroupEvent;
-import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.Venue;
@@ -70,6 +66,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         summitEvent.setDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : "");
         summitEvent.setAverageRate(!jsonObject.isNull("avg_feedback_rate") ? jsonObject.getDouble("avg_feedback_rate") : 0);
         summitEvent.setRsvpLink(!jsonObject.isNull("rsvp_link") ? jsonObject.getString("rsvp_link") : null);
+        summitEvent.setRsvpExternal(!jsonObject.isNull("rsvp_external") ? jsonObject.getBoolean("rsvp_external") : false);
         summitEvent.setHeadCount(!jsonObject.isNull("head_count") ? jsonObject.getInt("head_count") : 0);
 
         //first check db, and then cache storage

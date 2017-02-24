@@ -5,9 +5,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
-import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
@@ -16,7 +14,8 @@ import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
 
-import io.realm.Realm;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Claudio Redi on 1/5/2016.
@@ -30,40 +29,42 @@ public class SummitAttendeeDataStore extends GenericDataStore<SummitAttendee> im
         this.summitAttendeeRemoteDataStore = summitAttendeeRemoteDataStore;
     }
 
-
     @Override
-    public void addEventToMemberSchedule(final SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
-        addEventToMemberScheduleLocal(summitAttendee, summitEvent);
+    public Observable<Boolean> addEventToMemberSchedule(SummitAttendee me, final SummitEvent summitEvent)
+    {
 
-        IDataStoreOperationListener<SummitAttendee> remoteDataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
-            @Override
-            public void onSucceedWithSingleData(SummitAttendee data) {
-                dataStoreOperationListener.onSucceedWithoutData();
-            }
+        int attendeeId = me.getId();
+        int eventId  = summitEvent.getId();
 
-            @Override
-            public void onError(String message) {
-                removeEventFromMemberScheduleLocal(summitAttendee, summitEvent);
-                dataStoreOperationListener.onError(message);
-            }
-        };
-        summitAttendeeRemoteDataStore.addEventToSchedule(summitAttendee, summitEvent, remoteDataStoreOperationListener);
+        return summitAttendeeRemoteDataStore
+                .addEventToSchedule(me, summitEvent)
+                .doOnNext( res -> {
+
+                    addEventToMemberScheduleLocal(
+                            getById(attendeeId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                })
+                .doOnError( res -> {
+                    removeEventFromMemberScheduleLocal(
+                            getById(attendeeId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                })
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void addEventToMemberScheduleLocal(final SummitAttendee summitAttendee, final SummitEvent summitEvent) {
+    public void addEventToMemberScheduleLocal(final SummitAttendee me, final SummitEvent summitEvent) {
 
         try {
 
-            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
-                @Override
-                public Void callback(Realm session) throws Exception{
-                    if (summitAttendee.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() == 0){
-                        Log.d(Constants.LOG_TAG, String.format("adding event %s to myschedule", summitEvent.getId()));
-                        summitAttendee.getScheduledEvents().add(summitEvent);
-                    }
-                    return Void.getInstance();
+            RealmFactory.transaction(session -> {
+                if (me.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() == 0){
+                    Log.d(Constants.LOG_TAG, String.format("adding event %s to myschedule", summitEvent.getId()));
+                    me.getScheduledEvents().add(summitEvent);
                 }
+                return Void.getInstance();
             });
         }
         catch (Exception e) {
@@ -73,18 +74,15 @@ public class SummitAttendeeDataStore extends GenericDataStore<SummitAttendee> im
     }
 
     @Override
-    public void removeEventFromMemberScheduleLocal(final SummitAttendee summitAttendee, final SummitEvent summitEvent) {
+    public void removeEventFromMemberScheduleLocal(final SummitAttendee me, final SummitEvent summitEvent) {
         try{
-            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
-                @Override
-                public Void callback(Realm session) throws Exception{
-                    if (summitAttendee.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() > 0) {
-                        SummitEvent entityRealm = session.where(SummitEvent.class).equalTo("id", summitEvent.getId()).findFirst();
-                        Log.d(Constants.LOG_TAG, String.format("removing event %s to myschedule", summitEvent.getId()));
-                        summitAttendee.getScheduledEvents().remove(entityRealm);
-                    }
-                    return Void.getInstance();
+            RealmFactory.transaction(session -> {
+                if (me.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() > 0) {
+                    SummitEvent entityRealm = session.where(SummitEvent.class).equalTo("id", summitEvent.getId()).findFirst();
+                    Log.d(Constants.LOG_TAG, String.format("removing event %s to myschedule", summitEvent.getId()));
+                    me.getScheduledEvents().remove(entityRealm);
                 }
+                return Void.getInstance();
             });
         }
         catch (Exception e) {
@@ -94,21 +92,26 @@ public class SummitAttendeeDataStore extends GenericDataStore<SummitAttendee> im
     }
 
     @Override
-    public void removeEventFromMemberSchedule(final SummitAttendee summitAttendee, final SummitEvent summitEvent, final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener) {
-        removeEventFromMemberScheduleLocal(summitAttendee, summitEvent);
-        IDataStoreOperationListener<SummitAttendee> remoteDataStoreOperationListener = new DataStoreOperationListener<SummitAttendee>() {
-            @Override
-            public void onSucceedWithSingleData(SummitAttendee data) {
-                dataStoreOperationListener.onSucceedWithoutData();
-            }
+    public Observable<Boolean> removeEventFromMemberSchedule(SummitAttendee me, SummitEvent summitEvent) {
 
-            @Override
-            public void onError(String message) {
-                addEventToMemberScheduleLocal(summitAttendee, summitEvent);
-                dataStoreOperationListener.onError(message);
-            }
-        };
-        summitAttendeeRemoteDataStore.removeEventFromSchedule(summitAttendee, summitEvent, remoteDataStoreOperationListener);
+        int attendeeId = me.getId();
+        int eventId  = summitEvent.getId();
+
+        return summitAttendeeRemoteDataStore
+                .removeEventFromSchedule(me, summitEvent)
+                .doOnNext( res -> {
+                    removeEventFromMemberScheduleLocal(
+                            getById(attendeeId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                })
+                .doOnError( res -> {
+                    addEventToMemberScheduleLocal(
+                            getById(attendeeId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                })
+                .subscribeOn(Schedulers.io());
     }
 
 }

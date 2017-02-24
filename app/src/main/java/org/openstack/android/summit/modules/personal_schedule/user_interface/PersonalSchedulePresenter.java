@@ -8,8 +8,6 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
-import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 import org.openstack.android.summit.common.user_interface.IScheduleItemView;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
@@ -60,21 +58,26 @@ public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalSchedu
             removeItem(position);
         }
 
-        IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Void>() {
-            @Override
-            public void onError(String message) {
-
-                view.showErrorMessage(message);
-            }
-            @Override
-            public void onSucceed(){
-                Toast.makeText(view.getApplicationContext(), formerState ?
-                                view.getResources().getString(R.string.removed_from_going):
-                                view.getResources().getString(R.string.added_2_going),
-                        Toast.LENGTH_SHORT).show();
-            }
-        };
-        scheduleablePresenter.toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor, interactorAsyncOperationListener);
+        scheduleablePresenter
+                .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        ( res ) -> {
+                            Toast.makeText(view.getApplicationContext(), formerState ?
+                                            view.getResources().getString(R.string.removed_from_going):
+                                            view.getResources().getString(R.string.added_2_going),
+                                    Toast.LENGTH_SHORT).show();
+                        },
+                        (ex) -> {
+                            scheduleItemView.setScheduled(formerState);
+                            if(ex != null) {
+                                Log.d(Constants.LOG_TAG, ex.getMessage());
+                                view.showErrorMessage(ex.getMessage());
+                                return;
+                            }
+                            view.showErrorMessage("Server Error");
+                        }
+                );
     }
 
     @Override
@@ -115,7 +118,6 @@ public class PersonalSchedulePresenter extends SchedulePresenter<IPersonalSchedu
                                     }
                                     view.showErrorMessage("Server Error");
                                 }
-
                         );
     }
 }

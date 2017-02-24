@@ -21,6 +21,7 @@ import org.openstack.android.summit.modules.event_detail.user_interface.EventDet
 import org.openstack.android.summit.modules.event_detail.user_interface.IEventDetailPresenter;
 import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
 
 import dagger.Module;
@@ -31,6 +32,7 @@ import dagger.Provides;
  */
 @Module
 public class EventDetailModule {
+
     @Provides
     EventDetailFragment providesEventDetailFragment() {
         return new EventDetailFragment();
@@ -47,7 +49,22 @@ public class EventDetailModule {
     }
 
     @Provides
-    IEventDetailWireframe providesEventDetailWireframe(IMemberProfileWireframe memberProfileWireframe, IFeedbackEditWireframe feedbackEditWireframe,INavigationParametersStore navigationParametersStore, IVenueDetailWireframe venueDetailWireframe, IAppLinkRouter appLinkRouter) {
-        return new EventDetailWireframe(memberProfileWireframe, feedbackEditWireframe, navigationParametersStore, venueDetailWireframe, appLinkRouter);
+    IEventDetailWireframe providesEventDetailWireframe
+    (
+            IMemberProfileWireframe memberProfileWireframe,
+            IFeedbackEditWireframe feedbackEditWireframe,
+            IVenueDetailWireframe venueDetailWireframe,
+            IRSVPWireframe rsvpWireframe,
+            INavigationParametersStore navigationParametersStore
+    )
+    {
+        return new EventDetailWireframe
+        (
+            memberProfileWireframe,
+            feedbackEditWireframe,
+            venueDetailWireframe,
+            rsvpWireframe,
+            navigationParametersStore
+        );
     }
 }
