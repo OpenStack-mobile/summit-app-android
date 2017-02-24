@@ -16,6 +16,7 @@ import org.openstack.android.summit.common.user_interface.IScheduleablePresenter
 import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 import org.openstack.android.summit.modules.track_schedule.ITrackScheduleWireframe;
 import org.openstack.android.summit.modules.track_schedule.TrackScheduleWireframe;
 import org.openstack.android.summit.modules.track_schedule.business_logic.ITrackScheduleInteractor;
@@ -38,8 +39,8 @@ public class TrackScheduleModule {
     }
 
     @Provides
-    ITrackScheduleWireframe providesTrackScheduleWireframe(IEventDetailWireframe eventDetailWireframe,IGeneralScheduleFilterWireframe generalScheduleFilterWireframe, INavigationParametersStore navigationParametersStore) {
-        return new TrackScheduleWireframe(eventDetailWireframe, generalScheduleFilterWireframe, navigationParametersStore);
+    ITrackScheduleWireframe providesTrackScheduleWireframe(IEventDetailWireframe eventDetailWireframe, IGeneralScheduleFilterWireframe generalScheduleFilterWireframe, IRSVPWireframe rsvpWireframe, INavigationParametersStore navigationParametersStore) {
+        return new TrackScheduleWireframe(eventDetailWireframe, generalScheduleFilterWireframe, rsvpWireframe, navigationParametersStore);
     }
 
     @Provides

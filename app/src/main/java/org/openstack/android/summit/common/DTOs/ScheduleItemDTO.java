@@ -11,6 +11,23 @@ public class ScheduleItemDTO extends NamedDTO {
     private String time;
     private String dateTime;
     private String location;
+
+    public boolean isRsvpExternal() {
+        return rsvpExternal;
+    }
+
+    public void setRsvpExternal(boolean rsvpExternal) {
+        this.rsvpExternal = rsvpExternal;
+    }
+
+    public String getRsvpLink() {
+        return rsvpLink;
+    }
+
+    public void setRsvpLink(String rsvpLink) {
+        this.rsvpLink = rsvpLink;
+    }
+
     private String room;
     private String track;
     private String credentials;
@@ -19,6 +36,8 @@ public class ScheduleItemDTO extends NamedDTO {
     private String color;
     private String locationAddress;
     private int summitId;
+    private boolean rsvpExternal;
+    private String rsvpLink;
 
     public String getLocationAddress() {
         return locationAddress;

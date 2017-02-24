@@ -1,6 +1,5 @@
 package org.openstack.android.summit.common.business_logic;
 
-
 import io.reactivex.Observable;
 
 /**
@@ -8,9 +7,9 @@ import io.reactivex.Observable;
  */
 public interface IScheduleableInteractor extends IBaseInteractor  {
 
-    void addEventToLoggedInMemberSchedule(int eventId, IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener);
+    Observable<Boolean> addEventToLoggedInMemberSchedule(int eventId);
 
-    void removeEventFromLoggedInMemberSchedule(int eventId, IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener);
+    Observable<Boolean> removeEventFromLoggedInMemberSchedule(int eventId);
 
     boolean isEventScheduledByLoggedMember(int eventId);
 

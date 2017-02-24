@@ -13,6 +13,7 @@ import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.level_schedule.user_interface.LevelScheduleFragment;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 
 /**
  * Created by Claudio Redi on 1/11/2016.
@@ -20,8 +21,15 @@ import org.openstack.android.summit.modules.level_schedule.user_interface.LevelS
 public class LevelScheduleWireframe extends ScheduleWireframe implements ILevelScheduleWireframe {
     private IGeneralScheduleFilterWireframe generalScheduleFilterWireframe;
 
-    public LevelScheduleWireframe(IEventDetailWireframe eventDetailWireframe, IGeneralScheduleFilterWireframe generalScheduleFilterWireframe, INavigationParametersStore navigationParametersStore) {
-        super(eventDetailWireframe, navigationParametersStore);
+    public LevelScheduleWireframe
+    (
+        IRSVPWireframe rsvpWireframe,
+        IEventDetailWireframe eventDetailWireframe,
+        IGeneralScheduleFilterWireframe generalScheduleFilterWireframe,
+        INavigationParametersStore navigationParametersStore
+    )
+    {
+        super(eventDetailWireframe, rsvpWireframe, navigationParametersStore);
         this.generalScheduleFilterWireframe = generalScheduleFilterWireframe;
     }
 

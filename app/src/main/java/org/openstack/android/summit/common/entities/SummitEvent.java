@@ -18,6 +18,7 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     private Date   end;
     private String description;
     private String rsvpLink;
+    private boolean rsvpExternal;
     private int    headCount;
     private Track  track;
     private String  class_name;
@@ -39,6 +40,14 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
 
     public void setRsvpLink(String rsvpLink) {
         this.rsvpLink = rsvpLink;
+    }
+
+    public boolean isRsvpExternal() {
+        return rsvpExternal;
+    }
+
+    public void setRsvpExternal(boolean rsvpExternal) {
+        this.rsvpExternal = rsvpExternal;
     }
 
     public int getHeadCount() {

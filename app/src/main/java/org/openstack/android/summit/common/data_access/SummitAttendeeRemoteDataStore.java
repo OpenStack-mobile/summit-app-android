@@ -1,24 +1,18 @@
 package org.openstack.android.summit.common.data_access;
 
-import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
-
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.api.ISummitEventsApi;
+import org.openstack.android.summit.common.api.IAttendeeAPI;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.exceptions.NotFoundEntityException;
+import org.openstack.android.summit.common.entities.exceptions.ValidationException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observable;
 import retrofit2.Retrofit;
 
 /**
@@ -26,118 +20,115 @@ import retrofit2.Retrofit;
  */
 public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implements ISummitAttendeeRemoteDataStore {
 
-    private Retrofit restClient;
-    private ISummitEventsApi summitEventsApi;
+    private Retrofit restClientRxJava;
+    private IAttendeeAPI attendeeAPI;
     private ISummitSelector summitSelector;
 
     @Inject
     public SummitAttendeeRemoteDataStore
     (
-        @Named("MemberProfile") Retrofit restClient,
+        @Named("MemberProfileRXJava2") Retrofit restClientRxJava,
         ISummitSelector summitSelector
     )
     {
-        this.restClient      = restClient;
-        this.summitEventsApi = restClient.create(ISummitEventsApi.class);
-        this.summitSelector  = summitSelector;
+        this.restClientRxJava = restClientRxJava;
+        this.attendeeAPI      = restClientRxJava.create(IAttendeeAPI.class);
+        this.summitSelector   = summitSelector;
     }
 
     @Override
-    public void addEventToSchedule
+    public Observable<Boolean> addEventToSchedule
     (
-        final SummitAttendee summitAttendee,
-        final SummitEvent summitEvent,
-        final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener
+        SummitAttendee summitAttendee,
+        SummitEvent summitEvent
     )
     {
-        Call<ResponseBody> call = summitEventsApi.addToMySchedule(summitSelector.getCurrentSummitId(), summitEvent.getId());
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try
-                {
-
-                    if(!response.isSuccessful()) {
-                        switch (response.code()) {
-                            case 412:
-                                dataStoreOperationListener.onError
+        final int eventId = summitEvent.getId();
+        return attendeeAPI.addToMySchedule(summitEvent.getSummit().getId(),eventId ).
+        map(response -> {
+            if (!response.isSuccessful()) {
+                switch (response.code()) {
+                    case 412:
+                        throw new ValidationException
                                 (
-                                    "Event already belongs to user schedule"
+                                        String.format
+                                                (
+                                                        OpenStackSummitApplication.context.getString(R.string.error_already_in_schedule),
+                                                        eventId
+                                                )
                                 );
-                                return;
-                            case 404:
-                                dataStoreOperationListener.onError
-                                (
-                                    "Event not found"
-                                );
-                                return;
+                    case 404:
 
-                        }
-                    }
-                    dataStoreOperationListener.onSucceedWithSingleData(summitAttendee);
-                }
-                catch(Exception ex){
-                    Crashlytics.logException(ex);
-                    Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
-                    dataStoreOperationListener.onError(ex.getMessage());
+                        throw new NotFoundEntityException
+                                (
+                                        String.format
+                                                (
+                                                        OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                        eventId
+                                                )
+                                );
+                    default:
+
+                        throw new Exception
+                                (
+                                        String.format
+                                                (
+                                                        "addEventToSchedule: http error %d",
+                                                        response.code()
+                                                )
+                                );
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                String friendlyError = Constants.GENERIC_ERROR_MSG;
-                dataStoreOperationListener.onError(friendlyError);
-            }
-        });
+            return true;
+        }) ;
     }
 
     @Override
-    public void removeEventFromSchedule
+    public Observable<Boolean> removeEventFromSchedule
     (
-        final SummitAttendee summitAttendee,
-        final SummitEvent summitEvent,
-        final IDataStoreOperationListener<SummitAttendee> dataStoreOperationListener
+        SummitAttendee summitAttendee,
+        SummitEvent summitEvent
     )
     {
 
-        Call<ResponseBody> call = summitEventsApi.removeFromMySchedule(summitSelector.getCurrentSummitId(), summitEvent.getId());
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try
-                {
-                    if(!response.isSuccessful()) {
+        final int eventId = summitEvent.getId();
+        return attendeeAPI.removeFromMySchedule(summitEvent.getSummit().getId(),eventId ).
+                map(response -> {
+                    if (!response.isSuccessful()) {
                         switch (response.code()) {
                             case 412:
-                                dataStoreOperationListener.onError
-                                (
-                                    "Event does not belongs to user schedule"
-                                );
-                                return;
+                                throw new ValidationException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_already_in_schedule),
+                                                                eventId
+                                                        )
+                                        );
                             case 404:
-                                dataStoreOperationListener.onError
-                                 (
-                                    "Event not found"
-                                 );
-                                return;
 
+                                throw new NotFoundEntityException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                                eventId
+                                                        )
+                                        );
+                            default:
+
+                                throw new Exception
+                                        (
+                                                String.format
+                                                        (
+                                                                "removeEventFromSchedule: http error %d",
+                                                                response.code()
+                                                        )
+                                        );
                         }
                     }
-                    dataStoreOperationListener.onSucceedWithSingleData(summitAttendee);
-                }
-                catch(Exception ex){
-                    Crashlytics.logException(ex);
-                    Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
-                    dataStoreOperationListener.onError(ex.getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                String friendlyError = Constants.GENERIC_ERROR_MSG;
-                dataStoreOperationListener.onError(friendlyError);
-            }
-        });
+                    return true;
+                }) ;
     }
 
 }

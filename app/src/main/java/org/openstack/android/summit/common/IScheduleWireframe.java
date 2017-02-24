@@ -8,4 +8,6 @@ import org.openstack.android.summit.common.user_interface.IBaseView;
 public interface IScheduleWireframe extends IBaseWireframe {
 
     void showEventDetail(int eventId, IBaseView context);
+
+    void presentEventRsvpView(String rsvpLink, IBaseView context);
 }

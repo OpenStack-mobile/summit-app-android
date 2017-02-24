@@ -10,6 +10,7 @@ import org.openstack.android.summit.common.ScheduleWireframe;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 import org.openstack.android.summit.modules.track_schedule.user_interface.ITrackScheduleView;
 import org.openstack.android.summit.modules.track_schedule.user_interface.TrackScheduleFragment;
 
@@ -19,8 +20,15 @@ import org.openstack.android.summit.modules.track_schedule.user_interface.TrackS
 public class TrackScheduleWireframe extends ScheduleWireframe implements ITrackScheduleWireframe {
     private IGeneralScheduleFilterWireframe generalScheduleFilterWireframe;
 
-    public TrackScheduleWireframe(IEventDetailWireframe eventDetailWireframe, IGeneralScheduleFilterWireframe generalScheduleFilterWireframe, INavigationParametersStore navigationParametersStore) {
-        super(eventDetailWireframe, navigationParametersStore);
+    public TrackScheduleWireframe
+    (
+        IEventDetailWireframe eventDetailWireframe,
+        IGeneralScheduleFilterWireframe generalScheduleFilterWireframe,
+        IRSVPWireframe rsvpWireframe,
+        INavigationParametersStore navigationParametersStore
+    )
+    {
+        super(eventDetailWireframe, rsvpWireframe, navigationParametersStore);
         this.generalScheduleFilterWireframe = generalScheduleFilterWireframe;
     }
 

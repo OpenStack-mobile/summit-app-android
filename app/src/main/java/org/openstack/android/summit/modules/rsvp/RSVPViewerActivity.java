@@ -2,8 +2,8 @@ package org.openstack.android.summit.modules.rsvp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -17,7 +17,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -32,6 +31,8 @@ import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressPie;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
@@ -42,8 +43,28 @@ public class RSVPViewerActivity extends Activity {
     @Inject
     IConfigurationParamsManager configurationParamsManager;
 
+    private ACProgressPie progressDialog;
+
     public ApplicationComponent getApplicationComponent() {
         return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
+    }
+
+    public void showActivityIndicator() {
+        if(progressDialog != null) return;
+        progressDialog = new ACProgressPie.Builder(this)
+                .ringColor(Color.WHITE)
+                .pieColor(Color.WHITE)
+                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                .build();
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    public void hideActivityIndicator() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 
     @Override
@@ -106,27 +127,16 @@ public class RSVPViewerActivity extends Activity {
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
             super.onReceivedHttpError(view, request, errorResponse);
             WebView webView = (WebView) activity.get().findViewById(R.id.WebView);
-            ProgressBar progressBar = (ProgressBar) activity.get().findViewById(R.id.ProgressBar);
             webView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
+            activity.get().hideActivityIndicator();
         }
 
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(activity.get());
             builder.setMessage(R.string.notification_error_ssl_cert_invalid);
-            builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    handler.proceed();
-                }
-            });
-            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    handler.cancel();
-                }
-            });
+            builder.setPositiveButton("continue", (dialog, which) -> handler.proceed());
+            builder.setNegativeButton("cancel", (dialog, which) -> handler.cancel());
             final AlertDialog dialog = builder.create();
             dialog.show();
         }
@@ -135,18 +145,16 @@ public class RSVPViewerActivity extends Activity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             WebView webView = (WebView) activity.get().findViewById(R.id.WebView);
-            ProgressBar progressBar = (ProgressBar) activity.get().findViewById(R.id.ProgressBar);
             webView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
+            activity.get().hideActivityIndicator();
         }
 
         @Override
         public void onPageStarted(WebView view, String urlString, Bitmap favicon) {
             super.onPageStarted(view, urlString, favicon);
             WebView webView = (WebView) activity.get().findViewById(R.id.WebView);
-            ProgressBar progressBar = (ProgressBar) activity.get().findViewById(R.id.ProgressBar);
             webView.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
+            activity.get().showActivityIndicator();
         }
 
     }

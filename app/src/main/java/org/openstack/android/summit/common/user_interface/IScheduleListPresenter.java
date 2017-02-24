@@ -12,5 +12,7 @@ public interface IScheduleListPresenter<V extends IBaseView> extends IBasePresen
 
     void toggleFavoriteStatus(IScheduleItemView scheduleItemView, int position);
 
+    void toggleRSVPStatus(IScheduleItemView scheduleItemView, int position);
+
     void showEventDetail(int position);
 }

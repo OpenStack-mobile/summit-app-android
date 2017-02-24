@@ -6,7 +6,6 @@ import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
@@ -52,13 +51,14 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     }
 
     @Override
-    public void addEventToLoggedInMemberSchedule(int eventId, IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
-        scheduleableInteractor.addEventToLoggedInMemberSchedule(eventId, interactorAsyncOperationListener);
+    public Observable<Boolean> addEventToLoggedInMemberSchedule(int eventId) {
+        return scheduleableInteractor.addEventToLoggedInMemberSchedule(eventId);
     }
 
     @Override
-    public void removeEventFromLoggedInMemberSchedule(int eventId, IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
-        scheduleableInteractor.removeEventFromLoggedInMemberSchedule(eventId, interactorAsyncOperationListener);
+    public Observable<Boolean> removeEventFromLoggedInMemberSchedule(int eventId)
+    {
+        return scheduleableInteractor.removeEventFromLoggedInMemberSchedule(eventId);
     }
 
     @Override

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group android:id="@+id/grp1">
         <item
             android:id="@+id/schedule_item_menu_save_going_action"
             android:title="@string/save_going"
             app:showAsAction="always"
             android:icon="@drawable/ic_event_available"
             />
-
+        <item
+            android:id="@+id/schedule_item_menu_save_rsvp_action"
+            android:title="@string/save_rsvp"
+            app:showAsAction="always"
+            android:icon="@drawable/ic_event_available"
+        />
         <item
             android:id="@+id/schedule_item_menu_remove_going_action"
             app:showAsAction="always"
@@ -28,12 +32,9 @@
             android:title="@string/remove_favorite"
             android:icon="@drawable/ic_favorite_border"
             />
-    </group>
-    <group android:id="@+id/grp2">
         <item
             app:showAsAction="always"
             android:id="@+id/schedule_item_menu_cancel_action"
             android:title="@string/cancel"
             />
-    </group>
 </menu>

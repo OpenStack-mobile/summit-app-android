@@ -14,7 +14,7 @@ public class BasePresenter<V extends IBaseView, I extends IBaseInteractor, W> im
 
     public BasePresenter(I interactor, W wireframe) {
         this.interactor = interactor;
-        this.wireframe = wireframe;
+        this.wireframe  = wireframe;
     }
 
     @Override

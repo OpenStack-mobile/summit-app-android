@@ -14,6 +14,7 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.ScheduleItemViewBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 import org.openstack.android.summit.modules.speaker_presentations.ISpeakerPresentationsWireframe;
 import org.openstack.android.summit.modules.speaker_presentations.SpeakerPresentationsWireframe;
 import org.openstack.android.summit.modules.speaker_presentations.business_logic.ISpeakerPresentationsInteractor;
@@ -41,8 +42,8 @@ public class SpeakerPresentationsModule {
     }
 
     @Provides
-    ISpeakerPresentationsWireframe providesSpeakerPresentationsWireframe(IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
-        return new SpeakerPresentationsWireframe(eventDetailWireframe, navigationParametersStore);
+    ISpeakerPresentationsWireframe providesSpeakerPresentationsWireframe(IEventDetailWireframe eventDetailWireframe, IRSVPWireframe rsvpWireframe, INavigationParametersStore navigationParametersStore) {
+        return new SpeakerPresentationsWireframe(eventDetailWireframe, rsvpWireframe, navigationParametersStore);
     }
 
     @Provides

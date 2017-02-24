@@ -1,11 +1,7 @@
 package org.openstack.android.summit.modules.event_detail;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -15,15 +11,11 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
-import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
 import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
-import org.openstack.android.summit.modules.rsvp.RSVPViewerActivity;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -35,16 +27,24 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
     private IMemberProfileWireframe memberProfileWireframe;
     private IFeedbackEditWireframe feedbackEditWireframe;
     private IVenueDetailWireframe venueDetailWireframe;
-    private IAppLinkRouter appLinkRouter;
+    private IRSVPWireframe rsvpWireframe;
 
     @Inject
-    public EventDetailWireframe(IMemberProfileWireframe memberProfileWireframe, IFeedbackEditWireframe feedbackEditWireframe, INavigationParametersStore navigationParametersStore, IVenueDetailWireframe venueDetailWireframe, IAppLinkRouter appLinkRouter) {
+    public EventDetailWireframe
+    (
+            IMemberProfileWireframe memberProfileWireframe,
+            IFeedbackEditWireframe feedbackEditWireframe,
+            IVenueDetailWireframe venueDetailWireframe,
+            IRSVPWireframe rsvpWireframe,
+            INavigationParametersStore navigationParametersStore
+    )
+    {
         super(navigationParametersStore);
 
         this.memberProfileWireframe = memberProfileWireframe;
         this.feedbackEditWireframe  = feedbackEditWireframe;
         this.venueDetailWireframe   = venueDetailWireframe;
-        this.appLinkRouter          = appLinkRouter;
+        this.rsvpWireframe          = rsvpWireframe;
     }
 
     @Override
@@ -69,20 +69,7 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
 
     @Override
     public void presentEventRsvpView(String rsvpLink, IBaseView context) {
-        //before check if we are trying to see a custom rsvp
-        if(rsvpLink == null || rsvpLink.isEmpty()) return;
-        Uri uri  = Uri.parse(rsvpLink);
-        Intent i = null;
-        if(this.appLinkRouter.isCustomRSVPLink(uri)){
-            Log.i(Constants.LOG_TAG, String.format("opening custom RSVP template %s...", uri.toString()));
-            // match! rsvp browser
-            i = new Intent(context.getApplicationContext(), RSVPViewerActivity.class);
-            i.setData(uri);
-        } else {
-            Log.i(Constants.LOG_TAG, String.format("opening Third party RSVP link %s ...", uri.toString()));
-            i = new Intent(Intent.ACTION_VIEW, uri);
-        }
-        context.startActivity(i);
+        rsvpWireframe.presentEventRsvpView(rsvpLink, context);
     }
 
     @Override

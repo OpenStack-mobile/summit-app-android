@@ -1,9 +1,7 @@
 package org.openstack.android.summit.common.user_interface;
 
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
-
 import io.reactivex.Observable;
 
 /**
@@ -11,7 +9,7 @@ import io.reactivex.Observable;
  */
 public interface IScheduleablePresenter {
 
-    void toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor, IInteractorAsyncOperationListener<Void> interactorOperationListener);
+    Observable<Boolean> toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor);
 
     Observable<Boolean> toggleFavoriteStatusForEvent(ScheduleItemDTO scheduleItemDTO, IFavoriteView favoriteView, IScheduleableInteractor interactor);
 

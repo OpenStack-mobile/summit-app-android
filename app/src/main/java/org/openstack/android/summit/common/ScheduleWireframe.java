@@ -2,6 +2,7 @@ package org.openstack.android.summit.common;
 
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
+import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 
 import javax.inject.Inject;
 
@@ -11,15 +12,28 @@ import javax.inject.Inject;
 public class ScheduleWireframe extends BaseWireframe implements IScheduleWireframe {
 
     IEventDetailWireframe eventDetailWireframe;
+    IRSVPWireframe rsvpWireframe;
 
     @Inject
-    public ScheduleWireframe(IEventDetailWireframe eventDetailWireframe, INavigationParametersStore navigationParametersStore) {
+    public ScheduleWireframe
+    (
+                    IEventDetailWireframe eventDetailWireframe,
+                    IRSVPWireframe rsvpWireframe,
+                    INavigationParametersStore navigationParametersStore
+    )
+    {
         super(navigationParametersStore);
+        this.rsvpWireframe        = rsvpWireframe;
         this.eventDetailWireframe = eventDetailWireframe;
     }
 
     @Override
     public void showEventDetail(int eventId, IBaseView context) {
         eventDetailWireframe.presentEventDetailView(eventId, context);
+    }
+
+    @Override
+    public void presentEventRsvpView(String rsvpLink, IBaseView context) {
+        rsvpWireframe.presentEventRsvpView(rsvpLink, context);
     }
 }
