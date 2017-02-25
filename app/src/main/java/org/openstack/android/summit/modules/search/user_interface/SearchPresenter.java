@@ -211,7 +211,39 @@ public class SearchPresenter
 
     @Override
     public void toggleRSVPStatus(IScheduleItemView scheduleItemView, int position) {
+        ScheduleItemDTO scheduleItemDTO = events.get(position);
+        if(scheduleItemDTO == null) return;
+        boolean formerState = scheduleItemView.getScheduled();
+        if(!formerState){
+            if(!scheduleItemView.isExternalRSVP()){
+                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
+                return;
+            }
+            // its external, add to schedule and then show view
 
+            scheduleablePresenter
+                    .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            (res) -> {
+                                Toast.makeText(view.getApplicationContext(), formerState ?
+                                                view.getResources().getString(R.string.removed_from_going):
+                                                view.getResources().getString(R.string.added_2_going),
+                                        Toast.LENGTH_SHORT).show();
+
+                                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
+                            },
+                            (ex) -> {
+                                scheduleItemView.setScheduled(formerState);
+                                if(ex != null) {
+                                    Log.d(Constants.LOG_TAG, ex.getMessage());
+                                    view.showErrorMessage(ex.getMessage());
+                                    return;
+                                }
+                                view.showErrorMessage("Server Error");
+                            }
+                    );
+        }
     }
 
     @Override

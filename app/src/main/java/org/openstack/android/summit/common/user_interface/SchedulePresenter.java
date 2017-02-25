@@ -327,7 +327,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
                             }
                     );
         }
-
     }
 
     @Override
