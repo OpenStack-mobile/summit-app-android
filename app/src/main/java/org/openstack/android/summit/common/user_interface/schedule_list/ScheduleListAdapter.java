@@ -218,7 +218,7 @@ public class ScheduleListAdapter
 
                 if (showFavoritesMenuOption || showGoingMenuOption) {
                     optionsContainer.setVisibility(View.VISIBLE);
-                    buttonViewOptions.setOnClickListener(v -> {
+                    optionsContainer.setOnClickListener(v -> {
 
                         MenuBuilder menuBuilder     = new MenuBuilder(buttonViewOptions.getContext());
                         MenuInflater inflater       = new MenuInflater(buttonViewOptions.getContext());

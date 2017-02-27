@@ -173,7 +173,6 @@ public class SecurityManager implements ISecurityManager {
         Log.d(Constants.LOG_TAG, "SecurityManager.bindCurrentUser");
 
         memberDataStore.getLoggedInMember()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe
                 (

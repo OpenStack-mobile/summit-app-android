@@ -1,9 +1,9 @@
 package org.openstack.android.summit.common.api;
 
+import io.reactivex.Observable;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -16,10 +16,16 @@ import retrofit2.http.Query;
 public interface ISummitEventsApi {
 
     @GET("v1/summits/{summit_id}/events/{event_id}/published")
-    public Call<ResponseBody> getPublishedEvent(@Path("summit_id") int summitId, @Path("event_id") Integer eventId, @Query("fields") String fields, @Query("relations") String relations);
+    Observable<Response<ResponseBody>> getPublishedEvent
+    (
+        @Path("summit_id") int summitId,
+        @Path("event_id") Integer eventId,
+        @Query("fields") String fields,
+        @Query("relations") String relations
+    );
 
     @GET("v1/summits/{summit_id}/events/{event_id}/feedback")
-    public Call<ResponseBody> getEventFeedback
+    Observable<Response<ResponseBody>> getEventFeedback
     (
         @Path("summit_id") int summitId,
         @Path("event_id") Integer eventId,
@@ -29,5 +35,10 @@ public interface ISummitEventsApi {
     );
 
     @POST("v2/summits/{summit_id}/events/{event_id}/feedback")
-    public Call<ResponseBody> postEventFeedback(@Path("summit_id") int summitId, @Path("event_id") Integer eventId, @Body SummitEventFeedbackRequest body);
+    Observable<Response<ResponseBody>> postEventFeedback
+    (
+        @Path("summit_id") int summitId,
+        @Path("event_id") Integer eventId,
+        @Body SummitEventFeedbackRequest body
+    );
 }

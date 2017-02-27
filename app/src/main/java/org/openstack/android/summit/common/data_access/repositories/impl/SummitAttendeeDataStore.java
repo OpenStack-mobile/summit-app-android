@@ -50,8 +50,7 @@ public class SummitAttendeeDataStore extends GenericDataStore<SummitAttendee> im
                             getById(attendeeId),
                             RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
                     );
-                })
-                .subscribeOn(Schedulers.io());
+                });
     }
 
     @Override
@@ -110,8 +109,7 @@ public class SummitAttendeeDataStore extends GenericDataStore<SummitAttendee> im
                             getById(attendeeId),
                             RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
                     );
-                })
-                .subscribeOn(Schedulers.io());
+                });
     }
 
 }

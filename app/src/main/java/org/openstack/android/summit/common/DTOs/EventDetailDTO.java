@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.DTOs;
 
+import org.openstack.android.summit.common.user_interface.IScheduleableView;
 import org.openstack.android.summit.common.utils.Slugifier;
 
 import java.util.ArrayList;
@@ -14,6 +15,35 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private int venueRoomId;
     private int venueFloorId;
     private VideoDTO video;
+    private int headCount;
+    private String eventDescription;
+    private String tags;
+    private List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();
+    private Boolean started;
+    private Boolean allowFeedback;
+    private PersonListItemDTO moderator;
+    private String level;
+    private String eventUrl;
+    private Double averageRate;
+
+    public boolean isToRecord() {
+        return toRecord;
+    }
+
+    public void setToRecord(boolean toRecord) {
+        this.toRecord = toRecord;
+    }
+
+    public String getAttachmentUrl() {
+        return attachmentUrl;
+    }
+
+    public void setAttachmentUrl(String attachmentUrl) {
+        this.attachmentUrl = attachmentUrl;
+    }
+
+    private boolean toRecord;
+    private String attachmentUrl;
 
     public VideoDTO getVideo() {
         return video;
@@ -31,13 +61,9 @@ public class EventDetailDTO extends ScheduleItemDTO {
         this.venueFloorId = venueFloorId;
     }
 
-    private String rsvpLink;
-
     public boolean getAllowRsvp() {
         return this.rsvpLink != null;
     }
-
-    private int headCount;
 
     public String getRsvpLink() {
         return rsvpLink;
@@ -54,17 +80,6 @@ public class EventDetailDTO extends ScheduleItemDTO {
     public void setHeadCount(int headCount) {
         this.headCount = headCount;
     }
-
-    private String eventDescription;
-    private String tags;
-    private List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();
-
-    private Boolean started;
-    private Boolean allowFeedback;
-    private PersonListItemDTO moderator;
-    private String level;
-    private String eventUrl;
-    private Double averageRate;
 
     public int getVenueId() {
         return venueId;
@@ -167,4 +182,5 @@ public class EventDetailDTO extends ScheduleItemDTO {
     public String getSlug() {
         return Slugifier.toSlug(getName());
     }
+
 }

@@ -2,42 +2,47 @@
 package org.openstack.android.summit.common.DTOs;
 
 import org.joda.time.DateTime;
+import org.openstack.android.summit.common.user_interface.IScheduleableItem;
 
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
-public class ScheduleItemDTO extends NamedDTO {
+public class ScheduleItemDTO extends NamedDTO implements IScheduleableItem {
 
-    private String time;
-    private String dateTime;
-    private String location;
-
-    public boolean isRsvpExternal() {
-        return rsvpExternal;
+    public interface IChangeStatusListener{
+        void changed(ScheduleItemDTO item);
     }
 
-    public void setRsvpExternal(boolean rsvpExternal) {
-        this.rsvpExternal = rsvpExternal;
+    protected String time;
+    protected String dateTime;
+    protected String location;
+    protected String room;
+    protected String track;
+    protected String credentials;
+    protected String sponsors;
+    protected String eventType;
+    protected String color;
+    protected String locationAddress;
+    protected int summitId;
+    protected boolean rsvpExternal;
+    protected String rsvpLink;
+    protected boolean isScheduled;
+    protected boolean isFavorite;
+    protected boolean isPresentation;
+
+    public void setChangeStatusListener(IChangeStatusListener changeStatusListener) {
+        this.changeStatusListener = changeStatusListener;
     }
 
-    public String getRsvpLink() {
-        return rsvpLink;
+    protected IChangeStatusListener changeStatusListener;
+
+    public boolean isPresentation() {
+        return isPresentation;
     }
 
-    public void setRsvpLink(String rsvpLink) {
-        this.rsvpLink = rsvpLink;
+    public void setPresentation(boolean presentation) {
+        isPresentation = presentation;
     }
-
-    private String room;
-    private String track;
-    private String credentials;
-    private String sponsors;
-    private String eventType;
-    private String color;
-    private String locationAddress;
-    private int summitId;
-    private boolean rsvpExternal;
-    private String rsvpLink;
 
     public String getLocationAddress() {
         return locationAddress;
@@ -142,4 +147,49 @@ public class ScheduleItemDTO extends NamedDTO {
     public void setSummitId(int summitId){ this.summitId = summitId;}
 
     public int getSummitId(){ return this.summitId;}
+
+
+    @Override
+    public Boolean getScheduled() {
+        return isScheduled;
+    }
+
+    @Override
+    public void setScheduled(Boolean scheduled) {
+        this.isScheduled = scheduled;
+        if(this.changeStatusListener != null)
+            this.changeStatusListener.changed(this);
+    }
+
+    @Override
+    public Boolean getFavorite() {
+        return this.isFavorite;
+    }
+
+    @Override
+    public void setFavorite(Boolean favorite) {
+        this.isFavorite = favorite;
+        if(this.changeStatusListener != null)
+            this.changeStatusListener.changed(this);
+    }
+
+    @Override
+    public boolean isExternalRSVP() {
+        return this.rsvpExternal;
+    }
+
+    @Override
+    public String getRSVPLink() {
+        return this.rsvpLink;
+    }
+
+    @Override
+    public void setExternalRSVP(boolean externalRSVP) {
+        this.rsvpExternal = externalRSVP;
+    }
+
+    @Override
+    public void setRSVPLink(String link) {
+        this.rsvpLink = link;
+    }
 }

@@ -29,6 +29,8 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.openstack.android.summit.SummitDataLoadingActivity;
 import org.openstack.android.summit.OpenStackSummitApplication;
@@ -52,6 +54,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class MainActivity
         extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IMainView {
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Inject
     IMainPresenter presenter;
@@ -273,6 +277,23 @@ public class MainActivity
             presenter.shouldShowMainView();
         }
 
+        checkPlayServices();
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private void checkPlayServices() {
+        GoogleApiAvailability googleApiAvailability =  GoogleApiAvailability.getInstance();
+
+        int success = googleApiAvailability.isGooglePlayServicesAvailable(this);
+
+        if(success != ConnectionResult.SUCCESS)
+        {
+            googleApiAvailability.makeGooglePlayServicesAvailable(this);
+        }
     }
 
     @Override
@@ -291,10 +312,13 @@ public class MainActivity
     @Override
     protected void onResume() {
         try {
+
             Log.d(Constants.LOG_TAG, "MainActivity.onResume");
             toggleMenuLogo(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
 
             super.onResume();
+            checkPlayServices();
+
             Intent intent = getIntent();
             if(intent != null
                     && intent.getBooleanExtra(Constants.START_EXTERNAL_LOGIN, false)

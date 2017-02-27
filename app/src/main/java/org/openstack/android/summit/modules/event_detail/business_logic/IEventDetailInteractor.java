@@ -8,6 +8,8 @@ import org.openstack.android.summit.common.business_logic.IScheduleableInteracto
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 /**
  * Created by Claudio Redi on 1/21/2016.
  */
@@ -17,7 +19,7 @@ public interface IEventDetailInteractor extends IScheduleableInteractor {
 
     FeedbackDTO getMyFeedbackForEvent(int eventId);
 
-    void getFeedbackForEvent(int eventId, int page, int objectsPerPage, IInteractorAsyncOperationListener<List<FeedbackDTO>> interactorAsyncOperationListener);
+    Observable<List<FeedbackDTO>> getFeedbackForEvent(int eventId, int page, int objectsPerPage);
 
-    void getAverageFeedbackForEvent(int eventId, IInteractorAsyncOperationListener<Double> interactorAsyncOperationListener);
+    Observable<Double> getAverageFeedbackForEvent(int eventId);
 }

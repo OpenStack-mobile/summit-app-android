@@ -2,6 +2,7 @@ package org.openstack.android.summit.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -10,6 +11,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+
+import org.openstack.android.summit.R;
 
 /**
  * Created by sebastian on 8/10/2016.
@@ -39,17 +42,18 @@ public class HtmlTextView extends ScrollView {
         webView.setHorizontalScrollBarEnabled(false);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         webView.setLayoutParams(params);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setNetworkAvailable(false);
+        if(!isInEditMode()) {
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.setNetworkAvailable(false);
+        }
         addView(webView);
-
         webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (isValidUrl(url)) {
-                    loadExternalUrl(url);
-                }
-                return true;
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (isValidUrl(url)) {
+                loadExternalUrl(url);
+            }
+            return true;
             }
         });
     }
@@ -66,7 +70,21 @@ public class HtmlTextView extends ScrollView {
     public HtmlTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
+        setAttributes(attrs);
         this.context = context;
+    }
+
+    private void setAttributes( AttributeSet attrs){
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs,
+                R.styleable.HtmlTextView,
+                0, 0);
+        try {
+            String text = a.getString(R.styleable.HtmlTextView_text);
+            setText(text);
+        } finally {
+            a.recycle();
+        }
     }
 
     public HtmlTextView(Context context,
@@ -74,12 +92,13 @@ public class HtmlTextView extends ScrollView {
                         int defStyle) {
         super(context, attrs, defStyle);
         initialize(context);
+        setAttributes(attrs);
         this.context = context;
     }
 
     public void setText(String body) {
 
-        if (body.isEmpty()) return;
+        if (body == null || body.isEmpty()) return;
         StringBuilder html = new StringBuilder();
         html.append("<html>");
         html.append("<head>");
@@ -98,6 +117,7 @@ public class HtmlTextView extends ScrollView {
             webView.loadData(html.toString(), MimeType , Encoding);
             return;
         }
+
         webView.loadDataWithBaseURL(BaseUrl, html.toString(), MimeType, Encoding, null);
     }
 }

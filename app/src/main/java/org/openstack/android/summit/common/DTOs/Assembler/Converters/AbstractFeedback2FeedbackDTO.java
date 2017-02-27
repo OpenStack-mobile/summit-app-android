@@ -29,6 +29,8 @@ public class AbstractFeedback2FeedbackDTO<S extends Feedback> extends AbstractCo
             String ownerFullName = (owner != null) ? owner.getFullName() : "NOT SET";
 
             feedbackDTO.setOwner(ownerFullName);
+            feedbackDTO.setOwnerPicUrl((owner != null) ? owner.getPictureUrl(): "");
+
             if(event != null){
                 feedbackDTO.setEventName(event.getName());
                 feedbackDTO.setEventId(event.getId());

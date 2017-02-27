@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -28,20 +26,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
 public abstract class SchedulePresenter<V extends IScheduleView, I extends IScheduleInteractor, W
         extends IScheduleWireframe>
-        extends BasePresenter<V, I, W> implements ISchedulePresenter<V> {
+        extends BaseScheduleablePresenter<V, I, W> implements ISchedulePresenter<V> {
 
     protected List<ScheduleItemDTO> dayEvents;
     protected IScheduleFilter scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
     protected IScheduleItemViewBuilder scheduleItemViewBuilder;
-    protected IScheduleablePresenter scheduleablePresenter;
 
     protected boolean hasToCheckDisabledDates = true;
 
@@ -54,10 +49,11 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     protected SummitDTO currentSummit = null;
 
-    public SchedulePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
-        super(interactor, wireframe);
-
-        this.scheduleablePresenter = scheduleablePresenter;
+    public SchedulePresenter
+    (I interactor,
+     W wireframe,
+     IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
+        super(interactor, wireframe, scheduleablePresenter);
         this.scheduleItemViewBuilder = scheduleItemViewBuilder;
         this.scheduleFilter = scheduleFilter;
 
@@ -197,8 +193,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             interactor.isEventFavoriteByLoggedMember(scheduleItemDTO.getId()),
             false,
             interactor.shouldShowVenues(),
-            scheduleItemDTO.getRsvpLink() ,
-            scheduleItemDTO.isRsvpExternal()
+            scheduleItemDTO.getRSVPLink() ,
+            scheduleItemDTO.isExternalRSVP()
         );
     }
 
@@ -234,99 +230,17 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
-
-        ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-        if(scheduleItemDTO == null) return;
-        boolean formerState             = scheduleItemView.getScheduled();
-
-        scheduleablePresenter
-                .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    ( res ) -> {
-                        Toast.makeText(view.getApplicationContext(), formerState ?
-                                        view.getResources().getString(R.string.removed_from_going):
-                                        view.getResources().getString(R.string.added_2_going),
-                                Toast.LENGTH_SHORT).show();
-                    },
-                    (ex) -> {
-                        scheduleItemView.setScheduled(formerState);
-                        if(ex != null) {
-                            Log.d(Constants.LOG_TAG, ex.getMessage());
-                            view.showErrorMessage(ex.getMessage());
-                            return;
-                        }
-                        view.showErrorMessage("Server Error");
-                    }
-                );
+        _toggleScheduleStatus(scheduleItemView, position);
     }
 
     @Override
     public void toggleFavoriteStatus(IScheduleItemView scheduleItemView, int position) {
-
-        ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-        if(scheduleItemDTO == null) return;
-        // get former state
-        boolean formerState             = scheduleItemView.getFavorite();
-        scheduleablePresenter
-                .toggleFavoriteStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe
-                (
-                                (res) -> {
-                                    Toast.makeText(view.getApplicationContext(), formerState ?
-                                                    view.getResources().getString(R.string.removed_from_favorites):
-                                                    view.getResources().getString(R.string.added_2_favorites),
-                                            Toast.LENGTH_SHORT).show();
-                                },
-                                (ex) -> {
-                                    scheduleItemView.setFavorite(formerState);
-                                    if(ex != null) {
-                                        Log.d(Constants.LOG_TAG, ex.getMessage());
-                                        view.showErrorMessage(ex.getMessage());
-                                        return;
-                                    }
-                                    view.showErrorMessage("Server Error");
-                                }
-                );
+        _toggleFavoriteStatus(scheduleItemView, position);
     }
 
     @Override
     public void toggleRSVPStatus(IScheduleItemView scheduleItemView, int position) {
-
-        ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
-        if(scheduleItemDTO == null) return;
-        boolean formerState = scheduleItemView.getScheduled();
-        if(!formerState){
-            if(!scheduleItemView.isExternalRSVP()){
-                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
-                return;
-            }
-            // its external, add to schedule and then show view
-
-            scheduleablePresenter
-                    .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            (res) -> {
-                                Toast.makeText(view.getApplicationContext(), formerState ?
-                                                view.getResources().getString(R.string.removed_from_going):
-                                                view.getResources().getString(R.string.added_2_going),
-                                        Toast.LENGTH_SHORT).show();
-
-                                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
-                            },
-                            (ex) -> {
-                                scheduleItemView.setScheduled(formerState);
-                                if(ex != null) {
-                                    Log.d(Constants.LOG_TAG, ex.getMessage());
-                                    view.showErrorMessage(ex.getMessage());
-                                    return;
-                                }
-                                view.showErrorMessage("Server Error");
-                            }
-                    );
-        }
+       _toggleRSVPStatus(scheduleItemView, position);
     }
 
     @Override
@@ -338,14 +252,15 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             wireframe.showEventDetail(scheduleItemDTO.getId(), view);
             return;
         }
+
         view.showErrorMessage(view.getResources().getString(R.string.event_not_exist));
         onResume();
     }
 
     @Override
-    public void removeItem(int position) {
-        if (dayEvents.size() - 1 < position) return;
-        dayEvents.remove(position);
+    protected ScheduleItemDTO getCurrentItem(int position){
+        if (dayEvents.size() - 1 < position) return null;
+        return dayEvents.get(position);
     }
 
     @Override

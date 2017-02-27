@@ -1,6 +1,5 @@
 package org.openstack.android.summit.modules.level_schedule;
 
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import com.crashlytics.android.Crashlytics;
@@ -34,7 +33,7 @@ public class LevelScheduleWireframe extends ScheduleWireframe implements ILevelS
     }
 
     @Override
-    public void presentLevelScheduleView(String level, FragmentActivity context) {
+    public void presentLevelScheduleView(String level, IBaseView context) {
         try {
             LevelScheduleFragment levelScheduleFragment = new LevelScheduleFragment();
             navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_LEVEL, level);

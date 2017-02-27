@@ -1,15 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_add_to_calendar" android:icon="@drawable/ic_action_add_2_calendar" android:title="@string/action_add_to_calendar"
-        android:orderInCategory="100" app:showAsAction="always" />
-    <item android:id="@+id/action_scheduled_status" android:icon="@drawable/unchecked" android:title="@string/action_scheduled_status"
-        android:orderInCategory="100" app:showAsAction="always" />
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
     <item
-        android:id="@+id/action_share"
-        android:orderInCategory="100"
-        android:title="@string/action_share_event"
+        android:id="@+id/event_detail_menu_save_going_action"
+        android:title="@string/save_going"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_event_available"
+        />
+    <item
+        android:id="@+id/event_detail_menu_save_rsvp_action"
+        android:title="@string/save_rsvp"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_event_available"
+        />
+    <item
+        android:id="@+id/event_detail_menu_remove_going_action"
+        app:showAsAction="never"
+        android:title="@string/remove_going"
+        android:icon="@drawable/ic_event_busy"
+        />
+
+    <item
+        android:id="@+id/event_detail_menu_save_favorite_action"
+        app:showAsAction="never"
+        android:title="@string/save_favorite"
+        android:icon="@drawable/ic_bookmark" />
+
+    <item
+        android:id="@+id/event_detail_menu_remove_favorite_action"
+        app:showAsAction="never"
+        android:title="@string/remove_favorite"
+        android:icon="@drawable/ic_bookmark_border"
+        />
+    <item
+        android:id="@+id/event_detail_menu_rate_action"
+        android:title="@string/rate"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_star_border"
+        />
+    <item
+        app:showAsAction="never"
+        android:id="@+id/event_detail_menu_cancel_action"
+        android:title="@string/cancel"
+        />
+    <item
+        android:id="@+id/event_detail_menu_share_action"
+        android:title="@string/share_event_text"
         app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
         app:showAsAction="always"/>
 </menu>

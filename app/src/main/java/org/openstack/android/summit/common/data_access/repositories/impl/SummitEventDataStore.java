@@ -1,9 +1,7 @@
 package org.openstack.android.summit.common.data_access.repositories.impl;
 
 import org.joda.time.DateTime;
-import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
-import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
@@ -20,6 +18,8 @@ import org.openstack.android.summit.common.utils.RealmFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Case;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -270,42 +270,13 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
     }
 
     @Override
-    public void getFeedbackOrigin(int eventId, int page, int objectsPerPage, final IDataStoreOperationListener<Feedback> dataStoreOperationListener) {
-        IDataStoreOperationListener<Feedback> remoteDataStoreOperationListener = new DataStoreOperationListener<Feedback>() {
-            @Override
-            public void onSucceedWithDataCollection(List<Feedback> data) {
-                super.onSucceedWithDataCollection(data);
-                dataStoreOperationListener.onSucceedWithDataCollection(data);
-            }
-
-            @Override
-            public void onError(String message) {
-                super.onError(message);
-                dataStoreOperationListener.onError(message);
-            }
-        };
-
-        summitEventRemoteDataStore.getFeedback(eventId, page, objectsPerPage, remoteDataStoreOperationListener);
+    public Observable<List<Feedback>> getFeedback(int eventId, int page, int objectsPerPage) {
+        return summitEventRemoteDataStore.getFeedback(eventId, page, objectsPerPage);
     }
 
     @Override
-    public void getAverageFeedbackOrigin(int eventId, final IDataStoreOperationListener<SummitEvent> dataStoreOperationListener) {
-        IDataStoreOperationListener<SummitEvent> remoteDataStoreOperationListener = new DataStoreOperationListener<SummitEvent>() {
-
-            @Override
-            public void onSucceedWithSingleData(SummitEvent data) {
-                super.onSucceedWithSingleData(data);
-                dataStoreOperationListener.onSucceedWithSingleData(data);
-            }
-
-            @Override
-            public void onError(String message) {
-                super.onError(message);
-                dataStoreOperationListener.onError(message);
-            }
-        };
-
-        summitEventRemoteDataStore.getAverageFeedback(eventId, remoteDataStoreOperationListener);
+    public Observable<Double> getAverageFeedback(int eventId) {
+        return summitEventRemoteDataStore.getAverageFeedback(eventId).subscribeOn(Schedulers.io());
     }
 
 }

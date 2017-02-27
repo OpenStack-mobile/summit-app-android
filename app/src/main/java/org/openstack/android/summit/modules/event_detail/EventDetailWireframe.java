@@ -13,6 +13,7 @@ import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
 import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe;
+import org.openstack.android.summit.modules.level_schedule.user_interface.LevelScheduleFragment;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
@@ -48,7 +49,7 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
     }
 
     @Override
-    public void presentEventDetailView(int eventId, IBaseView context) {
+    public void showEventDetail(int eventId, IBaseView context) {
         try {
             navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_EVENT_ID, eventId);
 
@@ -94,5 +95,22 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
         NamedDTO location = new NamedDTO();
         location.setId(locationId);
         venueDetailWireframe.presentLocationDetailView(location, view);
+    }
+
+    @Override
+    public void presentLevelScheduleView(String level,  IBaseView view) {
+        try {
+            LevelScheduleFragment levelScheduleFragment = new LevelScheduleFragment();
+            navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_LEVEL, level);
+            FragmentManager fragmentManager = view.getSupportFragmentManager();
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.frame_layout_content, levelScheduleFragment)
+                    .addToBackStack(null)
+                    .commitAllowingStateLoss();
+        }
+        catch(Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 }

@@ -357,7 +357,7 @@ public class DataAccessModule {
 
     @Provides
     ISummitEventRemoteDataStore providesSummitEventRemoteDataStore(IDeserializer deserializer,
-                                                                   @Named("ServiceProfile") Retrofit restClient,
+                                                                   @Named("ServiceProfileRXJava2") Retrofit restClient,
                                                                    ISummitSelector summitSelector) {
         return new SummitEventRemoteDataStore(deserializer, restClient, summitSelector);
     }

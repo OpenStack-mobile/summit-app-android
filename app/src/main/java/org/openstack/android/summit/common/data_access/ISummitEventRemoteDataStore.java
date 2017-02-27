@@ -1,14 +1,16 @@
 package org.openstack.android.summit.common.data_access;
 
 import org.openstack.android.summit.common.entities.Feedback;
-import org.openstack.android.summit.common.entities.SummitEvent;
+import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * Created by Claudio Redi on 2/19/2016.
  */
 public interface ISummitEventRemoteDataStore {
 
-    void getFeedback(int eventId, int page, int objectsPerPage, IDataStoreOperationListener<Feedback> dataStoreOperationListener);
+    Observable<List<Feedback>> getFeedback(int eventId, int page, int objectsPerPage);
 
-    void getAverageFeedback(int eventId, final IDataStoreOperationListener<SummitEvent> dataStoreOperationListener);
+    Observable<Double> getAverageFeedback(int eventId);
 }

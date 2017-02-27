@@ -13,7 +13,7 @@ import retrofit2.http.Query;
 public interface ISummitEntityEventsApi {
 
     @GET("v1/summits/{summit_id}/entity-events")
-    public Call<ResponseBody> get
+    Call<ResponseBody> get
     (
         @Path("summit_id") int summitId,
         @Query("from_date") Long fromDateEpoch,

@@ -137,10 +137,10 @@ public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> i
     private void setStarColor(int selectedRate, int starRate, int controlId) {
         ImageView starRateImage = (ImageView)view.findViewById(controlId);
         if (starRate <= selectedRate) {
-            starRateImage.setImageResource(R.drawable.star_color);
+            starRateImage.setImageResource(R.drawable.ic_star);
         }
         else {
-            starRateImage.setImageResource(R.drawable.star_ligth_grey);
+            starRateImage.setImageResource(R.drawable.ic_star_empty);
         }
     }
 

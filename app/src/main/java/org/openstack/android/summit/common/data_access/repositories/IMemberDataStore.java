@@ -15,17 +15,17 @@ public interface IMemberDataStore extends IGenericDataStore<Member> {
 
     Observable<Integer> getLoggedInMember();
 
-    void getAttendeesForTicketOrder(String orderNumber, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener);
-
-    void addFeedback(final Member member, Feedback feedback, final IDataStoreOperationListener dataStoreOperationListener);
-
-    void addEventToMyFavoritesLocal(Member me, SummitEvent summitEvent);
-
-    void removeEventFromMyFavoritesLocal(Member me, SummitEvent summitEvent);
+    Observable<Integer> addFeedback(Member member, Feedback feedback);
 
     Observable<Boolean> addEventToMyFavorites(Member me, SummitEvent summitEvent);
 
     Observable<Boolean> removeEventFromMyFavorites(Member me, SummitEvent summitEvent);
+
+    void getAttendeesForTicketOrder(String orderNumber, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener);
+
+    void addEventToMyFavoritesLocal(Member me, SummitEvent summitEvent);
+
+    void removeEventFromMyFavoritesLocal(Member me, SummitEvent summitEvent);
 
     boolean isEventOnMyFavorites(Member me, SummitEvent summitEvent);
 

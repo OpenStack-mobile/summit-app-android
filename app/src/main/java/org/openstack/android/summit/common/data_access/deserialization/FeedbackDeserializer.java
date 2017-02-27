@@ -53,7 +53,8 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
                 member = RealmFactory.getSession().createObject(Member.class, memberId);
 
             member.setFullName(jsonMember.getString("first_name") + " " + jsonMember.getString("last_name"));
-
+            member.setBio(jsonMember.optString("bio"));
+            member.setPictureUrl(jsonMember.optString("pic"));
             feedback.setOwner(member);
         }
 

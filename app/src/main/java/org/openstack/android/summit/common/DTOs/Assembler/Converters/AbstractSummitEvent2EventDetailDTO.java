@@ -13,16 +13,23 @@ import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Tag;
 
+import java.security.InvalidParameterException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+
 /**
  * Created by Claudio Redi on 1/21/2016.
  */
-public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends PresentationSpeaker, V extends PresentationVideo> extends AbstractSummitEvent2ScheduleItemDTO<E, EventDetailDTO> {
+public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends PresentationSpeaker, V extends PresentationVideo>
+        extends AbstractSummitEvent2ScheduleItemDTO<E, EventDetailDTO> {
 
     protected AbstractPresentationSpeaker2PersonListIemDTO<S, PersonListItemDTO> presentationSpeaker2PersonListIemDTO;
     protected AbstractPresentationVideo2VideoDTO<V> video2VideoDTO;
 
     @Override
     protected EventDetailDTO convert(E source) {
+
         EventDetailDTO eventDetailDTO = new EventDetailDTO();
 
         try {
@@ -57,11 +64,17 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
                 eventDetailDTO.setEventUrl(eventUrl);
             }
 
+            if(source.getSummitEventWithFile() != null){
+                eventDetailDTO.setAttachmentUrl(source.getSummitEventWithFile().getAttachment());
+            }
+
             if (source.getPresentation() != null) {
                 eventDetailDTO.setTrack(
                         source.getTrack() != null ? source.getTrack().getName() : ""
                 );
-                eventDetailDTO.setLevel(source.getPresentation().getLevel() + " Level");
+
+                eventDetailDTO.setPresentation(true);
+                eventDetailDTO.setLevel(source.getPresentation().getLevel());
 
                 PersonListItemDTO speakerListItemDTO;
                 for (PresentationSpeaker presentationSpeaker : source.getPresentation().getSpeakers()) {
@@ -79,6 +92,11 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
                 if (source.getPresentation().getVideos().size() > 0) {
                     PresentationVideo video = source.getPresentation().getVideos().first();
                     eventDetailDTO.setVideo(video2VideoDTO.convert((V) video));
+                }
+                eventDetailDTO.setToRecord(source.getPresentation().isToRecord());
+
+                if(source.getPresentation().getSlides() != null && !source.getPresentation().getSlides().isEmpty()){
+                    eventDetailDTO.setAttachmentUrl(source.getPresentation().getSlides().first().getLink());
                 }
             }
         } catch (Exception e) {
@@ -105,4 +123,60 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
     private Boolean isStarted(E source){
         return source.getStart().getTime() <= System.currentTimeMillis();
     }
+
+    @Override
+    protected String getDateTime(E summitEvent) {
+        Summit summit = null;
+        try {
+
+            summit = summitEvent.getSummit();
+
+            if(summit == null)
+                throw new InvalidParameterException("missing summit on event id "+ summitEvent.getId());
+
+            if(summit.getTimeZone() == null)
+                throw new InvalidParameterException("summit timezone id is not set for summit id "+ summit.getId());
+
+            TimeZone timeZone = TimeZone.getTimeZone(summit.getTimeZone());
+
+            DateFormat formatterFrom = new SimpleDateFormat("MMM dd, yyyy");
+            formatterFrom.setTimeZone(timeZone);
+
+            return String.format("%s", formatterFrom.format(summitEvent.getStart()));
+
+        }
+        catch (Exception ex){
+            Log.w(Constants.LOG_TAG, ex);
+            Crashlytics.logException(ex);
+        }
+        return "INVALID";
+    }
+
+    @Override
+    protected String getTime(E summitEvent) {
+        Summit summit = null;
+        try {
+            DateFormat formatterFrom = new SimpleDateFormat("hh:mm a");
+            summit                   = summitEvent.getSummit();
+
+            if(summit == null)
+                throw new InvalidParameterException("missing summit on event id "+ summitEvent.getId());
+
+            if(summit.getTimeZone() == null)
+                throw new InvalidParameterException("summit timezone id is not set for summit id "+ summit.getId());
+
+            TimeZone timeZone = TimeZone.getTimeZone(summit.getTimeZone());
+            formatterFrom.setTimeZone(timeZone);
+            DateFormat formatterTo = new SimpleDateFormat("hh:mm a");
+            formatterTo.setTimeZone(timeZone);
+            String timeRange = String.format("%s - %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
+            return timeRange.toLowerCase();
+        }
+        catch (Exception ex){
+            Log.w(Constants.LOG_TAG, ex);
+            Crashlytics.logException(ex);
+        }
+        return "INVALID";
+    }
+
 }

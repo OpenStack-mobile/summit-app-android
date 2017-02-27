@@ -9,8 +9,8 @@ import io.reactivex.Observable;
  */
 public interface IScheduleablePresenter {
 
-    Observable<Boolean> toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor);
+    Observable<Boolean> toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableItem scheduleableView, IScheduleableInteractor interactor);
 
-    Observable<Boolean> toggleFavoriteStatusForEvent(ScheduleItemDTO scheduleItemDTO, IFavoriteView favoriteView, IScheduleableInteractor interactor);
+    Observable<Boolean> toggleFavoriteStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableItem favoriteView, IScheduleableInteractor interactor);
 
 }

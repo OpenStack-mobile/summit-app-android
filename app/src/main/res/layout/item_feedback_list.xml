@@ -1,28 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="5dp"
     android:paddingBottom="15dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
 
-    <TextView
-        android:id="@+id/item_feedback_event_title"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:layout_width="wrap_content"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/item_feedback_owner_pic"
+        fresco:roundAsCircle="true"
+        fresco:roundingBorderWidth="1dp"
+        fresco:roundingBorderColor="@color/openStackLightGray"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        fresco:placeholderImage="@drawable/generic_user_avatar"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        fresco:actualImageScaleType="centerCrop"
+        android:layout_gravity="center"
+        />
+
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Registration checkin"
-        android:visibility="gone"/>
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_gravity="center">
+
     <LinearLayout
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_gravity="center"
+
+        <TextView
+            android:id="@+id/item_feedback_owner"
             android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:text="Claudio Redi" />
+
+        <TextView
+            android:id="@+id/item_feedback_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/openStackGray"
+            android:layout_gravity="center"
+            android:text="2 days ago"/>
+    </LinearLayout>
+    <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
@@ -41,26 +75,11 @@
                 android:id="@+id/item_feedback_rate_5"
                 style="@style/AppTheme.SmallStarRate"/>
         </LinearLayout>
-        <TextView
-            android:id="@+id/item_feedback_owner"
-            android:paddingRight="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:text="Claudio Redi" />
-
-        <TextView
-            android:id="@+id/item_feedback_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/openStackGray"
-            android:layout_gravity="center"
-            android:text="2 days ago"/>
-    </LinearLayout>
     <TextView
         android:id="@+id/item_feedback_review"
+        android:paddingTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Mel te graecis menandri accusamus, meis putant imperdiet vis ut. Unum propriae volutpat no nam, tation everti assentior eos te. Eos an soluta repudiandae. Vel admodum adversarium ei, no est malis sadipscing intellegebat. Liber iudico lucilius ea his, vis stet periculis in, detraxit aliquando urbanitas has ea."/>
+    </LinearLayout>
 </LinearLayout>

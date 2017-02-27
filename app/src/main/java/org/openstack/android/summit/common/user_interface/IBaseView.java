@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.user_interface;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -35,5 +36,7 @@ public interface IBaseView {
     void finish();
 
     void startActivityForResult(Intent intent, int requestCode);
+
+    ContentResolver getContentResolver();
 
 }

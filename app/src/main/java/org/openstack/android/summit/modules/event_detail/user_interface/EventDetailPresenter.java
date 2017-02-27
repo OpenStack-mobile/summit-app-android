@@ -1,27 +1,19 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
-import android.Manifest;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
+import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
+import android.webkit.MimeTypeMap;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
-import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
-import org.openstack.android.summit.common.user_interface.BasePresenter;
+import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.common.user_interface.BaseScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
@@ -33,26 +25,39 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 /**
  * Created by Claudio Redi on 1/21/2016.
  */
-public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEventDetailInteractor, IEventDetailWireframe> implements IEventDetailPresenter {
+public class EventDetailPresenter
+        extends BaseScheduleablePresenter<IEventDetailView, IEventDetailInteractor, IEventDetailWireframe>
+        implements IEventDetailPresenter {
 
     private Integer eventId;
     private EventDetailDTO event;
-    private IScheduleablePresenter scheduleablePresenter;
     private FeedbackDTO myFeedbackForEvent;
     private List<FeedbackDTO> feedbackList = new ArrayList<>();
     private boolean loadingFeedback;
     private boolean loadedAllFeedback;
-    private int feedbackPage           = 1;
-    private int feedbackObjectsPerPage = 5;
+    private              int feedbackPage           = 1;
+    private static final int feedbackObjectsPerPage = 25;
     private boolean loadingFeedbackAverage;
 
     @Inject
-    public EventDetailPresenter(IEventDetailInteractor interactor, IEventDetailWireframe wireframe, IScheduleablePresenter scheduleablePresenter) {
-        super(interactor, wireframe);
-        this.scheduleablePresenter = scheduleablePresenter;
+    public EventDetailPresenter
+    (
+            IEventDetailInteractor interactor,
+            IEventDetailWireframe wireframe,
+            IScheduleablePresenter scheduleablePresenter
+    )
+    {
+        super(interactor, wireframe, scheduleablePresenter);
+    }
+
+    @Override
+    protected ScheduleItemDTO getCurrentItem(int position) {
+        return this.event;
     }
 
     @Override
@@ -73,13 +78,13 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     public void updateUI(){
 
         event = interactor.getEventDetail(eventId != null ? eventId : 0);
+        event.setChangeStatusListener(item -> updateContextMenuOptions());
 
         if (event == null) {
             view.setName("");
             view.setTrack("");
             view.setDate("");
             view.setDescription("");
-            view.setCredentials("");
             view.setLevel("");
             view.setSponsors("");
             view.setTags("");
@@ -94,23 +99,20 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         view.setName(event.getName());
         view.setTrack(event.getTrack());
         view.setDate(event.getDateTime());
+        view.setTime(event.getTime());
         view.setDescription(event.getEventDescription());
-        view.setCredentials(event.getCredentials());
         view.setLevel(event.getLevel());
         view.setSponsors(event.getSponsors());
         view.setSpeakers(event.getModeratorAndSpeakers());
-        view.setScheduled(interactor.isEventScheduledByLoggedMember(eventId));
-        view.setIsScheduledStatusVisible(interactor.isMemberLoggedInAndConfirmedAttendee());
-        view.setAllowNewFeedback(getAllowNewFeedback());
         view.setTags(event.getTags());
-        view.setAllowRsvp(event.getAllowRsvp() && interactor.isMemberLoggedInAndConfirmedAttendee());
         view.hasMyFeedback(myFeedbackForEvent != null);
 
+        boolean hasVideo = false;
         if (event.getVideo() != null && event.getVideo().getYouTubeId() != null) {
             view.loadVideo(event.getVideo());
+            hasVideo = true;
         }
 
-        view.showLocation(interactor.shouldShowVenues());
         if (interactor.shouldShowVenues()) {
             view.setLocation(event.getLocation());
         }
@@ -122,44 +124,45 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
             view.setMyFeedbackOwner(myFeedbackForEvent.getOwner());
         }
 
-        view.setAverageRate(0); // TODO: we should implement a hide
+        view.setAverageRate(0);
         if (event.isStarted() && event.getAllowFeedback()) {
             loadFeedback();
             loadAverageFeedback();
         }
+
+        if(event.isToRecord() && !hasVideo){
+            view.showToRecord(true);
+        }
+
+        if(event.getAttachmentUrl() != null && !event.getAttachmentUrl().isEmpty()){
+            view.showAttachment(true, event.isPresentation());
+        }
     }
+
+    @Override
+    public void updateContextMenuOptions(){
+        if(this.interactor.isMemberLoggedIn()){
+            view.showGoingMenuAction(false);
+            view.showNotGoingMenuAction(false);
+            view.showRSVPMenuAction(false);
+            view.showRateMenuAction(myFeedbackForEvent == null && this.event.getAllowFeedback());
+            view.showAddFavoriteMenuAction(!this.event.getFavorite());
+            view.showRemoveFavoriteMenuAction(this.event.getFavorite());
+
+            if(this.interactor.isMemberLoggedInAndConfirmedAttendee()){
+                if(this.event.getRsvpLink() != null &&  !this.event.getRsvpLink().isEmpty())
+                    view.showRSVPMenuAction(true);
+                else{
+                    view.showNotGoingMenuAction(this.event.getScheduled());
+                    view.showGoingMenuAction(!this.event.getScheduled());
+                }
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        view.showAddToMyCalendar(!isEventInCalendar(view.getApplicationContext()));
-    }
-
-    private boolean isEventInCalendar(Context context) {
-        Cursor cursor = null;
-        try {
-            if(event == null) return true;
-            int permissionCheck = ContextCompat.checkSelfPermission(view.getApplicationContext(), Manifest.permission.READ_CALENDAR);
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                return true;
-            }
-
-            cursor = CalendarContract.Instances.query(context.getContentResolver(), new String[]{
-                            CalendarContract.Instances._ID,
-                            CalendarContract.Instances.BEGIN,
-                            CalendarContract.Instances.END,
-                            CalendarContract.Instances.EVENT_ID},
-                    event.getStartDate().getMillis(),
-                    event.getEndDate().getMillis(),
-                    String.format("\"%s\"", event.getName()));
-
-            if (cursor != null && cursor.moveToFirst()) {
-                return true;
-            }
-            return false;
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
     }
 
     public void loadFeedback() {
@@ -170,64 +173,61 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         loadingFeedback = true;
         view.showFeedbackActivityIndicator();
 
-        IInteractorAsyncOperationListener<List<FeedbackDTO>> interactorAsyncOperationListener = new InteractorAsyncOperationListener<List<FeedbackDTO>>() {
-            @Override
-            public void onSucceedWithData(List<FeedbackDTO> data) {
-                super.onSucceedWithData(data);
-                loadingFeedback = false;
-                List<FeedbackDTO> feedbackPageWithoutMe = new ArrayList<FeedbackDTO>();
-                for (FeedbackDTO feedbackDTO : data) {
-                    // TODO: if there are more than one owners with the same name, this could potencially fail
-                    if (myFeedbackForEvent == null || (feedbackDTO.getOwner() != null && !feedbackDTO.getOwner().equals(myFeedbackForEvent.getOwner()))) {
-                        feedbackPageWithoutMe.add(feedbackDTO);
-                    }
-                }
+        interactor
+                .getFeedbackForEvent(eventId, feedbackPage, feedbackObjectsPerPage)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        ( data ) -> {
+                            loadingFeedback = false;
+                            List<FeedbackDTO> feedbackPageWithoutMe = new ArrayList<>();
+                            for (FeedbackDTO feedbackDTO : data) {
+                                // TODO: if there are more than one owners with the same name, this could potencially fail
+                                if (myFeedbackForEvent == null ||
+                                        (feedbackDTO.getOwner() != null &&
+                                                !feedbackDTO.getOwner().equals(myFeedbackForEvent.getOwner()))) {
+                                    feedbackPageWithoutMe.add(feedbackDTO);
+                                }
+                            }
 
-                feedbackList.addAll(feedbackPageWithoutMe);
-                view.setOtherPeopleFeedback(feedbackList);
-                //self.viewController.hasAnyFeedback = self.feedbackList.count > 0
-                feedbackPage++;
-                loadedAllFeedback = data.size() < feedbackObjectsPerPage;
-                view.toggleLoadMore(!loadedAllFeedback);
-                showFeedbackInfoIfFinishedLoading();
-            }
+                            feedbackList.addAll(feedbackPageWithoutMe);
+                            view.setOtherPeopleFeedback(feedbackList);
+                            feedbackPage++;
+                            loadedAllFeedback = data.size() < feedbackObjectsPerPage;
+                            view.toggleLoadMore(!loadedAllFeedback);
+                            int reviewCount = feedbackList.size();
+                            if(myFeedbackForEvent != null) ++reviewCount;
+                            view.setReviewCount(reviewCount);
+                            showFeedbackInfoIfFinishedLoading();
+                        },
+                        (ex) -> {
+                            loadingFeedback = false;
+                            view.showFeedbackErrorMessage(ex.getMessage());
+                            showFeedbackInfoIfFinishedLoading();
+                        }
+                );
 
-            @Override
-            public void onError(String message) {
-                super.onError(message);
-                loadingFeedback = false;
-                view.showFeedbackErrorMessage(message);
-                showFeedbackInfoIfFinishedLoading();
-            }
-        };
-
-        interactor.getFeedbackForEvent(eventId, feedbackPage, feedbackObjectsPerPage, interactorAsyncOperationListener);
     }
 
     public void loadAverageFeedback() {
         loadingFeedbackAverage = true;
         view.showFeedbackActivityIndicator();
 
-        IInteractorAsyncOperationListener<Double> interactorAsyncOperationListener = new InteractorAsyncOperationListener<Double>() {
-            @Override
-            public void onSucceedWithData(Double data) {
-                super.onSucceedWithData(data);
-                view.setAverageRate((int) Math.round(event.getAverageRate()));
-                loadingFeedbackAverage = false;
-                showFeedbackInfoIfFinishedLoading();
-            }
-
-            @Override
-            public void onError(String message) {
-                super.onError(message);
-                loadingFeedback = false;
-                view.showFeedbackErrorMessage(message);
-                loadingFeedbackAverage = false;
-                showFeedbackInfoIfFinishedLoading();
-            }
-        };
-
-        interactor.getAverageFeedbackForEvent(eventId, interactorAsyncOperationListener);
+        interactor
+                .getAverageFeedbackForEvent(eventId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        ( avg ) -> {
+                            view.setAverageRate(avg);
+                            loadingFeedbackAverage = false;
+                            showFeedbackInfoIfFinishedLoading();
+                        },
+                        (ex) -> {
+                            loadingFeedback = false;
+                            view.showFeedbackErrorMessage(ex.getMessage());
+                            loadingFeedbackAverage = false;
+                            showFeedbackInfoIfFinishedLoading();
+                        }
+                );
     }
 
     private void showFeedbackInfoIfFinishedLoading() {
@@ -247,8 +247,34 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
     }
 
     @Override
-    public void showEventRsvpView() {
-        this.wireframe.presentEventRsvpView(event.getRsvpLink(), view);
+    public void showEventsByLevel() {
+        wireframe.presentLevelScheduleView(event.getLevel(), view);
+    }
+
+    @Override
+    public void openAttachment() {
+
+        String fileUrl = this.event.getAttachmentUrl();
+        if(fileUrl == null || fileUrl.isEmpty()) return;
+
+        MimeTypeMap mime                = MimeTypeMap.getSingleton();
+        ContentResolver contentResolver = view.getContentResolver();
+        Intent newIntent                = new Intent(Intent.ACTION_VIEW);
+        String mimeType                 = mime.getMimeTypeFromExtension(contentResolver.getType(Uri.parse(fileUrl)));
+
+        newIntent.setDataAndType(Uri.parse(fileUrl),mimeType);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        try {
+            view.startActivity(newIntent);
+        } catch (Exception ex) {
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+        }
+    }
+
+    @Override
+    public boolean shouldShowContextMenu() {
+        return this.interactor.isMemberLoggedIn();
     }
 
     @Override
@@ -263,37 +289,6 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
                 )
         );
         return shareIntent;
-    }
-
-    @Override
-    public void addToCalendar() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_EDIT)
-                    .setData(CalendarContract.Events.CONTENT_URI)
-                    .putExtra(CalendarContract.Events.CALENDAR_ID, event.getId())
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStartDate().getMillis())
-                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEndDate().getMillis())
-                    .putExtra(CalendarContract.Events.TITLE, event.getName())
-                    .putExtra(CalendarContract.Events.DESCRIPTION, android.text.Html.fromHtml(event.getEventDescription()).toString())
-                    .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLocationAddress())
-                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
-
-            view.startActivity(intent);
-        }
-        catch(ActivityNotFoundException ex1){
-            view.showErrorMessage(view.getResources().getString(R.string.missing_activity_error));
-            Crashlytics.logException(ex1);
-            Log.w(Constants.LOG_TAG, ex1.getMessage());
-        }
-        catch(Exception ex){
-            Crashlytics.logException(ex);
-            Log.w(Constants.LOG_TAG, ex.getMessage());
-        }
-    }
-
-    private boolean getAllowNewFeedback() {
-        return event.getAllowFeedback() && event.isStarted() && interactor.isMemberLoggedIn() &&
-                myFeedbackForEvent == null;
     }
 
     @Override
@@ -325,8 +320,17 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
 
     @Override
     public void toggleScheduleStatus() {
+        _toggleScheduleStatus(event, 0);
+    }
 
-        scheduleablePresenter.toggleScheduledStatusForEvent(event, view, interactor);
+    @Override
+    public void toggleFavoriteStatus() {
+        _toggleFavoriteStatus(event, 0);
+    }
+
+    @Override
+    public void toggleRSVPStatus() {
+        _toggleRSVPStatus(event, 0);
     }
 
     @Override
@@ -346,6 +350,11 @@ public class EventDetailPresenter extends BasePresenter<IEventDetailView, IEvent
         feedbackItemView.setDate(feedback.getTimeAgo());
         feedbackItemView.setRate(feedback.getRate());
         feedbackItemView.setOwner(feedback.getOwner());
+        String ownerPicUrl = feedback.getOwnerPicUrl();
+        if(ownerPicUrl != null || !ownerPicUrl.isEmpty()) {
+            Uri uri = Uri.parse(feedback.getOwnerPicUrl().replace("https", "http"));
+            feedbackItemView.setOwnerPictureUri(uri);
+        }
         feedbackItemView.setReview(feedback.getReview());
     }
 }

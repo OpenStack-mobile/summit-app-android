@@ -32,7 +32,12 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
     }
 
     @Override
-    public Observable<Boolean> toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableView scheduleableView, IScheduleableInteractor interactor)
+    public Observable<Boolean> toggleScheduledStatusForEvent
+    (
+        ScheduleItemDTO scheduleItemDTO,
+        IScheduleableItem scheduleableView,
+        IScheduleableInteractor interactor
+    )
     {
 
         Boolean isScheduled = interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId());
@@ -46,7 +51,7 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
     public Observable<Boolean> toggleFavoriteStatusForEvent
     (
         ScheduleItemDTO scheduleItemDTO,
-        IFavoriteView favoriteView,
+        IScheduleableItem favoriteView,
         IScheduleableInteractor interactor
     )
     {

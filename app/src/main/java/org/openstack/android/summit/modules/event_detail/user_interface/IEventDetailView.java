@@ -4,13 +4,12 @@ import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.VideoDTO;
 import org.openstack.android.summit.common.user_interface.IBaseView;
-import org.openstack.android.summit.common.user_interface.IScheduleableView;
 import java.util.List;
 
 /**
  * Created by Claudio Redi on 1/22/2016.
  */
-public interface IEventDetailView extends IBaseView, IScheduleableView {
+public interface IEventDetailView extends IBaseView {
 
     void setName(String name);
 
@@ -20,9 +19,9 @@ public interface IEventDetailView extends IBaseView, IScheduleableView {
 
     void setDate(String date);
 
-    void setLocation(String location);
+    void setTime(String time);
 
-    void setCredentials(String credentials);
+    void setLocation(String location);
 
     void setLevel(String level);
 
@@ -30,19 +29,9 @@ public interface IEventDetailView extends IBaseView, IScheduleableView {
 
     void setSpeakers(List<PersonListItemDTO> speakers);
 
-    void setScheduled(Boolean scheduled);
-
     void setTags(String tags);
 
-    Boolean getScheduled();
-
-    void setIsScheduledStatusVisible(Boolean isScheduledStatusVisible);
-
-    void setAllowNewFeedback(boolean allowNewFeedback);
-
-    void setAllowRsvp(boolean allowRsvp);
-
-    void setAverageRate(int rate);
+    void setAverageRate(double rate);
 
     void setMyFeedbackRate(int rate);
 
@@ -68,7 +57,27 @@ public interface IEventDetailView extends IBaseView, IScheduleableView {
 
     void loadVideo(VideoDTO video);
 
-    void showLocation(boolean show);
+    void showGoingButton(boolean show);
 
-    void showAddToMyCalendar(boolean show);
+    void showFavoriteButton(boolean show);
+
+    void showRateButton(boolean show);
+
+    void showAddFavoriteMenuAction(boolean show);
+
+    void showRemoveFavoriteMenuAction(boolean show);
+
+    void showGoingMenuAction(boolean show);
+
+    void showNotGoingMenuAction(boolean show);
+
+    void showRSVPMenuAction(boolean show);
+
+    void showRateMenuAction(boolean show);
+
+    void setReviewCount(int reviewCount);
+
+    void showAttachment(boolean show, boolean isPresentation);
+
+    void showToRecord(boolean show);
 }

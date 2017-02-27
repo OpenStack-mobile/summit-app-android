@@ -10,7 +10,10 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 1/27/2016.
  */
-public class FeedbackGivenListPresenter extends BasePresenter<IFeedbackGivenListView, IFeedbackGivenListInteractor, Void> implements IFeedbackGivenListPresenter {
+public class FeedbackGivenListPresenter
+        extends BasePresenter<IFeedbackGivenListView, IFeedbackGivenListInteractor, Void>
+        implements IFeedbackGivenListPresenter {
+
     List<FeedbackDTO> feedbackList;
 
     public FeedbackGivenListPresenter(IFeedbackGivenListInteractor interactor) {
@@ -28,7 +31,6 @@ public class FeedbackGivenListPresenter extends BasePresenter<IFeedbackGivenList
         FeedbackDTO feedback = feedbackList.get(position);
         feedbackItemView.setDate(feedback.getTimeAgo());
         feedbackItemView.setOwner(feedback.getOwner());
-        feedbackItemView.setEventTitle(feedback.getEventName());
         feedbackItemView.setRate(feedback.getRate());
         feedbackItemView.setReview(feedback.getReview());
     }

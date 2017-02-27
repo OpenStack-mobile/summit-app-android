@@ -29,7 +29,7 @@ public class ScheduleWireframe extends BaseWireframe implements IScheduleWirefra
 
     @Override
     public void showEventDetail(int eventId, IBaseView context) {
-        eventDetailWireframe.presentEventDetailView(eventId, context);
+        eventDetailWireframe.showEventDetail(eventId, context);
     }
 
     @Override
