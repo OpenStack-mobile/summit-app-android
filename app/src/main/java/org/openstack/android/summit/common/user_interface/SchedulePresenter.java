@@ -33,6 +33,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         extends IScheduleWireframe>
         extends BaseScheduleablePresenter<V, I, W> implements ISchedulePresenter<V> {
 
+    protected boolean buttonNowState  = false;
     protected List<ScheduleItemDTO> dayEvents;
     protected IScheduleFilter scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
@@ -77,6 +78,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if(savedInstanceState == null)
+            buttonNowState = true;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGGED_IN_EVENT);
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
@@ -121,7 +124,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
         if (currentSummit.isCurrentDateTimeInsideSummitRange()) {
             int summitCurrentDay = currentSummit.getCurrentLocalTime().withTime(0, 0, 0, 0).getDayOfMonth();
-            if(formerSelectedDate == null || summitCurrentDay > formerSelectedDate.getDayOfMonth())
+            if(shouldHidePastTalks || formerSelectedDate == null)
                 view.setSelectedDate(summitCurrentDay, false);
         }
 
@@ -137,9 +140,10 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             currentSummit = interactor.getActiveSummit();
             if (currentSummit == null) return;
 
-            if (currentSummit.isCurrentDateTimeInsideSummitRange()) {
+            if (currentSummit.isCurrentDateTimeInsideSummitRange() && buttonNowState) {
                 view.clearNowButtonListener();
-                view.setNowButtonState(true);
+                view.setNowButtonState(buttonNowState);
+                buttonNowState = false;
                 view.setNowButtonListener();
             }
 
