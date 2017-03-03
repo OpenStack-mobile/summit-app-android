@@ -7,8 +7,6 @@ public interface ISchedulePresenter<V extends IScheduleView> extends IScheduleLi
 
     void reloadSchedule();
 
-    void removeItem(int position);
-
     void setHidePastTalks(boolean hidePastTalks);
 
 }

@@ -104,7 +104,7 @@
 
     <style name="AppTheme.IconedInformationBarContainer" parent="AppTheme.IconedInformationBarContainerNoBorder">
         <item name="android:layout_height">66dp</item>
-        <item name="android:background">@drawable/bottom_bordered_control</item>
+        <item name="android:background">@color/openStackLightGray</item>
     </style>
 
     <style name="AppTheme.IconedInformationBarImageView">
@@ -120,6 +120,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="AppTheme.IconedInformationBarTextViewNoMoreImage" parent="AppTheme.IconedInformationBarTextView">
@@ -173,12 +174,12 @@
 
     <style name="AppTheme.StarRate">
         <item name="android:layout_marginRight">2dp</item>
-        <item name="android:src">@drawable/star_ligth_grey</item>
+        <item name="android:src">@drawable/ic_star_empty</item>
     </style>
 
     <style name="AppTheme.SmallStarRate" parent="AppTheme.StarRate">
-        <item name="android:layout_width">15dp</item>
-        <item name="android:layout_height">15dp</item>
+        <item name="android:layout_width">25dp</item>
+        <item name="android:layout_height">25dp</item>
     </style>
 
     <style name="AppTheme.BigStarRate" parent="AppTheme.StarRate">
@@ -187,8 +188,8 @@
     </style>
 
     <style name="AppTheme.MediumStarRate" parent="AppTheme.StarRate">
-        <item name="android:layout_width">20dp</item>
-        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
     </style>
 
     <style name="AppTheme.FilterSectionList">
@@ -291,5 +292,41 @@
         <item name="android:background">@drawable/material_now_button</item>
     </style>
 
+    <style name="AppTheme.EventDetailSubSectionHeaderTitle">
+        <item name="android:textColor">@color/openStackGray</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingLeft">25dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
+    <style name="AppTheme.EventDetailSubSectionHeaderTitleContainer">
+        <item name="android:layout_height">66dp</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="AppTheme.EventDetailTimeText" parent="AppTheme.IconedInformationBarTextView">
+        <item name="android:textColor">@color/openStackGray</item>
+    </style>
+
+    <style name="AppTheme.EventDetailActionButton" parent="android:Widget.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/material_button_event_detail_action</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:maxHeight">40dp</item>
+        <item name="android:minWidth">100dp</item>
+        <item name="android:maxWidth">100dp</item>
+    </style>
+
+    <style name="AppTheme.DownloadButton">
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/openStackDarkBlue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

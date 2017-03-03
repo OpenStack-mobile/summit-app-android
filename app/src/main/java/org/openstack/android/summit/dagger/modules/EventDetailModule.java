@@ -11,7 +11,6 @@ import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
-import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.event_detail.EventDetailWireframe;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.event_detail.business_logic.EventDetailInteractor;

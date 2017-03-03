@@ -43,7 +43,7 @@ public class LevelListPresenter extends BasePresenter<LevelListFragment, ILevelL
     @Override
     public void showLevelEvents(int position) {
         String level = levels.get(position);
-        wireframe.showLevelSchedule(level, view.getActivity());
+        wireframe.showLevelSchedule(level, view);
     }
 
     @Override

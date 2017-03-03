@@ -3,7 +3,7 @@ package org.openstack.android.summit.common.user_interface;
 /**
  * Created by Claudio Redi on 12/28/2015.
  */
-public interface IScheduleItemView extends IScheduleableView, IFavoriteView {
+public interface IScheduleItemView extends IScheduleableItem {
 
     void setName(String name);
 
@@ -29,11 +29,4 @@ public interface IScheduleItemView extends IScheduleableView, IFavoriteView {
 
     void setContextualMenu();
 
-    boolean isExternalRSVP();
-
-    String getRSVPLink();
-
-    void setExternalRSVP(boolean externalRSVP);
-
-    void setRSVPLink(String link);
 }

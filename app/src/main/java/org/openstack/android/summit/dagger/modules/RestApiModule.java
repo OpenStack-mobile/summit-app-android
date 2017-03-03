@@ -183,6 +183,19 @@ public class RestApiModule {
         return buildRetrofitClient(configurationManager, gson, okHttpClient);
     }
 
+    @Provides
+    @Named("ServiceProfileRXJava2")
+    @Singleton
+    public Retrofit providesRetrofitServiceRXJava2
+            (
+                    IOIDCConfigurationManager configurationManager,
+                    Gson gson,
+                    @Named("ServiceProfile") OkHttpClient okHttpClient
+            )
+    {
+        return buildRetrofitClientRXJava2(configurationManager, gson, okHttpClient);
+    }
+
     private Retrofit buildRetrofitClient
     (
         IOIDCConfigurationManager configurationManager,

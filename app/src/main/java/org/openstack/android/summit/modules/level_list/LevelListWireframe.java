@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.level_list;
 
 import android.support.v4.app.FragmentActivity;
 
+import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.level_schedule.ILevelScheduleWireframe;
 
 /**
@@ -16,7 +17,7 @@ public class LevelListWireframe implements ILevelListWireframe {
     }
 
     @Override
-    public void showLevelSchedule(String level, FragmentActivity context) {
+    public void showLevelSchedule(String level, IBaseView context) {
         levelScheduleWireframe.presentLevelScheduleView(level, context);
     }
 }

@@ -25,11 +25,19 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> 
 
     void showVenueDetail();
 
-    void showEventRsvpView();
-
     Intent createShareIntent();
 
-    void addToCalendar();
-
     void updateUI();
+
+    void showEventsByLevel();
+
+    void openAttachment();
+
+    boolean shouldShowContextMenu();
+
+    void updateContextMenuOptions();
+
+    void toggleFavoriteStatus();
+
+    void toggleRSVPStatus();
 }

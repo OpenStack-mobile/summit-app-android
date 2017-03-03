@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
 /**
@@ -26,74 +27,73 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
 
     @Inject
     public SummitAttendeeRemoteDataStore
-    (
-        @Named("MemberProfileRXJava2") Retrofit restClientRxJava,
-        ISummitSelector summitSelector
-    )
-    {
+            (
+                    @Named("MemberProfileRXJava2") Retrofit restClientRxJava,
+                    ISummitSelector summitSelector
+            ) {
         this.restClientRxJava = restClientRxJava;
-        this.attendeeAPI      = restClientRxJava.create(IAttendeeAPI.class);
-        this.summitSelector   = summitSelector;
+        this.attendeeAPI = restClientRxJava.create(IAttendeeAPI.class);
+        this.summitSelector = summitSelector;
     }
 
     @Override
     public Observable<Boolean> addEventToSchedule
-    (
-        SummitAttendee summitAttendee,
-        SummitEvent summitEvent
-    )
-    {
+            (
+                    SummitAttendee summitAttendee,
+                    SummitEvent summitEvent
+            ) {
         final int eventId = summitEvent.getId();
-        return attendeeAPI.addToMySchedule(summitEvent.getSummit().getId(),eventId ).
-        map(response -> {
-            if (!response.isSuccessful()) {
-                switch (response.code()) {
-                    case 412:
-                        throw new ValidationException
-                                (
-                                        String.format
-                                                (
-                                                        OpenStackSummitApplication.context.getString(R.string.error_already_in_schedule),
-                                                        eventId
-                                                )
-                                );
-                    case 404:
+        return attendeeAPI.addToMySchedule(summitEvent.getSummit().getId(), eventId)
+                .subscribeOn(Schedulers.io())
+                .map(response -> {
+                    if (!response.isSuccessful()) {
+                        switch (response.code()) {
+                            case 412:
+                                throw new ValidationException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_already_in_schedule),
+                                                                eventId
+                                                        )
+                                        );
+                            case 404:
 
-                        throw new NotFoundEntityException
-                                (
-                                        String.format
-                                                (
-                                                        OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
-                                                        eventId
-                                                )
-                                );
-                    default:
+                                throw new NotFoundEntityException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                                eventId
+                                                        )
+                                        );
+                            default:
 
-                        throw new Exception
-                                (
-                                        String.format
-                                                (
-                                                        "addEventToSchedule: http error %d",
-                                                        response.code()
-                                                )
-                                );
-                }
-            }
-            return true;
-        }) ;
+                                throw new Exception
+                                        (
+                                                String.format
+                                                        (
+                                                                "addEventToSchedule: http error %d",
+                                                                response.code()
+                                                        )
+                                        );
+                        }
+                    }
+                    return true;
+                });
     }
 
     @Override
     public Observable<Boolean> removeEventFromSchedule
-    (
-        SummitAttendee summitAttendee,
-        SummitEvent summitEvent
-    )
-    {
+            (
+                    SummitAttendee summitAttendee,
+                    SummitEvent summitEvent
+            ) {
 
         final int eventId = summitEvent.getId();
-        return attendeeAPI.removeFromMySchedule(summitEvent.getSummit().getId(),eventId ).
-                map(response -> {
+        return attendeeAPI.removeFromMySchedule(summitEvent.getSummit().getId(), eventId)
+                .subscribeOn(Schedulers.io())
+                .map(response -> {
                     if (!response.isSuccessful()) {
                         switch (response.code()) {
                             case 412:
@@ -128,7 +128,7 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
                         }
                     }
                     return true;
-                }) ;
+                });
     }
 
 }

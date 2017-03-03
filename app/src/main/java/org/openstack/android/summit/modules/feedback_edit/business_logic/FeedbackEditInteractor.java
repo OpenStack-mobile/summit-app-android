@@ -5,19 +5,20 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
-import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
-import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.exceptions.ValidationException;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.Date;
+
+import io.reactivex.Observable;
 
 /**
  * Created by Claudio Redi on 2/17/2016.
@@ -37,21 +38,20 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
     }
 
     @Override
-    public void saveFeedback(int rate, String review, int eventId, final IInteractorAsyncOperationListener<FeedbackDTO> interactorAsyncOperationListener) {
-        String error;
+    public Observable<FeedbackDTO> saveFeedback(int eventId, int rate, String review) throws ValidationException {
 
         if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-            error = "Feedback can't be created, there is no connectivity";
-            interactorAsyncOperationListener.onError(error);
-            return;
+            throw new ValidationException("Feedback can't be created, there is no connectivity");
         }
 
-        error = validateFeedback(rate, review);
-        if (error != null) {
-            interactorAsyncOperationListener.onError(error);
-            return;
+        if(!securityManager.isLoggedIn()){
+            throw new ValidationException("User is not logged!");
         }
-        if(!securityManager.isLoggedIn()) return;
+
+        String error = validateFeedback(rate, review);
+        if (error != null) {
+            throw new ValidationException(error);
+        }
 
         Member member           = securityManager.getCurrentMember();
         SummitEvent summitEvent = summitEventDataStore.getById(eventId);
@@ -63,21 +63,13 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
         feedback.setReview(review);
         feedback.setDate(new Date());
 
-        IDataStoreOperationListener<Feedback> dataStoreOperationListener = new DataStoreOperationListener<Feedback>() {
-            @Override
-            public void onSucceedWithSingleData(Feedback data) {
-                FeedbackDTO dto = dtoAssembler.createDTO(data, FeedbackDTO.class);
-                interactorAsyncOperationListener.onSucceedWithData(dto);
-            }
-
-            @Override
-            public void onError(String message) {
-                super.onError(message);
-                interactorAsyncOperationListener.onError(message);
-            }
-        };
-
-        memberDataStore.addFeedback(member, feedback, dataStoreOperationListener);
+        return memberDataStore.addFeedback(member, feedback).map( id -> {
+                    Feedback f = RealmFactory.transaction(session ->
+                       session.where(Feedback.class).equalTo("id", id).findFirst()
+                    );
+                    return dtoAssembler.createDTO(f, FeedbackDTO.class);
+                }
+        );
     }
 
     private String validateFeedback(int rate, String review) {

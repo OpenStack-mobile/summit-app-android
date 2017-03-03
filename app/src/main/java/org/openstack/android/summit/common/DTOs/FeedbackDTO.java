@@ -1,17 +1,22 @@
 package org.openstack.android.summit.common.DTOs;
 
+import org.joda.time.Instant;
+
 import java.util.Date;
 
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
 public class FeedbackDTO {
+
     private int id = 0;
     private int rate = 0;
     private String review;
     private Date date;
     private String timeAgo;
     private String owner;
+    private String ownerPicUrl;
+
     private String eventName;
     private int eventId;
 
@@ -49,6 +54,14 @@ public class FeedbackDTO {
 
     public String getOwner() {
         return owner;
+    }
+
+    public String getOwnerPicUrl(){
+        return this.ownerPicUrl+"?t="+ Instant.now().getMillis();
+    }
+
+    public void setOwnerPicUrl(String ownerPicUrl){
+        this.ownerPicUrl = ownerPicUrl;
     }
 
     public void setOwner(String owner) {

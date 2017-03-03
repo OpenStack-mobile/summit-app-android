@@ -27,6 +27,15 @@ public class Presentation extends RealmObject implements IPresentation {
     private RealmList<PresentationLink> links       = new RealmList<>();
     private PresentationSpeaker moderator;
     private SummitEvent event;
+    private boolean toRecord;
+
+    public boolean isToRecord() {
+        return toRecord;
+    }
+
+    public void setToRecord(boolean toRecord) {
+        this.toRecord = toRecord;
+    }
 
     public RealmList<PresentationSlide> getSlides() {
         if(slides == null) slides = new RealmList<>();
@@ -157,7 +166,6 @@ public class Presentation extends RealmObject implements IPresentation {
     public void setSponsors(RealmList<Company> sponsors) {
         event.setSponsors(sponsors);
     }
-
 
     @Override
     public Venue getVenue() {

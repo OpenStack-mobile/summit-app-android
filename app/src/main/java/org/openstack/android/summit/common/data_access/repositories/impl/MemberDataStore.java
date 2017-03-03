@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.joda.time.DateTime;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
@@ -18,12 +19,11 @@ import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
-import io.realm.RealmSchema;
 
 /**
  * Created by Claudio Redi on 12/16/2015.
@@ -73,36 +73,31 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
     }
 
     @Override
-    public void addFeedback(final Member member, Feedback feedback, final IDataStoreOperationListener dataStoreOperationListener) {
-        IDataStoreOperationListener<Feedback> remoteDataStoreOperationListener = new DataStoreOperationListener<Feedback>() {
-            @Override
-            public void onSucceedWithSingleData(final Feedback data) {
-                super.onSucceedWithSingleData(data);
+    public Observable<Integer> addFeedback(final Member member, Feedback feedback) {
 
-                try {
-                    RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
-                        @Override
-                        public Void callback(Realm session) throws Exception {
-                            member.getFeedback().add(data);
-                            return Void.getInstance();
-                        }
+        int eventId   = feedback.getEvent().getId();
+        int rate      = feedback.getRate();
+        Date  date    = feedback.getDate();
+        String review = feedback.getReview();
+        int memberId  = member.getId();
+
+        return memberRemoteDataStore
+                .addFeedback(eventId, rate, review)
+                .doOnNext( id -> {
+                    RealmFactory.transaction(session -> {
+                        // save it locally and recreate bc realm does not support xcross threading
+                        Member me            = this.getById(memberId);
+                        SummitEvent event    = session.where(SummitEvent.class).equalTo("id", eventId).findFirst();
+                        Feedback newFeedback = session.createObject(Feedback.class, id);
+                        newFeedback.setOwner(me);
+                        newFeedback.setDate(date);
+                        newFeedback.setRate(rate);
+                        newFeedback.setReview(review);
+                        newFeedback.setEvent(event);
+                        me.getFeedback().add(newFeedback);
+                        return newFeedback;
                     });
-                    dataStoreOperationListener.onSucceedWithSingleData(data);
-                }
-                catch (Exception ex) {
-                    super.onError(ex.getMessage());
-                    Crashlytics.logException(ex);
-                    onError(ex.getMessage());
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                super.onError(message);
-                dataStoreOperationListener.onError(message);
-            }
-        };
-        memberRemoteDataStore.addFeedback(feedback, remoteDataStoreOperationListener);
+                });
     }
 
     @Override
@@ -155,8 +150,7 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
                             getById(memberId),
                             RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
                     );
-                })
-                .subscribeOn(Schedulers.io());
+                });
     }
 
     @Override
@@ -173,8 +167,7 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
                             getById(memberId),
                             RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
                     );
-                })
-                .subscribeOn(Schedulers.io());
+                });
     }
 
     @Override

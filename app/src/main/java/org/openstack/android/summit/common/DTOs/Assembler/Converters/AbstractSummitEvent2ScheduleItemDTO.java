@@ -40,8 +40,6 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         scheduleItemDTO.setEventType(source.getType() != null ? source.getType().getName() : "");
         String sponsors = getSponsors(source);
         scheduleItemDTO.setSponsors(sponsors);
-        String credentials = getCredentials(source);
-        scheduleItemDTO.setCredentials(credentials);
         scheduleItemDTO.setTrack(
          source.getTrack() != null
                         ? source.getTrack().getName()
@@ -57,11 +55,11 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         }
 
         scheduleItemDTO.setSummitId(source.getSummit().getId());
-        scheduleItemDTO.setRsvpLink(source.getRsvpLink());
-        scheduleItemDTO.setRsvpExternal(source.isRsvpExternal());
+        scheduleItemDTO.setRSVPLink(source.getRsvpLink());
+        scheduleItemDTO.setExternalRSVP(source.isRsvpExternal());
     }
 
-    private String getSponsors(S summitEvent) {
+    protected String getSponsors(S summitEvent) {
         String sponsors = "";
 
         if (summitEvent.getSponsors().size() > 0) {
@@ -76,7 +74,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         return sponsors;
     }
 
-    private String getLocation(S summitEvent) {
+    protected String getLocation(S summitEvent) {
         String location = "";
         if (summitEvent.getVenueRoom() != null && summitEvent.getVenueRoom().getVenue() != null) {
             location = summitEvent.getVenueRoom().getVenue().getName();
@@ -92,7 +90,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         return location;
     }
 
-    private String getLocationAddress(S summitEvent){
+    protected String getLocationAddress(S summitEvent){
         String address = "";
         Venue venue    = summitEvent.getVenue() != null ? summitEvent.getVenue():(summitEvent.getVenueRoom() != null ? summitEvent.getVenueRoom().getVenue() : null) ;
 
@@ -125,7 +123,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         return address;
     }
 
-    private String getDateTime(S summitEvent) {
+    protected String getDateTime(S summitEvent) {
         Summit summit = null;
         try {
 
@@ -155,7 +153,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         return "INVALID";
     }
 
-    private String getTime(S summitEvent) {
+    protected String getTime(S summitEvent) {
         Summit summit = null;
         try {
             DateFormat formatterFrom = new SimpleDateFormat("hh:mm a");
@@ -179,10 +177,6 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
             Crashlytics.logException(ex);
         }
         return "INVALID";
-    }
-
-    private String getCredentials(S summitEvent) {
-       return "";
     }
 
     @Override

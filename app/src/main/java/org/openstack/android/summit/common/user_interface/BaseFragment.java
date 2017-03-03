@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common.user_interface;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -230,5 +231,10 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
     @Override
     public void startActivityForResult(Intent intent, int requestCode){
         super.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    public ContentResolver getContentResolver(){
+        return getActivity().getContentResolver();
     }
 }

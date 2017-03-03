@@ -24,13 +24,13 @@
             android:id="@+id/schedule_item_menu_save_favorite_action"
             app:showAsAction="always"
             android:title="@string/save_favorite"
-            android:icon="@drawable/ic_favorite" />
+            android:icon="@drawable/ic_bookmark" />
 
         <item
             android:id="@+id/schedule_item_menu_remove_favorite_action"
             app:showAsAction="always"
             android:title="@string/remove_favorite"
-            android:icon="@drawable/ic_favorite_border"
+            android:icon="@drawable/ic_bookmark_border"
             />
         <item
             app:showAsAction="always"

@@ -147,10 +147,11 @@ public class Deserializer implements IDeserializer {
     }
 
     public <T extends RealmObject & IEntity> List<T> deserializePage(String jsonString, Class<T> type) throws JSONException, IllegalArgumentException {
-        JSONObject jsonObject = new JSONObject(jsonString);
-        JSONArray jsonArray = jsonObject.getJSONArray("data");
-        List<T> list = new ArrayList<>();
+        JSONObject jsonObject   = new JSONObject(jsonString);
+        JSONArray jsonArray     = jsonObject.getJSONArray("data");
+        List<T> list            = new ArrayList<>();
         JSONObject jsonPageItem = null;
+
         for(int i = 0; i < jsonArray.length(); i++) {
             try {
                 jsonPageItem = jsonArray.getJSONObject(i);

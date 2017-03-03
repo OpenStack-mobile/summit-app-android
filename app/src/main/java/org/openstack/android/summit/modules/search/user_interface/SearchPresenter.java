@@ -2,15 +2,12 @@ package org.openstack.android.summit.modules.search.user_interface;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
-import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
-import org.openstack.android.summit.common.user_interface.BasePresenter;
+import org.openstack.android.summit.common.user_interface.BaseScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.IPersonItemView;
 import org.openstack.android.summit.common.user_interface.IScheduleItemView;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
@@ -21,13 +18,11 @@ import org.openstack.android.summit.modules.search.business_logic.ISearchInterac
 
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-
 /**
  * Created by Claudio Redi on 1/14/2016.
  */
 public class SearchPresenter
-        extends BasePresenter<ISearchView, ISearchInteractor, ISearchWireframe>
+        extends BaseScheduleablePresenter<ISearchView, ISearchInteractor, ISearchWireframe>
         implements ISearchPresenter
 {
 
@@ -36,11 +31,9 @@ public class SearchPresenter
     private List<NamedDTO> tracks;
     private List<PersonListItemDTO> speakers;
     private IScheduleItemViewBuilder scheduleItemViewBuilder;
-    private IScheduleablePresenter scheduleablePresenter;
 
     public SearchPresenter(ISearchInteractor interactor, ISearchWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder) {
-        super(interactor, wireframe);
-        this.scheduleablePresenter = scheduleablePresenter;
+        super(interactor, wireframe, scheduleablePresenter);
         this.scheduleItemViewBuilder = scheduleItemViewBuilder;
     }
 
@@ -148,107 +141,35 @@ public class SearchPresenter
                 interactor.isEventFavoriteByLoggedMember(scheduleItemDTO.getId()),
                 true,
                 interactor.shouldShowVenues(),
-                scheduleItemDTO.getRsvpLink(),
-                scheduleItemDTO.isRsvpExternal()
+                scheduleItemDTO.getRSVPLink(),
+                scheduleItemDTO.isExternalRSVP()
         );
     }
 
     @Override
     public void toggleScheduleStatus(IScheduleItemView scheduleItemView, int position) {
-        ScheduleItemDTO scheduleItemDTO = events.get(position);
-        if(scheduleItemDTO == null) return;
-        boolean formerState             = scheduleItemView.getScheduled();
-
-        scheduleablePresenter
-                .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        ( res ) -> {
-                            Toast.makeText(view.getApplicationContext(), formerState ?
-                                            view.getResources().getString(R.string.removed_from_going):
-                                            view.getResources().getString(R.string.added_2_going),
-                                    Toast.LENGTH_SHORT).show();
-                        },
-                        (ex) -> {
-                            scheduleItemView.setScheduled(formerState);
-                            if(ex != null) {
-                                Log.d(Constants.LOG_TAG, ex.getMessage());
-                                view.showErrorMessage(ex.getMessage());
-                                return;
-                            }
-                            view.showErrorMessage("Server Error");
-                        }
-                );
+        _toggleScheduleStatus(scheduleItemView, position);
     }
 
     @Override
     public void toggleFavoriteStatus(IScheduleItemView scheduleItemView, int position) {
-        ScheduleItemDTO scheduleItemDTO = events.get(position);
-        // get former state
-        boolean formerFavoriteState     = scheduleItemView.getFavorite();
-        scheduleablePresenter
-                .toggleFavoriteStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe
-                        (
-                                (res) -> {
-                                    Toast.makeText(view.getApplicationContext(), formerFavoriteState ?
-                                                    "Removed from Favorites" : "Added to Favorites",
-                                            Toast.LENGTH_SHORT).show();
-                                },
-                                (ex) -> {
-                                    scheduleItemView.setFavorite(formerFavoriteState);
-                                    if(ex != null) {
-                                        Log.d(Constants.LOG_TAG, ex.getMessage());
-                                        view.showErrorMessage(ex.getMessage());
-                                        return;
-                                    }
-                                    view.showErrorMessage("Server Error");
-                                }
-
-                        );
+        _toggleFavoriteStatus(scheduleItemView, position);
     }
 
     @Override
     public void toggleRSVPStatus(IScheduleItemView scheduleItemView, int position) {
-        ScheduleItemDTO scheduleItemDTO = events.get(position);
-        if(scheduleItemDTO == null) return;
-        boolean formerState = scheduleItemView.getScheduled();
-        if(!formerState){
-            if(!scheduleItemView.isExternalRSVP()){
-                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
-                return;
-            }
-            // its external, add to schedule and then show view
-
-            scheduleablePresenter
-                    .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            (res) -> {
-                                Toast.makeText(view.getApplicationContext(), formerState ?
-                                                view.getResources().getString(R.string.removed_from_going):
-                                                view.getResources().getString(R.string.added_2_going),
-                                        Toast.LENGTH_SHORT).show();
-
-                                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
-                            },
-                            (ex) -> {
-                                scheduleItemView.setScheduled(formerState);
-                                if(ex != null) {
-                                    Log.d(Constants.LOG_TAG, ex.getMessage());
-                                    view.showErrorMessage(ex.getMessage());
-                                    return;
-                                }
-                                view.showErrorMessage("Server Error");
-                            }
-                    );
-        }
+        _toggleRSVPStatus(scheduleItemView, position);
     }
 
     @Override
     public void showEventDetail(int position) {
         ScheduleItemDTO scheduleItemDTO = events.get(position);
         wireframe.showEventDetail(scheduleItemDTO.getId(), view);
+    }
+
+    @Override
+    protected ScheduleItemDTO getCurrentItem(int position) {
+        if(events.size() - 1 < position ) return null;
+        return events.get(position);
     }
 }

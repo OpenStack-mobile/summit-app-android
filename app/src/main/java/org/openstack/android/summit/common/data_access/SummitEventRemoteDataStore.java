@@ -1,11 +1,6 @@
 package org.openstack.android.summit.common.data_access;
 
-import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
-
 import org.json.JSONObject;
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitEventsApi;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
@@ -18,11 +13,8 @@ import java.util.List;
 
 import javax.inject.Named;
 
-import io.realm.Realm;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
 /**
@@ -36,7 +28,7 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
     private ISummitSelector  summitSelector;
 
     public SummitEventRemoteDataStore(IDeserializer deserializer,
-                                      @Named("ServiceProfile") Retrofit restClient,
+                                      @Named("ServiceProfileRXJava2") Retrofit restClient,
                                       ISummitSelector summitSelector) {
         this.deserializer    = deserializer;
         this.restClient      = restClient;
@@ -45,92 +37,63 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
     }
 
     @Override
-    public void getFeedback(int eventId, int page, int objectsPerPage, final IDataStoreOperationListener<Feedback> dataStoreOperationListener) {
+    public Observable<List<Feedback>> getFeedback(int eventId, int page, int objectsPerPage) {
 
-        Call<ResponseBody> call = this.summitEventsApi.getEventFeedback(summitSelector.getCurrentSummitId(), eventId, "owner", page, objectsPerPage);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
-                try{
-                    List<Feedback> feedbackList = RealmFactory.transaction(new RealmFactory.IRealmCallback<List<Feedback> >() {
-                        @Override
-                        public List<Feedback> callback(Realm session) throws Exception {
-                            return deserializer.deserializePage(response.body().string(), Feedback.class);
-                        }
-                    });
-
-                    dataStoreOperationListener.onSucceedWithDataCollection(feedbackList);
-
-                }
-                catch (Exception ex){
-                    Crashlytics.logException(ex);
-                    Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
-                    String friendlyError = Constants.GENERIC_ERROR_MSG;
-                    dataStoreOperationListener.onError(friendlyError);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Crashlytics.logException(t);
-                Log.e(Constants.LOG_TAG, t.getMessage(), t);
-                String friendlyError = Constants.GENERIC_ERROR_MSG;
-                dataStoreOperationListener.onError(friendlyError);
-            }
-        });
+       return summitEventsApi
+                .getEventFeedback(summitSelector.getCurrentSummitId(), eventId, "owner", page, objectsPerPage)
+               .subscribeOn(Schedulers.io())
+                .map( response -> {
+                    if(!response.isSuccessful()){
+                         throw new Exception
+                                (
+                                        String.format
+                                                (
+                                                        "getFeedback: http error %d",
+                                                        response.code()
+                                                )
+                                );
+                    }
+                    return RealmFactory.transaction(session -> deserializer.deserializePage(response.body().string(), Feedback.class));
+                });
     }
 
     @Override
-    public void getAverageFeedback(int eventId, final IDataStoreOperationListener<SummitEvent> dataStoreOperationListener) {
+    public Observable<Double> getAverageFeedback(int eventId) {
 
-        Call<ResponseBody> call = this.summitEventsApi.getPublishedEvent(summitSelector.getCurrentSummitId(), eventId, "id,avg_feedback_rate", "none");
+        return summitEventsApi.
+                getPublishedEvent(summitSelector.getCurrentSummitId(), eventId, "id,avg_feedback_rate", "none")
+                .subscribeOn(Schedulers.io())
+                .map( response -> {
+                    if(!response.isSuccessful()){
+                        throw new Exception
+                                (
+                                        String.format
+                                                (
+                                                        "getAverageFeedback: http error %d",
+                                                        response.code()
+                                                )
+                                );
+                    }
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-               try{
-                   final JSONObject json = new JSONObject(response.body().string());
+                    final JSONObject json = new JSONObject(response.body().string());
 
-                   SummitEvent summitEvent = RealmFactory.transaction(new RealmFactory.IRealmCallback<SummitEvent>() {
-                       @Override
-                       public SummitEvent callback(Realm session) throws Exception {
-                           SummitEvent summitEvent = session.where(SummitEvent.class).equalTo("id", json.getInt("id")).findFirst();
-                           Double avgRateFromServer = json.optDouble("avg_feedback_rate");
-                           updateAverageRateIfNecessary(summitEvent, avgRateFromServer);
-                           return summitEvent;
-                       }
-                   });
-                   dataStoreOperationListener.onSucceedWithSingleData(summitEvent);
-               }
-               catch (Exception ex)
-               {
-                   Crashlytics.logException(ex);
-                   Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
-                   String friendlyError = Constants.GENERIC_ERROR_MSG;
-                   dataStoreOperationListener.onError(friendlyError);
-               }
-            }
+                    SummitEvent summitEvent = RealmFactory.transaction(session -> {
+                        SummitEvent summitEvent1 = session.where(SummitEvent.class).equalTo("id", json.getInt("id")).findFirst();
+                        Double avgRateFromServer = json.optDouble("avg_feedback_rate");
+                        updateAverageRateIfNecessary(summitEvent1, avgRateFromServer);
+                        return summitEvent1;
+                    });
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Crashlytics.logException(t);
-                Log.e(Constants.LOG_TAG, t.getMessage(), t);
-                String friendlyError = Constants.GENERIC_ERROR_MSG;
-                dataStoreOperationListener.onError(friendlyError);
-            }
-        });
+                    return summitEvent.getAverageRate();
+                });
     }
 
     private void updateAverageRateIfNecessary(final SummitEvent summitEvent, final Double averateRateFromServer) throws DataAccessException {
         if (summitEvent != null && !averateRateFromServer.isNaN() && summitEvent.getAverageRate() != averateRateFromServer) {
 
-            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
-                @Override
-                public Void callback(Realm session) throws Exception {
-                    summitEvent.setAverageRate(averateRateFromServer);
-                    return Void.getInstance();
-                }
+            RealmFactory.transaction(session -> {
+                summitEvent.setAverageRate(averateRateFromServer);
+                return Void.getInstance();
             });
         }
     }
