@@ -86,7 +86,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         super.onCreate(savedInstanceState);
     }
 
-    private void setRangerState() {
+    protected void setRangerState() {
 
         currentSummit = interactor.getActiveSummit();
         if (currentSummit == null) return;

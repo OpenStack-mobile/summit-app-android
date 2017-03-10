@@ -1,9 +1,6 @@
 package org.openstack.android.summit.modules.general_schedule.user_interface;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
-
 import org.joda.time.DateTime;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
@@ -87,5 +84,6 @@ public class GeneralSchedulePresenter
     public void clearFilters() {
         scheduleFilter.clearActiveFilters();
         view.setShowActiveFilterIndicator(false);
+        setRangerState();
     }
 }
