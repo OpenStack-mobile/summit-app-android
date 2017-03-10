@@ -36,4 +36,16 @@ public class SpeakerListInteractor extends BaseInteractor implements ISpeakerLis
 
         return createDTOList(speakers, PersonListItemDTO.class);
     }
+
+    public List<PersonListItemDTO> getAllSpeakers() {
+        String searchTerm = null;
+
+        List<PresentationSpeaker> speakers = presentationSpeakerDataStore.getAllByFilter
+                (
+                        summitSelector.getCurrentSummitId(),
+                        searchTerm
+                );
+
+        return createDTOList(speakers, PersonListItemDTO.class);
+    }
 }

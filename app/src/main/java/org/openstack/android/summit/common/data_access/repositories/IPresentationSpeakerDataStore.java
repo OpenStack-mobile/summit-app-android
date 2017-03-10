@@ -10,4 +10,6 @@ import java.util.List;
 public interface IPresentationSpeakerDataStore extends IGenericDataStore<PresentationSpeaker> {
 
     List<PresentationSpeaker> getByFilter(int summitId, String searchTerm, int page, int objectsPerPage);
+
+    List<PresentationSpeaker> getAllByFilter(int summitId, String searchTerm);
 }
