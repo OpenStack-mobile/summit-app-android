@@ -147,9 +147,6 @@ public class EventDetailFragment
     @BindView(R2.id.item_feedback_date)
     TextView dateText;
 
-    @BindView(R2.id.item_feedback_owner)
-    TextView ownerText;
-
     @BindView(R2.id.event_avg_feedback_rate)
     LinearLayout averageFeedbackLayout;
 
@@ -607,12 +604,6 @@ public class EventDetailFragment
     public void setMyFeedbackDate(String date) {
         if (dateText == null) return;
         dateText.setText(date);
-    }
-
-    @Override
-    public void setMyFeedbackOwner(String owner) {
-        if (ownerText == null) return;
-        ownerText.setText(owner);
     }
 
     @Override

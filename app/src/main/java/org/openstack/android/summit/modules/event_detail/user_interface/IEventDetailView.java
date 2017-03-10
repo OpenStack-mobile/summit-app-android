@@ -39,8 +39,6 @@ public interface IEventDetailView extends IBaseView {
 
     void setMyFeedbackDate(String date);
 
-    void setMyFeedbackOwner(String owner);
-
     void hasMyFeedback(boolean hasMyFeedback);
 
     void showFeedbackActivityIndicator();

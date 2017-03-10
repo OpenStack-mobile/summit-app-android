@@ -26,7 +26,7 @@
             android:layout_marginRight="40dp"
             android:layout_marginBottom="30dp"
             android:textAlignment="center"
-            android:textSize="16dp"
+            style="@style/AppTheme.AlertText"
             android:layout_height="wrap_content"
             android:text="@string/no_data_message"/>
         <Button
@@ -56,9 +56,8 @@
             android:layout_marginRight="40dp"
             android:layout_marginBottom="30dp"
             android:textAlignment="center"
-            android:textSize="16dp"
-            android:textColor="@color/openStackDarkGray"
             android:layout_height="wrap_content"
+            style="@style/AppTheme.AlertText"
             android:text="@string/new_data_message"/>
         <LinearLayout
             android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package org.openstack.android.summit;
+package org.openstack.android.openstacksummit;
 
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.DrawerActions;
@@ -10,12 +10,12 @@ import android.test.suitebuilder.annotation.LargeTest;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -86,8 +86,6 @@ public class MainActivityTest {
         onView(withText("Beginner")).perform(click());
         onView(withId(R.id.list_schedule)).check(matches(isDisplayed()));
         onView(withId(R.id.action_filter)).perform(click());
-        onView(withId(R.id.filter_tags_autocomplete)).perform(typeText("upstream"));
-
         onData(instanceOf(String.class)).inRoot(RootMatchers.withDecorView(
                 not(is(mMainActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .atPosition(0)

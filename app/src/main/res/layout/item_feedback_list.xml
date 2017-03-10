@@ -9,22 +9,7 @@
     android:paddingBottom="15dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/item_feedback_owner_pic"
-        fresco:roundAsCircle="true"
-        fresco:roundingBorderWidth="1dp"
-        fresco:roundingBorderColor="@color/openStackLightGray"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        fresco:placeholderImage="@drawable/generic_user_avatar"
-        android:paddingLeft="10dp"
-        android:paddingRight="15dp"
-        fresco:actualImageScaleType="centerCrop"
-        android:layout_gravity="center"
-        />
-
-    <LinearLayout
+  <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -38,16 +23,6 @@
         android:paddingBottom="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/item_feedback_owner"
-            android:paddingRight="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:text="Claudio Redi" />
-
         <TextView
             android:id="@+id/item_feedback_date"
             android:layout_width="wrap_content"
@@ -61,7 +36,8 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/item_feedback_rate_1"
-                style="@style/AppTheme.SmallStarRate"/>
+                style="@style/AppTheme.SmallStarRateNoPadding"
+                />
             <ImageView
                 android:id="@+id/item_feedback_rate_2"
                 style="@style/AppTheme.SmallStarRate"/>

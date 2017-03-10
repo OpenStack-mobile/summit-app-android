@@ -38,12 +38,6 @@ public class FeedbackItemView implements IFeedbackItemView {
     @BindView(R2.id.item_feedback_date)
     TextView dateTextView;
 
-    @BindView(R2.id.item_feedback_owner)
-    TextView ownerTextView;
-
-    @BindView(R2.id.item_feedback_owner_pic)
-    SimpleDraweeView draweeView;
-
     @BindView(R2.id.item_feedback_review)
     TextView reviewTextView;
 
@@ -76,19 +70,6 @@ public class FeedbackItemView implements IFeedbackItemView {
         if (rate >= 5) {
             rate5.setImageResource(R.drawable.ic_star);
         }
-    }
-
-    @Override
-    public void setOwner(String owner) {
-        if(ownerTextView == null) return;
-        ownerTextView.setText(owner);
-        ownerTextView.setVisibility(owner != null && !owner.isEmpty() ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public  void setOwnerPictureUri(Uri ownerPicUri){
-       if(draweeView == null) return;
-        draweeView.setImageURI(ownerPicUri);
     }
 
     @Override

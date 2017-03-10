@@ -121,7 +121,6 @@ public class EventDetailPresenter
             view.setMyFeedbackRate(myFeedbackForEvent.getRate());
             view.setMyFeedbackReview(myFeedbackForEvent.getReview());
             view.setMyFeedbackDate(myFeedbackForEvent.getTimeAgo());
-            view.setMyFeedbackOwner(myFeedbackForEvent.getOwner());
         }
 
         view.setAverageRate(0);
@@ -349,12 +348,6 @@ public class EventDetailPresenter
         FeedbackDTO feedback = feedbackList.get(position);
         feedbackItemView.setDate(feedback.getTimeAgo());
         feedbackItemView.setRate(feedback.getRate());
-        feedbackItemView.setOwner(feedback.getOwner());
-        String ownerPicUrl = feedback.getOwnerPicUrl();
-        if(ownerPicUrl != null || !ownerPicUrl.isEmpty()) {
-            Uri uri = Uri.parse(feedback.getOwnerPicUrl().replace("https", "http"));
-            feedbackItemView.setOwnerPictureUri(uri);
-        }
         feedbackItemView.setReview(feedback.getReview());
     }
 }

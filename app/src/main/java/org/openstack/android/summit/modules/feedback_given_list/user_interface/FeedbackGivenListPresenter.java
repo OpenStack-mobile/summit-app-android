@@ -30,7 +30,6 @@ public class FeedbackGivenListPresenter
     public void buildItem(IFeedbackItemView feedbackItemView, int position) {
         FeedbackDTO feedback = feedbackList.get(position);
         feedbackItemView.setDate(feedback.getTimeAgo());
-        feedbackItemView.setOwner(feedback.getOwner());
         feedbackItemView.setRate(feedback.getRate());
         feedbackItemView.setReview(feedback.getReview());
     }
