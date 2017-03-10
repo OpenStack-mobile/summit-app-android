@@ -19,9 +19,5 @@ public interface IGeneralScheduleFilterView extends IBaseView {
 
     void showLevels(List<String> levels);
 
-    void bindTags(List<String> tags);
-
-    void addTag(String tagText);
-
     void showSummitTypes(List<NamedDTO> summitTypes);
 }

@@ -1,16 +1,11 @@
 package org.openstack.android.summit.modules.general_schedule_filter.user_interface;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 
 import com.linearlistview.LinearListView;
 
@@ -20,10 +15,6 @@ import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 
 import java.util.List;
-
-import me.kaede.tagview.OnTagDeleteListener;
-import me.kaede.tagview.Tag;
-import me.kaede.tagview.TagView;
 
 /**
  * Created by Claudio Redi on 2/1/2016.
@@ -93,24 +84,6 @@ public class GeneralScheduleFilterFragment
             }
         });
 
-        AutoCompleteTextView tagsTextView = (AutoCompleteTextView) view.findViewById(R.id.filter_tags_autocomplete);
-        tagsTextView.setThreshold(2);
-        tagsTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String tagText = (String) parent.getItemAtPosition(position);
-                presenter.addTag(tagText);
-            }
-        });
-
-        TagView tagView = (TagView) view.findViewById(R.id.filter_tags_list);
-        tagView.setOnTagDeleteListener(new OnTagDeleteListener() {
-            @Override
-            public void onTagDeleted(Tag tag, int i) {
-                presenter.removeTag(tag.text);
-            }
-        });
-
         super.onCreateView(inflater, container, savedInstanceState);
 
         return view;
@@ -120,30 +93,6 @@ public class GeneralScheduleFilterFragment
     public void showSummitTypes(List<NamedDTO> summitTypes) {
         summitTypeListAdapter.clear();
         summitTypeListAdapter.addAll(summitTypes);
-    }
-
-    public void addTag(String tagText) {
-        AutoCompleteTextView tagsTextView = (AutoCompleteTextView) view.findViewById(R.id.filter_tags_autocomplete);
-        TagView tagView = (TagView) view.findViewById(R.id.filter_tags_list);
-        Tag tag = new Tag(tagText);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            tag.layoutBorderColor = view.getResources().getColor(R.color.openStackGray, null);
-        } else {
-            tag.layoutBorderColor = view.getResources().getColor(R.color.openStackGray);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            tag.layoutColor = view.getResources().getColor(R.color.openStackLightBlue, null);
-        } else {
-            tag.layoutColor = view.getResources().getColor(R.color.openStackLightBlue);
-        }
-
-        tag.layoutBorderSize = 1;
-        tag.isDeletable = true;
-        tagView.addTag(tag);
-
-        tagsTextView.setText("");
     }
 
     @Override
@@ -189,12 +138,6 @@ public class GeneralScheduleFilterFragment
         levelListAdapter.addAll(levels);
     }
 
-    @Override
-    public void bindTags(List<String> tags) {
-        AutoCompleteTextView tagsTextView = (AutoCompleteTextView) view.findViewById(R.id.filter_tags_autocomplete);
-        tagsAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, tags);
-        tagsTextView.setAdapter(tagsAdapter);
-    }
 
     private class SummitTypeListAdapter extends ArrayAdapter<NamedDTO> {
 

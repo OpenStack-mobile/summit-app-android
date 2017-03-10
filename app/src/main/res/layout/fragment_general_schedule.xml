@@ -2,15 +2,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_general_schedule"
     tools:context="org.openstack.android.summit.modules.events.user_interface.EventsFragment"
     android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/general_schedule_list_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
         <!-- Adding layout_height and layout_width here is a hack to avoid active filter indicator to dissapear -->
-        <include layout="@layout/schedule" android:layout_height="match_parent" android:layout_width="match_parent"></include>
+        <include
+            layout="@layout/schedule"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></include>
     </LinearLayout>
+
+    <include
+        layout="@layout/active_filters_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></include>
+
 </LinearLayout>

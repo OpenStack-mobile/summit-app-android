@@ -1,24 +1,35 @@
 package org.openstack.android.summit.modules.general_schedule.user_interface;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+
 import android.widget.LinearLayout;
-import android.widget.ToggleButton;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.user_interface.ScheduleFragment;
+import org.openstack.android.summit.modules.events.user_interface.IEventsView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePresenter>
-        implements IGeneralScheduleView {
+public class GeneralScheduleFragment
+        extends ScheduleFragment<IGeneralSchedulePresenter>
+        implements IGeneralScheduleView , IEventsView {
+
+    private Menu menu;
+    private boolean showActiveFilterIndicator;
 
     public GeneralScheduleFragment() {
         // Required empty public constructor
@@ -28,6 +39,50 @@ public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePr
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        this.menu = menu;
+        this.menu.clear();
+        inflater.inflate(R.menu.main, this.menu);
+        setFilterIcon();
+    }
+
+    private void setFilterIcon(){
+        if(menu == null) return;
+        MenuItem filterItem = menu.findItem(R.id.action_filter);
+        if(filterItem == null) return;
+        Drawable newIcon    = filterItem.getIcon();
+        int color;
+        if (showActiveFilterIndicator) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                color = view.getResources().getColor(R.color.openStackYellow, null);
+            }
+            else {
+                color = view.getResources().getColor(R.color.openStackYellow);
+            }
+        }
+        else {
+            color = Color.WHITE;
+        }
+
+        newIcon.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        filterItem.setIcon(newIcon);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_filter) {
+            presenter.showFilterView();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -39,7 +94,11 @@ public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(Constants.LOG_TAG, "GeneralScheduleFragment.onCreateView");
-        view      = inflater.inflate(R.layout.fragment_general_schedule, container, false);
+        view                                = inflater.inflate(R.layout.fragment_general_schedule, container, false);
+        LinearLayout activeFiltersIndicator = (LinearLayout)view.findViewById(R.id.active_filters_indicator);
+
+        activeFiltersIndicator.setOnClickListener(v -> presenter.clearFilters());
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -54,6 +113,14 @@ public class GeneralScheduleFragment extends ScheduleFragment<IGeneralSchedulePr
     public void toggleEventList(boolean show) {
         LinearLayout eventListContainer = (LinearLayout)view.findViewById(R.id.general_schedule_list_container);
         eventListContainer.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setShowActiveFilterIndicator(boolean showActiveFilterIndicator) {
+        LinearLayout activeFiltersIndicator = (LinearLayout)view.findViewById(R.id.active_filters_indicator);
+        activeFiltersIndicator.setVisibility(showActiveFilterIndicator ? View.VISIBLE : View.GONE);
+        this.showActiveFilterIndicator = showActiveFilterIndicator;
+        setFilterIcon();
     }
 
 }

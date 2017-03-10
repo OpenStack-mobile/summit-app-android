@@ -25,9 +25,6 @@ public class GeneralScheduleFilterPresenter
     private List<NamedDTO>      eventTypes;
     private List<String>        levels;
     private List<TrackGroupDTO> trackGroups;
-    private List<String>        tags;
-
-    private final String KEY_SELECTED_TAGS = "KEY_SELECTED_TAGS";
 
     public GeneralScheduleFilterPresenter
     (
@@ -53,7 +50,6 @@ public class GeneralScheduleFilterPresenter
         eventTypes  = interactor.getEventTypes();
         levels      = interactor.getLevels();
         trackGroups = interactor.getTrackGroups();
-        tags        = interactor.getTags();
         venues      = interactor.getVenues();
 
         scheduleFilter.getFilterSections().clear();
@@ -116,11 +112,6 @@ public class GeneralScheduleFilterPresenter
         view.showTrackGroups(trackGroups);
         view.showLevels(levels);
         view.showVenues(venues);
-        view.bindTags(tags);
-
-        for (Object tag : scheduleFilter.getSelections().get(FilterSectionType.Tag)) {
-            view.addTag((String) tag);
-        }
     }
 
     private FilterSectionItem createSectionItem(int id, String name, FilterSectionType type) {
@@ -261,34 +252,6 @@ public class GeneralScheduleFilterPresenter
                 position
         );
     }
-
-    @Override
-    public void addTag(String tag) {
-        if (tag == "" || scheduleFilter.getSelections().get(FilterSectionType.Tag).contains(tag)) {
-            return;
-        }
-
-        scheduleFilter.getSelections().get(FilterSectionType.Tag).add(tag);
-        view.addTag(tag);
-    }
-
-    @Override
-    public void removeTag(String tagToDelete) {
-        int filterItemPosition = 0;
-        boolean found = false;
-        String tag = "";
-        while (!found) {
-            tag = (String) scheduleFilter.getSelections().get(FilterSectionType.Tag).get(filterItemPosition);
-            if (tag == tagToDelete) {
-                found = true;
-            } else {
-                filterItemPosition++;
-            }
-        }
-
-        scheduleFilter.getSelections().get(FilterSectionType.Tag).remove(filterItemPosition);
-    }
-
 
     public void toggleSelection(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, MultiFilterSection filterSection, int position) {
         FilterSectionItem filterItem = filterSection.getItems().get(position);

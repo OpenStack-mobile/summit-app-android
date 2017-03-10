@@ -7,5 +7,10 @@ import org.openstack.android.summit.modules.general_schedule.business_logic.IGen
 /**
  * Created by Claudio Redi on 12/21/2015.
  */
-public interface IGeneralSchedulePresenter extends ISchedulePresenter<GeneralScheduleFragment> {
+public interface IGeneralSchedulePresenter
+        extends ISchedulePresenter<GeneralScheduleFragment> {
+
+    void showFilterView();
+
+    void clearFilters();
 }

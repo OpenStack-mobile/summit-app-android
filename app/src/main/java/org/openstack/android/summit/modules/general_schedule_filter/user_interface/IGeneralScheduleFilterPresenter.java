@@ -23,10 +23,6 @@ public interface IGeneralScheduleFilterPresenter extends IBasePresenter<IGeneral
 
     void toggleSelectionTrackGroup(IGeneralScheduleFilterItemView item, int position);
 
-    void addTag(String tag);
-
-    void removeTag(String tagToDelete);
-
     void buildSummitTypeFilterItem(GeneralScheduleFilterItemView item, int position);
 
     void toggleSelectionSummitType(IGeneralScheduleFilterItemView item, int position);

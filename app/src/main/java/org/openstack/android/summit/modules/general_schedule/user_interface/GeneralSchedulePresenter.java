@@ -1,6 +1,11 @@
 package org.openstack.android.summit.modules.general_schedule.user_interface;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+
 import org.joda.time.DateTime;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
@@ -22,15 +27,28 @@ public class GeneralSchedulePresenter
         implements IGeneralSchedulePresenter {
 
     @Inject
-    public GeneralSchedulePresenter(IGeneralScheduleInteractor interactor, IGeneralScheduleWireframe wireframe, IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
+    public GeneralSchedulePresenter
+    (
+        IGeneralScheduleInteractor interactor,
+        IGeneralScheduleWireframe wireframe,
+        IScheduleablePresenter scheduleablePresenter,
+        IScheduleItemViewBuilder scheduleItemViewBuilder,
+        IScheduleFilter scheduleFilter
+    )
+    {
         super(interactor, wireframe, scheduleablePresenter, scheduleItemViewBuilder, scheduleFilter);
         hasToCheckDisabledDates = true;
     }
 
     @Override
+    public void onCreateView(Bundle savedInstanceState) {
+        view.setShowActiveFilterIndicator(scheduleFilter.hasActiveFilters());
+    }
+    @Override
     public void onResume() {
         view.toggleEventList(true);
         super.onResume();
+        view.setShowActiveFilterIndicator(scheduleFilter.hasActiveFilters());
     }
 
     @Override
@@ -56,4 +74,18 @@ public class GeneralSchedulePresenter
         return events;
     }
 
+    @Override
+    public void showFilterView() {
+        if(!interactor.isDataLoaded()) {
+            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data));
+            return;
+        }
+        wireframe.showFilterView(view);
+    }
+
+    @Override
+    public void clearFilters() {
+        scheduleFilter.clearActiveFilters();
+        view.setShowActiveFilterIndicator(false);
+    }
 }
