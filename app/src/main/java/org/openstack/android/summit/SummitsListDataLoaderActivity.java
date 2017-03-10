@@ -51,32 +51,17 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
         Button retryButton = (Button) this.findViewById(R.id.initial_data_loading_retry_button);
 
         retryButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        presenter.retryButtonPressed();
-                    }
-                }
+                v -> presenter.retryButtonPressed()
         );
 
         Button doLoadButton = (Button) this.findViewById(R.id.initial_data_loading_do_load);
         doLoadButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        presenter.loadNewDataButtonPressed();
-                    }
-                }
+                v -> presenter.loadNewDataButtonPressed()
         );
 
         Button doCancel = (Button) this.findViewById(R.id.initial_data_loading_do_cancel);
         doCancel.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    presenter.cancelLoadNewDataButtonPressed();
-                    }
-                }
+                v -> presenter.cancelLoadNewDataButtonPressed()
         );
     }
 

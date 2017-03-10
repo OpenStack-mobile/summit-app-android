@@ -1,13 +1,12 @@
 package org.openstack.android.summit.modules.events;
 
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentActivity;
 
 import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.IBaseView;
-import org.openstack.android.summit.modules.events.user_interface.EventsFragment;
+import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralScheduleFragment;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 
 /**
@@ -24,7 +23,7 @@ public class EventsWireframe implements IEventsWireframe {
     @Override
     public void presentEventsView(IBaseView context) {
         try {
-            EventsFragment eventsFragment   = new EventsFragment();
+            GeneralScheduleFragment eventsFragment   = new GeneralScheduleFragment();
             FragmentManager fragmentManager = context.getSupportFragmentManager();
 
             // clean backs stack entries ...
