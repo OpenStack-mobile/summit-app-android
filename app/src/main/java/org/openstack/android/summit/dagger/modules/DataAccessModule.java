@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
+
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
@@ -24,6 +25,7 @@ import org.openstack.android.summit.common.data_access.data_polling.SummitGroupE
 import org.openstack.android.summit.common.data_access.data_polling.SummitVenueImageDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.TrackGroupDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.data_polling.VenueLocationsDataUpdateStrategy;
+import org.openstack.android.summit.common.data_access.data_polling.WifiConnectionDataUpdateStrategy;
 import org.openstack.android.summit.common.data_access.deserialization.Deserializer;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.GenericDeserializer;
@@ -48,6 +50,7 @@ import org.openstack.android.summit.common.data_access.deserialization.ITrackGro
 import org.openstack.android.summit.common.data_access.deserialization.IVenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IVenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IVenueRoomDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.IWifiConnectionDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.MemberDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.NonConfirmedSummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PersonDeserializer;
@@ -66,6 +69,7 @@ import org.openstack.android.summit.common.data_access.deserialization.TrackGrou
 import org.openstack.android.summit.common.data_access.deserialization.VenueDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueFloorDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.WifiConnectionDeserializer;
 import org.openstack.android.summit.common.data_access.repositories.IDataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IEventPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IEventTypeDataStore;
@@ -89,6 +93,7 @@ import org.openstack.android.summit.common.data_access.repositories.ITrackGroupD
 import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IVenueFloorDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IVenueRoomDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IWifiConnectionDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.DataUpdateDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.EventPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.EventTypeDataStore;
@@ -112,6 +117,7 @@ import org.openstack.android.summit.common.data_access.repositories.impl.TrackGr
 import org.openstack.android.summit.common.data_access.repositories.impl.VenueDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.VenueFloorDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.VenueRoomDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.WifiConnectionDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.DeleteRealmStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
@@ -179,9 +185,10 @@ public class DataAccessModule {
                                                    ISummitEventDeserializer summitEventDeserializer,
                                                    IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
                                                    ITrackGroupDeserializer trackGroupDeserializer,
-                                                   ITrackDeserializer trackDeserializer)
+                                                   ITrackDeserializer trackDeserializer,
+                                                   IWifiConnectionDeserializer wifiConnectionDeserializer)
     {
-        return new SummitDeserializer(genericDeserializer, venueDeserializer, venueRoomDeserializer, summitEventDeserializer, presentationSpeakerDeserializer, trackGroupDeserializer, trackDeserializer);
+        return new SummitDeserializer(genericDeserializer, venueDeserializer, venueRoomDeserializer, summitEventDeserializer, presentationSpeakerDeserializer, trackGroupDeserializer, trackDeserializer, wifiConnectionDeserializer);
     }
 
     @Provides
@@ -277,6 +284,11 @@ public class DataAccessModule {
     }
 
     @Provides
+    IWifiConnectionDeserializer providesWifiConnectionDeserializer() {
+        return new WifiConnectionDeserializer();
+    }
+
+    @Provides
     IDeserializer providesDeserializer(IGenericDeserializer genericDeserializer,
                                        IFeedbackDeserializer feedbackDeserializer,
                                        IMemberDeserializer memberDeserializer,
@@ -290,7 +302,8 @@ public class DataAccessModule {
                                        IVenueRoomDeserializer venueRoomDeserializer,
                                        IVenueDeserializer venueDeserializer,
                                        IVenueFloorDeserializer venueFloorDeserializer,
-                                       IGroupEventDeserializer groupEventDeserializer
+                                       IGroupEventDeserializer groupEventDeserializer,
+                                       IWifiConnectionDeserializer wifiConnectionDeserializer
                                        )
     {
         return new Deserializer
@@ -308,7 +321,8 @@ public class DataAccessModule {
             venueRoomDeserializer,
             venueDeserializer,
             venueFloorDeserializer,
-            groupEventDeserializer
+            groupEventDeserializer,
+            wifiConnectionDeserializer
         );
     }
 
@@ -436,6 +450,7 @@ public class DataAccessModule {
             IPresentationSlideDataStore presentationSlideDataStore,
             IPresentationLinkDataStore presentationLinkDataStore,
             IMemberDataStore memberDataStore,
+            IWifiConnectionDataStore wifiConnectionDataStore,
             ISecurityManager securityManager,
             ISummitSelector summitSelector
     )
@@ -456,7 +471,8 @@ public class DataAccessModule {
                     summitSelector
                 ),
                 new VenueLocationsDataUpdateStrategy(venueDataStore, venueFloorDataStore, venueRoomDataStore, summitSelector),
-                new SummitGroupEventDataUpdateStrategy(securityManager, summitSelector)
+                new SummitGroupEventDataUpdateStrategy(securityManager, summitSelector),
+                new WifiConnectionDataUpdateStrategy(wifiConnectionDataStore, summitSelector)
         );
     }
 
@@ -593,6 +609,16 @@ public class DataAccessModule {
     )
     {
         return new PresentationSlideDataStore(saveOrUpdateStrategy, deleteStrategy);
+    }
+
+    @Provides
+    IWifiConnectionDataStore providesWifiConnectionDataStore
+            (
+                    ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                    IDeleteStrategy deleteStrategy
+            )
+    {
+        return new WifiConnectionDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
 }

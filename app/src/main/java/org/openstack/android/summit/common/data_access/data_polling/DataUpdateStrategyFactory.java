@@ -14,6 +14,7 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
     IDataUpdateStrategy venueLocationsDataUpdateStrategy;
     IDataUpdateStrategy summitGroupEventDataUpdateStrategy;
     IDataUpdateStrategy myFavoriteDataUpdateStrategy;
+    IDataUpdateStrategy wifiConnectionsDataUpdateStrategy;
 
     public DataUpdateStrategyFactory
     (
@@ -25,7 +26,8 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
         IDataUpdateStrategy venueImageDataUpdateStrategy,
         IDataUpdateStrategy presentationMaterialDataUpdateStrategy,
         IDataUpdateStrategy venueLocationsDataUpdateStrategy,
-        IDataUpdateStrategy summitGroupEventDataUpdateStrategy
+        IDataUpdateStrategy summitGroupEventDataUpdateStrategy,
+        IDataUpdateStrategy wifiConnectionsDataUpdateStrategy
     )
     {
         this.genericDataUpdateProcessStrategy       = genericDataUpdateProcessStrategy;
@@ -37,6 +39,7 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
         this.venueLocationsDataUpdateStrategy       = venueLocationsDataUpdateStrategy;
         this.summitGroupEventDataUpdateStrategy     = summitGroupEventDataUpdateStrategy;
         this.myFavoriteDataUpdateStrategy           = myFavoriteDataUpdateStrategy;
+        this.wifiConnectionsDataUpdateStrategy      = wifiConnectionsDataUpdateStrategy;
     }
 
     @Override
@@ -71,6 +74,9 @@ public class DataUpdateStrategyFactory implements IDataUpdateStrategyFactory {
             case "SummitVenueFloor":
             case "SummitVenueRoom":
                 dataUpdateProcessStrategy = venueLocationsDataUpdateStrategy;
+                break;
+            case "SummitWIFIConnection":
+                dataUpdateProcessStrategy = wifiConnectionsDataUpdateStrategy;
                 break;
             default:
                 dataUpdateProcessStrategy = genericDataUpdateProcessStrategy;

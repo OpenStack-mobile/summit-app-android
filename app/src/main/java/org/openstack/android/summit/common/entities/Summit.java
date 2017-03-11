@@ -65,16 +65,17 @@ public class Summit extends RealmObject implements INamedEntity {
         isScheduleLoaded = scheduleLoaded;
     }
 
-    private RealmList<SummitType> types             = new RealmList<>();
-    private RealmList<TicketType> ticketTypes       = new RealmList<>();
-    private RealmList<Venue> venues                 = new RealmList<>();
-    private RealmList<VenueRoom> venueRooms         = new RealmList<>();
-    private RealmList<SummitEvent> events           = new RealmList<>();
-    private RealmList<TrackGroup> trackGroups       = new RealmList<>();
-    private RealmList<Track> tracks                 = new RealmList<>();
-    private RealmList<EventType> eventTypes         = new RealmList<>();
-    private RealmList<Company> sponsors             = new RealmList<>();
-    private RealmList<PresentationSpeaker> speakers = new RealmList<>();
+    private RealmList<SummitType> types                     = new RealmList<>();
+    private RealmList<TicketType> ticketTypes               = new RealmList<>();
+    private RealmList<Venue> venues                         = new RealmList<>();
+    private RealmList<VenueRoom> venueRooms                 = new RealmList<>();
+    private RealmList<SummitEvent> events                   = new RealmList<>();
+    private RealmList<TrackGroup> trackGroups               = new RealmList<>();
+    private RealmList<Track> tracks                         = new RealmList<>();
+    private RealmList<EventType> eventTypes                 = new RealmList<>();
+    private RealmList<Company> sponsors                     = new RealmList<>();
+    private RealmList<PresentationSpeaker> speakers         = new RealmList<>();
+    private RealmList<SummitWIFIConnection> wifiConnections = new RealmList<>();
 
     public int getId() {
         return id;
@@ -91,6 +92,7 @@ public class Summit extends RealmObject implements INamedEntity {
     public void setName(String name) {
         this.name = name;
     }
+
     public Date getStartDate() {
         return startDate;
     }
@@ -217,5 +219,13 @@ public class Summit extends RealmObject implements INamedEntity {
 
     public void setSpeakers(RealmList<PresentationSpeaker> speakers) {
         this.speakers = speakers;
+    }
+
+    public RealmList<SummitWIFIConnection> getWifiConnections() {
+        return wifiConnections;
+    }
+
+    public void setWifiConnections(RealmList<SummitWIFIConnection> wifiConnections) {
+        this.wifiConnections = wifiConnections;
     }
 }

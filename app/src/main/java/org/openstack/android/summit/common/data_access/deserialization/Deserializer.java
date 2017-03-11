@@ -17,6 +17,7 @@ import org.openstack.android.summit.common.entities.SummitGroupEvent;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.entities.SummitWIFIConnection;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
@@ -49,6 +50,7 @@ public class Deserializer implements IDeserializer {
     IVenueFloorDeserializer venueFloorDeserializer;
     IVenueRoomDeserializer venueRoomDeserializer;
     IGroupEventDeserializer groupEventDeserializer;
+    IWifiConnectionDeserializer wifiConnectionDeserializer;
 
     public Deserializer()
     {
@@ -69,7 +71,8 @@ public class Deserializer implements IDeserializer {
         IVenueRoomDeserializer venueRoomDeserializer,
         IVenueDeserializer venueDeserializer,
         IVenueFloorDeserializer venueFloorDeserializer,
-        IGroupEventDeserializer groupEventDeserializer
+        IGroupEventDeserializer groupEventDeserializer,
+        IWifiConnectionDeserializer wifiConnectionDeserializer
     )
     {
         this.genericDeserializer             = genericDeserializer;
@@ -86,6 +89,7 @@ public class Deserializer implements IDeserializer {
         this.venueRoomDeserializer           = venueRoomDeserializer;
         this.venueFloorDeserializer          = venueFloorDeserializer;
         this.groupEventDeserializer          = groupEventDeserializer;
+        this.wifiConnectionDeserializer      = wifiConnectionDeserializer;
     }
 
     @Override
@@ -129,6 +133,9 @@ public class Deserializer implements IDeserializer {
         }
         else if (type == VenueFloor.class) {
             return (T)venueFloorDeserializer.deserialize(jsonString);
+        }
+        else if (type == SummitWIFIConnection.class) {
+            return (T)wifiConnectionDeserializer.deserialize(jsonString);
         }
         else {
             return genericDeserializer.deserialize(jsonString, type);

@@ -14,26 +14,70 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/openStackDarkBlue"
             android:elevation="4dp"
-            android:layout_margin="10dp"
             android:padding="20dp">
             <TextView
-                android:id="@+id/about_summit_name_and_date"
+                android:id="@+id/about_wifi_networks_title"
                 android:textIsSelectable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="25dp"
                 android:layout_gravity="center_horizontal"
-                android:text="Austin - April 25-29, 2016"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:text="Wifi"
                 android:layout_marginBottom="10dp"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="145dp"
-                android:src="@drawable/summit_logo"
+            <TextView
+                android:id="@+id/about_wifi_networks_subtitle"
+                android:textIsSelectable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/openStackLightBlue"
-                android:padding="30dp"/>
+                android:textColor="@color/white"
+                android:text="Available Networks"
+                android:layout_marginBottom="10dp"/>
+            <com.linearlistview.LinearListView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/about_wifi_networks_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                android:background="#eeeeee"
+                android:divider="@color/openStackDarkGray"
+                app:dividerThickness="1dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/openStackLightBlue"
+            android:elevation="4dp"
+            android:padding="20dp">
+            <TextView
+                android:id="@+id/about_summit_name"
+                android:textIsSelectable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="28dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:text="Austin"
+                android:layout_marginBottom="3dp"/>
+            <TextView
+                android:id="@+id/about_summit_date"
+                android:textIsSelectable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:text="April 25-29, 2016"
+                android:layout_marginBottom="10dp"/>
+
             <TextView
                 android:id="@+id/about_version_text"
                 android:textIsSelectable="true"
@@ -41,35 +85,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textSize="10dp"
+                android:textColor="@color/white"
                 android:text="Version 0.6"/>
 
             <TextView
-                android:id="@+id/about_website_link"
+                android:id="@+id/about_build_text"
+                android:textIsSelectable="true"
+                android:layout_marginTop="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Website"
-                android:textColor="@color/openStackLightBlue"
-                android:textSize="18dp"
-                android:layout_marginTop="5dp"/>
-            <TextView
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:textIsSelectable="true"
-                android:text="@string/app_support_on_site"
-                android:autoLink="email"/>
-            <TextView
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:textIsSelectable="true"
-                android:text="@string/app_support"
-                android:autoLink="email"/>
+                android:layout_gravity="center"
+                android:textSize="10dp"
+                android:textColor="@color/white"
+                android:text="Build Number 1101"/>
         </LinearLayout>
 
         <LinearLayout
@@ -78,21 +107,68 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:elevation="4dp"
-            android:layout_margin="10dp"
-            android:padding="20dp">
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
+
             <TextView
-                android:textIsSelectable="true"
+                android:id="@+id/about_website_link"
+                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:layout_gravity="center_horizontal"
+                android:textColor="@color/openStackLightBlue"
+                android:textSize="20dp"
+                android:text="OpenStack Website"/>
+            <TextView
+                android:id="@+id/about_conduct_link"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/openStackLightBlue"
+                android:textSize="20dp"
+                android:text="Code of Conduct"/>
+            <TextView
+                android:id="@+id/about_support_link"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/openStackLightBlue"
+                android:textSize="20dp"
+                android:text="App Support"/>
+            <TextView
+                android:id="@+id/about_inquiries_link"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/openStackLightBlue"
+                android:textSize="20dp"
+                android:text="General Inquiries"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:textIsSelectable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingLeft="20dp"
                 android:text="The Must-Attend OpenStack Event"
-                android:textSize="19dp"
-                android:layout_marginBottom="10dp"/>
+                android:textSize="15dp"
+                android:layout_marginBottom="5dp"/>
             <TextView
                 android:textIsSelectable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:text="The OpenStack Summit is the most important gathering of IT leaders, telco operators, cloud administrators, app developers and OpenStack contributors building the future of cloud computing. Hear business cases and operational experience directly from users, learn about new products in the ecosystem and participate in hands-on workshops to build your skills. Attended by thousands of people from more than 50 countries, it’s the ideal venue to plan your cloud strategy and share knowledge about architecting and operating OpenStack clouds."/>
         </LinearLayout>
     </LinearLayout>
