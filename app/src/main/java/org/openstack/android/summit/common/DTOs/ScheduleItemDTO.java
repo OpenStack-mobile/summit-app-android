@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.DTOs;
 
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.user_interface.IScheduleableItem;
+import org.openstack.android.summit.common.utils.Slugifier;
 
 /**
  * Created by Claudio Redi on 11/18/2015.
@@ -29,6 +30,15 @@ public class ScheduleItemDTO extends NamedDTO implements IScheduleableItem {
     protected boolean isScheduled;
     protected boolean isFavorite;
     protected boolean isPresentation;
+    protected String eventUrl;
+
+    public String getEventUrl() {
+        return eventUrl;
+    }
+
+    public void setEventUrl(String eventUrl) {
+        this.eventUrl = eventUrl;
+    }
 
     public void setChangeStatusListener(IChangeStatusListener changeStatusListener) {
         this.changeStatusListener = changeStatusListener;
@@ -191,5 +201,9 @@ public class ScheduleItemDTO extends NamedDTO implements IScheduleableItem {
     @Override
     public void setRSVPLink(String link) {
         this.rsvpLink = link;
+    }
+
+    public String getSlug() {
+        return Slugifier.toSlug(getName());
     }
 }

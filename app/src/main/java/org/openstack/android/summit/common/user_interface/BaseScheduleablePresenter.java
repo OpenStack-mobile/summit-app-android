@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.user_interface;
 
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -101,7 +102,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                         );
     }
 
-    public void _toggleRSVPStatus(IScheduleableItem scheduleItemView, int position) {
+    protected void _toggleRSVPStatus(IScheduleableItem scheduleItemView, int position) {
 
         ScheduleItemDTO scheduleItemDTO = getCurrentItem(position);
         if(scheduleItemDTO == null) return;
@@ -138,4 +139,9 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
         }
     }
 
+    protected void _shareEvent(IScheduleableItem scheduleItemView, int position){
+        ScheduleItemDTO scheduleItemDTO = getCurrentItem(position);
+        if(scheduleItemDTO == null) return;
+        view.startActivity(Intent.createChooser(ShareIntentBuilder.build(scheduleItemDTO.getEventUrl()), view.getResources().getString(R.string.action_share_event)));
+    }
 }

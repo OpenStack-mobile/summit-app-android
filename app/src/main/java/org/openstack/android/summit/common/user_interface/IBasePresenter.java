@@ -17,6 +17,8 @@ public interface IBasePresenter <T extends IBaseView> {
 
     void onCreateView(Bundle savedInstanceState);
 
+    void onActivityCreated (Bundle savedInstanceState);
+
     void onResume();
 
     void onPause();

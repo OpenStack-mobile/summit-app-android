@@ -162,6 +162,11 @@ public class SearchPresenter
     }
 
     @Override
+    public void shareEvent(IScheduleItemView scheduleItemView, int position){
+        _shareEvent(scheduleItemView, position);
+    }
+
+    @Override
     public void showEventDetail(int position) {
         ScheduleItemDTO scheduleItemDTO = events.get(position);
         wireframe.showEventDetail(scheduleItemDTO.getId(), view);

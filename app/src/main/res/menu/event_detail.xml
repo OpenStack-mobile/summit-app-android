@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
+    tools:context=".modules.main.user_interface.MainActivity">
     <item
         android:id="@+id/event_detail_menu_save_going_action"
         android:title="@string/save_going"
@@ -41,13 +41,14 @@
         android:icon="@drawable/ic_star_border"
         />
     <item
+        android:id="@+id/event_detail_menu_share_action"
+        app:showAsAction="never"
+        android:title="@string/action_share_event"
+        android:icon="@drawable/ic_share" />
+    <item
         app:showAsAction="never"
         android:id="@+id/event_detail_menu_cancel_action"
         android:title="@string/cancel"
         />
-    <item
-        android:id="@+id/event_detail_menu_share_action"
-        android:title="@string/share_event_text"
-        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-        app:showAsAction="always"/>
+
 </menu>

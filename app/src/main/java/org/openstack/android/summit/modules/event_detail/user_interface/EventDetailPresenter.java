@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
@@ -17,6 +16,7 @@ import org.openstack.android.summit.common.user_interface.BaseScheduleablePresen
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
+import org.openstack.android.summit.common.user_interface.ShareIntentBuilder;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.event_detail.business_logic.IEventDetailInteractor;
 
@@ -140,11 +140,14 @@ public class EventDetailPresenter
 
     @Override
     public void updateContextMenuOptions(){
+        view.showGoingMenuAction(false);
+        view.showNotGoingMenuAction(false);
+        view.showAddFavoriteMenuAction(false);
+        view.showRemoveFavoriteMenuAction(false);
+        view.showRateMenuAction(false);
+        view.showRSVPMenuAction(false);
         if(this.interactor.isMemberLoggedIn()){
-            view.showGoingMenuAction(false);
-            view.showNotGoingMenuAction(false);
-            view.showRSVPMenuAction(false);
-            view.showRateMenuAction(myFeedbackForEvent == null && this.event.getAllowFeedback());
+            view.showRateMenuAction(myFeedbackForEvent == null && this.event.getAllowFeedback() && event.isStarted());
             view.showAddFavoriteMenuAction(!this.event.getFavorite());
             view.showRemoveFavoriteMenuAction(this.event.getFavorite());
 
@@ -272,22 +275,9 @@ public class EventDetailPresenter
     }
 
     @Override
-    public boolean shouldShowContextMenu() {
-        return this.interactor.isMemberLoggedIn();
-    }
-
-    @Override
     public Intent createShareIntent() {
         if (this.event == null) return null;
-
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, String.format(
-                view.getResources().getString(R.string.share_event_text),
-                this.event.getEventUrl()
-                )
-        );
-        return shareIntent;
+        return ShareIntentBuilder.build(this.event.getEventUrl());
     }
 
     @Override

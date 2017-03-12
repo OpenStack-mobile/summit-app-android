@@ -127,9 +127,9 @@ public class RestApiModule {
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         // configuration
-        httpClient.readTimeout(180, TimeUnit.SECONDS);
-        httpClient.connectTimeout(60, TimeUnit.SECONDS);
-        httpClient.writeTimeout(180, TimeUnit.SECONDS);
+        httpClient.readTimeout(30, TimeUnit.SECONDS);
+        httpClient.connectTimeout(30, TimeUnit.SECONDS);
+        httpClient.writeTimeout(30, TimeUnit.SECONDS);
         httpClient.retryOnConnectionFailure(true);
 
         if(BuildConfig.DEBUG) {

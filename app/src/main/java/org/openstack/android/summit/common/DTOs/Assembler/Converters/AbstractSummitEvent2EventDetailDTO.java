@@ -53,16 +53,6 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
             eventDetailDTO.setAverageRate(source.getAverageRate());
             eventDetailDTO.setHeadCount(source.getHeadCount());
             eventDetailDTO.setRsvpLink(source.getRsvpLink());
-            Summit summit = source.getSummit();
-
-            if (summit != null) {
-                String templateUrl = summit.getScheduleEventDetailUrl();
-                String eventUrl    = templateUrl
-                        .replace(":event_id", Integer.toString(source.getId()))
-                        .replace(":event_title", eventDetailDTO.getSlug());
-
-                eventDetailDTO.setEventUrl(eventUrl);
-            }
 
             if(source.getSummitEventWithFile() != null){
                 eventDetailDTO.setAttachmentUrl(source.getSummitEventWithFile().getAttachment());

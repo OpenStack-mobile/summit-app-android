@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
         <item
             android:id="@+id/schedule_item_menu_save_going_action"
@@ -27,11 +28,18 @@
             android:icon="@drawable/ic_bookmark" />
 
         <item
+            android:id="@+id/schedule_item_menu_share_action"
+            app:showAsAction="always"
+            android:title="@string/action_share_event"
+            android:icon="@drawable/ic_share" />
+
+        <item
             android:id="@+id/schedule_item_menu_remove_favorite_action"
             app:showAsAction="always"
             android:title="@string/remove_favorite"
             android:icon="@drawable/ic_bookmark_border"
             />
+
         <item
             app:showAsAction="always"
             android:id="@+id/schedule_item_menu_cancel_action"

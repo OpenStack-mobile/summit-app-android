@@ -98,6 +98,12 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     }
 
     @Override
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        presenter.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (selectedDay != null && selectedDay > 0 ){

@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,7 +59,6 @@ public class EventDetailFragment
     private Unbinder unbinder;
     private SpeakerListAdapter speakerListAdapter;
     private FeedbackListAdapter feedbackListAdapter;
-    private ShareActionProvider shareActionProvider;
 
     @BindView(R2.id.event_detail_action_rate)
     Button buttonRate;
@@ -241,7 +238,7 @@ public class EventDetailFragment
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
         presenter.onCreate(savedInstanceState);
-        setHasOptionsMenu(presenter.shouldShowContextMenu());
+        setHasOptionsMenu(true);
     }
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
@@ -279,24 +276,6 @@ public class EventDetailFragment
         super.onPause();
         presenter.onPause();
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
-    }
-
-    private int getSelectedRate(View v) {
-        int rate = 0;
-
-        if (v.getId() == R.id.feedback_rate_1) {
-            rate = 1;
-        } else if (v.getId() == R.id.feedback_rate_2) {
-            rate = 2;
-        } else if (v.getId() == R.id.feedback_rate_3) {
-            rate = 3;
-        } else if (v.getId() == R.id.feedback_rate_4) {
-            rate = 4;
-        } else if (v.getId() == R.id.feedback_rate_5) {
-            rate = 5;
-        }
-
-        return rate;
     }
 
     @Override
@@ -376,12 +355,6 @@ public class EventDetailFragment
         menu.clear();
         inflater.inflate(R.menu.event_detail, menu);
         MenuHelper.setShowIcons(menu);
-        // Locate MenuItem with ShareActionProvider
-        MenuItem item = menu.findItem(R.id.event_detail_menu_share_action);
-        // Fetch and store ShareActionProvider
-        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-        setShareIntent(presenter.createShareIntent());
-
         presenter.updateContextMenuOptions();
     }
 
@@ -407,17 +380,14 @@ public class EventDetailFragment
             case R.id.event_detail_menu_save_going_action:
                 presenter.toggleScheduleStatus();
                 return true;
+            case R.id.event_detail_menu_share_action:
+                Intent shareIntent = presenter.createShareIntent();
+                startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.action_share_event)));
+            return true;
             case R.id.event_detail_menu_cancel_action:
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // Call to update the share intent
-    private void setShareIntent(Intent shareIntent) {
-        if (shareActionProvider != null) {
-            shareActionProvider.setShareIntent(shareIntent);
-        }
     }
 
     @Override

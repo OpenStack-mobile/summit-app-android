@@ -115,6 +115,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
 
         // if its a new summit , then deserialize the entire hierarchy ...
         if (jsonObject.has("sponsors")) {
+            summit.getSponsors().clear();
             JSONObject jsonObjectSponsor;
             JSONArray jsonArraySponsors = jsonObject.getJSONArray("sponsors");
             for (int i = 0; i < jsonArraySponsors.length(); i++) {
@@ -125,6 +126,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         }
 
         if (jsonObject.has("ticket_types")) {
+            summit.getTicketTypes().clear();
             TicketType ticketType;
             JSONObject jsonObjectTicketType;
             JSONArray jsonArrayTicketTypes = jsonObject.getJSONArray("ticket_types");
@@ -137,6 +139,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         }
 
         if (jsonObject.has("event_types")) {
+            summit.getEventTypes().clear();
             EventType eventType;
             JSONObject jsonObjectEventType;
             JSONArray jsonArrayEventTypes = jsonObject.getJSONArray("event_types");
@@ -149,6 +152,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         }
 
         if (jsonObject.has("tracks")) {
+            summit.getTracks().clear();;
             Track track;
             JSONObject jsonObjectTrack;
             trackDeserializer.setShouldDeserializeTrackGroups(false);
@@ -162,6 +166,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         }
 
         if (jsonObject.has("track_groups")) {
+            summit.getTrackGroups().clear();
             TrackGroup trackGroup;
             JSONObject jsonObjectTrackGroup;
             JSONArray jsonArrayTrackGroups = jsonObject.getJSONArray("track_groups");
@@ -174,7 +179,6 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         }
 
         if (jsonObject.has("locations")) {
-
             Venue venue;
             JSONObject jsonObjectVenue;
             JSONArray jsonArrayVenues = jsonObject.getJSONArray("locations");
@@ -210,15 +214,19 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         }
 
         if (jsonObject.has("speakers")) {
+            PresentationSpeaker presentationSpeaker = null;
+            summit.getSpeakers().clear();
             JSONObject jsonObjectPresentationSpeaker;
             JSONArray jsonArrayPresentationSpeakers = jsonObject.getJSONArray("speakers");
             for (int i = 0; i < jsonArrayPresentationSpeakers.length(); i++) {
                 jsonObjectPresentationSpeaker = jsonArrayPresentationSpeakers.getJSONObject(i);
-                presentationSpeakerDeserializer.deserialize(jsonObjectPresentationSpeaker.toString());
+                presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonObjectPresentationSpeaker.toString());
+                summit.getSpeakers().add(presentationSpeaker);
             }
         }
 
         if (jsonObject.has("schedule") && !summit.isScheduleLoaded()) {
+            summit.getEvents().clear();
             SummitEvent summitEvent;
             JSONObject jsonObjectSummitEvent;
             JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");

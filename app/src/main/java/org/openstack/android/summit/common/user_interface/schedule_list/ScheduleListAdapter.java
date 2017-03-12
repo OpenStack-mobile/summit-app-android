@@ -51,7 +51,8 @@ public class ScheduleListAdapter
                         (item, position) -> presenter.toggleScheduleStatus(item, position),
                         (item, position) -> presenter.toggleFavoriteStatus(item, position),
                         (item, position) -> presenter.toggleFavoriteStatus(item, position),
-                        (item, position) -> presenter.toggleRSVPStatus(item, position)
+                        (item, position) -> presenter.toggleRSVPStatus(item, position),
+                        (item, position) -> presenter.shareEvent(item, position)
                 );
     }
 
@@ -104,6 +105,7 @@ public class ScheduleListAdapter
         private OnEventMenuAction eventFavoriteCallback;
         private OnEventMenuAction eventRemoveFavoriteCallback;
         private OnEventMenuAction eventRSVPCallback;
+        private OnEventMenuAction eventShareCallback;
         private boolean showFavoritesMenuOption;
         private boolean showGoingMenuOption;
         private boolean showRSVPOption;
@@ -118,7 +120,8 @@ public class ScheduleListAdapter
                         OnEventMenuAction eventGoingCallback,
                         OnEventMenuAction eventFavoriteCallback,
                         OnEventMenuAction eventRemoveFavoriteCallback,
-                        OnEventMenuAction eventRSVPCallback
+                        OnEventMenuAction eventRSVPCallback,
+                        OnEventMenuAction eventShareCallback
                 ) {
 
             super(itemView);
@@ -141,6 +144,7 @@ public class ScheduleListAdapter
             this.eventFavoriteCallback       = eventFavoriteCallback;
             this.eventRemoveFavoriteCallback = eventRemoveFavoriteCallback;
             this.eventRSVPCallback           = eventRSVPCallback;
+            this.eventShareCallback          = eventShareCallback;
             // events handlers
             itemView.setOnClickListener(this);
         }
@@ -216,7 +220,6 @@ public class ScheduleListAdapter
         public void setContextualMenu() {
           if (buttonViewOptions == null) return;
 
-                if (showFavoritesMenuOption || showGoingMenuOption) {
                     optionsContainer.setVisibility(View.VISIBLE);
                     optionsContainer.setOnClickListener(v -> {
 
@@ -292,6 +295,12 @@ public class ScheduleListAdapter
                                         }
                                     }
                                     break;
+                                    case R.id.schedule_item_menu_share_action:{
+                                        if (eventShareCallback != null) {
+                                            eventShareCallback.action(ScheduleItemViewHolder.this, getAdapterPosition());
+                                            return true;
+                                        }
+                                    }
                                     case R.id.schedule_item_menu_cancel_action: {
                                         optionsMenu.dismiss();
                                         return true;
@@ -307,9 +316,6 @@ public class ScheduleListAdapter
                         //displaying the popup
                         optionsMenu.show();
                     });
-                    return;
-                }   // hide ... button
-                optionsContainer.setVisibility(View.GONE);
         }
 
         @Override

@@ -51,9 +51,14 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     protected SummitDTO currentSummit = null;
 
     public SchedulePresenter
-    (I interactor,
-     W wireframe,
-     IScheduleablePresenter scheduleablePresenter, IScheduleItemViewBuilder scheduleItemViewBuilder, IScheduleFilter scheduleFilter) {
+    (
+            I interactor,
+            W wireframe,
+            IScheduleablePresenter scheduleablePresenter,
+            IScheduleItemViewBuilder scheduleItemViewBuilder,
+            IScheduleFilter scheduleFilter
+    )
+    {
         super(interactor, wireframe, scheduleablePresenter);
         this.scheduleItemViewBuilder = scheduleItemViewBuilder;
         this.scheduleFilter = scheduleFilter;
@@ -80,10 +85,30 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     public void onCreate(Bundle savedInstanceState) {
         if(savedInstanceState == null)
             buttonNowState = true;
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGGED_IN_EVENT);
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated (Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        if (!interactor.isDataLoaded()) return;
+        currentSummit = interactor.getActiveSummit();
+        if (currentSummit == null) return;
+
+        if (currentSummit.isCurrentDateTimeInsideSummitRange() && buttonNowState) {
+            view.clearNowButtonListener();
+            view.setNowButtonState(buttonNowState);
+            buttonNowState = false;
+            view.setNowButtonListener();
+        }
+
+        setRangerState();
+
     }
 
     protected void setRangerState() {
@@ -136,19 +161,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     public void onResume() {
         try {
             super.onResume();
-            if (!interactor.isDataLoaded()) return;
-            currentSummit = interactor.getActiveSummit();
-            if (currentSummit == null) return;
-
-            if (currentSummit.isCurrentDateTimeInsideSummitRange() && buttonNowState) {
-                view.clearNowButtonListener();
-                view.setNowButtonState(buttonNowState);
-                buttonNowState = false;
-                view.setNowButtonListener();
-            }
-
-            setRangerState();
-
         } catch (Exception ex) {
             Crashlytics.logException(ex);
         }
@@ -245,6 +257,11 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     @Override
     public void toggleRSVPStatus(IScheduleItemView scheduleItemView, int position) {
        _toggleRSVPStatus(scheduleItemView, position);
+    }
+
+    @Override
+    public void shareEvent(IScheduleItemView scheduleItemView, int position){
+        _shareEvent(scheduleItemView, position);
     }
 
     @Override
