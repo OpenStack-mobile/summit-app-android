@@ -100,18 +100,20 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     @Override
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        if (selectedDay != null && selectedDay > 0 ){
+            ranger.setSelectedDay(selectedDay, false);
+        }
+        setNowButtonListener();
+        ranger.setDayViewOnClickListener(date -> {
+            selectedDay = date.getDayOfMonth();
+            presenter.reloadSchedule();
+        });
         presenter.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (selectedDay != null && selectedDay > 0 ){
-            ranger.setSelectedDay(selectedDay, true);
-        }
-        selectedDay = null;
-        setNowButtonListener();
-        ranger.setDayViewOnClickListener(date -> presenter.reloadSchedule());
     }
 
     @Override
@@ -222,7 +224,6 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         TextView listEmptyMessageTextView = (TextView) view.findViewById(R.id.list_empty_message);
         listEmptyMessageTextView.setVisibility(show? View.VISIBLE: View.GONE );
     }
-
 
     @Override
     public DateTime getSelectedDate() {

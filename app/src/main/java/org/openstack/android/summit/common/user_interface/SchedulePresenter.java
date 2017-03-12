@@ -108,7 +108,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         }
 
         setRangerState();
-
+        reloadSchedule();
     }
 
     protected void setRangerState() {
@@ -130,9 +130,9 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         inactiveDates.removeAll(pastDates);
         inactiveDates.addAll(pastDates);
         Collections.sort(inactiveDates);
-        DateTime formerSelectedDate = view.getSelectedDate();
         // set ranger states
         view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
+        DateTime formerSelectedDate       = view.getSelectedDate();
         DateTime scheduleStartDate        = currentSummit.getLocalScheduleStartDate();
         boolean scheduleStartDateInactive = false;
 
@@ -152,8 +152,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             if(shouldHidePastTalks || formerSelectedDate == null)
                 view.setSelectedDate(summitCurrentDay, false);
         }
-
-        reloadSchedule();
         view.hideActivityIndicator();
     }
 
@@ -161,6 +159,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     public void onResume() {
         try {
             super.onResume();
+            setRangerState();
         } catch (Exception ex) {
             Crashlytics.logException(ex);
         }
@@ -287,5 +286,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     @Override
     public void setHidePastTalks(boolean hidePastTalks) {
         setRangerState();
+        reloadSchedule();
     }
 }
