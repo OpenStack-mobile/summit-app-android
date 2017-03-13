@@ -85,5 +85,6 @@ public class GeneralSchedulePresenter
         scheduleFilter.clearActiveFilters();
         view.setShowActiveFilterIndicator(false);
         setRangerState();
+        reloadSchedule();
     }
 }

@@ -51,7 +51,7 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
                 .beginTransaction()
                     .replace(R.id.frame_layout_content, memberProfileFragment)
                     .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     public void showEventsView(IBaseView context) {
