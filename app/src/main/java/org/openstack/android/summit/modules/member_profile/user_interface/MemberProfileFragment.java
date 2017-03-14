@@ -5,44 +5,53 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.SlidingTabLayout;
-import org.openstack.android.summit.modules.feedback_given_list.user_interface.FeedbackGivenListFragment;
-import org.openstack.android.summit.modules.general_schedule.user_interface.GeneralScheduleFragment;
-import org.openstack.android.summit.modules.level_list.user_interface.LevelListFragment;
-import org.openstack.android.summit.modules.member_order_confirm.user_interface.MemberOrderConfirmFragment;
+import org.openstack.android.summit.modules.favorites_schedule.user_interface.FavoritesScheduleFragment;
 import org.openstack.android.summit.modules.member_profile_detail.user_interface.MemberProfileDetailFragment;
 import org.openstack.android.summit.modules.personal_schedule.user_interface.PersonalScheduleFragment;
 import org.openstack.android.summit.modules.speaker_presentations.user_interface.SpeakerPresentationsFragment;
-import org.openstack.android.summit.modules.track_list.user_interface.TrackListFragment;
 
 import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Claudio Redi on 1/26/2016.
  */
-public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter> implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IMemberProfileView {
+public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
+        implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IMemberProfileView {
+
+    protected Unbinder unbinder;
+
     @Inject
     PersonalScheduleFragment personalScheduleFragment;
+
+    @Inject
+    FavoritesScheduleFragment favoritesScheduleFragment;
 
     @Inject
     MemberProfileDetailFragment memberProfileDetailFragment;
 
     @Inject
-    FeedbackGivenListFragment feedbackGivenListFragment;
-
-    @Inject
     SpeakerPresentationsFragment speakerPresentationsFragment;
 
     private int selectedTabIndex;
+
+    @BindView(R2.id.tabs)
+    SlidingTabLayout tabs;
+
+    @BindView(R2.id.member_profile_pager)
+    ViewPager eventsViewPager;
 
     public MemberProfileFragment() {
         // Required empty public constructor
@@ -57,7 +66,15 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
     @Override
     public void onResume() {
         super.onResume();
-        setTitle(getResources().getString(R.string.profile));
+        presenter.onResume();
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        if(unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
+        }
     }
 
     @Override
@@ -70,12 +87,12 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_member_profile_container, container, false);
 
-        SlidingTabLayout tabs = (SlidingTabLayout)view.findViewById(R.id.tabs);
+        unbinder  = ButterKnife.bind(this, view);
+
         tabs.setDistributeEvenly(true);
         tabs.setCustomTabColorizer(this);
         tabs.setOnPageChangeListener(this);
 
-        ViewPager eventsViewPager = (ViewPager)view.findViewById(R.id.member_profile_pager);
         MemberProfilePageAdapter memberProfilePageAdapter = new MemberProfilePageAdapter(getChildFragmentManager());
         eventsViewPager.setAdapter(memberProfilePageAdapter);
         eventsViewPager.setCurrentItem(selectedTabIndex);
@@ -129,6 +146,9 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
                 else if (presenter.getIsAttendee()) {
                     count = 3;
                 }
+                else if (presenter.getIsMember()) {
+                    count = 2;
+                }
             }
             else {
                 count = 2;
@@ -145,6 +165,9 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
                 else if (presenter.getIsAttendee()) {
                     return getPageTitleForMyProfileAsAttendee(position);
                 }
+                else if (presenter.getIsMember()){
+                    return getPageTitleForMyProfileAsMember(position);
+                }
             }
             else {
                 return getPageTitleForOtherProfileAsSpeaker(position);
@@ -156,9 +179,9 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         private CharSequence getPageTitleForOtherProfileAsSpeaker(int position) {
             switch (position) {
                 case 0:
-                    return "PROFILE";
+                    return getResources().getString(R.string.my_summit_profile_tab_title);
                 case 1:
-                    return "SESSIONS";
+                    return getResources().getString(R.string.my_summit_sessions_tab_title);
                 default:
                     return "";
             }
@@ -167,11 +190,22 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         private CharSequence getPageTitleForMyProfileAsAttendee(int position) {
             switch (position) {
                 case 0:
-                    return "SCHEDULE";
+                    return getResources().getString(R.string.my_summit_profile_tab_title);
                 case 1:
-                    return "PROFILE";
+                    return getResources().getString(R.string.my_summit_schedule_tab_title);
                 case 2:
-                    return "FEEDBACK";
+                    return getResources().getString(R.string.my_summit_favorites_tab_title);
+                default:
+                    return "";
+            }
+        }
+
+        private CharSequence getPageTitleForMyProfileAsMember(int position) {
+            switch (position) {
+                case 0:
+                    return getResources().getString(R.string.my_summit_profile_tab_title);
+                case 1:
+                    return getResources().getString(R.string.my_summit_favorites_tab_title);
                 default:
                     return "";
             }
@@ -180,13 +214,13 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         private CharSequence getPageTitleForMyProfileAsSpeaker(int position) {
             switch (position) {
                 case 0:
-                    return "SCHEDULE";
+                    return getResources().getString(R.string.my_summit_profile_tab_title);
                 case 1:
-                    return "PROFILE";
+                    return getResources().getString(R.string.my_summit_schedule_tab_title);
                 case 2:
-                    return "FEEDBACK";
+                    return getResources().getString(R.string.my_summit_favorites_tab_title);
                 case 3:
-                    return "SESSIONS";
+                    return getResources().getString(R.string.my_summit_sessions_tab_title);
                 default:
                     return "";
             }
@@ -200,6 +234,9 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
                 }
                 else if (presenter.getIsAttendee()) {
                     return getItemForMyProfileAsAttendee(i);
+                }
+                else if (presenter.getIsMember()){
+                    return getItemForMyProfileAsMember(i);
                 }
             }
             else {
@@ -223,11 +260,22 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         private Fragment getItemForMyProfileAsAttendee(int i) {
             switch (i) {
                 case 0:
-                    return personalScheduleFragment;
-                case 1:
                     return memberProfileDetailFragment;
+                case 1:
+                    return personalScheduleFragment;
                 case 2:
-                    return feedbackGivenListFragment;
+                    return favoritesScheduleFragment;
+                default:
+                    return null;
+            }
+        }
+
+        private Fragment getItemForMyProfileAsMember(int i) {
+            switch (i) {
+                case 0:
+                    return memberProfileDetailFragment;
+                case 1:
+                    return favoritesScheduleFragment;
                 default:
                     return null;
             }
@@ -236,11 +284,11 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         private Fragment getItemForMyProfileAsSpeaker(int i) {
             switch (i) {
                 case 0:
-                    return personalScheduleFragment;
-                case 1:
                     return memberProfileDetailFragment;
+                case 1:
+                    return personalScheduleFragment;
                 case 2:
-                    return feedbackGivenListFragment;
+                    return favoritesScheduleFragment;
                 case 3:
                     return speakerPresentationsFragment;
                 default:

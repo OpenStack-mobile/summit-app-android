@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/missing_eventbrite_order_indicator"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:background="@color/openStackYellow"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_warning"/>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:textSize="13dp"
+        android:layout_gravity="center_vertical"
+        android:textColor="@android:color/black"
+        android:layout_height="wrap_content"
+        android:text="@string/missing_eventbrite_order_indicator_text"/>
+
+</LinearLayout>

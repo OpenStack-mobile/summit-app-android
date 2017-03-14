@@ -2,17 +2,18 @@ package org.openstack.android.summit.modules.member_order_confirm.business_logic
 
 import org.openstack.android.summit.common.DTOs.NonConfirmedSummitAttendeeDTO;
 import org.openstack.android.summit.common.business_logic.IBaseInteractor;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * Created by Claudio Redi on 3/27/2016.
  */
 public interface IMemberOrderConfirmInteractor extends IBaseInteractor {
 
-    void getAttendeesForTicketOrder(String orderNumber, IInteractorAsyncOperationListener<List<NonConfirmedSummitAttendeeDTO>> interactorAsyncOperationListener);
+    Observable<List<NonConfirmedSummitAttendeeDTO>> getAttendeesForTicketOrder(String orderNumber) throws Exception;
 
-    void selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId, IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener);
+    Observable<Boolean> selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId) throws Exception;
 
     void bindCurrentUser();
 }

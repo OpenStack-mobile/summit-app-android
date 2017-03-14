@@ -2,10 +2,12 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile_detail.IMemberProfileDetailWireframe;
 import org.openstack.android.summit.modules.member_profile_detail.MemberProfileDetailWireframe;
 import org.openstack.android.summit.modules.member_profile_detail.business_logic.IMemberProfileDetailInteractor;
@@ -28,8 +30,8 @@ public class MemberProfileDetailModule {
     }
 
     @Provides
-    IMemberProfileDetailWireframe providesMemberProfileDetailWireframe(INavigationParametersStore navigationParametersStore) {
-        return new MemberProfileDetailWireframe(navigationParametersStore);
+    IMemberProfileDetailWireframe providesMemberProfileDetailWireframe(IMemberOrderConfirmWireframe memberOrderConfirmWireframe, INavigationParametersStore navigationParametersStore) {
+        return new MemberProfileDetailWireframe(memberOrderConfirmWireframe, navigationParametersStore);
     }
 
     @Provides
@@ -38,7 +40,7 @@ public class MemberProfileDetailModule {
     }
 
     @Provides
-    IMemberProfileDetailPresenter providesMemberProfileDetailPresenter(IMemberProfileDetailInteractor interactor, IMemberProfileDetailWireframe wireframe) {
-        return new MemberProfileDetailPresenter(interactor, wireframe);
+    IMemberProfileDetailPresenter providesMemberProfileDetailPresenter(IMemberProfileDetailInteractor interactor, IMemberProfileDetailWireframe wireframe, ISession session) {
+        return new MemberProfileDetailPresenter(interactor, wireframe, session);
     }
 }

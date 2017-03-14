@@ -56,7 +56,6 @@ public class MainActivity
         extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IMainView {
 
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Inject
     IMainPresenter presenter;
@@ -137,11 +136,10 @@ public class MainActivity
                     try {
                         Log.d(Constants.LOG_TAG, "LOGGED_IN_EVENT");
                         presenter.onLoggedIn();
-                        //show my profile tab
+                        // show my profile tab ...
                         navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(true);
-                        // set events tab ...
-                        navigationView.getMenu().findItem(R.id.nav_events).setChecked(true);
-                        presenter.showEventsView();
+                        navigationView.getMenu().findItem(R.id.nav_my_profile).setChecked(true);
+                        presenter.showMyProfileView();
                     } catch (MissingMemberException ex1) {
                         Crashlytics.logException(ex1);
                         Log.w(Constants.LOG_TAG, ex1.getMessage());
@@ -323,18 +321,19 @@ public class MainActivity
             super.onResume();
             checkPlayServices();
 
+            presenter.onResume();
+            setupNavigationIcons();
+
             Intent intent = getIntent();
             if(intent != null
                     && intent.getBooleanExtra(Constants.START_EXTERNAL_LOGIN, false)
                     && !securityManager.isLoggedIn()
                     && !onLoginProcess){
                 intent.removeExtra(Constants.START_EXTERNAL_LOGIN);
+                this.toggleMenu(true);
                 this.loginButton.performClick();
                 return;
             }
-
-            presenter.onResume();
-            setupNavigationIcons();
 
         } catch (Exception ex) {
             Crashlytics.logException(ex);
@@ -480,33 +479,30 @@ public class MainActivity
             memberNameTextView     = (TextView) headerView.findViewById(R.id.member_name_textview);
             memberProfileImageView = (SimpleDraweeView) headerView.findViewById(R.id.member_profile_pic_imageview);
             memberProfileImageView.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                    v -> {
 
-                            if (!reachability.isNetworkingAvailable(MainActivity.this)) {
-                                showErrorMessage(getResources().getString(R.string.login_disallowed_no_connectivity));
-                                return;
-                            }
-
-                            presenter.disableDataUpdateService();
-
-                            if (!presenter.isSummitDataLoaded()) {
-                                showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
-                                launchInitialDataLoadingActivity();
-                                return;
-                            }
-
-                            // LOGIN
-                            if (!securityManager.isLoggedIn()) {
-                                securityManager.login(MainActivity.this);
-                                return;
-                            }
-
-                            // go to my summit ?
-                            closeMenuDrawer();
-                            presenter.showMyProfileView();
+                        if (!reachability.isNetworkingAvailable(MainActivity.this)) {
+                            showErrorMessage(getResources().getString(R.string.login_disallowed_no_connectivity));
+                            return;
                         }
+
+                        presenter.disableDataUpdateService();
+
+                        if (!presenter.isSummitDataLoaded()) {
+                            showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
+                            launchInitialDataLoadingActivity();
+                            return;
+                        }
+
+                        // LOGIN
+                        if (!securityManager.isLoggedIn()) {
+                            securityManager.login(MainActivity.this);
+                            return;
+                        }
+
+                        // go to my summit ?
+                        closeMenuDrawer();
+                        presenter.showMyProfileView();
                     }
             );
             EditText searchText = (EditText) headerView.findViewById(R.id.nav_header_search_edittext);
@@ -541,7 +537,7 @@ public class MainActivity
 
             if (!drawer.isDrawerOpen(GravityCompat.START) && getFragmentManager().getBackStackEntryCount() == 0) {
                 // set events tab ...
-                super.onBackPressed();
+               super.onBackPressed();
             }
 
             int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
@@ -577,7 +573,7 @@ public class MainActivity
             }
 
             drawer.closeDrawer(GravityCompat.START);
-            getFragmentManager().popBackStack();
+            getFragmentManager().popBackStackImmediate();
         }
         catch (Exception ex){
             Log.e(Constants.LOG_TAG, ex.getMessage(), ex);

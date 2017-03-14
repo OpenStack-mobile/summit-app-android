@@ -1,13 +1,7 @@
 package org.openstack.android.summit.modules.member_order_confirm.user_interface;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,34 +13,45 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.DTOs.NonConfirmedSummitAttendeeDTO;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
-import org.w3c.dom.Text;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Claudio Redi on 3/27/2016.
  */
-public class MemberOrderConfirmFragment extends BaseFragment<IMemberOrderConfirmPresenter> implements IMemberOrderConfirmView {
+public class MemberOrderConfirmFragment
+        extends BaseFragment<IMemberOrderConfirmPresenter>
+        implements IMemberOrderConfirmView {
     private static final NonConfirmedSummitAttendee[] NO_ATTENDEES = {};
     private String orderNumber;
     private SpinnerAdapter adapter;
-    private Menu menu;
     boolean attendeeSelected;
     private int externalAttendeeSelectedIndex;
+    private Unbinder unbinder;
+
+    @BindView(R2.id.member_order_confirm_number_text)
+    EditText orderNumberTxt;
+
+    @BindView(R2.id.btn_add_order_action)
+    Button addOrderBtn;
+
+    @BindView(R2.id.btn_cancel_order_action)
+    Button cancelOrderBtn;
 
     public MemberOrderConfirmFragment() {
         // Required empty public constructor
@@ -55,7 +60,6 @@ public class MemberOrderConfirmFragment extends BaseFragment<IMemberOrderConfirm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
-        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -74,16 +78,13 @@ public class MemberOrderConfirmFragment extends BaseFragment<IMemberOrderConfirm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_member_order_confirm, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
-        EditText searchText = (EditText)view.findViewById(R.id.member_order_confirm_number_text);
-        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    confirmOrder();
-                }
-                return false;
+        orderNumberTxt.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                confirmOrder();
             }
+            return false;
         });
 
         adapter = new SpinnerAdapter(this.getContext());
@@ -99,22 +100,7 @@ public class MemberOrderConfirmFragment extends BaseFragment<IMemberOrderConfirm
             }
         });
 
-        return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.order_confirm, menu);
-        this.menu = menu;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_send) {
+        addOrderBtn.setOnClickListener(v -> {
             if (!attendeeSelected) {
                 confirmOrder();
                 InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -123,10 +109,13 @@ public class MemberOrderConfirmFragment extends BaseFragment<IMemberOrderConfirm
             else if (attendeeSelected){
                 confirmOrderAfterSelectingAttendee();
             }
-            return true;
-        }
+        });
 
-        return super.onOptionsItemSelected(item);
+        cancelOrderBtn.setOnClickListener(v -> {
+            presenter.cancelOrder();
+        });
+
+        return view;
     }
 
     private void confirmOrderAfterSelectingAttendee() {
@@ -135,8 +124,8 @@ public class MemberOrderConfirmFragment extends BaseFragment<IMemberOrderConfirm
     }
 
     private void confirmOrder() {
-        TextView orderNumberText = (TextView)view.findViewById(R.id.member_order_confirm_number_text);
-        String orderNumber = orderNumberText.getText().toString();
+        if(orderNumberTxt == null) return;
+        String orderNumber = orderNumberTxt.getText().toString();
         if (!orderNumber.isEmpty()) {
             presenter.confirmOrder(orderNumber);
         }
@@ -160,6 +149,14 @@ public class MemberOrderConfirmFragment extends BaseFragment<IMemberOrderConfirm
     public void onDestroy() {
         super.onDestroy();
         presenter.onDestroy();
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        if(unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
+        }
     }
 
     private class SpinnerAdapter extends ArrayAdapter<NonConfirmedSummitAttendeeDTO> {

@@ -1,6 +1,5 @@
 package org.openstack.android.summit.modules.member_profile;
 
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import org.openstack.android.summit.R;
@@ -39,7 +38,7 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                    .replace(R.id.frame_layout_content, memberProfileFragment,"nav_my_profile")
+                    .replace(R.id.frame_layout_content, memberProfileFragment, "nav_my_profile")
                     .addToBackStack("nav_my_profile")
                 .commitAllowingStateLoss();
     }

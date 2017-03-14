@@ -47,6 +47,15 @@
         <item name="android:layout_gravity">center</item>
     </style>
 
+    <style name="AppTheme.EventBriteTicketAddedImageView">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:src">@drawable/ic_check_circle_green</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
     <style name="AppTheme.SlidingTabLayout">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
@@ -107,6 +116,10 @@
         <item name="android:background">@color/openStackLightGray</item>
     </style>
 
+    <style name="AppTheme.InformationBarContainerBorderBottom" parent="AppTheme.IconedInformationBarContainerNoBorder">
+        <item name="android:background">@drawable/bottom_bordered_control</item>
+    </style>
+
     <style name="AppTheme.IconedInformationBarImageView">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">25dp</item>
@@ -151,11 +164,9 @@
     <style name="AppTheme.MemberProfileDetailFieldContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">25dp</item>
         <item name="android:paddingRight">25dp</item>
         <item name="android:paddingTop">9dp</item>
         <item name="android:paddingBottom">9dp</item>
-        <item name="android:background">@color/openStackLightGray</item>
     </style>
 
     <style name="AppTheme.MemberProfileDetailFieldContainerIcon">
@@ -268,27 +279,34 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
-    <style name="AppTheme.SplashLoginButton">
+    <style name="AppTheme.ButtonDarkBlue">
         <item name="android:textColor">@color/white</item>
         <item name="android:padding">0dp</item>
-        <item name="android:minWidth">88dp</item>
         <item name="android:minHeight">46dp</item>
         <item name="android:layout_margin">3dp</item>
-        <item name="android:layout_marginBottom">20dp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">14sp</item>
         <item name="android:background">@drawable/material_rounded_button_dark_blue</item>
     </style>
 
-    <style name="AppTheme.SplashGuestButton">
+    <style name="AppTheme.SplashLoginButton" parent="AppTheme.ButtonDarkBlue">
+        <item name="android:minWidth">88dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="AppTheme.ButtonLightBlue">
         <item name="android:textColor">@color/white</item>
         <item name="android:padding">0dp</item>
-        <item name="android:minWidth">88dp</item>
         <item name="android:minHeight">46dp</item>
         <item name="android:layout_margin">3dp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:background">@drawable/material_rounded_button_light_blue</item>
-        <item name="android:textAllCaps">true</item>
+       <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="AppTheme.SplashGuestButton" parent="AppTheme.ButtonLightBlue">
+        <item name="android:minWidth">88dp</item>
     </style>
 
     <style name="AppTheme.NowButton">

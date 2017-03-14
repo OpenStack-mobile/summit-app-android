@@ -28,10 +28,6 @@ import javax.inject.Named;
 import io.reactivex.Observable;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -41,7 +37,6 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
 
     private IDeserializer deserializer;
     private INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer;
-    private Retrofit restClient;
     private IMembersApi memberApi;
     private ISummitEventsApi summitEventsApi;
     private ISummitExternalOrdersApi summitExternalOrdersApi;
@@ -49,20 +44,19 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
 
     @Inject
     public MemberRemoteDataStore
-            (
-                    INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,
-                    IDeserializer deserializer,
-                    @Named("MemberProfile") Retrofit restClient,
-                    @Named("MemberProfileRXJava2") Retrofit restClientRxJava,
-                    ISummitSelector summitSelector
-            ) {
+    (
+        INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,
+        IDeserializer deserializer,
+        @Named("MemberProfileRXJava2") Retrofit restClientRxJava,
+        ISummitSelector summitSelector
+    )
+    {
         this.nonConfirmedSummitAttendeeDeserializer = nonConfirmedSummitAttendeeDeserializer;
-        this.deserializer = deserializer;
-        this.restClient = restClient;
-        this.memberApi = restClientRxJava.create(IMembersApi.class);
-        this.summitEventsApi = restClientRxJava.create(ISummitEventsApi.class);
-        this.summitExternalOrdersApi = restClient.create(ISummitExternalOrdersApi.class);
-        this.summitSelector = summitSelector;
+        this.deserializer                           = deserializer;
+        this.memberApi                              = restClientRxJava.create(IMembersApi.class);
+        this.summitEventsApi                        = restClientRxJava.create(ISummitEventsApi.class);
+        this.summitExternalOrdersApi                = restClientRxJava.create(ISummitExternalOrdersApi.class);
+        this.summitSelector                         = summitSelector;
     }
 
     @Override
@@ -88,113 +82,50 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
     }
 
     @Override
-    public void getAttendeesForTicketOrder(String orderNumber, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener) {
+    public Observable<List<NonConfirmedSummitAttendee>>  getAttendeesForTicketOrder(String orderNumber) {
+        return summitExternalOrdersApi.get(summitSelector.getCurrentSummitId(), orderNumber.trim())
+               .subscribeOn(Schedulers.io())
+               .map(response -> {
 
-        Call<ResponseBody> call = this.summitExternalOrdersApi.get(summitSelector.getCurrentSummitId(), orderNumber.trim());
+                   if (!response.isSuccessful()) {
+                       switch (response.code()) {
+                           case 412:
+                               throw new ValidationException(OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error));
+                           case 404:
+                               throw new NotFoundEntityException( OpenStackSummitApplication.context.getString(R.string.redeem_external_order_not_found_error));
+                       }
+                       throw new Exception(String.format("getAttendeesForTicketOrder: http error code %d", response.code()));
+                   }
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    if (!response.isSuccessful()) {
-                        switch (response.code()) {
-                            case 412:
-                                dataStoreOperationListener.onError
-                                        (
-                                                OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error)
-                                        );
-                                return;
-                            case 404:
-                                dataStoreOperationListener.onError
-                                        (
-                                                OpenStackSummitApplication.context.getString(R.string.redeem_external_order_not_found_error)
-                                        );
-                                return;
-                            default:
-                                throw new Exception
-                                        (
-                                                String.format
-                                                        (
-                                                                "getAttendeesForTicketOrder: http error %d",
-                                                                response.code()
-                                                        )
-                                        );
-                        }
-                    }
-
-                    List<NonConfirmedSummitAttendee> nonConfirmedSummitAttendeeList = nonConfirmedSummitAttendeeDeserializer.deserializeArray(response.body().string());
-                    dataStoreOperationListener.onSucceedWithDataCollection(nonConfirmedSummitAttendeeList);
-                } catch (Exception ex) {
-                    Crashlytics.logException(ex);
-                    Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
-                    String friendlyError = Constants.GENERIC_ERROR_MSG;
-                    dataStoreOperationListener.onError(friendlyError);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                dataStoreOperationListener.onError(t.getMessage());
-            }
-        });
+                   return nonConfirmedSummitAttendeeDeserializer.deserializeArray(response.body().string());
+                });
     }
 
     @Override
-    public void selectAttendeeFromOrderList
-            (
-                    String orderNumber,
-                    int externalAttendeeId,
-                    final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener
-            ) {
+    public Observable<Boolean> selectAttendeeFromOrderList
+    (
+        String orderNumber,
+        int externalAttendeeId
+    )
+    {
 
-        Call<ResponseBody> call = this.summitExternalOrdersApi.confirm(summitSelector.getCurrentSummitId(), orderNumber.trim(), externalAttendeeId);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
+        return summitExternalOrdersApi.confirm(summitSelector.getCurrentSummitId(), orderNumber.trim(), externalAttendeeId)
+               .subscribeOn(Schedulers.io())
+                .map(response -> {
 
                     if (!response.isSuccessful()) {
                         switch (response.code()) {
                             case 412:
-                                dataStoreOperationListener.onError
-                                        (
-                                                OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error)
-                                        );
-                                return;
+                                throw new ValidationException(OpenStackSummitApplication.context.getString(R.string.redeem_external_order_already_done_error));
                             case 404:
-                                dataStoreOperationListener.onError
-                                        (
-                                                OpenStackSummitApplication.context.getString(R.string.redeem_external_order_attendee_does_not_exists_error)
-                                        );
-                                return;
-                            default:
-                                throw new Exception
-                                        (
-                                                String.format
-                                                        (
-                                                                "selectAttendeeFromOrderList: http error %d",
-                                                                response.code()
-                                                        )
-                                        );
+                                throw new NotFoundEntityException(OpenStackSummitApplication.context.getString(R.string.redeem_external_order_attendee_does_not_exists_error));
                         }
+                        throw new Exception(String.format("getAttendeesForTicketOrder: http error code %d", response.code()));
                     }
+                    return true;
+                });
 
-                    dataStoreOperationListener.onSucceedWithoutData();
-                } catch (Exception ex) {
-                    String friendlyError = Constants.GENERIC_ERROR_MSG;
-                    Crashlytics.logException(ex);
-                    dataStoreOperationListener.onError(friendlyError);
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                String friendlyError = Constants.GENERIC_ERROR_MSG;
-                Crashlytics.logException(t);
-                dataStoreOperationListener.onError(friendlyError);
-            }
-        });
     }
 
     @Override

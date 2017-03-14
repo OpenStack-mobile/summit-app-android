@@ -1,9 +1,9 @@
 package org.openstack.android.summit.modules.main;
 
+import org.openstack.android.summit.common.user_interface.FragmentBackStackHelper;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.about.IAboutWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
-import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
@@ -26,8 +26,6 @@ public class MainWireframe implements IMainWireframe {
 
     IVenuesWireframe venuesWireframe;
 
-    IMemberOrderConfirmWireframe memberOrderConfirmWireframe;
-
     IAboutWireframe aboutWireframe;
 
     IPushNotificationsWireframe notificationsWireframe;
@@ -39,7 +37,6 @@ public class MainWireframe implements IMainWireframe {
                          IMemberProfileWireframe memberProfileWireframe,
                          ISearchWireframe searchWireframe,
                          IVenuesWireframe venuesWireframe,
-                         IMemberOrderConfirmWireframe memberOrderConfirmWireframe,
                          IAboutWireframe aboutWireframe,
                          IPushNotificationsWireframe notificationsWireframe,
                          ISettingsWireframe settingsWireframe
@@ -50,7 +47,6 @@ public class MainWireframe implements IMainWireframe {
         this.memberProfileWireframe      = memberProfileWireframe;
         this.searchWireframe             = searchWireframe;
         this.venuesWireframe             = venuesWireframe;
-        this.memberOrderConfirmWireframe = memberOrderConfirmWireframe;
         this.aboutWireframe              = aboutWireframe;
         this.notificationsWireframe      = notificationsWireframe;
         this.settingsWireframe           = settingsWireframe;
@@ -61,6 +57,7 @@ public class MainWireframe implements IMainWireframe {
     }
 
     public void showMyProfileView(IBaseView context) {
+        FragmentBackStackHelper.clearAllBackStack(context);
         memberProfileWireframe.presentMyProfileView(context);
     }
 
@@ -79,11 +76,6 @@ public class MainWireframe implements IMainWireframe {
 
     public void showVenuesView(IBaseView context) {
         venuesWireframe.presentVenuesView(context);
-    }
-
-    @Override
-    public void showMemberOrderConfirmView(IBaseView view) {
-        memberOrderConfirmWireframe.presentMemberOrderConfirmView(view);
     }
 
     public void showAboutView(IBaseView context) {

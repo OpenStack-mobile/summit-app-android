@@ -45,4 +45,5 @@ public class Constants {
     static public final String ON_DATA_LOADING_PROCESS                = "on-data-loading-process";
     static public final String LOADED_SUMMITS_LIST                    = "loaded-summits-list";
     static public final String START_EXTERNAL_LOGIN                   = "start-external-login";
+    static public final String WILL_ATTEND                            = "org.openstack.android.summit.common.security.WILL_ATTEND";
 }

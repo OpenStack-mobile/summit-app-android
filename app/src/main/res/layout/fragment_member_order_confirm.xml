@@ -7,45 +7,36 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="@color/openStackDarkBlue"
+        android:paddingTop="60dp"
+        style="@style/AppTheme.InformationBarContainerBorderBottom"
+        android:orientation="vertical"
         android:gravity="center_horizontal">
         <TextView
             android:id="@+id/member_order_confirm_profile_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/eventbrite_order_confirm"
-            android:textColor="@android:color/white"
+            android:textColor="@color/openStackDarkGray"
             android:layout_gravity="center"
-            android:textAllCaps="true"
+            android:textSize="20sp"
             android:textStyle="bold"></TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="16dp"
+            android:textColor="@color/openStackGray"
+            android:text="@string/eventbrite_add_order_number" />
     </LinearLayout>
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:background="@color/openStackYellow"
-        android:text="@string/dont_forget_to_link_ticket" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp"
-        android:textSize="16dp"
-        android:textColor="@color/openStackLightBlue"
-        android:text="@string/are_you_summit_attendee" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginBottom="20dp"
-        android:textSize="16dp"
-        android:textColor="@color/openStackLightBlue"
-        android:text="@string/eventbrite_add_order_number" />
+        android:paddingTop="10dp"
+        style="@style/AppTheme.InformationBarContainerBorderBottom"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
     <EditText
         android:id="@+id/member_order_confirm_number_text"
         android:layout_width="match_parent"
@@ -54,8 +45,9 @@
         android:layout_marginRight="25dp"
         android:layout_marginLeft="25dp"
         android:layout_marginBottom="20dp"
-        android:singleLine="true"
-        android:hint="@string/eventbrite_order_number"/>
+        android:hint="@string/eventbrite_order_number"
+        android:inputType="number"
+        android:maxLines="1" />
 
     <TextView
         android:id="@+id/member_order_confirm_multiple_mathes_text"
@@ -79,5 +71,26 @@
         app:met_floatingLabel="normal"
         android:visibility="gone">
     </com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner>
-
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="120dp"
+            android:id="@+id/btn_cancel_order_action"
+            style="@style/AppTheme.ButtonLightBlue"
+            android:text="@string/cancel"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="120dp"
+            android:id="@+id/btn_add_order_action"
+            style="@style/AppTheme.ButtonDarkBlue"
+            android:text="@string/add_order_action"/>
+    </LinearLayout>
 </LinearLayout>

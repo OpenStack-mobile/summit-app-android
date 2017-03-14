@@ -10,4 +10,6 @@ public interface IMemberOrderConfirmPresenter extends IBasePresenter<IMemberOrde
     void confirmOrder(String orderNumber);
 
     void selectAttendeeFromOrderList(int position);
+
+    void cancelOrder();
 }

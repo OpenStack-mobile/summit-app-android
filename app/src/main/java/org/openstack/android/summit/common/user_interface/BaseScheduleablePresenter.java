@@ -51,7 +51,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                 .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        ( res ) -> {
+                        (res) -> {
                             Toast.makeText(view.getApplicationContext(), formerState ?
                                             view.getResources().getString(R.string.removed_from_going):
                                             view.getResources().getString(R.string.added_2_going),

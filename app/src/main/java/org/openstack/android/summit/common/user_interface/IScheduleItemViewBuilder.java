@@ -19,4 +19,21 @@ public interface IScheduleItemViewBuilder {
         String rsvpLink,
         boolean externalRSVP
     );
+
+    void build
+    (
+        IScheduleItemView scheduleItemView,
+        ScheduleItemDTO scheduleItemDTO,
+        boolean isMemberLoggedIn,
+        boolean isMemberLoggedInAndAttendee,
+        boolean isEventScheduledByLoggedMember,
+        boolean isEventFavoriteByLoggedMember,
+        boolean useFullDate,
+        boolean showVenues,
+        String rsvpLink,
+        boolean externalRSVP,
+        boolean showMyScheduleOptions,
+        boolean showMyFavoritesOptions
+    );
+
 }

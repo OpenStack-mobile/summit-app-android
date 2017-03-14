@@ -7,19 +7,19 @@
         android:id="@+id/event_detail_menu_save_going_action"
         android:title="@string/save_going"
         app:showAsAction="never"
-        android:icon="@drawable/ic_event_available"
+        android:icon="@drawable/ic_check_circle"
         />
     <item
         android:id="@+id/event_detail_menu_save_rsvp_action"
         android:title="@string/save_rsvp"
         app:showAsAction="never"
-        android:icon="@drawable/ic_event_available"
+        android:icon="@drawable/ic_check_circle"
         />
     <item
         android:id="@+id/event_detail_menu_remove_going_action"
         app:showAsAction="never"
         android:title="@string/remove_going"
-        android:icon="@drawable/ic_event_busy"
+        android:icon="@drawable/ic_cancel"
         />
 
     <item

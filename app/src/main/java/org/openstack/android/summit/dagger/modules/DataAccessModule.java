@@ -337,12 +337,11 @@ public class DataAccessModule {
     (
                     INonConfirmedSummitAttendeeDeserializer nonConfirmedSummitAttendeeDeserializer,
                     IDeserializer deserializer,
-                    @Named("MemberProfile") Retrofit restClient,
                     @Named("MemberProfileRXJava2") Retrofit restClientRxJava,
                     ISummitSelector summitSelector
     )
     {
-        return new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, deserializer, restClient,restClientRxJava, summitSelector);
+        return new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, deserializer, restClientRxJava, summitSelector);
     }
 
     @Provides

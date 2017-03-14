@@ -6,6 +6,8 @@ import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 
 /**
@@ -21,7 +23,7 @@ public interface IMemberDataStore extends IGenericDataStore<Member> {
 
     Observable<Boolean> removeEventFromMyFavorites(Member me, SummitEvent summitEvent);
 
-    void getAttendeesForTicketOrder(String orderNumber, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener);
+    Observable<List<NonConfirmedSummitAttendee>> getAttendeesForTicketOrder(String orderNumber);
 
     void addEventToMyFavoritesLocal(Member me, SummitEvent summitEvent);
 
