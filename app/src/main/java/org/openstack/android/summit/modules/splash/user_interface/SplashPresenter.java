@@ -3,10 +3,13 @@ package org.openstack.android.summit.modules.splash.user_interface;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
@@ -26,18 +29,18 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
         super(interactor, wireframe);
     }
 
-    private boolean onDataLoading              = false;
-    private boolean loadedSummitList           = false;
+    private boolean onDataLoading = false;
+    private boolean loadedSummitList = false;
     private static final int SHOW_SPLASH_DELAY = 2000;
 
     public void showSummitInfo() {
         SummitDTO summit = interactor.getActiveSummit();
-        if(summit != null){
+        if (summit != null) {
             view.setSummitName(summit.getName());
             String dates = summit.getLocalStartDate().toString("MMM")
-                    + " "   + summit.getLocalStartDate().toString("dd")+ "TH "
-                    + " - " + summit.getLocalEndDate().toString("dd")+ "TH "
-                    +  ", " + summit.getLocalStartDate().toString("yyyy");
+                    + " " + summit.getLocalStartDate().toString("dd") + "TH "
+                    + " - " + summit.getLocalEndDate().toString("dd") + "TH "
+                    + ", " + summit.getLocalStartDate().toString("yyyy");
             view.setSummitDates(dates);
             view.setSummitInfoContainerVisibility(true);
             return;
@@ -57,7 +60,7 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Log.d(Constants.LOG_TAG, "SplashPresenter.onRestoreInstanceState");
-        onDataLoading    = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
+        onDataLoading = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
         loadedSummitList = savedInstanceState.getBoolean(Constants.LOADED_SUMMITS_LIST, false);
     }
 
@@ -77,19 +80,41 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         disableDataUpdateService();
+        PackageInfo pInfo = null;
 
-       view.setLoginButtonVisibility(!interactor.isMemberLoggedIn());
-       view.setGuestButtonVisibility(!interactor.isMemberLoggedIn());
-       launchSummitListDataLoadingActivity();
+        try {
+            pInfo = view.getApplicationContext().getPackageManager().getPackageInfo(view.getApplicationContext().getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            pInfo = null;
+        }
+        // check current build against storad build
+        if (pInfo != null) {
+            int currentBuildNumber = pInfo.versionCode;
+            int installedBuildNumber = interactor.getInstalledBuildNumber();
+            if (installedBuildNumber < currentBuildNumber) {
+                Log.i(Constants.LOG_TAG, String.format("SplashPresenter.onCreate: old version %d - new version %d", installedBuildNumber, currentBuildNumber));
+                interactor.setInstalledBuildNumber(currentBuildNumber);
+                // if we are updating version and data is already loaded cleaning it ...
+                if (interactor.isDataLoaded()) {
+                    Log.i(Constants.LOG_TAG, "SplashPresenter.onCreate: upgrading data storage");
+                    this.disableDataUpdateService();
+                    interactor.upgradeStorage();
+                }
+            }
+        }
+
+        view.setLoginButtonVisibility(!interactor.isMemberLoggedIn());
+        view.setGuestButtonVisibility(!interactor.isMemberLoggedIn());
+        launchSummitListDataLoadingActivity();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
-    void launchSummitListDataLoadingActivity(){
-        if(loadedSummitList) return;
+    void launchSummitListDataLoadingActivity() {
+        if (loadedSummitList) return;
         onDataLoading = true;
         // disable data updates ...
         disableDataUpdateService();
@@ -105,70 +130,69 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
         }
     }
 
-    void launchMainActivity(boolean doLogin){
+    void launchMainActivity(boolean doLogin) {
         wireframe.showMainActivity(this.view, doLogin);
     }
 
-    void launchMainActivity(){
+    void launchMainActivity() {
         wireframe.showMainActivity(this.view, false);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            // Check which request we're responding to
-            if (requestCode == ISplashView.DATA_LOAD_REQUEST) {
-                onDataLoading = false;
-                // Make sure the request was successful
-                if (resultCode == Activity.RESULT_OK) {
-                    Log.i(Constants.LOG_TAG, "SplashPresenter.onActivityResult: Summit Data Loaded!");
-                    //re enable data update service
-                    enableDataUpdateService();
-                    if(interactor.isMemberLoggedIn()) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
+        // Check which request we're responding to
+        if (requestCode == ISplashView.DATA_LOAD_REQUEST) {
+            onDataLoading = false;
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                Log.i(Constants.LOG_TAG, "SplashPresenter.onActivityResult: Summit Data Loaded!");
+                //re enable data update service
+                enableDataUpdateService();
+                if (interactor.isMemberLoggedIn()) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                                launchMainActivity();
-                            }
-                        }, SHOW_SPLASH_DELAY);
+                            launchMainActivity();
+                        }
+                    }, SHOW_SPLASH_DELAY);
 
-                        return;
-                    }
+                    return;
                 }
             }
-            if(requestCode == ISplashView.SUMMITS_LIST_DATA_LOAD_REQUEST){
-                onDataLoading    = false;
-                loadedSummitList = true;
-                showSummitInfo();
-                // Make sure the request was successful
-                if (resultCode == Activity.RESULT_OK) {
-                    Log.i(Constants.LOG_TAG, "SplashPresenter.onActivityResult: Summit Data Loaded!");
-                    if(interactor.isMemberLoggedIn()) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
+        }
+        if (requestCode == ISplashView.SUMMITS_LIST_DATA_LOAD_REQUEST) {
+            onDataLoading = false;
+            loadedSummitList = true;
+            showSummitInfo();
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                Log.i(Constants.LOG_TAG, "SplashPresenter.onActivityResult: Summit Data Loaded!");
+                if (interactor.isMemberLoggedIn()) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                                launchMainActivity();
-                            }
-                        }, SHOW_SPLASH_DELAY);
-                        return;
-                    }
+                            launchMainActivity();
+                        }
+                    }, SHOW_SPLASH_DELAY);
+                    return;
                 }
-                else if(resultCode == SummitsListDataLoaderActivity.RESULT_OK_FIRE_SUMMIT_DATA_LOADING){
-                    launchInitialDataLoadingActivity();
-                }
+            } else if (resultCode == SummitsListDataLoaderActivity.RESULT_OK_FIRE_SUMMIT_DATA_LOADING) {
+                launchInitialDataLoadingActivity();
             }
+        }
     }
 
     @Override
-    public void loginClicked(View v){
+    public void loginClicked(View v) {
         disableDataUpdateService();
         launchMainActivity(true);
 
     }
 
     @Override
-    public void guestClicked(View v){
+    public void guestClicked(View v) {
         enableDataUpdateService();
         launchMainActivity();
     }

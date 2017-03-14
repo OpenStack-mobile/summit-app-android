@@ -11,4 +11,10 @@ import org.openstack.android.summit.common.business_logic.IBaseInteractor;
 public interface ISplashInteractor extends IBaseInteractor {
 
     void login(Context context);
+
+    void setInstalledBuildNumber(int buildNumber);
+
+    int getInstalledBuildNumber();
+
+    void upgradeStorage();
 }

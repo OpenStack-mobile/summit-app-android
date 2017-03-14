@@ -33,6 +33,15 @@ public class SummitEvent extends RealmObject implements ISummitEvent {
     private Summit summit;
     private SummitGroupEvent groupEvent;
     private SummitEventWithFile eventWithFile;
+    private String socialDescription;
+
+    public String getSocialDescription() {
+        return socialDescription;
+    }
+
+    public void setSocialDescription(String socialDescription) {
+        this.socialDescription = socialDescription;
+    }
 
     public String getRsvpLink() {
         return rsvpLink;

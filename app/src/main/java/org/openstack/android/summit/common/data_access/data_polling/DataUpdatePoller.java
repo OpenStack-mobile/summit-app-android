@@ -40,7 +40,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private Retrofit restClientServiceProfile;
     private ISummitSelector summitSelector;
 
-    private static final int EntityEventUpdatesPageSize = 50;
+    private static final int EntityEventUpdatesPageSize = 100;
 
     @Inject
     public DataUpdatePoller
@@ -96,38 +96,23 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         }
     }
 
-    private long getFromDate() {
-        return session.getLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE);
-    }
-
-    private void setFromDate(long fromDate) {
-        session.setLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE, fromDate);
-    }
-
     private Call<ResponseBody> getCall(ISummitEntityEventsApi api) {
 
-        long latestDataUpdateId       = session.getLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID);
-        long latestDataUpdateIdFromDB = dataUpdateDataStore.getLatestDataUpdate();
-
-        if(latestDataUpdateId < latestDataUpdateIdFromDB ){
-            latestDataUpdateId = latestDataUpdateIdFromDB;
-            session.setLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID, latestDataUpdateId);
-        }
+        long latestDataUpdateId = dataUpdateDataStore.getLatestDataUpdate();
 
         if (latestDataUpdateId > 0){
+            Log.i(Constants.LOG_TAG, String.format("DataUpdatePoller - calling api from id %d",latestDataUpdateId));
             return api.get(summitSelector.getCurrentSummitId(), null, latestDataUpdateId, EntityEventUpdatesPageSize);
         }
 
-        long fromDate = getFromDate();
-        if (fromDate == 0) {
-            Summit summit = summitDataStore.getById(summitSelector.getCurrentSummitId());
-            if (summit != null) {
-                fromDate = summit.getInitialDataLoadDate().getTime() / 1000L;
-                setFromDate(fromDate);
-            }
+        long fromDate = 0;
+        Summit summit = summitDataStore.getById(summitSelector.getCurrentSummitId());
+        if (summit != null) {
+            fromDate = summit.getInitialDataLoadDate().getTime() / 1000L;
         }
 
-        if (fromDate != 0) {
+        if (fromDate > 0) {
+            Log.d(Constants.LOG_TAG, String.format("DataUpdatePoller - calling api from date %d ",fromDate));
             return api.get(summitSelector.getCurrentSummitId(), fromDate, null, EntityEventUpdatesPageSize);
         }
 
@@ -144,9 +129,6 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
                 if (lastWipeEventId == 0 || lastWipeEventId < dataUpdate.getId()) {
 
                     Log.d(Constants.LOG_TAG, "DataUpdatePoller.clearDataIfTruncateEventExist: doing a wipe DB ...");
-                    // reset state ...
-                    session.setLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID, 0);
-                    clearState(session);
                     // check login state ...
                     if(securityManager.isLoggedIn()){
                         securityManager.logout(false);
@@ -161,11 +143,4 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             }
         } while (dataUpdate != null);
     }
-
-    public static void clearState(ISession session){
-        if(session == null ) return;
-        session.setLong(Constants.KEY_DATA_UPDATE_LAST_EVENT_ID, 0);
-        session.setLong(Constants.KEY_DATA_UPDATE_SET_FROM_DATE, 0);
-    }
-
 }

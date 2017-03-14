@@ -64,6 +64,7 @@ public class SummitEventDeserializer extends BaseDeserializer implements ISummit
         summitEvent.setStart(new Date(jsonObject.optLong("start_date") * 1000L));
         summitEvent.setEnd(new Date(jsonObject.optLong("end_date") * 1000L));
         summitEvent.setDescription(!jsonObject.isNull("description") ? jsonObject.getString("description") : "");
+        summitEvent.setSocialDescription(!jsonObject.isNull("social_description") ? jsonObject.getString("social_description") : "");
         summitEvent.setAverageRate(!jsonObject.isNull("avg_feedback_rate") ? jsonObject.getDouble("avg_feedback_rate") : 0);
         summitEvent.setRsvpLink(!jsonObject.isNull("rsvp_link") ? jsonObject.getString("rsvp_link") : null);
         summitEvent.setRsvpExternal(!jsonObject.isNull("rsvp_external") ? jsonObject.getBoolean("rsvp_external") : false);

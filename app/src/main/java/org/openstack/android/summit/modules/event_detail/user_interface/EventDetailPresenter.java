@@ -277,7 +277,7 @@ public class EventDetailPresenter
     @Override
     public Intent createShareIntent() {
         if (this.event == null) return null;
-        return ShareIntentBuilder.build(this.event.getEventUrl());
+        return ShareIntentBuilder.build(this.event.getSocialSummary(), this.event.getEventUrl());
     }
 
     @Override

@@ -40,11 +40,12 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         scheduleItemDTO.setEventType(source.getType() != null ? source.getType().getName() : "");
         String sponsors = getSponsors(source);
         scheduleItemDTO.setSponsors(sponsors);
-        scheduleItemDTO.setTrack(
-         source.getTrack() != null
+        scheduleItemDTO.setTrack(source.getTrack() != null
                         ? source.getTrack().getName()
                         : null
         );
+
+
 
         if (source.getTrack() != null && source.getTrack().getTrackGroups().size() > 0) {
             scheduleItemDTO.setColor(source.getTrack().getTrackGroups().get(0).getColor());
@@ -57,6 +58,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         scheduleItemDTO.setSummitId(source.getSummit().getId());
         scheduleItemDTO.setRSVPLink(source.getRsvpLink());
         scheduleItemDTO.setExternalRSVP(source.isRsvpExternal());
+        scheduleItemDTO.setSocialSummary(source.getSocialDescription());
         Summit summit = source.getSummit();
 
         if (summit != null) {

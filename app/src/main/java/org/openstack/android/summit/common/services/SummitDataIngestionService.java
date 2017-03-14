@@ -112,15 +112,12 @@ public class SummitDataIngestionService extends IntentService {
 
             final String body = response.body().string();
 
-            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
-                @Override
-                public Void callback(Realm session) throws Exception {
+            RealmFactory.transaction(session -> {
 
-                    Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: deserializing summit data ...");
-                    Summit summit = deserializer.deserialize(body);
-                    session.copyToRealmOrUpdate(summit);
-                    return Void.getInstance();
-                }
+                Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: deserializing summit data ...");
+                Summit summit = deserializer.deserialize(body);
+                session.copyToRealmOrUpdate(summit);
+                return Void.getInstance();
             });
 
             Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: summit data loaded !!!");

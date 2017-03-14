@@ -11,14 +11,12 @@ import org.openstack.android.summit.R;
 
 public class ShareIntentBuilder {
 
-    public static Intent build(String eventUrl){
+    public static Intent build(String eventSocialSummary, String eventUrl){
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, String.format(
-                OpenStackSummitApplication.context.getResources().getString(R.string.share_event_text),
-                eventUrl
-                )
-        );
+        if(eventSocialSummary == null || eventSocialSummary.trim().isEmpty())
+            eventSocialSummary =  OpenStackSummitApplication.context.getResources().getString(R.string.share_event_text);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, eventSocialSummary.trim() + " "+eventUrl.trim());
         return shareIntent;
     }
 }

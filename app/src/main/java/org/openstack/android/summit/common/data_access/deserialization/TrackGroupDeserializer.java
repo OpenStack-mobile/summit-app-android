@@ -33,7 +33,7 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
         if(trackGroup == null)
             trackGroup = RealmFactory.getSession().createObject(TrackGroup.class, groupId);
 
-        trackDeserializer.setShouldDeserializeTrackGroups(false);
+
 
         trackGroup.setName(jsonObject.getString("name"));
         trackGroup.setDescription(jsonObject.getString("description"));
@@ -43,16 +43,18 @@ public class TrackGroupDeserializer extends BaseDeserializer implements ITrackGr
         JSONArray jsonArrayTracks = jsonObject.getJSONArray("tracks");
         trackGroup.getTracks().clear();
 
+        trackDeserializer.setShouldDeserializeTrackGroups(false);
         for (int i = 0; i < jsonArrayTracks.length(); i++) {
-
-            track =  (jsonArrayTracks.optInt(i) > 0) ?
-                    RealmFactory.getSession().where(Track.class).equalTo("id", jsonArrayTracks.optInt(i)).findFirst() :
+            int trackId = jsonArrayTracks.optInt(i);
+            if(trackId == 0 ) trackId = jsonArrayTracks.getJSONObject(i).getInt("id");
+            track =  trackId > 0  ?
+                    RealmFactory.getSession().where(Track.class).equalTo("id", trackId).findFirst() :
                     trackDeserializer.deserialize(jsonArrayTracks.getJSONObject(i).toString());
 
             if(track == null) continue;
-
-            track.getTrackGroups().add(trackGroup);
             trackGroup.getTracks().add(track);
+            if(!track.getTrackGroups().contains(trackGroup))
+                track.getTrackGroups().add(trackGroup);
         }
 
         return trackGroup;

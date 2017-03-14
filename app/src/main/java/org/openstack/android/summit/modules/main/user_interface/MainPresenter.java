@@ -55,7 +55,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     private boolean shouldShowMainView = false;
 
     @Override
-    public void shouldShowMainView(){
+    public void shouldShowMainView() {
         this.shouldShowMainView = true;
     }
 
@@ -68,7 +68,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     public void onResume() {
         Log.d(Constants.LOG_TAG, "MainPresenter.onResume");
         super.onResume();
-        if(shouldShowMainView){
+        if (shouldShowMainView) {
             Log.d(Constants.LOG_TAG, "MainPresenter.onResume - showEventsView");
             shouldShowMainView = false;
             showEventsView();
@@ -87,32 +87,8 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*PackageInfo pInfo = null;
-
-        try {
-            pInfo = view.getApplicationContext().getPackageManager().getPackageInfo(view.getApplicationContext().getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            pInfo = null;
-        }
-        // check current build against storad build
-        if(pInfo != null){
-            int currentBuildNumber   = pInfo.versionCode;
-            int installedBuildNumber = interactor.getInstalledBuildNumber();
-            if(installedBuildNumber < currentBuildNumber){
-                Log.d(Constants.LOG_TAG, String.format("MainPresenter.onCreate: old version %d - new version %d", installedBuildNumber, currentBuildNumber));
-                interactor.setInstalledBuildNumber(currentBuildNumber);
-                // if we are updating version and data is already loaded cleaning it ...
-                if(interactor.isDataLoaded()) {
-                    Log.d(Constants.LOG_TAG, "MainPresenter.onCreate: upgrading data storage");
-                    this.disableDataUpdateService();
-                    interactor.upgradeStorage();
-                    return;
-                }
-            }
-        }*/
         // normal flow, if data is loaded, enabled the data update services
-        if(interactor.isDataLoaded()){
+        if (interactor.isDataLoaded()) {
             enableDataUpdateService();
         }
     }
@@ -268,7 +244,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onLoggedIn() throws MissingMemberException {
         MemberDTO member = interactor.getCurrentMember();
-        if(member == null) throw new MissingMemberException();
+        if (member == null) throw new MissingMemberException();
         view.setMemberName(member.getFullName());
         view.setLoginButtonText(view.getResources().getText(R.string.log_out).toString());
         view.setProfilePic(Uri.parse(member.getPictureUrl()));

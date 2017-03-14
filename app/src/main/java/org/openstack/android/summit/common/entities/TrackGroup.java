@@ -49,7 +49,6 @@ public class TrackGroup extends RealmObject implements INamedEntity, ISummitOwne
     }
 
     public RealmList<Track> getTracks() {
-        if(tracks == null) tracks = new RealmList<>();
         return tracks;
     }
 

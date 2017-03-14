@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -29,8 +30,9 @@ public class SplashModule {
     ISplashInteractor providesSplashInteractor(ISummitDataStore summitDataStore,
                                                ISecurityManager securityManager,
                                                IDTOAssembler dtoAssembler,
+                                               ISession session,
                                                ISummitSelector summitSelector){
-        return new SplashInteractor(summitDataStore, securityManager, dtoAssembler, summitSelector);
+        return new SplashInteractor(summitDataStore, securityManager, dtoAssembler,session, summitSelector);
     }
 
     @Provides

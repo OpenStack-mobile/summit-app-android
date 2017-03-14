@@ -12,7 +12,6 @@ import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
-import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
@@ -47,28 +46,6 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         this.reachability              = reachability;
         this.pushNotificationDataStore = pushNotificationDataStore;
         this.session                   = session;
-    }
-
-    private final static String BuildNumber = "build-number";
-
-    @Override
-    public void setInstalledBuildNumber(int buildNumber){
-        session.setInt(BuildNumber, buildNumber);
-    }
-
-    @Override
-    public int getInstalledBuildNumber(){
-        return session.getInt(BuildNumber);
-    }
-
-    @Override
-    public void upgradeStorage() {
-        // clear data update state
-        DataUpdatePoller.clearState(session);
-        if(securityManager.isLoggedIn()){
-            securityManager.logout(false);
-        }
-        summitDataStore.clearDataLocal();
     }
 
     @Override

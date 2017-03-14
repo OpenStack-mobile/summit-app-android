@@ -31,6 +31,15 @@ public class ScheduleItemDTO extends NamedDTO implements IScheduleableItem {
     protected boolean isFavorite;
     protected boolean isPresentation;
     protected String eventUrl;
+    protected String socialSummary;
+
+    public String getSocialSummary() {
+        return socialSummary;
+    }
+
+    public void setSocialSummary(String socialSummary) {
+        this.socialSummary = socialSummary;
+    }
 
     public String getEventUrl() {
         return eventUrl;

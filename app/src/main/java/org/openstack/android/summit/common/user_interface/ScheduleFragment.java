@@ -165,7 +165,7 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         if(layoutManager != null)
             listPosition = layoutManager.findFirstVisibleItemPosition();
         //save list state ( if visible)
-        if(view != null) {
+        if(ranger != null) {
             outState.putInt(SELECTED_DAY, ranger.getSelectedDay());
         }
         if(selectedDay != null){

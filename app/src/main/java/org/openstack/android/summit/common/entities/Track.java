@@ -1,7 +1,5 @@
 package org.openstack.android.summit.common.entities;
 
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -33,7 +31,6 @@ public class Track extends RealmObject implements INamedEntity, ISummitOwned {
     }
 
     public RealmList<TrackGroup> getTrackGroups() {
-        if(trackGroups == null) trackGroups = new RealmList<>();
         return trackGroups;
     }
 

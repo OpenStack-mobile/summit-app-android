@@ -142,6 +142,6 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
     protected void _shareEvent(IScheduleableItem scheduleItemView, int position){
         ScheduleItemDTO scheduleItemDTO = getCurrentItem(position);
         if(scheduleItemDTO == null) return;
-        view.startActivity(Intent.createChooser(ShareIntentBuilder.build(scheduleItemDTO.getEventUrl()), view.getResources().getString(R.string.action_share_event)));
+        view.startActivity(Intent.createChooser(ShareIntentBuilder.build(scheduleItemDTO.getSocialSummary(), scheduleItemDTO.getEventUrl()), view.getResources().getString(R.string.action_share_event)));
     }
 }

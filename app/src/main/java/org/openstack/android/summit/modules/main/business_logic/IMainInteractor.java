@@ -22,11 +22,5 @@ public interface IMainInteractor extends IBaseInteractor {
 
     long getNotReadNotificationsCount();
 
-    void setInstalledBuildNumber(int buildNumber);
-
-    int getInstalledBuildNumber();
-
-    void upgradeStorage();
-
     void unSubscribeToPushNotifications();
 }

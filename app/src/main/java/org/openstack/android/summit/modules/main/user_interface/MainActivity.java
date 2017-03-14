@@ -37,6 +37,7 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.devices.huawei.HuaweiHelper;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.BadgeCounterMenuItemDecorator;
@@ -270,6 +271,9 @@ public class MainActivity
         setContentView(R.layout.activity_main);
 
         ActionBarSetup();
+
+        HuaweiHelper.check(this);
+
         NavigationMenuSetup(savedInstanceState);
         if (savedInstanceState == null) {
             // first time

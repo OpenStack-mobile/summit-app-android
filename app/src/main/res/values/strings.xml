@@ -7,7 +7,7 @@
     <string name="action_add_to_calendar">Add to Calendar</string>
     <string name="action_rsvp">RSVP required</string>
     <string name="action_share_event">Share Event</string>
-    <string name="share_event_text">Check out this #OpenStack session I’m attending at the #OpenStackSummit! %1$s</string>
+    <string name="share_event_text">Check out this #OpenStack session I’m attending at the #OpenStackSummit!</string>
     <string name="action_send">Send</string>
     <string name="action_create_feedback">Leave a Review</string>
     <string name="log_in">LOG IN</string>
