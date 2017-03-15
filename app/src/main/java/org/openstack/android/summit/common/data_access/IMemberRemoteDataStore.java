@@ -2,6 +2,9 @@ package org.openstack.android.summit.common.data_access;
 
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
+
+import java.util.List;
+
 import io.reactivex.Observable;
 
 /**
@@ -17,8 +20,8 @@ public interface IMemberRemoteDataStore {
 
     Observable<Boolean> removeSummitEventFromFavorites(int summitId, int eventId);
 
-    void getAttendeesForTicketOrder(String orderNumber, IDataStoreOperationListener<NonConfirmedSummitAttendee> remoteDataStoreOperationListener);
+    Observable<List<NonConfirmedSummitAttendee>> getAttendeesForTicketOrder(String orderNumber);
 
-    void selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener);
+    Observable<Boolean> selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId);
 
 }

@@ -76,4 +76,25 @@ public class PersonalSchedulePresenter
     public void toggleFavoriteStatus(IScheduleItemView scheduleItemView, int position) {
        _toggleFavoriteStatus(scheduleItemView, position);
     }
+
+    @Override
+    public void buildItem(IScheduleItemView scheduleItemView, int position) {
+        if (dayEvents.size() - 1 < position) return;
+        ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
+        scheduleItemViewBuilder.build
+                (
+                        scheduleItemView,
+                        scheduleItemDTO,
+                        interactor.isMemberLoggedIn(),
+                        interactor.isMemberLoggedInAndConfirmedAttendee(),
+                        interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
+                        interactor.isEventFavoriteByLoggedMember(scheduleItemDTO.getId()),
+                        false,
+                        interactor.shouldShowVenues(),
+                        scheduleItemDTO.getRSVPLink() ,
+                        scheduleItemDTO.isExternalRSVP(),
+                        true,
+                        false
+                );
+    }
 }

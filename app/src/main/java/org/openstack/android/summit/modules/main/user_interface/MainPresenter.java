@@ -11,6 +11,7 @@ import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.services.DataUpdatesService;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
@@ -38,10 +39,12 @@ import bolts.AppLinkNavigation;
 public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMainWireframe> implements IMainPresenter {
 
     private IAppLinkRouter appLinkRouter;
+    private ISession session;
 
-    public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter) {
+    public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter, ISession session) {
         super(interactor, wireframe);
         this.appLinkRouter = appLinkRouter;
+        this.session       = session;
         if (BuildConfig.FLAVOR.contains(Constants.FLAVOR_BETA) || BuildConfig.FLAVOR.contains(Constants.FLAVOR_DEV)) {
             trustEveryone();
         }
@@ -188,12 +191,12 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
             return;
         }
 
-        if (interactor.isLoggedInAndConfirmedAttendee()) {
+        if (interactor.isMemberLogged()) {
             wireframe.showMyProfileView(view);
             return;
         }
 
-        wireframe.showMemberOrderConfirmView(view);
+        view.showInfoMessage(view.getResources().getString(R.string.no_logged_in_user));
     }
 
     public void showSpeakerListView() {
@@ -238,6 +241,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         view.setProfilePic(null);
         interactor.unSubscribeToPushNotifications();
         interactor.subscribeToPushNotifications();
+        session.setInt(Constants.WILL_ATTEND, 0);
         updateNotificationCounter();
     }
 

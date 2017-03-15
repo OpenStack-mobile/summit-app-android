@@ -125,7 +125,7 @@
             android:padding="0dp"
             android:layout_margin="0dp"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:background="@drawable/ic_event_available"/>
+            android:background="@drawable/ic_check_circle"/>
     </FrameLayout>
 
     <LinearLayout

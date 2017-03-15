@@ -3,21 +3,19 @@ package org.openstack.android.summit.modules.personal_schedule.business_logic;
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
-import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
+import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -44,32 +42,8 @@ public class PersonalScheduleInteractor extends ScheduleInteractor implements IP
                     .lessThanOrEqualTo("end", endDate)
                     .findAllSorted(new String[]{"start", "end", "name"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING});
 
-            List<SummitEvent> favoriteEvents = member.getFavoriteEvents()
-                    .where()
-                    .greaterThanOrEqualTo("start", startDate)
-                    .lessThanOrEqualTo("end", endDate)
-                    .findAllSorted(new String[]{"start", "end", "name"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING});
 
-            List<SummitEvent> finalList = new ArrayList<>();
-            finalList.addAll(scheduleEvents);
-            for (SummitEvent f : favoriteEvents){
-                if (!finalList.contains(f))
-                    finalList.add(f);
-            }
-
-            Collections.sort(finalList, (s1, s2) -> {
-                int startCond = s1.getStart().compareTo(s2.getStart());
-                if (startCond != 0) {
-                    return startCond;
-                } else {
-                    int endCond   = s1.getEnd().compareTo(s2.getEnd());
-                    if(endCond != 0)
-                       return endCond;
-                }
-                return s1.getName().compareTo(s2.getName());
-            });
-
-            dtos = createDTOList(finalList, ScheduleItemDTO.class);
+            dtos = createDTOList(scheduleEvents, ScheduleItemDTO.class);
         }
         else {
             dtos = new ArrayList<>();

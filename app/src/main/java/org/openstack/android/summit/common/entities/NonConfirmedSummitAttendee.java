@@ -6,8 +6,10 @@ import io.realm.annotations.Ignore;
 /**
  * Created by Claudio Redi on 3/29/2016.
  */
-public class NonConfirmedSummitAttendee extends RealmObject implements IEntity{
+public class NonConfirmedSummitAttendee extends RealmObject implements IEntity
+{
     private int id;
+
     private String name;
 
     public int getId() {

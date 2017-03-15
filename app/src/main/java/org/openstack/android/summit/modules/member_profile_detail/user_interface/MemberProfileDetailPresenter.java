@@ -6,6 +6,7 @@ import android.os.Bundle;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.DTOs.PersonDTO;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.member_profile_detail.IMemberProfileDetailWireframe;
 import org.openstack.android.summit.modules.member_profile_detail.business_logic.IMemberProfileDetailInteractor;
@@ -20,10 +21,20 @@ public class MemberProfileDetailPresenter
 
     private Boolean isMyProfile;
     private Integer speakerId;
+    private Boolean isAttendee;
     private PersonDTO person;
+    private ISession session;
 
-    public MemberProfileDetailPresenter(IMemberProfileDetailInteractor interactor, IMemberProfileDetailWireframe wireframe) {
+    public MemberProfileDetailPresenter
+    (
+
+        IMemberProfileDetailInteractor interactor,
+        IMemberProfileDetailWireframe wireframe,
+        ISession session
+    )
+    {
         super(interactor, wireframe);
+        this.session = session;
     }
 
     @Override
@@ -37,16 +48,17 @@ public class MemberProfileDetailPresenter
 
         if (isMyProfile != null && isMyProfile) {
             MemberDTO myProfile = interactor.getCurrentMember();
-            person = myProfile != null && myProfile.getSpeakerRole() != null ? myProfile.getSpeakerRole() : myProfile;
-            speakerId = myProfile != null && myProfile.getSpeakerRole() != null ? myProfile.getSpeakerRole().getId() : 0;
+            person              = myProfile != null && myProfile.getSpeakerRole()  != null ? myProfile.getSpeakerRole() : myProfile;
+            isAttendee          = myProfile != null && myProfile.getAttendeeRole() != null;
+            speakerId           = myProfile != null && myProfile.getSpeakerRole()  != null ? myProfile.getSpeakerRole().getId() : 0;
+            return;
         }
-        else {
-            speakerId = (savedInstanceState != null) ?
+
+        speakerId = (savedInstanceState != null) ?
                     savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_SPEAKER) :
                     wireframe.getParameter(Constants.NAVIGATION_PARAMETER_SPEAKER, Integer.class);
 
-            person   = interactor.getPresentationSpeaker(speakerId);
-        }
+        person    = interactor.getPresentationSpeaker(speakerId);
     }
 
     @Override
@@ -71,8 +83,17 @@ public class MemberProfileDetailPresenter
             ? Uri.parse(person.getPictureUrl().replace("https", "http"))
             : null;
         view.setPictureUri(uri);
-
+        view.showAddEventBriteOrderContainer(isMyProfile && !isAttendee);
+        view.showEventBriteOrderAdded(isMyProfile && isAttendee);
         super.onCreate(savedInstanceState);
+        view.setShowMissingEventBriteOrderIndicator(false);
+
+        if(isMyProfile && !isAttendee){
+            int willAttend = session.getInt(Constants.WILL_ATTEND);
+            if(willAttend == 0)
+                view.createNotAttendeeAlertDialog().show();
+            view.setShowMissingEventBriteOrderIndicator(willAttend == 1);
+        }
     }
 
     @Override
@@ -83,5 +104,21 @@ public class MemberProfileDetailPresenter
         if(speakerId != null){
             outState.putInt(Constants.NAVIGATION_PARAMETER_SPEAKER, speakerId);
         }
+    }
+
+    @Override
+    public void onAddEventBriteOrderClicked() {
+        wireframe.showMemberOrderConfirmView(view);
+    }
+
+    @Override
+    public void willAttendClicked() {
+        session.setInt(Constants.WILL_ATTEND, 1);
+        wireframe.showMemberOrderConfirmView(view);
+    }
+
+    @Override
+    public void willNotAttendClicked() {
+        session.setInt(Constants.WILL_ATTEND, -1);
     }
 }

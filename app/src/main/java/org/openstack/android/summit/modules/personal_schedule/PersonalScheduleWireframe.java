@@ -9,8 +9,9 @@ import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
  * Created by Claudio Redi on 1/28/2016.
  */
 public class PersonalScheduleWireframe extends ScheduleWireframe implements IPersonalScheduleWireframe {
+
     public PersonalScheduleWireframe
-(
+    (
         IEventDetailWireframe eventDetailWireframe,
         IRSVPWireframe rsvpWireframe,
         INavigationParametersStore navigationParametersStore

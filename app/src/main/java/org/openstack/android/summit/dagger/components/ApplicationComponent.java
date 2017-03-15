@@ -4,8 +4,10 @@ package org.openstack.android.summit.dagger.components;
  * Created by claudio on 11/3/2015.
  */
 
+import org.openstack.android.summit.dagger.modules.FavoriteScheduleModule;
 import org.openstack.android.summit.dagger.modules.RSVPModule;
 import org.openstack.android.summit.dagger.modules.SplashModule;
+import org.openstack.android.summit.modules.favorites_schedule.user_interface.FavoritesScheduleFragment;
 import org.openstack.android.summit.modules.splash.user_interface.SplashActivity;
 import org.openstack.android.summit.SummitDataLoadingActivity;
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
@@ -121,7 +123,8 @@ import dagger.Component;
         RestApiModule.class,
         PushNotificationsModule.class,
         SplashModule.class,
-        RSVPModule.class
+        RSVPModule.class,
+        FavoriteScheduleModule.class,
 })
 public interface ApplicationComponent {
 
@@ -165,4 +168,5 @@ public interface ApplicationComponent {
     void inject(PushNotificationReceiverService pushNotificationReceiverService);
     void inject(PushNotificationsBroadcastReceiver pushNotificationsBroadcastReceiver);
     void inject(SplashActivity splashActivity);
+    void inject(FavoritesScheduleFragment favoritesScheduleFragment);
 }

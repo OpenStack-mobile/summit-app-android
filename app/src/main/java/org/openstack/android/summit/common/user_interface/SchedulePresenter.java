@@ -61,7 +61,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     {
         super(interactor, wireframe, scheduleablePresenter);
         this.scheduleItemViewBuilder = scheduleItemViewBuilder;
-        this.scheduleFilter = scheduleFilter;
+        this.scheduleFilter          = scheduleFilter;
 
         scheduleItemDTOIInteractorOperationListener = new InteractorAsyncOperationListener<ScheduleItemDTO>() {
             @Override
@@ -193,7 +193,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
         return inactiveDates;
     }
-
 
     public void buildItem(IScheduleItemView scheduleItemView, int position) {
         if (dayEvents.size() - 1 < position) return;

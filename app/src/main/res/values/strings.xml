@@ -61,9 +61,9 @@
     <string name="eventbrite_order_confirmation">Eventbrite Order Confirmation</string>
     <string name="eventbrite_order_already_in_use">This Order# has already been associated with another user. If you feel this is an error, please contact summitsupport@openstack.org or enter a different Order #.</string>
     <string name="eventbrite_multiple_matches">Multiple tickets are assigned to provided order #. Please pick your name from the list to finish confirmation process</string>
-    <string name="eventbrite_order_confirm">Ticket Order Confirm</string>
-    <string name="eventbrite_add_order_number">Add your order # to unlock features only available for registered summit attendees</string>
-    <string name="eventbrite_order_number">Eventbrite Order #</string>
+    <string name="eventbrite_order_confirm">EventBrite Order</string>
+    <string name="eventbrite_add_order_number">Add your Eventbrite Order # to unlock features only available for Registered Summit attendees.</string>
+    <string name="eventbrite_order_number">Insert your Order #</string>
     <string name="cannot_navigate_event">It\'s not possible to view this event right now. Please try again later.</string>
     <string name="event_not_exist">This event was removed from schedule.</string>
     <string name="average_rating">Average Rating</string>
@@ -73,6 +73,7 @@
     <string name="nav_item_settings">SETTINGS</string>
     <string name="nav_item_about">ABOUT</string>
     <string name="nav_item_my_summit">MY SUMMIT</string>
+    <string name="nav_item_profile">PROFILE</string>
     <string name="nav_item_venues">VENUES</string>
     <string name="nav_item_speakers">SPEAKERS</string>
     <string name="nav_item_events">EVENTS</string>
@@ -101,10 +102,10 @@
     <string name="splash_guest_button_txt">continue as guest</string>
     <string name="now">NOW</string>
     <string name="save_favorite">Watch Later</string>
-    <string name="remove_favorite">Remove from Watch Later</string>
-    <string name="save_going">Add to My Schedule</string>
+    <string name="remove_favorite">Don\'t Watch Later</string>
+    <string name="save_going">Schedule</string>
     <string name="save_rsvp">RSVP</string>
-    <string name="remove_going">Remove from My Schedule</string>
+    <string name="remove_going">Unschedule</string>
     <string name="cancel">Cancel</string>
     <string name="removed_from_favorites">Removed from Watch Later</string>
     <string name="added_2_favorites">Added to Watch Later</string>
@@ -119,4 +120,14 @@
     <string name="event_details_reviews">%1$d Reviews</string>
     <string name="download_attachment">Download Attachment</string>
     <string name="download_slide">Download Slide</string>
+    <string name="add_eventbrite_order_action">Add Eventbrite Order</string>
+    <string name="add_order_action">Add Order</string>
+    <string name="my_summit_profile_tab_title">PROFILE</string>
+    <string name="my_summit_schedule_tab_title">SCHEDULE</string>
+    <string name="my_summit_favorites_tab_title">WATCH LIST</string>
+    <string name="my_summit_sessions_tab_title">SESSIONS</string>
+    <string name="eventbrite_ticket_added">Eventbrite Ticket Added</string>
+    <string name="eventbrite_not_attendee_alert_dialog_title">Are you a summit attendee?</string>
+    <string name="eventbrite_not_attendee_alert_dialog_body">Add your Eventbrite Order# to unlock features only available for Registered Summit Attendees.</string>
+    <string name="missing_eventbrite_order_indicator_text">Do not forget to add your EventBrite Order #</string>
 </resources>

@@ -19,8 +19,6 @@ public interface IMainWireframe {
 
     void showVenuesView(IBaseView context);
 
-    void showMemberOrderConfirmView(IBaseView view);
-
     void showAboutView(IBaseView context);
 
     void showEventDetail(int eventId, IBaseView context);

@@ -6,6 +6,13 @@ import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
  * Created by Claudio Redi on 1/14/2016.
  */
 public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
+
+
+    @Override
+    public void build(IScheduleItemView scheduleItemView, ScheduleItemDTO scheduleItemDTO, boolean isMemberLoggedIn, boolean isMemberLoggedInAndAttendee, boolean isEventScheduledByLoggedMember, boolean isEventFavoriteByLoggedMember, boolean useFullDate, boolean showVenues, String rsvpLink, boolean externalRSVP) {
+         build(scheduleItemView, scheduleItemDTO, isMemberLoggedIn, isMemberLoggedInAndAttendee, isEventScheduledByLoggedMember, isEventFavoriteByLoggedMember,  useFullDate, showVenues, rsvpLink, externalRSVP, true, true);
+    }
+
     @Override
     public void build
     (
@@ -18,7 +25,9 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         boolean useFullDate,
         boolean showVenues,
         String rsvpLink,
-        boolean externalRSVP
+        boolean externalRSVP,
+        boolean showMyScheduleOptions,
+        boolean showMyFavoritesOptions
     ) {
         scheduleItemView.setName(scheduleItemDTO.getName());
         scheduleItemView.setTime(useFullDate ? scheduleItemDTO.getDateTime() : scheduleItemDTO.getTime());
@@ -27,11 +36,11 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         scheduleItemView.setTrack(scheduleItemDTO.getTrack());
 
         if (isMemberLoggedIn) {
-            scheduleItemView.setScheduled(isEventScheduledByLoggedMember);
-            scheduleItemView.setFavorite(isEventFavoriteByLoggedMember);
-            scheduleItemView.shouldShowFavoritesOption(true);
-            scheduleItemView.shouldShowGoingToOption(isMemberLoggedInAndAttendee && (rsvpLink == null || rsvpLink.isEmpty()));
-            scheduleItemView.shouldShowRSVPToOption(isMemberLoggedInAndAttendee && rsvpLink != null && !rsvpLink.isEmpty());
+            scheduleItemView.setScheduled(showMyScheduleOptions && isEventScheduledByLoggedMember);
+            scheduleItemView.setFavorite(showMyFavoritesOptions && isEventFavoriteByLoggedMember);
+            scheduleItemView.shouldShowFavoritesOption(showMyFavoritesOptions);
+            scheduleItemView.shouldShowGoingToOption(showMyScheduleOptions && isMemberLoggedInAndAttendee && (rsvpLink == null || rsvpLink.isEmpty()));
+            scheduleItemView.shouldShowRSVPToOption(showMyScheduleOptions && isMemberLoggedInAndAttendee && rsvpLink != null && !rsvpLink.isEmpty());
         }
         else{
             scheduleItemView.setScheduled(false);

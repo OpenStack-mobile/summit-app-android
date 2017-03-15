@@ -15,73 +15,43 @@ import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 /**
  * Created by Claudio Redi on 3/27/2016.
  */
-public class MemberOrderConfirmInteractor extends BaseInteractor implements IMemberOrderConfirmInteractor {
+public class MemberOrderConfirmInteractor
+        extends BaseInteractor
+        implements IMemberOrderConfirmInteractor {
+
     IMemberRemoteDataStore memberRemoteDataStore;
     IReachability reachability;
 
     public MemberOrderConfirmInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
         super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+
         this.memberRemoteDataStore = memberRemoteDataStore;
-        this.reachability = reachability;
+        this.reachability          = reachability;
     }
 
     @Override
-    public void getAttendeesForTicketOrder(String orderNumber, final IInteractorAsyncOperationListener<List<NonConfirmedSummitAttendeeDTO>> interactorAsyncOperationListener) {
-        String error;
+    public Observable<List<NonConfirmedSummitAttendeeDTO>> getAttendeesForTicketOrder(String orderNumber) throws Exception {
+
         if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-            error = "Order can't be confirmed, there is no connectivity";
-            interactorAsyncOperationListener.onError(error);
-            return;
+           throw new Exception("Order can't be confirmed, there is no connectivity");
         }
 
-        //TODO logged in
-
-        IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<NonConfirmedSummitAttendee>() {
-
-            @Override
-            public void onSucceedWithDataCollection(List<NonConfirmedSummitAttendee> data) {
-                List<NonConfirmedSummitAttendeeDTO> nonConfirmedSummitAttendeeDTOs = createDTOList(data, NonConfirmedSummitAttendeeDTO.class);
-                interactorAsyncOperationListener.onSucceedWithData(nonConfirmedSummitAttendeeDTOs);
-            }
-
-            @Override
-            public void onError(String message) {
-                interactorAsyncOperationListener.onError(message);
-            }
-        };
-
-        memberRemoteDataStore.getAttendeesForTicketOrder(orderNumber, dataStoreOperationListener);
+        return memberRemoteDataStore.getAttendeesForTicketOrder(orderNumber)
+                .map(list -> createDTOList(list, NonConfirmedSummitAttendeeDTO.class));
     }
 
     @Override
-    public void selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId, final IInteractorAsyncOperationListener<Void> interactorAsyncOperationListener) {
-        String error;
+    public Observable<Boolean> selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId) throws Exception {
+
         if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-            error = "Order can't be confirmed, there is no connectivity";
-            interactorAsyncOperationListener.onError(error);
-            return;
+            throw new Exception("Order can't be confirmed, there is no connectivity");
         }
-
-        //TODO logged in
-
-        IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener = new DataStoreOperationListener<NonConfirmedSummitAttendee>() {
-
-            @Override
-            public void onSucceedWithoutData() {
-                interactorAsyncOperationListener.onSucceed();
-            }
-
-            @Override
-            public void onError(String message) {
-                interactorAsyncOperationListener.onError(message);
-            }
-        };
-
-        //interactorAsyncOperationListener.onSucceed();
-        memberRemoteDataStore.selectAttendeeFromOrderList(orderNumber, externalAttendeeId, dataStoreOperationListener);
+        return memberRemoteDataStore.selectAttendeeFromOrderList(orderNumber, externalAttendeeId);
     }
 
     @Override

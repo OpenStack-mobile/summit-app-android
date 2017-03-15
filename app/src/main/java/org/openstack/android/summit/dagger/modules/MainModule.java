@@ -4,9 +4,9 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
-import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.network.IReachability;
+import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.about.IAboutWireframe;
@@ -21,7 +21,6 @@ import org.openstack.android.summit.modules.main.user_interface.IDataLoadingPres
 import org.openstack.android.summit.modules.main.user_interface.IMainPresenter;
 import org.openstack.android.summit.modules.main.user_interface.MainPresenter;
 import org.openstack.android.summit.modules.main.user_interface.SummitListDataLoadingPresenter;
-import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
@@ -41,8 +40,8 @@ import dagger.Provides;
 public class MainModule {
 
     @Provides
-    IMainWireframe providesMainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IMemberOrderConfirmWireframe memberOrderConfirmWireframe, IAboutWireframe aboutWireframe, IPushNotificationsWireframe nofificationsWireframe, ISettingsWireframe settingsWireframe) {
-        return new MainWireframe(eventsWireframe, speakerListWireframe, memberProfileWireframe, searchWireframe, venuesWireframe, memberOrderConfirmWireframe, aboutWireframe, nofificationsWireframe, settingsWireframe);
+    IMainWireframe providesMainWireframe(IEventsWireframe eventsWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IAboutWireframe aboutWireframe, IPushNotificationsWireframe nofificationsWireframe, ISettingsWireframe settingsWireframe) {
+        return new MainWireframe(eventsWireframe, speakerListWireframe, memberProfileWireframe, searchWireframe, venuesWireframe, aboutWireframe, nofificationsWireframe, settingsWireframe);
     }
 
     @Provides
@@ -51,8 +50,8 @@ public class MainModule {
     }
 
     @Provides
-    IMainPresenter providesMainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter) {
-        return new MainPresenter(interactor, wireframe, appLinkRouter);
+    IMainPresenter providesMainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter, ISession session) {
+        return new MainPresenter(interactor, wireframe, appLinkRouter, session);
     }
 
     @Provides

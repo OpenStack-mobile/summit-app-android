@@ -4,11 +4,8 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.joda.time.DateTime;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
@@ -23,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Claudio Redi on 12/16/2015.
@@ -49,27 +45,9 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
         );
     }
 
-    public void getAttendeesForTicketOrder(String orderNumber, final IDataStoreOperationListener<NonConfirmedSummitAttendee> dataStoreOperationListener) {
-        IDataStoreOperationListener<NonConfirmedSummitAttendee> remoteDataStoreOperationListener = new DataStoreOperationListener<NonConfirmedSummitAttendee>() {
-            @Override
-            public void onSucceedWithDataCollection(List<NonConfirmedSummitAttendee> data) {
-                try{
-                    super.onSucceedWithDataCollection(data);
-                }
-                catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.e(Constants.LOG_TAG, e.getMessage(), e);
-                    String friendlyError = Constants.GENERIC_ERROR_MSG;
-                    dataStoreOperationListener.onError(friendlyError);
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                dataStoreOperationListener.onError(message);
-            }
-        };
-        memberRemoteDataStore.getAttendeesForTicketOrder(orderNumber, remoteDataStoreOperationListener);
+    @Override
+    public Observable<List<NonConfirmedSummitAttendee>> getAttendeesForTicketOrder(String orderNumber) {
+        return memberRemoteDataStore.getAttendeesForTicketOrder(orderNumber);
     }
 
     @Override
