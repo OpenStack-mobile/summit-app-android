@@ -22,7 +22,6 @@ import org.openstack.android.summit.modules.general_schedule.business_logic.IGen
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -115,6 +114,7 @@ public class SummitDataIngestionService extends IntentService {
             RealmFactory.transaction(session -> {
 
                 Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: deserializing summit data ...");
+                deserializer.setMode(ISummitDeserializer.SummitDeserializerMode.Complete);
                 Summit summit = deserializer.deserialize(body);
                 session.copyToRealmOrUpdate(summit);
                 return Void.getInstance();

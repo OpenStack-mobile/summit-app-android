@@ -23,7 +23,6 @@ import org.openstack.android.summit.common.utils.RealmFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -115,35 +114,33 @@ public class SummitsListIngestionService extends IntentService {
             final String body           = response.body().string();
             final JSONObject jsonObject = new JSONObject(body);
 
-            int res = RealmFactory.transaction(new RealmFactory.IRealmCallback<Integer>() {
-                @Override
-                public Integer callback(Realm session) throws Exception {
-                    Boolean mustReadSummitData = false;
-                    Log.d(Constants.LOG_TAG, "SummitsListIngestionService.onHandleIntent: deserializing summit list data ...");
-                    JSONArray summitsList = jsonObject.getJSONArray("data");
+            int res = RealmFactory.transaction(session -> {
+                Boolean mustReadSummitData = false;
+                Log.d(Constants.LOG_TAG, "SummitsListIngestionService.onHandleIntent: deserializing summit list data ...");
+                JSONArray summitsList = jsonObject.getJSONArray("data");
 
-                    for (int i = 0; i < summitsList.length(); i++) {
-                        JSONObject summitJson = summitsList.getJSONObject(i);
-                        Summit summit = deserializer.deserialize(summitJson.toString());
-                        session.copyToRealmOrUpdate(summit);
-                    }
-
-                    // get latest summit
-                    Summit latestSummit = summitDataStore.getLatest();
-                    int currentSummitId = summitSelector.getCurrentSummitId();
-                    int res             = RESULT_CODE_OK;
-
-                    if(latestSummit.getId() != currentSummitId || !latestSummit.isScheduleLoaded()) {
-                        res = RESULT_CODE_OK_INITIAL_LOADING;
-                        if(currentSummitId > 0 && latestSummit.getId() > currentSummitId){
-                            // we have a new summit available
-                            return RESULT_CODE_OK_NEW_SUMMIT_AVAILABLE_LOADING;
-                        }
-                        summitSelector.setCurrentSummitId(latestSummit.getId());
-                    }
-
-                    return res;
+                for (int i = 0; i < summitsList.length(); i++) {
+                    JSONObject summitJson = summitsList.getJSONObject(i);
+                    deserializer.setMode(ISummitDeserializer.SummitDeserializerMode.Header);
+                    Summit summit = deserializer.deserialize(summitJson.toString());
+                    session.copyToRealmOrUpdate(summit);
                 }
+
+                // get latest summit
+                Summit latestSummit = summitDataStore.getLatest();
+                int currentSummitId = summitSelector.getCurrentSummitId();
+                int res1 = RESULT_CODE_OK;
+
+                if(latestSummit.getId() != currentSummitId || !latestSummit.isScheduleLoaded()) {
+                    res1 = RESULT_CODE_OK_INITIAL_LOADING;
+                    if(currentSummitId > 0 && latestSummit.getId() > currentSummitId){
+                        // we have a new summit available
+                        return RESULT_CODE_OK_NEW_SUMMIT_AVAILABLE_LOADING;
+                    }
+                    summitSelector.setCurrentSummitId(latestSummit.getId());
+                }
+
+                return res1;
             });
             Log.d(Constants.LOG_TAG, "SummitsListIngestionService.onHandleIntent: summit data loaded !!!");
             sendResult(result, res);
