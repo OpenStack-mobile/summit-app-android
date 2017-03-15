@@ -38,8 +38,8 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
         if (summit != null) {
             view.setSummitName(summit.getName());
             String dates = summit.getLocalStartDate().toString("MMM")
-                    + " " + summit.getLocalStartDate().toString("dd") + "TH "
-                    + " - " + summit.getLocalEndDate().toString("dd") + "TH "
+                    + " " + summit.getLocalStartDate().toString("d") + "TH "
+                    + " - " + summit.getLocalEndDate().toString("d") + "TH "
                     + ", " + summit.getLocalStartDate().toString("yyyy");
             view.setSummitDates(dates);
             view.setSummitInfoContainerVisibility(true);
