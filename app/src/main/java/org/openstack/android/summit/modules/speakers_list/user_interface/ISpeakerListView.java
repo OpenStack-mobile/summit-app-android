@@ -3,6 +3,7 @@ package org.openstack.android.summit.modules.speakers_list.user_interface;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -10,4 +11,5 @@ import java.util.List;
  */
 public interface ISpeakerListView extends IBaseView {
     void setSpeakers(List<PersonListItemDTO> speakers);
+    public void setIndex(HashMap<String, Integer> mapIndex);
 }

@@ -55,4 +55,28 @@ public class PresentationSpeakerDataStore extends GenericDataStore<PresentationS
         return presentationSpeakers;
     }
 
+    public List<PresentationSpeaker> getAllByFilter(int summitId, String searchTerm) {
+
+        Summit summit = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
+        RealmQuery<PresentationSpeaker> query = summit.getSpeakers().where().isNotNull("fullName");
+
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            query.contains("fullName", searchTerm, Case.INSENSITIVE);
+        }
+
+        RealmResults<PresentationSpeaker> results = query.findAll();
+        results                                   = results.sort(new String[] { "firstName", "lastName"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING });
+
+        ArrayList<PresentationSpeaker> presentationSpeakers = new ArrayList<>();
+
+        int index = 0;
+        int size = results.size();
+        while (index < size) {
+            presentationSpeakers.add(results.get(index));
+            index++;
+        }
+
+        return presentationSpeakers;
+    }
+
 }

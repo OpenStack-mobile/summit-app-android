@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface ISpeakerListInteractor extends IBaseInteractor {
     List<PersonListItemDTO> getSpeakers(int page, int objectsPerPage);
+
+    List<PersonListItemDTO> getAllSpeakers();
 }

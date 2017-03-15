@@ -1,28 +1,34 @@
 package org.openstack.android.summit.modules.speakers_list.user_interface;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
-import org.openstack.android.summit.common.user_interface.InfiniteScrollListener;
-import org.openstack.android.summit.common.user_interface.PersonItemView;
+import org.openstack.android.summit.common.user_interface.fast_scroll_recycler_view.FastScrollRecyclerViewItemDecoration;
 
+import java.util.HashMap;
 import java.util.List;
 
-import javax.inject.Inject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Claudio Redi on 1/13/2016.
  */
 public class SpeakerListFragment extends BaseFragment<ISpeakerListPresenter> implements ISpeakerListView {
 
-    SpeakerListAdapter speakerListAdapter;
+    private View view;
+    private Unbinder unbinder;
+    private SpeakerListAdapter speakerListAdapter;
+
+    @BindView(R.id.list_speakers) RecyclerView speakerList;
 
     public SpeakerListFragment() {
         // Required empty public constructor
@@ -40,19 +46,31 @@ public class SpeakerListFragment extends BaseFragment<ISpeakerListPresenter> imp
         setTitle(getResources().getString(R.string.speakers));
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_speaker_list, container, false);
-        this.view = view;
-        ListView speakerList = (ListView)view.findViewById(R.id.list_speakers);
-        speakerListAdapter = new SpeakerListAdapter(getContext());
+        view = inflater.inflate(R.layout.fragment_speaker_list, container, false);
+        unbinder = ButterKnife.bind(this, view);
+
+        speakerList.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager  = new LinearLayoutManager(getContext());
+
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        speakerList.setLayoutManager(layoutManager);
+
+        speakerListAdapter  = new SpeakerListAdapter(presenter);
+
         speakerList.setAdapter(speakerListAdapter);
-        speakerList.setOnScrollListener(new InfiniteScrollListener(presenter.getObjectsPerPage()) {
-            @Override
-            public void loadMore(int page, int totalItemsCount) {
-                presenter.loadData();
-            }
-        });
-        super.onCreateView(inflater, container, savedInstanceState);
+
+        speakerList.addItemDecoration(new FastScrollRecyclerViewItemDecoration(getContext()));
+
+        presenter.onCreateView(savedInstanceState);
+
         return view;
     }
 
@@ -62,38 +80,8 @@ public class SpeakerListFragment extends BaseFragment<ISpeakerListPresenter> imp
         speakerListAdapter.addAll(speakers);
     }
 
-    private class SpeakerListAdapter extends ArrayAdapter<PersonListItemDTO> {
-
-        public SpeakerListAdapter(Context context) {
-            super(context, 0);
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_person_list, parent, false);
-            }
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    presenter.showSpeakerProfile(position);
-                }
-            });
-
-            final PersonItemView personItemView = new PersonItemView(convertView);
-
-            presenter.buildItem(personItemView, position);
-
-            // Return the completed view to render on screen
-            return convertView;
-        }
-
-        @Override
-        public int getCount() {
-            return super.getCount();
-        };
+    @Override
+    public void setIndex(HashMap<String, Integer> mapIndex) {
+        speakerListAdapter.setMapIndex(mapIndex);
     }
 }
