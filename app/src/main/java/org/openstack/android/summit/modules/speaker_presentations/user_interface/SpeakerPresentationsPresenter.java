@@ -58,7 +58,6 @@ public class SpeakerPresentationsPresenter
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
-        view.setTitle("PROFILE");
         super.onCreate(savedInstanceState);
     }
 

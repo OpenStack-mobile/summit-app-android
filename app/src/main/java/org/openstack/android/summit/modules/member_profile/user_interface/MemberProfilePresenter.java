@@ -56,8 +56,6 @@ public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IM
             }
             speaker = interactor.getPresentationSpeaker(speakerId);
         }
-
-        view.setTitle("PROFILE");
     }
 
     @Override

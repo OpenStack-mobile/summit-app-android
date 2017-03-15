@@ -53,6 +53,8 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
                 !jsonObject.isNull("level") ? jsonObject.getString("level") : null
         );
 
+        presentation.setToRecord(jsonObject.optBoolean("to_record"));
+
         int summitId            = jsonObject.optInt("summit_id");
 
         //first check db, and then cache storage

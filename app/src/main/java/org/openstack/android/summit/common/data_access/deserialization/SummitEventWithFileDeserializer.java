@@ -24,7 +24,7 @@ public class SummitEventWithFileDeserializer extends BaseDeserializer implements
             event = RealmFactory.getSession().createObject(SummitEventWithFile.class, eventId);
 
         if(jsonObject.has("attachment")){
-            event.setAttachment(jsonObject.getString("attachment"));
+            event.setAttachment(!jsonObject.isNull("attachment")  ? jsonObject.getString("attachment") : null);
         }
 
         return event;
