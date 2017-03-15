@@ -36,7 +36,7 @@ public class SplashModule {
     }
 
     @Provides
-    ISplashPresenter providesSplashPresenter(ISplashInteractor interactor, ISplashWireframe wireframe){
-        return new SplashPresenter(interactor, wireframe);
+    ISplashPresenter providesSplashPresenter(ISplashInteractor interactor, ISplashWireframe wireframe, ISummitSelector summitSelector){
+        return new SplashPresenter(interactor, wireframe, summitSelector);
     }
 }

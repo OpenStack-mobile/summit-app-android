@@ -9,4 +9,6 @@ public interface ISummitSelector {
     int getCurrentSummitId();
 
     void setCurrentSummitId(int summitId);
+
+    void clearCurrentSummit();
 }

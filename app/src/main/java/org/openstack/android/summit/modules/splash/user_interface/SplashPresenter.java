@@ -13,6 +13,7 @@ import android.view.View;
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
+import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.services.DataUpdatesService;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.splash.ISplashWireframe;
@@ -25,8 +26,11 @@ import org.openstack.android.summit.modules.splash.business_logic.ISplashInterac
 public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteractor, ISplashWireframe>
         implements ISplashPresenter {
 
-    public SplashPresenter(ISplashInteractor interactor, ISplashWireframe wireframe) {
+    ISummitSelector summitSelector;
+
+    public SplashPresenter(ISplashInteractor interactor, ISplashWireframe wireframe, ISummitSelector summitSelector) {
         super(interactor, wireframe);
+        this.summitSelector = summitSelector;
     }
 
     private Boolean onDataLoading              = false;
@@ -88,7 +92,7 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
         } catch (PackageManager.NameNotFoundException e) {
             pInfo = null;
         }
-        // check current build against storad build
+        // check current build against stored build
         if (pInfo != null) {
             int currentBuildNumber = pInfo.versionCode;
             int installedBuildNumber = interactor.getInstalledBuildNumber();
@@ -100,6 +104,7 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
                     Log.i(Constants.LOG_TAG, "SplashPresenter.onCreate: upgrading data storage");
                     this.disableDataUpdateService();
                     interactor.upgradeStorage();
+                    summitSelector.clearCurrentSummit();
                 }
             }
         }

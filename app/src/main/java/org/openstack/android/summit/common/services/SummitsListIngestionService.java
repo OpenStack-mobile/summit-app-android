@@ -114,6 +114,13 @@ public class SummitsListIngestionService extends IntentService {
             final String body           = response.body().string();
             final JSONObject jsonObject = new JSONObject(body);
 
+
+            //check if current summit id exists on our local ...
+            Summit currentSummit = RealmFactory.getSession().where(Summit.class).equalTo("id", summitSelector.getCurrentSummitId()).findFirst();
+            if(currentSummit == null || !currentSummit.isScheduleLoaded()){
+                summitSelector.clearCurrentSummit();
+            }
+
             int res = RealmFactory.transaction(session -> {
                 Boolean mustReadSummitData = false;
                 Log.d(Constants.LOG_TAG, "SummitsListIngestionService.onHandleIntent: deserializing summit list data ...");
@@ -125,10 +132,10 @@ public class SummitsListIngestionService extends IntentService {
                     Summit summit = deserializer.deserialize(summitJson.toString());
                     session.copyToRealmOrUpdate(summit);
                 }
-
+                int currentSummitId = summitSelector.getCurrentSummitId();
                 // get latest summit
                 Summit latestSummit = summitDataStore.getLatest();
-                int currentSummitId = summitSelector.getCurrentSummitId();
+
                 int res1            = RESULT_CODE_OK;
 
                 Log.i(Constants.LOG_TAG, String.format("SummitsListIngestionService : currentSummitId %d", currentSummitId));
