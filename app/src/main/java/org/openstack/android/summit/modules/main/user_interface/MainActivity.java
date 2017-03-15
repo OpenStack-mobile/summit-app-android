@@ -183,8 +183,8 @@ public class MainActivity
         }
     };
 
-    private static final int DATA_LOAD_REQUEST = 1;  // The request code
-    private static final int SUMMITS_LIST_DATA_LOAD_REQUEST =2;
+    private static final int DATA_LOAD_REQUEST = 0xFF97;  // The request code
+    private static final int SUMMITS_LIST_DATA_LOAD_REQUEST = 0xFF96;
 
     private void launchInitialDataLoadingActivity() {
         if (!onDataLoading) {
@@ -192,7 +192,6 @@ public class MainActivity
             // disable data updates ...
             presenter.disableDataUpdateService();
             Intent intent = new Intent(MainActivity.this, SummitDataLoadingActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             Log.i(Constants.LOG_TAG, "starting SummitDataLoadingActivity ...");
             startActivityForResult(intent, DATA_LOAD_REQUEST);
         }
@@ -205,7 +204,6 @@ public class MainActivity
         presenter.disableDataUpdateService();
 
         Intent intent = new Intent(MainActivity.this, SummitsListDataLoaderActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         Log.i(Constants.LOG_TAG, "starting SummitsListDataLoaderActivity ...");
         startActivityForResult(intent, SUMMITS_LIST_DATA_LOAD_REQUEST);
     }
@@ -459,7 +457,7 @@ public class MainActivity
                 if (!presenter.isSummitDataLoaded()) {
                     hideActivityIndicator();
                     showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
-                    launchInitialDataLoadingActivity();
+                    launchSummitListDataLoadingActivity();
                     return;
                 }
 
@@ -490,7 +488,7 @@ public class MainActivity
 
                         if (!presenter.isSummitDataLoaded()) {
                             showInfoMessage(getResources().getString(R.string.login_disallowed_no_data));
-                            launchInitialDataLoadingActivity();
+                            launchSummitListDataLoadingActivity();
                             return;
                         }
 

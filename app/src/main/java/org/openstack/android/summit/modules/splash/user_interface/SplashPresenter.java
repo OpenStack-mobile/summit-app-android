@@ -29,8 +29,8 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
         super(interactor, wireframe);
     }
 
-    private boolean onDataLoading = false;
-    private boolean loadedSummitList = false;
+    private Boolean onDataLoading              = false;
+    private Boolean loadedSummitList           = false;
     private static final int SHOW_SPLASH_DELAY = 2000;
 
     public void showSummitInfo() {
@@ -60,7 +60,8 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Log.d(Constants.LOG_TAG, "SplashPresenter.onRestoreInstanceState");
-        onDataLoading = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
+
+        onDataLoading    = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
         loadedSummitList = savedInstanceState.getBoolean(Constants.LOADED_SUMMITS_LIST, false);
     }
 
@@ -102,19 +103,25 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
                 }
             }
         }
-
+        if(savedInstanceState != null){
+            onDataLoading    = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
+            loadedSummitList = savedInstanceState.getBoolean(Constants.LOADED_SUMMITS_LIST, false);
+            Log.d(Constants.LOG_TAG, String.format("SplashPresenter.onCreate: Reloading former state - loadedSummitList %b - onDataLoading %b", loadedSummitList, onDataLoading));
+        }
         view.setLoginButtonVisibility(!interactor.isMemberLoggedIn());
         view.setGuestButtonVisibility(!interactor.isMemberLoggedIn());
+
         launchSummitListDataLoadingActivity();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        showSummitInfo();
     }
 
     void launchSummitListDataLoadingActivity() {
-        if (loadedSummitList) return;
+        if (loadedSummitList || onDataLoading) return;
         onDataLoading = true;
         // disable data updates ...
         disableDataUpdateService();
@@ -149,33 +156,20 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
                 //re enable data update service
                 enableDataUpdateService();
                 if (interactor.isMemberLoggedIn()) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            launchMainActivity();
-                        }
-                    }, SHOW_SPLASH_DELAY);
-
+                    new Handler().postDelayed(() -> launchMainActivity(), SHOW_SPLASH_DELAY);
                     return;
                 }
             }
         }
         if (requestCode == ISplashView.SUMMITS_LIST_DATA_LOAD_REQUEST) {
-            onDataLoading = false;
             loadedSummitList = true;
+            onDataLoading    = false;
             showSummitInfo();
             // Make sure the request was successful
             if (resultCode == Activity.RESULT_OK) {
                 Log.i(Constants.LOG_TAG, "SplashPresenter.onActivityResult: Summit Data Loaded!");
                 if (interactor.isMemberLoggedIn()) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            launchMainActivity();
-                        }
-                    }, SHOW_SPLASH_DELAY);
+                    new Handler().postDelayed(() -> launchMainActivity(), SHOW_SPLASH_DELAY);
                     return;
                 }
             } else if (resultCode == SummitsListDataLoaderActivity.RESULT_OK_FIRE_SUMMIT_DATA_LOADING) {
@@ -188,7 +182,6 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
     public void loginClicked(View v) {
         disableDataUpdateService();
         launchMainActivity(true);
-
     }
 
     @Override

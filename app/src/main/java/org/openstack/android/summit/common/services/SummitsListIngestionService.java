@@ -129,9 +129,14 @@ public class SummitsListIngestionService extends IntentService {
                 // get latest summit
                 Summit latestSummit = summitDataStore.getLatest();
                 int currentSummitId = summitSelector.getCurrentSummitId();
-                int res1 = RESULT_CODE_OK;
+                int res1            = RESULT_CODE_OK;
 
-                if(latestSummit.getId() != currentSummitId || !latestSummit.isScheduleLoaded()) {
+                Log.i(Constants.LOG_TAG, String.format("SummitsListIngestionService : currentSummitId %d", currentSummitId));
+                if(latestSummit != null ){
+                    Log.i(Constants.LOG_TAG, String.format("SummitsListIngestionService : latestSummit.getId() %d", latestSummit.getId()));
+                }
+
+                if(latestSummit !=null && ( latestSummit.getId() != currentSummitId || !latestSummit.isScheduleLoaded() )) {
                     res1 = RESULT_CODE_OK_INITIAL_LOADING;
                     if(currentSummitId > 0 && latestSummit.getId() > currentSummitId){
                         // we have a new summit available
@@ -142,7 +147,7 @@ public class SummitsListIngestionService extends IntentService {
 
                 return res1;
             });
-            Log.d(Constants.LOG_TAG, "SummitsListIngestionService.onHandleIntent: summit data loaded !!!");
+            Log.d(Constants.LOG_TAG, "SummitsListIngestionService.onHandleIntent: summit list data loaded !!!");
             sendResult(result, res);
         } catch (Exception ex) {
             setRunning(false);

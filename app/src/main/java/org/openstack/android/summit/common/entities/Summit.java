@@ -58,7 +58,7 @@ public class Summit extends RealmObject implements INamedEntity {
     private boolean isScheduleLoaded;
 
     public boolean isScheduleLoaded() {
-        return isScheduleLoaded;
+        return isScheduleLoaded && events.size() > 0;
     }
 
     public void setScheduleLoaded(boolean scheduleLoaded) {

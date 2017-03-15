@@ -100,9 +100,19 @@ public class SummitDataIngestionService extends IntentService {
                 return;
             }
 
+            int currentSummitId  = summitSelector.getCurrentSummitId();
+            Log.d(Constants.LOG_TAG, String.format("SummitDataIngestionService.onHandleIntent: currentSummitId %d", currentSummitId));
+            Summit currentSummit = RealmFactory.getSession().where(Summit.class).equalTo("id", currentSummitId).findFirst();
+            if(currentSummit != null && currentSummit.isScheduleLoaded()){
+                Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: current summit data already loaded ! bypassing ...");
+                setRunning(false);
+                sendResult(result, RESULT_CODE_OK);
+                return;
+            }
+
             Log.d(Constants.LOG_TAG, "SummitDataIngestionService.onHandleIntent: getting summit data ...");
 
-            Call<ResponseBody> call = restClient.create(ISummitApi.class).getSummit(summitSelector.getCurrentSummitId(), "schedule");
+            Call<ResponseBody> call = restClient.create(ISummitApi.class).getSummit(currentSummitId, "schedule");
 
             final retrofit2.Response<ResponseBody> response = call.execute();
 

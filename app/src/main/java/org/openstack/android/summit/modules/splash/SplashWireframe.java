@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.splash;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import org.openstack.android.summit.SummitDataLoadingActivity;
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
@@ -26,15 +27,15 @@ public class SplashWireframe implements ISplashWireframe {
 
     @Override
     public void showSummitListLoadingActivity(IBaseView context) {
+        Log.d(Constants.LOG_TAG, "SplashWireframe: showSummitListLoadingActivity");
         Intent intent = new Intent((Context) context, SummitsListDataLoaderActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivityForResult(intent, ISplashView.SUMMITS_LIST_DATA_LOAD_REQUEST);
     }
 
     @Override
     public void showSummitDataLoadingActivity(IBaseView context) {
+        Log.d(Constants.LOG_TAG, "SplashWireframe: showSummitDataLoadingActivity");
         Intent intent = new Intent((Context) context, SummitDataLoadingActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivityForResult(intent, ISplashView.DATA_LOAD_REQUEST);
     }
 }
