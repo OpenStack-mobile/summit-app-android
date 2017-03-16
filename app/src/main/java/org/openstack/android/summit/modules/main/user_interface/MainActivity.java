@@ -56,7 +56,6 @@ public class MainActivity
         extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IMainView {
 
-
     @Inject
     IMainPresenter presenter;
 
@@ -402,7 +401,7 @@ public class MainActivity
             }
         };
 
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setHomeButtonEnabled(true);
         //calling sync state is necessary or else your hamburger icon wont show up
@@ -417,15 +416,12 @@ public class MainActivity
             }
         });
 
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-              setupNavigationIcons();
-              if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                  int id      = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getId();
-                  String name = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
-              }
-            }
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+          setupNavigationIcons();
+          if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+              int id      = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getId();
+              String name = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+          }
         });
     }
 

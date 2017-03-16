@@ -10,8 +10,8 @@ import org.openstack.android.summit.common.data_access.repositories.ITeamPushNot
 import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
 import org.openstack.android.summit.common.entities.notifications.PushNotificationFactory;
 import org.openstack.android.summit.common.security.ISecurityManager;
-import org.openstack.android.summit.modules.push_notifications.business_logic.IPushNotificationInteractor;
-import org.openstack.android.summit.modules.push_notifications.business_logic.PushNotificationInteractor;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationInteractor;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.PushNotificationInteractor;
 
 import dagger.Module;
 import dagger.Provides;

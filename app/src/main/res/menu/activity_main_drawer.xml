@@ -12,7 +12,7 @@
         <item android:id="@+id/nav_my_profile" android:icon="@drawable/profile"
             android:title="@string/nav_item_my_summit" android:visible="false" />
         <item android:id="@+id/nav_notifications"
-            android:icon="@drawable/notifications"
+            android:icon="@drawable/ic_inbox"
             android:title="@string/nav_item_notifications"
             app:showAsAction="always"
             app:actionLayout="@layout/nav_menu_item_badge"/>

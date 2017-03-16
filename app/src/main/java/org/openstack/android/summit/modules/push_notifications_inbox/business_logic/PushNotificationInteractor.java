@@ -1,4 +1,4 @@
-package org.openstack.android.summit.modules.push_notifications.business_logic;
+package org.openstack.android.summit.modules.push_notifications_inbox.business_logic;
 
 import android.util.Log;
 

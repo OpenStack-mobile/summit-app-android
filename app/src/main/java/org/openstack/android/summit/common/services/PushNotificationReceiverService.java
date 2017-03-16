@@ -10,7 +10,7 @@ import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.notifications.IPushNotification;
 import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
 import org.openstack.android.summit.common.security.ISecurityManager;
-import org.openstack.android.summit.modules.push_notifications.business_logic.IPushNotificationInteractor;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationInteractor;
 import org.openstack.android.summit.modules.settings.business_logic.ISettingsInteractor;
 
 import java.util.Locale;
