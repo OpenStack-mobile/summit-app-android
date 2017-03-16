@@ -94,11 +94,11 @@
     <string name="missing_activity_error">You do not have installed any application to manage the requested action.</string>
     <string name="generic_error_message">There was an error performing this operation.</string>
     <string name="session_expired_message">Your session has expired.</string>
-    <string name="redeem_external_order_not_found_error">Eventbrite order number not found or does not exists!.</string>
+    <string name="redeem_external_order_not_found_error">EventBrite order number not found or does not exist!</string>
     <string name="redeem_external_order_already_done_error">EventBrite Order already redeem!.</string>
-    <string name="redeem_external_order_attendee_does_not_exists_error">Eventbrite attendee is not registered!.</string>
+    <string name="redeem_external_order_attendee_does_not_exists_error">EventBrite attendee is not registered!</string>
     <string name="push_notification_default_title">OpenStack Notification</string>
-    <string name="splash_login_button_txt">login with openstackid</string>
+    <string name="splash_login_button_txt">login with OpenStackID</string>
     <string name="splash_guest_button_txt">continue as guest</string>
     <string name="now">NOW</string>
     <string name="save_favorite">Watch Later</string>
@@ -120,7 +120,7 @@
     <string name="event_details_reviews">%1$d Reviews</string>
     <string name="download_attachment">Download Attachment</string>
     <string name="download_slide">Download Slide</string>
-    <string name="add_eventbrite_order_action">Add Eventbrite Order</string>
+    <string name="add_eventbrite_order_action">Add EventBrite Order</string>
     <string name="add_order_action">Add Order</string>
     <string name="my_summit_profile_tab_title">PROFILE</string>
     <string name="my_summit_schedule_tab_title">SCHEDULE</string>
