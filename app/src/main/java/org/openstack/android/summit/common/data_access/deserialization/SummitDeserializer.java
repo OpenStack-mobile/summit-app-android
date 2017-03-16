@@ -59,6 +59,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
         this.trackGroupDeserializer          = trackGroupDeserializer;
         this.trackDeserializer               = trackDeserializer;
         this.wifiConnectionDeserializer      = wifiConnectionDeserializer;
+        this.mode                            = SummitDeserializerMode.Header;
     }
 
     @Override
@@ -112,6 +113,9 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
 
         if(!jsonObject.isNull("start_showing_venues_date"))
             summit.setStartShowingVenuesDate(new Date(jsonObject.getInt("start_showing_venues_date") * 1000L));
+
+        if(!jsonObject.isNull("dates_label"))
+            summit.setDatesLabel(jsonObject.getString("dates_label"));
 
         if(this.mode == SummitDeserializerMode.Complete) {
             // if its a new summit , then deserialize the entire hierarchy ...

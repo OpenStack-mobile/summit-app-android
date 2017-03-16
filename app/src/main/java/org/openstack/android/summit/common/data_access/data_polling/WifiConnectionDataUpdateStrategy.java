@@ -14,8 +14,6 @@ import org.openstack.android.summit.common.entities.SummitWIFIConnection;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
 
-import io.realm.Realm;
-
 /**
  * Created by sebastian on 8/10/2016.
  */
@@ -47,20 +45,17 @@ public class WifiConnectionDataUpdateStrategy extends DataUpdateStrategy  {
 
                 try {
 
-                    RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
-                        @Override
-                        public Void callback(Realm session) throws Exception {
-                            Summit managedSummit = summitDataStore.getById(summit_id);
-                            if (managedSummit == null)
-                                throw new DataUpdateException(String.format("Summit with id %d not found", summit_id));
+                    RealmFactory.transaction(session -> {
+                        Summit managedSummit = summitDataStore.getById(summit_id);
+                        if (managedSummit == null)
+                            throw new DataUpdateException(String.format("Summit with id %d not found", summit_id));
 
-                            if (className.equals("SummitWIFIConnection")) {
-                                SummitWIFIConnection wifiConnection = (SummitWIFIConnection) dataUpdate.getEntity();
-                                wifiConnection.setSummit(managedSummit);
-                                managedSummit.getWifiConnections().add(wifiConnection);
-                            }
-                            return Void.getInstance();
+                        if (className.equals("SummitWIFIConnection")) {
+                            SummitWIFIConnection wifiConnection = (SummitWIFIConnection) dataUpdate.getEntity();
+                            wifiConnection.setSummit(managedSummit);
+                            managedSummit.getWifiConnections().add(wifiConnection);
                         }
+                        return Void.getInstance();
                     });
                 }
                 catch (Exception ex){

@@ -14,8 +14,6 @@ import org.openstack.android.summit.common.utils.Void;
 
 import java.security.InvalidParameterException;
 import java.util.List;
-
-import io.realm.Realm;
 import io.realm.Sort;
 
 /**
@@ -37,18 +35,22 @@ public class SummitDataStore extends GenericDataStore<Summit> implements ISummit
     public void updateActiveSummitFromDataUpdate(final Summit dataUpdateEntity) {
         try {
 
-            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
-                @Override
-                public Void callback(Realm session) throws Exception {
-                    Summit summit = session.where(Summit.class).equalTo("id", dataUpdateEntity.getId()).findFirst();
-                    if (summit == null)
-                        throw new InvalidParameterException("missing current summit!");
-                    summit.setName(dataUpdateEntity.getName());
-                    summit.setStartShowingVenuesDate(dataUpdateEntity.getStartShowingVenuesDate());
-                    summit.setStartDate(dataUpdateEntity.getStartDate());
-                    summit.setEndDate(dataUpdateEntity.getEndDate());
-                    return Void.getInstance();
-                }
+            RealmFactory.transaction(session -> {
+                Summit summit = session.where(Summit.class).equalTo("id", dataUpdateEntity.getId()).findFirst();
+
+                if (summit == null)
+                    throw new InvalidParameterException(String.format("missing summit %d", dataUpdateEntity.getId()));
+
+                summit.setName(dataUpdateEntity.getName());
+                summit.setStartShowingVenuesDate(dataUpdateEntity.getStartShowingVenuesDate());
+                summit.setStartDate(dataUpdateEntity.getStartDate());
+                summit.setEndDate(dataUpdateEntity.getEndDate());
+                summit.setDatesLabel(dataUpdateEntity.getDatesLabel());
+                summit.setScheduleEventDetailUrl(dataUpdateEntity.getScheduleEventDetailUrl());
+                summit.setSchedulePageUrl(dataUpdateEntity.getSchedulePageUrl());
+                summit.setPageUrl(dataUpdateEntity.getPageUrl());
+
+                return Void.getInstance();
             });
         } catch (Exception e) {
             Crashlytics.logException(e);

@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/openStackDarkBlue"
+            android:id="@+id/wifi_networks_container"
             android:elevation="4dp"
             android:padding="20dp">
             <TextView
@@ -48,7 +49,6 @@
                 android:background="#eeeeee"
                 android:divider="@color/openStackDarkGray"
                 app:dividerThickness="1dp" />
-
         </LinearLayout>
         <LinearLayout
             android:orientation="vertical"

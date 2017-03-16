@@ -69,7 +69,7 @@ public class DataUpdateStrategy implements IDataUpdateStrategy {
                 case DataOperation.Delete:
                     int entityId = ((IEntity) dataUpdate.getEntity()).getId();
                     deleteStrategy.delete(entityId, dataUpdate.getEntityType());
-                    intent = new Intent( Constants.DATA_UPDATE_DELETED_ENTITY_EVENT);
+                    intent = new Intent(Constants.DATA_UPDATE_DELETED_ENTITY_EVENT);
                     intent.putExtra(Constants.DATA_UPDATE_ENTITY_ID, dataUpdate.getEntityId());
                     intent.putExtra(Constants.DATA_UPDATE_ENTITY_CLASS, dataUpdate.getEntityClassName());
                     LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);

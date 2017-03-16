@@ -11,6 +11,14 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Summit extends RealmObject implements INamedEntity {
 
+    public String getDatesLabel() {
+        return datesLabel;
+    }
+
+    public void setDatesLabel(String datesLabel) {
+        this.datesLabel = datesLabel;
+    }
+
     public Date getScheduleStartDate() {
         return scheduleStartDate;
     }
@@ -55,6 +63,7 @@ public class Summit extends RealmObject implements INamedEntity {
     private String pageUrl;
     private String schedulePageUrl;
     private String scheduleEventDetailUrl;
+    private String datesLabel;
     private boolean isScheduleLoaded;
 
     public boolean isScheduleLoaded() {

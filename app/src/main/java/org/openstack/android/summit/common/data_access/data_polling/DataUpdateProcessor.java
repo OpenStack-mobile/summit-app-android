@@ -50,19 +50,16 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
                 jsonObject              = jsonArray.getJSONObject(i);
                 final String jsonString = jsonObject.toString();
 
-                dataUpdate = RealmFactory.transaction(new RealmFactory.IRealmCallback<DataUpdate>() {
-                    @Override
-                    public DataUpdate callback(Realm session) throws Exception {
+                dataUpdate = RealmFactory.transaction(session -> {
 
-                        DataUpdate dataUpdate = deserialize(jsonString);
-                        if (dataUpdate == null) return null;
-                        IDataUpdateStrategy dataUpdateStrategy;
-                        if (dataUpdate.getEntity() != null) {
-                            dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate.getEntityClassName());
-                            dataUpdateStrategy.process(dataUpdate);
-                        }
-                        return dataUpdate;
+                    DataUpdate dataUpdate1 = deserialize(jsonString);
+                    if (dataUpdate1 == null) return null;
+                    IDataUpdateStrategy dataUpdateStrategy;
+                    if (dataUpdate1.getEntity() != null) {
+                        dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate1.getEntityClassName());
+                        dataUpdateStrategy.process(dataUpdate1);
                     }
+                    return dataUpdate1;
                 });
 
                 if(dataUpdate == null) continue;

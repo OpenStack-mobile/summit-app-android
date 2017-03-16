@@ -18,6 +18,7 @@ public class SummitDTO extends NamedDTO {
     private String timeZone;
     private Date startShowingVenuesDate;
     private Date scheduleStartDate;
+    private String datesLabel;
 
     private List<WifiListItemDTO> wifiConnections = new ArrayList<WifiListItemDTO>();
 
@@ -128,5 +129,13 @@ public class SummitDTO extends NamedDTO {
 
     public void setWifiConnections(List<WifiListItemDTO> wifiConnections) {
         this.wifiConnections = wifiConnections;
+    }
+
+    public String getDatesLabel() {
+        return datesLabel;
+    }
+
+    public void setDatesLabel(String datesLabel) {
+        this.datesLabel = datesLabel;
     }
 }

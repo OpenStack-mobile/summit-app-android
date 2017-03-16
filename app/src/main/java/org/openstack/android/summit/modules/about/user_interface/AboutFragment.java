@@ -10,16 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.linearlistview.LinearListView;
 
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.DTOs.WifiListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.WifiItemView;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Claudio Redi on 4/1/2016.
@@ -27,6 +33,37 @@ import java.util.List;
 public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAboutView {
 
     private WifiListAdapter wifiListAdapter;
+    private Unbinder unbinder;
+
+    @BindView(R2.id.about_wifi_networks_list)
+    LinearListView wifiList;
+
+    @BindView(R2.id.about_website_link)
+    TextView websiteLink;
+
+    @BindView(R2.id.about_conduct_link)
+    TextView conductLink;
+
+    @BindView(R2.id.about_support_link)
+    TextView supportLink;
+
+    @BindView(R2.id.about_inquiries_link)
+    TextView inquiriesLink;
+
+    @BindView(R2.id.about_summit_name)
+    TextView nameText;
+
+    @BindView(R2.id.about_summit_date)
+    TextView dateText;
+
+    @BindView(R2.id.about_version_text)
+    TextView aboutText;
+
+    @BindView(R2.id.about_build_text)
+    TextView aboutBuildText;
+
+    @BindView(R2.id.wifi_networks_container)
+    LinearLayout wifiContainer;
 
     public AboutFragment() {
         // Required empty public constructor
@@ -53,9 +90,9 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_about, container, false);
+        view     = inflater.inflate(R.layout.fragment_about, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
-        LinearListView wifiList = (LinearListView)view.findViewById(R.id.about_wifi_networks_list);
         wifiListAdapter = new WifiListAdapter(getContext());
         wifiList.setAdapter(wifiListAdapter);
 
@@ -70,50 +107,34 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
 
         setBuild(String.format("Build Number %s", pInfo.versionCode));
 
-        TextView websiteLink = (TextView)view.findViewById(R.id.about_website_link);
-        websiteLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("https://www.openstack.org");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
+        websiteLink.setOnClickListener(v -> {
+            Uri uri = Uri.parse("https://www.openstack.org");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         });
 
-        TextView conductLink = (TextView)view.findViewById(R.id.about_conduct_link);
-        conductLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("https://www.openstack.org/code-of-conduct/");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
+        conductLink.setOnClickListener(v -> {
+            Uri uri = Uri.parse("https://www.openstack.org/code-of-conduct/");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         });
 
-        TextView supportLink = (TextView)view.findViewById(R.id.about_support_link);
-        supportLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent emailintent = new Intent(android.content.Intent.ACTION_SEND);
-                emailintent.setType("plain/text");
-                emailintent.putExtra(android.content.Intent.EXTRA_EMAIL,new String[] {"summitapp@openstack.org" });
-                emailintent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-                emailintent.putExtra(android.content.Intent.EXTRA_TEXT,"");
-                startActivity(Intent.createChooser(emailintent, "Send mail..."));
-            }
+        supportLink.setOnClickListener(v -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("plain/text");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL,new String[] {"summitapp@openstack.org" });
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+            emailIntent.putExtra(Intent.EXTRA_TEXT,"");
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
         });
 
-        TextView inquiriesLink = (TextView)view.findViewById(R.id.about_inquiries_link);
-        inquiriesLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent emailintent = new Intent(android.content.Intent.ACTION_SEND);
-                emailintent.setType("plain/text");
-                emailintent.putExtra(android.content.Intent.EXTRA_EMAIL,new String[] {"summit@openstack.org" });
-                emailintent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-                emailintent.putExtra(android.content.Intent.EXTRA_TEXT,"");
-                startActivity(Intent.createChooser(emailintent, "Send mail..."));
-            }
+        inquiriesLink.setOnClickListener(v -> {
+            Intent emailintent = new Intent(Intent.ACTION_SEND);
+            emailintent.setType("plain/text");
+            emailintent.putExtra(Intent.EXTRA_EMAIL,new String[] {"summit@openstack.org" });
+            emailintent.putExtra(Intent.EXTRA_SUBJECT, "");
+            emailintent.putExtra(Intent.EXTRA_TEXT,"");
+            startActivity(Intent.createChooser(emailintent, "Send mail..."));
         });
 
         presenter.onCreateView(savedInstanceState);
@@ -122,36 +143,33 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
 
     @Override
     public void setSummitName(String name) {
-        TextView nameText = (TextView)view.findViewById(R.id.about_summit_name);
+        if(nameText == null) return;
         nameText.setText(name);
     }
 
     @Override
     public void setSummitDate(String date) {
-        TextView dateText = (TextView)view.findViewById(R.id.about_summit_date);
+        if(dateText == null) return;
         dateText.setText(date);
     }
 
-
     @Override
     public void setVersion(String version) {
-        TextView textView = (TextView)view.findViewById(R.id.about_version_text);
-        textView.setText(version);
+        if(aboutText == null) return;
+        aboutText.setText(version);
     }
 
     @Override
     public void setBuild(String build) {
-        TextView textView = (TextView)view.findViewById(R.id.about_build_text);
-        textView.setText(build);
+        if(aboutBuildText == null)
+        aboutBuildText.setText(build);
     }
 
     @Override
     public void setWifiConnections(List<WifiListItemDTO> wifiConnections) {
         wifiListAdapter.clear();
         wifiListAdapter.addAll(wifiConnections);
-
-        LinearListView wifiList = (LinearListView)view.findViewById(R.id.about_wifi_networks_list);
-
+        wifiContainer.setVisibility(wifiConnections.size() == 0 ? view.GONE : view.VISIBLE);
     }
 
     private class WifiListAdapter extends ArrayAdapter<WifiListItemDTO> {
@@ -181,4 +199,13 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
             return super.getCount();
         };
     }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        if(unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
+        }
+    }
+
 }
