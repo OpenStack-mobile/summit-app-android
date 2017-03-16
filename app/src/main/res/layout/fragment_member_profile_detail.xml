@@ -6,15 +6,12 @@
     tools:context="org.openstack.android.summit.modules.events.user_interface.EventsFragment"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@android:color/white">
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@android:color/white">
             <LinearLayout
                 android:orientation="horizontal"
@@ -53,7 +50,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
-                        android:textSize="26sp"
+                        android:textSize="@dimen/profile_name_size"
                         android:text="John Doe"/>
                     <TextView
                         android:id="@+id/profile_detail_title"
@@ -61,6 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/profile_title_size"
                         android:text="Vice President Jr."/>
                 </LinearLayout>
             </LinearLayout>
@@ -77,85 +75,91 @@
             <LinearLayout
                 android:id="@+id/eventbrite_order_container"
                 android:visibility="gone"
-                android:layout_height="66dp"
+
                 style="@style/AppTheme.InformationBarContainerBorderBottom">
                 <TextView
                     android:textIsSelectable="true"
                     style="@style/AppTheme.IconedInformationBarTextView"
-                    android:textSize="20sp"
                     android:text="@string/eventbrite_ticket_added"/>
                 <ImageView style="@style/AppTheme.EventBriteTicketAddedImageView" />
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/member_info_container"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:layout_height="wrap_content"
-                style="@style/AppTheme.InformationBarContainerBorderBottom">
-                <LinearLayout
-                    android:id="@+id/profile_detail_location_container"
-                    android:visibility="gone"
-                    style="@style/AppTheme.MemberProfileDetailFieldContainer">
-                    <ImageView
-                        style="@style/AppTheme.MemberProfileDetailFieldContainerIcon"
-                        android:src="@drawable/map"/>
-                    <TextView
-                        android:id="@+id/profile_detail_location"
-                        android:textIsSelectable="true"
-                        style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/profile_detail_mail_container"
-                    android:visibility="gone"
-                    style="@style/AppTheme.MemberProfileDetailFieldContainer">
-                    <ImageView
-                        style="@style/AppTheme.MemberProfileDetailFieldContainerIcon"
-                        android:src="@drawable/contact_mail"/>
-                    <TextView
-                        android:id="@+id/profile_detail_mail"
-                        android:textIsSelectable="true"
-                        style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/profile_detail_twitter_container"
-                    android:visibility="gone"
-                    style="@style/AppTheme.MemberProfileDetailFieldContainer">
-                    <ImageView
-                        style="@style/AppTheme.MemberProfileDetailFieldContainerIcon"
-                        android:src="@drawable/contact_twitter"/>
-                    <TextView
-                        android:id="@+id/profile_detail_twitter"
-                        android:textIsSelectable="true"
-                        style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/profile_detail_irc_container"
-                    android:visibility="gone"
-                    style="@style/AppTheme.MemberProfileDetailFieldContainer">
-                    <ImageView
-                        style="@style/AppTheme.MemberProfileDetailFieldContainerIcon"
-                        android:src="@drawable/contact_irc"/>
-                    <TextView
-                        android:id="@+id/profile_detail_irc"
-                        android:textIsSelectable="true"
-                        style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <org.openstack.android.summit.common.HtmlTextView
-                android:id="@+id/profile_detail_bio"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="25dp"
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            </org.openstack.android.summit.common.HtmlTextView>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/member_info_container"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        style="@style/AppTheme.InformationBarContainerBorderBottom">
+                        <LinearLayout
+                            android:id="@+id/profile_detail_location_container"
+                            android:visibility="gone"
+                            style="@style/AppTheme.MemberProfileDetailFieldContainer">
+                            <ImageView
+                                style="@style/AppTheme.MemberProfileDetailFieldContainerIcon"
+                                android:src="@drawable/map"/>
+                            <TextView
+                                android:id="@+id/profile_detail_location"
+                                android:textIsSelectable="true"
+                                style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/profile_detail_mail_container"
+                            android:visibility="gone"
+                            style="@style/AppTheme.MemberProfileDetailFieldContainer">
+                            <ImageView
+                                style="@style/AppTheme.MemberProfileDetailFieldContainerIcon"
+                                android:src="@drawable/contact_mail"/>
+                            <TextView
+                                android:id="@+id/profile_detail_mail"
+                                android:textIsSelectable="true"
+                                style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/profile_detail_twitter_container"
+                            android:visibility="gone"
+                            style="@style/AppTheme.MemberProfileDetailFieldContainer">
+                            <ImageView
+                                style="@style/AppTheme.MemberProfileDetailFieldContainerIcon"
+                                android:src="@drawable/contact_twitter"/>
+                            <TextView
+                                android:id="@+id/profile_detail_twitter"
+                                android:textIsSelectable="true"
+                                style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/profile_detail_irc_container"
+                            android:visibility="gone"
+                            style="@style/AppTheme.MemberProfileDetailFieldContainer">
+                            <ImageView
+                                style="@style/AppTheme.MemberProfileDetailFieldContainerIcon"
+                                android:src="@drawable/contact_irc"/>
+                            <TextView
+                                android:id="@+id/profile_detail_irc"
+                                android:textIsSelectable="true"
+                                style="@style/AppTheme.MemberProfileDetailFieldContainerText" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <org.openstack.android.summit.common.HtmlTextView
+                    android:id="@+id/profile_detail_bio"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </org.openstack.android.summit.common.HtmlTextView>
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
 
-    </ScrollView>
-    <include
 
-    layout="@layout/missing_eventbrite_order_indicator"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"></include>
+    <include
+        layout="@layout/missing_eventbrite_order_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></include>
 </LinearLayout>

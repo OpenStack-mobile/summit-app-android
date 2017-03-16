@@ -7,4 +7,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fast_scroll_overlay_text_size">100dp</dimen>
+    <dimen name="profile_name_size">20sp</dimen>
+    <dimen name="profile_title_size">12sp</dimen>
+    <dimen name="info_bar_text_size">16sp</dimen>
 </resources>
