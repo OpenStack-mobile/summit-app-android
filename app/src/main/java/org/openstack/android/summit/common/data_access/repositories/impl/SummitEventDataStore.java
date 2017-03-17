@@ -238,15 +238,17 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
     public List<SummitEvent> getBySearchTerm(int summitId, String searchTerm) {
         RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class).equalTo("summit.id", summitId)
                 .beginGroup()
-                    .contains("name", searchTerm, Case.INSENSITIVE)
+                        .contains("name", searchTerm, Case.INSENSITIVE)
                     .or()
-                    .contains("tags.tag", searchTerm, Case.INSENSITIVE)
+                        .contains("tags.tag", searchTerm, Case.INSENSITIVE)
                     .or()
-                    .contains("presentation.speakers.fullName", searchTerm, Case.INSENSITIVE)
+                        .contains("presentation.speakers.fullName", searchTerm, Case.INSENSITIVE)
                     .or()
-                    .contains("presentation.moderator.fullName", searchTerm, Case.INSENSITIVE)
+                        .contains("presentation.moderator.fullName", searchTerm, Case.INSENSITIVE)
                     .or()
-                    .contains("presentation.level", searchTerm, Case.INSENSITIVE)
+                        .contains("presentation.level", searchTerm, Case.INSENSITIVE)
+                    .or()
+                        .contains("sponsors.name", searchTerm, Case.INSENSITIVE)
                 .endGroup();
 
         RealmResults<SummitEvent> results = query.findAll();

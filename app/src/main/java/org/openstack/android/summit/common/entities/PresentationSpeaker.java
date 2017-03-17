@@ -21,6 +21,7 @@ public class PresentationSpeaker extends RealmObject implements IPerson {
     private String irc;
     private String email;
     private Integer memberId;
+    private RealmList<Organization> affiliations = new RealmList<>();
 
     public int getId() {
         return id;
@@ -110,4 +111,15 @@ public class PresentationSpeaker extends RealmObject implements IPerson {
         this.fullName = fullName;
     }
 
+    public RealmList<Organization> getAffiliations() {
+        return affiliations;
+    }
+
+    public void setAffiliations(RealmList<Organization> affiliations) {
+        this.affiliations = affiliations;
+    }
+
+    public void clearAffiliations(){
+        if(this.affiliations != null) this.affiliations.clear();
+    }
 }

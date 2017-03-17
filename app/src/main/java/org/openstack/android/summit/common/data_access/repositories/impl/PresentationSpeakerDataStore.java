@@ -31,7 +31,12 @@ public class PresentationSpeakerDataStore extends GenericDataStore<PresentationS
         RealmQuery<PresentationSpeaker> query = summit.getSpeakers().where().isNotNull("fullName");
 
         if (searchTerm != null && !searchTerm.isEmpty()) {
-            query.contains("fullName", searchTerm, Case.INSENSITIVE);
+            query
+                    .beginGroup()
+                            .contains("fullName", searchTerm, Case.INSENSITIVE)
+                        .or()
+                            .contains("affiliations.name", searchTerm, Case.INSENSITIVE)
+                    .endGroup();
         }
 
         RealmResults<PresentationSpeaker> results = query.findAll();
