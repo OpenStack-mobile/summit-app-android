@@ -95,7 +95,7 @@
     <string name="generic_error_message">There was an error performing this operation.</string>
     <string name="session_expired_message">Your session has expired.</string>
     <string name="redeem_external_order_not_found_error">EventBrite order number not found or does not exist!</string>
-    <string name="redeem_external_order_already_done_error">EventBrite Order already redeem!.</string>
+    <string name="redeem_external_order_already_done_error">EventBrite Order # already redeemed!</string>
     <string name="redeem_external_order_attendee_does_not_exists_error">EventBrite attendee is not registered!</string>
     <string name="push_notification_default_title">OpenStack Notification</string>
     <string name="splash_login_button_txt">login with OpenStackID</string>
@@ -126,7 +126,7 @@
     <string name="my_summit_schedule_tab_title">SCHEDULE</string>
     <string name="my_summit_favorites_tab_title">WATCH LIST</string>
     <string name="my_summit_sessions_tab_title">SESSIONS</string>
-    <string name="eventbrite_ticket_added">Eventbrite Ticket Added</string>
+    <string name="eventbrite_ticket_added">EventBrite Ticket Added</string>
     <string name="eventbrite_not_attendee_alert_dialog_title">Are you a summit attendee?</string>
     <string name="eventbrite_not_attendee_alert_dialog_body">Add your Eventbrite Order# to unlock features only available for Registered Summit Attendees.</string>
     <string name="missing_eventbrite_order_indicator_text">Do not forget to add your EventBrite Order #</string>
