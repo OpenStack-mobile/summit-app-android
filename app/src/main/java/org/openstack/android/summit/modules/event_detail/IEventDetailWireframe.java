@@ -1,6 +1,5 @@
 package org.openstack.android.summit.modules.event_detail;
 
-import org.openstack.android.summit.common.IBaseWireframe;
 import org.openstack.android.summit.common.IScheduleWireframe;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 
@@ -11,7 +10,7 @@ public interface IEventDetailWireframe extends IScheduleWireframe {
 
     void showSpeakerProfile(int speakerId, IBaseView view);
 
-    void showFeedbackEditView(int eventId, int rate, IBaseView view);
+    void showFeedbackEditView(int eventId, String eventName, int rate, IBaseView view);
 
     void showEventVenueDetailView(int venueId, IBaseView view);
 

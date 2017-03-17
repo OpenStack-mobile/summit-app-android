@@ -75,7 +75,7 @@
             <LinearLayout
                 android:id="@+id/eventbrite_order_container"
                 android:visibility="gone"
-
+                android:layout_height="66dp"
                 style="@style/AppTheme.InformationBarContainerBorderBottom">
                 <TextView
                     android:textIsSelectable="true"

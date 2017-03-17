@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.linearlistview.LinearListView;
@@ -64,10 +65,10 @@ public class EventDetailFragment
     Button buttonRate;
 
     @BindView(R2.id.event_detail_action_going)
-    Button buttonGoing;
+    ToggleButton buttonGoing;
 
     @BindView(R2.id.event_detail_action_favorite)
-    Button buttonFavorite;
+    ToggleButton buttonFavorite;
 
     @BindView(R2.id.event_detail_place_container)
     LinearLayout locationContainer;
@@ -210,6 +211,7 @@ public class EventDetailFragment
         buttonGoing.setVisibility(View.GONE);
 
         buttonRate.setVisibility(View.GONE);
+
         buttonRate.setOnClickListener(v -> presenter.showFeedbackEdit(0));
 
         speakersContainer.setVisibility(View.GONE);
@@ -302,6 +304,21 @@ public class EventDetailFragment
     }
 
     @Override
+    public void setFavoriteButtonState(boolean pressed) {
+        buttonFavorite.setOnCheckedChangeListener(null);
+        buttonFavorite.setChecked(pressed);
+        buttonFavorite.setOnCheckedChangeListener((buttonView, isChecked)  -> presenter.toggleFavoriteStatus());
+    }
+
+    @Override
+    public void setGoingButtonState(boolean pressed) {
+        buttonGoing.setOnCheckedChangeListener(null);
+        buttonGoing.setChecked(pressed);
+        //could be schedule or RSVP
+        buttonGoing.setOnCheckedChangeListener((buttonView, isChecked)  -> presenter.buttonGoingPressed());
+    }
+
+    @Override
     public void showAddFavoriteMenuAction(boolean show) {
         if (contextMenu == null) return;
         MenuItem item = contextMenu.findItem(R.id.event_detail_menu_save_favorite_action);
@@ -355,7 +372,7 @@ public class EventDetailFragment
         menu.clear();
         inflater.inflate(R.menu.event_detail, menu);
         MenuHelper.setShowIcons(menu);
-        presenter.updateContextMenuOptions();
+        presenter.updateActions();
     }
 
     @Override

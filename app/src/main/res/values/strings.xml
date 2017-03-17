@@ -35,7 +35,7 @@
     <string name="rooms">Rooms</string>
     <string name="venue">Venue</string>
     <string name="location">Location</string>
-    <string name="feedback">Leave a Review</string>
+    <string name="feedback">Rate</string>
     <string name="about">About</string>
     <string name="send">Send</string>
     <string name="no_data_message">There was a problem loading summit information. If there is no internet connection active, please wait until it is available and click "retry" to load information.</string>
@@ -130,4 +130,5 @@
     <string name="eventbrite_not_attendee_alert_dialog_title">Are you a summit attendee?</string>
     <string name="eventbrite_not_attendee_alert_dialog_body">Add your Eventbrite Order# to unlock features only available for Registered Summit Attendees.</string>
     <string name="missing_eventbrite_order_indicator_text">Do not forget to add your EventBrite Order #</string>
+    <string name="event_rate_hint">Write a Review ...</string>
 </resources>

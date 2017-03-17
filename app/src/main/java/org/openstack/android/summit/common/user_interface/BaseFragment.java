@@ -196,7 +196,8 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
     @Override
     public Context getApplicationContext() {
-        return getContext().getApplicationContext();
+        Context ctx = getContext();
+        return ctx != null ? ctx.getApplicationContext() : null;
     }
 
     @Override

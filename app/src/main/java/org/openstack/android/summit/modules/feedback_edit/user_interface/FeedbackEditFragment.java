@@ -1,6 +1,5 @@
 package org.openstack.android.summit.modules.feedback_edit.user_interface;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,22 +7,46 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
-import com.linearlistview.LinearListView;
+import android.widget.TextView;
 
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Claudio Redi on 2/17/2016.
  */
-public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> implements IFeedbackEditView {
+public class FeedbackEditFragment
+        extends BaseFragment<IFeedbackEditPresenter>
+        implements IFeedbackEditView {
+
     private int rate;
     private Menu menu;
+    private Unbinder unbinder;
+
+    @BindView(R2.id.feedback_rate_1)
+    ImageView starRateImage1;
+    @BindView(R2.id.feedback_rate_2)
+    ImageView starRateImage2;
+    @BindView(R2.id.feedback_rate_3)
+    ImageView starRateImage3;
+    @BindView(R2.id.feedback_rate_4)
+    ImageView starRateImage4;
+    @BindView(R2.id.feedback_rate_5)
+    ImageView starRateImage5;
+    @BindView(R2.id.feedback_create_button)
+    Button feedbackCreateButton;
+    @BindView(R2.id.feedback_review_text)
+    EditText reviewText;
+    @BindView(R2.id.event_name)
+    TextView eventNameText;
 
     @Override
     public void setRate(int rate){
@@ -66,22 +89,15 @@ public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> i
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_feedback_edit, container, false);
 
-        ImageView starRateImage1 = (ImageView)view.findViewById(R.id.feedback_rate_1);
-        ImageView starRateImage2 = (ImageView)view.findViewById(R.id.feedback_rate_2);
-        ImageView starRateImage3 = (ImageView)view.findViewById(R.id.feedback_rate_3);
-        ImageView starRateImage4 = (ImageView)view.findViewById(R.id.feedback_rate_4);
-        ImageView starRateImage5 = (ImageView)view.findViewById(R.id.feedback_rate_5);
+        unbinder = ButterKnife.bind(this, view);
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rate = getSelectedRate(v);
-                setStarColor(rate, 1, R.id.feedback_rate_1);
-                setStarColor(rate, 2, R.id.feedback_rate_2);
-                setStarColor(rate, 3, R.id.feedback_rate_3);
-                setStarColor(rate, 4, R.id.feedback_rate_4);
-                setStarColor(rate, 5, R.id.feedback_rate_5);
-            }
+        View.OnClickListener onClickListener = v -> {
+            rate = getSelectedRate(v);
+            setStarColor(rate, 1, R.id.feedback_rate_1);
+            setStarColor(rate, 2, R.id.feedback_rate_2);
+            setStarColor(rate, 3, R.id.feedback_rate_3);
+            setStarColor(rate, 4, R.id.feedback_rate_4);
+            setStarColor(rate, 5, R.id.feedback_rate_5);
         };
 
         starRateImage1.setOnClickListener(onClickListener);
@@ -90,13 +106,7 @@ public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> i
         starRateImage4.setOnClickListener(onClickListener);
         starRateImage5.setOnClickListener(onClickListener);
 
-        Button feedbackCreateButton = (Button)view.findViewById(R.id.feedback_create_button);
-        feedbackCreateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.saveFeedback();
-            }
-        });
+        feedbackCreateButton.setOnClickListener(v -> presenter.saveFeedback());
 
         super.onCreateView(inflater, container, savedInstanceState);
         return view;
@@ -144,13 +154,28 @@ public class FeedbackEditFragment extends BaseFragment<IFeedbackEditPresenter> i
         }
     }
 
+    @Override
     public int getRate() {
         return rate;
     }
 
+    @Override
     public String getReview() {
-        EditText reviewText = (EditText)view.findViewById(R.id.feedback_review_text);
         return reviewText.getText().toString();
+    }
+
+    @Override
+    public void setEventName(String eventName) {
+        if(eventNameText == null) return;
+        eventNameText.setText(eventName);
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        if(unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
+        }
     }
 }
 

@@ -61,6 +61,10 @@ public interface IEventDetailView extends IBaseView {
 
     void showRateButton(boolean show);
 
+    void setFavoriteButtonState(boolean pressed);
+
+    void setGoingButtonState(boolean pressed);
+
     void showAddFavoriteMenuAction(boolean show);
 
     void showRemoveFavoriteMenuAction(boolean show);

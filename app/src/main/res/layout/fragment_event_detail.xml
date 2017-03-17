@@ -27,13 +27,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Load Balancing as a Service, Liberty and Beyond"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:paddingRight="50dp"
-                    android:paddingLeft="50dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textStyle="bold" />
+                      style="@style/AppTheme.EventDetailsTitle"
+                />
 
                 <TextView
                     android:id="@+id/event_detail_track"
@@ -41,12 +36,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Networking"
-                    android:textColor="@color/openStackLightGray"
-                    android:textSize="14sp"
-                    android:paddingRight="20dp"
-                    android:paddingLeft="20dp"
-                    android:layout_gravity="center"
-                    android:paddingTop="10dp" />
+                    style="@style/AppTheme.EventDetailsCategory"
+                   />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -56,28 +47,30 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp">
 
-                    <Button
+                    <ToggleButton
                         android:id="@+id/event_detail_action_favorite"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        style="@style/AppTheme.EventDetailActionButton"
-                        android:drawableLeft="@drawable/ic_bookmark"
+                        style="@style/AppTheme.EventDetailActionButtonToggle"
                         android:drawableTint="@color/white"
-                        android:text="Save" />
-                    <Button
+                        android:drawableLeft="@drawable/material_button_event_detail_action_favorite"
+                        android:textOff="@string/save_favorite"
+                        android:textOn="@string/save_favorite" />
+                    <ToggleButton
                         android:id="@+id/event_detail_action_going"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        style="@style/AppTheme.EventDetailActionButton"
-                        android:drawableLeft="@drawable/ic_event_available"
+                        style="@style/AppTheme.EventDetailActionButtonToggle"
+                        android:drawableLeft="@drawable/material_button_event_detail_action_schedule"
                         android:drawableTint="@color/white"
-                        android:text="Going" />
+                        android:textOff="@string/save_going"
+                        android:textOn="@string/save_going"/>
                     <Button
                         android:id="@+id/event_detail_action_rate"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         style="@style/AppTheme.EventDetailActionButton"
-                        android:drawableLeft="@drawable/ic_star_border"
+                        android:drawableLeft="@drawable/ic_btn_star"
                         android:drawableTint="@color/white"
                         android:text="@string/rate" />
                 </LinearLayout>

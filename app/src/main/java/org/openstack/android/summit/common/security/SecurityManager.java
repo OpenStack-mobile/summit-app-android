@@ -2,14 +2,11 @@ package org.openstack.android.summit.common.security;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -18,17 +15,12 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
-import org.openstack.android.summit.common.data_access.repositories.impl.MemberDataStore;
 import org.openstack.android.summit.common.entities.Member;
 
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Claudio Redi on 12/7/2015.
@@ -177,7 +169,9 @@ public class SecurityManager implements ISecurityManager {
                 .subscribe
                 (
                     memberId -> {
+
                         identity.setCurrentMemberId(memberId);
+
                         Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
                         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
                         state = SecurityManagerState.LOGGED_IN;
@@ -234,11 +228,6 @@ public class SecurityManager implements ISecurityManager {
     @Override
     public Member getCurrentMember() {
         try{
-            final AccountManager accountManager = AccountManager.get(OpenStackSummitApplication.context);
-            final String accountType            = OpenStackSummitApplication.context.getString(R.string.ACCOUNT_TYPE);
-
-            if(accountManager.getAccountsByType(accountType).length == 0) return null;
-
             if(identity.getCurrentMemberId() > 0){
                 return memberDataStore.getById(identity.getCurrentMemberId());
             }

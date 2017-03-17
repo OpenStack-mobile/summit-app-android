@@ -33,9 +33,11 @@ public interface IEventDetailPresenter extends IBasePresenter<IEventDetailView> 
 
     void openAttachment();
 
-    void updateContextMenuOptions();
+    void updateActions();
 
     void toggleFavoriteStatus();
 
     void toggleRSVPStatus();
+
+    void buttonGoingPressed();
 }

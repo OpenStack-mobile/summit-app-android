@@ -48,8 +48,8 @@
     </style>
 
     <style name="AppTheme.EventBriteTicketAddedImageView">
-        <item name="android:layout_width">64dp</item>
-        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
         <item name="android:src">@drawable/ic_check_circle_green</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
@@ -341,12 +341,17 @@
     <style name="AppTheme.EventDetailActionButton" parent="android:Widget.Button">
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/material_button_event_detail_action</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:layout_marginLeft">15dp</item>
-        <item name="android:minHeight">40dp</item>
-        <item name="android:maxHeight">40dp</item>
-        <item name="android:minWidth">100dp</item>
-        <item name="android:maxWidth">100dp</item>
+        <item name="android:padding">@dimen/event_detail_action_btn_padding</item>
+        <item name="android:layout_marginLeft">@dimen/event_detail_action_btn_layout_margin_left</item>
+        <item name="android:textSize">@dimen/event_detail_action_btn_txt_size</item>
+        <item name="android:minHeight">@dimen/event_detail_action_btn_height</item>
+        <item name="android:maxHeight">@dimen/event_detail_action_btn_height</item>
+        <item name="android:minWidth">@dimen/event_detail_action_btn_min_width</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="AppTheme.EventDetailActionButtonToggle" parent="AppTheme.EventDetailActionButton">
+        <item name="android:background">@drawable/material_button_event_detail_action_toggle</item>
     </style>
 
     <style name="AppTheme.DownloadButton">
@@ -375,6 +380,33 @@
         <item name="android:src">@drawable/ic_lock</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="AppTheme.EventDetailsTitle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/event_detail_title_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingRight">@dimen/event_detail_title_padding</item>
+        <item name="android:paddingLeft">@dimen/event_detail_title_padding</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="AppTheme.EventRateTitle" parent="AppTheme.EventDetailsTitle">
+        <item name="android:paddingTop">@dimen/event_detail_title_padding</item>
+        <item name="android:textColor">@color/openStackDarkGray</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="AppTheme.EventDetailsCategory">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/event_detail_category_size</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:paddingRight">@dimen/event_detail_category_padding</item>
+        <item name="android:paddingLeft">@dimen/event_detail_category_padding</item>
+        <item name="android:paddingTop">10dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
 </resources>

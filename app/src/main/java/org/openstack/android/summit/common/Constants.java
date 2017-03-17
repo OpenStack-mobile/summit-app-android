@@ -21,6 +21,7 @@ public class Constants {
     static public final String WIPE_DATE_EVENT                        = "org.openstack.android.summit.common.wipe-data-event";
     static public final String NAVIGATION_PARAMETER_SEARCH_TERM       = "org.openstack.android.summit.common.SearchTerm";
     static public final String NAVIGATION_PARAMETER_EVENT_ID          = "org.openstack.android.summit.common.EventId";
+    static public final String NAVIGATION_PARAMETER_EVENT_NAME        = "org.openstack.android.summit.common.EventName";
     static public final String NAVIGATION_PARAMETER_EVENT_RATE        = "org.openstack.android.summit.common.EventRate";
     public static final String NAVIGATION_PARAMETER_LEVEL             = "org.openstack.android.summit.common.Level";
     public static final String NAVIGATION_PARAMETER_TRACK             = "org.openstack.android.summit.common.Track";

@@ -18,6 +18,7 @@ public class FeedbackEditPresenter
         implements IFeedbackEditPresenter {
 
     private Integer eventId;
+    private String  eventName;
     private Integer rate;
 
     public FeedbackEditPresenter(IFeedbackEditInteractor interactor, IFeedbackEditWireframe wireframe) {
@@ -31,10 +32,13 @@ public class FeedbackEditPresenter
         savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_ID, 0):
         wireframe.getParameter(Constants.NAVIGATION_PARAMETER_EVENT_ID, Integer.class);
 
+        eventName = (savedInstanceState != null) ?
+                savedInstanceState.getString(Constants.NAVIGATION_PARAMETER_EVENT_NAME, null):
+                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_EVENT_NAME, String.class);
+
         rate = (savedInstanceState != null) ?
                 savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_RATE, 0):
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_EVENT_RATE, Integer.class);
-
     }
 
     @Override
@@ -51,6 +55,14 @@ public class FeedbackEditPresenter
 
         if(rate != null)
             outState.putInt(Constants.NAVIGATION_PARAMETER_EVENT_RATE, eventId);
+    }
+
+    @Override
+    public void onCreateView(Bundle savedInstanceState) {
+        super.onCreateView(savedInstanceState);
+        if(eventName != null && !eventName.trim().isEmpty()) {
+            view.setEventName(eventName);
+        }
     }
 
     @Override

@@ -248,7 +248,12 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onLoggedIn() throws MissingMemberException {
         MemberDTO member = interactor.getCurrentMember();
-        if (member == null) throw new MissingMemberException();
+        if (member == null)
+        {
+            Log.w(Constants.LOG_TAG, "MainPresenter.onLoggedIn : member is null !!!");
+            throw new MissingMemberException();
+        }
+
         view.setMemberName(member.getFullName());
         view.setLoginButtonText(view.getResources().getText(R.string.log_out).toString());
         view.setProfilePic(Uri.parse(member.getPictureUrl()));

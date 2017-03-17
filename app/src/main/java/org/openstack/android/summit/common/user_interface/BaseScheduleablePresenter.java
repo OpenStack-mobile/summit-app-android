@@ -52,6 +52,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (res) -> {
+                            if(view != null && view.getApplicationContext() != null)
                             Toast.makeText(view.getApplicationContext(), formerState ?
                                             view.getResources().getString(R.string.removed_from_going):
                                             view.getResources().getString(R.string.added_2_going),
@@ -61,10 +62,12 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                             scheduleItemView.setScheduled(formerState);
                             if(ex != null) {
                                 Log.d(Constants.LOG_TAG, ex.getMessage());
-                                view.showErrorMessage(ex.getMessage());
+                                if(view != null)
+                                    view.showErrorMessage(ex.getMessage());
                                 return;
                             }
-                            view.showErrorMessage("Server Error");
+                            if(view != null)
+                                view.showErrorMessage("Server Error");
                         }
                 );
     }
@@ -85,6 +88,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                 .subscribe
                         (
                                 (res) -> {
+                                    if(view != null && view.getApplicationContext() != null)
                                     Toast.makeText(view.getApplicationContext(), formerState ?
                                                     view.getResources().getString(R.string.removed_from_favorites):
                                                     view.getResources().getString(R.string.added_2_favorites),
@@ -94,10 +98,12 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                     scheduleItemView.setFavorite(formerState);
                                     if(ex != null) {
                                         Log.d(Constants.LOG_TAG, ex.getMessage());
-                                        view.showErrorMessage(ex.getMessage());
+                                        if(view != null)
+                                            view.showErrorMessage(ex.getMessage());
                                         return;
                                     }
-                                    view.showErrorMessage("Server Error");
+                                    if(view != null)
+                                        view.showErrorMessage("Server Error");
                                 }
                         );
     }
@@ -119,6 +125,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             (res) -> {
+                                if(view != null && view.getApplicationContext() != null)
                                 Toast.makeText(view.getApplicationContext(), formerState ?
                                                 view.getResources().getString(R.string.removed_from_going):
                                                 view.getResources().getString(R.string.added_2_going),
@@ -130,10 +137,12 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                 scheduleItemView.setScheduled(formerState);
                                 if(ex != null) {
                                     Log.d(Constants.LOG_TAG, ex.getMessage());
-                                    view.showErrorMessage(ex.getMessage());
+                                    if(view != null)
+                                        view.showErrorMessage(ex.getMessage());
                                     return;
                                 }
-                                view.showErrorMessage("Server Error");
+                                if(view != null)
+                                    view.showErrorMessage("Server Error");
                             }
                     );
         }

@@ -9,7 +9,6 @@ import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
-import org.openstack.android.summit.modules.event_detail.user_interface.EventDetailFragment;
 import org.openstack.android.summit.modules.feedback_edit.user_interface.FeedbackEditFragment;
 
 /**
@@ -21,9 +20,10 @@ public class FeedbackEditWireframe extends BaseWireframe implements IFeedbackEdi
     }
 
     @Override
-    public void presentFeedbackEditView(int eventId, int rate, IBaseView context) {
+    public void presentFeedbackEditView(int eventId,  String eventName, int rate, IBaseView context) {
 
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_EVENT_ID, eventId);
+        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_EVENT_NAME, eventName);
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_EVENT_RATE, rate);
 
         FeedbackEditFragment feedbackEditFragment = new FeedbackEditFragment();

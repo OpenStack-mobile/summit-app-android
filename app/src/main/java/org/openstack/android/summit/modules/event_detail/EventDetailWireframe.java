@@ -79,8 +79,8 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
     }
 
     @Override
-    public void showFeedbackEditView(int eventId, int rate, IBaseView view) {
-        feedbackEditWireframe.presentFeedbackEditView(eventId, rate, view);
+    public void showFeedbackEditView(int eventId, String eventName, int rate, IBaseView view) {
+        feedbackEditWireframe.presentFeedbackEditView(eventId, eventName, rate, view);
     }
 
     @Override

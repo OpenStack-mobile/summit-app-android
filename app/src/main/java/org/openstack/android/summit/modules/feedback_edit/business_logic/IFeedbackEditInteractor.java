@@ -12,4 +12,5 @@ import io.reactivex.Observable;
 public interface IFeedbackEditInteractor extends IBaseInteractor {
 
     Observable<FeedbackDTO> saveFeedback(int eventId, int rate, String review) throws ValidationException;
+
 }

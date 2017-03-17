@@ -133,11 +133,13 @@ public class MainActivity
 
                 if (intent.getAction().contains(Constants.LOGGED_IN_EVENT)) {
                     try {
-                        Log.d(Constants.LOG_TAG, "LOGGED_IN_EVENT");
+                        Log.d(Constants.LOG_TAG, "MainActivity.messageReceiver(LOGGED_IN_EVENT)");
                         presenter.onLoggedIn();
                         // show my profile tab ...
+                        Log.d(Constants.LOG_TAG, "MainActivity.messageReceiver(LOGGED_IN_EVENT) : setting tabs and main view ...");
                         navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(true);
                         navigationView.getMenu().findItem(R.id.nav_my_profile).setChecked(true);
+                        Log.w(Constants.LOG_TAG, "MainActivity.messageReceiver(LOGGED_IN_EVENT) : showing my profile ...");
                         presenter.showMyProfileView();
                     } catch (MissingMemberException ex1) {
                         Crashlytics.logException(ex1);

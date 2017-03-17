@@ -10,4 +10,14 @@
     <dimen name="profile_name_size">20sp</dimen>
     <dimen name="profile_title_size">12sp</dimen>
     <dimen name="info_bar_text_size">16sp</dimen>
+    <!-- Event Details -->
+    <dimen name="event_detail_title_size">20sp</dimen>
+    <dimen name="event_detail_category_size">16sp</dimen>
+    <dimen name="event_detail_title_padding">15dp</dimen>
+    <dimen name="event_detail_category_padding">20dp</dimen>
+    <dimen name="event_detail_action_btn_txt_size">13sp</dimen>
+    <dimen name="event_detail_action_btn_height">35dp</dimen>
+    <dimen name="event_detail_action_btn_min_width">100dp</dimen>
+    <dimen name="event_detail_action_btn_layout_margin_left">5dp</dimen>
+    <dimen name="event_detail_action_btn_padding">5dp</dimen>
 </resources>

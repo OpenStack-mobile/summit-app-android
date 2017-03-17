@@ -78,7 +78,7 @@ public class EventDetailPresenter
     public void updateUI(){
 
         event = interactor.getEventDetail(eventId != null ? eventId : 0);
-        event.setChangeStatusListener(item -> updateContextMenuOptions());
+        event.setChangeStatusListener(item -> updateActions());
 
         if (event == null) {
             view.setName("");
@@ -139,19 +139,28 @@ public class EventDetailPresenter
     }
 
     @Override
-    public void updateContextMenuOptions(){
+    public void updateActions(){
         view.showGoingMenuAction(false);
         view.showNotGoingMenuAction(false);
         view.showAddFavoriteMenuAction(false);
         view.showRemoveFavoriteMenuAction(false);
         view.showRateMenuAction(false);
         view.showRSVPMenuAction(false);
+        view.showFavoriteButton(false);
+        view.showGoingButton(false);
+        view.showRateButton(false);
+
         if(this.interactor.isMemberLoggedIn()){
+            view.showFavoriteButton(true);
             view.showRateMenuAction(myFeedbackForEvent == null && this.event.getAllowFeedback() && event.isStarted());
+            view.showRateButton(myFeedbackForEvent == null && this.event.getAllowFeedback() && event.isStarted());
             view.showAddFavoriteMenuAction(!this.event.getFavorite());
+            view.setFavoriteButtonState(this.event.getFavorite());
             view.showRemoveFavoriteMenuAction(this.event.getFavorite());
 
             if(this.interactor.isMemberLoggedInAndConfirmedAttendee()){
+                view.showGoingButton(true);
+                view.setGoingButtonState(this.event.getScheduled());
                 if(this.event.getRsvpLink() != null &&  !this.event.getRsvpLink().isEmpty())
                     view.showRSVPMenuAction(true);
                 else{
@@ -323,6 +332,17 @@ public class EventDetailPresenter
     }
 
     @Override
+    public void buttonGoingPressed() {
+        if(this.interactor.isMemberLoggedInAndConfirmedAttendee()){
+            if(this.event.getRsvpLink() != null &&  !this.event.getRsvpLink().isEmpty())
+                toggleRSVPStatus();
+            else{
+                toggleScheduleStatus();
+            }
+        }
+    }
+
+    @Override
     public void showSpeakerProfile(int position) {
         PersonListItemDTO speaker = event.getModeratorAndSpeakers().get(position);
         wireframe.showSpeakerProfile(speaker.getId(), view);
@@ -330,7 +350,7 @@ public class EventDetailPresenter
 
     @Override
     public void showFeedbackEdit(int rate) {
-        wireframe.showFeedbackEditView(eventId, rate, view);
+        wireframe.showFeedbackEditView(event.getId(), event.getName(), rate, view);
     }
 
     @Override
