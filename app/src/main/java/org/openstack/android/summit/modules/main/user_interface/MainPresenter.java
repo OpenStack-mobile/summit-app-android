@@ -104,10 +104,18 @@ public class MainPresenter
                     try {
                         Log.d(Constants.LOG_TAG, "MainPresenter.LOGGED_IN_EVENT");
                         onLoggedIn();
-                        // show my profile tab ...
-                        view.setMenuItemChecked(R.id.nav_my_profile);
+
                         view.setMenuItemVisible(R.id.nav_my_profile, true);
-                        showMyProfileView();
+                        if(interactor.isMemberLoggedInAndConfirmedAttendee()){
+                            // if we are confirmed attendee start on main view
+                            view.setMenuItemChecked(R.id.nav_events);
+                            showEventsView();
+                        }
+                        else {
+                            // if we are not confirmed attendee show my profile
+                            view.setMenuItemChecked(R.id.nav_my_profile);
+                            showMyProfileView();
+                        }
                     } catch (MissingMemberException ex1) {
                         Crashlytics.logException(ex1);
                         Log.w(Constants.LOG_TAG, ex1.getMessage());
