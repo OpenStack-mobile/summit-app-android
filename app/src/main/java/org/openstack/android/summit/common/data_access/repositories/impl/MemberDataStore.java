@@ -120,11 +120,16 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
         int memberId = me.getId();
         int eventId  = summitEvent.getId();
 
+        addEventToMyFavoritesLocal(
+                me,
+               summitEvent
+        );
+
         return memberRemoteDataStore
                 .addSummitEvent2Favorites(summitEvent.getSummit().getId(), summitEvent.getId())
-                .doOnNext( res -> {
+                .doOnError( ex -> {
 
-                    addEventToMyFavoritesLocal(
+                    removeEventFromMyFavoritesLocal(
                             getById(memberId),
                             RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
                     );
@@ -137,14 +142,15 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
         int memberId = me.getId();
         int eventId  = summitEvent.getId();
 
+        removeEventFromMyFavoritesLocal(
+                me,
+                summitEvent
+        );
+
         return memberRemoteDataStore
                 .removeSummitEventFromFavorites(summitEvent.getSummit().getId(), summitEvent.getId())
-                .doOnNext( res -> {
-
-                    removeEventFromMyFavoritesLocal(
-                            getById(memberId),
-                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
-                    );
+                .doOnError( ex -> {
+                    addEventToMyFavoritesLocal(getById(memberId), RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst());
                 });
     }
 

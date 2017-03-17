@@ -58,7 +58,7 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
         Boolean isFavorite = interactor.isEventFavoriteByLoggedMember(scheduleItemDTO.getId());
         return isFavorite ?
                 removeEventFromFavorites(scheduleItemDTO, favoriteView, interactor) :
-                addEven2Favorites(scheduleItemDTO, favoriteView, interactor);
+                addEvent2Favorites(scheduleItemDTO, favoriteView, interactor);
     }
 
     private Observable<Boolean> removeEventFromFavorites(ScheduleItemDTO scheduleItemDTO,
@@ -75,7 +75,7 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
                 .doOnError((res) -> { removeOp(scheduleItemDTO.getId(), "FAV_DEL"); scheduleableView.setFavorite(true);});
     }
 
-    private Observable<Boolean> addEven2Favorites(ScheduleItemDTO scheduleItemDTO,
+    private Observable<Boolean> addEvent2Favorites(ScheduleItemDTO scheduleItemDTO,
                                           IFavoriteView scheduleableView,
                                           IScheduleableInteractor interactor){
         // update view

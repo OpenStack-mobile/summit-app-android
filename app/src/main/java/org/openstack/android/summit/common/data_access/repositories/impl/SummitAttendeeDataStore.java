@@ -15,7 +15,6 @@ import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
 
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Claudio Redi on 1/5/2016.
@@ -36,15 +35,13 @@ public class SummitAttendeeDataStore extends GenericDataStore<SummitAttendee> im
         int attendeeId = me.getId();
         int eventId  = summitEvent.getId();
 
+        addEventToMemberScheduleLocal(
+                me,
+                summitEvent
+        );
+
         return summitAttendeeRemoteDataStore
                 .addEventToSchedule(me, summitEvent)
-                .doOnNext( res -> {
-
-                    addEventToMemberScheduleLocal(
-                            getById(attendeeId),
-                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
-                    );
-                })
                 .doOnError( res -> {
                     removeEventFromMemberScheduleLocal(
                             getById(attendeeId),
@@ -96,14 +93,13 @@ public class SummitAttendeeDataStore extends GenericDataStore<SummitAttendee> im
         int attendeeId = me.getId();
         int eventId  = summitEvent.getId();
 
+        removeEventFromMemberScheduleLocal(
+                me,
+               summitEvent
+        );
+
         return summitAttendeeRemoteDataStore
                 .removeEventFromSchedule(me, summitEvent)
-                .doOnNext( res -> {
-                    removeEventFromMemberScheduleLocal(
-                            getById(attendeeId),
-                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
-                    );
-                })
                 .doOnError( res -> {
                     addEventToMemberScheduleLocal(
                             getById(attendeeId),
