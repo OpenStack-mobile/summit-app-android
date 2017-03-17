@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
@@ -64,14 +65,15 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
 
         return memberApi.info(summitSelector.getCurrentSummitId(), "attendee,speaker,feedback")
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .map(response -> {
                     Member member = null;
                     try {
                         final String data = response.body().string();
 
-                        member = RealmFactory.transaction(session -> {
-                            return session.copyToRealmOrUpdate(deserializer.deserialize(data, Member.class));
-                        });
+                        member = RealmFactory.transaction(session ->
+                            session.copyToRealmOrUpdate(deserializer.deserialize(data, Member.class))
+                        );
                     } catch (Exception ex) {
                         Crashlytics.logException(ex);
                         Log.e(Constants.LOG_TAG, ex.getMessage(), ex);

@@ -10,7 +10,8 @@ public class Constants {
     static public final String CURRENT_MEMBER_ID                      = "org.openstack.android.summit.common.CurrentMemberId";
     static public final String LOGGED_IN_EVENT                        = "org.openstack.android.summit.common.logged-in-event";
     static public final String START_LOG_IN_EVENT                     = "org.openstack.android.summit.common.start-logged-in-event";
-    static public final String ON_LOGGING_PROCESS                     = "org.openstack.android.summit.common.on-logging-process";
+    static public final String USER_LOG_IN_STATE                      = "org.openstack.android.summit.common.USER_LOG_IN_STATE";
+    static public final String USER_LOG_IN_BUTTON_STATE               = "org.openstack.android.summit.common.USER_LOG_IN_BUTTON_STATE";
     static public final String LOG_IN_ERROR_EVENT                     = "org.openstack.android.summit.common.log-in-error-event";
     static public final String LOG_IN_CANCELLED_EVENT                 = "org.openstack.android.summit.common.log-in-cancelled-event";
     static public final String LOG_IN_ERROR_MESSAGE                   = "org.openstack.android.summit.common.log-in-error-message";

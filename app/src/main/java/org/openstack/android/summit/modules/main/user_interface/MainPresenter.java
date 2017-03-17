@@ -1,26 +1,40 @@
 package org.openstack.android.summit.modules.main.user_interface;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import org.openstack.android.summit.BuildConfig;
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.SummitDataLoadingActivity;
+import org.openstack.android.summit.SummitsListDataLoaderActivity;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.devices.huawei.HuaweiHelper;
+import org.openstack.android.summit.common.network.IReachability;
+import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.services.DataUpdatesService;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
+import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
 import org.openstack.android.summit.modules.main.exceptions.MissingMemberException;
 import org.openstack.android.summit.modules.rsvp.RSVPViewerActivity;
-
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -36,30 +50,212 @@ import bolts.AppLinkNavigation;
 /**
  * Created by Claudio Redi on 2/12/2016.
  */
-public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMainWireframe> implements IMainPresenter {
+public class MainPresenter
+        extends BasePresenter<IMainView, IMainInteractor, IMainWireframe>
+        implements IMainPresenter {
 
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+
+                if (intent.getAction() == Constants.WIPE_DATE_EVENT) {
+                    Log.d(Constants.LOG_TAG, "MainPresenter.WIPE_DATE_EVENT");
+                    launchSummitListDataLoadingActivity();
+                }
+
+                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_RECEIVED)) {
+                    Log.d(Constants.LOG_TAG, "MainPresenter.PUSH_NOTIFICATION_RECEIVED");
+                    updateNotificationCounter();
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_DELETED)) {
+                    Log.d(Constants.LOG_TAG, "MainPresenter.PUSH_NOTIFICATION_DELETED");
+                    updateNotificationCounter();
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.PUSH_NOTIFICATION_OPENED)) {
+                    Log.d(Constants.LOG_TAG, "MainPresenter.PUSH_NOTIFICATION_OPENED");
+                    updateNotificationCounter();
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.START_LOG_IN_EVENT)) {
+                    Log.d(Constants.LOG_TAG, "MainPresenter.START_LOG_IN_EVENT");
+                    view.showActivityIndicator();
+                    userLoginState = UserLoginState.Started;
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.LOG_IN_ERROR_EVENT)) {
+                    Log.d(Constants.LOG_TAG, "MainPresenter.LOG_IN_ERROR_EVENT");
+                    view.hideActivityIndicator();
+                    view.showErrorMessage(intent.getExtras().getString(Constants.LOG_IN_ERROR_MESSAGE, Constants.GENERIC_ERROR_MSG));
+                    userLoginState = UserLoginState.None;
+                    view.setMenuItemVisible(R.id.nav_my_profile, false);
+                    enableDataUpdateService();
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.LOGGED_IN_EVENT)) {
+                    try {
+                        Log.d(Constants.LOG_TAG, "MainPresenter.LOGGED_IN_EVENT");
+                        onLoggedIn();
+                        // show my profile tab ...
+                        view.setMenuItemChecked(R.id.nav_my_profile);
+                        view.setMenuItemVisible(R.id.nav_my_profile, true);
+                        showMyProfileView();
+                    } catch (MissingMemberException ex1) {
+                        Crashlytics.logException(ex1);
+                        Log.w(Constants.LOG_TAG, ex1.getMessage());
+                        view.showErrorMessage(view.getResources().getString(R.string.login_error_message));
+                    } finally {
+                        enableDataUpdateService();
+                        view.hideActivityIndicator();
+                        userLoginState = UserLoginState.None;
+                    }
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.LOGGED_OUT_EVENT)) {
+                    try {
+                        Log.d(Constants.LOG_TAG, "LOGGED_OUT_EVENT");
+                        onLoggedOut();
+                        if (userLoginButtonInteraction.equals(UserLoginButtonInteraction.None)) {
+                            view.showInfoMessage(view.getResources().getString(R.string.session_expired_message));
+                        }
+                        userLoginButtonInteraction = UserLoginButtonInteraction.None;
+                        showEventsView();
+                    }
+                    finally {
+                        if(intent.getBooleanExtra(Constants.EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT, false))
+                            enableDataUpdateService();
+                        userLoginState = UserLoginState.None;
+                    }
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.LOG_IN_CANCELLED_EVENT)) {
+                    Log.d(Constants.LOG_TAG, "LOG_IN_CANCELLED_EVENT");
+                    view.hideActivityIndicator();
+                    userLoginState = UserLoginState.None;
+                    return;
+                }
+
+            } catch (Exception ex) {
+                Crashlytics.logException(new Exception(String.format("Action %s", intent.getAction()), ex));
+            }
+        }
+    };
+
+    public enum UserLoginButtonInteraction {
+        None(0),
+        ClickLogIn(1),
+        ClickLogOut(2);
+
+        private final int value;
+
+        private UserLoginButtonInteraction(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static UserLoginButtonInteraction getValue(int id) {
+            UserLoginButtonInteraction[] As = UserLoginButtonInteraction.values();
+            for (int i = 0; i < As.length; i++) {
+                if (As[i].getValue() == id)
+                    return As[i];
+            }
+            return UserLoginButtonInteraction.None;
+        }
+    }
+
+    public enum UserLoginState {
+        None(0),
+        Started(1),
+        Cancelled(2),
+        Error(3);
+
+        private final int value;
+
+        private UserLoginState(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static UserLoginState getValue(int id)
+        {
+            UserLoginState[] As = UserLoginState.values();
+            for(int i = 0; i < As.length; i++)
+            {
+                if(As[i].getValue() == id)
+                    return As[i];
+            }
+            return UserLoginState.None;
+        }
+    }
+
+    public enum InitialView{
+        None,
+        Events,
+    }
+
+    private ISecurityManager securityManager;
+    private IReachability reachability;
     private IAppLinkRouter appLinkRouter;
     private ISession session;
+    private UserLoginButtonInteraction userLoginButtonInteraction = UserLoginButtonInteraction.None;
+    private UserLoginState userLoginState                         = UserLoginState.None;
+    private InitialView    initialView                            = InitialView.Events;
 
-    public MainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter, ISession session) {
+    public MainPresenter
+    (
+        IMainInteractor interactor,
+        IMainWireframe wireframe,
+        IAppLinkRouter appLinkRouter,
+        ISecurityManager securityManager,
+        IReachability reachability,
+        ISession session
+    )
+    {
         super(interactor, wireframe);
-        this.appLinkRouter = appLinkRouter;
-        this.session       = session;
+
+        this.appLinkRouter   = appLinkRouter;
+        this.session         = session;
+        this.securityManager = securityManager;
+        this.reachability    = reachability;
+
         if (BuildConfig.FLAVOR.contains(Constants.FLAVOR_BETA) || BuildConfig.FLAVOR.contains(Constants.FLAVOR_DEV)) {
             trustEveryone();
         }
     }
 
-    @Override
-    public void updateNotificationCounter() {
-        view.updateNotificationCounter(this.interactor.getNotReadNotificationsCount());
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private void checkPlayServices() {
+        GoogleApiAvailability googleApiAvailability =  GoogleApiAvailability.getInstance();
+
+        int success = googleApiAvailability.isGooglePlayServicesAvailable((Activity)view);
+
+        if(success != ConnectionResult.SUCCESS)
+        {
+            googleApiAvailability.makeGooglePlayServicesAvailable((Activity)view);
+        }
     }
 
-    private boolean shouldShowMainView = false;
-
-    @Override
-    public void shouldShowMainView() {
-        this.shouldShowMainView = true;
+    private void updateNotificationCounter() {
+        view.updateNotificationCounter(this.interactor.getNotReadNotificationsCount());
     }
 
     @Override
@@ -67,33 +263,219 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         wireframe.showSettingsView(view);
     }
 
+    private boolean onDataLoading    = false;
+    private boolean loadedSummitList = false;
+
+
+    private void launchInitialDataLoadingActivity() {
+        if (!onDataLoading) {
+            onDataLoading = true;
+            // disable data updates ...
+            disableDataUpdateService();
+            Intent intent = new Intent((Activity) view, SummitDataLoadingActivity.class);
+            Log.i(Constants.LOG_TAG, "starting SummitDataLoadingActivity ...");
+            view.startActivityForResult(intent, IMainView.DATA_LOAD_REQUEST);
+        }
+    }
+
+    private void launchSummitListDataLoadingActivity(){
+        if(loadedSummitList) return;
+        onDataLoading = true;
+        // disable data updates ...
+        disableDataUpdateService();
+
+        Intent intent = new Intent((Activity) view, SummitsListDataLoaderActivity.class);
+        Log.i(Constants.LOG_TAG, "starting SummitsListDataLoaderActivity ...");
+        view.startActivityForResult(intent, IMainView.SUMMITS_LIST_DATA_LOAD_REQUEST);
+    }
+
+    @Override
+    public void onClickMemberProfilePic(){
+
+        userLoginButtonInteraction = UserLoginButtonInteraction.ClickLogIn;
+
+        view.showActivityIndicator();
+
+        if (!reachability.isNetworkingAvailable(view.getApplicationContext())) {
+            view.hideActivityIndicator();
+            view.showErrorMessage(view.getResources().getString(R.string.login_disallowed_no_connectivity));
+            return;
+        }
+
+        disableDataUpdateService();
+
+        if (!interactor.isDataLoaded()) {
+            view.hideActivityIndicator();
+            view.showInfoMessage(view.getResources().getString(R.string.login_disallowed_no_data));
+            //launchSummitListDataLoadingActivity();
+            return;
+        }
+
+        // LOGIN
+        if (!securityManager.isLoggedIn()) {
+            securityManager.login((Activity)view);
+            return;
+        }
+
+        // go to my profile
+        view.hideActivityIndicator();
+        view.closeMenuDrawer();
+        showMyProfileView();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == IMainView.DATA_LOAD_REQUEST) {
+
+            onDataLoading = false;
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                Log.i(Constants.LOG_TAG, "MainPresenter.onActivityResult: Summit Data Loaded!");
+                enableDataUpdateService();
+                this.showEventsView();
+            }
+        }
+        if(requestCode == IMainView.SUMMITS_LIST_DATA_LOAD_REQUEST){
+            onDataLoading    = false;
+            loadedSummitList = true;
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                Log.i(Constants.LOG_TAG, "MainPresenter.onActivityResult: Summit Data Loaded!");
+                //re enable data update service
+                enableDataUpdateService();
+            }
+            if(resultCode == SummitsListDataLoaderActivity.RESULT_OK_FIRE_SUMMIT_DATA_LOADING){
+                this.launchInitialDataLoadingActivity();
+            }
+        }
+    }
+
+    @Override
+    public void onClickLoginButton() {
+        userLoginButtonInteraction = UserLoginButtonInteraction.ClickLogIn;
+
+        view.showActivityIndicator();
+
+        if (!reachability.isNetworkingAvailable(view.getApplicationContext())) {
+            view.hideActivityIndicator();
+            view.showErrorMessage(view.getResources().getString(R.string.login_disallowed_no_connectivity));
+            return;
+        }
+
+        disableDataUpdateService();
+
+        if (!interactor.isDataLoaded()) {
+            view.hideActivityIndicator();
+            view.showInfoMessage(view.getResources().getString(R.string.login_disallowed_no_data));
+            //launchSummitListDataLoadingActivity();
+            return;
+        }
+
+        // LOGIN
+        if (!securityManager.isLoggedIn()) {
+            securityManager.login((Activity)view);
+            return;
+        }
+
+        // LOGOUT
+        userLoginButtonInteraction = UserLoginButtonInteraction.ClickLogOut;
+
+        securityManager.logout(true);
+        view.hideActivityIndicator();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        // kill any data updates enabled
+        disableDataUpdateService();
+        // bind local broadcast receiver
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.START_LOG_IN_EVENT);
+        intentFilter.addAction(Constants.LOG_IN_CANCELLED_EVENT);
+        intentFilter.addAction(Constants.LOG_IN_ERROR_EVENT);
+        intentFilter.addAction(Constants.LOGGED_IN_EVENT);
+        intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
+        intentFilter.addAction(Constants.PUSH_NOTIFICATION_RECEIVED);
+        intentFilter.addAction(Constants.PUSH_NOTIFICATION_DELETED);
+        intentFilter.addAction(Constants.PUSH_NOTIFICATION_OPENED);
+        intentFilter.addAction(Constants.WIPE_DATE_EVENT);
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+
+        HuaweiHelper.check((Activity) view);
+
+        if (interactor.isDataLoaded()) {
+            enableDataUpdateService();
+        }
+
+        if (savedInstanceState != null) {
+            onDataLoading    = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
+            loadedSummitList = savedInstanceState.getBoolean(Constants.LOADED_SUMMITS_LIST, false);
+            userLoginState   = UserLoginState.getValue(savedInstanceState.getInt(Constants.USER_LOG_IN_STATE, UserLoginState.None.getValue()));
+
+            if (userLoginState.equals(UserLoginState.Started)) {
+                initialView = InitialView.None;
+            }
+        }
+
+        checkPlayServices();
+
+        if (securityManager.isLoggedIn()) {
+            try {
+                onLoggedIn();
+            }
+            catch(MissingMemberException ex1){
+                Crashlytics.logException(ex1);
+                Log.w(Constants.LOG_TAG, ex1.getMessage());
+                view.showErrorMessage(view.getResources().getString(R.string.login_error_message));
+            }
+        }
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        if (!this.userLoginState.equals(UserLoginState.None)) {
+            Log.d(Constants.LOG_TAG, "MainPresenter.onStart : its on logging flow ...");
+            view.showActivityIndicator();
+            return;
+        }
+        Log.d(Constants.LOG_TAG, "MainPresenter.onStart: its on regular flow ...");
+        securityManager.init();
+    }
+
     @Override
     public void onResume() {
-        Log.d(Constants.LOG_TAG, "MainPresenter.onResume");
         super.onResume();
-        if (shouldShowMainView) {
-            Log.d(Constants.LOG_TAG, "MainPresenter.onResume - showEventsView");
-            shouldShowMainView = false;
-            showEventsView();
-        }
+        Log.d(Constants.LOG_TAG, "MainPresenter.onResume");
+        checkPlayServices();
         updateNotificationCounter();
         checkDeepLinks();
         interactor.subscribeToPushNotifications();
-        view.toggleMyProfileMenuItem(interactor.isMemberLogged());
+        view.toggleMyProfileMenuItem(interactor.isMemberLoggedIn());
+
+        if(initialView.equals(InitialView.Events)) {
+            showEventsView();
+            initialView = InitialView.None;
+        }
+
+        Intent intent = view.getIntent();
+        if(intent != null
+                && intent.getBooleanExtra(Constants.START_EXTERNAL_LOGIN, false)
+                && !securityManager.isLoggedIn()
+                && this.userLoginState.equals(UserLoginState.None)){
+            intent.removeExtra(Constants.START_EXTERNAL_LOGIN);
+            view.toggleMenu(true);
+            onClickLoginButton();
+        }
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // normal flow, if data is loaded, enabled the data update services
-        if (interactor.isDataLoaded()) {
-            enableDataUpdateService();
-        }
     }
 
     private boolean checkDeepLinks() {
@@ -191,7 +573,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
             return;
         }
 
-        if (interactor.isMemberLogged()) {
+        if (interactor.isMemberLoggedIn()) {
             wireframe.showMyProfileView(view);
             return;
         }
@@ -243,6 +625,7 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         interactor.subscribeToPushNotifications();
         session.setInt(Constants.WILL_ATTEND, 0);
         updateNotificationCounter();
+        view.setNavigationViewLogOutState();
     }
 
     @Override
@@ -266,6 +649,9 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt(Constants.USER_LOG_IN_STATE, userLoginState.getValue());
+        outState.putBoolean(Constants.ON_DATA_LOADING_PROCESS, onDataLoading);
+        outState.putBoolean(Constants.LOADED_SUMMITS_LIST, loadedSummitList);
     }
 
     @Override
@@ -273,6 +659,11 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         super.onDestroy();
         //stop data updates services
         disableDataUpdateService();
+        // unbind local broadcast receiver
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
+        view.hideActivityIndicator();
+        //close realm session for current thread
+        RealmFactory.closeSession();
     }
 
     @Override
@@ -280,10 +671,6 @@ public class MainPresenter extends BasePresenter<IMainView, IMainInteractor, IMa
         view.toggleMenuLogo(newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE);
     }
 
-    @Override
-    public boolean isSummitDataLoaded() {
-        return interactor.isDataLoaded();
-    }
 
     @Override
     public void onOpenedNavigationMenu() {

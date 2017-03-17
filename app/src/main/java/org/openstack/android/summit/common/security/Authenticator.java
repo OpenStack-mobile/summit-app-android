@@ -15,6 +15,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.auth.openidconnect.IdTokenResponse;
 
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.oidc.AuthCodeRequest;
 import org.openstack.android.summit.common.security.oidc.IOIDCConfigurationManager;
 import org.openstack.android.summit.common.security.oidc.OIDCClientConfiguration;
@@ -40,8 +41,6 @@ import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
  */
 public class Authenticator extends AbstractAccountAuthenticator {
 
-    private final String TAG = getClass().getSimpleName();
-
     private Context context;
     private AccountManager accountManager;
 
@@ -59,7 +58,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
         this.oidcProtocol = new OpenIdConnectProtocol(oidcConfigurationManager.buildIdentityProviderUrls());
         this.clientConfig = (OIDCNativeClientConfiguration) oidcConfigurationManager.buildConfiguration(OIDCClientConfiguration.ODICAccountType.NativeAccount);
         accountManager    = AccountManager.get(context);
-        Log.d(TAG, "Authenticator created.");
+        Log.d(Constants.LOG_TAG, "Authenticator created.");
     }
 
     /**
@@ -70,7 +69,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
                              String authTokenType, String[] requiredFeatures, Bundle options) {
 
-        Log.d(TAG, String.format("addAccount called with accountType %s, authTokenType %s.", accountType, authTokenType));
+        Log.d(Constants.LOG_TAG, String.format("addAccount called with accountType %s, authTokenType %s.", accountType, authTokenType));
 
         Bundle result = new Bundle();
 
@@ -92,7 +91,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
                                String authTokenType, Bundle options) {
 
-        Log.d(TAG, String.format("getAuthToken called with account.type '%s', account.name '%s', " +
+        Log.d(Constants.LOG_TAG, String.format("getAuthToken called with account.type '%s', account.name '%s', " +
                 "authTokenType '%s'.", account.type, account.name, authTokenType));
 
         // Try to retrieve a stored token
@@ -101,14 +100,14 @@ public class Authenticator extends AbstractAccountAuthenticator {
         if (TextUtils.isEmpty(token)) {
             // If we don't have one or the token has been invalidated, we need to check if we have
             // a refresh token
-            Log.d(TAG, "Token empty, checking for refresh token.");
+            Log.d(Constants.LOG_TAG, "Token empty, checking for refresh token.");
             String refreshToken = accountManager.peekAuthToken(account, TOKEN_TYPE_REFRESH);
 
             if (TextUtils.isEmpty(refreshToken)) {
                 // If we don't even have a refresh token, we need to launch an intent for the user
                 // to get us a new set of tokens by authorising us again.
 
-                Log.d(TAG, "Refresh token empty, launching intent for renewing authorisation.");
+                Log.d(Constants.LOG_TAG, "Refresh token empty, launching intent for renewing authorisation.");
 
                 Bundle result = new Bundle();
                 Intent intent = createIntentForAuthorization(response);
@@ -120,7 +119,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 return result;
             }
             // Got a refresh token, let's use it to get a fresh set of tokens
-            Log.d(TAG, "Got refresh token, getting new tokens.");
+            Log.d(Constants.LOG_TAG, "Got refresh token, getting new tokens.");
 
             IdTokenResponse tokenResponse;
 
@@ -128,7 +127,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
                 tokenResponse = this.oidcProtocol.makeRefreshTokenRequest(new RefreshTokenRequest(clientConfig, refreshToken));
 
-                Log.d(TAG, "Got new tokens.");
+                Log.d(Constants.LOG_TAG, "Got new tokens.");
 
                 accountManager.setAuthToken(account, TOKEN_TYPE_ID, tokenResponse.getIdToken());
                 accountManager.setAuthToken(account, TOKEN_TYPE_ACCESS, tokenResponse.getAccessToken());
@@ -139,7 +138,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
                     // If the refresh token has expired, we need to launch an intent for the user
                     // to get us a new set of tokens by authorising us again.
 
-                    Log.d(TAG, "Refresh token expired, launching intent for renewing authorisation.");
+                    Log.d(Constants.LOG_TAG, "Refresh token expired, launching intent for renewing authorisation.");
 
                     Bundle result = new Bundle();
                     Intent intent = createIntentForAuthorization(response);
@@ -151,12 +150,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
                     return result;
                 }
                 // There's not much we can do if we get here
-                Log.e(TAG, "Couldn't get new tokens.", e);
+                Log.e(Constants.LOG_TAG, "Couldn't get new tokens.", e);
 
             } catch (IOException e) {
                 // There's not much we can do if we get here
                 Crashlytics.logException(e);
-                Log.e(TAG, "Couldn't get new tokens.", e);
+                Log.e(Constants.LOG_TAG, "Couldn't get new tokens.", e);
             }
 
             // Now, let's return the token that was requested
@@ -164,7 +163,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
         }
 
-        Log.d(TAG, String.format("Returning token '%s' of type '%s'.", token, authTokenType));
+        Log.d(Constants.LOG_TAG, String.format("Returning token '%s' of type '%s'.", token, authTokenType));
 
         Bundle result = new Bundle();
 
@@ -182,7 +181,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
         Intent intent = new Intent(context, AuthenticatorActivity.class);
         // Generate a new authorisation URL
         AuthCodeRequest request = this.oidcProtocol.buildAuthRequest(clientConfig);
-        Log.d(TAG, String.format("Created new intent with auth URL '%s'.", request.toString()));
+        Log.d(Constants.LOG_TAG, String.format("Created new intent with auth URL '%s'.", request.toString()));
 
         intent.putExtra(AuthenticatorActivity.KEY_AUTH_URL, request.toString());
 

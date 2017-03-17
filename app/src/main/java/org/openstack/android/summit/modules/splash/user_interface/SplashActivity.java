@@ -119,6 +119,12 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
+
+    @Override
     public void showActivityIndicator() {
 
     }

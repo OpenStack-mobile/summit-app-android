@@ -9,6 +9,9 @@ import org.openstack.android.summit.common.user_interface.IBaseView;
  */
 public interface IMainView extends IBaseView {
 
+    public static final int DATA_LOAD_REQUEST              = 0xFF97;
+    public static final int SUMMITS_LIST_DATA_LOAD_REQUEST = 0xFF96;
+
     void setLoginButtonText(String text);
 
     void setMemberName(String text);
@@ -34,4 +37,10 @@ public interface IMainView extends IBaseView {
     void startActivityForResult(Intent intent, int requestCode);
 
     void setMenuItemChecked(int menuItemId);
+
+    void setMenuItemVisible(int menuItemId, boolean visible);
+
+    void closeMenuDrawer();
+
+    void setNavigationViewLogOutState();
 }

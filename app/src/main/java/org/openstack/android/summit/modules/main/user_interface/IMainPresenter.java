@@ -1,5 +1,6 @@
 package org.openstack.android.summit.modules.main.user_interface;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 
 import org.openstack.android.summit.common.user_interface.IBasePresenter;
@@ -28,8 +29,6 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
 
     void onConfigurationChanged(Configuration newConfig);
 
-    boolean isSummitDataLoaded();
-
     void onOpenedNavigationMenu();
 
     void showEventView(int eventId);
@@ -40,9 +39,11 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
 
     void disableDataUpdateService();
 
-    void updateNotificationCounter();
-
-    void shouldShowMainView();
-
     void showSettingsView();
+
+    void onClickLoginButton();
+
+    void onClickMemberProfilePic();
+
+    void onActivityResult(int requestCode, int resultCode, Intent data);
 }

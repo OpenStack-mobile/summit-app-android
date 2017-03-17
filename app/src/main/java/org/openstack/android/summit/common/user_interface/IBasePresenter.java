@@ -24,4 +24,6 @@ public interface IBasePresenter <T extends IBaseView> {
     void onPause();
 
     void onDestroy();
+
+    void onStart();
 }

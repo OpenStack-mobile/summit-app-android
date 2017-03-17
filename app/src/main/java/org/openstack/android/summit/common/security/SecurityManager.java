@@ -168,8 +168,9 @@ public class SecurityManager implements ISecurityManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe
                 (
-                    memberId -> {
 
+                    memberId -> {
+                        Log.d(Constants.LOG_TAG, String.format("SecurityManager.bindCurrentUser got memberId %d", memberId));
                         identity.setCurrentMemberId(memberId);
 
                         Intent intent = new Intent(Constants.LOGGED_IN_EVENT);
@@ -228,8 +229,10 @@ public class SecurityManager implements ISecurityManager {
     @Override
     public Member getCurrentMember() {
         try{
-            if(identity.getCurrentMemberId() > 0){
-                return memberDataStore.getById(identity.getCurrentMemberId());
+
+            int currentMemberId = identity.getCurrentMemberId();
+            if(currentMemberId > 0){
+                return memberDataStore.getById(currentMemberId);
             }
             return null;
         }

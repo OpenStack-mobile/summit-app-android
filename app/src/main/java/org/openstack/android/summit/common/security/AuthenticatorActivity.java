@@ -124,7 +124,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         // Fetch the authentication URL that was given to us by the calling activity
         String authUrl = getIntent().getStringExtra(KEY_AUTH_URL) + "&nonce=" + String.valueOf(new Date().getTime());
 
-        Log.d(Constants.LOG_TAG, String.format("Initiated activity for getting authorisation with URL '%s'.", authUrl));
+        Log.d(Constants.LOG_TAG, String.format("Initiated activity for getting authorization with URL '%s'.", authUrl));
 
         if (authUrl == null) {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
@@ -137,7 +137,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         WebView webView = (WebView) findViewById(R.id.WebView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new CustomWebViewClient(this, this.oidcConfigurationManager));
-        // persists the oookies ...
+        // persists the cookies ...
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
         }

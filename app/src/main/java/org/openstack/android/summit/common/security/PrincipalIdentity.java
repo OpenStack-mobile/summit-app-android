@@ -1,5 +1,4 @@
 package org.openstack.android.summit.common.security;
-
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.ISession;
 

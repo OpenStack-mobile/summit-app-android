@@ -50,8 +50,17 @@ public class MainModule {
     }
 
     @Provides
-    IMainPresenter providesMainPresenter(IMainInteractor interactor, IMainWireframe wireframe, IAppLinkRouter appLinkRouter, ISession session) {
-        return new MainPresenter(interactor, wireframe, appLinkRouter, session);
+    IMainPresenter providesMainPresenter
+    (
+        IMainInteractor interactor,
+        IMainWireframe wireframe,
+        IAppLinkRouter appLinkRouter,
+        ISecurityManager securityManager,
+        IReachability reachability,
+        ISession session
+    )
+    {
+        return new MainPresenter(interactor, wireframe, appLinkRouter, securityManager, reachability, session);
     }
 
     @Provides
