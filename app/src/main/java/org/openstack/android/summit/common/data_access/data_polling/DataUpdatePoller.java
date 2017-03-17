@@ -126,9 +126,12 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             dataUpdate           = dataUpdateDataStore.getTruncateDataUpdate();
 
             if (dataUpdate != null) {
+
+                Log.i(Constants.LOG_TAG, String.format("DataUpdatePoller.clearDataIfTruncateEventExist: lastWipeEventId %d - dataUpdate.getId() %d", lastWipeEventId, dataUpdate.getId()));
                 if (lastWipeEventId == 0 || lastWipeEventId < dataUpdate.getId()) {
 
-                    Log.d(Constants.LOG_TAG, "DataUpdatePoller.clearDataIfTruncateEventExist: doing a wipe DB ...");
+                    session.setLong(Constants.KEY_DATA_UPDATE_LAST_WIPE_EVENT_ID, dataUpdate.getId());
+                    Log.i(Constants.LOG_TAG, "DataUpdatePoller.clearDataIfTruncateEventExist: doing a wipe DB ...");
                     // check login state ...
                     if(securityManager.isLoggedIn()){
                         securityManager.logout(false);

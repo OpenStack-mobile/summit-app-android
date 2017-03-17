@@ -61,6 +61,7 @@ public class MainPresenter
 
                 if (intent.getAction() == Constants.WIPE_DATE_EVENT) {
                     Log.d(Constants.LOG_TAG, "MainPresenter.WIPE_DATE_EVENT");
+                    loadedSummitList = onDataLoading = false;
                     launchSummitListDataLoadingActivity();
                 }
 

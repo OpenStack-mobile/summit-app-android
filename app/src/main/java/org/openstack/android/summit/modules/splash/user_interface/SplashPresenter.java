@@ -16,6 +16,7 @@ import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.services.DataUpdatesService;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
+import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.modules.splash.ISplashWireframe;
 import org.openstack.android.summit.modules.splash.business_logic.ISplashInteractor;
 
@@ -119,6 +120,13 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
     public void onResume() {
         super.onResume();
         showSummitInfo();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //close realm session for current thread
+        RealmFactory.closeSession();
     }
 
     void launchSummitListDataLoadingActivity() {
