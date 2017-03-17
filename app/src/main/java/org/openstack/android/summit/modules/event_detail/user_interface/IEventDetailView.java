@@ -82,4 +82,6 @@ public interface IEventDetailView extends IBaseView {
     void showAttachment(boolean show, boolean isPresentation);
 
     void showToRecord(boolean show);
+
+    void setTrackColor(String color);
 }

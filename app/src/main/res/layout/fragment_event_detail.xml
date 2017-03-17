@@ -54,6 +54,7 @@
                         style="@style/AppTheme.EventDetailActionButtonToggle"
                         android:drawableTint="@color/white"
                         android:drawableLeft="@drawable/material_button_event_detail_action_favorite"
+                        android:drawableStart="@drawable/material_button_event_detail_action_favorite"
                         android:textOff="@string/save_favorite"
                         android:textOn="@string/save_favorite" />
                     <ToggleButton
@@ -62,6 +63,7 @@
                         android:layout_height="match_parent"
                         style="@style/AppTheme.EventDetailActionButtonToggle"
                         android:drawableLeft="@drawable/material_button_event_detail_action_schedule"
+                        android:drawableStart="@drawable/material_button_event_detail_action_schedule"
                         android:drawableTint="@color/white"
                         android:textOff="@string/save_going"
                         android:textOn="@string/save_going"/>
@@ -127,6 +129,7 @@
                                 android:id="@+id/must_record_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
                                 android:background="@drawable/ic_videocam"
                                 />
                         </LinearLayout>

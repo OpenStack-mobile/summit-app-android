@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -431,6 +432,16 @@ public class EventDetailFragment
         if (trackTextView == null) return;
         trackTextView.setVisibility(track != null && !track.isEmpty() ? View.VISIBLE : View.GONE);
         trackTextView.setText(track);
+    }
+
+    @Override
+    public void setTrackColor(String color) {
+
+        if (color == null || color.length() == 0) {
+            trackTextView.setTextColor(getResources().getColor(R.color.white));
+        } else {
+            trackTextView.setTextColor(Color.parseColor(color));
+        }
     }
 
     @Override

@@ -98,6 +98,7 @@ public class EventDetailPresenter
 
         view.setName(event.getName());
         view.setTrack(event.getTrack());
+        view.setTrackColor(event.getColor());
         view.setDate(event.getDateTime());
         view.setTime(event.getTime());
         view.setDescription(event.getEventDescription());
