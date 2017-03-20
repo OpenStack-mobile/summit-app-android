@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/openStackDarkBlue"
+    android:background="@color/openStackLightGray"
     android:padding="13dp">
     <View
         android:id="@+id/item_filter_circle"
@@ -14,15 +14,18 @@
         android:id="@+id/item_filter_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
+        android:textColor="@color/openStackGray"
+        android:textStyle="bold"
         android:layout_marginLeft="10dp"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:text="Beginner"/>
-    <ImageView
+    <Switch
         android:id="@+id/item_filter_checked"
-        android:layout_width="20dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/check"/>
+    >
+
+    </Switch>
 </LinearLayout>

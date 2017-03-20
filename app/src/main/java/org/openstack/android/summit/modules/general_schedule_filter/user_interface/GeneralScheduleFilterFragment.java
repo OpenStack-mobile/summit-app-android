@@ -43,46 +43,22 @@ public class GeneralScheduleFilterFragment
         LinearListView summitTypesList = (LinearListView) view.findViewById(R.id.filter_summit_types_list);
         summitTypeListAdapter = new SummitTypeListAdapter(getContext());
         summitTypesList.setAdapter(summitTypeListAdapter);
-        summitTypesList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(LinearListView parent, View view, int position, long id) {
-                GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view);
-                presenter.toggleSelectionSummitType(generalScheduleFilterItemView, position);
-            }
+        summitTypesList.setOnItemClickListener((parent, view1, position, id) -> {
+            GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view1);
+            presenter.toggleSelectionSummitType(generalScheduleFilterItemView, position);
         });
 
         LinearListView trackGroupList = (LinearListView) view.findViewById(R.id.filter_track_groups_list);
         trackGroupListAdapter = new TrackGroupListAdapter(getContext());
         trackGroupList.setAdapter(trackGroupListAdapter);
-        trackGroupList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(LinearListView parent, View view, int position, long id) {
-                GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view);
-                presenter.toggleSelectionTrackGroup(generalScheduleFilterItemView, position);
-            }
-        });
 
         LinearListView venuesList = (LinearListView) view.findViewById(R.id.filter_venues_list);
         venueListAdapter = new VenueListAdapter(getContext());
         venuesList.setAdapter(venueListAdapter);
-        venuesList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(LinearListView parent, View view, int position, long id) {
-                GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view);
-                presenter.toggleSelectionVenue(generalScheduleFilterItemView, position);
-            }
-        });
 
         LinearListView levelList = (LinearListView) view.findViewById(R.id.filter_levels_list);
         levelListAdapter = new LevelListAdapter(getContext());
         levelList.setAdapter(levelListAdapter);
-        levelList.setOnItemClickListener(new LinearListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(LinearListView parent, View view, int position, long id) {
-                GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(view);
-                presenter.toggleSelectionLevel(generalScheduleFilterItemView, position);
-            }
-        });
 
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -154,7 +130,9 @@ public class GeneralScheduleFilterFragment
 
             GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
             presenter.buildSummitTypeFilterItem(generalScheduleFilterItemView, position);
-
+            generalScheduleFilterItemView.setItemCallback(isChecked -> {
+                presenter.toggleSelectionSummitType(generalScheduleFilterItemView, position);
+            });
             // Return the completed view to render on screen
             return convertView;
         }
@@ -208,7 +186,9 @@ public class GeneralScheduleFilterFragment
 
             GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
             presenter.buildVenueFilterItem(generalScheduleFilterItemView, position);
-
+            generalScheduleFilterItemView.setItemCallback(isChecked -> {
+                presenter.toggleSelectionVenue(generalScheduleFilterItemView, position);
+            });
             // Return the completed view to render on screen
             return convertView;
         }
@@ -235,7 +215,9 @@ public class GeneralScheduleFilterFragment
 
             GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
             presenter.buildTrackGroupFilterItem(generalScheduleFilterItemView, position);
-
+            generalScheduleFilterItemView.setItemCallback(isChecked -> {
+                presenter.toggleSelectionTrackGroup(generalScheduleFilterItemView, position);
+            });
             // Return the completed view to render on screen
             return convertView;
         }
@@ -262,7 +244,9 @@ public class GeneralScheduleFilterFragment
 
             GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
             presenter.buildLevelFilterItem(generalScheduleFilterItemView, position);
-
+            generalScheduleFilterItemView.setItemCallback(isChecked -> {
+                presenter.toggleSelectionLevel(generalScheduleFilterItemView, position);
+            });
             // Return the completed view to render on screen
             return convertView;
         }

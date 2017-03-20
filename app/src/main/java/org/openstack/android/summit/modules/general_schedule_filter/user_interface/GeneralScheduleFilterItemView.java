@@ -1,15 +1,12 @@
 package org.openstack.android.summit.modules.general_schedule_filter.user_interface;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
-
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.openstack.android.summit.R;
 
@@ -18,8 +15,17 @@ import org.openstack.android.summit.R;
  */
 public class GeneralScheduleFilterItemView implements IGeneralScheduleFilterItemView {
     private View view;
-    private String selectedColor;
-    private String unselectedColor;
+    private OnSelectedItem itemAction;
+
+    public interface OnSelectedItem{
+        void onAction( boolean isChecked);
+    }
+
+    public void setItemCallback(OnSelectedItem itemAction){
+        this.itemAction = itemAction;
+        Switch checkedImageView = (Switch) view.findViewById(R.id.item_filter_checked);
+        checkedImageView.setOnCheckedChangeListener((buttonView, isChecked) -> itemAction.onAction(isChecked));
+    }
 
     public GeneralScheduleFilterItemView(View view) {
         this.view = view;
@@ -33,17 +39,8 @@ public class GeneralScheduleFilterItemView implements IGeneralScheduleFilterItem
 
     @Override
     public void setIsSelected(boolean isSelected) {
-        ImageView checkedImageView = (ImageView) view.findViewById(R.id.item_filter_checked);
-        checkedImageView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
-        TextView textView = (TextView) view.findViewById(R.id.item_filter_text);
-        if (isSelected) {
-            textView.setTypeface(null, Typeface.BOLD);
-            textView.setTextColor(Color.WHITE);
-        }
-        else {
-            textView.setTypeface(null, Typeface.NORMAL);
-            textView.setTextColor(Color.GRAY);
-        }
+        Switch checkedImageView = (Switch) view.findViewById(R.id.item_filter_checked);
+        checkedImageView.setChecked(isSelected);
     }
 
     @Override
