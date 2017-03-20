@@ -3,25 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_events" android:icon="@drawable/events"
+        <item android:id="@+id/nav_events"
+            android:icon="@drawable/events"
             android:title="@string/nav_item_events" />
-        <item android:id="@+id/nav_speakers" android:icon="@drawable/people"
-            android:title="@string/nav_item_speakers" />
-        <item android:id="@+id/nav_venues" android:icon="@drawable/venues"
+
+        <item android:id="@+id/nav_venues"
+            android:icon="@drawable/venues"
             android:title="@string/nav_item_venues" />
-        <item android:id="@+id/nav_my_profile" android:icon="@drawable/profile"
-            android:title="@string/nav_item_my_summit" android:visible="false" />
+
+        <item android:id="@+id/nav_speakers"
+            android:icon="@drawable/people"
+            android:title="@string/nav_item_speakers" />
+
+        <item android:id="@+id/nav_my_profile"
+            android:icon="@drawable/profile"
+            android:title="@string/nav_item_my_summit"
+            android:visible="false" />
+
         <item android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_inbox"
             android:title="@string/nav_item_notifications"
             app:showAsAction="always"
-            app:actionLayout="@layout/nav_menu_item_badge"/>
+            app:actionLayout="@layout/nav_menu_item_badge"
+            />
         <item android:id="@+id/nav_settings"
             android:icon="@drawable/settings"
             android:title="@string/nav_item_settings"
             app:showAsAction="always"
         />
-        <item android:id="@+id/nav_about" android:icon="@drawable/about"
+
+        <item android:id="@+id/nav_about"
+            android:icon="@drawable/about"
             android:title="@string/nav_item_about" />
     </group>
 
