@@ -15,6 +15,7 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.HtmlTextView;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
+import org.openstack.android.summit.common.user_interface.tabs.FragmentLifecycle;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +26,7 @@ import butterknife.Unbinder;
  */
 public class MemberProfileDetailFragment
         extends BaseFragment<IMemberProfileDetailPresenter>
-        implements IMemberProfileDetailView {
+        implements IMemberProfileDetailView, FragmentLifecycle {
 
     protected Unbinder unbinder;
 
@@ -190,5 +191,15 @@ public class MemberProfileDetailFragment
     public void setShowMissingEventBriteOrderIndicator(boolean show) {
         if(missingEventbriteOrderIndicator == null) return;
         missingEventbriteOrderIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onPauseFragment() {
+
+    }
+
+    @Override
+    public void onResumeFragment() {
+
     }
 }

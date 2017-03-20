@@ -14,6 +14,7 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.SlidingTabLayout;
+import org.openstack.android.summit.common.user_interface.tabs.FragmentLifecycle;
 import org.openstack.android.summit.modules.favorites_schedule.user_interface.FavoritesScheduleFragment;
 import org.openstack.android.summit.modules.member_profile_detail.user_interface.MemberProfileDetailFragment;
 import org.openstack.android.summit.modules.personal_schedule.user_interface.PersonalScheduleFragment;
@@ -29,7 +30,9 @@ import butterknife.Unbinder;
  * Created by Claudio Redi on 1/26/2016.
  */
 public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
-        implements ViewPager.OnPageChangeListener, SlidingTabLayout.TabColorizer, IMemberProfileView {
+        implements ViewPager.OnPageChangeListener,
+        SlidingTabLayout.TabColorizer,
+        IMemberProfileView {
 
     protected Unbinder unbinder;
 
@@ -46,6 +49,8 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
     SpeakerPresentationsFragment speakerPresentationsFragment;
 
     private int selectedTabIndex;
+
+    private MemberProfilePageAdapter memberProfilePageAdapter;
 
     @BindView(R2.id.tabs)
     SlidingTabLayout tabs;
@@ -93,7 +98,7 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         tabs.setCustomTabColorizer(this);
         tabs.setOnPageChangeListener(this);
 
-        MemberProfilePageAdapter memberProfilePageAdapter = new MemberProfilePageAdapter(getChildFragmentManager());
+        memberProfilePageAdapter = new MemberProfilePageAdapter(getChildFragmentManager());
         eventsViewPager.setAdapter(memberProfilePageAdapter);
         eventsViewPager.setCurrentItem(selectedTabIndex);
 
@@ -115,6 +120,13 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
 
     @Override
     public void onPageSelected(int position) {
+
+        FragmentLifecycle fragmentToShow = (FragmentLifecycle)memberProfilePageAdapter.getItem(position);
+        fragmentToShow.onResumeFragment();
+
+        FragmentLifecycle fragmentToHide = (FragmentLifecycle)memberProfilePageAdapter.getItem(selectedTabIndex);
+        fragmentToHide.onPauseFragment();
+
         selectedTabIndex = position;
     }
 

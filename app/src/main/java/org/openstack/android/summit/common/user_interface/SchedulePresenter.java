@@ -111,7 +111,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         reloadSchedule();
     }
 
-    protected void setRangerState() {
+    @Override
+    public void setRangerState() {
 
         currentSummit = interactor.getActiveSummit();
         if (currentSummit == null) return;
@@ -223,6 +224,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         return selectedDate.withTime(hour, minute, second, millis);
     }
 
+    @Override
     public void reloadSchedule() {
 
         DateTime selectedDate = view.getSelectedDate();

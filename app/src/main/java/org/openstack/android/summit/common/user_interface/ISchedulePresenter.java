@@ -9,5 +9,6 @@ public interface ISchedulePresenter<V extends IScheduleView> extends IScheduleLi
 
     void setHidePastTalks(boolean hidePastTalks);
 
+    void setRangerState();
 }
 

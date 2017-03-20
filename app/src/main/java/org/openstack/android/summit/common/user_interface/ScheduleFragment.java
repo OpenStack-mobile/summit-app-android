@@ -88,7 +88,7 @@ public class ScheduleFragment<P extends ISchedulePresenter>
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        unbinder = ButterKnife.bind(this, view);
+        unbinder       = ButterKnife.bind(this, view);
         layoutManager  = new LinearLayoutManager(getContext());
 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -129,6 +129,7 @@ public class ScheduleFragment<P extends ISchedulePresenter>
 
     @Override
     public void setNowButtonListener(){
+        if(nowButton == null) return;
         nowButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
             presenter.setHidePastTalks(isChecked);
         });
