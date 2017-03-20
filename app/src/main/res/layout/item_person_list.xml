@@ -49,5 +49,5 @@
             android:textColor="@color/openStackGray"
             android:text="Vice President Jr."/>
     </LinearLayout>
-    <ImageView style="@style/AppTheme.MoreImageView"/>
+
 </LinearLayout>
