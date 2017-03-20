@@ -110,51 +110,73 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp">
 
-            <TextView
-                android:id="@+id/about_website_link"
-                android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/openStackLightBlue"
-                android:textSize="20dp"
-                android:text="OpenStack Website"/>
-            <TextView
-                android:id="@+id/about_conduct_link"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/openStackLightBlue"
-                android:textSize="20dp"
-                android:text="Code of Conduct"/>
-            <TextView
-                android:id="@+id/about_support_link"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/openStackLightBlue"
-                android:textSize="20dp"
-                android:text="App Support"/>
-            <TextView
-                android:id="@+id/about_inquiries_link"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/openStackLightBlue"
-                android:textSize="20dp"
-                android:text="General Inquiries"/>
-
-            <View
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:gravity="center_horizontal"
+                style="@style/AppTheme.InformationBarContainerBorderBottom">
+                <TextView
+                    android:id="@+id/about_website_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/openStackLightBlue"
+                    android:textSize="20dp"
+                    android:text="OpenStack Website"/>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:gravity="center_horizontal"
+                style="@style/AppTheme.InformationBarContainerBorderBottom">
+                <TextView
+                    android:id="@+id/about_conduct_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/openStackLightBlue"
+                    android:textSize="20dp"
+                    android:text="Code of Conduct"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:gravity="center_horizontal"
+                style="@style/AppTheme.InformationBarContainerBorderBottom">
+                <TextView
+                    android:id="@+id/about_support_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/openStackLightBlue"
+                    android:textSize="20dp"
+                    android:text="App Support"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:gravity="center_horizontal"
+                style="@style/AppTheme.InformationBarContainerBorderBottom">
+                <TextView
+                    android:id="@+id/about_inquiries_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/openStackLightBlue"
+                    android:textSize="20dp"
+                    android:text="General Inquiries"/>
+            </LinearLayout>
             <TextView
+                android:layout_marginTop="30dp"
                 android:textIsSelectable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
