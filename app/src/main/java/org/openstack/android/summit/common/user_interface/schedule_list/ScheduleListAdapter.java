@@ -91,7 +91,6 @@ public class ScheduleListAdapter
         private TextView track;
         private LinearLayout locationContainer;
         private TextView location;
-        private View colorView;
         private boolean scheduled;
         private boolean favorite;
         private TextView buttonViewOptions;
@@ -133,7 +132,6 @@ public class ScheduleListAdapter
             locationContainer = (LinearLayout) itemView.findViewById(R.id.item_schedule_place_container);
             location = (TextView) itemView.findViewById(R.id.item_schedule_textview_location);
 
-            colorView                        = itemView.findViewById(R.id.item_schedule_view_color);
             buttonViewOptions                = (TextView) itemView.findViewById(R.id.textViewOptions);
             favoriteEvent                    = (ImageView) itemView.findViewById(R.id.favorite_event);
             goingEvent                       = (ImageView) itemView.findViewById(R.id.going_event);
@@ -179,14 +177,11 @@ public class ScheduleListAdapter
         @Override
         public void setColor(String color) {
 
-            if (color == null || color.length() == 0) {
-                this.colorView.setVisibility(View.INVISIBLE);
-                this.track.setTextColor(itemView.getResources().getColor(R.color.openStackGray));
-            } else {
-                this.colorView.setVisibility(View.VISIBLE);
-                this.colorView.setBackgroundColor(Color.parseColor(color));
-                this.track.setTextColor(Color.parseColor(color));
-            }
+            int colorValue  = (color == null || color.length() == 0) ?
+                    itemView.getResources().getColor(R.color.openStackGray) :
+                    Color.parseColor(color);
+
+            this.track.setTextColor(colorValue);
         }
 
         @Override

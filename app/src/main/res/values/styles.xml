@@ -409,4 +409,22 @@
         <item name="android:paddingTop">10dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
+
+    <style name="AppTheme.EventRowDateTitle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/event_row_date_title_size</item>
+        <item name="android:textColor">@color/openStackSecondText</item>
+    </style>
+
+    <style name="AppTheme.EventRowTitle">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">@dimen/event_row_title_size</item>
+        <item name="android:textColor">@color/openStackDarkGray</item>
+    </style>
+
+    <style name="AppTheme.EventRowTrackTitle">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">@dimen/event_row_date_title_size</item>
+        <item name="android:textColor">@color/openStackSecondText</item>
+    </style>
 </resources>

@@ -20,4 +20,6 @@
     <dimen name="event_detail_action_btn_min_width">100dp</dimen>
     <dimen name="event_detail_action_btn_layout_margin_left">5dp</dimen>
     <dimen name="event_detail_action_btn_padding">5dp</dimen>
+    <dimen name="event_row_date_title_size">13sp</dimen>
+    <dimen name="event_row_title_size">17sp</dimen>
 </resources>
