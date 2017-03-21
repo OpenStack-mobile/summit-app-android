@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".modules.main.user_interface.MainActivity">
     <item
+        android:id="@+id/event_detail_menu_rate_action"
+        android:title="@string/rate"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_star_border"
+        />
+
+    <item
         android:id="@+id/event_detail_menu_save_going_action"
         android:title="@string/save_going"
         app:showAsAction="never"
@@ -34,12 +41,7 @@
         android:title="@string/remove_favorite"
         android:icon="@drawable/ic_bookmark_border"
         />
-    <item
-        android:id="@+id/event_detail_menu_rate_action"
-        android:title="@string/rate"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_star_border"
-        />
+
     <item
         android:id="@+id/event_detail_menu_share_action"
         app:showAsAction="never"

@@ -46,15 +46,13 @@
                     android:gravity="center_horizontal"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp">
-
-                    <ToggleButton
-                        android:id="@+id/event_detail_action_favorite"
+                    <Button
+                        android:id="@+id/event_detail_action_rate"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        style="@style/AppTheme.EventDetailActionButtonToggle"
-                        android:drawableLeft="@drawable/material_button_event_detail_action_favorite"
-                        android:textOff="@string/save_favorite"
-                        android:textOn="@string/save_favorite" />
+                        style="@style/AppTheme.EventDetailActionButton"
+                        android:drawableLeft="@drawable/ic_btn_star"
+                        android:text="@string/rate" />
                     <ToggleButton
                         android:id="@+id/event_detail_action_going"
                         android:layout_width="wrap_content"
@@ -63,13 +61,15 @@
                         android:drawableLeft="@drawable/material_button_event_detail_action_schedule"
                         android:textOff="@string/save_going"
                         android:textOn="@string/save_going"/>
-                    <Button
-                        android:id="@+id/event_detail_action_rate"
+                    <ToggleButton
+                        android:id="@+id/event_detail_action_favorite"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        style="@style/AppTheme.EventDetailActionButton"
-                        android:drawableLeft="@drawable/ic_btn_star"
-                        android:text="@string/rate" />
+                        style="@style/AppTheme.EventDetailActionButtonToggle"
+                        android:drawableLeft="@drawable/material_button_event_detail_action_favorite"
+                        android:textOff="@string/save_favorite"
+                        android:textOn="@string/save_favorite" />
+
                 </LinearLayout>
             </LinearLayout>
 
