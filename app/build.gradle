@@ -167,9 +167,17 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile 'jp.wasabeef:recyclerview-animators:2.2.5'
-    compile 'com.android.support:design:25.2.0'
+    compile ('com.android.support:recyclerview-v7:25.2.0') {
+        transitive = false
+    }
+    compile ('jp.wasabeef:recyclerview-animators:2.2.5') {
+        transitive = false
+    }
+    compile ('com.android.support:design:25.2.0') {
+        exclude module: 'appcompat-v7'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'support-v4'
+    }
     compile 'joda-time:joda-time:2.9.4'
     compile 'com.google.code.gson:gson:2.7'
 
@@ -185,20 +193,34 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'junit', module: 'junit'
         exclude group: 'com.google.android', module: 'android'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
     }
-    compile 'com.google.api-client:google-api-client-android:1.21.0'
+    compile ('com.google.api-client:google-api-client-android:1.21.0') {
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+
     // Google's JSON parsing, could be replaced with Jackson
-    compile 'com.google.api-client:google-api-client-gson:1.21.0'
+    compile ('com.google.api-client:google-api-client-gson:1.21.0') {
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+
     compile 'org.modelmapper:modelmapper:0.7.5'
     compile('com.github.claudioredi:Ranger:da908aa') {
         exclude module: 'joda-time'
+        exclude module: 'appcompat-v7'
     }
     // progress indicator
-    compile 'cc.cloudist.acplibrary:library:1.2.1'
+    compile ('cc.cloudist.acplibrary:library:1.2.1') {
+        exclude module: 'appcompat-v7'
+    }
     // pop up alerts
-    compile 'com.github.claudioredi:sweet-alert-dialog:9c1be1a'
+    compile ('com.github.claudioredi:sweet-alert-dialog:9c1be1a') {
+        exclude module: 'appcompat-v7'
+    }
     // image library
-    compile 'com.facebook.fresco:fresco:0.11.0'
+    compile ('com.facebook.fresco:fresco:0.11.0') {
+        exclude module: 'support-v4'
+    }
     // simulate list with a linear layout
     compile 'com.github.frankiesardo:linearlistview:1.0.1@aar'
     // page indicator
@@ -215,13 +237,16 @@ dependencies {
     // material design spiner
     compile('com.weiwangcn.betterspinner:library-material:1.1.0') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude module: 'support-annotations'
     }
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }
     testCompile 'org.mockito:mockito-core:2.0.86-beta'
     testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.1'
+    testCompile ('org.robolectric:robolectric:3.1') {
+        exclude module: 'guava'
+    }
     testCompile 'org.powermock:powermock-module-junit4:1.6.5'
     testCompile 'org.powermock:powermock-module-junit4-rule:1.6.5'
     testCompile 'org.powermock:powermock-api-mockito:1.6.5'
@@ -282,9 +307,14 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxjava:2.0.5'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+    compile ('com.jakewharton:butterknife:8.5.1') {
+        exclude module: 'support-annotations'
+        exclude module: 'support-compat'
+    }
 
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    annotationProcessor ('com.jakewharton:butterknife-compiler:8.5.1') {
+        exclude module: 'guava'
+    }
 }
 
 apply plugin: 'realm-android'
