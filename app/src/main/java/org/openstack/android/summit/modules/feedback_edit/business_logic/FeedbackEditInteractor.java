@@ -77,10 +77,7 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
         if (rate == 0) {
             errorMessage = "You must provide a rate using stars at the top";
         }
-        else if (review.isEmpty()) {
-            errorMessage = "You must provide a review";
-        }
-        else if (review.length() > 500) {
+        else if (review != null && review.length() > 500) {
             errorMessage = "Review exceeded 500 characters limit";
         }
         return errorMessage;
