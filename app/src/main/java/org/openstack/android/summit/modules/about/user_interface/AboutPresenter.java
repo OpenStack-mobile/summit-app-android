@@ -32,6 +32,9 @@ public class AboutPresenter extends BasePresenter<IAboutView, IAboutInteractor, 
         view.setSummitName(summit.getName());
         view.setSummitDate(summit.getDatesLabel());
         view.setWifiConnections(wifiList);
+        if (!summit.isCurrentDateTimeInsideSummitRange()) {
+            view.hideWifiConnections();
+        }
     }
 
     @Override

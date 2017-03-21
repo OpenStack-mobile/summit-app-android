@@ -8,48 +8,8 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/openStackLightGray">
+        android:background="@color/openStackDarkBlue">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/openStackDarkBlue"
-            android:id="@+id/wifi_networks_container"
-            android:elevation="4dp"
-            android:padding="20dp">
-            <TextView
-                android:id="@+id/about_wifi_networks_title"
-                android:textIsSelectable="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:text="Wifi"
-                android:layout_marginBottom="10dp"/>
-            <TextView
-                android:id="@+id/about_wifi_networks_subtitle"
-                android:textIsSelectable="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/white"
-                android:text="Available Networks"
-                android:layout_marginBottom="10dp"/>
-            <com.linearlistview.LinearListView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/about_wifi_networks_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:showDividers="middle"
-                android:background="#eeeeee"
-                android:divider="@color/openStackDarkGray"
-                app:dividerThickness="1dp" />
-        </LinearLayout>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -72,7 +32,7 @@
                 android:textIsSelectable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15dp"
+                android:textSize="16dp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/white"
                 android:text="April 25-29, 2016"
@@ -105,9 +65,52 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/openStackDarkBlue"
+            android:id="@+id/wifi_networks_container"
             android:elevation="4dp"
             android:paddingTop="20dp"
+            android:paddingBottom="20dp">
+            <TextView
+                android:id="@+id/about_wifi_networks_title"
+                android:textIsSelectable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/openStackLightGray"
+                android:textStyle="bold"
+                android:text="WiFi"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"/>
+            <TextView
+                android:id="@+id/about_wifi_networks_subtitle"
+                android:textIsSelectable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/openStackLightGray"
+                android:text="Available Networks"
+                android:layout_marginBottom="20dp"/>
+            <com.linearlistview.LinearListView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/about_wifi_networks_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                android:background="#eeeeee"
+                android:divider="@color/openStackLightBlue"
+                app:dividerThickness="1dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:paddingTop="10dp"
             android:paddingBottom="20dp">
 
             <LinearLayout
@@ -122,7 +125,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/openStackLightBlue"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
                     android:text="OpenStack Website"/>
 
             </LinearLayout>
@@ -140,7 +144,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/openStackLightBlue"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
                     android:text="Code of Conduct"/>
             </LinearLayout>
             <LinearLayout
@@ -156,7 +161,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/openStackLightBlue"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
                     android:text="App Support"/>
             </LinearLayout>
             <LinearLayout
@@ -172,7 +178,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/openStackLightBlue"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
                     android:text="General Inquiries"/>
             </LinearLayout>
             <TextView
@@ -184,6 +191,7 @@
                 android:paddingLeft="20dp"
                 android:text="The Must-Attend OpenStack Event"
                 android:textSize="15dp"
+                android:textStyle="bold"
                 android:layout_marginBottom="5dp"/>
             <TextView
                 android:textIsSelectable="true"

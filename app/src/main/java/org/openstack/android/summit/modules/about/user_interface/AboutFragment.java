@@ -172,6 +172,11 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
         wifiContainer.setVisibility(wifiConnections.size() == 0 ? view.GONE : view.VISIBLE);
     }
 
+    @Override
+    public void hideWifiConnections() {
+        wifiContainer.setVisibility(view.GONE);
+    }
+
     private class WifiListAdapter extends ArrayAdapter<WifiListItemDTO> {
 
         public WifiListAdapter(Context context) {

@@ -18,4 +18,6 @@ public interface IAboutView extends IBaseView {
     void setBuild(String build);
 
     void setWifiConnections(List<WifiListItemDTO> wifiConnections);
+
+    void hideWifiConnections();
 }

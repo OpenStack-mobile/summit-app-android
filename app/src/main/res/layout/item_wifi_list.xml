@@ -1,35 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/openStackDarkBlue">
+    android:background="@color/openStackDarkBlue"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:weightSum="20">
     <ImageView
         android:id="@+id/item_wifi_list_wifi_icon"
-        style="@style/AppTheme.WifiIcon" />
+        style="@style/AppTheme.WifiIcon"
+        android:layout_weight="1"/>
     <TextView
         android:id="@+id/item_wifi_list_ssid"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:layout_weight="1"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
+        android:layout_weight="10"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
+        android:textColor="@color/openStackLightGray"
         android:textSize="17sp"
         android:textIsSelectable="true"
-        android:text="Network"/>
+        android:text="another wifi update"/>
     <ImageView
         android:id="@+id/item_wifi_list_password_icon"
-        style="@style/AppTheme.LockIcon" />
+        style="@style/AppTheme.LockIcon"
+        android:layout_weight="1"/>
     <TextView
         android:id="@+id/item_wifi_list_password"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:layout_weight="1"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
+        android:layout_weight="8"
+        android:textColor="@color/openStackLightGray"
         android:textSize="17sp"
         android:textIsSelectable="true"
-        android:text="xxxxxxxx"/>
+        android:text="12FJD21!aa"/>
+
 </LinearLayout>
