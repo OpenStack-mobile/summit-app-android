@@ -60,6 +60,7 @@ public class FavoritesScheduleFragment
 
     @Override
     public void onResumeFragment() {
+        if(presenter == null) return;
         presenter.setRangerState();
         presenter.reloadSchedule();
     }

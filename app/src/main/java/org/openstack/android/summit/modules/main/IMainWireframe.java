@@ -9,7 +9,7 @@ public interface IMainWireframe {
 
     void showEventsView(IBaseView context);
 
-    void showMyProfileView(IBaseView context);
+    void showMyProfileView(IBaseView context, String defaultTabTitle);
 
     void showSpeakerListView(IBaseView context);
 

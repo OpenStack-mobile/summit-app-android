@@ -114,7 +114,7 @@ public class MainPresenter
                         else {
                             // if we are not confirmed attendee show my profile
                             view.setMenuItemChecked(R.id.nav_my_profile);
-                            showMyProfileView();
+                            showMyProfileView(Constants.MY_PROFILE_TAB_PROFILE);
                         }
                     } catch (MissingMemberException ex1) {
                         Crashlytics.logException(ex1);
@@ -576,14 +576,20 @@ public class MainPresenter
         }
     }
 
-    public void showMyProfileView() {
+    @Override
+    public void showMyProfileView(){
+        showMyProfileView(null);
+    }
+
+
+    private void showMyProfileView(String defaultTabTitle) {
         if (!interactor.isDataLoaded()) {
             view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
             return;
         }
 
         if (interactor.isMemberLoggedIn()) {
-            wireframe.showMyProfileView(view);
+            wireframe.showMyProfileView(view, defaultTabTitle);
             return;
         }
 

@@ -13,11 +13,16 @@ import org.openstack.android.summit.modules.member_profile.business_logic.IMembe
 /**
  * Created by Claudio Redi on 1/26/2016.
  */
-public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IMemberProfileInteractor, IMemberProfileWireframe> implements IMemberProfilePresenter {
+public class MemberProfilePresenter
+        extends BasePresenter<IMemberProfileView, IMemberProfileInteractor, IMemberProfileWireframe>
+        implements IMemberProfilePresenter {
+
     private int speakerId;
     private boolean isMyProfile;
     private MemberDTO myProfile;
     private PersonDTO speaker;
+    private String defaultTabTitle = null;
+    private int selectedTabIndex;
 
     public MemberProfilePresenter(IMemberProfileInteractor interactor, IMemberProfileWireframe wireframe) {
         super(interactor, wireframe);
@@ -36,6 +41,8 @@ public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        defaultTabTitle = wireframe.getParameter(Constants.NAVIGATION_PARAMETER_MY_PROFILE_DEFAULT_TAB, String.class);
 
         if (savedInstanceState != null) {
             isMyProfile = savedInstanceState.getBoolean(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE);
@@ -56,6 +63,16 @@ public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IM
             }
             speaker = interactor.getPresentationSpeaker(speakerId);
         }
+    }
+
+    @Override
+    public void onCreateView(Bundle savedInstanceState) {
+        super.onCreateView(savedInstanceState);
+
+        if(defaultTabTitle != null && defaultTabTitle.equals(Constants.MY_PROFILE_TAB_PROFILE))
+            selectedTabIndex = view.getCurrentTabsCount() - 1;
+
+        view.setCurrentTabByIndex(selectedTabIndex);
     }
 
     @Override
@@ -89,5 +106,10 @@ public class MemberProfilePresenter extends BasePresenter<IMemberProfileView, IM
     @Override
     public boolean showOrderConfirm() {
         return !interactor.isLoggedInAndConfirmedAttendee();
+    }
+
+    @Override
+    public void onPageSelected(int newTabIndex) {
+        this.selectedTabIndex = newTabIndex;
     }
 }

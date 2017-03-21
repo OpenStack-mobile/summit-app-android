@@ -16,4 +16,7 @@ public interface IMemberProfilePresenter extends IBasePresenter<IMemberProfileVi
     boolean getIsMember();
 
     boolean showOrderConfirm();
+
+    void onPageSelected(int newTabIndex);
+
 }

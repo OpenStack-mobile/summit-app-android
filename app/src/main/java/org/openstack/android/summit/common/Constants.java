@@ -26,9 +26,11 @@ public class Constants {
     static public final String NAVIGATION_PARAMETER_EVENT_RATE        = "org.openstack.android.summit.common.EventRate";
     public static final String NAVIGATION_PARAMETER_LEVEL             = "org.openstack.android.summit.common.Level";
     public static final String NAVIGATION_PARAMETER_TRACK             = "org.openstack.android.summit.common.Track";
-    public static final String NAVIGATION_PARAMETER_IS_MY_PROFILE     = "org.openstack.android.summit.common.IsMyProfile";
-    public static final String NAVIGATION_PARAMETER_SPEAKER           = "org.openstack.android.summit.common.SpeakerId";
-    public static final String NAVIGATION_PARAMETER_NOTIFICATION_ID   = "org.openstack.android.summit.common.NotificationId";
+    public static final String NAVIGATION_PARAMETER_IS_MY_PROFILE          = "org.openstack.android.summit.common.NAVIGATION_PARAMETER_IS_MY_PROFILE";
+    public static final String NAVIGATION_PARAMETER_MY_PROFILE_DEFAULT_TAB = "org.openstack.android.summit.common.NAVIGATION_PARAMETER_MY_PROFILE_DEFAULT_TAB";
+    public static final String MY_PROFILE_TAB_PROFILE                      = "org.openstack.android.summit.common.MY_PROFILE_TAB_PROFILE";
+    public static final String NAVIGATION_PARAMETER_SPEAKER                = "org.openstack.android.summit.common.SpeakerId";
+    public static final String NAVIGATION_PARAMETER_NOTIFICATION_ID        = "org.openstack.android.summit.common.NotificationId";
     public static final String NAVIGATION_PARAMETER_VENUE             = "org.openstack.android.summit.common.VenueId";
     public static final String NAVIGATION_PARAMETER_ROOM              = "org.openstack.android.summit.common.roomId";
     public static final String BASIC_AUTH_USER                        = "org.openstack.android.summit.common.security.BASIC_AUTH_USER";

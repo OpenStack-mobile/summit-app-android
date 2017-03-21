@@ -32,8 +32,14 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
     }
 
     @Override
-    public void presentMyProfileView(IBaseView context) {
+    public void presentMyProfileView(IBaseView context){
+        presentMyProfileView(context, null);
+    }
+
+    @Override
+    public void presentMyProfileView(IBaseView context, String defaultTabTitle) {
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, true);
+        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_MY_PROFILE_DEFAULT_TAB, defaultTabTitle);
         MemberProfileFragment memberProfileFragment = new MemberProfileFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager

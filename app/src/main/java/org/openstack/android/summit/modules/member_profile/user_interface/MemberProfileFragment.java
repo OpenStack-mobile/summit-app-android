@@ -29,7 +29,8 @@ import butterknife.Unbinder;
 /**
  * Created by Claudio Redi on 1/26/2016.
  */
-public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
+public class MemberProfileFragment
+        extends BaseFragment<IMemberProfilePresenter>
         implements ViewPager.OnPageChangeListener,
         SlidingTabLayout.TabColorizer,
         IMemberProfileView {
@@ -48,8 +49,6 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
     @Inject
     SpeakerPresentationsFragment speakerPresentationsFragment;
 
-    private int selectedTabIndex;
-
     private MemberProfilePageAdapter memberProfilePageAdapter;
 
     @BindView(R2.id.tabs)
@@ -57,6 +56,8 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
 
     @BindView(R2.id.member_profile_pager)
     ViewPager eventsViewPager;
+
+    private int selectedTabIndex = 0;
 
     public MemberProfileFragment() {
         // Required empty public constructor
@@ -100,10 +101,9 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
 
         memberProfilePageAdapter = new MemberProfilePageAdapter(getChildFragmentManager());
         eventsViewPager.setAdapter(memberProfilePageAdapter);
-        eventsViewPager.setCurrentItem(selectedTabIndex);
 
         tabs.setViewPager(eventsViewPager);
-
+        super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
 
@@ -119,15 +119,23 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
     }
 
     @Override
-    public void onPageSelected(int position) {
+    public void onPageSelected(int newTabIndex) {
 
-        FragmentLifecycle fragmentToShow = (FragmentLifecycle)memberProfilePageAdapter.getItem(position);
+        FragmentLifecycle fragmentToShow = (FragmentLifecycle)memberProfilePageAdapter.getItem(newTabIndex);
         fragmentToShow.onResumeFragment();
 
         FragmentLifecycle fragmentToHide = (FragmentLifecycle)memberProfilePageAdapter.getItem(selectedTabIndex);
         fragmentToHide.onPauseFragment();
 
-        selectedTabIndex = position;
+        selectedTabIndex = newTabIndex;
+
+        presenter.onPageSelected(newTabIndex);
+    }
+
+    @Override
+    public int getCurrentTabsCount(){
+        if(memberProfilePageAdapter == null) return 0;
+        return memberProfilePageAdapter.getCount() ;
     }
 
     @Override
@@ -143,7 +151,15 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         }
     }
 
+    @Override
+    public void setCurrentTabByIndex(int tabIndex) {
+        if(eventsViewPager == null) return;
+        selectedTabIndex = tabIndex;
+        eventsViewPager.setCurrentItem(tabIndex);
+    }
+
     private class MemberProfilePageAdapter extends FragmentPagerAdapter {
+
         public MemberProfilePageAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -153,7 +169,7 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
             int count = 0;
             if (presenter.getIsMyPofile()){
                 if (presenter.getIsSpeaker()) {
-                    count = 4;
+                    count = presenter.getIsAttendee() ? 4 : 3;
                 }
                 else if (presenter.getIsAttendee()) {
                     count = 3;
@@ -172,7 +188,7 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         public CharSequence getPageTitle(int position) {
             if (presenter.getIsMyPofile()){
                 if (presenter.getIsSpeaker()) {
-                    return getPageTitleForMyProfileAsSpeaker(position);
+                    return getPageTitleForMyProfileAsSpeaker(position, presenter.getIsAttendee());
                 }
                 else if (presenter.getIsAttendee()) {
                     return getPageTitleForMyProfileAsAttendee(position);
@@ -202,11 +218,11 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         private CharSequence getPageTitleForMyProfileAsAttendee(int position) {
             switch (position) {
                 case 0:
-                    return getResources().getString(R.string.my_summit_profile_tab_title);
-                case 1:
                     return getResources().getString(R.string.my_summit_schedule_tab_title);
-                case 2:
+                case 1:
                     return getResources().getString(R.string.my_summit_favorites_tab_title);
+                case 2:
+                    return getResources().getString(R.string.my_summit_profile_tab_title);
                 default:
                     return "";
             }
@@ -215,24 +231,32 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         private CharSequence getPageTitleForMyProfileAsMember(int position) {
             switch (position) {
                 case 0:
-                    return getResources().getString(R.string.my_summit_profile_tab_title);
-                case 1:
                     return getResources().getString(R.string.my_summit_favorites_tab_title);
+                case 1:
+                    return getResources().getString(R.string.my_summit_profile_tab_title);
                 default:
                     return "";
             }
         }
 
-        private CharSequence getPageTitleForMyProfileAsSpeaker(int position) {
+        private CharSequence getPageTitleForMyProfileAsSpeaker(int position, boolean isAttendee) {
             switch (position) {
                 case 0:
-                    return getResources().getString(R.string.my_summit_profile_tab_title);
-                case 1:
-                    return getResources().getString(R.string.my_summit_schedule_tab_title);
-                case 2:
+                    if(isAttendee)
+                        return getResources().getString(R.string.my_summit_schedule_tab_title);
                     return getResources().getString(R.string.my_summit_favorites_tab_title);
-                case 3:
+                case 1:
+                    if(isAttendee)
+                        return getResources().getString(R.string.my_summit_favorites_tab_title);
                     return getResources().getString(R.string.my_summit_sessions_tab_title);
+                case 2:
+                    if(isAttendee)
+                        return getResources().getString(R.string.my_summit_sessions_tab_title);
+                    return getResources().getString(R.string.my_summit_profile_tab_title);
+                case 3:
+                    if(isAttendee)
+                        return getResources().getString(R.string.my_summit_profile_tab_title);
+                    return "";
                 default:
                     return "";
             }
@@ -242,7 +266,7 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         public Fragment getItem(int i) {
             if (presenter.getIsMyPofile()){
                 if (presenter.getIsSpeaker()) {
-                    return getItemForMyProfileAsSpeaker(i);
+                    return getItemForMyProfileAsSpeaker(i, presenter.getIsAttendee());
                 }
                 else if (presenter.getIsAttendee()) {
                     return getItemForMyProfileAsAttendee(i);
@@ -272,11 +296,11 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         private Fragment getItemForMyProfileAsAttendee(int i) {
             switch (i) {
                 case 0:
-                    return memberProfileDetailFragment;
-                case 1:
                     return personalScheduleFragment;
-                case 2:
+                case 1:
                     return favoritesScheduleFragment;
+                case 2:
+                    return memberProfileDetailFragment;
                 default:
                     return null;
             }
@@ -285,24 +309,32 @@ public class MemberProfileFragment extends BaseFragment<IMemberProfilePresenter>
         private Fragment getItemForMyProfileAsMember(int i) {
             switch (i) {
                 case 0:
-                    return memberProfileDetailFragment;
-                case 1:
                     return favoritesScheduleFragment;
+                case 1:
+                    return memberProfileDetailFragment;
                 default:
                     return null;
             }
         }
 
-        private Fragment getItemForMyProfileAsSpeaker(int i) {
+        private Fragment getItemForMyProfileAsSpeaker(int i, boolean isAttendee) {
             switch (i) {
                 case 0:
-                    return memberProfileDetailFragment;
-                case 1:
-                    return personalScheduleFragment;
-                case 2:
+                    if(isAttendee)
+                        return personalScheduleFragment;
                     return favoritesScheduleFragment;
-                case 3:
+                case 1:
+                    if(isAttendee)
+                        return favoritesScheduleFragment;
                     return speakerPresentationsFragment;
+                case 2:
+                    if(isAttendee)
+                        return speakerPresentationsFragment;
+                    return memberProfileDetailFragment;
+                case 3:
+                    if(isAttendee)
+                        return memberProfileDetailFragment;
+                    return null;
                 default:
                     return null;
             }

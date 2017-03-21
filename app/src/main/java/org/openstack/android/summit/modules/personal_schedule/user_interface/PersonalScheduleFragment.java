@@ -59,6 +59,7 @@ public class PersonalScheduleFragment
 
     @Override
     public void onResumeFragment() {
+        if(presenter == null) return;
         presenter.setRangerState();
         presenter.reloadSchedule();
     }

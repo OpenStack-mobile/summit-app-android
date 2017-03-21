@@ -56,9 +56,10 @@ public class MainWireframe implements IMainWireframe {
         eventsWireframe.presentEventsView(context);
     }
 
-    public void showMyProfileView(IBaseView context) {
+    @Override
+    public void showMyProfileView(IBaseView context, String defaultTabTitle) {
         FragmentBackStackHelper.clearAllBackStack(context);
-        memberProfileWireframe.presentMyProfileView(context);
+        memberProfileWireframe.presentMyProfileView(context, defaultTabTitle);
     }
 
     public void showSpeakerListView(IBaseView context) {

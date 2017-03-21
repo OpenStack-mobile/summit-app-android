@@ -10,6 +10,8 @@ public interface IMemberProfileWireframe extends IBaseWireframe{
 
     void presentOtherSpeakerProfileView(int speakerId, IBaseView context);
 
+    void presentMyProfileView(IBaseView context, String defaultTabTitle);
+
     void presentMyProfileView(IBaseView context);
 
     void showEventsView(IBaseView context);

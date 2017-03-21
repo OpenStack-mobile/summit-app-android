@@ -20,6 +20,7 @@ import java.util.List;
 public class SpeakerPresentationsFragment
         extends ScheduleFragment<ISpeakerPresentationsPresenter>
         implements ISpeakerPresentationsView, FragmentLifecycle {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getComponent().inject(this);
@@ -53,6 +54,7 @@ public class SpeakerPresentationsFragment
 
     @Override
     public void onResumeFragment() {
+        if(presenter == null) return;
         presenter.setRangerState();
         presenter.reloadSchedule();
     }
