@@ -2,6 +2,7 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
 def generateFireBaseJsonConfiguration(file) {
+    println('loading file '+file+' ...')
     def properties   = loadPropertiesFile(file)
     def templateFile = new File("google-services.json.template")
     def json         = new JsonSlurper().parseText(templateFile.text)
@@ -85,6 +86,39 @@ def expandManifest(flavor, properties_file) {
     ]
 }
 
+task expandConfigurationRelease  {
+    doLast {
+        android.productFlavors.production {
+            generateFireBaseJsonConfiguration("../summit-app.properties")
+        }
+    }
+}
+
+task expandConfigurationDebug {
+    doLast {
+        android.productFlavors.beta {
+            generateFireBaseJsonConfiguration("../summit-app.debug.properties")
+
+        }
+        android.productFlavors.development {
+            generateFireBaseJsonConfiguration("../summit-app.debug.properties")
+
+        }
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    if(task.name == 'processProductionReleaseManifest') {
+        task.dependsOn expandConfigurationRelease
+    }
+    if(task.name == 'processBetaReleaseManifest') {
+        task.dependsOn expandConfigurationDebug
+    }
+    if(task.name == 'processDevelopmentDebugManifest') {
+        task.dependsOn expandConfigurationDebug
+    }
+}
+
 android {
     signingConfigs {
         config {
@@ -120,17 +154,13 @@ android {
     }
     productFlavors {
         development {
-            generateFireBaseJsonConfiguration("../summit-app.debug.properties")
-            ext.betaDistributionEmails = getPropertyFromFile("../summit-app.debug.properties", "BetaDistributionEmails")
+            manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
+        }
+        beta {
             manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
         }
         production {
-            generateFireBaseJsonConfiguration("../summit-app.properties")
             manifestPlaceholders = expandManifest("production", "../summit-app.properties")
-        }
-        beta {
-            generateFireBaseJsonConfiguration("../summit-app.debug.properties")
-            manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
         }
     }
     packagingOptions {
@@ -235,7 +265,7 @@ dependencies {
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.android.support:support-annotations:23.4.0'
+    androidTestCompile 'com.android.support:support-annotations:25.2.0'
 
     if (file('libs/safe_storage.aar').exists()) {
         println('adding dependency safe_storage.aar ...')
@@ -270,7 +300,7 @@ dependencies {
 
     configurations.all {
         resolutionStrategy {
-            force 'com.android.support:support-annotations:23.0.1'
+            force 'com.android.support:support-annotations:25.2.0'
             force 'com.google.guava:guava:20.0-rc1'
         }
     }
