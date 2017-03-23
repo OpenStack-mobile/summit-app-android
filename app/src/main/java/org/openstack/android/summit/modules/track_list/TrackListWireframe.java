@@ -1,6 +1,5 @@
 package org.openstack.android.summit.modules.track_list;
 
-import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.track_schedule.ITrackScheduleWireframe;
 
@@ -16,7 +15,7 @@ public class TrackListWireframe implements ITrackListWireframe {
     }
 
     @Override
-    public void showTrackSchedule(NamedDTO track, IBaseView context) {
-        trackScheduleWireframe.presentTrackScheduleView(track, context);
+    public void showTrackSchedule(int trackId, IBaseView context) {
+        trackScheduleWireframe.presentTrackScheduleView(trackId, context);
     }
 }

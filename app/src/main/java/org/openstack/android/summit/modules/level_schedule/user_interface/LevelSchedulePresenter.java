@@ -19,8 +19,8 @@ import java.util.List;
 /**
  * Created by Claudio Redi on 1/11/2016.
  */
-public class LevelSchedulePresenter extends
-        SchedulePresenter<ILevelScheduleView, ILevelScheduleInteractor, ILevelScheduleWireframe>
+public class LevelSchedulePresenter
+        extends SchedulePresenter<ILevelScheduleView, ILevelScheduleInteractor, ILevelScheduleWireframe>
         implements ILevelSchedulePresenter {
 
     private String level;

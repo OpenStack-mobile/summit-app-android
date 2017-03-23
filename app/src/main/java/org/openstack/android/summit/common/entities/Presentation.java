@@ -10,13 +10,6 @@ import io.realm.annotations.PrimaryKey;
  * Created by Claudio Redi on 11/4/2015.
  */
 public class Presentation extends RealmObject implements IPresentation {
-    /**
-     *   'Level' => "Enum('Beginner,Intermediate,Advanced,N/A')",
-     */
-    public final static String LevelBeginner     = "Beginner";
-    public final static String LevelIntermediate = "Intermediate";
-    public final static String LevelAdvanced     = "Advanced";
-    public final static String LevelNA           = "N/A";
 
     @PrimaryKey
     private int id;

@@ -21,6 +21,7 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.SummitDataLoadingActivity;
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.devices.huawei.HuaweiHelper;
@@ -461,7 +462,7 @@ public class MainPresenter
         Log.d(Constants.LOG_TAG, "MainPresenter.onResume");
         checkPlayServices();
         updateNotificationCounter();
-        checkDeepLinks();
+
         interactor.subscribeToPushNotifications();
         view.toggleMyProfileMenuItem(interactor.isMemberLoggedIn());
 
@@ -469,6 +470,8 @@ public class MainPresenter
             showEventsView();
             initialView = InitialView.None;
         }
+
+        checkDeepLinks();
 
         Intent intent = view.getIntent();
         if(intent != null
@@ -503,13 +506,30 @@ public class MainPresenter
                     if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewEvent) {
                         if (!deepLinkInfo.hasParam()) return false;
                         view.setMenuItemChecked(R.id.nav_events);
-                        this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), this.view);
+                        int eventId          = deepLinkInfo.getParamAsInt();
+                        EventDetailDTO event = this.interactor.getEventById(eventId);
+                        int day              = event.getStartDate().getDayOfMonth();
+                        this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), day, this.view);
                         return true;
                     }
                     if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSpeaker) {
                         if (!deepLinkInfo.hasParam()) return false;
                         view.setMenuItemChecked(R.id.nav_speakers);
                         this.wireframe.showSpeakerProfile(deepLinkInfo.getParamAsInt(), this.view);
+                        return true;
+                    }
+                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewLevel) {
+                        if (!deepLinkInfo.hasParam()) return false;
+                        view.setMenuItemChecked(R.id.nav_events);
+                        String level = deepLinkInfo.getParam();
+                        this.wireframe.showEventsViewByLevel(level, this.view);
+                        return true;
+                    }
+                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewTrack) {
+                        if (!deepLinkInfo.hasParam()) return false;
+                        view.setMenuItemChecked(R.id.nav_events);
+                        int trackid = deepLinkInfo.getParamAsInt();
+                        this.wireframe.showEventsViewByTrack(trackid, this.view);
                         return true;
                     }
                     if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewNotification) {

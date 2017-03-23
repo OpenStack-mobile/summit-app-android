@@ -47,7 +47,7 @@ public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackList
     @Override
     public void showTrackEvents(int position) {
         NamedDTO track = tracks.get(position);
-        wireframe.showTrackSchedule(track, view);
+        wireframe.showTrackSchedule(track.getId(), view);
     }
 
     @Override

@@ -17,7 +17,10 @@ import org.openstack.android.summit.modules.track_schedule.user_interface.TrackS
 /**
  * Created by Claudio Redi on 1/12/2016.
  */
-public class TrackScheduleWireframe extends ScheduleWireframe implements ITrackScheduleWireframe {
+public class TrackScheduleWireframe
+        extends ScheduleWireframe
+        implements ITrackScheduleWireframe
+{
     private IGeneralScheduleFilterWireframe generalScheduleFilterWireframe;
 
     public TrackScheduleWireframe
@@ -33,9 +36,9 @@ public class TrackScheduleWireframe extends ScheduleWireframe implements ITrackS
     }
 
     @Override
-    public void presentTrackScheduleView(NamedDTO track, IBaseView context) {
+    public void presentTrackScheduleView(int trackId, IBaseView context) {
         TrackScheduleFragment trackScheduleFragment = new TrackScheduleFragment();
-        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_TRACK, track.getId());
+        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_TRACK, trackId);
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
@@ -45,9 +48,9 @@ public class TrackScheduleWireframe extends ScheduleWireframe implements ITrackS
     }
 
     @Override
-    public void reloadTrackScheduleView(NamedDTO track, IBaseView context) {
+    public void reloadTrackScheduleView(int trackId, IBaseView context) {
         TrackScheduleFragment trackScheduleFragment = new TrackScheduleFragment();
-        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_TRACK, track.getId());
+        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_TRACK, trackId);
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()

@@ -47,19 +47,10 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTop">
-            <intent-filter android:priority="999" android:autoVerify="true">
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" />
-                <data android:scheme="http" />
-                <data android:host="${WebSiteBaseUrl}" />
-                <data android:pathPattern="/summit/.*/summit-schedule.*" />
-            </intent-filter>
             <!-- custom schema -->
             <intent-filter android:priority="999">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -78,27 +69,56 @@
                 <data
                     android:host="notifications"
                     android:scheme="org.openstack.android.summit" />
+                <data
+                    android:host="levels"
+                    android:scheme="org.openstack.android.summit" />
 
+                <data
+                    android:host="tracks"
+                    android:scheme="org.openstack.android.summit" />
+
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="${WebSiteBaseUrl}"
+                    android:pathPattern="/summit/.*/summit-schedule.*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="${WebSiteBaseUrl}"
+                    android:pathPattern="/summit/.*/summit-schedule.*" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".SummitDataLoadingActivity"
-            android:theme="@style/AppTheme.InitialLoadActivity"/>
+            android:theme="@style/AppTheme.InitialLoadActivity" />
 
         <activity
             android:name=".SummitsListDataLoaderActivity"
-            android:theme="@style/AppTheme.InitialLoadActivity"/>
+            android:theme="@style/AppTheme.InitialLoadActivity" />
 
-        <activity android:name=".common.player.YouTubePlayerActivity"
+        <activity
+            android:name=".common.player.YouTubePlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="sensor"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-        </activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
 
-        <activity android:name=".modules.rsvp.RSVPViewerActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-        </activity>
+        <activity
+            android:name=".modules.rsvp.RSVPViewerActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
 
         <!-- https://developers.google.com/youtube/android/player/register -->
         <meta-data
@@ -180,23 +200,22 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/push_icon"
-            tools:ignore="ManifestResource"/>
+            tools:ignore="ManifestResource" />
 
-        <service
-            android:name=".common.services.PushNotificationReceiverService">
+        <service android:name=".common.services.PushNotificationReceiverService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service
-            android:name=".common.services.FirebaseIDService">
+        <service android:name=".common.services.FirebaseIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".common.push_notifications.PushNotificationsBroadcastReceiver"
+        <receiver
+            android:name=".common.push_notifications.PushNotificationsBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="org.openstack.android.summit.push_notification.intent.RECEIVE" />
@@ -208,18 +227,15 @@
 
         <service
             android:name=".common.services.DataUpdatesService"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
 
         <service
             android:name=".common.services.SummitDataIngestionService"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
 
         <service
             android:name=".common.services.SummitsListIngestionService"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
 
     </application>
 

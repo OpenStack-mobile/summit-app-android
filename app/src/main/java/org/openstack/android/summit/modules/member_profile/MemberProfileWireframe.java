@@ -40,6 +40,8 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
     public void presentMyProfileView(IBaseView context, String defaultTabTitle) {
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_IS_MY_PROFILE, true);
         navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_MY_PROFILE_DEFAULT_TAB, defaultTabTitle);
+        navigationParametersStore.put(Constants.NAVIGATION_PARAMETER_DAY, 0);
+
         MemberProfileFragment memberProfileFragment = new MemberProfileFragment();
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager

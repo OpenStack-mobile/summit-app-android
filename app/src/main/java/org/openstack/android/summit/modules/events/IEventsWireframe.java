@@ -9,5 +9,7 @@ public interface IEventsWireframe {
 
     void presentEventsView(IBaseView context);
 
+    void presentEventsView(IBaseView context, int day);
+
     void showFilterView(IBaseView view);
 }

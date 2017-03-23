@@ -50,8 +50,6 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     protected TextView listEmptyMessageTextView;
 
     protected LinearLayoutManager layoutManager = null;
-    protected Integer     selectedDay           = null;
-    private static final String SELECTED_DAY    = "ScheduleFragment.SCHEDULE_SELECTED_DAY";
     // list position state
     private static final String LIST_POSITION   = "ScheduleFragment.LIST_POSITION";
     protected int listPosition                  = -1;
@@ -64,9 +62,6 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.setView(this);
-        if(savedInstanceState != null){
-            selectedDay = savedInstanceState.getInt(SELECTED_DAY, 0);
-        }
     }
 
     @Override
@@ -111,13 +106,9 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     @Override
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        if (selectedDay != null && selectedDay > 0 ){
-            ranger.setSelectedDay(selectedDay, false);
-        }
         setNowButtonListener();
         ranger.setDayViewOnClickListener(date -> {
-            selectedDay = date.getDayOfMonth();
-            presenter.reloadSchedule();
+            presenter.reloadSchedule(date.getDayOfMonth());
         });
         presenter.onActivityCreated(savedInstanceState);
     }
@@ -162,17 +153,10 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        presenter.onSaveInstanceState(outState);
         if(layoutManager != null)
             listPosition = layoutManager.findFirstVisibleItemPosition();
-        //save list state ( if visible)
-        if(ranger != null) {
-            outState.putInt(SELECTED_DAY, ranger.getSelectedDay());
-        }
-        if(selectedDay != null){
-            outState.putInt(SELECTED_DAY, selectedDay);
-        }
         outState.putInt(LIST_POSITION, listPosition);
+        presenter.onSaveInstanceState(outState);
     }
 
     @Override
@@ -180,10 +164,8 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         // Always call the superclass so it can restore the view hierarchy
         super.onViewStateRestored (savedInstanceState);
         if(savedInstanceState != null){
-            selectedDay  = savedInstanceState.getInt(SELECTED_DAY, 0);
             listPosition = savedInstanceState.getInt(LIST_POSITION, -1);
         }
-
         presenter.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -244,6 +226,17 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         }
         catch (Exception ex){
             return null;
+        }
+    }
+
+    @Override
+    public int getSelectedDay() {
+        try {
+            if (ranger == null) return 0;
+            return ranger.getSelectedDay();
+        }
+        catch (Exception ex){
+            return 0;
         }
     }
 

@@ -1,5 +1,6 @@
 package org.openstack.android.summit.modules.main.business_logic;
 
+import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.business_logic.IBaseInteractor;
 
 /**
@@ -14,4 +15,6 @@ public interface IMainInteractor extends IBaseInteractor {
     long getNotReadNotificationsCount();
 
     void unSubscribeToPushNotifications();
+
+    EventDetailDTO getEventById(int eventId);
 }

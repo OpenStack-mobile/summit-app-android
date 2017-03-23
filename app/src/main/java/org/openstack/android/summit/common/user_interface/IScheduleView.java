@@ -20,6 +20,8 @@ public interface IScheduleView extends IBaseView {
 
     DateTime getSelectedDate();
 
+    int getSelectedDay();
+
     void setSelectedDate(int day, boolean notifyListeners);
 
     void setSelectedDate(int day);

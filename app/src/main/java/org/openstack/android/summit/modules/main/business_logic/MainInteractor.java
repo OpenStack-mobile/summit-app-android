@@ -5,12 +5,14 @@ import android.util.Log;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
@@ -27,10 +29,12 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     private IReachability reachability;
     private IPushNotificationDataStore pushNotificationDataStore;
     private ISession session;
+    private ISummitEventDataStore summitEventDataStore;
 
     public MainInteractor
     (
         ISummitDataStore summitDataStore,
+        ISummitEventDataStore summitEventDataStore,
         ISecurityManager securityManager,
         IPushNotificationsManager pushNotificationsManager,
         IDTOAssembler dtoAssembler,
@@ -45,6 +49,7 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         this.reachability              = reachability;
         this.pushNotificationDataStore = pushNotificationDataStore;
         this.session                   = session;
+        this.summitEventDataStore      = summitEventDataStore;
     }
 
     @Override
@@ -72,6 +77,11 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     public void unSubscribeToPushNotifications() {
         Log.d(Constants.LOG_TAG, "MainInteractor.unSubscribeToPushNotifications");
         pushNotificationsManager.unSubscribe();
+    }
+
+    @Override
+    public EventDetailDTO getEventById(int eventId) {
+        return dtoAssembler.createDTO(summitEventDataStore.getById(eventId), EventDetailDTO.class);
     }
 
     @Override

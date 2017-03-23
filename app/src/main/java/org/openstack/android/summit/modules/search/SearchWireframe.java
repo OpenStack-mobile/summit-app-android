@@ -53,8 +53,8 @@ public class SearchWireframe extends ScheduleWireframe implements ISearchWirefra
     }
 
     @Override
-    public void showTrackSchedule(NamedDTO track, IBaseView context) {
-        trackScheduleWireframe.presentTrackScheduleView(track, context);
+    public void showTrackSchedule(int trackId, IBaseView context) {
+        trackScheduleWireframe.presentTrackScheduleView(trackId, context);
     }
 
     @Override

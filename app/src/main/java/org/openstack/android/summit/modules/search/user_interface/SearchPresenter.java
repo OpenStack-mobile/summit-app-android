@@ -103,7 +103,7 @@ public class SearchPresenter
     @Override
     public void showTrackSchedule(int position) {
         NamedDTO track = tracks.get(position);
-        wireframe.showTrackSchedule(track, view);
+        wireframe.showTrackSchedule(track.getId(), view);
     }
 
     @Override

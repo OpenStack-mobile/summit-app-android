@@ -38,7 +38,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     protected IScheduleFilter scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
     protected IScheduleItemViewBuilder scheduleItemViewBuilder;
-
+    protected Integer selectedDay             = null;
     protected boolean hasToCheckDisabledDates = true;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
@@ -86,6 +86,10 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         if(savedInstanceState == null)
             buttonNowState = true;
 
+        selectedDay = (savedInstanceState != null) ?
+                savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_DAY, 0) :
+                wireframe.getParameter(Constants.NAVIGATION_PARAMETER_DAY, Integer.class);
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGGED_IN_EVENT);
         intentFilter.addAction(Constants.LOGGED_OUT_EVENT);
@@ -93,7 +97,21 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     @Override
-    public void onActivityCreated (Bundle savedInstanceState){
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(selectedDay != null)
+            outState.putInt(Constants.NAVIGATION_PARAMETER_DAY, selectedDay);
+        if(view.getSelectedDay() > 0 )
+            outState.putInt(Constants.NAVIGATION_PARAMETER_DAY, view.getSelectedDay());
+    }
+
+    @Override
+    public void onCreateView(Bundle savedInstanceState) {
+        super.onCreateView(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
         if (!interactor.isDataLoaded()) return;
@@ -106,7 +124,9 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             buttonNowState = false;
             view.setNowButtonListener();
         }
-
+        if (selectedDay != null && selectedDay > 0 ){
+            view.setSelectedDate(selectedDay, false);
+        }
         setRangerState();
         reloadSchedule();
     }
@@ -125,8 +145,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
 
         // check if current time is on summit time
-        List<DateTime> pastDates     = shouldHidePastTalks ? currentSummit.getPastDates() : new ArrayList<DateTime>();
-        List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<DateTime>();
+        List<DateTime> pastDates     = shouldHidePastTalks ? currentSummit.getPastDates() : new ArrayList<>();
+        List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<>();
         // now merge past dates with inactive dates
         inactiveDates.removeAll(pastDates);
         inactiveDates.addAll(pastDates);
@@ -225,9 +245,10 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     @Override
-    public void reloadSchedule() {
-
+    public void reloadSchedule(int day) {
         DateTime selectedDate = view.getSelectedDate();
+        if(day > 0)
+            this.selectedDay = day;
         if (selectedDate != null) {
             view.showEmptyMessage(false);
 
@@ -240,6 +261,11 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             return;
         }
         view.showEmptyMessage(true);
+    }
+
+    @Override
+    public void reloadSchedule() {
+        reloadSchedule(0);
     }
 
     protected abstract List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, I interactor);

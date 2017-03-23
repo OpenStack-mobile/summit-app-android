@@ -1,6 +1,7 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
@@ -29,8 +30,8 @@ public class EventsModule {
     }
 
     @Provides
-    IEventsWireframe providesEventsWireframe(IGeneralScheduleFilterWireframe generalScheduleFilterWireframe) {
-        return new EventsWireframe(generalScheduleFilterWireframe);
+    IEventsWireframe providesEventsWireframe(IGeneralScheduleFilterWireframe generalScheduleFilterWireframe, INavigationParametersStore navigationParametersStore) {
+        return new EventsWireframe(generalScheduleFilterWireframe, navigationParametersStore);
     }
 
     @Provides

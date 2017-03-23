@@ -40,6 +40,6 @@ final public class PushPushNotificationsWireframe extends BaseWireframe implemen
                 .beginTransaction()
                     .replace(R.id.frame_layout_content, detailFragment)
                     .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 }

@@ -20,6 +20,8 @@ final public class AppLinkRouter implements IAppLinkRouter {
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.LocationsPath)) return true;
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.SchedulePath)) return true;
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.NotificationsPath)) return true;
+        if(url.getHost().toLowerCase().contains(DeepLinkInfo.LevelPath)) return true;
+        if(url.getHost().toLowerCase().contains(DeepLinkInfo.TrackPath)) return true;
         return false;
     }
 

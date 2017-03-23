@@ -9,6 +9,12 @@ public interface IMainWireframe {
 
     void showEventsView(IBaseView context);
 
+    void showEventsView(IBaseView context, int day);
+
+    void showEventsViewByLevel(String level, IBaseView context);
+
+    void showEventsViewByTrack(int trackId, IBaseView context);
+
     void showMyProfileView(IBaseView context, String defaultTabTitle);
 
     void showSpeakerListView(IBaseView context);
@@ -22,6 +28,8 @@ public interface IMainWireframe {
     void showAboutView(IBaseView context);
 
     void showEventDetail(int eventId, IBaseView context);
+
+    void showEventDetail(int eventId, int day, IBaseView context);
 
     void showSpeakerProfile(int speakerId, IBaseView context);
 

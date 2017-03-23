@@ -19,7 +19,9 @@ import org.openstack.android.summit.common.user_interface.ScheduleFragment;
 /**
  * Created by Claudio Redi on 1/11/2016.
  */
-public class LevelScheduleFragment extends ScheduleFragment<ILevelSchedulePresenter> implements ILevelScheduleView {
+public class LevelScheduleFragment
+        extends ScheduleFragment<ILevelSchedulePresenter>
+        implements ILevelScheduleView {
     private boolean showActiveFilterIndicator;
     private Menu menu;
 
