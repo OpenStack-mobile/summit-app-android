@@ -14,6 +14,13 @@ final public class AppLinkRouter implements IAppLinkRouter {
 
     @Override
     public boolean isDeepLink(Uri url) {
+        if(isInternalAppLink(url)) return true;
+        if(isMainScheduleFilteredByTrack(url)) return true;
+        if(isMainScheduleFilteredByLevel(url)) return true;
+        return false;
+    }
+
+    private boolean isInternalAppLink(Uri url){
         if(!url.getScheme().toLowerCase().contains(DeepLinkHost)) return false;
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.EventsPath)) return true;
         if(url.getHost().toLowerCase().contains(DeepLinkInfo.SpeakersPath)) return true;
@@ -35,10 +42,44 @@ final public class AppLinkRouter implements IAppLinkRouter {
     }
 
     @Override
+    public boolean isMainScheduleFilteredByTrack(Uri url) {
+        if(!url.getLastPathSegment().equals("summit-schedule")) return false;
+        String fragment = url.getFragment();
+        return fragment != null && fragment.contains("track=");
+    }
+
+    @Override
+    public boolean isMainScheduleFilteredByLevel(Uri url) {
+        if(!url.getLastPathSegment().equals("summit-schedule")) return false;
+        String fragment = url.getFragment();
+        return fragment != null && fragment.contains("level=");
+    }
+
+    @Override
+    public boolean isRawMainSchedule(Uri url) {
+        return url.getLastPathSegment().equals("summit-schedule");
+    }
+
+    @Override
     public DeepLinkInfo buildDeepLinkInfo(Uri url) {
-        String action = url.getHost();
-        String param  = url.getPath().replace("/","");
-        return new DeepLinkInfo(action, param);
+        if(isInternalAppLink(url)){
+            String action = url.getHost();
+            String param  = url.getPath().replace("/","");
+            return new DeepLinkInfo(action, param);
+        }
+        if(isMainScheduleFilteredByTrack(url)){
+            String action   = DeepLinkInfo.TrackPath;
+            String urlNew   = url.toString().replace("#", "?");
+            String param    = Uri.parse(urlNew).getQueryParameter("track");
+            return new DeepLinkInfo(action, param);
+        }
+        if(isMainScheduleFilteredByLevel(url)){
+            String action   = DeepLinkInfo.LevelPath;
+            String urlNew   = url.toString().replace("#", "?");
+            String param    = Uri.parse(urlNew).getQueryParameter("level");
+            return new DeepLinkInfo(action, param);
+        }
+        return null;
     }
 
     @Override

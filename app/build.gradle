@@ -134,7 +134,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 75
+        versionCode 76
         versionName "2.0"
         multiDexEnabled true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
@@ -155,9 +155,11 @@ android {
     productFlavors {
         development {
             manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
+            // applicationIdSuffix ".development"
         }
         beta {
             manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
+            // applicationIdSuffix ".beta"
         }
         production {
             manifestPlaceholders = expandManifest("production", "../summit-app.properties")

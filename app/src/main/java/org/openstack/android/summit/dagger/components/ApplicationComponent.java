@@ -4,6 +4,7 @@ package org.openstack.android.summit.dagger.components;
  * Created by claudio on 11/3/2015.
  */
 
+import org.openstack.android.summit.common.user_interface.BrowserActivity;
 import org.openstack.android.summit.dagger.modules.FavoriteScheduleModule;
 import org.openstack.android.summit.dagger.modules.RSVPModule;
 import org.openstack.android.summit.dagger.modules.SplashModule;
@@ -169,4 +170,5 @@ public interface ApplicationComponent {
     void inject(PushNotificationsBroadcastReceiver pushNotificationsBroadcastReceiver);
     void inject(SplashActivity splashActivity);
     void inject(FavoritesScheduleFragment favoritesScheduleFragment);
+    void inject(BrowserActivity browserActivity);
 }

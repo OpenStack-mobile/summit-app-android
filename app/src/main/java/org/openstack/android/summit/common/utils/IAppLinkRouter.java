@@ -14,4 +14,10 @@ public interface IAppLinkRouter {
     Uri buildUriFor(String action, String param);
 
     boolean isCustomRSVPLink(Uri url);
+
+    boolean isMainScheduleFilteredByTrack(Uri url);
+
+    boolean isMainScheduleFilteredByLevel(Uri url);
+
+    boolean isRawMainSchedule(Uri url);
 }

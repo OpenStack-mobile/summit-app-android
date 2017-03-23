@@ -120,6 +120,10 @@
             android:name=".modules.rsvp.RSVPViewerActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
 
+        <activity
+            android:name=".common.user_interface.BrowserActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+
         <!-- https://developers.google.com/youtube/android/player/register -->
         <meta-data
             android:name="common.player.YouTubePlayerActivity.API_KEY"

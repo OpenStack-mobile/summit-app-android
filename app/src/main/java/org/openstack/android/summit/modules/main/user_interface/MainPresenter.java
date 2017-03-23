@@ -29,6 +29,7 @@ import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.services.DataUpdatesService;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
+import org.openstack.android.summit.common.user_interface.BrowserActivity;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.common.utils.RealmFactory;
@@ -528,8 +529,8 @@ public class MainPresenter
                     if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewTrack) {
                         if (!deepLinkInfo.hasParam()) return false;
                         view.setMenuItemChecked(R.id.nav_events);
-                        int trackid = deepLinkInfo.getParamAsInt();
-                        this.wireframe.showEventsViewByTrack(trackid, this.view);
+                        int trackId = deepLinkInfo.getParamAsInt();
+                        this.wireframe.showEventsViewByTrack(trackId, this.view);
                         return true;
                     }
                     if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewNotification) {
@@ -553,6 +554,13 @@ public class MainPresenter
                     Log.d(Constants.LOG_TAG, "opening custom RSVP template ...");
                     // match! rsvp browser
                     Intent i = new Intent((Context) view, RSVPViewerActivity.class);
+                    i.setData(url);
+                    view.startActivity(i);
+                    return false;
+                }
+                if(this.appLinkRouter.isRawMainSchedule(url)){
+                    Log.d(Constants.LOG_TAG, "opening RAW main schedule ...");
+                    Intent i = new Intent((Context) view, BrowserActivity.class);
                     i.setData(url);
                     view.startActivity(i);
                     return false;
