@@ -1,5 +1,7 @@
 package org.openstack.android.summit.modules.general_schedule.user_interface;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -118,7 +120,28 @@ public class GeneralScheduleFragment
     @Override
     public void setShowActiveFilterIndicator(boolean showActiveFilterIndicator) {
         LinearLayout activeFiltersIndicator = (LinearLayout)view.findViewById(R.id.active_filters_indicator);
-        activeFiltersIndicator.setVisibility(showActiveFilterIndicator ? View.VISIBLE : View.GONE);
+        if(showActiveFilterIndicator){
+            activeFiltersIndicator.setVisibility(View.VISIBLE);
+            activeFiltersIndicator.setAlpha(0.0f);
+            // Start the animation
+            activeFiltersIndicator.animate()
+                    .translationX(0)
+                    .setDuration(500)
+                    .alpha(1.0f);
+        }
+        else{
+            activeFiltersIndicator.animate()
+                    .translationXBy(view.getWidth())
+                    .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            activeFiltersIndicator.setVisibility(View.GONE);
+                        }
+                    });
+        }
+
         this.showActiveFilterIndicator = showActiveFilterIndicator;
         setFilterIcon();
     }
