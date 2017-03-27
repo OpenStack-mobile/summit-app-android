@@ -19,7 +19,9 @@ import io.reactivex.Observable;
 /**
  * Created by Claudio Redi on 1/5/2016.
  */
-public class SummitAttendeeDataStore extends GenericDataStore<SummitAttendee> implements ISummitAttendeeDataStore {
+public class SummitAttendeeDataStore
+        extends GenericDataStore<SummitAttendee>
+        implements ISummitAttendeeDataStore {
 
     private ISummitAttendeeRemoteDataStore summitAttendeeRemoteDataStore;
 
@@ -100,6 +102,27 @@ public class SummitAttendeeDataStore extends GenericDataStore<SummitAttendee> im
 
         return summitAttendeeRemoteDataStore
                 .removeEventFromSchedule(me, summitEvent)
+                .doOnError( res -> {
+                    addEventToMemberScheduleLocal(
+                            getById(attendeeId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                });
+    }
+
+    @Override
+    public Observable<Boolean> deleteRSVP(SummitAttendee me, SummitEvent summitEvent) {
+
+        int attendeeId = me.getId();
+        int eventId  = summitEvent.getId();
+
+        removeEventFromMemberScheduleLocal(
+                me,
+                summitEvent
+        );
+
+        return summitAttendeeRemoteDataStore
+                .deleteRSVP(me, summitEvent)
                 .doOnError( res -> {
                     addEventToMemberScheduleLocal(
                             getById(attendeeId),

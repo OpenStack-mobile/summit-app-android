@@ -19,7 +19,9 @@ import retrofit2.Retrofit;
 /**
  * Created by Claudio Redi on 1/5/2016.
  */
-public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implements ISummitAttendeeRemoteDataStore {
+public class SummitAttendeeRemoteDataStore
+        extends BaseRemoteDataStore
+        implements ISummitAttendeeRemoteDataStore {
 
     private Retrofit restClientRxJava;
     private IAttendeeAPI attendeeAPI;
@@ -85,13 +87,57 @@ public class SummitAttendeeRemoteDataStore extends BaseRemoteDataStore implement
 
     @Override
     public Observable<Boolean> removeEventFromSchedule
-            (
-                    SummitAttendee summitAttendee,
-                    SummitEvent summitEvent
-            ) {
+    (
+        SummitAttendee summitAttendee,
+        SummitEvent summitEvent
+    )
+    {
 
         final int eventId = summitEvent.getId();
         return attendeeAPI.removeFromMySchedule(summitEvent.getSummit().getId(), eventId)
+                .subscribeOn(Schedulers.io())
+                .map(response -> {
+                    if (!response.isSuccessful()) {
+                        switch (response.code()) {
+                            case 412:
+                                throw new ValidationException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_already_in_schedule),
+                                                                eventId
+                                                        )
+                                        );
+                            case 404:
+
+                                throw new NotFoundEntityException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                                eventId
+                                                        )
+                                        );
+                            default:
+
+                                throw new Exception
+                                        (
+                                                String.format
+                                                        (
+                                                                "removeEventFromSchedule: http error %d",
+                                                                response.code()
+                                                        )
+                                        );
+                        }
+                    }
+                    return true;
+                });
+    }
+
+    @Override
+    public Observable<Boolean> deleteRSVP(SummitAttendee summitAttendee, SummitEvent summitEvent) {
+        final int eventId = summitEvent.getId();
+        return attendeeAPI.deleteRSVP(summitEvent.getSummit().getId(), eventId)
                 .subscribeOn(Schedulers.io())
                 .map(response -> {
                     if (!response.isSuccessful()) {

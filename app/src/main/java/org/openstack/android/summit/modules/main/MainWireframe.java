@@ -1,10 +1,13 @@
 package org.openstack.android.summit.modules.main;
 
+import android.support.v4.app.FragmentManager;
+
 import org.openstack.android.summit.common.user_interface.FragmentBackStackHelper;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.about.IAboutWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.level_list.ILevelListWireframe;
+import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
@@ -38,6 +41,8 @@ public class MainWireframe implements IMainWireframe {
 
     ITrackListWireframe trackListWireframe;
 
+    IMemberOrderConfirmWireframe memberOrderConfirmWireframe;
+
     public MainWireframe
     (
         IEventsWireframe eventsWireframe,
@@ -49,20 +54,22 @@ public class MainWireframe implements IMainWireframe {
         IVenuesWireframe venuesWireframe,
         IAboutWireframe aboutWireframe,
         IPushNotificationsWireframe notificationsWireframe,
-        ISettingsWireframe settingsWireframe
+        ISettingsWireframe settingsWireframe,
+        IMemberOrderConfirmWireframe memberOrderConfirmWireframe
     )
     {
 
-        this.eventsWireframe             = eventsWireframe;
-        this.speakerListWireframe        = speakerListWireframe;
-        this.memberProfileWireframe      = memberProfileWireframe;
-        this.searchWireframe             = searchWireframe;
-        this.venuesWireframe             = venuesWireframe;
-        this.aboutWireframe              = aboutWireframe;
-        this.notificationsWireframe      = notificationsWireframe;
-        this.levelListWireframe          = levelListWireframe;
-        this.trackListWireframe          = trackListWireframe;
-        this.settingsWireframe           = settingsWireframe;
+        this.eventsWireframe              = eventsWireframe;
+        this.speakerListWireframe         = speakerListWireframe;
+        this.memberProfileWireframe       = memberProfileWireframe;
+        this.searchWireframe              = searchWireframe;
+        this.venuesWireframe              = venuesWireframe;
+        this.aboutWireframe               = aboutWireframe;
+        this.notificationsWireframe       = notificationsWireframe;
+        this.levelListWireframe           = levelListWireframe;
+        this.trackListWireframe           = trackListWireframe;
+        this.settingsWireframe            = settingsWireframe;
+        this.memberOrderConfirmWireframe  = memberOrderConfirmWireframe;
     }
 
     @Override
@@ -138,5 +145,16 @@ public class MainWireframe implements IMainWireframe {
     @Override
     public void showSettingsView(IBaseView context) {
         settingsWireframe.presentSettingsView(context);
+    }
+
+    @Override
+    public void showMemberOrderConfirmationView(IBaseView context) {
+        memberOrderConfirmWireframe.presentMemberOrderConfirmView(context);
+    }
+
+    @Override
+    public void back(IBaseView context) {
+        FragmentManager fragmentManager = context.getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate();
     }
 }

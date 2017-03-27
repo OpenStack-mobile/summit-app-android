@@ -22,6 +22,14 @@
         app:showAsAction="never"
         android:icon="@drawable/ic_check_circle"
         />
+
+    <item
+        android:id="@+id/event_detail_menu_unrsvp_action"
+        app:showAsAction="never"
+        android:title="@string/unrsvp_action"
+        android:icon="@drawable/ic_cancel"
+        />
+
     <item
         android:id="@+id/event_detail_menu_remove_going_action"
         app:showAsAction="never"

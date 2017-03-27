@@ -87,6 +87,11 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     }
 
     @Override
+    public Observable<Boolean> deleteRSVP(int eventId) {
+        return scheduleableInteractor.deleteRSVP(eventId);
+    }
+
+    @Override
     public List<ScheduleItemDTO> getEventsBySearchTerm(String searchTerm) {
         List<SummitEvent> events = summitEventDataStore.getBySearchTerm
         (

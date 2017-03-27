@@ -360,6 +360,14 @@ public class EventDetailFragment
     }
 
     @Override
+    public void showUnRSVOMenuAction(boolean show){
+        if (contextMenu == null) return;
+        MenuItem item = contextMenu.findItem(R.id.event_detail_menu_unrsvp_action);
+        if (item == null) return;
+        item.setVisible(show);
+    }
+
+    @Override
     public void showRateMenuAction(boolean show) {
         if (contextMenu == null) return;
         MenuItem item = contextMenu.findItem(R.id.event_detail_menu_rate_action);
@@ -383,6 +391,7 @@ public class EventDetailFragment
             case R.id.event_detail_menu_rate_action:
                 presenter.showFeedbackEdit(0);
                 return true;
+            case R.id.event_detail_menu_unrsvp_action:
             case R.id.event_detail_menu_save_rsvp_action:
                 presenter.toggleRSVPStatus();
                 return true;
@@ -442,6 +451,24 @@ public class EventDetailFragment
         } else {
             trackTextView.setTextColor(Color.parseColor(color));
         }
+    }
+
+    @Override
+    public void resetGoingButtonState() {
+        setGoingButtonState(false);
+    }
+
+    @Override
+    public void resetFavoriteButtonState() {
+        setFavoriteButtonState(false);
+    }
+
+    @Override
+    public void setGoingButtonText(String text) {
+        if(buttonGoing == null) return;
+        buttonGoing.setTextOff(text);
+        buttonGoing.setTextOn(text);
+        buttonGoing.setText(text);
     }
 
     @Override

@@ -20,4 +20,6 @@ public interface IScheduleableInteractor extends IBaseInteractor  {
     Observable<Boolean> removeEventFromMemberFavorites(int eventId);
 
     boolean shouldShowVenues();
+
+    Observable<Boolean> deleteRSVP(int eventId);
 }

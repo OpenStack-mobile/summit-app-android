@@ -35,20 +35,12 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         scheduleItemView.setEventType(scheduleItemDTO.getEventType().toUpperCase());
         scheduleItemView.setTrack(scheduleItemDTO.getTrack());
 
-        if (isMemberLoggedIn) {
-            scheduleItemView.setScheduled(showMyScheduleOptions && isEventScheduledByLoggedMember);
-            scheduleItemView.setFavorite(showMyFavoritesOptions && isEventFavoriteByLoggedMember);
-            scheduleItemView.shouldShowFavoritesOption(showMyFavoritesOptions);
-            scheduleItemView.shouldShowGoingToOption(showMyScheduleOptions && isMemberLoggedInAndAttendee && (rsvpLink == null || rsvpLink.isEmpty()));
-            scheduleItemView.shouldShowRSVPToOption(showMyScheduleOptions && isMemberLoggedInAndAttendee && rsvpLink != null && !rsvpLink.isEmpty());
-        }
-        else{
-            scheduleItemView.setScheduled(false);
-            scheduleItemView.setFavorite(false);
-            scheduleItemView.shouldShowFavoritesOption(false);
-            scheduleItemView.shouldShowGoingToOption(false);
-            scheduleItemView.shouldShowRSVPToOption(false);
-        }
+        scheduleItemView.setScheduled(showMyScheduleOptions && isEventScheduledByLoggedMember);
+        scheduleItemView.setFavorite(showMyFavoritesOptions && isEventFavoriteByLoggedMember);
+        scheduleItemView.shouldShowFavoritesOption(showMyFavoritesOptions);
+        scheduleItemView.shouldShowGoingToOption(showMyScheduleOptions && (rsvpLink == null || rsvpLink.isEmpty()));
+        scheduleItemView.shouldShowRSVPToOption(showMyScheduleOptions  && rsvpLink != null && !rsvpLink.isEmpty());
+        scheduleItemView.shouldShowUnRSVPToOption(showMyScheduleOptions  && rsvpLink != null && !rsvpLink.isEmpty() && isEventScheduledByLoggedMember);
 
         scheduleItemView.setContextualMenu();
         String color = scheduleItemDTO.getColor() != null && scheduleItemDTO.getColor() != ""

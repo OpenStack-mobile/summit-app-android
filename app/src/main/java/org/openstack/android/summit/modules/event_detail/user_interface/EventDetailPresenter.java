@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
@@ -141,34 +142,30 @@ public class EventDetailPresenter
 
     @Override
     public void updateActions(){
-        view.showGoingMenuAction(false);
-        view.showNotGoingMenuAction(false);
-        view.showAddFavoriteMenuAction(false);
-        view.showRemoveFavoriteMenuAction(false);
-        view.showRateMenuAction(false);
+        // buttons
+        view.showFavoriteButton(true);
+        view.showGoingButton(true);
+        view.setGoingButtonText(view.getResources().getString(R.string.save_going));
+        view.showRateButton(myFeedbackForEvent == null && this.event.getAllowFeedback() && event.isStarted());
+        view.setFavoriteButtonState(this.event.getFavorite());
+        view.setGoingButtonState(this.event.getScheduled());
+        // menu options
         view.showRSVPMenuAction(false);
-        view.showFavoriteButton(false);
-        view.showGoingButton(false);
-        view.showRateButton(false);
+        view.showNotGoingMenuAction(false);
+        view.showGoingMenuAction(false);
+        view.showUnRSVOMenuAction(false);
+        view.showRateMenuAction(myFeedbackForEvent == null && this.event.getAllowFeedback() && event.isStarted());
+        view.showAddFavoriteMenuAction(!this.event.getFavorite());
+        view.showRemoveFavoriteMenuAction(this.event.getFavorite());
 
-        if(this.interactor.isMemberLoggedIn()){
-            view.showFavoriteButton(true);
-            view.showRateMenuAction(myFeedbackForEvent == null && this.event.getAllowFeedback() && event.isStarted());
-            view.showRateButton(myFeedbackForEvent == null && this.event.getAllowFeedback() && event.isStarted());
-            view.showAddFavoriteMenuAction(!this.event.getFavorite());
-            view.setFavoriteButtonState(this.event.getFavorite());
-            view.showRemoveFavoriteMenuAction(this.event.getFavorite());
-
-            if(this.interactor.isMemberLoggedInAndConfirmedAttendee()){
-                view.showGoingButton(true);
-                view.setGoingButtonState(this.event.getScheduled());
-                if(this.event.getRsvpLink() != null &&  !this.event.getRsvpLink().isEmpty())
-                    view.showRSVPMenuAction(true);
-                else{
-                    view.showNotGoingMenuAction(this.event.getScheduled());
-                    view.showGoingMenuAction(!this.event.getScheduled());
-                }
-            }
+        if(this.event.getRsvpLink() != null &&  !this.event.getRsvpLink().isEmpty()) {
+            view.showRSVPMenuAction(!this.event.getScheduled());
+            view.showUnRSVOMenuAction(this.event.getScheduled());
+            view.setGoingButtonText(view.getResources().getString(R.string.save_rsvp));
+        }
+         else{
+            view.showNotGoingMenuAction(this.event.getScheduled());
+            view.showGoingMenuAction(!this.event.getScheduled());
         }
     }
 
@@ -334,12 +331,11 @@ public class EventDetailPresenter
 
     @Override
     public void buttonGoingPressed() {
-        if(this.interactor.isMemberLoggedInAndConfirmedAttendee()){
-            if(this.event.getRsvpLink() != null &&  !this.event.getRsvpLink().isEmpty())
-                toggleRSVPStatus();
-            else{
-                toggleScheduleStatus();
-            }
+        if(this.event.getRsvpLink() != null &&  !this.event.getRsvpLink().isEmpty())
+           toggleRSVPStatus();
+        else
+        {
+           toggleScheduleStatus();
         }
     }
 
@@ -351,6 +347,10 @@ public class EventDetailPresenter
 
     @Override
     public void showFeedbackEdit(int rate) {
+        if(!this.interactor.isMemberLoggedIn()){
+            buildLoginModal().show();
+            return;
+        }
         wireframe.showFeedbackEditView(event.getId(), event.getName(), rate, view);
     }
 
@@ -360,5 +360,16 @@ public class EventDetailPresenter
         feedbackItemView.setDate(feedback.getTimeAgo());
         feedbackItemView.setRate(feedback.getRate());
         feedbackItemView.setReview(feedback.getReview());
+    }
+
+    @Override
+    protected void onBeforeLoginModal(){
+        view.resetFavoriteButtonState();
+        view.resetGoingButtonState();
+    }
+
+    @Override
+    protected void onBeforeAttendeeModal(){
+        view.resetGoingButtonState();
     }
 }

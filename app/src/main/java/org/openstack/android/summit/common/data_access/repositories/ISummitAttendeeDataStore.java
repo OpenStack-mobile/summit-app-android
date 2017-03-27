@@ -16,6 +16,8 @@ public interface ISummitAttendeeDataStore extends IGenericDataStore<SummitAttend
 
     Observable<Boolean> removeEventFromMemberSchedule(SummitAttendee me, SummitEvent summitEvent);
 
+    Observable<Boolean> deleteRSVP(SummitAttendee me, SummitEvent summitEvent);
+
     void removeEventFromMemberScheduleLocal(SummitAttendee me, SummitEvent summitEvent);
 
 }

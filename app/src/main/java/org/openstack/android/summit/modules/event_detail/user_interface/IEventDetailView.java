@@ -75,6 +75,8 @@ public interface IEventDetailView extends IBaseView {
 
     void showRSVPMenuAction(boolean show);
 
+    void showUnRSVOMenuAction(boolean show);
+
     void showRateMenuAction(boolean show);
 
     void setReviewCount(int reviewCount);
@@ -84,4 +86,10 @@ public interface IEventDetailView extends IBaseView {
     void showToRecord(boolean show);
 
     void setTrackColor(String color);
+
+    void resetGoingButtonState();
+
+    void resetFavoriteButtonState();
+
+    void setGoingButtonText(String text);
 }

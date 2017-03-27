@@ -108,6 +108,7 @@ public class ScheduleListAdapter
         private boolean showFavoritesMenuOption;
         private boolean showGoingMenuOption;
         private boolean showRSVPOption;
+        private boolean showUnRSVPOption;
         private boolean externalRSVP;
         private String rsvpLink;
 
@@ -212,6 +213,11 @@ public class ScheduleListAdapter
         }
 
         @Override
+        public void shouldShowUnRSVPToOption(boolean show) {
+            this.showUnRSVPOption = show;
+        }
+
+        @Override
         public void setContextualMenu() {
           if (buttonViewOptions == null) return;
 
@@ -242,6 +248,11 @@ public class ScheduleListAdapter
                             menuBuilder.findItem(R.id.schedule_item_menu_save_favorite_action).setVisible(false);
                         }
 
+                        if(showUnRSVPOption)
+                            menuBuilder.findItem(R.id.schedule_item_menu_unrsvp_action).setVisible(scheduled);
+                        else
+                            menuBuilder.findItem(R.id.schedule_item_menu_unrsvp_action).setVisible(false);
+
                         if(showRSVPOption){
                             menuBuilder.findItem(R.id.schedule_item_menu_save_rsvp_action).setVisible(!scheduled);
                             menuBuilder.findItem(R.id.schedule_item_menu_save_going_action).setVisible(false);
@@ -269,6 +280,7 @@ public class ScheduleListAdapter
                                             return true;
                                         }
                                     }
+                                    case R.id.schedule_item_menu_unrsvp_action:
                                     case R.id.schedule_item_menu_save_rsvp_action: {
                                         if (eventRSVPCallback != null) {
                                             eventRSVPCallback.action(ScheduleItemViewHolder.this, getAdapterPosition());

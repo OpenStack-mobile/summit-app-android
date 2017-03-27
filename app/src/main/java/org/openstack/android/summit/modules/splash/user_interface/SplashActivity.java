@@ -8,6 +8,7 @@ import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -147,6 +148,11 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     @Override
     public void showInfoMessage(String message) {
 
+    }
+
+    @Override
+    public FragmentActivity getFragmentActivity() {
+        return null;
     }
 
     @Override

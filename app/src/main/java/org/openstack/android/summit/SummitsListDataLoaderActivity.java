@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -184,6 +185,11 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
     @Override
     public void showInfoMessage(String message) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public FragmentActivity getFragmentActivity() {
+        return null;
     }
 
     @Override

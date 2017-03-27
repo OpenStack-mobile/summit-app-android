@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -157,6 +158,19 @@ public class BrowserActivity extends Activity {
             WebView webView = (WebView) activity.get().findViewById(R.id.WebView);
             webView.setVisibility(View.INVISIBLE);
             activity.get().showActivityIndicator();
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if( url.startsWith("http:") || url.startsWith("https:") ) {
+                return false;
+            }
+
+            // Otherwise allow the OS to handle it
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            activity.get().startActivity(intent);
+            return true;
         }
 
     }

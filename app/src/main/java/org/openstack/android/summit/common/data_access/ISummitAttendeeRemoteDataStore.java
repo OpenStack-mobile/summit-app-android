@@ -14,4 +14,6 @@ public interface ISummitAttendeeRemoteDataStore {
 
     Observable<Boolean> removeEventFromSchedule(SummitAttendee summitAttendee, SummitEvent summitEvent);
 
+    Observable<Boolean> deleteRSVP(SummitAttendee summitAttendee, SummitEvent summitEvent);
+
 }

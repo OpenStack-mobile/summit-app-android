@@ -27,6 +27,8 @@ public interface IScheduleItemView extends IScheduleableItem {
 
     void shouldShowRSVPToOption(boolean show);
 
+    void shouldShowUnRSVPToOption(boolean show);
+
     void setContextualMenu();
 
 }

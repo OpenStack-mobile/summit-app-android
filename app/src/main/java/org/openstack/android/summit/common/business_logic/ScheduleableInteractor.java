@@ -83,6 +83,25 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     }
 
     @Override
+    public Observable<Boolean> deleteRSVP(int eventId)
+    {
+        if (!this.isMemberLoggedInAndConfirmedAttendee()) {
+            return Observable.just(false);
+        }
+
+        final Member loggedInMember       = securityManager.getCurrentMember();
+        final SummitEvent summitEvent     = summitEventDataStore.getById(eventId);
+
+        if(summitEvent == null)
+            return Observable.just(false);
+
+        return summitAttendeeDataStore
+                .deleteRSVP(loggedInMember.getAttendeeRole(), summitEvent)
+                .doOnNext(res -> pushNotificationsManager.unsubscribeFromEvent(eventId));
+    }
+
+
+    @Override
     public boolean isEventScheduledByLoggedMember(int eventId) {
 
         if (!this.isMemberLoggedInAndConfirmedAttendee()) {
