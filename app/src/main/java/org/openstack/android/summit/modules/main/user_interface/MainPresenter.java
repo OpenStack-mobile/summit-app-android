@@ -37,6 +37,8 @@ import org.openstack.android.summit.modules.main.IMainWireframe;
 import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
 import org.openstack.android.summit.modules.main.exceptions.MissingMemberException;
 import org.openstack.android.summit.modules.rsvp.RSVPViewerActivity;
+
+import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -524,6 +526,19 @@ public class MainPresenter
                         view.setMenuItemChecked(R.id.nav_events);
                         String level = deepLinkInfo.getParam();
                         this.wireframe.showEventsViewByLevel(level, this.view);
+                        return true;
+                    }
+                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSearch) {
+                        if (!deepLinkInfo.hasParam()) return false;
+                        view.setMenuItemChecked(R.id.nav_events);
+                        String search = deepLinkInfo.getParam();
+                        try{
+                            search =  java.net.URLDecoder.decode(search, "UTF-8");
+                        }
+                        catch (Exception ex){
+
+                        }
+                        this.wireframe.showSearchView(search, this.view);
                         return true;
                     }
                     if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewTrack) {

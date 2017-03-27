@@ -12,6 +12,7 @@ public class DeepLinkInfo {
     public static final String ActionViewLocation     = "VIEW_LOCATION";
     public static final String ActionViewSchedule     = "VIEW_SCHEDULE";
     public static final String ActionViewNotification = "VIEW_NOTIFICATION";
+    public static final String ActionViewSearch       = "VIEW_SEARCH";
 
     public static final String EventsPath             = "events";
     public static final String SpeakersPath           = "speakers";
@@ -20,6 +21,7 @@ public class DeepLinkInfo {
     public static final String LocationsPath          = "locations";
     public static final String SchedulePath           = "schedule";
     public static final String NotificationsPath      = "notifications";
+    public static final String SearchPath             = "search";
 
     private String param;
     private String action;
@@ -33,6 +35,7 @@ public class DeepLinkInfo {
         if(action.toLowerCase().startsWith(NotificationsPath)) this.action = ActionViewNotification;
         if(action.toLowerCase().startsWith(LevelPath))         this.action = ActionViewLevel;
         if(action.toLowerCase().startsWith(TrackPath))         this.action = ActionViewTrack;
+        if(action.toLowerCase().startsWith(SearchPath))        this.action = ActionViewSearch;
     }
 
     public String getParam() {

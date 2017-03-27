@@ -77,6 +77,10 @@
                     android:host="tracks"
                     android:scheme="org.openstack.android.summit" />
 
+                <data
+                    android:host="search"
+                    android:scheme="org.openstack.android.summit" />
+
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
