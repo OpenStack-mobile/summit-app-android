@@ -161,7 +161,7 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
 
     @Override
     public void setBuild(String build) {
-        if(aboutBuildText == null)
+        if(aboutBuildText == null) return;
         aboutBuildText.setText(build);
     }
 
