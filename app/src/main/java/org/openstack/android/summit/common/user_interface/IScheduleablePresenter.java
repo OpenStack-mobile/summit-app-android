@@ -11,6 +11,8 @@ public interface IScheduleablePresenter {
 
     Observable<Boolean> toggleScheduledStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableItem scheduleableView, IScheduleableInteractor interactor);
 
+    Observable<Boolean> deleteRSVP(ScheduleItemDTO scheduleItemDTO, IScheduleableItem scheduleableView, IScheduleableInteractor interactor);
+
     Observable<Boolean> toggleFavoriteStatusForEvent(ScheduleItemDTO scheduleItemDTO, IScheduleableItem favoriteView, IScheduleableInteractor interactor);
 
 }

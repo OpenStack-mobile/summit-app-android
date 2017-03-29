@@ -23,6 +23,7 @@ import org.openstack.android.summit.modules.main.user_interface.IDataLoadingPres
 import org.openstack.android.summit.modules.main.user_interface.IMainPresenter;
 import org.openstack.android.summit.modules.main.user_interface.MainPresenter;
 import org.openstack.android.summit.modules.main.user_interface.SummitListDataLoadingPresenter;
+import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
@@ -43,8 +44,35 @@ import dagger.Provides;
 public class MainModule {
 
     @Provides
-    IMainWireframe providesMainWireframe(IEventsWireframe eventsWireframe, ILevelListWireframe levelListWireframe, ITrackListWireframe trackListWireframe, ISpeakerListWireframe speakerListWireframe, IMemberProfileWireframe memberProfileWireframe, ISearchWireframe searchWireframe, IVenuesWireframe venuesWireframe, IAboutWireframe aboutWireframe, IPushNotificationsWireframe nofificationsWireframe, ISettingsWireframe settingsWireframe) {
-        return new MainWireframe(eventsWireframe, levelListWireframe, trackListWireframe, speakerListWireframe, memberProfileWireframe, searchWireframe, venuesWireframe, aboutWireframe, nofificationsWireframe, settingsWireframe);
+    IMainWireframe providesMainWireframe
+    (
+        IEventsWireframe eventsWireframe,
+        ILevelListWireframe levelListWireframe,
+        ITrackListWireframe trackListWireframe,
+        ISpeakerListWireframe speakerListWireframe,
+        IMemberProfileWireframe memberProfileWireframe,
+        ISearchWireframe searchWireframe,
+        IVenuesWireframe venuesWireframe,
+        IAboutWireframe aboutWireframe,
+        IPushNotificationsWireframe notificationsWireframe,
+        ISettingsWireframe settingsWireframe,
+        IMemberOrderConfirmWireframe memberOrderConfirmWireframe
+    )
+    {
+        return new MainWireframe
+        (
+                eventsWireframe,
+                levelListWireframe,
+                trackListWireframe,
+                speakerListWireframe,
+                memberProfileWireframe,
+                searchWireframe,
+                venuesWireframe,
+                aboutWireframe,
+                notificationsWireframe,
+                settingsWireframe,
+                memberOrderConfirmWireframe
+        );
     }
 
     @Provides

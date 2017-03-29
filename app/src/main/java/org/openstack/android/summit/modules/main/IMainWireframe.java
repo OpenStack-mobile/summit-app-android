@@ -36,4 +36,8 @@ public interface IMainWireframe {
     void showPushNotification(int pushNotificationId, IBaseView context);
 
     void showSettingsView(IBaseView context);
+
+    void showMemberOrderConfirmationView(IBaseView context);
+
+    void back(IBaseView context);
 }

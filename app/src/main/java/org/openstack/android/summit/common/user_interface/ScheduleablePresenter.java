@@ -48,6 +48,19 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
     }
 
     @Override
+    public Observable<Boolean> deleteRSVP(ScheduleItemDTO scheduleItemDTO, IScheduleableItem scheduleableView, IScheduleableInteractor interactor) {
+        // update view
+        if(hasOp(scheduleItemDTO.getId(), "RSVP_DEL")) return Observable.just(false);
+        addOp(scheduleItemDTO.getId(), "RSVP_DEL");
+        scheduleableView.setScheduled(false);
+
+        return interactor
+                .deleteRSVP(scheduleItemDTO.getId())
+                .doOnNext((res) ->  removeOp(scheduleItemDTO.getId(), "RSVP_DEL"))
+                .doOnError((res) -> { removeOp(scheduleItemDTO.getId(), "RSVP_DEL"); scheduleableView.setScheduled(true);});
+    }
+
+    @Override
     public Observable<Boolean> toggleFavoriteStatusForEvent
     (
         ScheduleItemDTO scheduleItemDTO,

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,25 +100,18 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
         isActivityIndicatorVisible = true;
 
         showActivityIndicator = true;
-        Runnable task = new Runnable() {
-            public void run() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!showActivityIndicator) {
-                            return;
-                        }
-                        progressDialog = new ACProgressPie.Builder(getActivity())
-                                .ringColor(Color.WHITE)
-                                .pieColor(Color.WHITE)
-                                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                                .build();
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
-                    }
-                });
+        Runnable task = () -> getActivity().runOnUiThread(() -> {
+            if (!showActivityIndicator) {
+                return;
             }
-        };
+            progressDialog = new ACProgressPie.Builder(getActivity())
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        });
         ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
         activityIndicatorTask = worker.schedule(task, delay, TimeUnit.MILLISECONDS);
     }
@@ -133,16 +127,13 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
         if (getActivity() == null) {
             return;
         }
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                showActivityIndicator = false;
-                isActivityIndicatorVisible = false;
+        getActivity().runOnUiThread(() -> {
+            showActivityIndicator = false;
+            isActivityIndicatorVisible = false;
 
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                    progressDialog = null;
-                }
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+                progressDialog = null;
             }
         });
     }
@@ -237,5 +228,10 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
     @Override
     public ContentResolver getContentResolver(){
         return getActivity().getContentResolver();
+    }
+
+    @Override
+    public FragmentActivity getFragmentActivity(){
+        return super.getActivity();
     }
 }

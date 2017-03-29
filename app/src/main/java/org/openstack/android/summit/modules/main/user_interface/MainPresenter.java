@@ -38,7 +38,6 @@ import org.openstack.android.summit.modules.main.business_logic.IMainInteractor;
 import org.openstack.android.summit.modules.main.exceptions.MissingMemberException;
 import org.openstack.android.summit.modules.rsvp.RSVPViewerActivity;
 
-import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -94,6 +93,22 @@ public class MainPresenter
                     return;
                 }
 
+                if (intent.getAction().contains(Constants.DO_EXTERNAL_LOG_IN_EVENT)) {
+                    Log.d(Constants.LOG_TAG, "MainPresenter.DO_EXTERNAL_LOG_IN_EVENT");
+                    initialView            = InitialView.None;
+                    initiatedExternalLogin = true;
+                    onClickLoginButton();
+                    return;
+                }
+
+                if (intent.getAction().contains(Constants.DO_EXTERNAL_REDEEM_ORDER_EVENT)) {
+                    Log.d(Constants.LOG_TAG, "MainPresenter.DO_EXTERNAL_REDEEM_ORDER_EVENT");
+                    initialView                  = InitialView.None;
+                    initiatedExternalRedeemOrder = true;
+                    wireframe.showMemberOrderConfirmationView(view);
+                    return;
+                }
+
                 if (intent.getAction().contains(Constants.LOG_IN_ERROR_EVENT)) {
                     Log.d(Constants.LOG_TAG, "MainPresenter.LOG_IN_ERROR_EVENT");
                     view.hideActivityIndicator();
@@ -108,17 +123,22 @@ public class MainPresenter
                     try {
                         Log.d(Constants.LOG_TAG, "MainPresenter.LOGGED_IN_EVENT");
                         onLoggedIn();
-
                         view.setMenuItemVisible(R.id.nav_my_profile, true);
-                        if(interactor.isMemberLoggedInAndConfirmedAttendee()){
-                            // if we are confirmed attendee start on main view
-                            view.setMenuItemChecked(R.id.nav_events);
-                            showEventsView();
+                        if(!initiatedExternalLogin && !initiatedExternalRedeemOrder){
+                            if(interactor.isMemberLoggedInAndConfirmedAttendee()){
+                                // if we are confirmed attendee start on main view
+                                view.setMenuItemChecked(R.id.nav_events);
+                                showEventsView();
+                            }
+                            else {
+                                // if we are not confirmed attendee show my profile
+                                view.setMenuItemChecked(R.id.nav_my_profile);
+                                showMyProfileView(Constants.MY_PROFILE_TAB_PROFILE);
+                            }
                         }
-                        else {
-                            // if we are not confirmed attendee show my profile
-                            view.setMenuItemChecked(R.id.nav_my_profile);
-                            showMyProfileView(Constants.MY_PROFILE_TAB_PROFILE);
+                        if(initiatedExternalRedeemOrder){
+                            // just do back
+                            wireframe.back(view);
                         }
                     } catch (MissingMemberException ex1) {
                         Crashlytics.logException(ex1);
@@ -127,7 +147,9 @@ public class MainPresenter
                     } finally {
                         enableDataUpdateService();
                         view.hideActivityIndicator();
-                        userLoginState = UserLoginState.None;
+                        userLoginState               = UserLoginState.None;
+                        initiatedExternalLogin       = false;
+                        initiatedExternalRedeemOrder = false;
                     }
                     return;
                 }
@@ -170,7 +192,7 @@ public class MainPresenter
 
         private final int value;
 
-        private UserLoginButtonInteraction(int value) {
+        UserLoginButtonInteraction(int value) {
             this.value = value;
         }
 
@@ -196,7 +218,7 @@ public class MainPresenter
 
         private final int value;
 
-        private UserLoginState(int value) {
+        UserLoginState(int value) {
             this.value = value;
         }
 
@@ -216,9 +238,30 @@ public class MainPresenter
         }
     }
 
-    public enum InitialView{
-        None,
-        Events,
+    public enum InitialView {
+        None(0),
+        Events(1);
+
+        private final int value;
+
+        InitialView(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static InitialView getValue(int id)
+        {
+            InitialView[] As = InitialView.values();
+            for(int i = 0; i < As.length; i++)
+            {
+                if(As[i].getValue() == id)
+                    return As[i];
+            }
+            return InitialView.None;
+        }
     }
 
     private ISecurityManager securityManager;
@@ -228,6 +271,8 @@ public class MainPresenter
     private UserLoginButtonInteraction userLoginButtonInteraction = UserLoginButtonInteraction.None;
     private UserLoginState userLoginState                         = UserLoginState.None;
     private InitialView    initialView                            = InitialView.Events;
+    private Boolean        initiatedExternalLogin                 = false;
+    private Boolean        initiatedExternalRedeemOrder           = false;
 
     public MainPresenter
     (
@@ -415,6 +460,9 @@ public class MainPresenter
         intentFilter.addAction(Constants.PUSH_NOTIFICATION_DELETED);
         intentFilter.addAction(Constants.PUSH_NOTIFICATION_OPENED);
         intentFilter.addAction(Constants.WIPE_DATE_EVENT);
+        intentFilter.addAction(Constants.DO_EXTERNAL_LOG_IN_EVENT);
+        intentFilter.addAction(Constants.DO_EXTERNAL_REDEEM_ORDER_EVENT);
+
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
 
         HuaweiHelper.check((Activity) view);
@@ -424,11 +472,13 @@ public class MainPresenter
         }
 
         if (savedInstanceState != null) {
-            onDataLoading    = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
-            loadedSummitList = savedInstanceState.getBoolean(Constants.LOADED_SUMMITS_LIST, false);
-            userLoginState   = UserLoginState.getValue(savedInstanceState.getInt(Constants.USER_LOG_IN_STATE, UserLoginState.None.getValue()));
+            onDataLoading                = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
+            loadedSummitList             = savedInstanceState.getBoolean(Constants.LOADED_SUMMITS_LIST, false);
+            userLoginState               = UserLoginState.getValue(savedInstanceState.getInt(Constants.USER_LOG_IN_STATE, UserLoginState.None.getValue()));
+            initiatedExternalLogin       = savedInstanceState.getBoolean(Constants.INIT_EXTERNAL_LOGIN, false);
+            initiatedExternalRedeemOrder = savedInstanceState.getBoolean(Constants.INIT_EXTERNAL_REDEEM_ORDER, false);
 
-            if (userLoginState.equals(UserLoginState.Started)) {
+            if (userLoginState.equals(UserLoginState.Started) || initiatedExternalLogin || initiatedExternalRedeemOrder) {
                 initialView = InitialView.None;
             }
         }
@@ -710,6 +760,8 @@ public class MainPresenter
         outState.putInt(Constants.USER_LOG_IN_STATE, userLoginState.getValue());
         outState.putBoolean(Constants.ON_DATA_LOADING_PROCESS, onDataLoading);
         outState.putBoolean(Constants.LOADED_SUMMITS_LIST, loadedSummitList);
+        outState.putBoolean(Constants.INIT_EXTERNAL_LOGIN, initiatedExternalLogin);
+        outState.putBoolean(Constants.INIT_EXTERNAL_REDEEM_ORDER, initiatedExternalRedeemOrder);
     }
 
     @Override

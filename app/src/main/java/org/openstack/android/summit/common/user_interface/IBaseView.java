@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 /**
@@ -39,4 +40,5 @@ public interface IBaseView {
 
     ContentResolver getContentResolver();
 
+    FragmentActivity getFragmentActivity();
 }

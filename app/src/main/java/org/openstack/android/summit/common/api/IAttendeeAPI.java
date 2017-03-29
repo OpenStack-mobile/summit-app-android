@@ -18,4 +18,7 @@ public interface IAttendeeAPI {
 
     @DELETE("v1/summits/{summit_id}/attendees/me/schedule/{event_id}")
     Observable<Response<ResponseBody>> removeFromMySchedule(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
+
+    @DELETE("v1/summits/{summit_id}/attendees/me/schedule/{event_id}/rsvp")
+    Observable<Response<ResponseBody>> deleteRSVP(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
 }

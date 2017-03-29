@@ -22,6 +22,13 @@
             />
 
         <item
+            android:id="@+id/schedule_item_menu_unrsvp_action"
+            app:showAsAction="always"
+            android:title="@string/unrsvp_action"
+            android:icon="@drawable/ic_cancel"
+            />
+
+        <item
             android:id="@+id/schedule_item_menu_save_favorite_action"
             app:showAsAction="always"
             android:title="@string/save_favorite"
