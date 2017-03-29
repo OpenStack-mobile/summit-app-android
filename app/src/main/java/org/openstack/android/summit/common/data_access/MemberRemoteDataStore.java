@@ -68,7 +68,12 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(response -> {
                     Member member = null;
+                    int code      = response.code();
                     try {
+                        if(!response.isSuccessful()){
+                            throw new Exception(String.format("MemberRemoteDataStore.getMemberInfo http code %d", code));
+                        }
+
                         final String data = response.body().string();
 
                         member = RealmFactory.transaction(session ->
@@ -76,6 +81,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                         );
                     } catch (Exception ex) {
                         Crashlytics.logException(ex);
+                        Crashlytics.log(String.format("MemberRemoteDataStore.getMemberInfo http code %d", code));
                         Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
                         throw Exceptions.propagate(ex);
                     }

@@ -180,7 +180,7 @@ public class SecurityManager implements ISecurityManager {
                     (ex) -> {
                         Log.e(Constants.LOG_TAG, ex.toString());
                         Intent intent = new Intent(Constants.LOG_IN_ERROR_EVENT);
-                        intent.putExtra(Constants.LOG_IN_ERROR_MESSAGE, ex.getMessage());
+                        intent.putExtra(Constants.LOG_IN_ERROR_MESSAGE, Constants.GENERIC_ERROR_MSG);
                         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).sendBroadcast(intent);
                         state = SecurityManagerState.IDLE;
                     }
