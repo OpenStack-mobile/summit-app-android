@@ -58,6 +58,13 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
 
             fragmentManager
                     .beginTransaction()
+                    .setCustomAnimations
+                    (
+                        R.anim.slide_in_left,
+                        R.anim.slide_out_left,
+                        R.anim.slide_out_right,
+                        R.anim.slide_in_right
+                    )
                     .replace(R.id.frame_layout_content, eventDetailFragment)
                     .addToBackStack(null)
                     .commit();
@@ -105,6 +112,13 @@ public class EventDetailWireframe extends BaseWireframe implements IEventDetailW
             FragmentManager fragmentManager = view.getSupportFragmentManager();
             fragmentManager
                     .beginTransaction()
+                    .setCustomAnimations
+                            (
+                                    R.anim.slide_in_left,
+                                    R.anim.slide_out_left,
+                                    R.anim.slide_out_right,
+                                    R.anim.slide_in_right
+                            )
                     .replace(R.id.frame_layout_content, levelScheduleFragment)
                     .addToBackStack(null)
                     .commitAllowingStateLoss();

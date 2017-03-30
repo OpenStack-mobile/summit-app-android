@@ -16,6 +16,13 @@ public class VenuesWireframe implements IVenuesWireframe {
 
         fragmentManager
                 .beginTransaction()
+                .setCustomAnimations
+                        (
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_left,
+                                R.anim.slide_out_right,
+                                R.anim.slide_in_right
+                        )
                 .replace(R.id.frame_layout_content, venuesFragment, "nav_venues")
                 .addToBackStack("nav_venues")
                 .commitAllowingStateLoss();

@@ -20,11 +20,14 @@ import org.openstack.android.summit.common.user_interface.recycler_view.DividerI
 import org.openstack.android.summit.common.user_interface.schedule_list.ScheduleListAdapter;
 
 import java.util.List;
+import java.util.logging.Handler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
@@ -95,8 +98,7 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         scheduleList.addItemDecoration(itemDecoration);
         scheduleListAdapter  = new ScheduleListAdapter(presenter);
 
-        scheduleList.setAdapter(new AlphaInAnimationAdapter(scheduleListAdapter));
-        scheduleList.setItemAnimator(new SlideInUpAnimator(new OvershootInterpolator(1f)));
+        scheduleList.setAdapter(scheduleListAdapter);
 
         presenter.onCreateView(savedInstanceState);
 
@@ -196,20 +198,32 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     @Override
     public void setEvents(final List<ScheduleItemDTO> events) {
 
+        scheduleList.setItemAnimator(new SlideInLeftAnimator());
+        scheduleList.getItemAnimator().setRemoveDuration(150);
         scheduleListAdapter.clear();
-        scheduleListAdapter.addAll(events);
+        scheduleList.getItemAnimator().runPendingAnimations();
+        new android.os.Handler().postDelayed(() -> {
 
-        // reset position
-        if(events.size() > 0)
-            scheduleList.scrollToPosition(0);
+                scheduleList.getItemAnimator().isRunning(() -> {
+                    scheduleList.setItemAnimator(new SlideInDownAnimator());
+                    scheduleList.getItemAnimator().setAddDuration(150);
+                    scheduleListAdapter.addAll(events);
 
-        showEmptyMessage(events.size() == 0 );
+                    // reset position
+                    if(events.size() > 0)
+                        scheduleList.scrollToPosition(0);
 
-        // if we have a former state, set it
-        if (layoutManager != null && listPosition != -1) {
-            scheduleList.scrollToPosition(listPosition);
-            listPosition = -1;
-        }
+                    showEmptyMessage(events.size() == 0 );
+
+                    // if we have a former state, set it
+                    if (layoutManager != null && listPosition != -1) {
+                        scheduleList.scrollToPosition(listPosition);
+                        listPosition = -1;
+                    }
+                });
+
+        }, 150);
+
     }
 
     @Override

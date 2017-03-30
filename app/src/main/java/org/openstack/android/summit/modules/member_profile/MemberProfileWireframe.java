@@ -46,6 +46,13 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
+                .setCustomAnimations
+                        (
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_left,
+                                R.anim.slide_out_right,
+                                R.anim.slide_in_right
+                        )
                     .replace(R.id.frame_layout_content, memberProfileFragment, "nav_my_profile")
                     .addToBackStack("nav_my_profile")
                 .commitAllowingStateLoss();
@@ -56,6 +63,13 @@ public class MemberProfileWireframe extends BaseWireframe implements IMemberProf
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
+                .setCustomAnimations
+                        (
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_left,
+                                R.anim.slide_out_right,
+                                R.anim.slide_in_right
+                        )
                     .replace(R.id.frame_layout_content, memberProfileFragment)
                     .addToBackStack(null)
                 .commitAllowingStateLoss();
