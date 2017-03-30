@@ -233,8 +233,6 @@ dependencies {
     }
     // progress indicator
     compile 'cc.cloudist.acplibrary:library:1.2.1'
-    // pop up alerts
-    compile 'com.github.claudioredi:sweet-alert-dialog:9c1be1a'
     // image library
     compile 'com.facebook.fresco:fresco:0.11.0'
     // simulate list with a linear layout

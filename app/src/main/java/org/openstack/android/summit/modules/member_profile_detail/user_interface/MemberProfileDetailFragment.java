@@ -99,7 +99,7 @@ public class MemberProfileDetailFragment
 
         builder.setTitle(R.string.eventbrite_not_attendee_alert_dialog_title)
                 .setMessage(R.string.eventbrite_not_attendee_alert_dialog_body)
-                .setPositiveButton(R.string.dialog_ok, (dialog, id) -> {
+                .setPositiveButton(R.string.generic_error_message_ok, (dialog, id) -> {
                     presenter.willAttendClicked();
                     dialog.dismiss();
                 })

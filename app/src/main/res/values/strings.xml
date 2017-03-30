@@ -92,7 +92,8 @@
     <string name="login_error_message">We sorry, there was an error with your login process, please try again.</string>
     <string name="notification_error_ssl_cert_invalid">Seems that there is some issue with SSL certificate. Do you want to continue?</string>
     <string name="missing_activity_error">You do not have installed any application to manage the requested action.</string>
-    <string name="generic_error_message">There was an error performing this operation.</string>
+    <string name="generic_error_title">We are sorry, there was an error</string>
+    <string name="generic_error_message">It has been reported to our dev team</string>
     <string name="session_expired_message">Your session has expired.</string>
     <string name="redeem_external_order_not_found_error">EventBrite order number not found or does not exist!</string>
     <string name="redeem_external_order_already_done_error">EventBrite Order # already redeemed!</string>
@@ -140,4 +141,5 @@
     <string name="alert_attendee_required_ok">Add Now</string>
     <string name="alert_attendee_required_cancel">Dismiss</string>
     <string name="unrsvp_action">UnRSVP</string>
+    <string name="generic_error_message_ok">Ok</string>
 </resources>

@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -34,7 +36,6 @@ import javax.inject.Inject;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
 import cc.cloudist.acplibrary.ACProgressPie;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by smarcet on 3/23/17.
@@ -88,10 +89,15 @@ public class BrowserActivity extends Activity {
             Uri url = getIntent().getData();
 
             if (url == null) {
-                new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Oops...")
-                        .setContentText(getResources().getString(R.string.generic_error_message))
-                        .show();
+
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+
+                builder.setTitle(R.string.generic_error_title)
+                       .setMessage(R.string.generic_error_message)
+                       .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )
+                       .create()
+                       .show();
+
                 return;
             }
 

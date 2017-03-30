@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
@@ -27,9 +28,8 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import cc.cloudist.acplibrary.ACProgressConstant;
-import cc.cloudist.acplibrary.ACProgressFlower;
 import cc.cloudist.acplibrary.ACProgressPie;
-import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 /**
  * Created by Claudio Redi on 11/3/2015.
@@ -144,9 +144,12 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
             return;
         }
 
-        new SweetAlertDialog(this.getActivity(), SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Oops...")
-                .setContentText(message)
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getFragmentActivity());
+
+        builder.setTitle(R.string.generic_error_title)
+                .setMessage(R.string.generic_error_message)
+                .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )
+                .create()
                 .show();
     }
 
@@ -156,9 +159,12 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
             return;
         }
 
-        new SweetAlertDialog(this.getActivity(), SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Info")
-                .setContentText(message)
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getFragmentActivity());
+
+        builder.setTitle("Info")
+                .setMessage(message)
+                .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )
+                .create()
                 .show();
     }
 
