@@ -242,21 +242,17 @@ public class MemberProfileFragment
         private CharSequence getPageTitleForMyProfileAsSpeaker(int position, boolean isAttendee) {
             switch (position) {
                 case 0:
+                    return getResources().getString(R.string.my_summit_sessions_tab_title);
+                case 1:
                     if(isAttendee)
                         return getResources().getString(R.string.my_summit_schedule_tab_title);
                     return getResources().getString(R.string.my_summit_favorites_tab_title);
-                case 1:
-                    if(isAttendee)
-                        return getResources().getString(R.string.my_summit_favorites_tab_title);
-                    return getResources().getString(R.string.my_summit_sessions_tab_title);
                 case 2:
                     if(isAttendee)
-                        return getResources().getString(R.string.my_summit_sessions_tab_title);
+                        return getResources().getString(R.string.my_summit_favorites_tab_title);
                     return getResources().getString(R.string.my_summit_profile_tab_title);
                 case 3:
-                    if(isAttendee)
-                        return getResources().getString(R.string.my_summit_profile_tab_title);
-                    return "";
+                    return getResources().getString(R.string.my_summit_profile_tab_title);
                 default:
                     return "";
             }
@@ -320,21 +316,17 @@ public class MemberProfileFragment
         private Fragment getItemForMyProfileAsSpeaker(int i, boolean isAttendee) {
             switch (i) {
                 case 0:
+                    return speakerPresentationsFragment;
+                case 1:
                     if(isAttendee)
                         return personalScheduleFragment;
                     return favoritesScheduleFragment;
-                case 1:
-                    if(isAttendee)
-                        return favoritesScheduleFragment;
-                    return speakerPresentationsFragment;
                 case 2:
                     if(isAttendee)
-                        return speakerPresentationsFragment;
+                        return favoritesScheduleFragment;
                     return memberProfileDetailFragment;
                 case 3:
-                    if(isAttendee)
-                        return memberProfileDetailFragment;
-                    return null;
+                    return memberProfileDetailFragment;
                 default:
                     return null;
             }

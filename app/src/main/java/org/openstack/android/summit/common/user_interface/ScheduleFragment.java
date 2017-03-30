@@ -98,6 +98,10 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         scheduleList.addItemDecoration(itemDecoration);
         scheduleListAdapter  = new ScheduleListAdapter(presenter);
 
+        scheduleList.setItemAnimator(new SlideInDownAnimator());
+        scheduleList.getItemAnimator().setRemoveDuration(200);
+        scheduleList.getItemAnimator().setAddDuration(200);
+
         scheduleList.setAdapter(scheduleListAdapter);
 
         presenter.onCreateView(savedInstanceState);
@@ -200,31 +204,21 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         if(scheduleList == null) return;
         if(scheduleListAdapter == null) return;
 
-        scheduleList.setItemAnimator(new SlideInLeftAnimator());
-        scheduleList.getItemAnimator().setRemoveDuration(150);
         scheduleListAdapter.clear();
-        scheduleList.getItemAnimator().runPendingAnimations();
-        new android.os.Handler().postDelayed(() -> {
-                if(scheduleList == null || scheduleList.getItemAnimator() == null) return;
-                scheduleList.getItemAnimator().isRunning(() -> {
-                    scheduleList.setItemAnimator(new SlideInDownAnimator());
-                    scheduleList.getItemAnimator().setAddDuration(150);
-                    scheduleListAdapter.addAll(events);
 
-                    // reset position
-                    if(events.size() > 0)
-                        scheduleList.scrollToPosition(0);
+        scheduleListAdapter.addAll(events);
 
-                    showEmptyMessage(events.size() == 0 );
+        // reset position
+        if(events.size() > 0)
+            scheduleList.scrollToPosition(0);
 
-                    // if we have a former state, set it
-                    if (layoutManager != null && listPosition != -1) {
-                        scheduleList.scrollToPosition(listPosition);
-                        listPosition = -1;
-                    }
-                });
+        showEmptyMessage(events.size() == 0 );
 
-        }, 150);
+        // if we have a former state, set it
+        if (layoutManager != null && listPosition != -1) {
+            scheduleList.scrollToPosition(listPosition);
+            listPosition = -1;
+        }
 
     }
 

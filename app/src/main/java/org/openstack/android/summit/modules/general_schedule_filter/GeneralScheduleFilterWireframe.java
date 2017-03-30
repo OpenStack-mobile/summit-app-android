@@ -24,12 +24,12 @@ public class GeneralScheduleFilterWireframe extends BaseWireframe implements IGe
         fragmentManager
                 .beginTransaction()
                 .setCustomAnimations
-                        (
-                                R.anim.slide_in_left,
-                                R.anim.slide_out_left,
-                                R.anim.slide_out_right,
-                                R.anim.slide_in_right
-                        )
+                (
+                    R.anim.slide_in_bottom,
+                    R.anim.slide_out_bottom,
+                    R.anim.slide_in_top,
+                    R.anim.slide_out_top
+                )
                 .addToBackStack(null)
                 .replace(R.id.frame_layout_content, generalScheduleFilterFragment)
                 .commit();
