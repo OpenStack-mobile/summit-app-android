@@ -197,13 +197,15 @@ public class ScheduleFragment<P extends ISchedulePresenter>
 
     @Override
     public void setEvents(final List<ScheduleItemDTO> events) {
+        if(scheduleList == null) return;
+        if(scheduleListAdapter == null) return;
 
         scheduleList.setItemAnimator(new SlideInLeftAnimator());
         scheduleList.getItemAnimator().setRemoveDuration(150);
         scheduleListAdapter.clear();
         scheduleList.getItemAnimator().runPendingAnimations();
         new android.os.Handler().postDelayed(() -> {
-
+                if(scheduleList == null || scheduleList.getItemAnimator() == null) return;
                 scheduleList.getItemAnimator().isRunning(() -> {
                     scheduleList.setItemAnimator(new SlideInDownAnimator());
                     scheduleList.getItemAnimator().setAddDuration(150);
