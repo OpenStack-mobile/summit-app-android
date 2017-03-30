@@ -174,7 +174,7 @@ public class EventDetailPresenter
         view.showFavoriteButton(true);
         view.showGoingButton(true);
         view.setGoingButtonText(view.getResources().getString(R.string.save_going));
-        view.showRateButton(myFeedbackForEvent == null && this.event.getAllowFeedback() && event.isStarted());
+        view.showRateButton(this.event.getAllowFeedback() && event.isStarted());
         view.setFavoriteButtonState(this.event.getFavorite());
         view.setGoingButtonState(this.event.getScheduled());
         // menu options
@@ -182,7 +182,7 @@ public class EventDetailPresenter
         view.showNotGoingMenuAction(false);
         view.showGoingMenuAction(false);
         view.showUnRSVOMenuAction(false);
-        view.showRateMenuAction(myFeedbackForEvent == null && this.event.getAllowFeedback() && event.isStarted());
+        view.showRateMenuAction(this.event.getAllowFeedback() && event.isStarted());
         view.showAddFavoriteMenuAction(!this.event.getFavorite());
         view.showRemoveFavoriteMenuAction(this.event.getFavorite());
 

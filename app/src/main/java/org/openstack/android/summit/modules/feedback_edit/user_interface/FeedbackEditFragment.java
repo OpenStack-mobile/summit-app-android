@@ -49,9 +49,20 @@ public class FeedbackEditFragment
     TextView eventNameText;
 
     @Override
-    public void setRate(int rate){
+    public void setRate(int rate) {
         this.rate = rate;
+
+        if(this.rate > 0){
+            setStarColor(rate, 1, R.id.feedback_rate_1);
+            setStarColor(rate, 2, R.id.feedback_rate_2);
+            setStarColor(rate, 3, R.id.feedback_rate_3);
+            setStarColor(rate, 4, R.id.feedback_rate_4);
+            setStarColor(rate, 5, R.id.feedback_rate_5);
+        }
     }
+
+    @Override
+    public void setReview(String review) { this.reviewText.setText(review); }
 
     public FeedbackEditFragment() {
         // Required empty public constructor
@@ -69,13 +80,6 @@ public class FeedbackEditFragment
         super.onResume();
         presenter.onResume();
         setTitle(getResources().getString(R.string.feedback));
-        if(rate > 0){
-            setStarColor(rate, 1, R.id.feedback_rate_1);
-            setStarColor(rate, 2, R.id.feedback_rate_2);
-            setStarColor(rate, 3, R.id.feedback_rate_3);
-            setStarColor(rate, 4, R.id.feedback_rate_4);
-            setStarColor(rate, 5, R.id.feedback_rate_5);
-        }
     }
 
     @Override

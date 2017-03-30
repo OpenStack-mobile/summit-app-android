@@ -3,6 +3,7 @@ package org.openstack.android.summit.modules.feedback_edit.user_interface;
 import android.os.Bundle;
 
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.exceptions.ValidationException;
 import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
@@ -45,7 +46,22 @@ public class FeedbackEditPresenter
     @Override
     public void onResume() {
         super.onResume();
-        view.setRate(rate);
+
+        if (eventId != null) {
+            try {
+                Feedback feedback = interactor.getFeedback(eventId);
+                if (feedback != null) {
+                    view.setRate(feedback.getRate());
+                    view.setReview(feedback.getReview());
+                } else {
+                    view.setRate(rate);
+                }
+            }
+            catch (ValidationException ex){
+                view.hideActivityIndicator();
+                AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex.getMessage()).show();
+            }
+        }
     }
 
     @Override

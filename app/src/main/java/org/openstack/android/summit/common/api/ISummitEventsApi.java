@@ -6,6 +6,7 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -40,5 +41,13 @@ public interface ISummitEventsApi {
         @Path("summit_id") int summitId,
         @Path("event_id") Integer eventId,
         @Body SummitEventFeedbackRequest body
+    );
+
+    @PUT("v2/summits/{summit_id}/events/{event_id}/feedback")
+    Observable<Response<ResponseBody>> updateEventFeedback
+    (
+            @Path("summit_id") int summitId,
+            @Path("event_id") Integer eventId,
+            @Body SummitEventFeedbackRequest body
     );
 }

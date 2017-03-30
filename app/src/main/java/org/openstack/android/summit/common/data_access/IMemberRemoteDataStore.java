@@ -16,6 +16,8 @@ public interface IMemberRemoteDataStore {
 
     Observable<Integer> addFeedback(int eventId, int rate, String review);
 
+    Observable<Boolean> updateFeedback(int eventId, int rate, String review);
+
     Observable<Boolean> addSummitEvent2Favorites(int summitId, int eventId);
 
     Observable<Boolean> removeSummitEventFromFavorites(int summitId, int eventId);

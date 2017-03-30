@@ -79,6 +79,38 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
     }
 
     @Override
+    public Observable<Boolean> updateFeedback(final Member member, Feedback feedback) {
+
+        int eventId   = feedback.getEvent().getId();
+        int rate      = feedback.getRate();
+        Date  date    = feedback.getDate();
+        String review = feedback.getReview();
+        int memberId  = member.getId();
+
+        return memberRemoteDataStore
+                .updateFeedback(eventId, rate, review)
+                .doOnNext( success -> {
+                    RealmFactory.transaction(session -> {
+                        if (success) {
+                            // save it locally and recreate bc realm does not support xcross threading
+                            Member me               = this.getById(memberId);
+                            Feedback newFeedback    = me.getFeedback().where().equalTo("event.id", eventId).findFirst();
+                            if (newFeedback == null) {
+                                return false;
+                            }
+                            newFeedback.setDate(date);
+                            newFeedback.setRate(rate);
+                            newFeedback.setReview(review);
+
+                            return newFeedback;
+                        }
+
+                        return null;
+                    });
+                });
+    }
+
+    @Override
     public void addEventToMyFavoritesLocal(Member me, SummitEvent summitEvent) {
         try {
 
