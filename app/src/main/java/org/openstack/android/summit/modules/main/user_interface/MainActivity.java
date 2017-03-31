@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.StringBuilderPrinter;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -350,6 +351,11 @@ public class MainActivity
     }
 
     @Override
+    public void showErrorMessage() {
+        this.showErrorMessage("");
+    }
+
+    @Override
     public void showInfoMessage(String message) {
         showInfoMessage(message, "info");
     }
@@ -430,10 +436,15 @@ public class MainActivity
     public void hideActivityIndicator() {
 
         runOnUiThread(() -> {
-            if (progressDialog != null) {
-                Log.d(Constants.LOG_TAG, "MainActivity.hideActivityIndicator");
-                progressDialog.dismiss();
-                progressDialog = null;
+            try {
+                if (progressDialog != null) {
+                    Log.d(Constants.LOG_TAG, "MainActivity.hideActivityIndicator");
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
+            }
+            catch (Exception ex){
+                Crashlytics.logException(ex);
             }
         });
 

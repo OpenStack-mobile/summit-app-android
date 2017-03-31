@@ -179,4 +179,10 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     public void setSummitInfoContainerVisibility(boolean visible) {
         summitInfoContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
+
+
+    @Override
+    public void showErrorMessage() {
+
+    }
 }

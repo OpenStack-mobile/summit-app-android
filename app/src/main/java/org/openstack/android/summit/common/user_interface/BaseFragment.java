@@ -240,4 +240,10 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
     public FragmentActivity getFragmentActivity(){
         return super.getActivity();
     }
+
+
+    @Override
+    public void showErrorMessage() {
+        this.showErrorMessage("");
+    }
 }

@@ -6,6 +6,8 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -76,12 +78,9 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                             scheduleItemView.setScheduled(formerState);
                             if(ex != null) {
                                 Log.d(Constants.LOG_TAG, ex.getMessage());
-                                if(view != null)
-                                    view.showErrorMessage(ex.getMessage());
-                                return;
+                                Crashlytics.logException(ex);
                             }
-                            if(view != null)
-                                view.showErrorMessage("Server Error");
+                            if(view != null) view.showErrorMessage();
                         }
                 );
     }
@@ -119,12 +118,9 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                     scheduleItemView.setFavorite(formerState);
                                     if(ex != null) {
                                         Log.d(Constants.LOG_TAG, ex.getMessage());
-                                        if(view != null)
-                                            view.showErrorMessage(ex.getMessage());
-                                        return;
+                                        Crashlytics.logException(ex);
                                     }
-                                    if(view != null)
-                                        view.showErrorMessage("Server Error");
+                                    if(view != null) view.showErrorMessage();
                                 }
                         );
     }
@@ -163,13 +159,10 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                             (ex) -> {
                                 scheduleItemView.setScheduled(formerState);
                                 if(ex != null) {
+                                    Crashlytics.logException(ex);
                                     Log.d(Constants.LOG_TAG, ex.getMessage());
-                                    if(view != null)
-                                        view.showErrorMessage(ex.getMessage());
-                                    return;
                                 }
-                                if(view != null)
-                                    view.showErrorMessage("Server Error");
+                                if(view != null) view.showErrorMessage();
                             }
                     );
         }
@@ -189,12 +182,9 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                     scheduleItemView.setScheduled(formerState);
                                     if(ex != null) {
                                         Log.d(Constants.LOG_TAG, ex.getMessage());
-                                        if(view != null)
-                                            view.showErrorMessage(ex.getMessage());
-                                        return;
+                                        Crashlytics.logException(ex);
                                     }
-                                    if(view != null)
-                                        view.showErrorMessage("Server Error");
+                                    if(view != null) view.showErrorMessage();
                                 }
                         );
             }

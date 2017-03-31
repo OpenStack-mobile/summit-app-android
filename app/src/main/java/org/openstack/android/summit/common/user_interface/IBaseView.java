@@ -20,6 +20,8 @@ public interface IBaseView {
 
     void showErrorMessage(String message);
 
+    void showErrorMessage();
+
     FragmentManager getSupportFragmentManager();
 
     void runOnUiThread(Runnable runnable);

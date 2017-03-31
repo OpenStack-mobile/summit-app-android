@@ -16,6 +16,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.services.SummitsListIngestionService;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
@@ -161,9 +163,14 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
 
     @Override
     public void hideActivityIndicator() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
+        try {
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+        }
+        catch (Exception ex){
+            Crashlytics.logException(ex);
         }
     }
 
@@ -215,6 +222,12 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
         Intent intent2 = new Intent();
         setResult(RESULT_OK_FIRE_SUMMIT_DATA_LOADING, intent2);
         finish();
+    }
+
+
+    @Override
+    public void showErrorMessage() {
+        this.showErrorMessage("");
     }
 
 }
