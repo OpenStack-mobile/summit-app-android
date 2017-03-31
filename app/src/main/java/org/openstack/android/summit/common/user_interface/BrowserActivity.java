@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -64,9 +63,14 @@ public class BrowserActivity extends Activity {
     }
 
     public void hideActivityIndicator() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
+        try {
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+        }
+        catch(Exception ex){
+            Crashlytics.logException(ex);
         }
     }
 
