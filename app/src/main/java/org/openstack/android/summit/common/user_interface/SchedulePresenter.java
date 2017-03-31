@@ -33,7 +33,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         extends IScheduleWireframe>
         extends BaseScheduleablePresenter<V, I, W> implements ISchedulePresenter<V> {
 
-    protected boolean buttonNowState  = false;
+    protected boolean setNowButtonInitialState = false;
     protected List<ScheduleItemDTO> dayEvents;
     protected IScheduleFilter scheduleFilter;
     protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
@@ -83,12 +83,13 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if(savedInstanceState == null)
-            buttonNowState = true;
 
         selectedDay = (savedInstanceState != null) ?
                 savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_DAY, 0) :
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_DAY, Integer.class);
+
+        if(savedInstanceState != null)
+            setNowButtonInitialState = savedInstanceState.getBoolean(Constants.SETTING_SET_NOW_BUTTON_INITIAL_STATE);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGGED_IN_EVENT);
@@ -103,6 +104,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             outState.putInt(Constants.NAVIGATION_PARAMETER_DAY, selectedDay);
         if(view.getSelectedDay() > 0 )
             outState.putInt(Constants.NAVIGATION_PARAMETER_DAY, view.getSelectedDay());
+        outState.putBoolean(Constants.SETTING_SET_NOW_BUTTON_INITIAL_STATE, setNowButtonInitialState);
     }
 
     @Override
@@ -115,15 +117,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         super.onActivityCreated(savedInstanceState);
 
         if (!interactor.isDataLoaded()) return;
-        currentSummit = interactor.getActiveSummit();
-        if (currentSummit == null) return;
 
-        if (currentSummit.isCurrentDateTimeInsideSummitRange() && buttonNowState) {
-            view.clearNowButtonListener();
-            view.setNowButtonState(buttonNowState);
-            buttonNowState = false;
-            view.setNowButtonListener();
-        }
         if (selectedDay != null && selectedDay > 0 ){
             view.setSelectedDate(selectedDay, false);
         }
@@ -180,7 +174,28 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     public void onResume() {
         try {
             super.onResume();
+            currentSummit = interactor.getActiveSummit();
+            boolean shouldReloadSchedule = false;
+            if (currentSummit != null && currentSummit.isCurrentDateTimeInsideSummitRange()) {
+                // only in summit time ... for the very first time
+                if(!setNowButtonInitialState) {
+                    view.clearNowButtonListener();
+                    view.setNowButtonState(true);
+                    view.setNowButtonListener();
+                    shouldReloadSchedule = setNowButtonInitialState = true;
+                }
+            }
+            else{ // out side of summit time
+                view.clearNowButtonListener();
+                view.setNowButtonState(false);
+                view.setNowButtonListener();
+                // reset state
+                setNowButtonInitialState = false;
+            }
             setRangerState();
+            if(shouldReloadSchedule){
+                reloadSchedule();
+            }
         } catch (Exception ex) {
             Crashlytics.logException(ex);
         }

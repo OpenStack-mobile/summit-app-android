@@ -55,4 +55,5 @@ public class Constants {
     static public final String WILL_ATTEND                            = "org.openstack.android.summit.common.WILL_ATTEND";
     static public final String INIT_EXTERNAL_LOGIN                    = "org.openstack.android.summit.common.INIT_EXTERNAL_LOGIN";
     static public final String INIT_EXTERNAL_REDEEM_ORDER             = "org.openstack.android.summit.common.INIT_EXTERNAL_REDEEM_ORDER";
+    static public final String SETTING_SET_NOW_BUTTON_INITIAL_STATE    = "org.openstack.android.summit.common.I.SETTING_SET_NOW_BUTTON_INITIAL_STATE";
 }

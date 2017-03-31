@@ -70,7 +70,6 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     @Override
     public void onStop() {
         super.onStop();
-        clearNowButtonListener();
         if(layoutManager != null)
             listPosition = layoutManager.findFirstVisibleItemPosition();
     }
@@ -81,7 +80,6 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         // This is somewhat like [[NSNotificationCenter defaultCenter] removeObserver:name:object:]
         super.onDestroy();
         presenter.onDestroy();
-        clearNowButtonListener();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
