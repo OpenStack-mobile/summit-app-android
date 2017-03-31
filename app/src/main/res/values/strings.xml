@@ -133,11 +133,11 @@
     <string name="missing_eventbrite_order_indicator_text">Do not forget to add your EventBrite Order #</string>
     <string name="event_rate_hint">Write a Review ...</string>
     <string name="alert_login_required_title">Login Required</string>
-    <string name="alert_login_required_body">You must be logged to use this function</string>
+    <string name="alert_login_required_body">You must be logged in to use this function.</string>
     <string name="alert_login_required_ok">Login Now</string>
     <string name="alert_login_required_cancel">Dismiss</string>
     <string name="alert_attendee_required_title">EventBrite Ticket Required</string>
-    <string name="alert_attendee_required_body">Only Attendees can use this function</string>
+    <string name="alert_attendee_required_body">Only attendees can use this function. Enter your Eventbrite order number in My Summit if you are an attendee.</string>
     <string name="alert_attendee_required_ok">Add Now</string>
     <string name="alert_attendee_required_cancel">Dismiss</string>
     <string name="unrsvp_action">UnRSVP</string>
