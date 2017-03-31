@@ -38,9 +38,9 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
     @Override
     public void onCreateView(Bundle savedInstanceState) {
 
-
         track = interactor.getTrack(trackId);
-        view.setTrack(track.getName());
+        if(track != null)
+            view.setTrack(track.getName());
         view.setShowActiveFilterIndicator(scheduleFilter.hasActiveFilters());
 
         super.onCreateView(savedInstanceState);
