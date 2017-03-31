@@ -189,17 +189,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                         );
             }
             else{
-                //https://developer.chrome.com/multidevice/android/intents
-                String backUrl = String.format("org.openstack.android.summit://events/%d",scheduleItemDTO.getId());
-
-                try{
-                    backUrl =  java.net.URLDecoder.decode(backUrl, "UTF-8");
-                }
-                catch (Exception ex){
-
-                }
-
-                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink()+"?BackURL="+ backUrl, view);
+                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
             }
         }
     }

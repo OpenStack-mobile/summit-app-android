@@ -1,12 +1,19 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import com.crashlytics.android.Crashlytics;
+
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
@@ -45,6 +52,26 @@ public class EventDetailPresenter
     private              int feedbackPage           = 1;
     private static final int feedbackObjectsPerPage = 25;
     private boolean loadingFeedbackAverage;
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+
+                if (intent.getAction() == Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT
+                        || intent.getAction() == Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED
+                        || intent.getAction() == Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED ) {
+                    int entityId = intent.getIntExtra(Constants.DATA_UPDATE_ENTITY_ID, 0);
+                    String entityClassName = intent.getStringExtra(Constants.DATA_UPDATE_ENTITY_CLASS);
+                    if (eventId == entityId)
+                        updateUI();
+                }
+
+            } catch (Exception ex) {
+                Crashlytics.logException(new Exception(String.format("Action %s", intent.getAction()), ex));
+            }
+        }
+    };
 
     @Inject
     public EventDetailPresenter
@@ -173,6 +200,19 @@ public class EventDetailPresenter
     @Override
     public void onResume() {
         super.onResume();
+        // bind local broadcast receiver
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT);
+        intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED);
+        intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED);
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+        updateActions();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
     }
 
     public void loadFeedback() {

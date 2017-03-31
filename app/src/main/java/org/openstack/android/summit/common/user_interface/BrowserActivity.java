@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.user_interface;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -28,6 +29,7 @@ import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.security.IConfigurationParamsManager;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
+import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -80,15 +82,7 @@ public class BrowserActivity extends Activity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.rsvp_viewer);
             getApplicationComponent().inject(this);
-            // Initialise the WebView
-            WebView webView = (WebView) findViewById(R.id.WebView);
-            webView.getSettings().setJavaScriptEnabled(true);
-            CookieManager cookieManager = CookieManager.getInstance();
-            // persists the oookies ...
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                cookieManager.setAcceptThirdPartyCookies(webView, true);
-            }
-            cookieManager.setAcceptCookie(true);
+
 
             Uri url = getIntent().getData();
 
@@ -104,8 +98,21 @@ public class BrowserActivity extends Activity {
 
                 return;
             }
+            // Initialise the WebView
+            WebView webView = (WebView) findViewById(R.id.WebView);
 
             webView.setWebViewClient(new BrowserActivity.CustomWebViewClient(this));
+
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.clearCache(true);
+            webView.clearHistory();
+            CookieManager cookieManager = CookieManager.getInstance();
+            // persists the oookies ...
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                cookieManager.setAcceptThirdPartyCookies(webView, true);
+            }
+            cookieManager.setAcceptCookie(true);
+
             Uri.Builder builder = url.buildUpon();
             //String link = builder.appendQueryParameter("mobile_app", "1").build().toString();
             String link = builder.build().toString();
@@ -171,14 +178,31 @@ public class BrowserActivity extends Activity {
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if( url.startsWith("http:") || url.startsWith("https:") ) {
+            final Uri uri = Uri.parse(url);
+            return handleUri(uri);
+        }
+
+        @TargetApi(Build.VERSION_CODES.N)
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            final Uri uri = request.getUrl();
+            return handleUri(uri);
+        }
+
+        private boolean handleUri(final Uri uri) {
+            final String scheme = uri.getScheme();
+            final String host   = uri.getHost();
+            if( scheme.startsWith("http:") || scheme.startsWith("https:") ) {
                 return false;
             }
-
+            if(!scheme.startsWith("org.openstack.android.summit")) return false;
+            Log.i(Constants.LOG_TAG, String.format("firing new intent for url %s", uri.toString()));
             // Otherwise allow the OS to handle it
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri, activity.get(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             activity.get().startActivity(intent);
             return true;
         }

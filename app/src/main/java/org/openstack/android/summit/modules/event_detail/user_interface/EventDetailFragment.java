@@ -1,14 +1,10 @@
 package org.openstack.android.summit.modules.event_detail.user_interface;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,13 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.crashlytics.android.Crashlytics;
 import com.linearlistview.LinearListView;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.R2;
-import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.VideoDTO;
@@ -244,41 +238,19 @@ public class EventDetailFragment
         setHasOptionsMenu(true);
     }
 
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
 
-                if (intent.getAction() == Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT) {
-                    int entityId = intent.getIntExtra(Constants.DATA_UPDATE_ENTITY_ID, 0);
-                    String entityClassName = intent.getStringExtra(Constants.DATA_UPDATE_ENTITY_CLASS);
-                    Log.d(Constants.LOG_TAG, "DATA_UPDATE_UPDATED_ENTITY_EVENT");
-                    if (entityClassName != null && (entityClassName.equals("Presentation") || entityClassName.equals("SummitEvent")))
-                        presenter.updateUI();
-                }
-
-            } catch (Exception ex) {
-                Crashlytics.logException(new Exception(String.format("Action %s", intent.getAction()), ex));
-            }
-        }
-    };
 
     @Override
     public void onResume() {
         super.onResume();
         presenter.onResume();
         setTitle(getResources().getString(R.string.event));
-        // bind local broadcast receiver
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT);
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         presenter.onPause();
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
     }
 
     @Override
