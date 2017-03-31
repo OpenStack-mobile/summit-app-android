@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.exceptions.ValidationException;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe;
 import org.openstack.android.summit.modules.feedback_edit.business_logic.IFeedbackEditInteractor;
@@ -82,13 +83,13 @@ public class FeedbackEditPresenter
                             },
                             (ex) -> {
                                 view.hideActivityIndicator();
-                                view.showErrorMessage(ex.getMessage());
+                                AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
                             }
                     );
         }
         catch (ValidationException ex){
             view.hideActivityIndicator();
-            view.showErrorMessage(ex.getMessage());
+            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex.getMessage()).show();
         }
     }
 }

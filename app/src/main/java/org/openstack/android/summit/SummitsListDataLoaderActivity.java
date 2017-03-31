@@ -175,11 +175,6 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
     }
 
     @Override
-    public void showErrorMessage(String message) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public FragmentManager getSupportFragmentManager() {
         return null;
     }
@@ -189,10 +184,6 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public void showInfoMessage(String message) {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
     public FragmentActivity getFragmentActivity() {
@@ -223,11 +214,4 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
         setResult(RESULT_OK_FIRE_SUMMIT_DATA_LOADING, intent2);
         finish();
     }
-
-
-    @Override
-    public void showErrorMessage() {
-        this.showErrorMessage("");
-    }
-
 }

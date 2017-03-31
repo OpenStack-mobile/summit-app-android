@@ -136,17 +136,7 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     }
 
     @Override
-    public void showErrorMessage(String message) {
-
-    }
-
-    @Override
     public void setTitle(String title) {
-
-    }
-
-    @Override
-    public void showInfoMessage(String message) {
 
     }
 
@@ -178,11 +168,5 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     @Override
     public void setSummitInfoContainerVisibility(boolean visible) {
         summitInfoContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-    }
-
-
-    @Override
-    public void showErrorMessage() {
-
     }
 }

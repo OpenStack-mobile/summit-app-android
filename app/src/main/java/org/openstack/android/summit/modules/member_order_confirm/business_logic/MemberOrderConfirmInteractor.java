@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.deserialization.DataStoreOperationListener;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
+import org.openstack.android.summit.common.entities.exceptions.ValidationException;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import java.util.List;
@@ -38,7 +39,7 @@ public class MemberOrderConfirmInteractor
     public Observable<List<NonConfirmedSummitAttendeeDTO>> getAttendeesForTicketOrder(String orderNumber) throws Exception {
 
         if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-           throw new Exception("Order can't be confirmed, there is no connectivity");
+           throw new ValidationException("Order can't be confirmed, there is no connectivity");
         }
 
         return memberRemoteDataStore.getAttendeesForTicketOrder(orderNumber)
@@ -49,7 +50,7 @@ public class MemberOrderConfirmInteractor
     public Observable<Boolean> selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId) throws Exception {
 
         if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-            throw new Exception("Order can't be confirmed, there is no connectivity");
+            throw new ValidationException("Order can't be confirmed, there is no connectivity");
         }
         return memberRemoteDataStore.selectAttendeeFromOrderList(orderNumber, externalAttendeeId);
     }

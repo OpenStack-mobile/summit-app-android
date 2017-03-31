@@ -66,6 +66,8 @@
     <string name="eventbrite_order_number">Insert your Order #</string>
     <string name="cannot_navigate_event">It\'s not possible to view this event right now. Please try again later.</string>
     <string name="event_not_exist">This event was removed from schedule.</string>
+    <string name="venue_not_exists">This venue was removed from schedule.</string>
+    <string name="room_not_exists">This venue was removed from schedule.</string>
     <string name="average_rating">Average Rating</string>
     <string name="loading_ratings_and_reviews">Loading Ratings &amp; Reviews...</string>
     <string name="title_activity_initial_data_loading_activiy">InitialDataLoadingActiviy</string>
@@ -92,8 +94,6 @@
     <string name="login_error_message">We sorry, there was an error with your login process, please try again.</string>
     <string name="notification_error_ssl_cert_invalid">Seems that there is some issue with SSL certificate. Do you want to continue?</string>
     <string name="missing_activity_error">You do not have installed any application to manage the requested action.</string>
-    <string name="generic_error_title">We are sorry, there was an error</string>
-    <string name="generic_error_message">It has been reported to our dev team</string>
     <string name="session_expired_message">Your session has expired.</string>
     <string name="redeem_external_order_not_found_error">EventBrite order number not found or does not exist!</string>
     <string name="redeem_external_order_already_done_error">EventBrite Order # already redeemed!</string>
@@ -142,4 +142,9 @@
     <string name="alert_attendee_required_cancel">Dismiss</string>
     <string name="unrsvp_action">UnRSVP</string>
     <string name="generic_error_message_ok">Ok</string>
+    <string name="generic_validation_error_title">Validation</string>
+    <string name="generic_error_title">We are sorry, there was an error</string>
+    <string name="generic_error_message">It has been reported to our dev team</string>
+    <string name="generic_info_title">We are sorry, there was an error</string>
+    <string name="profile_not_found">Profile not found.</string>
 </resources>

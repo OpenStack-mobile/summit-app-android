@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
@@ -74,7 +75,7 @@ public class GeneralSchedulePresenter
     @Override
     public void showFilterView() {
         if(!interactor.isDataLoaded()) {
-            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
             return;
         }
         wireframe.showFilterView(view);

@@ -2,6 +2,9 @@ package org.openstack.android.summit.modules.member_order_confirm.user_interface
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.NonConfirmedSummitAttendeeDTO;
+import org.openstack.android.summit.common.entities.exceptions.NotFoundEntityException;
+import org.openstack.android.summit.common.entities.exceptions.ValidationException;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderConfirmWireframe;
 import org.openstack.android.summit.modules.member_order_confirm.business_logic.IMemberOrderConfirmInteractor;
@@ -36,7 +39,7 @@ public class MemberOrderConfirmPresenter
                     .subscribe((list) -> {
                         nonConfirmedSummitAttendeeDTOs = list;
                         if (list.size() == 0) {
-                            view.showInfoMessage(view.getResources().getString(R.string.order_not_found));
+                            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.order_not_found).show();
                         }
                         else if (list.size() == 1) {
                             selectAttendeeFromOrderList(0);
@@ -49,12 +52,27 @@ public class MemberOrderConfirmPresenter
 
                     }, (ex) -> {
                         view.hideActivityIndicator();
-                        view.showErrorMessage(ex.getMessage());
+                        try{
+                            throw ex;
+                        }
+                        catch (NotFoundEntityException ex1){
+                            view.hideActivityIndicator();
+                            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex1.getMessage()).show();
+                        }
+                        catch (ValidationException ex2){
+                            view.hideActivityIndicator();
+                            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex2.getMessage()).show();
+                        }
+                        catch (Throwable ex3){
+                            view.hideActivityIndicator();
+                            AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                        }
                     });
         }
+
         catch (Exception ex){
             view.hideActivityIndicator();
-            view.showErrorMessage(ex.getMessage());
+            AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
         }
     }
 
@@ -71,12 +89,26 @@ public class MemberOrderConfirmPresenter
                         view.hideActivityIndicator();
                     }, (ex) -> {
                         view.hideActivityIndicator();
-                        view.showErrorMessage(ex.getMessage());
+                        try{
+                            throw ex;
+                        }
+                        catch (NotFoundEntityException ex1){
+                            view.hideActivityIndicator();
+                            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex1.getMessage()).show();
+                        }
+                        catch (ValidationException ex2){
+                            view.hideActivityIndicator();
+                            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex2.getMessage()).show();
+                        }
+                        catch (Throwable ex3){
+                            view.hideActivityIndicator();
+                            AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                        }
                     });
         }
         catch (Exception ex){
             view.hideActivityIndicator();
-            view.showErrorMessage(ex.getMessage());
+            AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
         }
     }
 

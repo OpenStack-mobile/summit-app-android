@@ -80,7 +80,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                 Log.d(Constants.LOG_TAG, ex.getMessage());
                                 Crashlytics.logException(ex);
                             }
-                            if(view != null) view.showErrorMessage();
+                            if(view != null) AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
                         }
                 );
     }
@@ -120,7 +120,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                         Log.d(Constants.LOG_TAG, ex.getMessage());
                                         Crashlytics.logException(ex);
                                     }
-                                    if(view != null) view.showErrorMessage();
+                                    if(view != null) AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
                                 }
                         );
     }
@@ -162,7 +162,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                     Crashlytics.logException(ex);
                                     Log.d(Constants.LOG_TAG, ex.getMessage());
                                 }
-                                if(view != null) view.showErrorMessage();
+                                if(view != null) AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
                             }
                     );
         }
@@ -184,7 +184,7 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                         Log.d(Constants.LOG_TAG, ex.getMessage());
                                         Crashlytics.logException(ex);
                                     }
-                                    if(view != null) view.showErrorMessage();
+                                    if(view != null) AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
                                 }
                         );
             }

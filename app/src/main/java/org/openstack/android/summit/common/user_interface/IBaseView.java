@@ -18,10 +18,6 @@ public interface IBaseView {
 
     void hideActivityIndicator();
 
-    void showErrorMessage(String message);
-
-    void showErrorMessage();
-
     FragmentManager getSupportFragmentManager();
 
     void runOnUiThread(Runnable runnable);
@@ -29,8 +25,6 @@ public interface IBaseView {
     void setTitle(String title);
 
     Resources getResources();
-
-    void showInfoMessage(String message);
 
     void startActivity(Intent intent);
 

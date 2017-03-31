@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.VenueDTO;
 import org.openstack.android.summit.common.DTOs.VenueFloorDTO;
 import org.openstack.android.summit.common.DTOs.VenueRoomDTO;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.ISimpleListItemView;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
@@ -49,7 +51,7 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
         venue = interactor.getVenue(venueId != null ? venueId : 0);
 
         if (venue == null) {
-            view.showInfoMessage("Venue not found!");
+            AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_info_title, R.string.venue_not_exists).show();
             return;
         }
 

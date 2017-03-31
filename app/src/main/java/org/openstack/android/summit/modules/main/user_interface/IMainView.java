@@ -22,10 +22,6 @@ public interface IMainView extends IBaseView {
 
     void toggleMenuLogo(boolean show);
 
-    void showInfoMessage(String message, String title);
-
-    void showInfoMessage(String message);
-
     void toggleMenu(boolean show);
 
     Intent getIntent();

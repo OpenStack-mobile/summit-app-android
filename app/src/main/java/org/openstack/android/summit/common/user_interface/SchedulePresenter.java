@@ -315,7 +315,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             return;
         }
 
-        view.showErrorMessage(view.getResources().getString(R.string.event_not_exist));
+        AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.event_not_exist).show();
         onResume();
     }
 

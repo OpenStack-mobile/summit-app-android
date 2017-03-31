@@ -3,10 +3,12 @@ package org.openstack.android.summit.modules.member_profile_detail.user_interfac
 import android.net.Uri;
 import android.os.Bundle;
 
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.DTOs.PersonDTO;
 import org.openstack.android.summit.common.ISession;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.member_profile_detail.IMemberProfileDetailWireframe;
 import org.openstack.android.summit.modules.member_profile_detail.business_logic.IMemberProfileDetailInteractor;
@@ -70,7 +72,7 @@ public class MemberProfileDetailPresenter
             view.setBio("");
             view.setTwitter("");
             view.setIrc("");
-            view.showInfoMessage("Member profile not found!");
+            AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_info_title, R.string.profile_not_found).show();
             return;
         }
 

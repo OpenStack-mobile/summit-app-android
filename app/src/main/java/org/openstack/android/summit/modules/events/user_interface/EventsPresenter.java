@@ -5,6 +5,7 @@ import android.os.Bundle;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.events.business_logic.IEventsInteractor;
@@ -53,7 +54,7 @@ public class EventsPresenter extends BasePresenter<IEventsView, IEventsInteracto
     @Override
     public void showFilterView() {
         if(!interactor.isDataLoaded()) {
-            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
             return;
         }
         wireframe.showFilterView(view);

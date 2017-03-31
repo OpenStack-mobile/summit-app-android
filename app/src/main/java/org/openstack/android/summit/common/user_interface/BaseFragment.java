@@ -139,36 +139,6 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
     }
 
     @Override
-    public void showErrorMessage(String message) {
-        if (getActivity() == null) {
-            return;
-        }
-
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getFragmentActivity());
-
-        builder.setTitle(R.string.generic_error_title)
-                .setMessage(R.string.generic_error_message)
-                .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )
-                .create()
-                .show();
-    }
-
-    @Override
-    public void showInfoMessage(String message) {
-        if (getActivity() == null) {
-            return;
-        }
-
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getFragmentActivity());
-
-        builder.setTitle("Info")
-                .setMessage(message)
-                .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )
-                .create()
-                .show();
-    }
-
-    @Override
     public FragmentManager getSupportFragmentManager() {
         return getActivity().getSupportFragmentManager();
     }
@@ -241,9 +211,4 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
         return super.getActivity();
     }
 
-
-    @Override
-    public void showErrorMessage() {
-        this.showErrorMessage("");
-    }
 }

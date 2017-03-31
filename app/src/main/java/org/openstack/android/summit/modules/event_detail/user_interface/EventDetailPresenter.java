@@ -13,6 +13,7 @@ import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BaseScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
@@ -90,7 +91,7 @@ public class EventDetailPresenter
             view.setSponsors("");
             view.setTags("");
             view.setLocation("");
-            view.showInfoMessage("Event not found!");
+            AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.event_not_exist).show();
             return;
         }
 

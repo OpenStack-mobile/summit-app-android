@@ -28,6 +28,7 @@ import org.openstack.android.summit.common.devices.huawei.HuaweiHelper;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.services.DataUpdatesService;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.BrowserActivity;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
@@ -112,8 +113,9 @@ public class MainPresenter
                 if (intent.getAction().contains(Constants.LOG_IN_ERROR_EVENT)) {
                     Log.d(Constants.LOG_TAG, "MainPresenter.LOG_IN_ERROR_EVENT");
                     view.hideActivityIndicator();
-                    view.showErrorMessage(intent.getExtras().getString(Constants.LOG_IN_ERROR_MESSAGE, Constants.GENERIC_ERROR_MSG));
-                    userLoginState = UserLoginState.None;
+                    AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                    userLoginState             = UserLoginState.None;
+                    userLoginButtonInteraction = UserLoginButtonInteraction.None;
                     view.setMenuItemVisible(R.id.nav_my_profile, false);
                     enableDataUpdateService();
                     return;
@@ -143,10 +145,11 @@ public class MainPresenter
                     } catch (MissingMemberException ex1) {
                         Crashlytics.logException(ex1);
                         Log.w(Constants.LOG_TAG, ex1.getMessage());
-                        view.showErrorMessage(view.getResources().getString(R.string.login_error_message));
+                        AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_error_message).show();
                     } finally {
                         enableDataUpdateService();
                         view.hideActivityIndicator();
+                        userLoginButtonInteraction   = UserLoginButtonInteraction.None;
                         userLoginState               = UserLoginState.None;
                         initiatedExternalLogin       = false;
                         initiatedExternalRedeemOrder = false;
@@ -159,15 +162,17 @@ public class MainPresenter
                         Log.d(Constants.LOG_TAG, "LOGGED_OUT_EVENT");
                         onLoggedOut();
                         if (userLoginButtonInteraction.equals(UserLoginButtonInteraction.None)) {
-                            view.showInfoMessage(view.getResources().getString(R.string.session_expired_message));
+
+                            AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.session_expired_message).show();
                         }
-                        userLoginButtonInteraction = UserLoginButtonInteraction.None;
+
                         showEventsView();
                     }
                     finally {
                         if(intent.getBooleanExtra(Constants.EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT, false))
                             enableDataUpdateService();
-                        userLoginState = UserLoginState.None;
+                        userLoginState             = UserLoginState.None;
+                        userLoginButtonInteraction = UserLoginButtonInteraction.None;
                     }
                     return;
                 }
@@ -175,7 +180,8 @@ public class MainPresenter
                 if (intent.getAction().contains(Constants.LOG_IN_CANCELLED_EVENT)) {
                     Log.d(Constants.LOG_TAG, "LOG_IN_CANCELLED_EVENT");
                     view.hideActivityIndicator();
-                    userLoginState = UserLoginState.None;
+                    userLoginState             = UserLoginState.None;
+                    userLoginButtonInteraction = UserLoginButtonInteraction.None;
                     return;
                 }
 
@@ -356,7 +362,7 @@ public class MainPresenter
 
         if (!reachability.isNetworkingAvailable(view.getApplicationContext())) {
             view.hideActivityIndicator();
-            view.showErrorMessage(view.getResources().getString(R.string.login_disallowed_no_connectivity));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_connectivity).show();
             return;
         }
 
@@ -364,7 +370,7 @@ public class MainPresenter
 
         if (!interactor.isDataLoaded()) {
             view.hideActivityIndicator();
-            view.showInfoMessage(view.getResources().getString(R.string.login_disallowed_no_data));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_data).show();
             //launchSummitListDataLoadingActivity();
             return;
         }
@@ -417,7 +423,7 @@ public class MainPresenter
 
         if (!reachability.isNetworkingAvailable(view.getApplicationContext())) {
             view.hideActivityIndicator();
-            view.showErrorMessage(view.getResources().getString(R.string.login_disallowed_no_connectivity));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_connectivity).show();
             return;
         }
 
@@ -425,7 +431,7 @@ public class MainPresenter
 
         if (!interactor.isDataLoaded()) {
             view.hideActivityIndicator();
-            view.showInfoMessage(view.getResources().getString(R.string.login_disallowed_no_data));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_data).show();
             //launchSummitListDataLoadingActivity();
             return;
         }
@@ -492,7 +498,7 @@ public class MainPresenter
             catch(MissingMemberException ex1){
                 Crashlytics.logException(ex1);
                 Log.w(Constants.LOG_TAG, ex1.getMessage());
-                view.showErrorMessage(view.getResources().getString(R.string.login_error_message));
+                AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_error_message).show();
             }
         }
     }
@@ -649,7 +655,7 @@ public class MainPresenter
     @Override
     public void showNotificationView() {
         if (!interactor.isDataLoaded()) {
-            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
             return;
         }
         wireframe.showNotificationsListView(view);
@@ -677,7 +683,7 @@ public class MainPresenter
 
     private void showMyProfileView(String defaultTabTitle) {
         if (!interactor.isDataLoaded()) {
-            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
             return;
         }
 
@@ -686,12 +692,12 @@ public class MainPresenter
             return;
         }
 
-        view.showInfoMessage(view.getResources().getString(R.string.no_logged_in_user));
+        AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.no_logged_in_user).show();
     }
 
     public void showSpeakerListView() {
         if (!interactor.isDataLoaded()) {
-            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
             return;
         }
 
@@ -700,7 +706,7 @@ public class MainPresenter
 
     public void showSearchView(String searchTerm) {
         if (!interactor.isDataLoaded()) {
-            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
             return;
         }
 
@@ -709,7 +715,7 @@ public class MainPresenter
 
     public void showAboutView() {
         if (!interactor.isDataLoaded()) {
-            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
             return;
         }
 
@@ -718,7 +724,7 @@ public class MainPresenter
 
     public void showVenuesView() {
         if (!interactor.isDataLoaded()) {
-            view.showInfoMessage(view.getResources().getString(R.string.no_summit_data_available));
+            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
             return;
         }
         wireframe.showVenuesView(view);

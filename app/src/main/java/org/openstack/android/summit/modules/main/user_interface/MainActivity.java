@@ -351,35 +351,8 @@ public class MainActivity
     }
 
     @Override
-    public void showErrorMessage() {
-        this.showErrorMessage("");
-    }
-
-    @Override
-    public void showInfoMessage(String message) {
-        showInfoMessage(message, "info");
-    }
-
-    @Override
     public FragmentActivity getFragmentActivity() {
-        return null;
-    }
-
-    @Override
-    public void showInfoMessage(final String message, final String title) {
-        runOnUiThread(() -> {
-            MainActivity context = MainActivity.this;
-            if(!context.isFinishing()) {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-
-                builder.setTitle(title)
-                        .setMessage(message)
-                        .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )
-                        .create()
-                        .show();
-            }
-
-        });
+        return this;
     }
 
     @Override
