@@ -142,7 +142,7 @@
     <string name="alert_attendee_required_cancel">Dismiss</string>
     <string name="unrsvp_action">UnRSVP</string>
     <string name="generic_error_message_ok">Ok</string>
-    <string name="generic_validation_error_title">Validation</string>
+    <string name="generic_validation_error_title"></string>
     <string name="generic_error_title">We are sorry, there was an error</string>
     <string name="generic_error_message">It has been reported to our dev team</string>
     <string name="generic_info_title">We are sorry, there was an error</string>
