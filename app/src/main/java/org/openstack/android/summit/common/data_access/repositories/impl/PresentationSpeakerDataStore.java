@@ -63,6 +63,9 @@ public class PresentationSpeakerDataStore extends GenericDataStore<PresentationS
     public List<PresentationSpeaker> getAllByFilter(int summitId, String searchTerm) {
 
         Summit summit = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
+
+        if(summit == null) return new ArrayList<>();
+
         RealmQuery<PresentationSpeaker> query = summit.getSpeakers().where().isNotNull("fullName");
 
         if (searchTerm != null && !searchTerm.isEmpty()) {
