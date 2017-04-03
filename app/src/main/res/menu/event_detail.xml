@@ -7,7 +7,7 @@
         android:id="@+id/event_detail_menu_rate_action"
         android:title="@string/rate"
         app:showAsAction="never"
-        android:icon="@drawable/ic_star_border"
+        android:icon="@drawable/ic_star_border_gray"
         />
 
     <item

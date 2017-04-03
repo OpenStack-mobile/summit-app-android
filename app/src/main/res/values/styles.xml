@@ -119,7 +119,7 @@
     <style name="AppTheme.IconedInformationBarContainerNoBorder">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">25dp</item>
+        <item name="android:paddingLeft">17dp</item>
         <item name="android:paddingRight">10dp</item>
     </style>
 
@@ -198,18 +198,18 @@
 
     <style name="AppTheme.StarRate">
         <item name="android:layout_marginRight">2dp</item>
-        <item name="android:src">@drawable/ic_star_empty</item>
+        <item name="android:src">@drawable/ic_star_border</item>
     </style>
 
     <style name="AppTheme.SmallStarRate" parent="AppTheme.StarRate">
-        <item name="android:layout_width">25dp</item>
-        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
     </style>
 
     <style name="AppTheme.SmallStarRateNoPadding" parent="AppTheme.StarRate">
         <item name="android:layout_marginRight">0dp</item>
-        <item name="android:layout_width">25dp</item>
-        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
     </style>
 
     <style name="AppTheme.BigStarRate" parent="AppTheme.StarRate">
@@ -218,8 +218,8 @@
     </style>
 
     <style name="AppTheme.MediumStarRate" parent="AppTheme.StarRate">
-        <item name="android:layout_width">35dp</item>
-        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">28dp</item>
     </style>
 
     <style name="AppTheme.FilterSectionList">
@@ -337,7 +337,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:paddingLeft">25dp</item>
+        <item name="android:paddingLeft">17dp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

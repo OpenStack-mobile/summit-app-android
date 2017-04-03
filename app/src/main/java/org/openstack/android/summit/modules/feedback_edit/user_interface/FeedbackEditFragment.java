@@ -152,10 +152,9 @@ public class FeedbackEditFragment
         ImageView starRateImage = (ImageView)view.findViewById(controlId);
         if (starRate <= selectedRate) {
             starRateImage.setImageResource(R.drawable.ic_star);
+            return;
         }
-        else {
-            starRateImage.setImageResource(R.drawable.ic_star_empty);
-        }
+        starRateImage.setImageResource(R.drawable.ic_star_border);
     }
 
     @Override
@@ -165,7 +164,8 @@ public class FeedbackEditFragment
 
     @Override
     public String getReview() {
-        return reviewText.getText().toString();
+        if(reviewText == null) return "";
+        return reviewText.getText().toString().trim();
     }
 
     @Override

@@ -229,19 +229,20 @@
                             </LinearLayout>
                    </LinearLayout>
 
-                    <LinearLayout
+                   <LinearLayout
                     android:id="@+id/event_detail_speakers_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <LinearLayout
-                        style="@style/AppTheme.EventDetailSubSectionHeaderTitleContainer">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/AppTheme.EventDetailSubSectionHeaderTitle"
-                            android:text="@string/speakers"/>
-                    </LinearLayout>
+
+                       <LinearLayout style="@style/AppTheme.EventDetailSubSectionHeaderTitleContainer">
+
+                           <TextView
+                               style="@style/AppTheme.EventDetailSubSectionHeaderTitle"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="@string/speakers" />
+                       </LinearLayout>
                     <com.linearlistview.LinearListView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/event_detail_speakers_list"
@@ -285,50 +286,70 @@
                             android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+
                             android:layout_marginTop="25dp">
                             <LinearLayout
                                 android:orientation="horizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:gravity="center"
                                 android:layout_marginBottom="10dp">
+
                                 <TextView
+                                    android:id="@+id/event_feedback_total_qty"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    style="@style/AppTheme.EventDetailSubSectionHeaderTitle"
-                                    android:id="@+id/event_feedback_total_qty"/>
+                                    android:fontFamily="sans-serif-medium"
+                                    android:textAllCaps="true"
+                                    android:textColor="@color/feedbackDateColor"
+                                    android:textSize="13sp"
+                                    android:layout_marginLeft="17dp"
+                                    android:gravity="center"
+                                    android:text="0 REVIEWS"/>
+
                                 <LinearLayout
                                     android:id="@+id/event_avg_feedback_rate"
-                                    android:orientation="horizontal"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:layout_marginRight="15dp">
+                                    android:layout_weight="1"
+                                    android:gravity="right|center"
+                                    android:orientation="horizontal">
+
                                     <LinearLayout
-                                        android:layout_gravity="center"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content">
+                                        android:gravity="center"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginRight="10dp">
+
                                         <ImageView
                                             android:id="@+id/event_avg_feedback_rate_1"
-                                            style="@style/AppTheme.MediumStarRate"/>
+                                            style="@style/AppTheme.MediumStarRate" />
+
                                         <ImageView
                                             android:id="@+id/event_avg_feedback_rate_2"
-                                            style="@style/AppTheme.MediumStarRate"/>
+                                            style="@style/AppTheme.MediumStarRate" />
+
                                         <ImageView
                                             android:id="@+id/event_avg_feedback_rate_3"
-                                            style="@style/AppTheme.MediumStarRate"/>
+                                            style="@style/AppTheme.MediumStarRate" />
+
                                         <ImageView
                                             android:id="@+id/event_avg_feedback_rate_4"
-                                            style="@style/AppTheme.MediumStarRate"/>
+                                            style="@style/AppTheme.MediumStarRate" />
+
                                         <ImageView
                                             android:id="@+id/event_avg_feedback_rate_5"
-                                            style="@style/AppTheme.MediumStarRate"/>
+                                            style="@style/AppTheme.MediumStarRate" />
                                     </LinearLayout>
+
                                     <TextView
+                                        android:gravity="center"
+                                        android:id="@+id/event_avg_feedback_val"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:id="@+id/event_avg_feedback_val"
-                                        android:textSize="17dp"
-                                        android:layout_gravity="center_vertical"/>
+                                        android:layout_marginRight="20dp"
+                                        android:text="5.0"
+                                        android:textSize="17dp" />
                                 </LinearLayout>
                             </LinearLayout>
 

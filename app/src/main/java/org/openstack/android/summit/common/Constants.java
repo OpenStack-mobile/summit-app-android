@@ -27,6 +27,7 @@ public class Constants {
     static public final String NAVIGATION_PARAMETER_DAY                    = "org.openstack.android.summit.common.NAVIGATION_PARAMETER_DAY";
     static public final String NAVIGATION_PARAMETER_EVENT_NAME             = "org.openstack.android.summit.common.NAVIGATION_PARAMETER_EVENT_NAME";
     static public final String NAVIGATION_PARAMETER_EVENT_RATE             = "org.openstack.android.summit.common.NAVIGATION_PARAMETER_EVENT_RATE";
+    static public final String NAVIGATION_PARAMETER_EVENT_REVIEW           = "org.openstack.android.summit.common.NAVIGATION_PARAMETER_EVENT_REVIEW";
     public static final String NAVIGATION_PARAMETER_LEVEL                  = "org.openstack.android.summit.common.NAVIGATION_PARAMETER_LEVEL";
     public static final String NAVIGATION_PARAMETER_TRACK                  = "org.openstack.android.summit.common.NAVIGATION_PARAMETER_TRACK";
     public static final String NAVIGATION_PARAMETER_IS_MY_PROFILE          = "org.openstack.android.summit.common.NAVIGATION_PARAMETER_IS_MY_PROFILE";

@@ -174,7 +174,7 @@ public class EventDetailPresenter
         view.showFavoriteButton(true);
         view.showGoingButton(true);
         view.setGoingButtonText(view.getResources().getString(R.string.save_going));
-        view.showRateButton(this.event.getAllowFeedback() && event.isStarted());
+        view.showRateButton(this.event.getAllowFeedback());
         view.setFavoriteButtonState(this.event.getFavorite());
         view.setGoingButtonState(this.event.getScheduled());
         // menu options
@@ -182,7 +182,7 @@ public class EventDetailPresenter
         view.showNotGoingMenuAction(false);
         view.showGoingMenuAction(false);
         view.showUnRSVOMenuAction(false);
-        view.showRateMenuAction(this.event.getAllowFeedback() && event.isStarted());
+        view.showRateMenuAction(this.event.getAllowFeedback());
         view.showAddFavoriteMenuAction(!this.event.getFavorite());
         view.showRemoveFavoriteMenuAction(this.event.getFavorite());
 
@@ -390,6 +390,10 @@ public class EventDetailPresenter
     public void showFeedbackEdit(int rate) {
         if(!this.interactor.isMemberLoggedIn()){
             buildLoginModal().show();
+            return;
+        }
+        if(!event.isStarted()){
+            AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.feedback_validation_error_event_not_started)).show();
             return;
         }
         wireframe.showFeedbackEditView(event.getId(), event.getName(), rate, view);

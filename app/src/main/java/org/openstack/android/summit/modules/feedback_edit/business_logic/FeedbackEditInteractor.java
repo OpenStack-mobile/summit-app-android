@@ -111,9 +111,8 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
         }
 
         Member member           = securityManager.getCurrentMember();
-        Feedback feedback       = member.getFeedback().where().equalTo("event.id", eventId).findFirst();
+        return member.getFeedback().where().equalTo("event.id", eventId).findFirst();
 
-        return feedback;
     }
 
 }

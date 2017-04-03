@@ -19,19 +19,22 @@
         android:layout_gravity="center">
 
     <LinearLayout
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="10dp"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/item_feedback_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/openStackGray"
+            android:textColor="@color/feedbackDateColor"
             android:layout_gravity="center"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
             android:text="2 days ago"/>
     </LinearLayout>
     <LinearLayout
+            android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
@@ -53,7 +56,10 @@
         </LinearLayout>
     <TextView
         android:id="@+id/item_feedback_review"
-        android:paddingTop="8dp"
+        android:paddingTop="10dp"
+        android:textColor="@color/openStackDarkGray"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Mel te graecis menandri accusamus, meis putant imperdiet vis ut. Unum propriae volutpat no nam, tation everti assentior eos te. Eos an soluta repudiandae. Vel admodum adversarium ei, no est malis sadipscing intellegebat. Liber iudico lucilius ea his, vis stet periculis in, detraxit aliquando urbanitas has ea."/>

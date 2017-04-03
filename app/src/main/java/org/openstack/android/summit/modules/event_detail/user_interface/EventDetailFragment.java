@@ -225,6 +225,8 @@ public class EventDetailFragment
 
         ((LinearLayout) feedbackErrorTextView.getParent()).setVisibility(View.GONE);
 
+        myFeedbackLayout.setOnClickListener( v -> presenter.showFeedbackEdit(0));
+
         super.onCreateView(inflater, container, savedInstanceState);
 
         return view;
