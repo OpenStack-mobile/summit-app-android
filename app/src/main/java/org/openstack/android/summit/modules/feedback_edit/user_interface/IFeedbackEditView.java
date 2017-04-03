@@ -10,6 +10,8 @@ public interface IFeedbackEditView extends IBaseView {
 
     void setRate(int rate);
 
+    void setReview(String review);
+
     String getReview();
 
     void setEventName(String eventName);

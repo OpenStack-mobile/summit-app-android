@@ -55,21 +55,38 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
 
         Member member           = securityManager.getCurrentMember();
         SummitEvent summitEvent = summitEventDataStore.getById(eventId);
-        final Feedback feedback = new Feedback();
+        Feedback old_feedback   = member.getFeedback().where().equalTo("event.id", eventId).findFirst();
+        Boolean new_feedback    = (old_feedback == null);
 
+        Feedback feedback = new Feedback();
         feedback.setEvent(summitEvent);
         feedback.setOwner(member);
         feedback.setRate(rate);
         feedback.setReview(review);
         feedback.setDate(new Date());
 
-        return memberDataStore.addFeedback(member, feedback).map( id -> {
-                    Feedback f = RealmFactory.transaction(session ->
-                       session.where(Feedback.class).equalTo("id", id).findFirst()
-                    );
-                    return dtoAssembler.createDTO(f, FeedbackDTO.class);
+        if (new_feedback) {
+            return memberDataStore.addFeedback(member, feedback).map( id -> {
+                        Feedback f = RealmFactory.transaction(session ->
+                                session.where(Feedback.class).equalTo("id", id).findFirst()
+                        );
+                        return dtoAssembler.createDTO(f, FeedbackDTO.class);
+                    }
+            );
+        } else {
+            return memberDataStore.updateFeedback(member, feedback).map( success -> {
+                    if (success) {
+                        Feedback f = RealmFactory.transaction(session ->
+                                session.where(Feedback.class).equalTo("event.id", eventId).findFirst()
+                        );
+                        return dtoAssembler.createDTO(f, FeedbackDTO.class);
+                    }
+
+                    return null;
                 }
-        );
+            );
+        }
+
     }
 
     private String validateFeedback(int rate, String review) {
@@ -82,4 +99,21 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
         }
         return errorMessage;
     }
+
+    @Override
+    public Feedback getFeedback(int eventId) throws ValidationException {
+        if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
+            throw new ValidationException("Feedback can't be created, there is no connectivity");
+        }
+
+        if(!securityManager.isLoggedIn()){
+            throw new ValidationException("User is not logged!");
+        }
+
+        Member member           = securityManager.getCurrentMember();
+        Feedback feedback       = member.getFeedback().where().equalTo("event.id", eventId).findFirst();
+
+        return feedback;
+    }
+
 }

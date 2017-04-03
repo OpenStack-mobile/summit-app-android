@@ -19,6 +19,8 @@ public interface IMemberDataStore extends IGenericDataStore<Member> {
 
     Observable<Integer> addFeedback(Member member, Feedback feedback);
 
+    Observable<Boolean> updateFeedback(Member member, Feedback feedback);
+
     Observable<Boolean> addEventToMyFavorites(Member me, SummitEvent summitEvent);
 
     Observable<Boolean> removeEventFromMyFavorites(Member me, SummitEvent summitEvent);

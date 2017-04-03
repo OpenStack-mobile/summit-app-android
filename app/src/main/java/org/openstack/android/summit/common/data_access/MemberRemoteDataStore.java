@@ -173,6 +173,42 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
     }
 
     @Override
+    public Observable<Boolean> updateFeedback(int eventId, int rate, String review) {
+
+        return summitEventsApi.updateEventFeedback
+                (
+                        summitSelector.getCurrentSummitId(),
+                        eventId,
+                        new SummitEventFeedbackRequest
+                                (
+                                        rate,
+                                        review.trim()
+                                )
+                )
+                .subscribeOn(Schedulers.io())
+                .map(response -> {
+
+                    if (!response.isSuccessful()) {
+                        switch (response.code()) {
+                            case 412:
+                                throw new ValidationException(response.body().string());
+                            case 404:
+                                throw new NotFoundEntityException
+                                    (
+                                        String.format
+                                            (
+                                                OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                eventId
+                                            )
+                                    );
+                        }
+                        throw new Exception(String.format("addFeedback: http error code %d", response.code()));
+                    }
+                    return true;
+                });
+    }
+
+    @Override
     public Observable<Boolean> addSummitEvent2Favorites(int summitId, int eventId) {
         return memberApi.addToFavorites(summitId, eventId)
                 .subscribeOn(Schedulers.io())
