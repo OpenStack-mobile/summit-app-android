@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 public class DataUpdatesService extends IntentService {
 
-    private static final int POLL_INTERVAL = 1000 * 60; // 30 seconds
+    private static final int POLL_INTERVAL = 1000 * 60; // 60 seconds
 
     @Inject
     IDataUpdatePoller dataUpdatePoller;

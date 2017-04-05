@@ -5,6 +5,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.data_access.DataAccessException;
 import org.openstack.android.summit.common.data_access.IDataStoreOperationListener;
 import org.openstack.android.summit.common.data_access.repositories.IGenericDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
@@ -14,7 +15,6 @@ import org.openstack.android.summit.common.utils.Void;
 
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -42,18 +42,42 @@ public class GenericDataStore<T extends RealmObject> implements IGenericDataStor
 
     @Override
     public T getById(int id) {
-        return RealmFactory.getSession().where(getType()).equalTo("id", id).findFirst();
+
+        try {
+            return RealmFactory.transaction(session -> session.where(getType()).equalTo("id", id).findFirst());
+        } catch (DataAccessException ex) {
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
+        return null;
     }
 
     @Override
     public List<T> getAll() {
-        return RealmFactory.getSession().where(getType()).findAll();
+
+        try {
+            return  RealmFactory.transaction(session -> session.where(getType()).findAll());
+        } catch (DataAccessException ex) {
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
+        return null;
     }
 
     @Override
     public List<T> getAll(String fieldNames[], Sort sortOrders[]) {
-        RealmResults<T> result = RealmFactory.getSession().where(getType()).findAll();
-        return result.sort(fieldNames, sortOrders);
+
+        try {
+            return  RealmFactory.transaction(session -> {
+                RealmResults<T> result = RealmFactory.getSession().where(getType()).findAll();
+                return result.sort(fieldNames, sortOrders);
+            });
+        } catch (DataAccessException ex) {
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
+        return null;
+
     }
 
     @Override
@@ -79,12 +103,9 @@ public class GenericDataStore<T extends RealmObject> implements IGenericDataStor
     @Override
     public void clearDataLocal() {
         try{
-            RealmFactory.transaction(new RealmFactory.IRealmCallback<Void>() {
-                @Override
-                public Void callback(Realm session) throws Exception {
-                session.deleteAll();
-                return Void.getInstance();
-                }
+            RealmFactory.transaction(session -> {
+            session.deleteAll();
+            return Void.getInstance();
             });
         }
         catch (Exception ex) {

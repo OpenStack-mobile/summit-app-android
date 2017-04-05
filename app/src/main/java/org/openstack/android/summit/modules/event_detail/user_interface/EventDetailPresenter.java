@@ -20,6 +20,7 @@ import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+import org.openstack.android.summit.common.services.DataUpdatesService;
 import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BaseScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
@@ -64,7 +65,10 @@ public class EventDetailPresenter
                     int entityId = intent.getIntExtra(Constants.DATA_UPDATE_ENTITY_ID, 0);
                     String entityClassName = intent.getStringExtra(Constants.DATA_UPDATE_ENTITY_CLASS);
                     if (eventId == entityId)
-                        updateUI();
+                        view.getFragmentActivity().runOnUiThread( () -> {
+                            updateUI();
+                            updateActions();
+                        });
                 }
 
             } catch (Exception ex) {
@@ -95,6 +99,9 @@ public class EventDetailPresenter
         eventId = (savedInstanceState != null) ?
                 savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_ID,0) :
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_EVENT_ID, Integer.class);
+
+        Intent intent = DataUpdatesService.newIntent(view.getFragmentActivity());
+        view.getFragmentActivity().startService(intent);
     }
 
     @Override
@@ -106,6 +113,7 @@ public class EventDetailPresenter
     @Override
     public void updateUI(){
 
+        Log.d(Constants.LOG_TAG, "updateUI");
         event = interactor.getEventDetail(eventId != null ? eventId : 0);
         event.setChangeStatusListener(item -> updateActions());
 
