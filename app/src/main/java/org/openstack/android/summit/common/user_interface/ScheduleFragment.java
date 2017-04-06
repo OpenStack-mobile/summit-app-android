@@ -6,10 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.andressantibanez.ranger.Ranger;
 
@@ -20,15 +19,11 @@ import org.openstack.android.summit.common.user_interface.recycler_view.DividerI
 import org.openstack.android.summit.common.user_interface.schedule_list.ScheduleListAdapter;
 
 import java.util.List;
-import java.util.logging.Handler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
  * Created by Claudio Redi on 12/29/2015.
@@ -47,7 +42,7 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     protected Ranger ranger;
 
     @BindView(R2.id.now_filter_button)
-    protected ToggleButton nowButton;
+    protected Button nowButton;
 
     @BindView(R2.id.list_empty_message)
     protected TextView listEmptyMessageTextView;
@@ -104,16 +99,21 @@ public class ScheduleFragment<P extends ISchedulePresenter>
 
         presenter.onCreateView(savedInstanceState);
 
+        ranger.setDayViewOnClickListener(date -> {
+            scheduleList.setItemAnimator(new SlideInDownAnimator());
+            scheduleList.getItemAnimator().setRemoveDuration(200);
+            scheduleList.getItemAnimator().setAddDuration(200);
+            presenter.reloadSchedule(date.getDayOfMonth());
+        });
+
+        nowButton.setOnClickListener(view1 -> presenter.gotoNowOnSchedule());
+
         return view;
     }
 
     @Override
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        setNowButtonListener();
-        ranger.setDayViewOnClickListener(date -> {
-            presenter.reloadSchedule(date.getDayOfMonth());
-        });
         presenter.onActivityCreated(savedInstanceState);
     }
 
@@ -123,35 +123,9 @@ public class ScheduleFragment<P extends ISchedulePresenter>
     }
 
     @Override
-    public void setNowButtonListener(){
-        if(nowButton == null) return;
-        nowButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            presenter.setHidePastTalks(isChecked);
-        });
-    }
-
-    @Override
-    public void clearNowButtonListener(){
-        if(nowButton == null) return;
-        nowButton.setOnCheckedChangeListener(null);
-    }
-
-    @Override
-    public boolean getNowButtonState() {
-        if(nowButton == null) return false;
-        return nowButton.isChecked();
-    }
-
-    @Override
     public void setNowButtonVisibility(int visibility) {
         if(nowButton == null) return;
         nowButton.setVisibility(visibility);
-    }
-
-    @Override
-    public void setNowButtonState(boolean isChecked){
-        if(nowButton == null) return;
-        nowButton.setChecked(isChecked);
     }
 
     @Override
@@ -208,16 +182,23 @@ public class ScheduleFragment<P extends ISchedulePresenter>
 
         // reset position
         if(events.size() > 0)
-            scheduleList.scrollToPosition(0);
+            layoutManager.scrollToPositionWithOffset(0, 0);
 
         showEmptyMessage(events.size() == 0 );
 
         // if we have a former state, set it
         if (layoutManager != null && listPosition != -1) {
-            scheduleList.scrollToPosition(listPosition);
+            layoutManager.scrollToPositionWithOffset(listPosition, 0);
             listPosition = -1;
         }
+    }
 
+    @Override
+    public void setListPosition(int newPosition){
+
+        scheduleList.setItemAnimator(null);
+        //scheduleList.scrollToPosition(listPosition);
+        layoutManager.scrollToPositionWithOffset(newPosition, 0);
     }
 
     @Override

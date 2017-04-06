@@ -20,4 +20,8 @@ public interface IGeneralScheduleFilterView extends IBaseView {
     void showLevels(List<String> levels);
 
     void showSummitTypes(List<NamedDTO> summitTypes);
+
+    void toggleShowPastTalks(boolean isChecked);
+
+    void showShowPastTalks(boolean show);
 }

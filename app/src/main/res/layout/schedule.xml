@@ -15,12 +15,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:visibility="invisible">
-        <ToggleButton
+        <Button
             android:id="@+id/now_filter_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textOff="@string/now"
-            android:textOn="@string/now"
+            android:text="@string/now"
             style="@style/AppTheme.NowButton"
         />
         <com.andressantibanez.ranger.Ranger

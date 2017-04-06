@@ -28,8 +28,8 @@
     <string name="levels">Levels</string>
     <string name="filter">Filters</string>
     <string name="tags">Tags</string>
-    <string name="past_talks">Past talks</string>
-    <string name="past_talks_hide">Hide Talks</string>
+    <string name="past_talks">Active Talks</string>
+    <string name="past_talks_hide">Hide Past Talks</string>
     <string name="profile">Profile</string>
     <string name="venues">Venues</string>
     <string name="rooms">Rooms</string>
@@ -148,4 +148,5 @@
     <string name="generic_info_title">We are sorry, there was an error</string>
     <string name="profile_not_found">Profile not found.</string>
     <string name="feedback_validation_error_event_not_started">Can only rate after event has started.</string>
+    <string name="error_events_has_ended">Sorry. All events have ended.</string>
 </resources>

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 
 import com.linearlistview.LinearListView;
 
@@ -48,6 +50,9 @@ public class GeneralScheduleFilterFragment
             presenter.toggleSelectionSummitType(generalScheduleFilterItemView, position);
         });
 
+        final Switch hidePastTalks = (Switch) view.findViewById(R.id.hide_past_talks);
+        hidePastTalks.setOnClickListener(v -> presenter.toggleHidePastTalks(hidePastTalks.isChecked()));
+
         LinearListView trackGroupList = (LinearListView) view.findViewById(R.id.filter_track_groups_list);
         trackGroupListAdapter = new TrackGroupListAdapter(getContext());
         trackGroupList.setAdapter(trackGroupListAdapter);
@@ -69,6 +74,20 @@ public class GeneralScheduleFilterFragment
     public void showSummitTypes(List<NamedDTO> summitTypes) {
         summitTypeListAdapter.clear();
         summitTypeListAdapter.addAll(summitTypes);
+    }
+
+    @Override
+    public void toggleShowPastTalks(boolean isChecked) {
+        Switch hidePastTalks = (Switch) view.findViewById(R.id.hide_past_talks);
+        hidePastTalks.setChecked(isChecked);
+    }
+
+    @Override
+    public void showShowPastTalks(boolean show) {
+        LinearLayout header = (LinearLayout) view.findViewById(R.id.hide_past_talks_header);
+        LinearLayout container = (LinearLayout) view.findViewById(R.id.hide_past_talks_container);
+        header.setVisibility(show ? View.VISIBLE : View.GONE);
+        container.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override

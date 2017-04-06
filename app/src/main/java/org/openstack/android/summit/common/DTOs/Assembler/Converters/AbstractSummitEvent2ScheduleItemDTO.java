@@ -69,6 +69,10 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
 
             scheduleItemDTO.setEventUrl(eventUrl);
         }
+
+        if (source.getPresentation() != null) {
+            scheduleItemDTO.setPresentation(true);
+        }
     }
 
     protected String getSponsors(S summitEvent) {

@@ -40,6 +40,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     protected IScheduleItemViewBuilder scheduleItemViewBuilder;
     protected Integer selectedDay             = null;
     protected boolean hasToCheckDisabledDates = true;
+    private   boolean shouldShowNow           = true;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -121,6 +122,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         if (selectedDay != null && selectedDay > 0 ){
             view.setSelectedDate(selectedDay, false);
         }
+        // set initial state;
         setRangerState();
         reloadSchedule();
     }
@@ -133,7 +135,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
         DateTime startDate          = currentSummit.getLocalStartDate().withTime(0, 0, 0, 0);
         DateTime endDate            = currentSummit.getLocalEndDate().withTime(23, 59, 59, 999);
-        boolean shouldHidePastTalks = view.getNowButtonState();
+        boolean shouldHidePastTalks = this.shouldHidePastTalks();
 
         view.setNowButtonVisibility(currentSummit.isCurrentDateTimeInsideSummitRange() ? View.VISIBLE : View.GONE);
 
@@ -171,30 +173,53 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     @Override
+    public void gotoNowOnSchedule() {
+        currentSummit = interactor.getActiveSummit();
+        if (currentSummit == null) return;
+        int summitCurrentDay = currentSummit.getCurrentLocalTime().withTime(0, 0, 0, 0).getDayOfMonth();
+        view.setSelectedDate(summitCurrentDay, false);
+
+        reloadSchedule(summitCurrentDay);
+        DateTime now              = currentSummit.getCurrentLocalTime();
+        boolean  foundFirstsEvent = false;
+
+        if(this.dayEvents == null || this.dayEvents.isEmpty()){
+            AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended)).show();
+            return;
+        }
+
+        int position = 0;
+        for (ScheduleItemDTO item: dayEvents) {
+            if
+            (
+                (item.getEndDate().isAfter(now.getMillis()) || item.getEndDate().isEqual(now.getMillis()))
+                &&
+                item.isPresentation()
+            )
+            {
+                foundFirstsEvent = true;
+                break;
+            }
+            position++;
+        }
+        if(!foundFirstsEvent){
+            AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended)).show();
+            return;
+        }
+        view.setListPosition(position);
+    }
+
+    @Override
     public void onResume() {
         try {
             super.onResume();
             currentSummit = interactor.getActiveSummit();
-            boolean shouldReloadSchedule = false;
-            if (currentSummit != null && currentSummit.isCurrentDateTimeInsideSummitRange()) {
-                // only in summit time ... for the very first time
-                if(!setNowButtonInitialState) {
-                    view.clearNowButtonListener();
-                    view.setNowButtonState(true);
-                    view.setNowButtonListener();
-                    shouldReloadSchedule = setNowButtonInitialState = true;
-                }
-            }
-            else{ // out side of summit time
-                view.clearNowButtonListener();
-                view.setNowButtonState(false);
-                view.setNowButtonListener();
-                // reset state
-                setNowButtonInitialState = false;
-            }
+            // called only in case that we are doing a filtering, we need to set the ranger state again
             setRangerState();
-            if(shouldReloadSchedule){
-                reloadSchedule();
+            // show now the first time that activity is created
+            if(currentSummit != null && currentSummit.isCurrentDateTimeInsideSummitRange() && shouldShowNow){
+                gotoNowOnSchedule();
+                shouldShowNow = false;
             }
         } catch (Exception ex) {
             Crashlytics.logException(ex);
@@ -248,8 +273,13 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         );
     }
 
+    private boolean shouldHidePastTalks(){
+        List<Boolean> filtersOnPassTalks = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks);
+        return (filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty()) ? filtersOnPassTalks.get(0) : false;
+    }
+
     private DateTime getStartDateFilter(DateTime selectedDate) {
-        boolean hidePastTalks = view.getNowButtonState();
+        boolean hidePastTalks      = shouldHidePastTalks();
         boolean selectedDayIsToday = selectedDate.isEqual(currentSummit.getCurrentLocalTime().withTime(0, 0, 0, 0));
         int hour   = (hidePastTalks && currentSummit.isCurrentDateTimeInsideSummitRange() && selectedDayIsToday) ? currentSummit.getCurrentLocalTime().getHourOfDay() : 0;
         int minute = (hidePastTalks && currentSummit.isCurrentDateTimeInsideSummitRange() && selectedDayIsToday) ? currentSummit.getCurrentLocalTime().getMinuteOfHour() : 0;
@@ -325,9 +355,4 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         return dayEvents.get(position);
     }
 
-    @Override
-    public void setHidePastTalks(boolean hidePastTalks) {
-        setRangerState();
-        reloadSchedule();
-    }
 }

@@ -94,7 +94,7 @@ public class GeneralScheduleFilterPresenter
         scheduleFilter.getFilterSections().add(filterSection);
 
         SingleFilterSelection singleFilterSection = new SingleFilterSelection(true);
-        singleFilterSection.setType(FilterSectionType.TrackGroup);
+        singleFilterSection.setType(FilterSectionType.HidePastTalks);
         singleFilterSection.setName("Hide Past Talks");
         scheduleFilter.getFilterSections().add(singleFilterSection);
 
@@ -105,13 +105,14 @@ public class GeneralScheduleFilterPresenter
             filterSectionItem = createSectionItem(venue.getId(), venue.getName(), filterSection.getType());
             filterSection.getItems().add(filterSectionItem);
         }
-
         scheduleFilter.getFilterSections().add(filterSection);
 
         view.showSummitTypes(summitTypes);
         view.showTrackGroups(trackGroups);
         view.showLevels(levels);
         view.showVenues(venues);
+        view.showShowPastTalks(false);
+
     }
 
     private FilterSectionItem createSectionItem(int id, String name, FilterSectionType type) {
@@ -164,6 +165,15 @@ public class GeneralScheduleFilterPresenter
     public void toggleSelectionSummitType(IGeneralScheduleFilterItemView item, int position) {
         AbstractFilterSection filterSection = scheduleFilter.getFilterSections().get(0);
         toggleSelection(item, Color.WHITE, Color.LTGRAY, (MultiFilterSection) filterSection, position);
+    }
+
+    @Override
+    public void toggleHidePastTalks(boolean hidePastTalks) {
+        SingleFilterSelection filterSection = (SingleFilterSelection) scheduleFilter.getFilterSections().get(4);
+        filterSection.setValue(hidePastTalks);
+        scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks).clear();
+        if (hidePastTalks)
+            scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks).add(hidePastTalks);
     }
 
 
@@ -251,6 +261,18 @@ public class GeneralScheduleFilterPresenter
                 (MultiFilterSection) filterSection,
                 position
         );
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (interactor.getActiveSummit() != null && interactor.getActiveSummit().isCurrentDateTimeInsideSummitRange()) {
+            view.showShowPastTalks(true);
+            List<Boolean> filtersOnPassTalks = (List<Boolean>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks);
+            boolean hidePastTalks = filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty() ? filtersOnPassTalks.get(0) : false;
+            view.toggleShowPastTalks(hidePastTalks);
+        }
     }
 
     public void toggleSelection(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, MultiFilterSection filterSection, int position) {
