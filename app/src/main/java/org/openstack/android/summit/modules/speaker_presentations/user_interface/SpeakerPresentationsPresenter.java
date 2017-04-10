@@ -91,4 +91,10 @@ public class SpeakerPresentationsPresenter
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        this.shouldShowNow = false;
+        super.onResume();
+    }
+
 }

@@ -144,10 +144,15 @@ public class MemberProfileFragment
 
     @Override
     public int getIndicatorColor(int position) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return getResources().getColor(R.color.white, null);
-        } else {
-            return getResources().getColor(R.color.white);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return getResources().getColor(R.color.white, null);
+            } else {
+                return getResources().getColor(R.color.white);
+            }
+        }
+        catch (Exception ex){
+            return -1;
         }
     }
 

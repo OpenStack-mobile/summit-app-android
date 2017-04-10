@@ -37,6 +37,12 @@ public class PersonalSchedulePresenter
     }
 
     @Override
+    public void onResume() {
+        this.shouldShowNow = false;
+        super.onResume();
+    }
+
+    @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IPersonalScheduleInteractor interactor) {
         List<ScheduleItemDTO> events = null;
         if (interactor.isMemberLoggedInAndConfirmedAttendee()) {

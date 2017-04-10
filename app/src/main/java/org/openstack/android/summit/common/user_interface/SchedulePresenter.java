@@ -40,7 +40,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     protected IScheduleItemViewBuilder scheduleItemViewBuilder;
     protected Integer selectedDay             = null;
     protected boolean hasToCheckDisabledDates = true;
-    private   boolean shouldShowNow           = true;
+    protected boolean shouldShowNow           = true;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
