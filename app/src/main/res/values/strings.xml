@@ -10,9 +10,9 @@
     <string name="share_event_text">Check out this #OpenStack session I’m attending at the #OpenStackSummit!</string>
     <string name="action_send">Send</string>
     <string name="action_create_feedback">Leave a Review</string>
-    <string name="log_in">LOG IN</string>
+    <string name="log_in">SIGN IN</string>
     <string name="log_out">LOG OUT</string>
-    <string name="search_placeholder">search events &amp; people...</string>
+    <string name="search_placeholder">Type to search...</string>
     <string name="events">Events</string>
     <string name="event">Event</string>
     <string name="notification">Notification</string>

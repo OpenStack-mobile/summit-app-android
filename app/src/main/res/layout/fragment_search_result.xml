@@ -8,6 +8,8 @@
     <EditText
         android:id="@+id/search_results_edittext"
         android:layout_width="match_parent"
+        android:drawableLeft="@drawable/ic_search"
+        android:drawableTint="@color/openStackSecondText"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
@@ -15,9 +17,11 @@
         android:layout_marginRight="10dp"
         android:paddingLeft="10dp"
         android:background="@drawable/rounded_edittext"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:padding="5dp"
+        android:textColor="@color/openStackSecondText"
         android:hint="@string/search_placeholder"
+        android:textColorHint="@color/openStackSecondText"
         android:inputType="text"
         android:imeOptions="actionDone"/>
 

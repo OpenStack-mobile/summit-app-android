@@ -152,23 +152,32 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         DateTime formerSelectedDate       = view.getSelectedDate();
         DateTime scheduleStartDate        = currentSummit.getLocalScheduleStartDate();
         boolean scheduleStartDateInactive = false;
+        boolean currentDateInactive       = false;
 
         for (DateTime dt : inactiveDates) {
             if (dt.compareTo(scheduleStartDate) == 0) {
                 scheduleStartDateInactive = true;
-                break;
+            }
+            if (formerSelectedDate != null && dt.compareTo(formerSelectedDate) == 0) {
+                currentDateInactive = true;
             }
         }
 
-        if (!scheduleStartDateInactive && formerSelectedDate == null) {
-            view.setSelectedDate(currentSummit.getScheduleStartDay(), false);
+        // outside of summit time, the default schedule start date should be set
+        if (!scheduleStartDateInactive && formerSelectedDate == null && !currentSummit.isCurrentDateTimeInsideSummitRange()) {
+            this.selectedDay = currentSummit.getScheduleStartDay();
+            view.setSelectedDate(this.selectedDay, false);
         }
 
-        if (currentSummit.isCurrentDateTimeInsideSummitRange()) {
-            int summitCurrentDay = currentSummit.getCurrentLocalTime().withTime(0, 0, 0, 0).getDayOfMonth();
-            if(shouldHidePastTalks || formerSelectedDate == null)
-                view.setSelectedDate(summitCurrentDay, false);
+        // is current date is inactive, move the current date to next active day ...
+        if(formerSelectedDate != null && currentDateInactive){
+            DateTime firstDate = currentSummit.getFirstEnabledDate(inactiveDates);
+            if(firstDate != null){
+                this.selectedDay = firstDate.getDayOfMonth();
+                view.setSelectedDate(this.selectedDay, false);
+            }
         }
+
         view.hideActivityIndicator();
     }
 

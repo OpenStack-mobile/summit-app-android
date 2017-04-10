@@ -36,6 +36,23 @@ public class SummitDTO extends NamedDTO {
         return auxStartSchedule.getDayOfMonth();
     }
 
+    public DateTime getFirstEnabledDate(List<DateTime> inactiveDates){
+        DateTime start = this.getLocalStartDate();
+        DateTime end   = this.getLocalEndDate();
+        DateTime first = null;
+
+        while( start.isBefore(end.getMillis())){
+
+          if(inactiveDates.contains(start)){
+              start = start.plusDays(1);
+              continue;
+          }
+          first = start;
+          break;
+        }
+        return first;
+    }
+
     public Date getStartDate() {
         return startDate;
     }
@@ -95,8 +112,8 @@ public class SummitDTO extends NamedDTO {
     public ArrayList<DateTime> getPastDates() {
         ArrayList<DateTime> list = new ArrayList<>();
         if (this.isCurrentDateTimeInsideSummitRange()) {
-            DateTime currentLocal = getCurrentLocalTime();
-            Calendar c = Calendar.getInstance();
+            DateTime currentLocal       = getCurrentLocalTime();
+            Calendar c                  = Calendar.getInstance();
             DateTimeZone summitTimeZone = DateTimeZone.forID(getTimeZone());
             do {
                 c.setTime(currentLocal.withTime(0, 0, 0, 0).toDate());

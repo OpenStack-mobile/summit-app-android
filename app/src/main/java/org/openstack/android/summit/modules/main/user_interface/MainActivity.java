@@ -292,6 +292,7 @@ public class MainActivity
 
     @Override
     public void setMemberName(String text) {
+        if(memberNameTextView == null) return;
         memberNameTextView.setText(text);
     }
 

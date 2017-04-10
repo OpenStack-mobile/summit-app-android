@@ -46,8 +46,6 @@ public class EventsPresenter extends BasePresenter<IEventsView, IEventsInteracto
     public void onResume() {
         super.onResume();
         // set the default enabled filter
-        if(!this.interactor.isDataLoaded()) return;
-
         view.setShowActiveFilterIndicator(scheduleFilter.hasActiveFilters());
     }
 

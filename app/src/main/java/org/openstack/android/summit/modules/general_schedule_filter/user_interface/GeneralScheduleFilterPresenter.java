@@ -266,11 +266,10 @@ public class GeneralScheduleFilterPresenter
     @Override
     public void onResume() {
         super.onResume();
-
         if (interactor.getActiveSummit() != null && interactor.getActiveSummit().isCurrentDateTimeInsideSummitRange()) {
             view.showShowPastTalks(true);
             List<Boolean> filtersOnPassTalks = (List<Boolean>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks);
-            boolean hidePastTalks = filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty() ? filtersOnPassTalks.get(0) : false;
+            boolean hidePastTalks            = filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty() ? filtersOnPassTalks.get(0) : false;
             view.toggleShowPastTalks(hidePastTalks);
         }
     }

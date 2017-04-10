@@ -46,6 +46,10 @@ public class GeneralSchedulePresenter
     public void onResume() {
         view.toggleEventList(true);
         super.onResume();
+        // reset hide past talks filter state
+        if (currentSummit != null && !currentSummit.isCurrentDateTimeInsideSummitRange()){
+            scheduleFilter.clearTypeValues(FilterSectionType.HidePastTalks);
+        }
         view.setShowActiveFilterIndicator(scheduleFilter.hasActiveFilters());
     }
 

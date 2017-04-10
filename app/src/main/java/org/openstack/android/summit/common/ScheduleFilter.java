@@ -99,6 +99,7 @@ final public class ScheduleFilter implements IScheduleFilter {
 
     @Override
     public void clearTypeValues(FilterSectionType type){
+        if(!getSelections().containsKey(type)) return;
         getSelections().get(type).clear();
         typesSet.remove(type);
     }
