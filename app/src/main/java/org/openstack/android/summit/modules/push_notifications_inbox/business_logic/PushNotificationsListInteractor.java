@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
@@ -26,9 +27,12 @@ import io.realm.Realm;
 /**
  * Created by sebastian on 8/20/2016.
  */
-public class PushNotificationsListInteractor extends BaseInteractor implements IPushNotificationsListInteractor {
+public class PushNotificationsListInteractor
+        extends BaseInteractor implements IPushNotificationsListInteractor {
 
     private IPushNotificationDataStore pushNotificationDataStore;
+
+    private ISession session;
 
     public PushNotificationsListInteractor
     (
@@ -36,11 +40,13 @@ public class PushNotificationsListInteractor extends BaseInteractor implements I
         IPushNotificationDataStore pushNotificationDataStore,
         IDTOAssembler dtoAssembler,
         ISummitDataStore summitDataStore,
-        ISummitSelector summitSelector
+        ISummitSelector summitSelector,
+        ISession session
     )
     {
         super(securityManager, dtoAssembler, summitSelector, summitDataStore);
         this.pushNotificationDataStore = pushNotificationDataStore;
+        this.session                   = session;
     }
 
     @Override
@@ -72,5 +78,15 @@ public class PushNotificationsListInteractor extends BaseInteractor implements I
             Log.e(Constants.LOG_TAG, ex.getMessage());
             Crashlytics.logException(ex);
         }
+    }
+
+    @Override
+    public void setBlockAllNotifications(boolean block) {
+        session.setInt(Constants.SETTING_BLOCK_NOTIFICATIONS_KEY, block ? 1: 0);
+    }
+
+    @Override
+    public boolean getBlockAllNotifications() {
+        return session.getInt(Constants.SETTING_BLOCK_NOTIFICATIONS_KEY) == 1;
     }
 }

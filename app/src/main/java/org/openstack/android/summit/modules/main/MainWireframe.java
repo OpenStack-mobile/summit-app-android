@@ -11,7 +11,6 @@ import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderCon
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
-import org.openstack.android.summit.modules.settings.ISettingsWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.track_list.ITrackListWireframe;
 import org.openstack.android.summit.modules.venues.IVenuesWireframe;
@@ -35,8 +34,6 @@ public class MainWireframe implements IMainWireframe {
 
     IPushNotificationsWireframe notificationsWireframe;
 
-    ISettingsWireframe settingsWireframe;
-
     ILevelListWireframe levelListWireframe;
 
     ITrackListWireframe trackListWireframe;
@@ -54,7 +51,6 @@ public class MainWireframe implements IMainWireframe {
         IVenuesWireframe venuesWireframe,
         IAboutWireframe aboutWireframe,
         IPushNotificationsWireframe notificationsWireframe,
-        ISettingsWireframe settingsWireframe,
         IMemberOrderConfirmWireframe memberOrderConfirmWireframe
     )
     {
@@ -68,7 +64,6 @@ public class MainWireframe implements IMainWireframe {
         this.notificationsWireframe       = notificationsWireframe;
         this.levelListWireframe           = levelListWireframe;
         this.trackListWireframe           = trackListWireframe;
-        this.settingsWireframe            = settingsWireframe;
         this.memberOrderConfirmWireframe  = memberOrderConfirmWireframe;
     }
 
@@ -140,11 +135,6 @@ public class MainWireframe implements IMainWireframe {
     public void showPushNotification(int pushNotificationId, IBaseView context) {
         notificationsWireframe.presentNotificationsListView(context);
         notificationsWireframe.showNotification(pushNotificationId, context);
-    }
-
-    @Override
-    public void showSettingsView(IBaseView context) {
-        settingsWireframe.presentSettingsView(context);
     }
 
     @Override

@@ -3,7 +3,6 @@ package org.openstack.android.summit.modules.push_notifications_inbox.user_inter
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -14,15 +13,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
+
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.InfiniteScrollListener;
+
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by sebastian on 8/19/2016.
@@ -31,6 +37,7 @@ public class PushPushNotificationsListFragment
         extends BaseFragment<IPushNotificationsListPresenter>
         implements IPushNotificationsListView {
 
+    private Unbinder unbinder;
     private static final String SEARCH_KEY = "search-key-push-notification-list";
     private String searchQuery             = "";
 
@@ -38,6 +45,14 @@ public class PushPushNotificationsListFragment
     private SearchView searchView;
     private SearchView.OnQueryTextListener queryTextListener;
 
+    @BindView(R2.id.switch_enable_notifications)
+    Switch switchEnableNotifications;
+
+    @BindView(R2.id.list_notifications)
+    ListView notificationsList;
+
+    @BindView(R2.id.list_notifications_empty_message)
+    TextView emptyMessage;
 
     public PushPushNotificationsListFragment() {
         // Required empty public constructor
@@ -127,15 +142,11 @@ public class PushPushNotificationsListFragment
         setTitle(getResources().getString(R.string.notifications));
     }
 
-    private ListView notificationsList;
-    private TextView emptyMessage;
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view         = inflater.inflate(R.layout.fragment_notifications_list, container, false);
+        unbinder          = ButterKnife.bind(this, view);
         this.view         = view;
-        notificationsList = (ListView)view.findViewById(R.id.list_notifications);
         listAdapter       = new PushNotificationListAdapter(getContext());
-        emptyMessage      = (TextView)view.findViewById(R.id.list_notifications_empty_message);
 
         notificationsList.setAdapter(listAdapter);
         notificationsList.setOnScrollListener(new InfiniteScrollListener(presenter.getObjectsPerPage()) {
@@ -145,12 +156,9 @@ public class PushPushNotificationsListFragment
             }
         });
 
-        notificationsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            presenter.showNotification(position);
-            }
-        });
+        switchEnableNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.setBlockAllNotifications(isChecked));
+
+        notificationsList.setOnItemClickListener((parent, view1, position, id) -> presenter.showNotification(position));
 
         notificationsList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         // Capture ListView item click
@@ -214,6 +222,14 @@ public class PushPushNotificationsListFragment
         return view;
     }
 
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        if(unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
+        }
+    }
+
     @Override
     public void setNotifications(List<PushNotificationListItemDTO> notifications) {
         if(listAdapter == null) return;
@@ -227,6 +243,14 @@ public class PushPushNotificationsListFragment
     {
         if(listAdapter == null) return;
         listAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setSwitchEnableNotificationsState(boolean checked) {
+        if(switchEnableNotifications == null) return;
+        switchEnableNotifications.setOnCheckedChangeListener(null);
+        switchEnableNotifications.setChecked(checked);
+        switchEnableNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.setBlockAllNotifications(isChecked));
     }
 
     private void updateState() {

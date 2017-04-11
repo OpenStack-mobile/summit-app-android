@@ -11,8 +11,7 @@ import org.openstack.android.summit.common.entities.notifications.IPushNotificat
 import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationInteractor;
-import org.openstack.android.summit.modules.settings.business_logic.ISettingsInteractor;
-
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.ISettingsInteractor;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;

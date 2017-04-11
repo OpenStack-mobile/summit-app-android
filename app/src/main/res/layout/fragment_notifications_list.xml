@@ -2,6 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/hide_past_talks_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/openStackLightGray"
+        android:orientation="horizontal"
+        android:padding="13dp">
+        <TextView
+            android:id="@+id/switch_enable_notifications_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/openStackGray"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/switch_enable_notifications_text"/>
+        <Switch
+            android:id="@+id/switch_enable_notifications"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            />
+
+    </LinearLayout>
     <ListView android:id="@+id/list_notifications"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"

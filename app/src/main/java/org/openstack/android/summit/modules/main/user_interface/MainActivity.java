@@ -224,9 +224,6 @@ public class MainActivity
                 if(currentEntryName != null && currentEntryName.equals("nav_my_profile")){
                     menuItemId = R.id.nav_my_profile;
                 }
-                if(currentEntryName != null && currentEntryName.equals("nav_settings")){
-                    menuItemId = R.id.nav_settings;
-                }
                 if(currentEntryName != null && currentEntryName.equals("nav_speakers")){
                     menuItemId = R.id.nav_speakers;
                 }
@@ -262,8 +259,6 @@ public class MainActivity
             presenter.showMyProfileView();
         } else if (selectedMenuItemId == R.id.nav_notifications) {
             presenter.showNotificationView();
-        } else if (selectedMenuItemId == R.id.nav_settings) {
-            presenter.showSettingsView();
         } else if (selectedMenuItemId == R.id.nav_about) {
             presenter.showAboutView();
         }

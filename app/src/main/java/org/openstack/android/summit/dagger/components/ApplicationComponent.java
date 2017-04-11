@@ -26,7 +26,6 @@ import org.openstack.android.summit.dagger.modules.MemberOrderConfirmModule;
 import org.openstack.android.summit.dagger.modules.PushNotificationsInboxModule;
 import org.openstack.android.summit.dagger.modules.PushNotificationsModule;
 import org.openstack.android.summit.dagger.modules.RestApiModule;
-import org.openstack.android.summit.dagger.modules.SettingsModule;
 import org.openstack.android.summit.dagger.modules.VenueMapModule;
 import org.openstack.android.summit.modules.about.user_interface.AboutFragment;
 import org.openstack.android.summit.modules.event_detail.user_interface.VenueRoomDetailFragment;
@@ -72,7 +71,6 @@ import org.openstack.android.summit.modules.push_notifications_inbox.user_interf
 import org.openstack.android.summit.modules.personal_schedule.user_interface.PersonalScheduleFragment;
 import org.openstack.android.summit.modules.rsvp.RSVPViewerActivity;
 import org.openstack.android.summit.modules.search.user_interface.SearchFragment;
-import org.openstack.android.summit.modules.settings.user_interface.SettingsFragment;
 import org.openstack.android.summit.modules.speaker_presentations.user_interface.SpeakerPresentationsFragment;
 import org.openstack.android.summit.modules.speakers_list.user_interface.SpeakerListFragment;
 import org.openstack.android.summit.modules.track_list.user_interface.TrackListFragment;
@@ -120,7 +118,6 @@ import dagger.Component;
         MemberOrderConfirmModule.class,
         AboutModule.class,
         PushNotificationsInboxModule.class,
-        SettingsModule.class,
         RestApiModule.class,
         PushNotificationsModule.class,
         SplashModule.class,
@@ -162,7 +159,6 @@ public interface ApplicationComponent {
     void inject(PushPushNotificationsListFragment pushPushNotificationsListFragment);
     void inject(PushNotificationDetailFragment pushNotificationDetailFragment);
     void inject(RSVPViewerActivity rsvpViewerActivity);
-    void inject(SettingsFragment settingsFragment);
     void inject(SummitDataIngestionService dataIngestionService);
     void inject(SummitsListIngestionService summitsListIngestionService);
     void inject(SummitsListDataLoaderActivity summitsListDataLoaderActivity);

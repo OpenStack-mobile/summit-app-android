@@ -39,8 +39,6 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
 
     void disableDataUpdateService();
 
-    void showSettingsView();
-
     void onClickLoginButton();
 
     void onClickMemberProfilePic();

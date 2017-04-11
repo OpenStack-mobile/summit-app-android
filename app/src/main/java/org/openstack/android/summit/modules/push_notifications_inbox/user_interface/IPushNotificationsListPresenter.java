@@ -21,4 +21,6 @@ public interface IPushNotificationsListPresenter extends IBasePresenter<IPushNot
     void onRemovePushNotification(PushNotificationListItemDTO item);
 
     void loadDataByTerm(String term);
+
+    void setBlockAllNotifications(boolean block);
 }

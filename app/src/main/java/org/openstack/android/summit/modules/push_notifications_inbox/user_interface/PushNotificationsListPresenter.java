@@ -21,7 +21,8 @@ import java.util.List;
 /**
  * Created by sebastian on 8/19/2016.
  */
-public class PushNotificationsListPresenter extends BasePresenter<IPushNotificationsListView, IPushNotificationsListInteractor, IPushNotificationsWireframe>
+public class PushNotificationsListPresenter
+        extends BasePresenter<IPushNotificationsListView, IPushNotificationsListInteractor, IPushNotificationsWireframe>
         implements IPushNotificationsListPresenter {
 
     private int page                       = 1;
@@ -80,6 +81,11 @@ public class PushNotificationsListPresenter extends BasePresenter<IPushNotificat
         loadData();
     }
 
+    @Override
+    public void setBlockAllNotifications(boolean block) {
+        interactor.setBlockAllNotifications(block);
+    }
+
     List<PushNotificationListItemDTO> notifications = new ArrayList<PushNotificationListItemDTO>();
     private ISecurityManager securityManager;
 
@@ -90,6 +96,7 @@ public class PushNotificationsListPresenter extends BasePresenter<IPushNotificat
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
+        view.setSwitchEnableNotificationsState(interactor.getBlockAllNotifications());
         loadedAllNotifications = false;
         loadData();
     }

@@ -322,14 +322,8 @@ public class MainPresenter
         view.updateNotificationCounter(this.interactor.getNotReadNotificationsCount());
     }
 
-    @Override
-    public void showSettingsView() {
-        wireframe.showSettingsView(view);
-    }
-
     private boolean onDataLoading    = false;
     private boolean loadedSummitList = false;
-
 
     private void launchInitialDataLoadingActivity() {
         if (!onDataLoading) {

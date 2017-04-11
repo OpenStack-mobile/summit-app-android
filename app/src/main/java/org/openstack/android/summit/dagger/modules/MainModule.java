@@ -27,7 +27,6 @@ import org.openstack.android.summit.modules.member_order_confirm.IMemberOrderCon
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotificationsWireframe;
 import org.openstack.android.summit.modules.search.ISearchWireframe;
-import org.openstack.android.summit.modules.settings.ISettingsWireframe;
 import org.openstack.android.summit.modules.speakers_list.ISpeakerListWireframe;
 import org.openstack.android.summit.modules.track_list.ITrackListWireframe;
 import org.openstack.android.summit.modules.venues.IVenuesWireframe;
@@ -55,7 +54,6 @@ public class MainModule {
         IVenuesWireframe venuesWireframe,
         IAboutWireframe aboutWireframe,
         IPushNotificationsWireframe notificationsWireframe,
-        ISettingsWireframe settingsWireframe,
         IMemberOrderConfirmWireframe memberOrderConfirmWireframe
     )
     {
@@ -70,7 +68,6 @@ public class MainModule {
                 venuesWireframe,
                 aboutWireframe,
                 notificationsWireframe,
-                settingsWireframe,
                 memberOrderConfirmWireframe
         );
     }

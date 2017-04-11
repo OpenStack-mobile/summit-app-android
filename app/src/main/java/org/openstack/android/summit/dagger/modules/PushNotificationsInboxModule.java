@@ -2,6 +2,7 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
+import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
@@ -11,6 +12,7 @@ import org.openstack.android.summit.modules.push_notifications_inbox.IPushNotifi
 import org.openstack.android.summit.modules.push_notifications_inbox.PushPushNotificationsWireframe;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationDetailInteractor;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationsListInteractor;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.ISettingsInteractor;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.PushNotificationDetailInteractor;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.PushNotificationsListInteractor;
 import org.openstack.android.summit.modules.push_notifications_inbox.user_interface.IPushNotificationDetailPresenter;
@@ -54,8 +56,13 @@ public class PushNotificationsInboxModule {
     }
 
     @Provides
-    IPushNotificationsListInteractor providesNotificationsListInteractor(ISecurityManager securityManager, IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new PushNotificationsListInteractor(securityManager, pushNotificationDataStore, dtoAssembler, summitDataStore, summitSelector);
+    IPushNotificationsListInteractor providesNotificationsListInteractor(ISecurityManager securityManager, IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector, ISession session) {
+        return new PushNotificationsListInteractor(securityManager, pushNotificationDataStore, dtoAssembler, summitDataStore, summitSelector, session);
+    }
+
+    @Provides
+    ISettingsInteractor providesSettingsInteractor (ISecurityManager securityManager, IPushNotificationDataStore pushNotificationDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector, ISession session) {
+        return new PushNotificationsListInteractor(securityManager, pushNotificationDataStore, dtoAssembler, summitDataStore, summitSelector, session);
     }
 
     @Provides

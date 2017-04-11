@@ -14,7 +14,7 @@ import org.openstack.android.summit.common.services.PushNotificationReceiverServ
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationsListInteractor;
-import org.openstack.android.summit.modules.settings.business_logic.ISettingsInteractor;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.ISettingsInteractor;
 
 import javax.inject.Inject;
 
