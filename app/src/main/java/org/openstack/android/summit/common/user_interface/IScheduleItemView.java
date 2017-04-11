@@ -31,4 +31,6 @@ public interface IScheduleItemView extends IScheduleableItem {
 
     void setContextualMenu();
 
+    void shouldShowAllowRate(boolean allowRate);
+
 }

@@ -36,6 +36,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class RestApiModule {
 
+    private static final int       ApiTimeout = 30 ; //secs;
+    private static final boolean   RetryOnConnection = true;
     @Provides
     @Named("MemberProfile")
     @Singleton
@@ -127,10 +129,10 @@ public class RestApiModule {
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         // configuration
-        httpClient.readTimeout(30, TimeUnit.SECONDS);
-        httpClient.connectTimeout(30, TimeUnit.SECONDS);
-        httpClient.writeTimeout(30, TimeUnit.SECONDS);
-        httpClient.retryOnConnectionFailure(true);
+        httpClient.readTimeout(ApiTimeout, TimeUnit.SECONDS);
+        httpClient.connectTimeout(ApiTimeout, TimeUnit.SECONDS);
+        httpClient.writeTimeout(ApiTimeout, TimeUnit.SECONDS);
+        httpClient.retryOnConnectionFailure(RetryOnConnection);
 
         if(BuildConfig.DEBUG) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor(); // set your desired log level

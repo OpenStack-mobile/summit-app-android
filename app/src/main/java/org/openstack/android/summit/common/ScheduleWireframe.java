@@ -36,4 +36,9 @@ public class ScheduleWireframe extends BaseWireframe implements IScheduleWirefra
     public void presentEventRsvpView(String rsvpLink, IBaseView context) {
         rsvpWireframe.presentEventRsvpView(rsvpLink, context);
     }
+
+    @Override
+    public void showFeedbackEditView(int eventId, String eventName, int rate, IBaseView view) {
+        this.eventDetailWireframe.showFeedbackEditView(eventId, eventName, rate, view);
+    }
 }

@@ -9,7 +9,6 @@
         app:showAsAction="never"
         android:icon="@drawable/ic_star_border_gray"
         />
-
     <item
         android:id="@+id/event_detail_menu_save_going_action"
         android:title="@string/save_going"

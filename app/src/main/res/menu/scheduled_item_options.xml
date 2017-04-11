@@ -3,6 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
         <item
+            android:id="@+id/schedule_item_menu_rate_action"
+            android:title="@string/rate"
+            app:showAsAction="always"
+            android:icon="@drawable/ic_star_border_gray"
+            />
+        <item
             android:id="@+id/schedule_item_menu_save_going_action"
             android:title="@string/save_going"
             app:showAsAction="always"

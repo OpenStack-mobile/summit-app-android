@@ -32,6 +32,16 @@ public class ScheduleItemDTO extends NamedDTO implements IScheduleableItem {
     protected boolean isPresentation;
     protected String eventUrl;
     protected String socialSummary;
+    protected Boolean started;
+    protected Boolean allowFeedback;
+
+    public Boolean isStarted() {
+        return started;
+    }
+
+    public void setStarted(Boolean started) {
+        this.started = started;
+    }
 
     public String getSocialSummary() {
         return socialSummary;
@@ -214,5 +224,13 @@ public class ScheduleItemDTO extends NamedDTO implements IScheduleableItem {
 
     public String getSlug() {
         return Slugifier.toSlug(getName());
+    }
+
+    public Boolean getAllowFeedback() {
+        return allowFeedback;
+    }
+
+    public void setAllowFeedback(Boolean allowFeedback) {
+        this.allowFeedback = allowFeedback;
     }
 }

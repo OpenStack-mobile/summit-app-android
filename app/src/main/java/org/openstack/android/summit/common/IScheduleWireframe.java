@@ -10,4 +10,6 @@ public interface IScheduleWireframe extends IBaseWireframe {
     void showEventDetail(int eventId, IBaseView context);
 
     void presentEventRsvpView(String rsvpLink, IBaseView context);
+
+    void showFeedbackEditView(int eventId, String eventName, int rate, IBaseView view);
 }

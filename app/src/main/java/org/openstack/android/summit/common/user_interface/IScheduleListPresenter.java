@@ -17,4 +17,6 @@ public interface IScheduleListPresenter<V extends IBaseView> extends IBasePresen
     void shareEvent(IScheduleItemView scheduleItemView, int position);
 
     void showEventDetail(int position);
+
+    void rateEvent(IScheduleItemView scheduleItemView, int position);
 }

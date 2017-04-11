@@ -83,6 +83,7 @@ public class FavoritesSchedulePresenter
                         interactor.shouldShowVenues(),
                         scheduleItemDTO.getRSVPLink() ,
                         scheduleItemDTO.isExternalRSVP(),
+                        scheduleItemDTO.getAllowFeedback(),
                         false,
                         true
                 );

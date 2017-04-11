@@ -1,6 +1,5 @@
 package org.openstack.android.summit.common.DTOs;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +16,11 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private String eventDescription;
     private String tags;
     private List<PersonListItemDTO> speakers = new ArrayList<PersonListItemDTO>();
-    private Boolean started;
-    private Boolean allowFeedback;
     private PersonListItemDTO moderator;
     private String level;
     private Double averageRate;
+    private boolean toRecord;
+    private String attachmentUrl;
 
     public boolean isToRecord() {
         return toRecord;
@@ -38,9 +37,6 @@ public class EventDetailDTO extends ScheduleItemDTO {
     public void setAttachmentUrl(String attachmentUrl) {
         this.attachmentUrl = attachmentUrl;
     }
-
-    private boolean toRecord;
-    private String attachmentUrl;
 
     public VideoDTO getVideo() {
         return video;
@@ -126,22 +122,6 @@ public class EventDetailDTO extends ScheduleItemDTO {
 
     public void setSpeakers(List<PersonListItemDTO> speakers) {
         this.speakers = speakers;
-    }
-
-    public Boolean isStarted() {
-        return started;
-    }
-
-    public void setStarted(Boolean started) {
-        this.started = started;
-    }
-
-    public Boolean getAllowFeedback() {
-        return allowFeedback;
-    }
-
-    public void setAllowFeedback(Boolean allowFeedback) {
-        this.allowFeedback = allowFeedback;
     }
 
     public PersonListItemDTO getModerator() {

@@ -33,11 +33,12 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         scheduleItemDTO.setDateTime(dateTime);
         scheduleItemDTO.setStartDate( new DateTime(source.getStart()));
         scheduleItemDTO.setEndDate( new DateTime(source.getEnd()));
-
+        scheduleItemDTO.setStarted(isStarted(source));
         scheduleItemDTO.setLocation(getLocation(source));
         scheduleItemDTO.setLocationAddress(getLocationAddress(source));
         scheduleItemDTO.setRoom(source.getVenueRoom() != null ?source.getVenueRoom().getName() : null);
         scheduleItemDTO.setEventType(source.getType() != null ? source.getType().getName() : "");
+        scheduleItemDTO.setAllowFeedback(source.getAllowFeedback());
         String sponsors = getSponsors(source);
         scheduleItemDTO.setSponsors(sponsors);
         scheduleItemDTO.setTrack(source.getTrack() != null
@@ -73,6 +74,10 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
         if (source.getPresentation() != null) {
             scheduleItemDTO.setPresentation(true);
         }
+    }
+
+    protected Boolean isStarted(S summitEvent){
+        return summitEvent.getStart().getTime() <= System.currentTimeMillis();
     }
 
     protected String getSponsors(S summitEvent) {

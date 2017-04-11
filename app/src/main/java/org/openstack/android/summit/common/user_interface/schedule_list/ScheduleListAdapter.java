@@ -47,6 +47,7 @@ public class ScheduleListAdapter
                 (
                         itemView,
                         position -> presenter.showEventDetail(position),
+                        (item, position) -> presenter.rateEvent(item, position),
                         (item, position) -> presenter.toggleScheduleStatus(item, position),
                         (item, position) -> presenter.toggleScheduleStatus(item, position),
                         (item, position) -> presenter.toggleFavoriteStatus(item, position),
@@ -105,17 +106,20 @@ public class ScheduleListAdapter
         private OnEventMenuAction eventRemoveFavoriteCallback;
         private OnEventMenuAction eventRSVPCallback;
         private OnEventMenuAction eventShareCallback;
+        private OnEventMenuAction eventRateCallback;
         private boolean showFavoritesMenuOption;
         private boolean showGoingMenuOption;
         private boolean showRSVPOption;
         private boolean showUnRSVPOption;
         private boolean externalRSVP;
+        private boolean allowRate;
         private String rsvpLink;
 
         public ScheduleItemViewHolder
                 (
                         View itemView,
                         OnSummitEventSelected clickEventCallback,
+                        OnEventMenuAction eventRateCallback,
                         OnEventMenuAction eventNotGoingCallback,
                         OnEventMenuAction eventGoingCallback,
                         OnEventMenuAction eventFavoriteCallback,
@@ -137,6 +141,7 @@ public class ScheduleListAdapter
             favoriteEvent                    = (ImageView) itemView.findViewById(R.id.favorite_event);
             goingEvent                       = (ImageView) itemView.findViewById(R.id.going_event);
             optionsContainer                 = (LinearLayout) itemView.findViewById(R.id.options_container);
+            this.eventRateCallback           = eventRateCallback;
             this.clickEventCallback          = clickEventCallback;
             this.eventNotGoingCallback       = eventNotGoingCallback;
             this.eventGoingCallback          = eventGoingCallback;
@@ -262,6 +267,8 @@ public class ScheduleListAdapter
                             menuBuilder.findItem(R.id.schedule_item_menu_save_rsvp_action).setVisible(false);
                         }
 
+                        menuBuilder.findItem(R.id.schedule_item_menu_rate_action).setVisible(allowRate);
+
                         menuBuilder.setCallback(new Callback() {
                             @Override
                             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
@@ -302,6 +309,13 @@ public class ScheduleListAdapter
                                         }
                                     }
                                     break;
+                                    case R.id.schedule_item_menu_rate_action: {
+                                        if (eventRateCallback != null) {
+                                            eventRateCallback.action(ScheduleItemViewHolder.this, getAdapterPosition());
+                                            return true;
+                                        }
+                                    }
+                                    break;
                                     case R.id.schedule_item_menu_share_action:{
                                         if (eventShareCallback != null) {
                                             eventShareCallback.action(ScheduleItemViewHolder.this, getAdapterPosition());
@@ -323,6 +337,11 @@ public class ScheduleListAdapter
                         //displaying the popup
                         optionsMenu.show();
                     });
+        }
+
+        @Override
+        public void shouldShowAllowRate(boolean allowRate) {
+            this.allowRate = allowRate;
         }
 
         @Override

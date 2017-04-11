@@ -200,6 +200,25 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
         view.startActivity(Intent.createChooser(ShareIntentBuilder.build(scheduleItemDTO.getSocialSummary(), scheduleItemDTO.getEventUrl()), view.getResources().getString(R.string.action_share_event)));
     }
 
+    protected void _rateEvent(IScheduleableItem scheduleItemView, int position){
+        ScheduleItemDTO scheduleItemDTO = getCurrentItem(position);
+        if(scheduleItemDTO == null) return;
+
+        if(!this.interactor.isMemberLoggedIn()){
+            buildLoginModal().show();
+            return;
+        }
+
+        if(!scheduleItemDTO.isStarted()){
+            AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.feedback_validation_error_event_not_started)).show();
+            return;
+        }
+
+        wireframe.showFeedbackEditView(scheduleItemDTO.getId(), scheduleItemDTO.getName(), 0, view);
+
+    }
+
+
     protected AlertDialog buildLoginModal(){
         onBeforeLoginModal();
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getFragmentActivity());

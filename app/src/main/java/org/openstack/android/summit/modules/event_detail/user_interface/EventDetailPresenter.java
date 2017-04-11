@@ -51,7 +51,7 @@ public class EventDetailPresenter
     private boolean loadingFeedback;
     private boolean loadedAllFeedback;
     private              int feedbackPage           = 1;
-    private static final int feedbackObjectsPerPage = 25;
+    private static final int feedbackObjectsPerPage = 50;
     private boolean loadingFeedbackAverage;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {

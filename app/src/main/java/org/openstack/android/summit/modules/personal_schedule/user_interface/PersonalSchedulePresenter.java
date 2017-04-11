@@ -99,6 +99,7 @@ public class PersonalSchedulePresenter
                         interactor.shouldShowVenues(),
                         scheduleItemDTO.getRSVPLink() ,
                         scheduleItemDTO.isExternalRSVP(),
+                        scheduleItemDTO.getAllowFeedback(),
                         true,
                         false
                 );

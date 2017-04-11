@@ -278,7 +278,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             false,
             interactor.shouldShowVenues(),
             scheduleItemDTO.getRSVPLink() ,
-            scheduleItemDTO.isExternalRSVP()
+            scheduleItemDTO.isExternalRSVP(),
+            scheduleItemDTO.getAllowFeedback()
         );
     }
 
@@ -342,6 +343,11 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     @Override
     public void shareEvent(IScheduleItemView scheduleItemView, int position){
         _shareEvent(scheduleItemView, position);
+    }
+
+    @Override
+    public void rateEvent(IScheduleItemView scheduleItemView, int position) {
+        _rateEvent(scheduleItemView, position);
     }
 
     @Override

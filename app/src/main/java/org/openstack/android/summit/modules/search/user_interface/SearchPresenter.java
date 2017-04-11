@@ -142,7 +142,8 @@ public class SearchPresenter
                 true,
                 interactor.shouldShowVenues(),
                 scheduleItemDTO.getRSVPLink(),
-                scheduleItemDTO.isExternalRSVP()
+                scheduleItemDTO.isExternalRSVP(),
+                scheduleItemDTO.getAllowFeedback()
         );
     }
 
@@ -164,6 +165,11 @@ public class SearchPresenter
     @Override
     public void shareEvent(IScheduleItemView scheduleItemView, int position){
         _shareEvent(scheduleItemView, position);
+    }
+
+    @Override
+    public void rateEvent(IScheduleItemView scheduleItemView, int position) {
+        _rateEvent(scheduleItemView, position);
     }
 
     @Override
