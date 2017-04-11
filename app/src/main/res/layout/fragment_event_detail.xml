@@ -287,15 +287,14 @@
                             android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-
                             android:layout_marginTop="25dp">
                             <LinearLayout
+                                android:id="@+id/feedback_info_container"
                                 android:orientation="horizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:layout_marginBottom="10dp">
-
                                 <TextView
                                     android:id="@+id/event_feedback_total_qty"
                                     android:layout_width="wrap_content"
@@ -307,7 +306,6 @@
                                     android:layout_marginLeft="17dp"
                                     android:gravity="center"
                                     android:text="0 REVIEWS"/>
-
                                 <LinearLayout
                                     android:id="@+id/event_avg_feedback_rate"
                                     android:layout_width="0dp"
@@ -350,8 +348,29 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginRight="20dp"
                                         android:text="5.0"
-                                        android:textSize="17dp" />
+                                        android:textSize="17sp" />
                                 </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/feedback_first_container"
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:gravity="center">
+                                <TextView
+                                    android:textSize="24sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/first_rate_text"/>
+                                <Button
+                                    android:id="@+id/event_detail_action_rate_first"
+                                    android:layout_width="match_parent"
+                                    android:layout_margin="10dp"
+                                    android:layout_height="match_parent"
+                                    style="@style/AppTheme.EventDetailActionButton"
+                                    android:text="@string/rate" />
                             </LinearLayout>
 
                             <LinearLayout

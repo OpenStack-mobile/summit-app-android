@@ -1,4 +1,4 @@
-package org.openstack.android.summit.modules.event_detail.user_interface;
+    package org.openstack.android.summit.modules.event_detail.user_interface;
 
 import android.content.Context;
 import android.content.Intent;
@@ -58,6 +58,9 @@ public class EventDetailFragment
 
     @BindView(R2.id.event_detail_action_rate)
     Button buttonRate;
+
+    @BindView(R2.id.event_detail_action_rate_first)
+    Button buttonRateFirst;
 
     @BindView(R2.id.event_detail_action_going)
     ToggleButton buttonGoing;
@@ -183,6 +186,12 @@ public class EventDetailFragment
 
     @BindString(R2.string.download_slide) String downloadSlideString;
 
+    @BindView(R2.id.feedback_info_container)
+    LinearLayout feedbackInfoContainer;
+
+    @BindView(R2.id.feedback_first_container)
+    LinearLayout feedbackFirstContainer;
+
     public EventDetailFragment() {
 
     }
@@ -208,6 +217,8 @@ public class EventDetailFragment
         buttonRate.setVisibility(View.GONE);
 
         buttonRate.setOnClickListener(v -> presenter.showFeedbackEdit(0));
+
+        buttonRateFirst.setOnClickListener(v -> presenter.showFeedbackEdit(0));
 
         speakersContainer.setVisibility(View.GONE);
 
@@ -239,8 +250,6 @@ public class EventDetailFragment
         presenter.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
-
-
 
     @Override
     public void onResume() {
@@ -647,6 +656,13 @@ public class EventDetailFragment
     @Override
     public void setReviewCount(int reviewCount) {
         if (feedbackQtyTxt == null) return;
+        if(reviewCount == 0){
+            feedbackInfoContainer.setVisibility(View.GONE);
+            feedbackFirstContainer.setVisibility(View.VISIBLE);
+            return;
+        }
+        feedbackInfoContainer.setVisibility(View.VISIBLE);
+        feedbackFirstContainer.setVisibility(View.GONE);
         feedbackQtyTxt.setText(String.format
                 (
                         OpenStackSummitApplication.context.getString(R.string.event_details_reviews),

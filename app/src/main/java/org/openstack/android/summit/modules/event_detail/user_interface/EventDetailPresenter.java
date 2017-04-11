@@ -107,7 +107,6 @@ public class EventDetailPresenter
     @Override
     public void onCreateView(Bundle savedInstanceState) {
         super.onCreateView(savedInstanceState);
-        updateUI();
     }
 
     @Override
@@ -214,6 +213,7 @@ public class EventDetailPresenter
         intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED);
         intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED);
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
+        updateUI();
         updateActions();
     }
 
