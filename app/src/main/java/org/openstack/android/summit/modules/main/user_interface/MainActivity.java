@@ -30,6 +30,7 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.user_interface.BadgeCounterMenuItemDecorator;
+import org.openstack.android.summit.common.utils.KeyboardHelper;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ActivityModule;
 
@@ -199,6 +200,8 @@ public class MainActivity
     public void onBackPressed() {
         try {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+            KeyboardHelper.hideKeyboard(this);
 
             if (!drawer.isDrawerOpen(GravityCompat.START) && getFragmentManager().getBackStackEntryCount() == 0) {
                 // set events tab ...

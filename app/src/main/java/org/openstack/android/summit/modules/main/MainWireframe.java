@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 
 import org.openstack.android.summit.common.user_interface.FragmentBackStackHelper;
 import org.openstack.android.summit.common.user_interface.IBaseView;
+import org.openstack.android.summit.common.utils.KeyboardHelper;
 import org.openstack.android.summit.modules.about.IAboutWireframe;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.level_list.ILevelListWireframe;
@@ -69,36 +70,43 @@ public class MainWireframe implements IMainWireframe {
 
     @Override
     public void showEventsView(IBaseView context) {
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         eventsWireframe.presentEventsView(context);
     }
 
     @Override
     public void showEventsView(IBaseView context, int day) {
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         eventsWireframe.presentEventsView(context, day);
     }
 
     @Override
     public void showEventsViewByLevel(String level, IBaseView context) {
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         levelListWireframe.showLevelSchedule(level, context);
     }
 
     @Override
     public void showEventsViewByTrack(int trackId, IBaseView context) {
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         trackListWireframe.showTrackSchedule(trackId, context);
     }
 
     @Override
     public void showMyProfileView(IBaseView context, String defaultTabTitle) {
         FragmentBackStackHelper.clearAllBackStack(context);
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         memberProfileWireframe.presentMyProfileView(context, defaultTabTitle);
     }
 
     public void showSpeakerListView(IBaseView context) {
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         speakerListWireframe.presentSpeakersListView(context);
     }
 
     @Override
     public void showNotificationsListView(IBaseView context) {
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         notificationsWireframe.presentNotificationsListView(context);
     }
 
@@ -107,20 +115,24 @@ public class MainWireframe implements IMainWireframe {
     }
 
     public void showVenuesView(IBaseView context) {
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         venuesWireframe.presentVenuesView(context);
     }
 
     public void showAboutView(IBaseView context) {
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         aboutWireframe.presentAboutView(context);
     }
 
     @Override
     public void showEventDetail(int eventId, IBaseView context){
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         searchWireframe.showEventDetail(eventId, context);
     }
 
     @Override
     public void showEventDetail(int eventId, int day, IBaseView context){
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         eventsWireframe.presentEventsView(context, day);
         searchWireframe.showEventDetail(eventId, context);
     }
@@ -133,6 +145,7 @@ public class MainWireframe implements IMainWireframe {
 
     @Override
     public void showPushNotification(int pushNotificationId, IBaseView context) {
+        KeyboardHelper.hideKeyboard(context.getFragmentActivity());
         notificationsWireframe.presentNotificationsListView(context);
         notificationsWireframe.showNotification(pushNotificationId, context);
     }
