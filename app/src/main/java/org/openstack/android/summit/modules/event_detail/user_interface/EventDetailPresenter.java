@@ -209,6 +209,8 @@ public class EventDetailPresenter
         super.onResume();
         // bind local broadcast receiver
         IntentFilter intentFilter = new IntentFilter();
+        // reset page
+        feedbackPage = 1;
         intentFilter.addAction(Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT);
         intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED);
         intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED);
@@ -239,7 +241,6 @@ public class EventDetailPresenter
                             loadingFeedback = false;
                             List<FeedbackDTO> feedbackPageWithoutMe = new ArrayList<>();
                             for (FeedbackDTO feedbackDTO : data) {
-                                // TODO: if there are more than one owners with the same name, this could potencially fail
                                 if (myFeedbackForEvent == null ||
                                         (feedbackDTO.getOwner() != null &&
                                                 !feedbackDTO.getOwner().equals(myFeedbackForEvent.getOwner()))) {

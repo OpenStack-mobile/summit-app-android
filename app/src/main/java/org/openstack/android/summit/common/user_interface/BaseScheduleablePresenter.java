@@ -142,6 +142,10 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
 
         boolean formerState = scheduleItemView.getScheduled();
 
+        if(toggleScheduleStatusListener != null){
+            toggleScheduleStatusListener.toggle(position, formerState, scheduleItemView);
+        }
+
         if(scheduleItemView.isExternalRSVP()){
             scheduleablePresenter
                     .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)

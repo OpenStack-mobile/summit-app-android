@@ -352,7 +352,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void showEventDetail(int position) {
-        if (dayEvents.size() - 1 < position) return;
+        if (dayEvents.size() - 1 < position || dayEvents.size() == 0 || position < 0) return;
+
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
 
         if (interactor.eventExist(scheduleItemDTO.getId())) {

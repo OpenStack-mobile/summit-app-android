@@ -380,6 +380,7 @@ public class ScheduleListAdapter
         @Override
         public void onClick(View v) {
             int position = this.getAdapterPosition();
+            if(position == RecyclerView.NO_POSITION) return;
             if (clickEventCallback != null) clickEventCallback.action(position);
         }
 

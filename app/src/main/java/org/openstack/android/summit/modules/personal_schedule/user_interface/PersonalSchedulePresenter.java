@@ -68,12 +68,12 @@ public class PersonalSchedulePresenter
 
     @Override
     protected ScheduleItemDTO getCurrentItem(int position) {
-        if(dayEvents.size() - 1 < position ) return null;
+        if (dayEvents.size() - 1 < position || dayEvents.size() == 0 || position < 0) return null;
         return dayEvents.get(position);
     }
 
     private void removeItem(int position){
-        if(dayEvents.size() - 1 < position ) return;
+        if (dayEvents.size() - 1 < position || dayEvents.size() == 0 || position < 0) return;
         dayEvents.remove(position);
         view.removeItem(position);
     }
@@ -85,7 +85,7 @@ public class PersonalSchedulePresenter
 
     @Override
     public void buildItem(IScheduleItemView scheduleItemView, int position) {
-        if (dayEvents.size() - 1 < position) return;
+        if (dayEvents.size() - 1 < position || dayEvents.size() == 0 || position < 0) return;
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
         scheduleItemViewBuilder.build
                 (
