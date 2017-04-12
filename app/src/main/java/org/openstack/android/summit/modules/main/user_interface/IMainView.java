@@ -20,8 +20,6 @@ public interface IMainView extends IBaseView {
 
     void toggleMyProfileMenuItem(boolean show);
 
-    void toggleMenuLogo(boolean show);
-
     void toggleMenu(boolean show);
 
     Intent getIntent();

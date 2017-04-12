@@ -27,8 +27,6 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
 
     void onLoggedIn() throws MissingMemberException;
 
-    void onConfigurationChanged(Configuration newConfig);
-
     void onOpenedNavigationMenu();
 
     void showEventView(int eventId);

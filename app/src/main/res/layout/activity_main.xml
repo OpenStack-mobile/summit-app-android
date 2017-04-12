@@ -35,25 +35,5 @@
         app:menu="@menu/activity_main_drawer"
         app:itemIconTint="#dddddd" >
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/empty_spacer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clickable="false"
-            android:text=""/>
-        <ImageView
-            android:layout_height="90dp"
-            android:id="@+id/footer_logo"
-            android:layout_width="191dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/summit_logo"/>
-    </LinearLayout>
-
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

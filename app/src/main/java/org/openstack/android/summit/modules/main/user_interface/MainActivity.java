@@ -13,13 +13,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.StringBuilderPrinter;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -84,7 +82,6 @@ public class MainActivity
         try {
             super.onResume();
             Log.d(Constants.LOG_TAG, "MainActivity.onResume");
-            toggleMenuLogo(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
             setupNavigationIcons();
             presenter.onResume();
         } catch (Exception ex) {
@@ -115,13 +112,7 @@ public class MainActivity
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        presenter.onConfigurationChanged(newConfig);
         setupNavigationIcons();
-    }
-
-    public void toggleMenuLogo(boolean show) {
-        ImageView footerLogo = (ImageView) findViewById(R.id.footer_logo);
-        footerLogo.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void ActionBarSetup() {

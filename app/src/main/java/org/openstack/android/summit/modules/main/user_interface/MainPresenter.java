@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -775,12 +774,6 @@ public class MainPresenter
         //close realm session for current thread
         RealmFactory.closeSession();
     }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        view.toggleMenuLogo(newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE);
-    }
-
 
     @Override
     public void onOpenedNavigationMenu() {
