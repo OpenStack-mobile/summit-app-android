@@ -52,7 +52,7 @@ public class MainActivity
     private ActionBarDrawerToggle toggle;
     private int selectedMenuItemId;
     private NavigationView navigationView;
-
+    private EditText searchText;
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -126,6 +126,13 @@ public class MainActivity
                 super.onDrawerOpened(drawerView);
                 presenter.onOpenedNavigationMenu();
             }
+            @Override
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                // when drawer is closing hide keyboard and clear the search textbox
+                KeyboardHelper.hideKeyboard(MainActivity.this);
+                if(searchText != null) searchText.setText("");
+            }
         };
 
         drawer.addDrawerListener(toggle);
@@ -158,7 +165,7 @@ public class MainActivity
 
     private void NavigationMenuSetup(Bundle savedInstanceState) {
         try {
-            navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView          = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
             navigationView.getMenu().getItem(0).setChecked(true);
             LinearLayout headerView = (LinearLayout) navigationView.inflateHeaderView(R.layout.nav_header_main);
@@ -171,7 +178,7 @@ public class MainActivity
             memberProfileImageView = (SimpleDraweeView) headerView.findViewById(R.id.member_profile_pic_imageview);
             memberProfileImageView.setOnClickListener(v -> presenter.onClickMemberProfilePic() );
 
-            EditText searchText = (EditText) headerView.findViewById(R.id.nav_header_search_edittext);
+            searchText = (EditText) headerView.findViewById(R.id.nav_header_search_edittext);
             searchText.setOnEditorActionListener((v, actionId, event) -> {
                 String searchTerm = v.getText().toString();
                 if (actionId == EditorInfo.IME_ACTION_DONE && !searchTerm.isEmpty()) {
