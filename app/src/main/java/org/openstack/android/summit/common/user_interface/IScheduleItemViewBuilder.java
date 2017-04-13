@@ -19,7 +19,8 @@ public interface IScheduleItemViewBuilder {
         boolean showVenues,
         String rsvpLink,
         boolean externalRSVP,
-        boolean allowRate
+        boolean allowRate,
+        boolean toBeRecorded
     );
 
     void build
@@ -35,6 +36,7 @@ public interface IScheduleItemViewBuilder {
         String rsvpLink,
         boolean externalRSVP,
         boolean allowRate,
+        boolean toBeRecorded,
         boolean showMyScheduleOptions,
         boolean showMyFavoritesOptions
     );

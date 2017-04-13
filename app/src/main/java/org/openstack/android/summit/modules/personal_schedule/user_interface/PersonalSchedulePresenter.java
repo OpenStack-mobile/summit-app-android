@@ -100,6 +100,7 @@ public class PersonalSchedulePresenter
                         scheduleItemDTO.getRSVPLink() ,
                         scheduleItemDTO.isExternalRSVP(),
                         scheduleItemDTO.getAllowFeedback(),
+                        scheduleItemDTO.isToRecord(),
                         true,
                         false
                 );

@@ -279,7 +279,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             interactor.shouldShowVenues(),
             scheduleItemDTO.getRSVPLink() ,
             scheduleItemDTO.isExternalRSVP(),
-            scheduleItemDTO.getAllowFeedback()
+            scheduleItemDTO.getAllowFeedback(),
+            scheduleItemDTO.isToRecord()
         );
     }
 

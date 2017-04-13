@@ -81,7 +81,6 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
                     PresentationVideo video = source.getPresentation().getVideos().first();
                     eventDetailDTO.setVideo(video2VideoDTO.convert((V) video));
                 }
-                eventDetailDTO.setToRecord(source.getPresentation().isToRecord());
 
                 if(source.getPresentation().getSlides() != null && !source.getPresentation().getSlides().isEmpty()){
                     eventDetailDTO.setAttachmentUrl(source.getPresentation().getSlides().first().getLink());

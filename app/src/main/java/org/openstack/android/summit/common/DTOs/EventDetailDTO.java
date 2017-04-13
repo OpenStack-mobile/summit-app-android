@@ -19,16 +19,7 @@ public class EventDetailDTO extends ScheduleItemDTO {
     private PersonListItemDTO moderator;
     private String level;
     private Double averageRate;
-    private boolean toRecord;
     private String attachmentUrl;
-
-    public boolean isToRecord() {
-        return toRecord;
-    }
-
-    public void setToRecord(boolean toRecord) {
-        this.toRecord = toRecord;
-    }
 
     public String getAttachmentUrl() {
         return attachmentUrl;

@@ -84,6 +84,7 @@ public class FavoritesSchedulePresenter
                         scheduleItemDTO.getRSVPLink() ,
                         scheduleItemDTO.isExternalRSVP(),
                         scheduleItemDTO.getAllowFeedback(),
+                        scheduleItemDTO.isToRecord(),
                         false,
                         true
                 );

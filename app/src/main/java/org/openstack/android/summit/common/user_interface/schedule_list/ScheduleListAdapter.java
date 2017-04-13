@@ -107,6 +107,7 @@ public class ScheduleListAdapter
         private OnEventMenuAction eventRSVPCallback;
         private OnEventMenuAction eventShareCallback;
         private OnEventMenuAction eventRateCallback;
+        private boolean toBeRecorded;
         private boolean showFavoritesMenuOption;
         private boolean showGoingMenuOption;
         private boolean showRSVPOption;
@@ -162,6 +163,9 @@ public class ScheduleListAdapter
         public void setTime(String time) {
             this.time.setText(time);
         }
+
+        @Override
+        public void setToBeRecorded(boolean toBeRecorded) { this.toBeRecorded = toBeRecorded; }
 
         @Override
         public void setSponsors(String sponsors) {
@@ -245,8 +249,8 @@ public class ScheduleListAdapter
                         }
 
                         if(showFavoritesMenuOption) {
-                            menuBuilder.findItem(  R.id.schedule_item_menu_remove_favorite_action).setVisible(favorite);
-                            menuBuilder.findItem(R.id.schedule_item_menu_save_favorite_action).setVisible(!favorite);
+                            menuBuilder.findItem(R.id.schedule_item_menu_remove_favorite_action).setVisible(favorite);
+                            menuBuilder.findItem(R.id.schedule_item_menu_save_favorite_action).setVisible(!favorite && toBeRecorded);
                         }
                         else{
                             menuBuilder.findItem(R.id.schedule_item_menu_remove_favorite_action).setVisible(false);

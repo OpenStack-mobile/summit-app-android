@@ -9,8 +9,8 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
 
 
     @Override
-    public void build(IScheduleItemView scheduleItemView, ScheduleItemDTO scheduleItemDTO, boolean isMemberLoggedIn, boolean isMemberLoggedInAndAttendee, boolean isEventScheduledByLoggedMember, boolean isEventFavoriteByLoggedMember, boolean useFullDate, boolean showVenues, String rsvpLink, boolean externalRSVP, boolean allowRate) {
-         build(scheduleItemView, scheduleItemDTO, isMemberLoggedIn, isMemberLoggedInAndAttendee, isEventScheduledByLoggedMember, isEventFavoriteByLoggedMember,  useFullDate, showVenues, rsvpLink, externalRSVP, allowRate, true, true);
+    public void build(IScheduleItemView scheduleItemView, ScheduleItemDTO scheduleItemDTO, boolean isMemberLoggedIn, boolean isMemberLoggedInAndAttendee, boolean isEventScheduledByLoggedMember, boolean isEventFavoriteByLoggedMember, boolean useFullDate, boolean showVenues, String rsvpLink, boolean externalRSVP, boolean allowRate, boolean toBeRecorded) {
+         build(scheduleItemView, scheduleItemDTO, isMemberLoggedIn, isMemberLoggedInAndAttendee, isEventScheduledByLoggedMember, isEventFavoriteByLoggedMember,  useFullDate, showVenues, rsvpLink, externalRSVP, allowRate, toBeRecorded, true, true);
     }
 
     @Override
@@ -27,6 +27,7 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         String rsvpLink,
         boolean externalRSVP,
         boolean allowRate,
+        boolean toBeRecorded,
         boolean showMyScheduleOptions,
         boolean showMyFavoritesOptions
     ) {
@@ -43,7 +44,9 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         scheduleItemView.shouldShowRSVPToOption(showMyScheduleOptions  && rsvpLink != null && !rsvpLink.isEmpty());
         scheduleItemView.shouldShowUnRSVPToOption(showMyScheduleOptions  && rsvpLink != null && !rsvpLink.isEmpty() && isEventScheduledByLoggedMember);
         scheduleItemView.shouldShowAllowRate(allowRate);
+        scheduleItemView.setToBeRecorded(toBeRecorded);
         scheduleItemView.setContextualMenu();
+
         String color = scheduleItemDTO.getColor() != null && scheduleItemDTO.getColor() != ""
                 ? scheduleItemDTO.getColor()
                 : "";

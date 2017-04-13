@@ -46,8 +46,6 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
                         : null
         );
 
-
-
         if (source.getTrack() != null && source.getTrack().getTrackGroups().size() > 0) {
             scheduleItemDTO.setColor(source.getTrack().getTrackGroups().get(0).getColor());
         }
@@ -73,6 +71,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
 
         if (source.getPresentation() != null) {
             scheduleItemDTO.setPresentation(true);
+            scheduleItemDTO.setToRecord(source.getPresentation().isToRecord());
         }
     }
 

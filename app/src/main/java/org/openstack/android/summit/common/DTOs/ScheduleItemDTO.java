@@ -34,6 +34,15 @@ public class ScheduleItemDTO extends NamedDTO implements IScheduleableItem {
     protected String socialSummary;
     protected Boolean started;
     protected Boolean allowFeedback;
+    protected boolean toRecord;
+
+    public boolean isToRecord() {
+        return toRecord;
+    }
+
+    public void setToRecord(boolean toRecord) {
+        this.toRecord = toRecord;
+    }
 
     public Boolean isStarted() {
         return started;

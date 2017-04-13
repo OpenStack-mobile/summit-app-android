@@ -143,7 +143,8 @@ public class SearchPresenter
                 interactor.shouldShowVenues(),
                 scheduleItemDTO.getRSVPLink(),
                 scheduleItemDTO.isExternalRSVP(),
-                scheduleItemDTO.getAllowFeedback()
+                scheduleItemDTO.getAllowFeedback(),
+                scheduleItemDTO.isToRecord()
         );
     }
 

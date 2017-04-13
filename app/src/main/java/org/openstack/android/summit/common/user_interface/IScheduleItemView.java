@@ -33,4 +33,6 @@ public interface IScheduleItemView extends IScheduleableItem {
 
     void shouldShowAllowRate(boolean allowRate);
 
+    void setToBeRecorded(boolean toBeRecorded);
+
 }

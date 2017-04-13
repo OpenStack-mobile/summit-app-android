@@ -178,7 +178,7 @@ public class EventDetailPresenter
     @Override
     public void updateActions(){
         // buttons
-        view.showFavoriteButton(true);
+        view.showFavoriteButton(this.event.isToRecord());
         view.showGoingButton(true);
         view.setGoingButtonText(view.getResources().getString(R.string.save_going));
         view.showRateButton(this.event.getAllowFeedback());
