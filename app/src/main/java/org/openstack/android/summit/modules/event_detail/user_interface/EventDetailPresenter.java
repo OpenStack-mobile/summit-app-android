@@ -190,7 +190,7 @@ public class EventDetailPresenter
         view.showGoingMenuAction(false);
         view.showUnRSVOMenuAction(false);
         view.showRateMenuAction(this.event.getAllowFeedback());
-        view.showAddFavoriteMenuAction(!this.event.getFavorite());
+        view.showAddFavoriteMenuAction(!this.event.getFavorite() && this.event.isToRecord());
         view.showRemoveFavoriteMenuAction(this.event.getFavorite());
 
         if(this.event.getRsvpLink() != null &&  !this.event.getRsvpLink().isEmpty()) {
