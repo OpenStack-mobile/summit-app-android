@@ -274,21 +274,25 @@ public class EventDetailFragment
 
     @Override
     public void showGoingButton(boolean show) {
+        if(buttonGoing == null) return;
         buttonGoing.setVisibility(show ? View.VISIBLE : view.GONE);
     }
 
     @Override
     public void showFavoriteButton(boolean show) {
+        if(buttonFavorite == null) return;
         buttonFavorite.setVisibility(show ? View.VISIBLE : view.GONE);
     }
 
     @Override
     public void showRateButton(boolean show) {
+        if(buttonRate == null) return;
         buttonRate.setVisibility(show ? View.VISIBLE : view.GONE);
     }
 
     @Override
     public void setFavoriteButtonState(boolean pressed) {
+        if(buttonFavorite == null) return;
         buttonFavorite.setOnCheckedChangeListener(null);
         buttonFavorite.setChecked(pressed);
         buttonFavorite.setOnCheckedChangeListener((buttonView, isChecked)  -> presenter.toggleFavoriteStatus());
@@ -296,6 +300,7 @@ public class EventDetailFragment
 
     @Override
     public void setGoingButtonState(boolean pressed) {
+        if(buttonGoing == null) return;
         buttonGoing.setOnCheckedChangeListener(null);
         buttonGoing.setChecked(pressed);
         //could be schedule or RSVP
