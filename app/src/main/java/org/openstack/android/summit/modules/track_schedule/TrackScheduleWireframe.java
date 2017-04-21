@@ -44,7 +44,7 @@ public class TrackScheduleWireframe
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, trackScheduleFragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class TrackScheduleWireframe
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, trackScheduleFragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override

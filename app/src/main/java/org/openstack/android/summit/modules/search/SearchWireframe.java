@@ -56,7 +56,7 @@ public class SearchWireframe extends ScheduleWireframe implements ISearchWirefra
                 )
                 .addToBackStack(null)
                 .replace(R.id.frame_layout_content, searchFragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override

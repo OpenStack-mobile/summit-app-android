@@ -35,6 +35,6 @@ public class VenueMapWireframe extends BaseWireframe implements IVenueMapWirefra
                         )
                 .replace(R.id.frame_layout_content, venueMapFragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 }

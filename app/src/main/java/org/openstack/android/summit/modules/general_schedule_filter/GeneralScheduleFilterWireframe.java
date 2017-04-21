@@ -32,6 +32,6 @@ public class GeneralScheduleFilterWireframe extends BaseWireframe implements IGe
                 )
                 .addToBackStack(null)
                 .replace(R.id.frame_layout_content, generalScheduleFilterFragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 }

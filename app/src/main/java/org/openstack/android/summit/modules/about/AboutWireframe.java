@@ -25,6 +25,6 @@ public class AboutWireframe implements IAboutWireframe {
                         )
                 .replace(R.id.frame_layout_content, aboutFragment, "nav_about")
                 .addToBackStack("nav_about")
-                .commit();
+                .commitAllowingStateLoss();
     }
 }

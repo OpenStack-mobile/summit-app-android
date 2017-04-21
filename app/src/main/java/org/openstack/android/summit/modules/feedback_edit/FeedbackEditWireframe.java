@@ -32,7 +32,7 @@ public class FeedbackEditWireframe extends BaseWireframe implements IFeedbackEdi
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, feedbackEditFragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override

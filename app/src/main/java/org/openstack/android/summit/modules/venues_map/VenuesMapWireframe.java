@@ -33,7 +33,7 @@ public class VenuesMapWireframe extends BaseWireframe implements IVenuesMapWiref
                 .beginTransaction()
                 .replace(R.id.frame_layout_content, venuesMapFragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override
