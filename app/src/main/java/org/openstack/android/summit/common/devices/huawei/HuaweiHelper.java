@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
 
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,8 +25,7 @@ public class HuaweiHelper {
 
     public static void check(Context context) {
         final SharedPreferences settings = context.getSharedPreferences("ProtectedApps", Context.MODE_PRIVATE);
-        final String saveIfSkip = "skipProtectedAppsMessage";
-        boolean skipMessage = settings.getBoolean(saveIfSkip, false);
+        boolean skipMessage              = settings.getBoolean(Constants.SKIP_PROTECTED_APPS_MESSAGE, false);
         if (!skipMessage) {
             final SharedPreferences.Editor editor = settings.edit();
             Intent intent = new Intent();
@@ -34,7 +34,7 @@ public class HuaweiHelper {
                 final AppCompatCheckBox dontShowAgain = new AppCompatCheckBox(context);
                 dontShowAgain.setText("Do not show again");
                 dontShowAgain.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    editor.putBoolean(saveIfSkip, isChecked);
+                    editor.putBoolean(Constants.SKIP_PROTECTED_APPS_MESSAGE, isChecked);
                     editor.apply();
                 });
 
@@ -48,7 +48,7 @@ public class HuaweiHelper {
                         .setNegativeButton(android.R.string.cancel, null)
                         .show();
             } else {
-                editor.putBoolean(saveIfSkip, true);
+                editor.putBoolean(Constants.SKIP_PROTECTED_APPS_MESSAGE, true);
                 editor.apply();
             }
         }

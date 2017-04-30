@@ -66,7 +66,7 @@ public class BrowserActivity extends Activity {
 
     public void hideActivityIndicator() {
         try {
-            if (progressDialog != null) {
+            if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }

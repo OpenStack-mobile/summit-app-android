@@ -1,5 +1,7 @@
 package org.openstack.android.summit.modules.splash;
 
+import android.net.Uri;
+
 import org.openstack.android.summit.common.user_interface.IBaseView;
 
 /**
@@ -13,4 +15,6 @@ public interface ISplashWireframe {
     void showSummitListLoadingActivity(IBaseView context);
 
     void showSummitDataLoadingActivity(IBaseView context);
+
+    void showNotification(IBaseView context, Uri pushNotificationDeepLink);
 }

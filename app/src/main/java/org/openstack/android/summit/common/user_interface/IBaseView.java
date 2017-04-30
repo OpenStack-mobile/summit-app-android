@@ -37,4 +37,6 @@ public interface IBaseView {
     ContentResolver getContentResolver();
 
     FragmentActivity getFragmentActivity();
+
+    Intent getIntent();
 }

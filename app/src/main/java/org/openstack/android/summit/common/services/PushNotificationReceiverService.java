@@ -40,6 +40,7 @@ public class PushNotificationReceiverService extends FirebaseMessagingService {
     public static final String ACTION_PUSH_RECEIVE      = "org.openstack.android.summit.push_notification.intent.RECEIVE";
 
     public static final String KEY_PUSH_NOTIFICATION_ID = "org.openstack.android.summit.push_notification.intent.PUSH_NOTIFICATION_ID";
+
     @Inject
     ISecurityManager securityManager;
 

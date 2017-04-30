@@ -2,7 +2,10 @@ package org.openstack.android.summit.common.push_notifications;
 
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import org.openstack.android.summit.common.Constants;
 
@@ -168,9 +171,19 @@ public class PushNotificationsManager implements IPushNotificationsManager {
         synchronized (this.lock) {
             for (String channel : channels)
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(channel);
-
             channels.clear();
-
+            try {
+                new Thread(() -> {
+                    try {
+                        FirebaseInstanceId.getInstance().deleteInstanceId();
+                    } catch (IOException ex) {
+                        Log.w(Constants.LOG_TAG, ex.getMessage());
+                    }
+                }).start();
+            }
+            catch (Exception ex){
+                Log.w(Constants.LOG_TAG, ex.getMessage());
+            }
             isMemberSubscribed = false;
             isAnonymousSubscribed = false;
         }

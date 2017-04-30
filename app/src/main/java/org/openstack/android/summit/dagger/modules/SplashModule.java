@@ -4,7 +4,11 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.utils.IAppLinkRouter;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationInteractor;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationsListInteractor;
 import org.openstack.android.summit.modules.splash.user_interface.ISplashPresenter;
 import org.openstack.android.summit.modules.splash.ISplashWireframe;
 import org.openstack.android.summit.modules.splash.user_interface.SplashPresenter;
@@ -36,7 +40,18 @@ public class SplashModule {
     }
 
     @Provides
-    ISplashPresenter providesSplashPresenter(ISplashInteractor interactor, ISplashWireframe wireframe, ISummitSelector summitSelector){
-        return new SplashPresenter(interactor, wireframe, summitSelector);
+    ISplashPresenter providesSplashPresenter
+    (
+        ISplashInteractor interactor,
+        IPushNotificationInteractor pushNotificationInteractor,
+        IPushNotificationsListInteractor pushNotificationsListInteractor,
+        IPushNotificationFactory pushNotificationFactory,
+        ISecurityManager securityManager,
+        IAppLinkRouter appLinkRouter,
+        ISplashWireframe wireframe,
+        ISummitSelector summitSelector
+    )
+    {
+        return new SplashPresenter(interactor, wireframe, pushNotificationInteractor, pushNotificationsListInteractor, pushNotificationFactory, securityManager, appLinkRouter, summitSelector);
     }
 }

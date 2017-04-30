@@ -13,6 +13,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.Task;
 
 import org.openstack.android.summit.BuildConfig;
 import org.openstack.android.summit.OpenStackSummitApplication;
@@ -301,19 +302,25 @@ public class MainPresenter
         }
     }
 
+    private Task<Void> googlePlayServicesTask = null;
+
     /**
      * Check the device to make sure it has the Google Play Services APK. If
      * it doesn't, display a dialog that allows users to download the APK from
      * the Google Play Store or enable it in the device's system settings.
      */
     private void checkPlayServices() {
-        GoogleApiAvailability googleApiAvailability =  GoogleApiAvailability.getInstance();
+        try {
+            GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
-        int success = googleApiAvailability.isGooglePlayServicesAvailable((Activity)view);
+            int success = googleApiAvailability.isGooglePlayServicesAvailable((Activity) view);
 
-        if(success != ConnectionResult.SUCCESS)
-        {
-            googleApiAvailability.makeGooglePlayServicesAvailable((Activity)view);
+            if (success != ConnectionResult.SUCCESS && googlePlayServicesTask != null) {
+                googlePlayServicesTask = googleApiAvailability.makeGooglePlayServicesAvailable((Activity) view);
+            }
+        }
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
         }
     }
 

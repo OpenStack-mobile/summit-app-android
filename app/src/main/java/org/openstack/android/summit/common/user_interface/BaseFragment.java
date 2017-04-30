@@ -211,4 +211,8 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
         return super.getActivity();
     }
 
+    @Override
+    public Intent getIntent() {
+        return super.getActivity().getIntent();
+    }
 }

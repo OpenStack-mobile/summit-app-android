@@ -2,7 +2,10 @@ package org.openstack.android.summit.modules.splash;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.View;
 
 import org.openstack.android.summit.SummitDataLoadingActivity;
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
@@ -37,5 +40,16 @@ public class SplashWireframe implements ISplashWireframe {
         Log.d(Constants.LOG_TAG, "SplashWireframe: showSummitDataLoadingActivity");
         Intent intent = new Intent((Context) context, SummitDataLoadingActivity.class);
         context.startActivityForResult(intent, ISplashView.DATA_LOAD_REQUEST);
+    }
+
+    @Override
+    public void showNotification(IBaseView context, Uri pushNotificationDeepLink) {
+        Intent openedIntent = new Intent(Constants.PUSH_NOTIFICATION_OPENED);
+        LocalBroadcastManager.getInstance((Context) context).sendBroadcast(openedIntent);
+        Intent activityIntent = new Intent(Intent.ACTION_VIEW, pushNotificationDeepLink);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(activityIntent);
+        context.finish();
     }
 }

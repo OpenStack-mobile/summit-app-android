@@ -3,12 +3,23 @@ package org.openstack.android.summit.modules.splash.user_interface;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.entities.Member;
+import org.openstack.android.summit.common.entities.notifications.IPushNotification;
+import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
+import org.openstack.android.summit.common.entities.notifications.PushNotification;
+import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.utils.DeepLinkInfo;
+import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationInteractor;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.ISettingsInteractor;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +33,9 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 /**
@@ -32,6 +46,9 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
 
     @Inject
     ISplashPresenter presenter;
+
+    @Inject
+    ISettingsInteractor settings;
 
     private Button loginButton;
     private Button guestButton;
@@ -50,11 +67,12 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        loginButton = (Button) this.findViewById(R.id.btn_splash_login);
-        guestButton = (Button) this.findViewById(R.id.btn_splash_guest);
+        // todo: move to butterkniffe
+        loginButton         = (Button) this.findViewById(R.id.btn_splash_login);
+        guestButton         = (Button) this.findViewById(R.id.btn_splash_guest);
         summitInfoContainer = (LinearLayout) this.findViewById(R.id.splash_summit_info_container);
-        summitDates  = (TextView) this.findViewById(R.id.splash_summit_dates);
-        summitName  = (TextView) this.findViewById(R.id.splash_summit_name );
+        summitDates         = (TextView) this.findViewById(R.id.splash_summit_dates);
+        summitName          = (TextView) this.findViewById(R.id.splash_summit_name );
         getApplicationComponent().inject(this);
         StartAnimations();
         presenter.setView(this);
