@@ -117,7 +117,6 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
         }
 
         if(interactor.isDataLoaded()){
-            // todo: move to presenter
             Intent intent       = view.getIntent();
 
             if (intent != null && intent.getExtras() != null && intent.getAction().equals(Constants.ACTION_OPEN_OPENSTACK_PUSH_NOTIFICATION_FROM_SYSTRAY)) {

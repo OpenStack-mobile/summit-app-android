@@ -14,13 +14,14 @@ import org.openstack.android.summit.common.Constants;
  */
 public class PushNotificationsManager implements IPushNotificationsManager {
 
-    public static final String MemberChannelSlug    = "member_%d";
-    public static final String SummitChannelSlug    = "summit_%d";
-    public static final String TeamChannelSlug      = "team_%d";
-    public static final String EventChannelSlug     = "event_%d";
-    public static final String SpeakersChannelSlug  = "speakers";
-    public static final String AttendeesChannelSlug = "attendees";
-    public static final String EveryoneChannelSlug  = "everyone";
+    public static final String MemberChannelSlug    = "android_member_%d";
+    public static final String SummitChannelSlug    = "android_summit_%d";
+    public static final String TeamChannelSlug      = "android_team_%d";
+    public static final String EventChannelSlug     = "android_event_%d";
+    public static final String SpeakersChannelSlug  = "android_speakers";
+    public static final String AttendeesChannelSlug = "android_attendees";
+    public static final String EveryoneChannelSlug  = "android_everyone";
+
     private boolean isMemberSubscribed              = false;
     private boolean isAnonymousSubscribed           = false;
     private ArrayList<String> channels              = new ArrayList<>();
