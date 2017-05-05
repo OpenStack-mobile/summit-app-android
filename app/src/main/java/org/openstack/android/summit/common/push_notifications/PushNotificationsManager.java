@@ -173,7 +173,7 @@ public class PushNotificationsManager implements IPushNotificationsManager {
             for (String channel : channels)
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(channel);
             channels.clear();
-            try {
+            /*try {
                 new Thread(() -> {
                     try {
                         FirebaseInstanceId.getInstance().deleteInstanceId();
@@ -184,7 +184,7 @@ public class PushNotificationsManager implements IPushNotificationsManager {
             }
             catch (Exception ex){
                 Log.w(Constants.LOG_TAG, ex.getMessage());
-            }
+            }*/
             isMemberSubscribed = false;
             isAnonymousSubscribed = false;
         }
