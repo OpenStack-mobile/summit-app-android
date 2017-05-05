@@ -112,66 +112,72 @@ public class EventDetailPresenter
     @Override
     public void updateUI(){
 
-        Log.d(Constants.LOG_TAG, "updateUI");
-        event = interactor.getEventDetail(eventId != null ? eventId : 0);
-        event.setChangeStatusListener(item -> updateActions());
+        try {
+            Log.d(Constants.LOG_TAG, "updateUI");
+            event = interactor.getEventDetail(eventId != null ? eventId : 0);
+            event.setChangeStatusListener(item -> updateActions());
 
-        if (event == null) {
-            view.setName("");
-            view.setTrack("");
-            view.setDate("");
-            view.setDescription("");
-            view.setLevel("");
-            view.setSponsors("");
-            view.setTags("");
-            view.setLocation("");
-            AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.event_not_exist).show();
-            return;
+            if (event == null) {
+                view.setName("");
+                view.setTrack("");
+                view.setDate("");
+                view.setDescription("");
+                view.setLevel("");
+                view.setSponsors("");
+                view.setTags("");
+                view.setLocation("");
+                AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_info_title, R.string.event_not_exist).show();
+                return;
+            }
+
+            loadedAllFeedback = false;
+            myFeedbackForEvent = interactor.getMyFeedbackForEvent(eventId);
+
+            view.setName(event.getName());
+            view.setTrack(event.getTrack());
+            view.setTrackColor(event.getColor());
+            view.setDate(event.getDateTime());
+            view.setTime(event.getTime());
+            view.setDescription(event.getEventDescription());
+            view.setLevel(event.getLevel());
+            view.setSponsors(event.getSponsors());
+            view.setSpeakers(event.getModeratorAndSpeakers());
+            view.setTags(event.getTags());
+            view.hasMyFeedback(myFeedbackForEvent != null);
+
+            boolean hasVideo = false;
+            if (event.getVideo() != null && event.getVideo().getYouTubeId() != null) {
+                view.loadVideo(event.getVideo());
+                hasVideo = true;
+            }
+
+            if (interactor.shouldShowVenues()) {
+                view.setLocation(event.getLocation());
+            }
+
+            if (myFeedbackForEvent != null) {
+                view.setMyFeedbackRate(myFeedbackForEvent.getRate());
+                view.setMyFeedbackReview(myFeedbackForEvent.getReview());
+                view.setMyFeedbackDate(myFeedbackForEvent.getTimeAgo());
+            }
+
+            view.setAverageRate(0);
+            if (event.isStarted() && event.getAllowFeedback()) {
+                loadFeedback();
+                loadAverageFeedback();
+            }
+
+            if (event.isToRecord() && !hasVideo) {
+                view.showToRecord(true);
+            }
+
+            if (event.getAttachmentUrl() != null && !event.getAttachmentUrl().isEmpty()) {
+                view.showAttachment(true, event.isPresentation());
+            }
         }
-
-        loadedAllFeedback  = false;
-        myFeedbackForEvent = interactor.getMyFeedbackForEvent(eventId);
-
-        view.setName(event.getName());
-        view.setTrack(event.getTrack());
-        view.setTrackColor(event.getColor());
-        view.setDate(event.getDateTime());
-        view.setTime(event.getTime());
-        view.setDescription(event.getEventDescription());
-        view.setLevel(event.getLevel());
-        view.setSponsors(event.getSponsors());
-        view.setSpeakers(event.getModeratorAndSpeakers());
-        view.setTags(event.getTags());
-        view.hasMyFeedback(myFeedbackForEvent != null);
-
-        boolean hasVideo = false;
-        if (event.getVideo() != null && event.getVideo().getYouTubeId() != null) {
-            view.loadVideo(event.getVideo());
-            hasVideo = true;
-        }
-
-        if (interactor.shouldShowVenues()) {
-            view.setLocation(event.getLocation());
-        }
-
-        if (myFeedbackForEvent != null) {
-            view.setMyFeedbackRate(myFeedbackForEvent.getRate());
-            view.setMyFeedbackReview(myFeedbackForEvent.getReview());
-            view.setMyFeedbackDate(myFeedbackForEvent.getTimeAgo());
-        }
-
-        view.setAverageRate(0);
-        if (event.isStarted() && event.getAllowFeedback()) {
-            loadFeedback();
-            loadAverageFeedback();
-        }
-
-        if(event.isToRecord() && !hasVideo){
-            view.showToRecord(true);
-        }
-
-        if(event.getAttachmentUrl() != null && !event.getAttachmentUrl().isEmpty()){
-            view.showAttachment(true, event.isPresentation());
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
         }
     }
 

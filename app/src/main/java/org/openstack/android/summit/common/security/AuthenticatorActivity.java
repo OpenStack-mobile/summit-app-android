@@ -88,20 +88,32 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     ISession session;
 
     public void showActivityIndicator() {
-        if(progressDialog != null) return;
-        progressDialog = new ACProgressPie.Builder(this)
-                .ringColor(Color.WHITE)
-                .pieColor(Color.WHITE)
-                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                .build();
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        try {
+            if (progressDialog != null) return;
+            progressDialog = new ACProgressPie.Builder(this)
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
     }
 
     public void hideActivityIndicator() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
+        try {
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+        }
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
         }
     }
 

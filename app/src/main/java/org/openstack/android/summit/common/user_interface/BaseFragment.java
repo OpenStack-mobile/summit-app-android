@@ -9,13 +9,17 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
@@ -101,16 +105,22 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
 
         showActivityIndicator = true;
         Runnable task = () -> getActivity().runOnUiThread(() -> {
-            if (!showActivityIndicator) {
-                return;
+            try {
+                if (!showActivityIndicator) {
+                    return;
+                }
+                progressDialog = new ACProgressPie.Builder(getActivity())
+                        .ringColor(Color.WHITE)
+                        .pieColor(Color.WHITE)
+                        .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                        .build();
+                progressDialog.setCancelable(false);
+                progressDialog.show();
             }
-            progressDialog = new ACProgressPie.Builder(getActivity())
-                    .ringColor(Color.WHITE)
-                    .pieColor(Color.WHITE)
-                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                    .build();
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+            catch (Exception ex){
+                Log.e(Constants.LOG_TAG, ex.getMessage());
+                Crashlytics.logException(ex);
+            }
         });
         ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
         activityIndicatorTask = worker.schedule(task, delay, TimeUnit.MILLISECONDS);
@@ -128,12 +138,18 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
             return;
         }
         getActivity().runOnUiThread(() -> {
-            showActivityIndicator = false;
-            isActivityIndicatorVisible = false;
+            try {
+                showActivityIndicator = false;
+                isActivityIndicatorVisible = false;
 
-            if (progressDialog != null) {
-                progressDialog.dismiss();
-                progressDialog = null;
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
+            }
+            catch (Exception ex){
+                Log.e(Constants.LOG_TAG, ex.getMessage());
+                Crashlytics.logException(ex);
             }
         });
     }

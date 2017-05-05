@@ -151,25 +151,32 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
 
     @Override
     public void showActivityIndicator() {
-        hideActivityIndicator();
-        progressDialog = new ACProgressPie.Builder(this)
-                .ringColor(Color.WHITE)
-                .pieColor(Color.WHITE)
-                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                .build();
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        try {
+            hideActivityIndicator();
+            progressDialog = new ACProgressPie.Builder(this)
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
     }
 
     @Override
     public void hideActivityIndicator() {
         try {
-            if (progressDialog != null) {
+            if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
         }
         catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
             Crashlytics.logException(ex);
         }
     }

@@ -389,17 +389,23 @@ public class MainActivity
     public void showActivityIndicator() {
 
         runOnUiThread(() -> {
-            if (progressDialog != null) {
-                hideActivityIndicator();
+            try {
+                if (progressDialog != null) {
+                    hideActivityIndicator();
+                }
+                Log.d(Constants.LOG_TAG, "MainActivity.showActivityIndicator");
+                progressDialog = new ACProgressPie.Builder(MainActivity.this)
+                        .ringColor(Color.WHITE)
+                        .pieColor(Color.WHITE)
+                        .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                        .build();
+                progressDialog.setCancelable(false);
+                progressDialog.show();
             }
-            Log.d(Constants.LOG_TAG, "MainActivity.showActivityIndicator");
-            progressDialog = new ACProgressPie.Builder(MainActivity.this)
-                    .ringColor(Color.WHITE)
-                    .pieColor(Color.WHITE)
-                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                    .build();
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+            catch (Exception ex){
+                Log.e(Constants.LOG_TAG, ex.getMessage());
+                Crashlytics.logException(ex);
+            }
         });
     }
 
@@ -407,7 +413,7 @@ public class MainActivity
 
         runOnUiThread(() -> {
             try {
-                if (progressDialog != null) {
+                if (progressDialog != null && progressDialog.isShowing()) {
                     Log.d(Constants.LOG_TAG, "MainActivity.hideActivityIndicator");
                     progressDialog.dismiss();
                     progressDialog = null;

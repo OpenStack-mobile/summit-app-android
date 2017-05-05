@@ -14,6 +14,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.services.SummitDataIngestionService;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
@@ -119,20 +121,32 @@ public class SummitDataLoadingActivity extends Activity {
     }
 
     private void showActivityIndicator() {
-        hideActivityIndicator();
-        progressDialog =  new ACProgressPie.Builder(this)
-                .ringColor(Color.WHITE)
-                .pieColor(Color.WHITE)
-                .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                .build();
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        try {
+            hideActivityIndicator();
+            progressDialog = new ACProgressPie.Builder(this)
+                    .ringColor(Color.WHITE)
+                    .pieColor(Color.WHITE)
+                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
+                    .build();
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
     }
 
     private void hideActivityIndicator() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
+        try {
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+        }
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
         }
     }
 
