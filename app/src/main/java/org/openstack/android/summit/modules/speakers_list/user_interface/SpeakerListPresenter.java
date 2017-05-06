@@ -39,6 +39,7 @@ public class SpeakerListPresenter
 
     @Override
     public void showSpeakerProfile(int position) {
+        if(speakers == null || speakers.isEmpty() || (speakers.size() - 1) < position || position < 0 ) return;
         PersonListItemDTO speaker = speakers.get(position);
         wireframe.showSpeakerProfile(speaker.getId(), view);
     }
@@ -59,11 +60,12 @@ public class SpeakerListPresenter
 
     @Override
     public void buildItem(SpeakerListAdapter.SpeakerItemViewHolder speakerItemView, int position) {
+        if(speakers == null || speakers.isEmpty() || (speakers.size() - 1) < position || position < 0 ) return;
+
         PersonListItemDTO personListItemDTO = speakers.get(position);
         speakerItemView.setName(personListItemDTO.getName());
         speakerItemView.setTitle(personListItemDTO.getTitle());
         speakerItemView.setIsModerator(false);
-
         Uri uri = Uri.parse(personListItemDTO.getPictureUrl().replace("https", "http"));
         speakerItemView.setPictureUri(uri);
     }
