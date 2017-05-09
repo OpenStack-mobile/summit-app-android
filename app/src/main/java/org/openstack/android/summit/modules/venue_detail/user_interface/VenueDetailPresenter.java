@@ -1,6 +1,7 @@
 package org.openstack.android.summit.modules.venue_detail.user_interface;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -51,7 +52,8 @@ public class VenueDetailPresenter extends BasePresenter<IVenueDetailView, IVenue
         venue = interactor.getVenue(venueId != null ? venueId : 0);
 
         if (venue == null) {
-            AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_info_title, R.string.venue_not_exists).show();
+            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_info_title, R.string.venue_not_exists);
+            if(dialog != null) dialog.show();
             return;
         }
 

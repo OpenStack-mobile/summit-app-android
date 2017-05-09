@@ -12,8 +12,6 @@ import org.openstack.android.summit.common.data_access.repositories.IDataUpdateD
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.utils.RealmFactory;
-
-import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
@@ -46,24 +44,15 @@ public class DataUpdateProcessor implements IDataUpdateProcessor {
         for (int i = 0; i < jsonArray.length(); i++) {
 
             try {
-
-                jsonObject              = jsonArray.getJSONObject(i);
-                final String jsonString = jsonObject.toString();
-
-                dataUpdate = RealmFactory.transaction(session -> {
-
-                    DataUpdate dataUpdate1 = deserialize(jsonString);
-                    if (dataUpdate1 == null) return null;
-                    IDataUpdateStrategy dataUpdateStrategy;
-                    if (dataUpdate1.getEntity() != null) {
-                        dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate1.getEntityClassName());
-                        dataUpdateStrategy.process(dataUpdate1);
-                    }
-                    return dataUpdate1;
-                });
-
-                if(dataUpdate == null) continue;
-
+                jsonObject        = jsonArray.getJSONObject(i);
+                String jsonString = jsonObject.toString();
+                dataUpdate = deserialize(jsonString);
+                if (dataUpdate == null) continue;
+                IDataUpdateStrategy dataUpdateStrategy;
+                if (dataUpdate.getEntity() != null) {
+                    dataUpdateStrategy = dataUpdateStrategyFactory.create(dataUpdate.getEntityClassName());
+                    dataUpdateStrategy.process(dataUpdate);
+                }
             } catch (Exception e) {
                 String errorMessage = jsonObject != null ? String.format("There was an error processing this data update: %s", jsonObject.toString()) : "";
                 Crashlytics.logException(new Exception(errorMessage, e));

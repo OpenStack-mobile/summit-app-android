@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.exceptions.NotFoundEntityException;
 import org.openstack.android.summit.common.entities.exceptions.ValidationException;
+import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -82,7 +83,10 @@ public class SummitAttendeeRemoteDataStore
                         }
                     }
                     return true;
-                });
+                })
+                .doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
     }
 
     @Override
@@ -131,7 +135,10 @@ public class SummitAttendeeRemoteDataStore
                         }
                     }
                     return true;
-                });
+                })
+                .doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
     }
 
     @Override
@@ -174,7 +181,10 @@ public class SummitAttendeeRemoteDataStore
                         }
                     }
                     return true;
-                });
+                })
+                .doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
     }
 
 }

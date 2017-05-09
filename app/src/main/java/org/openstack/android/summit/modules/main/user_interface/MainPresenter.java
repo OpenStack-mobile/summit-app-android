@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -163,7 +164,8 @@ public class MainPresenter
                         onLoggedOut();
                         if (userLoginButtonInteraction.equals(UserLoginButtonInteraction.None)) {
 
-                            AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.session_expired_message).show();
+                            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.session_expired_message);
+                            if(dialog != null) dialog.show();
                         }
 
                         showEventsView();
@@ -692,7 +694,8 @@ public class MainPresenter
             return;
         }
 
-        AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.no_logged_in_user).show();
+        AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.no_logged_in_user);
+        if(dialog != null) dialog.show();
     }
 
     public void showSpeakerListView() {

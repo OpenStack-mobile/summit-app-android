@@ -6,6 +6,7 @@ import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.DataAccessException;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.realm.Realm;
@@ -46,17 +47,21 @@ final public class RealmFactory {
 
     private static Integer incrementTxCounter(){ return txCounter.get().incrementAndGet() ;};
 
+    private static Object lockCloseSession = new Object();
+
     public static Realm getSession() {
         return session.get();
     }
 
     public static void closeSession(){
-        Realm realmSession = session.get();
-        if(realmSession != null && !realmSession.isClosed()) {
-            Log.d(Constants.LOG_TAG, String.format("Closing Realm instance for thread %s", Thread.currentThread().getName()));
-            realmSession.close();
+        synchronized (lockCloseSession) {
+            Realm realmSession = session.get();
+            if (realmSession != null && !realmSession.isClosed()) {
+                Log.d(Constants.LOG_TAG, String.format("Closing Realm instance for thread %s", Thread.currentThread().getName()));
+                realmSession.close();
+            }
+            session.remove();
         }
-        session.remove();
     }
 
     /**
@@ -88,16 +93,13 @@ final public class RealmFactory {
     private static void beginTransaction(Realm session){
         Integer counter = incrementTxCounter();
         if(session != null && counter == 1) {
-            Log.d(Constants.LOG_TAG, "RealmFactory.beginTransaction");
             session.beginTransaction();
         }
     }
 
     private static void commitTransaction(Realm session){
-
         Integer counter = decrementTxCounter();
         if(session != null && counter == 0) {
-            Log.d(Constants.LOG_TAG, "RealmFactory.commitTransaction");
             session.commitTransaction();
         }
     }
@@ -105,7 +107,6 @@ final public class RealmFactory {
     private static void rollbackTransaction(Realm session){
         Integer counter = decrementTxCounter();
         if(session != null && counter == 0) {
-            Log.d(Constants.LOG_TAG, "RealmFactory.rollbackTransaction");
             session.cancelTransaction();
         }
     }

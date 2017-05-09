@@ -278,7 +278,7 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
 
     @Override
     public Observable<Double> getAverageFeedback(int eventId) {
-        return summitEventRemoteDataStore.getAverageFeedback(eventId).subscribeOn(Schedulers.io());
+        return summitEventRemoteDataStore.getAverageFeedback(eventId);
     }
 
 }

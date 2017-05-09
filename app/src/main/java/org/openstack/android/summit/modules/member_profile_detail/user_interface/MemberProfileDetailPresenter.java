@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.member_profile_detail.user_interfac
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -72,7 +73,8 @@ public class MemberProfileDetailPresenter
             view.setBio("");
             view.setTwitter("");
             view.setIrc("");
-            AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_info_title, R.string.profile_not_found).show();
+            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_info_title, R.string.profile_not_found);
+            if(dialog != null) dialog.show();
             return;
         }
 

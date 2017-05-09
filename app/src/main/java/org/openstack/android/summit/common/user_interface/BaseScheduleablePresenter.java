@@ -80,7 +80,10 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                 Log.d(Constants.LOG_TAG, ex.getMessage());
                                 Crashlytics.logException(ex);
                             }
-                            if(view != null) AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                            if(view != null) {
+                                AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                                if(dialog != null) dialog.show();
+                            }
                         }
                 );
     }
@@ -120,7 +123,10 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                         Log.d(Constants.LOG_TAG, ex.getMessage());
                                         Crashlytics.logException(ex);
                                     }
-                                    if(view != null) AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                                    if(view != null) {
+                                        AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                                        if(dialog != null) dialog.show();
+                                    }
                                 }
                         );
     }
@@ -166,7 +172,10 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                     Crashlytics.logException(ex);
                                     Log.d(Constants.LOG_TAG, ex.getMessage());
                                 }
-                                if(view != null) AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                                if(view != null) {
+                                    AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                                    if(dialog != null) dialog.show();
+                                }
                             }
                     );
         }
@@ -188,7 +197,10 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                         Log.d(Constants.LOG_TAG, ex.getMessage());
                                         Crashlytics.logException(ex);
                                     }
-                                    if(view != null) AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                                    if(view != null) {
+                                        AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                                        if(dialog != null) dialog.show();
+                                    }
                                 }
                         );
             }
@@ -257,7 +269,6 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                     dialog.dismiss();
                 })
                 .setNegativeButton(R.string.alert_attendee_required_cancel, (dialog, id) -> {
-
                     dialog.dismiss();
                 });
         return builder.create();

@@ -42,7 +42,6 @@ public class GenericDataStore<T extends RealmObject> implements IGenericDataStor
 
     @Override
     public T getById(int id) {
-
         try {
             return RealmFactory.transaction(session -> session.where(getType()).equalTo("id", id).findFirst());
         } catch (DataAccessException ex) {

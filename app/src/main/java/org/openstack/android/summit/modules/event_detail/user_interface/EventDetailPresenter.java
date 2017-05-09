@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -126,7 +127,8 @@ public class EventDetailPresenter
                 view.setSponsors("");
                 view.setTags("");
                 view.setLocation("");
-                AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_info_title, R.string.event_not_exist).show();
+                AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_info_title, R.string.event_not_exist);
+                if(dialog != null) dialog.show();
                 return;
             }
 
@@ -183,30 +185,35 @@ public class EventDetailPresenter
 
     @Override
     public void updateActions(){
-        // buttons
-        view.showFavoriteButton(this.event.isToRecord());
-        view.showGoingButton(true);
-        view.setGoingButtonText(view.getResources().getString(R.string.save_going));
-        view.showRateButton(this.event.getAllowFeedback());
-        view.setFavoriteButtonState(this.event.getFavorite());
-        view.setGoingButtonState(this.event.getScheduled());
-        // menu options
-        view.showRSVPMenuAction(false);
-        view.showNotGoingMenuAction(false);
-        view.showGoingMenuAction(false);
-        view.showUnRSVOMenuAction(false);
-        view.showRateMenuAction(this.event.getAllowFeedback());
-        view.showAddFavoriteMenuAction(!this.event.getFavorite() && this.event.isToRecord());
-        view.showRemoveFavoriteMenuAction(this.event.getFavorite());
+        try {
+            // buttons
+            view.showFavoriteButton(this.event.isToRecord());
+            view.showGoingButton(true);
+            view.setGoingButtonText(view.getResources().getString(R.string.save_going));
+            view.showRateButton(this.event.getAllowFeedback());
+            view.setFavoriteButtonState(this.event.getFavorite());
+            view.setGoingButtonState(this.event.getScheduled());
+            // menu options
+            view.showRSVPMenuAction(false);
+            view.showNotGoingMenuAction(false);
+            view.showGoingMenuAction(false);
+            view.showUnRSVOMenuAction(false);
+            view.showRateMenuAction(this.event.getAllowFeedback());
+            view.showAddFavoriteMenuAction(!this.event.getFavorite() && this.event.isToRecord());
+            view.showRemoveFavoriteMenuAction(this.event.getFavorite());
 
-        if(this.event.getRsvpLink() != null &&  !this.event.getRsvpLink().isEmpty()) {
-            view.showRSVPMenuAction(!this.event.getScheduled());
-            view.showUnRSVOMenuAction(this.event.getScheduled());
-            view.setGoingButtonText(view.getResources().getString(R.string.save_rsvp));
+            if (this.event.getRsvpLink() != null && !this.event.getRsvpLink().isEmpty()) {
+                view.showRSVPMenuAction(!this.event.getScheduled());
+                view.showUnRSVOMenuAction(this.event.getScheduled());
+                view.setGoingButtonText(view.getResources().getString(R.string.save_rsvp));
+            } else {
+                view.showNotGoingMenuAction(this.event.getScheduled());
+                view.showGoingMenuAction(!this.event.getScheduled());
+            }
         }
-         else{
-            view.showNotGoingMenuAction(this.event.getScheduled());
-            view.showGoingMenuAction(!this.event.getScheduled());
+        catch(Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
         }
     }
 

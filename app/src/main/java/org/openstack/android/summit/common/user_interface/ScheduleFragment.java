@@ -100,6 +100,7 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         presenter.onCreateView(savedInstanceState);
 
         ranger.setDayViewOnClickListener(date -> {
+            if(scheduleList == null) return;
             scheduleList.setItemAnimator(new SlideInDownAnimator());
             scheduleList.getItemAnimator().setRemoveDuration(200);
             scheduleList.getItemAnimator().setAddDuration(200);

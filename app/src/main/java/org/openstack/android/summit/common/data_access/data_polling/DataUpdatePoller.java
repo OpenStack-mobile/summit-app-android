@@ -17,6 +17,8 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitDataS
 import org.openstack.android.summit.common.entities.DataUpdate;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.utils.RealmFactory;
+import org.openstack.android.summit.common.utils.Void;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,7 +42,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private Retrofit restClientServiceProfile;
     private ISummitSelector summitSelector;
 
-    private static final int EntityEventUpdatesPageSize = 100;
+    private static final int EntityEventUpdatesPageSize = 50;
 
     @Inject
     public DataUpdatePoller
@@ -86,9 +88,11 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             Response<ResponseBody> response = call.execute();
 
             if(!response.isSuccessful()) return;
-
-            dataUpdateProcessor.process(response.body().string());
-            clearDataIfTruncateEventExist();
+            RealmFactory.transaction(session -> {
+                dataUpdateProcessor.process(response.body().string());
+                clearDataIfTruncateEventExist();
+                return Void.getInstance();
+            });
 
         } catch (Exception e) {
             Crashlytics.logException(e);

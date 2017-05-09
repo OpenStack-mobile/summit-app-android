@@ -131,9 +131,9 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                         throw new Exception(String.format("getAttendeesForTicketOrder: http error code %d", response.code()));
                     }
                     return true;
-                });
-
-
+                }).doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
     }
 
     @Override
@@ -169,7 +169,10 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                         throw new Exception(String.format("addFeedback: http error code %d", response.code()));
                     }
                     return Integer.parseInt(response.body().string());
-                });
+                })
+                .doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
     }
 
     @Override
@@ -205,7 +208,10 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                         throw new Exception(String.format("addFeedback: http error code %d", response.code()));
                     }
                     return true;
-                });
+                })
+                .doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
     }
 
     @Override
@@ -247,7 +253,10 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                         }
                     }
                     return true;
-                });
+                })
+                .doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
     }
 
     @Override
@@ -289,6 +298,9 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                         }
                     }
                     return true;
-                });
+                })
+                .doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
     }
 }

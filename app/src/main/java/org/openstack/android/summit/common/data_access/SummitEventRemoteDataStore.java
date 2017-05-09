@@ -15,6 +15,7 @@ import javax.inject.Named;
 
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 import retrofit2.Retrofit;
 
 /**
@@ -40,9 +41,9 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
     public Observable<List<Feedback>> getFeedback(int eventId, int page, int objectsPerPage) {
 
        return summitEventsApi
-                .getEventFeedback(summitSelector.getCurrentSummitId(), eventId, "owner", page, objectsPerPage)
+               .getEventFeedback(summitSelector.getCurrentSummitId(), eventId, "owner", page, objectsPerPage)
                .subscribeOn(Schedulers.io())
-                .map( response -> {
+               .map( response -> {
                     if(!response.isSuccessful()){
                          throw new Exception
                                 (
@@ -54,7 +55,9 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                                 );
                     }
                     return RealmFactory.transaction(session -> deserializer.deserializePage(response.body().string(), Feedback.class));
-                });
+                }).doOnTerminate( () ->
+                   RealmFactory.closeSession()
+               );
     }
 
     @Override
@@ -85,7 +88,9 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                     });
 
                     return summitEvent.getAverageRate();
-                });
+                }).doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
     }
 
     private void updateAverageRateIfNecessary(final SummitEvent summitEvent, final Double averateRateFromServer) throws DataAccessException {

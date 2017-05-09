@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
@@ -362,13 +363,14 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             return;
         }
 
-        AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.event_not_exist).show();
+        AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(),R.string.generic_info_title, R.string.event_not_exist);
+        if(dialog != null) dialog.show();
         onResume();
     }
 
     @Override
     protected ScheduleItemDTO getCurrentItem(int position){
-        if (dayEvents.size() - 1 < position) return null;
+        if (dayEvents.size() - 1 < position || dayEvents.size() == 0 || position < 0) return null;
         return dayEvents.get(position);
     }
 

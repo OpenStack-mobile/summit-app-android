@@ -3,8 +3,12 @@ package org.openstack.android.summit.common.user_interface;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
 
 /**
  * Created by smarcet on 31/03/17.
@@ -24,12 +28,19 @@ public final class AlertsBuilder {
 
 
     public static AlertDialog buildAlert(Context context, @StringRes int title, @StringRes int  message){
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+        try {
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
 
-        return builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )
-                .create();
+            return builder.setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton(R.string.generic_error_message_ok, (dialog, id) -> dialog.dismiss())
+                    .create();
+        }
+        catch (Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
+        return null;
     }
 
 
