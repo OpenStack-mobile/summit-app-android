@@ -248,6 +248,18 @@ public class SecurityManager implements ISecurityManager {
     }
 
     @Override
+    public int getCurrentMemberId(){
+        try {
+            return identity.getCurrentMemberId();
+        }
+        catch(Exception ex){
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            Crashlytics.logException(ex);
+        }
+        return 0;
+    }
+
+    @Override
     public boolean isLoggedIn() {
         return getCurrentMember() != null;
     }

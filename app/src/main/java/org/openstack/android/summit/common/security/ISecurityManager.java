@@ -20,6 +20,8 @@ public interface ISecurityManager {
 
     Member getCurrentMember();
 
+    int getCurrentMemberId();
+
     boolean isLoggedInAndConfirmedAttendee();
 
     void bindCurrentUser();

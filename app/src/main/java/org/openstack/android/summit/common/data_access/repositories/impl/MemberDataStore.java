@@ -187,11 +187,11 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
     }
 
     @Override
-    public boolean isEventOnMyFavorites(Member me, SummitEvent summitEvent) {
+    public boolean isEventOnMyFavorites(int memberId, int eventId) {
         return RealmFactory.getSession()
                 .where(Member.class)
-                .equalTo("id", me.getId())
-                .equalTo("favoriteEvents.id", summitEvent.getId())
+                .equalTo("id", memberId)
+                .equalTo("favoriteEvents.id", eventId)
                 .count() > 0;
     }
 

@@ -90,6 +90,15 @@ public class SummitAttendeeDataStore
     }
 
     @Override
+    public boolean isEventScheduledByLoggedMember(int memberId, int eventId) {
+        return RealmFactory.getSession()
+                .where(SummitAttendee.class)
+                .equalTo("memberId", memberId)
+                .equalTo("scheduledEvents.id", eventId)
+                .count() > 0;
+    }
+
+    @Override
     public Observable<Boolean> removeEventFromMemberSchedule(SummitAttendee me, SummitEvent summitEvent) {
 
         int attendeeId = me.getId();

@@ -31,6 +31,6 @@ public interface IMemberDataStore extends IGenericDataStore<Member> {
 
     void removeEventFromMyFavoritesLocal(Member me, SummitEvent summitEvent);
 
-    boolean isEventOnMyFavorites(Member me, SummitEvent summitEvent);
+    boolean isEventOnMyFavorites(int memberId, int eventId);
 
 }

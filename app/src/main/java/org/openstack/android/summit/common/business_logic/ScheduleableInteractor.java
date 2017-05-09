@@ -104,40 +104,22 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     @Override
     public boolean isEventScheduledByLoggedMember(int eventId) {
 
-        if (!this.isMemberLoggedInAndConfirmedAttendee()) {
+        int memberId = securityManager.getCurrentMemberId();
+
+        if (memberId <= 0) {
             return false;
         }
 
-        Member loggedInMember = securityManager.getCurrentMember();
-
-        if (loggedInMember == null || loggedInMember.getAttendeeRole() == null) {
-            return false;
-        }
-
-        Boolean found = false;
-        for (SummitEvent event : loggedInMember.getAttendeeRole().getScheduledEvents()) {
-            if (event.getId() == eventId) {
-                found = true;
-                break;
-            }
-        }
-
-        return found;
+        return summitAttendeeDataStore.isEventScheduledByLoggedMember(memberId, eventId);
     }
 
     @Override
     public boolean isEventFavoriteByLoggedMember(int eventId) {
-        if(!this.isMemberLoggedIn())
-            return false;
+        int memberId = securityManager.getCurrentMemberId();
 
-        Member me = securityManager.getCurrentMember();
+        if(memberId <= 0) return false;
 
-        final SummitEvent summitEvent = summitEventDataStore.getById(eventId);
-        if(summitEvent == null)
-            return false;
-
-        return memberDataStore.isEventOnMyFavorites(me, summitEvent);
-
+        return memberDataStore.isEventOnMyFavorites(memberId, eventId);
     }
 
     @Override

@@ -20,4 +20,6 @@ public interface ISummitAttendeeDataStore extends IGenericDataStore<SummitAttend
 
     void removeEventFromMemberScheduleLocal(SummitAttendee me, SummitEvent summitEvent);
 
+    boolean isEventScheduledByLoggedMember(int memberId, int eventId);
+
 }
