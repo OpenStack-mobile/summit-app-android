@@ -223,6 +223,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     public void onResume() {
         try {
             super.onResume();
+
             currentSummit = interactor.getActiveSummit();
             // called only in case that we are doing a filtering, we need to set the ranger state again
             setRangerState();
@@ -266,18 +267,18 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     public void buildItem(IScheduleItemView scheduleItemView, int position) {
-        if (dayEvents == null || dayEvents.isEmpty() || (dayEvents.size() - 1) < position || position <0) return;
+        if (dayEvents == null || dayEvents.isEmpty() || (dayEvents.size() - 1) < position || position < 0) return;
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
         scheduleItemViewBuilder.build
         (
             scheduleItemView,
             scheduleItemDTO,
-            interactor.isMemberLoggedIn(),
-            interactor.isMemberLoggedInAndConfirmedAttendee(),
-            interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
-            interactor.isEventFavoriteByLoggedMember(scheduleItemDTO.getId()),
+            isMemberLogged,
+            isMemberAttendee,
+            scheduleItemDTO.getScheduled(),
+            scheduleItemDTO.getFavorite(),
             false,
-            interactor.shouldShowVenues(),
+            shouldShowVenues,
             scheduleItemDTO.getRSVPLink() ,
             scheduleItemDTO.isExternalRSVP(),
             scheduleItemDTO.getAllowFeedback(),

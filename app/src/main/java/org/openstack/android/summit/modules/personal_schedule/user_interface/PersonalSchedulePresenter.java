@@ -44,14 +44,8 @@ public class PersonalSchedulePresenter
 
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IPersonalScheduleInteractor interactor) {
-        List<ScheduleItemDTO> events = null;
-        if (interactor.isMemberLoggedInAndConfirmedAttendee()) {
-            events = interactor.getCurrentMemberScheduledEvents(startDate.toDate(), endDate.toDate());
-        }
-        else {
-            events = new ArrayList<>();
-        }
-        return events;
+        if(!interactor.isMemberLoggedInAndConfirmedAttendee()) return new ArrayList<>();
+        return interactor.getCurrentMemberScheduledEvents(startDate.toDate(), endDate.toDate());
     }
 
     @Override
@@ -91,12 +85,12 @@ public class PersonalSchedulePresenter
                 (
                         scheduleItemView,
                         scheduleItemDTO,
-                        interactor.isMemberLoggedIn(),
-                        interactor.isMemberLoggedInAndConfirmedAttendee(),
-                        interactor.isEventScheduledByLoggedMember(scheduleItemDTO.getId()),
-                        interactor.isEventFavoriteByLoggedMember(scheduleItemDTO.getId()),
+                        isMemberLogged,
+                        isMemberAttendee,
+                        scheduleItemDTO.getScheduled(),
+                        scheduleItemDTO.getFavorite(),
                         false,
-                        interactor.shouldShowVenues(),
+                        shouldShowVenues,
                         scheduleItemDTO.getRSVPLink() ,
                         scheduleItemDTO.isExternalRSVP(),
                         scheduleItemDTO.getAllowFeedback(),

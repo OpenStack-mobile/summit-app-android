@@ -33,22 +33,17 @@ public class FavoritesScheduleInteractor  extends ScheduleInteractor implements 
 
     @Override
     public List<ScheduleItemDTO> getCurrentMemberFavoritesEvents(Date startDate, Date endDate) {
-        Member member = securityManager.getCurrentMember();
-        List<ScheduleItemDTO> dtos;
-        if (member != null) {
+        Member member              = securityManager.getCurrentMember();
+        if(member == null) return new ArrayList<>();
 
-            List<SummitEvent> favoriteEvents = member.getFavoriteEvents()
+        List<SummitEvent> favoriteEvents = member.getFavoriteEvents()
                     .where()
                     .greaterThanOrEqualTo("start", startDate)
                     .lessThanOrEqualTo("end", endDate)
                     .findAllSorted(new String[]{"start", "end", "name"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING});
 
-            dtos = createDTOList(favoriteEvents, ScheduleItemDTO.class);
-        }
-        else {
-            dtos = new ArrayList<>();
-        }
-        return dtos;
+        return postProcessScheduleEventList(createDTOList(favoriteEvents, ScheduleItemDTO.class));
+
     }
 
     @Override

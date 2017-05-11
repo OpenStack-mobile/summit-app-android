@@ -9,6 +9,8 @@ import org.openstack.android.summit.common.data_access.repositories.IMemberDataS
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
+import org.openstack.android.summit.common.entities.Member;
+import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -57,7 +59,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
 
     @Override
     public List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues) {
-        return createDTOList(
+        return postProcessScheduleEventList(createDTOList(
                 summitEventDataStore.getByFilter
                         (
                                 startDate,
@@ -71,7 +73,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                                 venues
                         ),
                 ScheduleItemDTO.class
-        );
+        ));
     }
 
     @Override

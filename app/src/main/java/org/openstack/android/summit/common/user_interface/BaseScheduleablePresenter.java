@@ -24,6 +24,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends IScheduleableInteractor, W extends IScheduleWireframe>
         extends BasePresenter<V, I, W> {
 
+    protected boolean shouldShowVenues        = false;
+    protected boolean isMemberLogged          = false;
+    protected boolean isMemberAttendee        = false;
+
     public interface ToggleScheduleStatusListener{
         void toggle(int position, boolean formerState, IScheduleableItem viewItem);
     }
@@ -39,6 +43,14 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
     public BaseScheduleablePresenter(I interactor, W wireframe, IScheduleablePresenter scheduleablePresenter) {
         super(interactor, wireframe);
         this.scheduleablePresenter = scheduleablePresenter;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        shouldShowVenues        = interactor.shouldShowVenues();
+        isMemberLogged          = interactor.isMemberLoggedIn();
+        isMemberAttendee        = interactor.isMemberLoggedInAndConfirmedAttendee();
     }
 
     protected abstract ScheduleItemDTO getCurrentItem(int position);

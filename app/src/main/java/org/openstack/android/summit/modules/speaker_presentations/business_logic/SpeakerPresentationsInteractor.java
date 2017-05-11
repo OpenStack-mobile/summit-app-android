@@ -36,7 +36,7 @@ public class SpeakerPresentationsInteractor extends ScheduleInteractor implement
     @Override
     public List<ScheduleItemDTO> getSpeakerPresentations(int speakerId, DateTime startDate, DateTime endDate) {
         List<SummitEvent> speakerEvents = summitEventDataStore.getSpeakerEvents(speakerId, startDate, endDate);
-        return createDTOList(speakerEvents, ScheduleItemDTO.class);
+        return postProcessScheduleEventList(createDTOList(speakerEvents, ScheduleItemDTO.class));
     }
 
     @Override

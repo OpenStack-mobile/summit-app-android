@@ -90,10 +90,10 @@ public class SummitAttendeeDataStore
     }
 
     @Override
-    public boolean isEventScheduledByLoggedMember(int memberId, int eventId) {
+    public boolean isEventScheduledByAttendee(int attendeeId, int eventId) {
         return RealmFactory.getSession()
                 .where(SummitAttendee.class)
-                .equalTo("memberId", memberId)
+                .equalTo("id", attendeeId)
                 .equalTo("scheduledEvents.id", eventId)
                 .count() > 0;
     }

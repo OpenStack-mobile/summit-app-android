@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common.business_logic;
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
+import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
@@ -8,11 +9,13 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitDataS
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.Date;
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -43,6 +46,24 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
         this.summitAttendeeDataStore  = summitAttendeeDataStore;
         this.memberDataStore          = memberDataStore;
         this.pushNotificationsManager = pushNotificationsManager;
+    }
+
+    public List<ScheduleItemDTO> postProcessScheduleEventList(List<ScheduleItemDTO> list){
+        // set favorite/schedule
+        int  memberId         =  securityManager.getCurrentMemberId();
+        int currentAttendeeId = 0;
+
+        if(memberId > 0){
+            Member currentMember                 = securityManager.getCurrentMember();
+            SummitAttendee currentSummitAttendee = currentMember.getAttendeeRole();
+            currentAttendeeId                    = currentSummitAttendee != null ? currentSummitAttendee.getId() : 0;
+        }
+
+        for(ScheduleItemDTO item:list){
+            item.setFavorite(memberId           > 0 ? memberDataStore.isEventOnMyFavorites(memberId, item.getId()): false);
+            item.setScheduled(currentAttendeeId > 0 ? summitAttendeeDataStore.isEventScheduledByAttendee(currentAttendeeId, item.getId()): false);
+        }
+        return list;
     }
 
     @Override
@@ -104,13 +125,17 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     @Override
     public boolean isEventScheduledByLoggedMember(int eventId) {
 
-        int memberId = securityManager.getCurrentMemberId();
+        Member member = securityManager.getCurrentMember();
 
-        if (memberId <= 0) {
+        if (member == null) {
             return false;
         }
 
-        return summitAttendeeDataStore.isEventScheduledByLoggedMember(memberId, eventId);
+        SummitAttendee attendee =  member.getAttendeeRole();
+
+        if(attendee == null) return false;
+
+        return summitAttendeeDataStore.isEventScheduledByAttendee(attendee.getId(), eventId);
     }
 
     @Override

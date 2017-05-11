@@ -112,11 +112,11 @@
     <string name="added_2_favorites">Added to Watch Later</string>
     <string name="removed_from_going">Removed from My Schedule</string>
     <string name="added_2_going">Added to My Schedule</string>
-    <string name="error_not_in_favorites">Event %1$i is not in Users Watch Later!.</string>
-    <string name="error_not_in_schedule">Event %1$i is not in Users My Schedule!.</string>
-    <string name="error_event_not_found">Event %1$i not found!.</string>
-    <string name="error_already_in_favorites">Event %1$i is already in Users Watch Later!.</string>
-    <string name="error_already_in_schedule">Event %1$i is already in Users My Schedule!.</string>
+    <string name="error_not_in_favorites">Event %d is not in Users Watch Later!.</string>
+    <string name="error_not_in_schedule">Event %d is not in Users My Schedule!.</string>
+    <string name="error_event_not_found">Event %d not found!.</string>
+    <string name="error_already_in_favorites">Event %d is already in Users Watch Later!.</string>
+    <string name="error_already_in_schedule">Event %d is already in Users My Schedule!.</string>
     <string name="rate">Rate</string>
     <string name="event_details_reviews">%1$d Reviews</string>
     <string name="download_attachment">Download Attachment</string>

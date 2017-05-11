@@ -1,5 +1,9 @@
 package org.openstack.android.summit.common.business_logic;
 
+import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
+
+import java.util.List;
+
 import io.reactivex.Observable;
 
 /**
@@ -22,4 +26,6 @@ public interface IScheduleableInteractor extends IBaseInteractor  {
     boolean shouldShowVenues();
 
     Observable<Boolean> deleteRSVP(int eventId);
+
+    List<ScheduleItemDTO> postProcessScheduleEventList(List<ScheduleItemDTO> list);
 }

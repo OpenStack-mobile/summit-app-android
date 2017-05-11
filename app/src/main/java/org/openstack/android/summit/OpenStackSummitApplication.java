@@ -18,6 +18,7 @@ import org.openstack.android.summit.dagger.components.DaggerApplicationComponent
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * Created by claudio on 11/3/2015.
@@ -43,7 +44,9 @@ public class OpenStackSummitApplication extends Application {
 
         this.initializeInjector();
 
-        Realm.setDefaultConfiguration(RealmFactory.buildDefaultConfiguration(getApplicationContext()));
+        RealmConfiguration realmConfiguration = RealmFactory.buildDefaultConfiguration(getApplicationContext());
+        Realm.setDefaultConfiguration(realmConfiguration);
+        Realm.compactRealm(realmConfiguration);
 
         context = getApplicationContext();
 

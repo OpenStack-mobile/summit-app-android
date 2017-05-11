@@ -25,6 +25,7 @@ import java.util.TimeZone;
 public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extends ScheduleItemDTO> extends AbstractConverter<S, T> {
 
     protected void convertInternal(S source, ScheduleItemDTO scheduleItemDTO) {
+
         scheduleItemDTO.setId(source.getId());
         scheduleItemDTO.setName(source.getName());
         String time = getTime(source);
@@ -73,6 +74,8 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
             scheduleItemDTO.setPresentation(true);
             scheduleItemDTO.setToRecord(source.getPresentation().isToRecord());
         }
+
+
     }
 
     protected Boolean isStarted(S summitEvent){

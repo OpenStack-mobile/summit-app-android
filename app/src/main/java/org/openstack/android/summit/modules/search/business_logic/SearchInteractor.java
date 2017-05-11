@@ -92,13 +92,20 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
     }
 
     @Override
+    public List<ScheduleItemDTO> postProcessScheduleEventList(List<ScheduleItemDTO> list) {
+        return this.scheduleableInteractor.postProcessScheduleEventList(list);
+    }
+
+    @Override
     public List<ScheduleItemDTO> getEventsBySearchTerm(String searchTerm) {
+
         List<SummitEvent> events = summitEventDataStore.getBySearchTerm
         (
             summitSelector.getCurrentSummitId(),
             searchTerm
         );
-        return createDTOList(events, ScheduleItemDTO.class);
+
+        return this.scheduleableInteractor.postProcessScheduleEventList(createDTOList(events, ScheduleItemDTO.class));
     }
 
     @Override

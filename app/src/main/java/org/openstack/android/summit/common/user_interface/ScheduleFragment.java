@@ -168,7 +168,8 @@ public class ScheduleFragment<P extends ISchedulePresenter>
                 startDate = startDate.plusDays(1);
             }
         }
-        ranger.setSelectedDay(formerSelectedDay, false);
+        if(formerSelectedDay > 0)
+            ranger.setSelectedDay(formerSelectedDay, false);
     }
 
 

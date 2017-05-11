@@ -41,6 +41,7 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     private Retrofit restClientUserProfile;
     private Retrofit restClientServiceProfile;
     private ISummitSelector summitSelector;
+    private Summit currentSummit = null;
 
     private static final int EntityEventUpdatesPageSize = 50;
 
@@ -72,6 +73,12 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
     public void pollServer() {
 
         try {
+
+            int summitId = summitSelector.getCurrentSummitId();
+            if(summitId <= 0) return;
+            currentSummit = summitDataStore.getById(summitId);
+
+            if(currentSummit == null) return;
 
             Log.d(Constants.LOG_TAG, "Polling server for data updates");
 
@@ -110,9 +117,8 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
         }
 
         long fromDate = 0;
-        Summit summit = summitDataStore.getById(summitSelector.getCurrentSummitId());
-        if (summit != null) {
-            fromDate = summit.getInitialDataLoadDate().getTime() / 1000L;
+        if (currentSummit != null) {
+            fromDate = currentSummit.getInitialDataLoadDate().getTime() / 1000L;
         }
 
         if (fromDate > 0) {
