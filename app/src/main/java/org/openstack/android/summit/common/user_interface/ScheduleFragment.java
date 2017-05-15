@@ -197,10 +197,11 @@ public class ScheduleFragment<P extends ISchedulePresenter>
 
     @Override
     public void setListPosition(int newPosition){
-
-        scheduleList.setItemAnimator(null);
+        if(scheduleList != null)
+            scheduleList.setItemAnimator(null);
         //scheduleList.scrollToPosition(listPosition);
-        layoutManager.scrollToPositionWithOffset(newPosition, 0);
+        if(layoutManager != null)
+            layoutManager.scrollToPositionWithOffset(newPosition, 0);
     }
 
     @Override

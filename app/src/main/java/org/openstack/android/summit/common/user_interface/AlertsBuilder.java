@@ -37,7 +37,6 @@ public final class AlertsBuilder {
                     .create();
         }
         catch (Exception ex){
-            Log.e(Constants.LOG_TAG, ex.getMessage());
             Crashlytics.logException(ex);
         }
         return null;

@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common.user_interface;
 
 import android.support.v4.app.FragmentManager;
+import com.crashlytics.android.Crashlytics;
 
 /**
  * Created by smarcet on 3/15/17.
@@ -9,9 +10,14 @@ import android.support.v4.app.FragmentManager;
 final public class FragmentBackStackHelper {
 
     public final static void clearAllBackStack(IBaseView context){
-        FragmentManager fragmentManager = context.getSupportFragmentManager();
-        do{
-            fragmentManager.popBackStackImmediate();
-        }while(fragmentManager.getBackStackEntryCount() > 0);
+        try {
+            FragmentManager fragmentManager = context.getSupportFragmentManager();
+            do {
+                fragmentManager.popBackStackImmediate();
+            } while (fragmentManager.getBackStackEntryCount() > 0);
+        }
+        catch (Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 }
