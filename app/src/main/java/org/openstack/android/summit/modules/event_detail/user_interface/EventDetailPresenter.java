@@ -52,7 +52,7 @@ public class EventDetailPresenter
     private boolean loadingFeedback;
     private boolean loadedAllFeedback;
     private              int feedbackPage           = 1;
-    private static final int feedbackObjectsPerPage = 50;
+    private static final int feedbackObjectsPerPage = 100;
     private boolean loadingFeedbackAverage;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
@@ -132,7 +132,7 @@ public class EventDetailPresenter
                 return;
             }
 
-            loadedAllFeedback = false;
+
             myFeedbackForEvent = interactor.getMyFeedbackForEvent(eventId);
 
             view.setName(event.getName());
@@ -223,7 +223,10 @@ public class EventDetailPresenter
         // bind local broadcast receiver
         IntentFilter intentFilter = new IntentFilter();
         // reset page
-        feedbackPage = 1;
+        feedbackPage      = 1;
+        loadedAllFeedback = false;
+        feedbackList      = new ArrayList<>();
+
         intentFilter.addAction(Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT);
         intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED);
         intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED);
@@ -236,6 +239,14 @@ public class EventDetailPresenter
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
+    }
+
+    private void setLoadedAllFeedback(boolean loadedAllFeedback){
+        this.loadedAllFeedback = loadedAllFeedback;
+    }
+
+    private void incCurrentPage(){
+        feedbackPage = feedbackPage + 1;
     }
 
     public void loadFeedback() {
@@ -263,8 +274,8 @@ public class EventDetailPresenter
 
                             feedbackList.addAll(feedbackPageWithoutMe);
                             view.setOtherPeopleFeedback(feedbackList);
-                            feedbackPage++;
-                            loadedAllFeedback = data.size() < feedbackObjectsPerPage;
+                            incCurrentPage();
+                            setLoadedAllFeedback(data.size() < feedbackObjectsPerPage);
                             view.toggleLoadMore(!loadedAllFeedback);
                             int reviewCount = feedbackList.size();
                             if(myFeedbackForEvent != null) ++reviewCount;
