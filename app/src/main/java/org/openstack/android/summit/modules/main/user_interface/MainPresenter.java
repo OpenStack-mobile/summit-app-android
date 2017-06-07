@@ -419,36 +419,42 @@ public class MainPresenter
 
     @Override
     public void onClickLoginButton() {
-        userLoginButtonInteraction = UserLoginButtonInteraction.ClickLogIn;
+        try {
+            userLoginButtonInteraction = UserLoginButtonInteraction.ClickLogIn;
+            boolean isUserLogged       = securityManager.isLoggedIn();
+            view.showActivityIndicator();
 
-        view.showActivityIndicator();
+            if (!isUserLogged && !reachability.isNetworkingAvailable(view.getApplicationContext())) {
+                view.hideActivityIndicator();
+                AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_connectivity).show();
+                return;
+            }
 
-        if (!reachability.isNetworkingAvailable(view.getApplicationContext())) {
+            if (!isUserLogged && !interactor.isDataLoaded()) {
+                view.hideActivityIndicator();
+                AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_data).show();
+                //launchSummitListDataLoadingActivity();
+                return;
+            }
+
+            disableDataUpdateService();
+
+            // LOGIN
+            if (!isUserLogged) {
+                securityManager.login((Activity) view);
+                return;
+            }
+
+            // LOGOUT
+            userLoginButtonInteraction = UserLoginButtonInteraction.ClickLogOut;
+            securityManager.logout(true);
+        }
+        catch (Exception ex){
+            Crashlytics.logException(ex);
+        }
+        finally {
             view.hideActivityIndicator();
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_connectivity).show();
-            return;
         }
-
-        disableDataUpdateService();
-
-        if (!interactor.isDataLoaded()) {
-            view.hideActivityIndicator();
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_data).show();
-            //launchSummitListDataLoadingActivity();
-            return;
-        }
-
-        // LOGIN
-        if (!securityManager.isLoggedIn()) {
-            securityManager.login((Activity)view);
-            return;
-        }
-
-        // LOGOUT
-        userLoginButtonInteraction = UserLoginButtonInteraction.ClickLogOut;
-
-        securityManager.logout(true);
-        view.hideActivityIndicator();
     }
 
     @Override
