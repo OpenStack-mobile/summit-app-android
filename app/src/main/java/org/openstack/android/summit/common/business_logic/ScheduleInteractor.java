@@ -6,11 +6,8 @@ import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
-import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -28,13 +25,11 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     private ISession session;
     private final String PUSH_NOTIFICATIONS_SUBSCRIBED_KEY = "PUSH_NOTIFICATIONS_SUBSCRIBED_KEY";
 
-
     @Inject
     public ScheduleInteractor
     (
             ISummitEventDataStore summitEventDataStore,
             ISummitDataStore summitDataStore,
-            ISummitAttendeeDataStore summitAttendeeDataStore,
             IMemberDataStore memberDataStore,
             IDTOAssembler dtoAssembler,
             ISecurityManager securityManager,
@@ -45,7 +40,6 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
         super
         (
             summitEventDataStore,
-            summitAttendeeDataStore,
             summitDataStore,
             memberDataStore,
             dtoAssembler,
@@ -105,6 +99,15 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     public boolean eventExist(int id) {
         SummitEvent summitEvent = summitEventDataStore.getById(id);
         return summitEvent != null;
+    }
+
+    @Override
+    public ScheduleItemDTO getEvent(int eventId) {
+        SummitEvent event= summitEventDataStore.getById(eventId);
+        if(event != null){
+            return postProcessScheduleEvent(securityManager.getCurrentMemberId(), createDTO(event, ScheduleItemDTO.class));
+        }
+        return null;
     }
 
 }

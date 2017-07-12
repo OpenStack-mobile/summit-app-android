@@ -86,7 +86,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                         throw Exceptions.propagate(ex);
                     }
                     return member;
-                });
+                }).doOnTerminate(RealmFactory::closeSession);
     }
 
     @Override
@@ -106,7 +106,8 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                    }
 
                    return nonConfirmedSummitAttendeeDeserializer.deserializeArray(response.body().string());
-                });
+                })
+                .doOnTerminate(RealmFactory::closeSession);
     }
 
     @Override
@@ -131,9 +132,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                         throw new Exception(String.format("getAttendeesForTicketOrder: http error code %d", response.code()));
                     }
                     return true;
-                }).doOnTerminate( () ->
-                        RealmFactory.closeSession()
-                );
+                }).doOnTerminate(RealmFactory::closeSession);
     }
 
     @Override
@@ -170,9 +169,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                     }
                     return Integer.parseInt(response.body().string());
                 })
-                .doOnTerminate( () ->
-                        RealmFactory.closeSession()
-                );
+                .doOnTerminate(RealmFactory::closeSession);
     }
 
     @Override
@@ -209,9 +206,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                     }
                     return true;
                 })
-                .doOnTerminate( () ->
-                        RealmFactory.closeSession()
-                );
+                .doOnTerminate(RealmFactory::closeSession);
     }
 
     @Override
@@ -254,9 +249,7 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                     }
                     return true;
                 })
-                .doOnTerminate( () ->
-                        RealmFactory.closeSession()
-                );
+                .doOnTerminate(RealmFactory::closeSession);
     }
 
     @Override
@@ -302,5 +295,134 @@ public class MemberRemoteDataStore extends BaseRemoteDataStore implements IMembe
                 .doOnTerminate( () ->
                         RealmFactory.closeSession()
                 );
+    }
+
+    @Override
+    public Observable<Boolean> addEventToSchedule(int summitId, int eventId) {
+        return memberApi.addToMySchedule(summitId, eventId)
+                .subscribeOn(Schedulers.io())
+                .map(response -> {
+                    if (!response.isSuccessful()) {
+                        switch (response.code()) {
+                            case 412:
+                                throw new ValidationException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_already_in_schedule),
+                                                                eventId
+                                                        )
+                                        );
+                            case 404:
+
+                                throw new NotFoundEntityException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                                eventId
+                                                        )
+                                        );
+                            default:
+
+                                throw new Exception
+                                        (
+                                                String.format
+                                                        (
+                                                                "addEventToSchedule: http error %d",
+                                                                response.code()
+                                                        )
+                                        );
+                        }
+                    }
+                    return true;
+                })
+                .doOnTerminate(RealmFactory::closeSession);
+    }
+
+    @Override
+    public Observable<Boolean> removeEventFromSchedule(int summitId, int eventId) {
+        return memberApi.removeFromMySchedule(summitId, eventId)
+                .subscribeOn(Schedulers.io())
+                .map(response -> {
+                    if (!response.isSuccessful()) {
+                        switch (response.code()) {
+                            case 412:
+                                throw new ValidationException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_not_in_schedule),
+                                                                eventId
+                                                        )
+                                        );
+                            case 404:
+
+                                throw new NotFoundEntityException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                                eventId
+                                                        )
+                                        );
+                            default:
+
+                                throw new Exception
+                                        (
+                                                String.format
+                                                        (
+                                                                "removeEventFromSchedule: http error %d",
+                                                                response.code()
+                                                        )
+                                        );
+                        }
+                    }
+                    return true;
+                })
+                .doOnTerminate(RealmFactory::closeSession);
+    }
+
+    @Override
+    public Observable<Boolean> deleteRSVP(int summitId, int eventId) {
+        return memberApi.deleteRSVP(summitId, eventId)
+                .subscribeOn(Schedulers.io())
+                .map(response -> {
+                    if (!response.isSuccessful()) {
+                        switch (response.code()) {
+                            case 412:
+                                throw new ValidationException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_already_in_schedule),
+                                                                eventId
+                                                        )
+                                        );
+                            case 404:
+
+                                throw new NotFoundEntityException
+                                        (
+                                                String.format
+                                                        (
+                                                                OpenStackSummitApplication.context.getString(R.string.error_event_not_found),
+                                                                eventId
+                                                        )
+                                        );
+                            default:
+
+                                throw new Exception
+                                        (
+                                                String.format
+                                                        (
+                                                                "deleteRSVP: http error %d",
+                                                                response.code()
+                                                        )
+                                        );
+                        }
+                    }
+                    return true;
+                })
+                .doOnTerminate(RealmFactory::closeSession);
     }
 }

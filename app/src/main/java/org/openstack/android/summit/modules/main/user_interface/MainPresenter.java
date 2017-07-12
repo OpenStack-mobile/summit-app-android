@@ -689,7 +689,7 @@ public class MainPresenter
     }
 
 
-    private void showMyProfileView(String defaultTabTitle) {
+    private void  showMyProfileView(String defaultTabTitle) {
         if (!interactor.isDataLoaded()) {
             AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
             return;

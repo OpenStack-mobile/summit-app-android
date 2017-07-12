@@ -51,7 +51,17 @@ public class FavoriteScheduleModule {
             ISummitSelector summitSelector
     )
     {
-        return new FavoritesScheduleInteractor(memberDataStore, summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+        return new FavoritesScheduleInteractor
+                   (
+                           memberDataStore,
+                           summitEventDataStore,
+                           summitDataStore,
+                           dtoAssembler,
+                           securityManager,
+                           pushNotificationsManager,
+                           session,
+                           summitSelector
+                   );
     }
 
     @Provides

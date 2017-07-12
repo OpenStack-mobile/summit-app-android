@@ -62,7 +62,7 @@
     <string name="eventbrite_order_already_in_use">This Order# has already been associated with another user. If you feel this is an error, please contact summitsupport@openstack.org or enter a different Order #.</string>
     <string name="eventbrite_multiple_matches">Multiple tickets are assigned to provided order #. Please pick your name from the list to finish confirmation process</string>
     <string name="eventbrite_order_confirm">EventBrite Order</string>
-    <string name="eventbrite_add_order_number">Add your Eventbrite Order # to unlock features only available for Registered Summit attendees.</string>
+    <string name="eventbrite_add_order_number">Add your Eventbrite Order # to associate your OpenStackID with your Summit purchase.</string>
     <string name="eventbrite_order_number">Insert your Order #</string>
     <string name="cannot_navigate_event">It\'s not possible to view this event right now. Please try again later.</string>
     <string name="event_not_exist">This event was removed from schedule.</string>

@@ -8,8 +8,8 @@ import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
 
     @Override
-    public void build(IScheduleItemView scheduleItemView, ScheduleItemDTO scheduleItemDTO, boolean isMemberLoggedIn, boolean isMemberLoggedInAndAttendee, boolean isEventScheduledByLoggedMember, boolean isEventFavoriteByLoggedMember, boolean useFullDate, boolean showVenues, String rsvpLink, boolean externalRSVP, boolean allowRate, boolean toBeRecorded) {
-         build(scheduleItemView, scheduleItemDTO, isMemberLoggedIn, isMemberLoggedInAndAttendee, isEventScheduledByLoggedMember, isEventFavoriteByLoggedMember,  useFullDate, showVenues, rsvpLink, externalRSVP, allowRate, toBeRecorded, true, true);
+    public void build(IScheduleItemView scheduleItemView, ScheduleItemDTO scheduleItemDTO, boolean isMemberLoggedIn, boolean isEventScheduledByLoggedMember, boolean isEventFavoriteByLoggedMember, boolean useFullDate, boolean showVenues, String rsvpLink, boolean externalRSVP, boolean allowRate, boolean toBeRecorded) {
+         build(scheduleItemView, scheduleItemDTO, isMemberLoggedIn, isEventScheduledByLoggedMember, isEventFavoriteByLoggedMember,  useFullDate, showVenues, rsvpLink, externalRSVP, allowRate, toBeRecorded, true, true);
     }
 
     @Override
@@ -18,7 +18,6 @@ public class ScheduleItemViewBuilder implements IScheduleItemViewBuilder {
         IScheduleItemView scheduleItemView,
         ScheduleItemDTO scheduleItemDTO,
         boolean isMemberLoggedIn,
-        boolean isMemberLoggedInAndAttendee,
         boolean isEventScheduledByLoggedMember,
         boolean isEventFavoriteByLoggedMember,
         boolean useFullDate,

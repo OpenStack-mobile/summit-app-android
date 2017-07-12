@@ -7,7 +7,6 @@ import org.openstack.android.summit.common.data_access.repositories.IMemberDataS
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.network.IReachability;
@@ -25,7 +24,6 @@ public class GeneralScheduleInteractor extends ScheduleInteractor implements IGe
         ISummitEventDataStore summitEventDataStore,
         IMemberDataStore memberDataStore,
         ISummitDataStore summitDataStore,
-        ISummitAttendeeDataStore summitAttendeeDataStore,
         IDTOAssembler dtoAssembler,
         ISecurityManager securityManager,
         IPushNotificationsManager pushNotificationsManager,
@@ -37,7 +35,6 @@ public class GeneralScheduleInteractor extends ScheduleInteractor implements IGe
         (
             summitEventDataStore,
             summitDataStore,
-            summitAttendeeDataStore,
             memberDataStore,
             dtoAssembler,
             securityManager,

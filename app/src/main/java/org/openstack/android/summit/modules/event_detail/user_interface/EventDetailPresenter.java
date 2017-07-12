@@ -62,7 +62,10 @@ public class EventDetailPresenter
 
                 if (intent.getAction() == Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT
                         || intent.getAction() == Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED
-                        || intent.getAction() == Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED ) {
+                        || intent.getAction() == Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED
+                        || intent.getAction() == Constants.DATA_UPDATE_MY_FAVORITE_EVENT_ADDED
+                        || intent.getAction() == Constants.DATA_UPDATE_MY_FAVORITE_EVENT_DELETED
+                        ) {
                     int entityId = intent.getIntExtra(Constants.DATA_UPDATE_ENTITY_ID, 0);
                     String entityClassName = intent.getStringExtra(Constants.DATA_UPDATE_ENTITY_CLASS);
                     if (eventId == entityId)
@@ -131,7 +134,6 @@ public class EventDetailPresenter
                 if(dialog != null) dialog.show();
                 return;
             }
-
 
             myFeedbackForEvent = interactor.getMyFeedbackForEvent(eventId);
 
@@ -230,6 +232,8 @@ public class EventDetailPresenter
         intentFilter.addAction(Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT);
         intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED);
         intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED);
+        intentFilter.addAction(Constants.DATA_UPDATE_MY_FAVORITE_EVENT_ADDED);
+        intentFilter.addAction(Constants.DATA_UPDATE_MY_FAVORITE_EVENT_DELETED);
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
         updateUI();
         updateActions();

@@ -48,6 +48,10 @@ public class BaseInteractor implements IBaseInteractor {
         return dtos;
     }
 
+    protected <S extends IEntity, D> D createDTO(S source, Class<D> destinationType) {
+       return  dtoAssembler.createDTO(source, destinationType);
+    }
+
     @Override
     public boolean isDataLoaded() {
         Summit summit = summitDataStore.getById(summitSelector.getCurrentSummitId());

@@ -5,7 +5,6 @@ import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
 import org.openstack.android.summit.common.business_logic.ScheduleableInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
@@ -25,7 +24,6 @@ public class ScheduleableModule {
     IScheduleableInteractor providesScheduleableInteractor
     (
                     ISummitEventDataStore summitEventDataStore,
-                    ISummitAttendeeDataStore summitAttendeeDataStore,
                     ISummitDataStore summitDataStore,
                     IMemberDataStore memberDataStore,
                     IDTOAssembler dtoAssembler,
@@ -34,7 +32,7 @@ public class ScheduleableModule {
                     ISummitSelector summitSelector
     )
     {
-        return new ScheduleableInteractor(summitEventDataStore, summitAttendeeDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, summitSelector);
+        return new ScheduleableInteractor(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, summitSelector);
     }
 
     @Provides

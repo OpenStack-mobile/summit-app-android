@@ -34,4 +34,6 @@ public interface IScheduleView extends IBaseView {
 
     void setListPosition(int newPosition);
 
+    void reloadItem(int position);
+
 }

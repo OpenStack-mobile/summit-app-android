@@ -4,7 +4,6 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Member;
@@ -25,14 +24,12 @@ import io.reactivex.Observable;
 public class ScheduleableInteractor extends BaseInteractor implements IScheduleableInteractor {
 
     protected ISummitEventDataStore     summitEventDataStore;
-    protected ISummitAttendeeDataStore  summitAttendeeDataStore;
     protected IPushNotificationsManager pushNotificationsManager;
     protected IMemberDataStore          memberDataStore;
 
     public ScheduleableInteractor
     (
             ISummitEventDataStore summitEventDataStore,
-            ISummitAttendeeDataStore summitAttendeeDataStore,
             ISummitDataStore summitDataStore,
             IMemberDataStore memberDataStore,
             IDTOAssembler dtoAssembler,
@@ -43,7 +40,6 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
         super(securityManager, dtoAssembler, summitSelector, summitDataStore);
 
         this.summitEventDataStore     = summitEventDataStore;
-        this.summitAttendeeDataStore  = summitAttendeeDataStore;
         this.memberDataStore          = memberDataStore;
         this.pushNotificationsManager = pushNotificationsManager;
     }
@@ -51,26 +47,24 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
     public List<ScheduleItemDTO> postProcessScheduleEventList(List<ScheduleItemDTO> list){
         // set favorite/schedule
         int  memberId         =  securityManager.getCurrentMemberId();
-        int currentAttendeeId = 0;
-
-        if(memberId > 0){
-            Member currentMember                 = securityManager.getCurrentMember();
-            SummitAttendee currentSummitAttendee = currentMember.getAttendeeRole();
-            currentAttendeeId                    = currentSummitAttendee != null ? currentSummitAttendee.getId() : 0;
-        }
 
         for(ScheduleItemDTO item:list){
-            item.setFavorite(memberId           > 0 ? memberDataStore.isEventOnMyFavorites(memberId, item.getId()): false);
-            item.setScheduled(currentAttendeeId > 0 ? summitAttendeeDataStore.isEventScheduledByAttendee(currentAttendeeId, item.getId()): false);
+            postProcessScheduleEvent(memberId, item);
         }
         return list;
+    }
+
+    protected ScheduleItemDTO postProcessScheduleEvent(int memberId, ScheduleItemDTO item){
+        item.setFavorite(memberId    > 0 ? memberDataStore.isEventOnMyFavorites(memberId, item.getId()): false);
+        item.setScheduled(memberId   > 0 ? memberDataStore.isEventScheduledByMember(memberId, item.getId()): false);
+        return item;
     }
 
     @Override
     public Observable<Boolean> addEventToLoggedInMemberSchedule(int eventId)
     {
 
-        if (!securityManager.isLoggedInAndConfirmedAttendee()) {
+        if (!securityManager.isLoggedIn()) {
             return Observable.just(false);
         }
 
@@ -80,15 +74,15 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
         if(summitEvent == null)
             return Observable.just(false);
 
-        return summitAttendeeDataStore
-                .addEventToMemberSchedule(loggedInMember.getAttendeeRole(), summitEvent)
+        return memberDataStore
+                .addEventToMemberSchedule(loggedInMember, summitEvent)
                 .doOnNext(res -> pushNotificationsManager.subscribeToEvent(eventId));
     }
 
     @Override
     public Observable<Boolean> removeEventFromLoggedInMemberSchedule(int eventId)
     {
-        if (!this.isMemberLoggedInAndConfirmedAttendee()) {
+        if (!this.isMemberLoggedIn()) {
             return Observable.just(false);
         }
 
@@ -98,15 +92,15 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
         if(summitEvent == null)
             return Observable.just(false);
 
-        return summitAttendeeDataStore
-                .removeEventFromMemberSchedule(loggedInMember.getAttendeeRole(), summitEvent)
+        return memberDataStore
+                .removeEventFromMemberSchedule(loggedInMember, summitEvent)
                 .doOnNext(res -> pushNotificationsManager.unsubscribeFromEvent(eventId));
     }
 
     @Override
     public Observable<Boolean> deleteRSVP(int eventId)
     {
-        if (!this.isMemberLoggedInAndConfirmedAttendee()) {
+        if (!this.isMemberLoggedIn()) {
             return Observable.just(false);
         }
 
@@ -116,8 +110,8 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
         if(summitEvent == null)
             return Observable.just(false);
 
-        return summitAttendeeDataStore
-                .deleteRSVP(loggedInMember.getAttendeeRole(), summitEvent)
+        return memberDataStore
+                .deleteRSVP(loggedInMember, summitEvent)
                 .doOnNext(res -> pushNotificationsManager.unsubscribeFromEvent(eventId));
     }
 
@@ -131,11 +125,7 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
             return false;
         }
 
-        SummitAttendee attendee =  member.getAttendeeRole();
-
-        if(attendee == null) return false;
-
-        return summitAttendeeDataStore.isEventScheduledByAttendee(attendee.getId(), eventId);
+        return memberDataStore.isEventScheduledByMember(member.getId(), eventId);
     }
 
     @Override

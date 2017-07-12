@@ -7,7 +7,6 @@ import org.openstack.android.summit.common.data_access.repositories.IMemberDataS
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.ISession;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -42,7 +41,6 @@ public class PersonalScheduleModule {
             IMemberDataStore memberDataStore,
             ISummitEventDataStore summitEventDataStore,
             ISummitDataStore summitDataStore,
-            ISummitAttendeeDataStore summitAttendeeDataStore,
             IDTOAssembler dtoAssembler,
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
@@ -50,7 +48,17 @@ public class PersonalScheduleModule {
             ISummitSelector summitSelector
     )
     {
-        return new PersonalScheduleInteractor(memberDataStore, summitEventDataStore, summitDataStore, summitAttendeeDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+        return new PersonalScheduleInteractor
+                   (
+                           memberDataStore,
+                           summitEventDataStore,
+                           summitDataStore,
+                           dtoAssembler,
+                           securityManager,
+                           pushNotificationsManager,
+                           session,
+                           summitSelector
+                   );
     }
 
     @Provides

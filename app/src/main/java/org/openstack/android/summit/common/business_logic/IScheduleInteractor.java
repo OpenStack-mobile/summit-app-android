@@ -15,4 +15,6 @@ public interface IScheduleInteractor extends IScheduleableInteractor {
     List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues);
 
     boolean eventExist(int id);
+
+    ScheduleItemDTO getEvent(int eventId);
 }

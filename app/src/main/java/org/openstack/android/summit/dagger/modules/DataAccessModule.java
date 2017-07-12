@@ -2,12 +2,9 @@ package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
-
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.ISummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
-import org.openstack.android.summit.common.data_access.SummitAttendeeRemoteDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
@@ -376,19 +373,9 @@ public class DataAccessModule {
     }
 
     @Provides
-    ISummitAttendeeRemoteDataStore providesSummitAttendeeRemoteDataStore
-    (
-        @Named("MemberProfileRXJava2") Retrofit restClient,
-        ISummitSelector summitSelector
-    )
-    {
-        return new SummitAttendeeRemoteDataStore(restClient, summitSelector);
-    }
-
-    @Provides
-    ISummitAttendeeDataStore providesSummitAttendeeDataStore(ISummitAttendeeRemoteDataStore summitAttendeeRemoteDataStore, ISaveOrUpdateStrategy saveOrUpdateStrategy,
+    ISummitAttendeeDataStore providesSummitAttendeeDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
                                                              IDeleteStrategy deleteStrategy) {
-        return new SummitAttendeeDataStore(summitAttendeeRemoteDataStore, saveOrUpdateStrategy, deleteStrategy);
+        return new SummitAttendeeDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
@@ -437,7 +424,6 @@ public class DataAccessModule {
     (
             ISaveOrUpdateStrategy saveOrUpdateStrategy,
             IDeleteStrategy deleteStrategy,
-            ISummitAttendeeDataStore summitAttendeeDataStore,
             ISummitDataStore summitDataStore,
             ITrackGroupDataStore trackGroupDataStore,
             IVenueDataStore venueDataStore,
@@ -456,7 +442,7 @@ public class DataAccessModule {
     {
         return new DataUpdateStrategyFactory(
                 new DataUpdateStrategy(summitSelector),
-                new MyScheduleDataUpdateStrategy(summitAttendeeDataStore, securityManager, summitSelector),
+                new MyScheduleDataUpdateStrategy(memberDataStore, securityManager, summitSelector),
                 new MyFavoriteDataUpdateStrategy(memberDataStore, securityManager, summitSelector),
                 new SummitDataUpdateStrategy(summitDataStore, summitSelector),
                 new TrackGroupDataUpdateStrategy(trackGroupDataStore, summitSelector),

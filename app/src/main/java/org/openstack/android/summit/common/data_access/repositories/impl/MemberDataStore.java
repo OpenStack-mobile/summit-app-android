@@ -25,6 +25,7 @@ import io.reactivex.Observable;
  * Created by Claudio Redi on 12/16/2015.
  */
 public class MemberDataStore extends GenericDataStore<Member> implements IMemberDataStore {
+
     private IMemberRemoteDataStore memberRemoteDataStore;
 
     public MemberDataStore
@@ -111,39 +112,43 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
     }
 
     @Override
-    public void addEventToMyFavoritesLocal(Member me, SummitEvent summitEvent) {
+    public boolean addEventToMyFavoritesLocal(Member me, SummitEvent summitEvent) {
         try {
 
-            RealmFactory.transaction(session -> {
+            return RealmFactory.transaction(session -> {
                 if (me.getFavoriteEvents().where().equalTo("id", summitEvent.getId()).count() == 0){
                     Log.d(Constants.LOG_TAG, String.format("adding event %s to my favorites", summitEvent.getId()));
                     me.getFavoriteEvents().add(summitEvent);
+                    return true;
                 }
-                return Void.getInstance();
+                return false;
             });
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             Crashlytics.logException(e);
         }
+        return false;
     }
 
     @Override
-    public void removeEventFromMyFavoritesLocal(Member me, SummitEvent summitEvent) {
+    public boolean removeEventFromMyFavoritesLocal(Member me, SummitEvent summitEvent) {
         try{
-            RealmFactory.transaction(session -> {
+            return RealmFactory.transaction(session -> {
                 if (me.getFavoriteEvents().where().equalTo("id", summitEvent.getId()).count() > 0) {
                     SummitEvent entityRealm = session.where(SummitEvent.class).equalTo("id", summitEvent.getId()).findFirst();
                     Log.d(Constants.LOG_TAG, String.format("removing event %s to favorites ", summitEvent.getId()));
                     me.getFavoriteEvents().remove(entityRealm);
+                    return true;
                 }
-                return Void.getInstance();
+                return false;
             });
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
             Crashlytics.logException(e);
         }
+        return false;
     }
 
     @Override
@@ -193,6 +198,120 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
                 .equalTo("id", memberId)
                 .equalTo("favoriteEvents.id", eventId)
                 .count() > 0;
+    }
+
+    @Override
+    public Observable<Boolean> addEventToMemberSchedule(Member me, final SummitEvent summitEvent)
+    {
+
+        int attendeeId = me.getId();
+        int eventId  = summitEvent.getId();
+
+        addEventToMemberScheduleLocal(
+                me,
+                summitEvent
+        );
+
+        return memberRemoteDataStore
+                .addEventToSchedule(summitEvent.getSummit().getId(), summitEvent.getId())
+                .doOnError( res -> {
+                    removeEventFromMemberScheduleLocal(
+                            getById(attendeeId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                });
+    }
+
+    @Override
+    public boolean addEventToMemberScheduleLocal(final Member me, final SummitEvent summitEvent) {
+
+        try {
+
+            return RealmFactory.transaction(session -> {
+                if (me.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() == 0){
+                    Log.d(Constants.LOG_TAG, String.format("adding event %s to myschedule", summitEvent.getId()));
+                    me.getScheduledEvents().add(summitEvent);
+                    return true;
+                }
+                return false;
+            });
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            Crashlytics.logException(e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removeEventFromMemberScheduleLocal(final Member me, final SummitEvent summitEvent) {
+        try{
+            return RealmFactory.transaction(session -> {
+                if (me.getScheduledEvents().where().equalTo("id", summitEvent.getId()).count() > 0) {
+                    SummitEvent entityRealm = session.where(SummitEvent.class).equalTo("id", summitEvent.getId()).findFirst();
+                    Log.d(Constants.LOG_TAG, String.format("removing event %s to myschedule", summitEvent.getId()));
+                    me.getScheduledEvents().remove(entityRealm);
+                    return true;
+                }
+                return false;
+            });
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, e.getMessage(), e);
+            Crashlytics.logException(e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isEventScheduledByMember(int memberId, int eventId) {
+        return RealmFactory.getSession()
+                .where(Member.class)
+                .equalTo("id", memberId)
+                .equalTo("scheduledEvents.id", eventId)
+                .count() > 0;
+    }
+
+    @Override
+    public Observable<Boolean> removeEventFromMemberSchedule(Member me, SummitEvent summitEvent) {
+
+        int attendeeId = me.getId();
+        int eventId  = summitEvent.getId();
+
+        removeEventFromMemberScheduleLocal(
+                me,
+                summitEvent
+        );
+
+        return memberRemoteDataStore
+                .removeEventFromSchedule(summitEvent.getSummit().getId(), summitEvent.getId())
+                .doOnError( res -> {
+                    addEventToMemberScheduleLocal(
+                            getById(attendeeId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                });
+    }
+
+    @Override
+    public Observable<Boolean> deleteRSVP(Member me, SummitEvent summitEvent) {
+
+        int attendeeId = me.getId();
+        int eventId  = summitEvent.getId();
+
+        removeEventFromMemberScheduleLocal(
+                me,
+                summitEvent
+        );
+
+        return memberRemoteDataStore
+                .deleteRSVP(summitEvent.getSummit().getId(), summitEvent.getId())
+                .doOnError( res -> {
+                    addEventToMemberScheduleLocal(
+                            getById(attendeeId),
+                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
+                    );
+                });
     }
 
 }

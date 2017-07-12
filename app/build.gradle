@@ -198,7 +198,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:design:25.3.1'
     compile 'jp.wasabeef:recyclerview-animators:2.2.5'
     compile 'net.danlew:android.joda:2.9.7'
     compile 'com.google.code.gson:gson:2.7'
@@ -242,7 +242,7 @@ dependencies {
     // Tags
     compile 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
     // google maps
-    compile 'com.google.android.gms:play-services-maps:10.2.1'
+    compile 'com.google.android.gms:play-services-maps:10.2.4'
     // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION: due oo many method references: (max is 65536)
     // https://github.com/BoltsFramework/Bolts-Android
     compile 'com.android.support:multidex:1.0.1'
@@ -267,7 +267,7 @@ dependencies {
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.android.support:support-annotations:25.3.0'
+    androidTestCompile 'com.android.support:support-annotations:25.3.1'
 
     if (file('libs/safe_storage.aar').exists()) {
         println('adding dependency safe_storage.aar ...')

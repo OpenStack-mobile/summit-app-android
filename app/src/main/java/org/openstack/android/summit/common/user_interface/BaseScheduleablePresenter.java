@@ -66,11 +66,6 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
             return;
         }
 
-        if(!this.interactor.isMemberLoggedInAndConfirmedAttendee()){
-            buildAttendeeModal().show();
-            return;
-        }
-
         if(toggleScheduleStatusListener != null){
             toggleScheduleStatusListener.toggle(position, formerState, scheduleItemView);
         }
@@ -150,11 +145,6 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
 
         if(!this.interactor.isMemberLoggedIn()){
             buildLoginModal().show();
-            return;
-        }
-
-        if(!this.interactor.isMemberLoggedInAndConfirmedAttendee()){
-            buildAttendeeModal().show();
             return;
         }
 
@@ -262,25 +252,6 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                     dialog.dismiss();
                 })
                 .setNegativeButton(R.string.alert_login_required_cancel, (dialog, id) -> {
-                    dialog.dismiss();
-                });
-        return builder.create();
-    }
-
-    protected AlertDialog buildAttendeeModal(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getFragmentActivity());
-        onBeforeAttendeeModal();
-        builder.setTitle(R.string.alert_attendee_required_title)
-                .setMessage(R.string.alert_attendee_required_body)
-                .setPositiveButton(R.string.alert_attendee_required_ok, (dialog, id) -> {
-                    Intent intent = new Intent(Constants.DO_EXTERNAL_REDEEM_ORDER_EVENT);
-                    LocalBroadcastManager
-                            .getInstance(OpenStackSummitApplication.context)
-                            .sendBroadcast(intent);
-
-                    dialog.dismiss();
-                })
-                .setNegativeButton(R.string.alert_attendee_required_cancel, (dialog, id) -> {
                     dialog.dismiss();
                 });
         return builder.create();

@@ -64,7 +64,7 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
             int memberId                         = loggedInMember.getId();
             int speakerId                        = loggedInMember.getSpeakerRole()  != null ? loggedInMember.getSpeakerRole().getId() : 0;
             int attendeeId                       = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getId() : 0;
-            ArrayList<Integer> scheduleEventsIds = loggedInMember.getAttendeeRole() != null ? loggedInMember.getAttendeeRole().getScheduleEventIds(): null;
+            ArrayList<Integer> scheduleEventsIds = loggedInMember.getAttendeeRole() != null ? loggedInMember.getScheduleEventIds(): null;
             pushNotificationsManager.subscribeMember(memberId, summitId, speakerId, attendeeId, scheduleEventsIds);
             return;
         }

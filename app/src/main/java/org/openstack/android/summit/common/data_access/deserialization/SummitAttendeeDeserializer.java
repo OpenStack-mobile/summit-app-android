@@ -40,25 +40,6 @@ public class SummitAttendeeDeserializer extends BaseDeserializer implements ISum
         if(attendee == null)
             attendee = RealmFactory.getSession().createObject(SummitAttendee.class, attendeeId);
 
-        SummitEvent summitEvent;
-        int summitEventId = 0;
-        JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule");
-
-        attendee.getScheduledEvents().clear();
-
-        for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
-            try {
-                summitEventId = jsonArraySummitEvents.getInt(i);
-                summitEvent   = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", summitEventId).findFirst();
-                if (summitEvent != null) {
-                    attendee.getScheduledEvents().add(summitEvent);
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.e(Constants.LOG_TAG, String.format("Error deserializing schedule event %s", summitEventId), e);
-            }
-        }
-
         TicketType ticketType;
         int ticketTypeId;
         JSONArray jsonArrayTicketTypes = jsonObject.getJSONArray("tickets");

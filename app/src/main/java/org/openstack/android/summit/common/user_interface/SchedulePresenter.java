@@ -20,12 +20,13 @@ import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.IScheduleWireframe;
 import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
-import org.openstack.android.summit.common.business_logic.InteractorAsyncOperationListener;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Claudio Redi on 12/28/2015.
@@ -36,8 +37,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     protected boolean setNowButtonInitialState = false;
     protected List<ScheduleItemDTO> dayEvents;
+    protected Map<Integer,Integer> eventPosIds = new HashMap<>();
     protected IScheduleFilter scheduleFilter;
-    protected InteractorAsyncOperationListener<ScheduleItemDTO> scheduleItemDTOIInteractorOperationListener;
     protected IScheduleItemViewBuilder scheduleItemViewBuilder;
     protected Integer selectedDay             = null;
     protected boolean hasToCheckDisabledDates = true;
@@ -46,7 +47,34 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            onResume();
+            try {
+
+                if (    intent.getAction() == Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT
+                        || intent.getAction() == Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED
+                        || intent.getAction() == Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED
+                        || intent.getAction() == Constants.DATA_UPDATE_MY_FAVORITE_EVENT_ADDED
+                        || intent.getAction() == Constants.DATA_UPDATE_MY_FAVORITE_EVENT_DELETED
+                        ) {
+                    int entityId = intent.getIntExtra(Constants.DATA_UPDATE_ENTITY_ID, 0);
+                    String entityClassName = intent.getStringExtra(Constants.DATA_UPDATE_ENTITY_CLASS);
+
+                    if(entityId > 0 && eventPosIds.containsKey(entityId) && !dayEvents.isEmpty()){
+                        int pos                    = eventPosIds.get(entityId);
+                        if (dayEvents.size() - 1 < pos || pos < 0) return;
+                        ScheduleItemDTO updateItem = interactor.getEvent(entityId);
+                        if(updateItem == null) return;
+
+                        dayEvents.set(pos, updateItem);
+
+                        view.getFragmentActivity().runOnUiThread( () -> {
+                            view.reloadItem(pos);
+                        });
+                    }
+                }
+
+            } catch (Exception ex) {
+                Crashlytics.logException(new Exception(String.format("Action %s", intent.getAction()), ex));
+            }
         }
     };
 
@@ -64,18 +92,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         super(interactor, wireframe, scheduleablePresenter);
         this.scheduleItemViewBuilder = scheduleItemViewBuilder;
         this.scheduleFilter          = scheduleFilter;
-
-        scheduleItemDTOIInteractorOperationListener = new InteractorAsyncOperationListener<ScheduleItemDTO>() {
-            @Override
-            public void onSucceedWithData(ScheduleItemDTO data) {
-                super.onSucceedWithData(data);
-            }
-
-            @Override
-            public void onError(String message) {
-                super.onError(message);
-            }
-        };
     }
 
     @Override
@@ -223,7 +239,14 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     public void onResume() {
         try {
             super.onResume();
-
+            // bind local broadcast receiver
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(Constants.DATA_UPDATE_UPDATED_ENTITY_EVENT);
+            intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED);
+            intentFilter.addAction(Constants.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED);
+            intentFilter.addAction(Constants.DATA_UPDATE_MY_FAVORITE_EVENT_ADDED);
+            intentFilter.addAction(Constants.DATA_UPDATE_MY_FAVORITE_EVENT_DELETED);
+            LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
             currentSummit = interactor.getActiveSummit();
             // called only in case that we are doing a filtering, we need to set the ranger state again
             setRangerState();
@@ -232,15 +255,21 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
                 gotoNowOnSchedule();
                 shouldShowNow = false;
             }
+
         } catch (Exception ex) {
             Crashlytics.logException(ex);
         }
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
     }
 
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
@@ -269,12 +298,15 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     public void buildItem(IScheduleItemView scheduleItemView, int position) {
         if (dayEvents == null || dayEvents.isEmpty() || (dayEvents.size() - 1) < position || position < 0) return;
         ScheduleItemDTO scheduleItemDTO = dayEvents.get(position);
+        if(eventPosIds.containsKey(scheduleItemDTO.getId())){
+            eventPosIds.remove(scheduleItemDTO.getId());
+        }
+        eventPosIds.put(scheduleItemDTO.getId(), position);
         scheduleItemViewBuilder.build
         (
             scheduleItemView,
             scheduleItemDTO,
             isMemberLogged,
-            isMemberAttendee,
             scheduleItemDTO.getScheduled(),
             scheduleItemDTO.getFavorite(),
             false,

@@ -76,7 +76,6 @@ public class FavoritesSchedulePresenter
                         scheduleItemView,
                         scheduleItemDTO,
                         isMemberLogged,
-                        isMemberAttendee,
                         scheduleItemDTO.getScheduled(),
                         scheduleItemDTO.getFavorite(),
                         false,

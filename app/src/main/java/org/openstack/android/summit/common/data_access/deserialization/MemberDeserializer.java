@@ -107,6 +107,28 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
             }
         }
 
+        // schedule
+
+        if (jsonObject.has("schedule_summit_events")) {
+            SummitEvent summitEvent;
+            int summitEventId = 0;
+            JSONArray jsonArraySummitEvents = jsonObject.getJSONArray("schedule_summit_events");
+            member.getScheduledEvents().clear();
+
+            for (int i = 0; i < jsonArraySummitEvents.length(); i++) {
+                try {
+                    summitEventId = jsonArraySummitEvents.getInt(i);
+                    summitEvent   = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", summitEventId).findFirst();
+                    if (summitEvent != null) {
+                        member.getScheduledEvents().add(summitEvent);
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.e(Constants.LOG_TAG, String.format("Error deserializing schedule event %s", summitEventId), e);
+                }
+            }
+
+        }
         // favorites
 
         if (jsonObject.has("favorite_summit_events")) {

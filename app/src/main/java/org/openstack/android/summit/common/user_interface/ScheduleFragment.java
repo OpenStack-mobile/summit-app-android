@@ -77,6 +77,14 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         presenter.onDestroy();
     }
 
+    @Override
+    public void onPause() {
+        // Unregister since the activity is about to be closed.
+        // This is somewhat like [[NSNotificationCenter defaultCenter] removeObserver:name:object:]
+        super.onPause();
+        presenter.onPause();
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         unbinder       = ButterKnife.bind(this, view);
@@ -92,8 +100,9 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         scheduleListAdapter  = new ScheduleListAdapter(presenter);
 
         scheduleList.setItemAnimator(new SlideInDownAnimator());
-        scheduleList.getItemAnimator().setRemoveDuration(200);
-        scheduleList.getItemAnimator().setAddDuration(200);
+        scheduleList.getItemAnimator().setRemoveDuration(300);
+        scheduleList.getItemAnimator().setAddDuration(300);
+        scheduleList.getItemAnimator().setChangeDuration(500);
 
         scheduleList.setAdapter(scheduleListAdapter);
 
@@ -102,8 +111,9 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         ranger.setDayViewOnClickListener(date -> {
             if(scheduleList == null) return;
             scheduleList.setItemAnimator(new SlideInDownAnimator());
-            scheduleList.getItemAnimator().setRemoveDuration(200);
-            scheduleList.getItemAnimator().setAddDuration(200);
+            scheduleList.getItemAnimator().setRemoveDuration(300);
+            scheduleList.getItemAnimator().setAddDuration(300);
+            scheduleList.getItemAnimator().setChangeDuration(500);
             presenter.reloadSchedule(date.getDayOfMonth());
         });
 
@@ -261,5 +271,10 @@ public class ScheduleFragment<P extends ISchedulePresenter>
             unbinder.unbind();
             unbinder = null;
         }
+    }
+
+    @Override
+    public void reloadItem(int position) {
+        scheduleListAdapter.notifyItemChanged(position);
     }
 }

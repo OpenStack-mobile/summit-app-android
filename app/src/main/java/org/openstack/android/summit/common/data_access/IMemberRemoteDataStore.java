@@ -26,4 +26,10 @@ public interface IMemberRemoteDataStore {
 
     Observable<Boolean> selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId);
 
+    Observable<Boolean> addEventToSchedule(int summitId, int eventId);
+
+    Observable<Boolean> removeEventFromSchedule(int summitId, int eventId);
+
+    Observable<Boolean> deleteRSVP(int summitId, int eventId);
+
 }

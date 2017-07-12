@@ -4,7 +4,6 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.network.Reachability;
@@ -43,8 +42,28 @@ public class EventDetailModule {
     }
 
     @Provides
-    IEventDetailInteractor providesEventDetailInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISummitSelector summitSelector) {
-        return new EventDetailInteractor(summitEventDataStore, summitAttendeeDataStore, summitDataStore, memberDataStore, new Reachability(), dtoAssembler, securityManager, pushNotificationsManager, summitSelector);
+    IEventDetailInteractor providesEventDetailInteractor
+    (
+            IMemberDataStore memberDataStore,
+            ISummitEventDataStore summitEventDataStore,
+            ISummitDataStore summitDataStore,
+            IDTOAssembler dtoAssembler,
+            ISecurityManager securityManager,
+            IPushNotificationsManager pushNotificationsManager,
+            ISummitSelector summitSelector
+    )
+    {
+        return new EventDetailInteractor
+                   (
+                           summitEventDataStore,
+                           summitDataStore,
+                           memberDataStore,
+                           new Reachability(),
+                           dtoAssembler,
+                           securityManager,
+                           pushNotificationsManager,
+                           summitSelector
+                   );
     }
 
     @Provides

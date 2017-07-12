@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.entities;
 
+import java.util.ArrayList;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -19,6 +21,26 @@ public class Member extends RealmObject implements IPerson {
     private String title;
     private String pictureUrl;
     private String bio;
+    private RealmList<SummitEvent> scheduledEvents  = new RealmList<>();
+
+    public RealmList<SummitEvent> getScheduledEvents() {
+
+        if(scheduledEvents == null) scheduledEvents  = new RealmList<>();
+        return scheduledEvents;
+    }
+
+    public ArrayList<Integer> getScheduleEventIds(){
+        ArrayList<Integer> res = new ArrayList<>();
+        for(SummitEvent event: getScheduledEvents()){
+            res.add(event.getId());
+        }
+        return res;
+    }
+
+    public void setScheduledEvents(RealmList<SummitEvent> scheduledEvents) {
+        this.scheduledEvents = scheduledEvents;
+    }
+
 
     public void setGroupEvents(RealmList<SummitGroupEvent> groupEvents) {
         this.groupEvents = groupEvents;

@@ -7,7 +7,6 @@ import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Member;
@@ -25,10 +24,23 @@ import io.realm.Sort;
  * Created by smarcet on 3/14/17.
  */
 
-public class FavoritesScheduleInteractor  extends ScheduleInteractor implements IFavoritesScheduleInteractor {
+public class FavoritesScheduleInteractor
+        extends ScheduleInteractor
+        implements IFavoritesScheduleInteractor {
 
-    public FavoritesScheduleInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector) {
-        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+    public FavoritesScheduleInteractor
+    (
+            IMemberDataStore memberDataStore,
+            ISummitEventDataStore summitEventDataStore,
+            ISummitDataStore summitDataStore,
+            IDTOAssembler dtoAssembler,
+            ISecurityManager securityManager,
+            IPushNotificationsManager pushNotificationsManager,
+            ISession session,
+            ISummitSelector summitSelector
+    )
+    {
+        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
     }
 
     @Override

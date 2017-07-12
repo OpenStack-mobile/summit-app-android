@@ -10,7 +10,8 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         // Realm
-        classpath "io.realm:realm-gradle-plugin:3.2.1"
+        // https://github.com/realm/realm-java/blob/master/CHANGELOG.md
+        classpath "io.realm:realm-gradle-plugin:3.5.0"
         //GCM
         classpath 'com.google.gms:google-services:3.0.0'
         // Retrolambda , https://github.com/evant/gradle-retrolambda/

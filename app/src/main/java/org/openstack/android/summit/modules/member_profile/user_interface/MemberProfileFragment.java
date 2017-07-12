@@ -174,13 +174,10 @@ public class MemberProfileFragment
             int count = 0;
             if (presenter.getIsMyPofile()){
                 if (presenter.getIsSpeaker()) {
-                    count = presenter.getIsAttendee() ? 4 : 3;
-                }
-                else if (presenter.getIsAttendee()) {
-                    count = 3;
+                    count = 4;
                 }
                 else if (presenter.getIsMember()) {
-                    count = 2;
+                    count = 3;
                 }
             }
             else {
@@ -194,9 +191,6 @@ public class MemberProfileFragment
             if (presenter.getIsMyPofile()){
                 if (presenter.getIsSpeaker()) {
                     return getPageTitleForMyProfileAsSpeaker(position, presenter.getIsAttendee());
-                }
-                else if (presenter.getIsAttendee()) {
-                    return getPageTitleForMyProfileAsAttendee(position);
                 }
                 else if (presenter.getIsMember()){
                     return getPageTitleForMyProfileAsMember(position);
@@ -220,7 +214,7 @@ public class MemberProfileFragment
             }
         }
 
-        private CharSequence getPageTitleForMyProfileAsAttendee(int position) {
+        private CharSequence getPageTitleForMyProfileAsMember(int position) {
             switch (position) {
                 case 0:
                     return getResources().getString(R.string.my_summit_schedule_tab_title);
@@ -233,29 +227,14 @@ public class MemberProfileFragment
             }
         }
 
-        private CharSequence getPageTitleForMyProfileAsMember(int position) {
-            switch (position) {
-                case 0:
-                    return getResources().getString(R.string.my_summit_favorites_tab_title);
-                case 1:
-                    return getResources().getString(R.string.my_summit_profile_tab_title);
-                default:
-                    return "";
-            }
-        }
-
         private CharSequence getPageTitleForMyProfileAsSpeaker(int position, boolean isAttendee) {
             switch (position) {
                 case 0:
                     return getResources().getString(R.string.my_summit_sessions_tab_title);
                 case 1:
-                    if(isAttendee)
-                        return getResources().getString(R.string.my_summit_schedule_tab_title);
-                    return getResources().getString(R.string.my_summit_favorites_tab_title);
+                    return getResources().getString(R.string.my_summit_schedule_tab_title);
                 case 2:
-                    if(isAttendee)
-                        return getResources().getString(R.string.my_summit_favorites_tab_title);
-                    return getResources().getString(R.string.my_summit_profile_tab_title);
+                    return getResources().getString(R.string.my_summit_favorites_tab_title);
                 case 3:
                     return getResources().getString(R.string.my_summit_profile_tab_title);
                 default:
@@ -268,9 +247,6 @@ public class MemberProfileFragment
             if (presenter.getIsMyPofile()){
                 if (presenter.getIsSpeaker()) {
                     return getItemForMyProfileAsSpeaker(i, presenter.getIsAttendee());
-                }
-                else if (presenter.getIsAttendee()) {
-                    return getItemForMyProfileAsAttendee(i);
                 }
                 else if (presenter.getIsMember()){
                     return getItemForMyProfileAsMember(i);
@@ -294,7 +270,7 @@ public class MemberProfileFragment
             }
         }
 
-        private Fragment getItemForMyProfileAsAttendee(int i) {
+        private Fragment getItemForMyProfileAsMember(int i) {
             switch (i) {
                 case 0:
                     return personalScheduleFragment;
@@ -307,29 +283,14 @@ public class MemberProfileFragment
             }
         }
 
-        private Fragment getItemForMyProfileAsMember(int i) {
-            switch (i) {
-                case 0:
-                    return favoritesScheduleFragment;
-                case 1:
-                    return memberProfileDetailFragment;
-                default:
-                    return null;
-            }
-        }
-
         private Fragment getItemForMyProfileAsSpeaker(int i, boolean isAttendee) {
             switch (i) {
                 case 0:
                     return speakerPresentationsFragment;
                 case 1:
-                    if(isAttendee)
-                        return personalScheduleFragment;
-                    return favoritesScheduleFragment;
+                    return personalScheduleFragment;
                 case 2:
-                    if(isAttendee)
-                        return favoritesScheduleFragment;
-                    return memberProfileDetailFragment;
+                    return favoritesScheduleFragment;
                 case 3:
                     return memberProfileDetailFragment;
                 default:

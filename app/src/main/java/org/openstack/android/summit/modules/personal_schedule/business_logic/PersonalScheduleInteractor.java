@@ -7,11 +7,9 @@ import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -27,20 +25,17 @@ import io.realm.Sort;
  */
 public class PersonalScheduleInteractor extends ScheduleInteractor implements IPersonalScheduleInteractor {
 
-    public PersonalScheduleInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector) {
-        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+    public PersonalScheduleInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector) {
+        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
     }
 
     @Override
     public List<ScheduleItemDTO> getCurrentMemberScheduledEvents(Date startDate, Date endDate) {
         Member member              = securityManager.getCurrentMember();
-        SummitAttendee  attendee;
 
         if(member == null) return new ArrayList<>();
-        attendee = member.getAttendeeRole();
-        if(attendee == null) return new ArrayList<>();
 
-        List<SummitEvent> scheduleEvents =  attendee.getScheduledEvents()
+        List<SummitEvent> scheduleEvents =  member.getScheduledEvents()
             .where()
             .greaterThanOrEqualTo("start", startDate)
             .lessThanOrEqualTo("end", endDate)

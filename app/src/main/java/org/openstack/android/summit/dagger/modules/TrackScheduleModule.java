@@ -8,7 +8,6 @@ import org.openstack.android.summit.common.data_access.repositories.ITrackDataSt
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.ISession;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -44,8 +43,20 @@ public class TrackScheduleModule {
     }
 
     @Provides
-    ITrackScheduleInteractor providesTrackScheduleInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ITrackDataStore trackDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector) {
-        return new TrackScheduleInteractor(memberDataStore, summitEventDataStore, summitDataStore, summitAttendeeDataStore, trackDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+    ITrackScheduleInteractor providesTrackScheduleInteractor
+    (
+            IMemberDataStore memberDataStore,
+            ISummitEventDataStore summitEventDataStore,
+            ISummitDataStore summitDataStore,
+            ITrackDataStore trackDataStore,
+            IDTOAssembler dtoAssembler,
+            ISecurityManager securityManager,
+            IPushNotificationsManager pushNotificationsManager,
+            ISession session,
+            ISummitSelector summitSelector
+    )
+    {
+        return new TrackScheduleInteractor(memberDataStore, summitEventDataStore, summitDataStore, trackDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
     }
 
     @Provides

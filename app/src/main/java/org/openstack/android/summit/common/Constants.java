@@ -58,7 +58,9 @@ public class Constants {
     static public final String INIT_EXTERNAL_REDEEM_ORDER             = "org.openstack.android.summit.common.INIT_EXTERNAL_REDEEM_ORDER";
     static public final String SETTING_SET_NOW_BUTTON_INITIAL_STATE   = "org.openstack.android.summit.common.I.SETTING_SET_NOW_BUTTON_INITIAL_STATE";
     public static final String DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED    = "org.openstack.android.summit.common.DATA_UPDATE_MY_SCHEDULE_EVENT_ADDED";
-    public static final String DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED  = "org.openstack.android.summit.common.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED";
+    public static final String DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED                = "org.openstack.android.summit.common.DATA_UPDATE_MY_SCHEDULE_EVENT_DELETED";
+    public static final String DATA_UPDATE_MY_FAVORITE_EVENT_ADDED                  = "org.openstack.android.summit.common.DATA_UPDATE_MY_FAVORITE_EVENT_ADDED";
+    public static final String DATA_UPDATE_MY_FAVORITE_EVENT_DELETED                = "org.openstack.android.summit.common.DATA_UPDATE_MY_FAVORITE_EVENT_DELETED";
     public static final String ACTION_OPEN_OPENSTACK_PUSH_NOTIFICATION_FROM_SYSTRAY = "org.openstack.android.summit.intent.action.OPEN_OPENSTACK_PUSH_NOTIFICATION_FROM_SYSTRAY";
     public static final String SKIP_PROTECTED_APPS_MESSAGE                          = "org.openstack.android.summit.common.KIPPROTECTEDAPPSMESSAGE";
 

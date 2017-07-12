@@ -44,15 +44,14 @@ public class PersonalSchedulePresenter
 
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IPersonalScheduleInteractor interactor) {
-        if(!interactor.isMemberLoggedInAndConfirmedAttendee()) return new ArrayList<>();
+        if(!interactor.isMemberLoggedIn()) return new ArrayList<>();
         return interactor.getCurrentMemberScheduledEvents(startDate.toDate(), endDate.toDate());
     }
 
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
-        return interactor.isMemberLoggedInAndConfirmedAttendee()?
-                interactor.getCurrentMemberScheduleDatesWithoutEvents(startDate, endDate):
-                new ArrayList<>();
+        if(!interactor.isMemberLoggedIn()) return new ArrayList<>();
+        return interactor.getCurrentMemberScheduleDatesWithoutEvents(startDate, endDate);
     }
 
     @Override
@@ -86,7 +85,6 @@ public class PersonalSchedulePresenter
                         scheduleItemView,
                         scheduleItemDTO,
                         isMemberLogged,
-                        isMemberAttendee,
                         scheduleItemDTO.getScheduled(),
                         scheduleItemDTO.getFavorite(),
                         false,

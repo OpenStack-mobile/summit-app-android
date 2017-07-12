@@ -6,7 +6,6 @@ import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.ScheduleableInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Feedback;
@@ -31,7 +30,6 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
     public EventDetailInteractor
     (
         ISummitEventDataStore summitEventDataStore,
-        ISummitAttendeeDataStore summitAttendeeDataStore,
         ISummitDataStore summitDataStore,
         IMemberDataStore memberDataStore,
         IReachability reachability,
@@ -41,7 +39,7 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
         ISummitSelector summitSelector
     )
     {
-        super(summitEventDataStore, summitAttendeeDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, summitSelector);
+        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, summitSelector);
         this.reachability = reachability;
     }
 

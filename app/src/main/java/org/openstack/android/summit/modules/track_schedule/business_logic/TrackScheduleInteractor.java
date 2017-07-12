@@ -8,7 +8,6 @@ import org.openstack.android.summit.common.data_access.repositories.ITrackDataSt
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.business_logic.ScheduleInteractor;
-import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Track;
@@ -23,8 +22,20 @@ public class TrackScheduleInteractor extends ScheduleInteractor implements ITrac
     private ITrackDataStore trackDataStore;
 
     @Inject
-    public TrackScheduleInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, ISummitAttendeeDataStore summitAttendeeDataStore, ITrackDataStore trackDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector) {
-        super(summitEventDataStore, summitDataStore, summitAttendeeDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+    public TrackScheduleInteractor
+    (
+            IMemberDataStore memberDataStore,
+            ISummitEventDataStore summitEventDataStore,
+            ISummitDataStore summitDataStore,
+            ITrackDataStore trackDataStore,
+            IDTOAssembler dtoAssembler,
+            ISecurityManager securityManager,
+            IPushNotificationsManager pushNotificationsManager,
+            ISession session,
+            ISummitSelector summitSelector
+    )
+    {
+        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
         this.trackDataStore = trackDataStore;
     }
 

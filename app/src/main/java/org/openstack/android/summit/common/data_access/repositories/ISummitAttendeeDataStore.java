@@ -10,16 +10,6 @@ import io.reactivex.Observable;
  */
 public interface ISummitAttendeeDataStore extends IGenericDataStore<SummitAttendee> {
 
-    Observable<Boolean> addEventToMemberSchedule(SummitAttendee me, SummitEvent summitEvent);
 
-    void addEventToMemberScheduleLocal(SummitAttendee me, SummitEvent summitEvent);
-
-    Observable<Boolean> removeEventFromMemberSchedule(SummitAttendee me, SummitEvent summitEvent);
-
-    Observable<Boolean> deleteRSVP(SummitAttendee me, SummitEvent summitEvent);
-
-    void removeEventFromMemberScheduleLocal(SummitAttendee me, SummitEvent summitEvent);
-
-    boolean isEventScheduledByAttendee(int attendeeId, int eventId);
 
 }
