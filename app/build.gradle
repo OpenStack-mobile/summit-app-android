@@ -134,7 +134,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 105
+        versionCode 106
         versionName "2.0"
         multiDexEnabled true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
@@ -252,7 +252,7 @@ dependencies {
     compile('com.weiwangcn.betterspinner:library-material:1.1.0') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
     testCompile 'org.mockito:mockito-core:2.0.86-beta'
