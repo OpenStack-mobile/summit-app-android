@@ -12,26 +12,26 @@ public class PersonDeserializer extends BaseDeserializer implements IPersonDeser
     public void deserialize(IPerson person, JSONObject jsonObject) throws JSONException {
 
         person.setFirstName(
-                !jsonObject.isNull("first_name") ? jsonObject.getString("first_name") : null
+                !jsonObject.isNull("first_name") ? jsonObject.getString("first_name") : ""
         );
         person.setLastName(
-                !jsonObject.isNull("last_name") ? jsonObject.getString("last_name") : null
+                !jsonObject.isNull("last_name") ? jsonObject.getString("last_name") : ""
         );
         person.setFullName(getFullName(person));
         person.setBio(
-                !jsonObject.isNull("bio") ? jsonObject.getString("bio") : null
+                !jsonObject.isNull("bio") ? jsonObject.getString("bio") : ""
         );
         person.setIrc(
-                !jsonObject.isNull("irc") ? jsonObject.getString("irc") : null
+                !jsonObject.isNull("irc") ? jsonObject.getString("irc") : ""
         );
         person.setPictureUrl(
-                !jsonObject.isNull("pic") ? jsonObject.getString("pic") : null
+                !jsonObject.isNull("pic") ? jsonObject.getString("pic") : ""
         );
         person.setTitle(
-                !jsonObject.isNull("title") ? jsonObject.getString("title") : null
+                !jsonObject.isNull("title") ? jsonObject.getString("title") : ""
         );
         person.setTwitter(
-                !jsonObject.isNull("twitter") ? jsonObject.getString("twitter") : null
+                !jsonObject.isNull("twitter") ? jsonObject.getString("twitter") : ""
         );
     }
 
