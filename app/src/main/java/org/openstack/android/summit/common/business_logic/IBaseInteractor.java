@@ -19,4 +19,6 @@ public interface IBaseInteractor {
     boolean isMemberLoggedInAndConfirmedAttendee();
 
     MemberDTO getCurrentMember();
+
+    boolean isNetworkingAvailable();
 }

@@ -13,6 +13,7 @@ import org.openstack.android.summit.common.data_access.repositories.IVenueRoomDa
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
@@ -35,10 +36,11 @@ public class VenueDetailInteractor extends BaseInteractor implements IVenueDetai
         IVenueFloorDataStore venueFloorDataStore,
         IDTOAssembler dtoAssembler,
         ISummitDataStore summitDataStore,
-        ISummitSelector summitSelector
+        ISummitSelector summitSelector,
+        IReachability reachability
     )
     {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
 
         this.venueDataStore      = venueDataStore;
         this.venueRoomDataStore  = venueRoomDataStore;

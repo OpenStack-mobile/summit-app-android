@@ -14,6 +14,7 @@ import org.openstack.android.summit.common.data_access.repositories.ITrackDataSt
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
@@ -40,10 +41,11 @@ public class SearchInteractor extends BaseInteractor implements ISearchInteracto
         IPresentationSpeakerDataStore presentationSpeakerDataStore,
         IDTOAssembler dtoAssembler,
         ISummitDataStore summitDataStore,
-        ISummitSelector summitSelector
+        ISummitSelector summitSelector,
+        IReachability reachability
     )
     {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
         this.scheduleableInteractor       = scheduleableInteractor;
         this.summitEventDataStore         = summitEventDataStore;
         this.trackDataStore               = trackDataStore;

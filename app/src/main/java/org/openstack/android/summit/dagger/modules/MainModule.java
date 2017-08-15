@@ -74,7 +74,18 @@ public class MainModule {
 
     @Provides
     IMainInteractor providesMainInteractor(ISummitDataStore summitDataStore, ISummitEventDataStore summitEventDataStore, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, IDTOAssembler dtoAssembler, IReachability reachability, IPushNotificationDataStore pushNotificationDataStore, ISession session, ISummitSelector summitSelector) {
-        return new MainInteractor(summitDataStore, summitEventDataStore, securityManager, pushNotificationsManager, dtoAssembler, reachability, pushNotificationDataStore, session, summitSelector);
+        return new MainInteractor
+                (
+                        summitDataStore,
+                        summitEventDataStore,
+                        securityManager,
+                        pushNotificationsManager,
+                        dtoAssembler,
+                        pushNotificationDataStore,
+                        session,
+                        summitSelector,
+                        reachability
+                );
     }
 
     @Provides
@@ -92,8 +103,8 @@ public class MainModule {
     }
 
     @Provides
-    IDataLoadingInteractor providesDataLoadingInteractor(ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitSelector summitSelector, ISummitDataStore summitDataStore) {
-        return new DataLoadingInteractor(securityManager, dtoAssembler, summitSelector, summitDataStore);
+    IDataLoadingInteractor providesDataLoadingInteractor(ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitSelector summitSelector, ISummitDataStore summitDataStore, IReachability reachability) {
+        return new DataLoadingInteractor(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
     }
 
     @Provides

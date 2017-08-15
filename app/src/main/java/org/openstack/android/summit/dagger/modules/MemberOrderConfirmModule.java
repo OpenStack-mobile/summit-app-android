@@ -34,7 +34,7 @@ public class MemberOrderConfirmModule {
 
     @Provides
     IMemberOrderConfirmInteractor providesMemberProfileDetailInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new MemberOrderConfirmInteractor(memberRemoteDataStore, reachability, securityManager, dtoAssembler, summitDataStore, summitSelector);
+        return new MemberOrderConfirmInteractor(memberRemoteDataStore, securityManager, dtoAssembler, summitDataStore, summitSelector, reachability);
     }
 
     @Provides

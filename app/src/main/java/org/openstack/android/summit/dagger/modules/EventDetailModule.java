@@ -6,6 +6,7 @@ import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.network.Reachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -50,7 +51,8 @@ public class EventDetailModule {
             IDTOAssembler dtoAssembler,
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
-            ISummitSelector summitSelector
+            ISummitSelector summitSelector,
+            IReachability reachability
     )
     {
         return new EventDetailInteractor
@@ -58,11 +60,11 @@ public class EventDetailModule {
                            summitEventDataStore,
                            summitDataStore,
                            memberDataStore,
-                           new Reachability(),
                            dtoAssembler,
                            securityManager,
                            pushNotificationsManager,
-                           summitSelector
+                           summitSelector,
+                           reachability
                    );
     }
 

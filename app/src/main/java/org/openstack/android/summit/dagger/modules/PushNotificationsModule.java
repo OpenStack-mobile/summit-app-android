@@ -9,6 +9,7 @@ import org.openstack.android.summit.common.data_access.repositories.ITeamDataSto
 import org.openstack.android.summit.common.data_access.repositories.ITeamPushNotificationDataStore;
 import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
 import org.openstack.android.summit.common.entities.notifications.PushNotificationFactory;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationInteractor;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.PushNotificationInteractor;
@@ -30,7 +31,8 @@ public class PushNotificationsModule {
             ITeamPushNotificationDataStore teamPushNotificationDataStore,
             IEventPushNotificationDataStore eventPushNotificationDataStore,
             ISummitSelector summitSelector,
-            ISummitDataStore summitDataStore
+            ISummitDataStore summitDataStore,
+            IReachability reachability
     )
     {
         return new PushNotificationInteractor
@@ -40,7 +42,8 @@ public class PushNotificationsModule {
                         teamPushNotificationDataStore,
                         eventPushNotificationDataStore,
                         summitDataStore,
-                        summitSelector
+                        summitSelector,
+                        reachability
                 );
     }
 

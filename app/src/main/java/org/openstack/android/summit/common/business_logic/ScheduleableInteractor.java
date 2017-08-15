@@ -10,6 +10,7 @@ import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
@@ -35,9 +36,10 @@ public class ScheduleableInteractor extends BaseInteractor implements ISchedulea
             IDTOAssembler dtoAssembler,
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
-            ISummitSelector summitSelector
+            ISummitSelector summitSelector,
+            IReachability reachability
     ) {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
 
         this.summitEventDataStore     = summitEventDataStore;
         this.memberDataStore          = memberDataStore;

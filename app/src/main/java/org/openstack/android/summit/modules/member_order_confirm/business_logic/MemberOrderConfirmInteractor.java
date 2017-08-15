@@ -26,13 +26,11 @@ public class MemberOrderConfirmInteractor
         implements IMemberOrderConfirmInteractor {
 
     IMemberRemoteDataStore memberRemoteDataStore;
-    IReachability reachability;
 
-    public MemberOrderConfirmInteractor(IMemberRemoteDataStore memberRemoteDataStore, IReachability reachability, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+    public MemberOrderConfirmInteractor(IMemberRemoteDataStore memberRemoteDataStore,ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector, IReachability reachability) {
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
 
         this.memberRemoteDataStore = memberRemoteDataStore;
-        this.reachability          = reachability;
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.events.IEventsWireframe;
 import org.openstack.android.summit.modules.member_profile.IMemberProfileWireframe;
@@ -34,8 +35,8 @@ public class MemberProfileModule {
     }
 
     @Provides
-    IMemberProfileInteractor providesMemberProfileInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new MemberProfileInteractor(presentationSpeakerDataStore, securityManager, dtoAssembler, summitDataStore, summitSelector);
+    IMemberProfileInteractor providesMemberProfileInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector, IReachability reachability) {
+        return new MemberProfileInteractor(presentationSpeakerDataStore, securityManager, dtoAssembler, summitDataStore, summitSelector, reachability);
     }
 
     @Provides

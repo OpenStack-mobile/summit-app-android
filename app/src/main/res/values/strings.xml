@@ -152,4 +152,5 @@
     <string name="feedback_validation_error_event_not_started">Can only rate after event has started.</string>
     <string name="error_events_has_ended">All presentations are finished for today.</string>
     <string name="first_rate_text">There are no reviews so far.\nBe the first to rate this event.</string>
+    <string name="no_connectivity_message">Please ensure you have an internet connection to perform this task.</string>
 </resources>

@@ -14,7 +14,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleWireframe;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
-
+import org.openstack.android.summit.common.network.NetworkException;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -66,6 +66,12 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
             return;
         }
 
+        if(!this.interactor.isNetworkingAvailable()){
+            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message);
+            if(dialog != null) dialog.show();
+            return;
+        }
+
         if(toggleScheduleStatusListener != null){
             toggleScheduleStatusListener.toggle(position, formerState, scheduleItemView);
         }
@@ -88,7 +94,9 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                 Crashlytics.logException(ex);
                             }
                             if(view != null) {
-                                AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                                AlertDialog dialog = (ex != null && ex instanceof NetworkException) ?
+                                        AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message):
+                                        AlertsBuilder.buildGenericError(view.getFragmentActivity());
                                 if(dialog != null) dialog.show();
                             }
                         }
@@ -102,6 +110,12 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
         if(!this.interactor.isMemberLoggedIn()){
             // Use the Builder class for convenient dialog construction
             buildLoginModal().show();
+            return;
+        }
+
+        if(!this.interactor.isNetworkingAvailable()){
+            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message);
+            if(dialog != null) dialog.show();
             return;
         }
 
@@ -131,11 +145,72 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
                                         Crashlytics.logException(ex);
                                     }
                                     if(view != null) {
-                                        AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                                        AlertDialog dialog = (ex != null && ex instanceof NetworkException) ?
+                                                AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message):
+                                                AlertsBuilder.buildGenericError(view.getFragmentActivity());
                                         if(dialog != null) dialog.show();
+
                                     }
                                 }
                         );
+    }
+
+    private void presentExternalRSVPView(ScheduleItemDTO scheduleItemDTO, IScheduleableItem scheduleItemView){
+        boolean isEventScheduled = scheduleItemView.getScheduled();
+        scheduleablePresenter
+                .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (res) -> {
+                            if(view != null && view.getApplicationContext() != null)
+                                Toast.makeText(view.getApplicationContext(), isEventScheduled ?
+                                                view.getResources().getString(R.string.removed_from_going):
+                                                view.getResources().getString(R.string.added_2_going),
+                                        Toast.LENGTH_SHORT).show();
+
+                            wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
+                        },
+                        (ex) -> {
+                            scheduleItemView.setScheduled(isEventScheduled);
+                            if(ex != null) {
+                                Crashlytics.logException(ex);
+                                Log.d(Constants.LOG_TAG, ex.getMessage());
+                            }
+                            if(view != null) {
+                                AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                                if(dialog != null) dialog.show();
+                            }
+                        }
+                );
+    }
+
+    private void unRSVP(ScheduleItemDTO scheduleItemDTO, IScheduleableItem scheduleItemView){
+        boolean isEventScheduled = scheduleItemView.getScheduled();
+        scheduleablePresenter.deleteRSVP(scheduleItemDTO, scheduleItemView, interactor)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (res) -> {
+                            if(view != null && view.getApplicationContext() != null)
+                                Toast.makeText(view.getApplicationContext(), isEventScheduled ?
+                                                view.getResources().getString(R.string.removed_from_going):
+                                                view.getResources().getString(R.string.added_2_going),
+                                        Toast.LENGTH_SHORT).show();
+                        },
+                        (ex) -> {
+                            scheduleItemView.setScheduled(isEventScheduled);
+                            if(ex != null) {
+                                Log.d(Constants.LOG_TAG, ex.getMessage());
+                                Crashlytics.logException(ex);
+                            }
+                            if(view != null) {
+                                AlertDialog dialog = (ex != null && ex instanceof NetworkException) ?
+                                        AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message):
+                                        AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                                if(dialog != null) dialog.show();
+                                scheduleItemView.setScheduled(true);
+                            }
+                        }
+                );
     }
 
     protected void _toggleRSVPStatus(IScheduleableItem scheduleItemView, int position) {
@@ -148,68 +223,27 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
             return;
         }
 
-        boolean formerState = scheduleItemView.getScheduled();
-
+        if(!this.interactor.isNetworkingAvailable()){
+            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message);
+            if(dialog != null) dialog.show();
+            return;
+        }
         if(toggleScheduleStatusListener != null){
-            toggleScheduleStatusListener.toggle(position, formerState, scheduleItemView);
+            toggleScheduleStatusListener.toggle(position, scheduleItemView.getScheduled(), scheduleItemView);
         }
 
         if(scheduleItemView.isExternalRSVP()){
-            scheduleablePresenter
-                    .toggleScheduledStatusForEvent(scheduleItemDTO, scheduleItemView, interactor)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            (res) -> {
-                                if(view != null && view.getApplicationContext() != null)
-                                    Toast.makeText(view.getApplicationContext(), formerState ?
-                                                    view.getResources().getString(R.string.removed_from_going):
-                                                    view.getResources().getString(R.string.added_2_going),
-                                            Toast.LENGTH_SHORT).show();
+            presentExternalRSVPView(scheduleItemDTO, scheduleItemView);
+            return;
+        }
 
-                                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
-                            },
-                            (ex) -> {
-                                scheduleItemView.setScheduled(formerState);
-                                if(ex != null) {
-                                    Crashlytics.logException(ex);
-                                    Log.d(Constants.LOG_TAG, ex.getMessage());
-                                }
-                                if(view != null) {
-                                    AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
-                                    if(dialog != null) dialog.show();
-                                }
-                            }
-                    );
+        if(scheduleItemView.getScheduled()){
+            unRSVP(scheduleItemDTO, scheduleItemView);
+            return;
         }
-        else{
-            if(formerState){
-                scheduleablePresenter.deleteRSVP(scheduleItemDTO, scheduleItemView, interactor)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                (res) -> {
-                                    if(view != null && view.getApplicationContext() != null)
-                                        Toast.makeText(view.getApplicationContext(), formerState ?
-                                                        view.getResources().getString(R.string.removed_from_going):
-                                                        view.getResources().getString(R.string.added_2_going),
-                                                Toast.LENGTH_SHORT).show();
-                                },
-                                (ex) -> {
-                                    scheduleItemView.setScheduled(formerState);
-                                    if(ex != null) {
-                                        Log.d(Constants.LOG_TAG, ex.getMessage());
-                                        Crashlytics.logException(ex);
-                                    }
-                                    if(view != null) {
-                                        AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
-                                        if(dialog != null) dialog.show();
-                                    }
-                                }
-                        );
-            }
-            else{
-                wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
-            }
-        }
+
+        wireframe.presentEventRsvpView(scheduleItemView.getRSVPLink(), view);
+
     }
 
     protected void _shareEvent(IScheduleableItem scheduleItemView, int position){
@@ -226,6 +260,11 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
             buildLoginModal().show();
             return;
         }
+        if(!this.interactor.isNetworkingAvailable()){
+            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message);
+            if(dialog != null) dialog.show();
+            return;
+        }
 
         if(!scheduleItemDTO.isStarted()){
             AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.feedback_validation_error_event_not_started)).show();
@@ -235,7 +274,6 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
         wireframe.showFeedbackEditView(scheduleItemDTO.getId(), scheduleItemDTO.getName(), 0, view);
 
     }
-
 
     protected AlertDialog buildLoginModal(){
         onBeforeLoginModal();

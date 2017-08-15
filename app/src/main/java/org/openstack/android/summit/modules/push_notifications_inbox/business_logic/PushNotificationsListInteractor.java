@@ -15,6 +15,7 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitDataS
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.notifications.IPushNotification;
 import org.openstack.android.summit.common.entities.notifications.PushNotification;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.common.utils.Void;
@@ -41,10 +42,11 @@ public class PushNotificationsListInteractor
         IDTOAssembler dtoAssembler,
         ISummitDataStore summitDataStore,
         ISummitSelector summitSelector,
-        ISession session
+        ISession session,
+        IReachability reachability
     )
     {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
         this.pushNotificationDataStore = pushNotificationDataStore;
         this.session                   = session;
     }

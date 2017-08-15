@@ -13,23 +13,17 @@ import org.openstack.android.summit.common.security.ISecurityManager;
  */
 public class EventsInteractor  extends BaseInteractor implements IEventsInteractor {
 
-    protected IReachability reachability;
 
     public EventsInteractor
     (
         ISecurityManager securityManager,
         ISummitDataStore summitDataStore,
-        IReachability reachability,
         IDTOAssembler dtoAssembler,
-        ISummitSelector summitSelector
+        ISummitSelector summitSelector,
+        IReachability reachability
     )
     {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
-        this.reachability    = reachability;
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
     }
 
-    @Override
-    public boolean isNetworkingAvailable() {
-        return reachability.isNetworkingAvailable(OpenStackSummitApplication.context);
-    }
 }

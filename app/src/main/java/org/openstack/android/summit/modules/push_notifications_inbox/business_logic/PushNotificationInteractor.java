@@ -15,6 +15,7 @@ import org.openstack.android.summit.common.entities.notifications.EventPushNotif
 import org.openstack.android.summit.common.entities.notifications.IPushNotification;
 import org.openstack.android.summit.common.entities.notifications.PushNotification;
 import org.openstack.android.summit.common.entities.notifications.TeamPushNotification;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
@@ -36,9 +37,10 @@ public class PushNotificationInteractor extends BaseInteractor implements IPushN
             ITeamPushNotificationDataStore teamPushNotificationDataStore,
             IEventPushNotificationDataStore eventPushNotificationDataStore,
             ISummitDataStore summitDataStore,
-            ISummitSelector summitSelector
+            ISummitSelector summitSelector,
+            IReachability reachability
     ){
-        super(securityManager, null, summitSelector, summitDataStore);
+        super(securityManager, null, summitSelector, summitDataStore, reachability);
         this.pushNotificationDataStore      = pushNotificationDataStore;
         this.teamPushNotificationDataStore  = teamPushNotificationDataStore;
         this.eventPushNotificationDataStore = eventPushNotificationDataStore;

@@ -5,6 +5,7 @@ import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -39,6 +40,7 @@ import org.openstack.android.summit.common.security.oidc.IOIDCConfigurationManag
 import org.openstack.android.summit.common.security.oidc.OIDCClientConfiguration;
 import org.openstack.android.summit.common.security.oidc.OIDCNativeClientConfiguration;
 import org.openstack.android.summit.common.security.oidc.OpenIdConnectProtocol;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -137,16 +139,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         Log.d(Constants.LOG_TAG, String.format("Initiated activity for getting authorization with URL '%s'.", authUrl));
 
-        if (authUrl == null) {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-
-            builder.setTitle(R.string.generic_error_title)
-                    .setMessage(R.string.generic_error_message)
-                    .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )
-                    .create()
-                    .show();
-            return;
-        }
         // Initialise the WebView
         WebView webView = (WebView) findViewById(R.id.WebView);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -253,15 +245,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
                     String error            = url.getQueryParameter("error");
                     String errorDescription = url.getQueryParameter("error_description");
+                    Dialog dialog = AlertsBuilder.buildRawAlert(authActivity.get(), String.format("Error code: %s", error));
+                    if(dialog != null) dialog.show();
 
-                    // If the user declines to authorise the app, there's no need to show an error
-                    // message.
-                    if (!error.equals("access_denied")) {
-                        authActivity.get().showErrorDialog
-                        (
-                            String.format("Error code: %s\n\n%s", error, errorDescription)
-                        );
-                    }
                     return;
                 }
 
@@ -326,19 +312,15 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             catch(UnsupportedOperationException ex1){
                 view.stopLoading();
                 Crashlytics.log(ex1.getMessage()+ " URL "+urlString);
-                authActivity.get().showErrorDialog
-                (
-                    authActivity.get().getResources().getString(R.string.login_error_message)
-                );
+                Dialog dialog = AlertsBuilder.buildRawAlert(authActivity.get(), authActivity.get().getResources().getString(R.string.login_error_message));
+                if(dialog != null) dialog.show();
                 Log.e(Constants.LOG_TAG, ex1.getMessage());
             }
             catch(Exception ex){
                 view.stopLoading();
                 Crashlytics.logException(ex);
-                authActivity.get().showErrorDialog
-                (
-                    authActivity.get().getResources().getString(R.string.login_error_message)
-                );
+                Dialog dialog = AlertsBuilder.buildRawAlert(authActivity.get(), authActivity.get().getResources().getString(R.string.login_error_message));
+                if(dialog != null) dialog.show();
                 Log.e(Constants.LOG_TAG, ex.getMessage());
             }
         }
@@ -403,7 +385,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         @Override
         protected void onPostExecute(Boolean wasSuccess) {
             if (!wasSuccess) {
-                authActivity.get().showErrorDialog("Could not get ID Token.");
+                Dialog dialog = AlertsBuilder.buildRawAlert(authActivity.get(), "Could not get ID Token.");
+                if(dialog != null) dialog.show();
                 return;
             }
             // The account manager still wants the following information back
@@ -478,7 +461,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         @Override
         protected void onPostExecute(Boolean wasSuccess) {
             if (!wasSuccess) {
-                authActivity.get().showErrorDialog("Could not get ID Token.");
+                Dialog dialog = AlertsBuilder.buildRawAlert(authActivity.get(), "Could not get ID Token.");
+                if(dialog != null) dialog.show();
                 return;
             }
             // The account manager still wants the following information back
@@ -552,7 +536,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             if(activity == null) return;
 
             if (!wasSuccess) {
-                activity.showErrorDialog("Could not get ID Token.");
+                Dialog dialog = AlertsBuilder.buildRawAlert(authActivity.get(), "Could not get ID Token.");
+                if(dialog != null) dialog.show();
                 return;
             }
             // The account manager still wants the following information back
@@ -608,37 +593,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_ID, response.getIdToken());
         accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_ACCESS, response.getAccessToken());
         accountManager.setAuthToken(account, Authenticator.TOKEN_TYPE_REFRESH, response.getRefreshToken());
-    }
-
-    private void showErrorDialog(final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AuthenticatorActivity context = AuthenticatorActivity.this;
-                    if(!context.isFinishing())
-                    {
-                        new AlertDialog.Builder(context)
-                                .setTitle("Sorry, there was an error")
-                                .setMessage(message)
-                                .setCancelable(true)
-                                .setNeutralButton("Close", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                        finish();
-                                    }
-                                })
-                                .create()
-                                .show();
-                    }
-
-                }
-                catch(Exception ex){
-                    Crashlytics.logException(ex);
-                }
-            }
-        });
     }
 
     @Override

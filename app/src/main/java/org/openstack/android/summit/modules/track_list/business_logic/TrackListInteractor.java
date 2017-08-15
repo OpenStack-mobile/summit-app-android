@@ -9,6 +9,7 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitEvent
 import org.openstack.android.summit.common.data_access.repositories.ITrackDataStore;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
@@ -32,9 +33,10 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
             ISummitEventDataStore summitEventDataStore,
             ITrackDataStore trackDataStore,
             ISummitDataStore summitDataStore,
-            ISummitSelector summitSelector
+            ISummitSelector summitSelector,
+            IReachability reachability
     ) {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
         this.summitEventDataStore = summitEventDataStore;
         this.trackDataStore       = trackDataStore;
     }

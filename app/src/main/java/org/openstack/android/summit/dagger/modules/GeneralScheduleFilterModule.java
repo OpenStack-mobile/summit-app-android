@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitTypeD
 import org.openstack.android.summit.common.data_access.repositories.ITagDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ITrackGroupDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.general_schedule_filter.GeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
@@ -50,7 +51,8 @@ public class GeneralScheduleFilterModule {
         ITrackGroupDataStore trackGroupDataStore,
         IVenueDataStore venueDataStore,
         IDTOAssembler dtoAssembler,
-        ISummitSelector summitSelector
+        ISummitSelector summitSelector,
+        IReachability reachability
     ) {
         return new GeneralScheduleFilterInteractor
         (
@@ -63,7 +65,8 @@ public class GeneralScheduleFilterModule {
             eventTypeDataStore,
             tagDataStore,
             dtoAssembler,
-            summitSelector
+            summitSelector,
+            reachability
         );
     }
 

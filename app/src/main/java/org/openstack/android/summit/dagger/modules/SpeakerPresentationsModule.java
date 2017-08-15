@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.ISession;
@@ -45,10 +46,11 @@ public class SpeakerPresentationsModule {
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
             ISession session,
-            ISummitSelector summitSelector
+            ISummitSelector summitSelector,
+            IReachability reachability
     )
     {
-        return new SpeakerPresentationsInteractor(memberDataStore, summitEventDataStore, summitDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+        return new SpeakerPresentationsInteractor(memberDataStore, summitEventDataStore, summitDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector, reachability);
     }
 
     @Provides

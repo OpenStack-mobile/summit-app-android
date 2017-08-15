@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 /**
@@ -24,10 +25,11 @@ public class SplashInteractor extends BaseInteractor implements ISplashInteracto
         ISecurityManager securityManager,
         IDTOAssembler dtoAssembler,
         ISession session,
-        ISummitSelector summitSelector
+        ISummitSelector summitSelector,
+        IReachability reachability
     )
     {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
         this.session  = session;
     }
 

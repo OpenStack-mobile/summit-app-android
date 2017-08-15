@@ -6,6 +6,7 @@ import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.List;
@@ -17,8 +18,8 @@ public class VenueListInteractor extends BaseInteractor implements IVenueListInt
 
     private IVenueDataStore venueDataStore;
 
-    public VenueListInteractor(ISecurityManager securityManager, IVenueDataStore venueDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+    public VenueListInteractor(ISecurityManager securityManager, IVenueDataStore venueDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector, IReachability reachability) {
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
         this.venueDataStore = venueDataStore;
     }
 

@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.level_list.ILevelListWireframe;
 import org.openstack.android.summit.modules.level_list.LevelListWireframe;
@@ -34,8 +35,8 @@ public class LevelListModule {
     }
 
     @Provides
-    ILevelListInteractor providesLevelListInteractor(ISecurityManager securityManager, ISummitEventDataStore summitEventDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new LevelListInteractor(securityManager, summitEventDataStore, dtoAssembler, summitDataStore, summitSelector);
+    ILevelListInteractor providesLevelListInteractor(ISecurityManager securityManager, ISummitEventDataStore summitEventDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector, IReachability reachability) {
+        return new LevelListInteractor(securityManager, summitEventDataStore, dtoAssembler, summitDataStore, summitSelector, reachability);
     }
 
     @Provides

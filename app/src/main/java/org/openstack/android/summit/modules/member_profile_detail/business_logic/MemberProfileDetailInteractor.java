@@ -9,6 +9,7 @@ import org.openstack.android.summit.common.data_access.repositories.IPresentatio
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 /**
@@ -17,8 +18,8 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 public class MemberProfileDetailInteractor extends BaseInteractor implements IMemberProfileDetailInteractor {
     protected IPresentationSpeakerDataStore presentationSpeakerDataStore;
 
-    public MemberProfileDetailInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+    public MemberProfileDetailInteractor(IPresentationSpeakerDataStore presentationSpeakerDataStore, ISecurityManager securityManager, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector, IReachability reachability) {
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
         this.presentationSpeakerDataStore = presentationSpeakerDataStore;
     }
     @Override

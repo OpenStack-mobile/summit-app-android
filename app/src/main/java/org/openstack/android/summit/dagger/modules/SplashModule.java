@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationInteractor;
@@ -35,8 +36,9 @@ public class SplashModule {
                                                ISecurityManager securityManager,
                                                IDTOAssembler dtoAssembler,
                                                ISession session,
-                                               ISummitSelector summitSelector){
-        return new SplashInteractor(summitDataStore, securityManager, dtoAssembler,session, summitSelector);
+                                               ISummitSelector summitSelector,
+                                               IReachability reachability){
+        return new SplashInteractor(summitDataStore, securityManager, dtoAssembler,session, summitSelector, reachability);
     }
 
     @Provides

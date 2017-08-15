@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitDataS
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
@@ -25,8 +26,8 @@ import io.realm.Sort;
  */
 public class PersonalScheduleInteractor extends ScheduleInteractor implements IPersonalScheduleInteractor {
 
-    public PersonalScheduleInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector) {
-        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+    public PersonalScheduleInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISecurityManager securityManager, IPushNotificationsManager pushNotificationsManager, ISession session, ISummitSelector summitSelector, IReachability reachability) {
+        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector, reachability);
     }
 
     @Override

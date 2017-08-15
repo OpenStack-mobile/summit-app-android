@@ -1,9 +1,7 @@
 package org.openstack.android.summit.common.data_access.repositories.impl;
 
 import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
-
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
@@ -14,11 +12,8 @@ import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
-import org.openstack.android.summit.common.utils.Void;
-
 import java.util.Date;
 import java.util.List;
-
 import io.reactivex.Observable;
 
 /**
@@ -90,24 +85,21 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
 
         return memberRemoteDataStore
                 .updateFeedback(eventId, rate, review)
-                .doOnNext( success -> {
-                    RealmFactory.transaction(session -> {
-                        if (success) {
-                            // save it locally and recreate bc realm does not support xcross threading
-                            Member me               = this.getById(memberId);
-                            Feedback newFeedback    = me.getFeedback().where().equalTo("event.id", eventId).findFirst();
-                            if (newFeedback == null) {
-                                return false;
-                            }
-                            newFeedback.setDate(date);
-                            newFeedback.setRate(rate);
-                            newFeedback.setReview(review);
-
-                            return newFeedback;
-                        }
-
-                        return null;
-                    });
+                .doOnNext( res -> {
+                   if(res){
+                       RealmFactory.transaction(session -> {
+                               // save it locally and recreate bc realm does not support xcross threading
+                               Member me               = this.getById(memberId);
+                               Feedback newFeedback    = me.getFeedback().where().equalTo("event.id", eventId).findFirst();
+                               if (newFeedback == null) {
+                                   return false;
+                               }
+                               newFeedback.setDate(date);
+                               newFeedback.setRate(rate);
+                               newFeedback.setReview(review);
+                               return newFeedback;
+                       });
+                   }
                 });
     }
 
@@ -157,19 +149,14 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
         int memberId = me.getId();
         int eventId  = summitEvent.getId();
 
-        addEventToMyFavoritesLocal(
-                me,
-               summitEvent
-        );
-
         return memberRemoteDataStore
                 .addSummitEvent2Favorites(summitEvent.getSummit().getId(), summitEvent.getId())
-                .doOnError( ex -> {
-
-                    removeEventFromMyFavoritesLocal(
-                            getById(memberId),
-                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
-                    );
+                .doOnNext(res -> {
+                    if(res)
+                        RealmFactory.transaction(session -> {
+                            addEventToMyFavoritesLocal(getById(memberId), session.where(SummitEvent.class).equalTo("id", eventId).findFirst());
+                            return true;
+                        });
                 });
     }
 
@@ -179,15 +166,14 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
         int memberId = me.getId();
         int eventId  = summitEvent.getId();
 
-        removeEventFromMyFavoritesLocal(
-                me,
-                summitEvent
-        );
-
         return memberRemoteDataStore
                 .removeSummitEventFromFavorites(summitEvent.getSummit().getId(), summitEvent.getId())
-                .doOnError( ex -> {
-                    addEventToMyFavoritesLocal(getById(memberId), RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst());
+                .doOnNext( res -> {
+                    if(res)
+                        RealmFactory.transaction(session -> {
+                            removeEventFromMyFavoritesLocal(getById(memberId), session.where(SummitEvent.class).equalTo("id", eventId).findFirst());
+                            return true;
+                        });
                 });
     }
 
@@ -204,21 +190,17 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
     public Observable<Boolean> addEventToMemberSchedule(Member me, final SummitEvent summitEvent)
     {
 
-        int attendeeId = me.getId();
-        int eventId  = summitEvent.getId();
-
-        addEventToMemberScheduleLocal(
-                me,
-                summitEvent
-        );
+        int memberId  = me.getId();
+        int eventId   = summitEvent.getId();
 
         return memberRemoteDataStore
                 .addEventToSchedule(summitEvent.getSummit().getId(), summitEvent.getId())
-                .doOnError( res -> {
-                    removeEventFromMemberScheduleLocal(
-                            getById(attendeeId),
-                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
-                    );
+                .doOnNext( res -> {
+                    if(res)
+                    RealmFactory.transaction(session -> {
+                        addEventToMemberScheduleLocal(getById(memberId), session.where(SummitEvent.class).equalTo("id", eventId).findFirst());
+                        return true;
+                    });
                 });
     }
 
@@ -275,42 +257,34 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
     @Override
     public Observable<Boolean> removeEventFromMemberSchedule(Member me, SummitEvent summitEvent) {
 
-        int attendeeId = me.getId();
+        int memberId = me.getId();
         int eventId  = summitEvent.getId();
-
-        removeEventFromMemberScheduleLocal(
-                me,
-                summitEvent
-        );
 
         return memberRemoteDataStore
                 .removeEventFromSchedule(summitEvent.getSummit().getId(), summitEvent.getId())
-                .doOnError( res -> {
-                    addEventToMemberScheduleLocal(
-                            getById(attendeeId),
-                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
-                    );
+                .doOnNext( res -> {
+                    if(res)
+                        RealmFactory.transaction(session -> {
+                            removeEventFromMemberScheduleLocal(getById(memberId), session.where(SummitEvent.class).equalTo("id", eventId).findFirst());
+                            return true;
+                        });
                 });
     }
 
     @Override
     public Observable<Boolean> deleteRSVP(Member me, SummitEvent summitEvent) {
 
-        int attendeeId = me.getId();
+        int memberId = me.getId();
         int eventId  = summitEvent.getId();
-
-        removeEventFromMemberScheduleLocal(
-                me,
-                summitEvent
-        );
 
         return memberRemoteDataStore
                 .deleteRSVP(summitEvent.getSummit().getId(), summitEvent.getId())
-                .doOnError( res -> {
-                    addEventToMemberScheduleLocal(
-                            getById(attendeeId),
-                            RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst()
-                    );
+                .doOnNext( res -> {
+                    if(res)
+                        RealmFactory.transaction(session -> {
+                            removeEventFromMemberScheduleLocal(getById(memberId), session.where(SummitEvent.class).equalTo("id", eventId).findFirst());
+                            return true;
+                        });
                 });
     }
 

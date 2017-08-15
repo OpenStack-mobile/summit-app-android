@@ -57,7 +57,7 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
         return interactor
                 .deleteRSVP(scheduleItemDTO.getId())
                 .doOnNext((res) ->  removeOp(scheduleItemDTO.getId(), "RSVP_DEL"))
-                .doOnError((res) -> { removeOp(scheduleItemDTO.getId(), "RSVP_DEL"); scheduleableView.setScheduled(true);});
+                .doOnError((res) -> { removeOp(scheduleItemDTO.getId(), "RSVP_DEL");});
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ScheduleablePresenter implements IScheduleablePresenter {
         return interactor
                 .removeEventFromMemberFavorites(scheduleItemDTO.getId())
                 .doOnNext((res) ->  removeOp(scheduleItemDTO.getId(), "FAV_DEL"))
-                .doOnError((res) -> { removeOp(scheduleItemDTO.getId(), "FAV_DEL"); scheduleableView.setFavorite(true);});
+                .doOnError((res) -> { removeOp(scheduleItemDTO.getId(), "FAV_DEL");});
     }
 
     private Observable<Boolean> addEvent2Favorites(ScheduleItemDTO scheduleItemDTO,

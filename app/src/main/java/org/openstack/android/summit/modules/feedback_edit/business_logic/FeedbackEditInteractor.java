@@ -1,6 +1,7 @@
 package org.openstack.android.summit.modules.feedback_edit.business_logic;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
@@ -15,9 +16,7 @@ import org.openstack.android.summit.common.entities.exceptions.ValidationExcepti
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.RealmFactory;
-
 import java.util.Date;
-
 import io.reactivex.Observable;
 
 /**
@@ -27,10 +26,19 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
 
     IMemberDataStore memberDataStore;
     ISummitEventDataStore summitEventDataStore;
-    IReachability reachability;
 
-    public FeedbackEditInteractor(IMemberDataStore memberDataStore, ISummitEventDataStore summitEventDataStore, ISecurityManager securityManager, IReachability reachability, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+    public FeedbackEditInteractor
+    (
+            IMemberDataStore memberDataStore,
+            ISummitEventDataStore summitEventDataStore,
+            ISecurityManager securityManager,
+             IDTOAssembler dtoAssembler,
+            ISummitDataStore summitDataStore,
+            ISummitSelector summitSelector,
+            IReachability reachability
+    )
+    {
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
 
         this.memberDataStore      = memberDataStore;
         this.summitEventDataStore = summitEventDataStore;
@@ -41,7 +49,7 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
     public Observable<FeedbackDTO> saveFeedback(int eventId, int rate, String review) throws ValidationException {
 
         if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-            throw new ValidationException("Feedback can't be created, there is no connectivity");
+            throw new ValidationException(OpenStackSummitApplication.context.getResources().getString(R.string.no_connectivity_message));
         }
 
         if(!securityManager.isLoggedIn()){
@@ -65,28 +73,23 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
         feedback.setReview(review);
         feedback.setDate(new Date());
 
-        if (new_feedback) {
-            return memberDataStore.addFeedback(member, feedback).map( id -> {
+        if (new_feedback)
+            return memberDataStore.addFeedback(member, feedback).map(id -> {
                         Feedback f = RealmFactory.transaction(session ->
                                 session.where(Feedback.class).equalTo("id", id).findFirst()
                         );
                         return dtoAssembler.createDTO(f, FeedbackDTO.class);
                     }
             );
-        } else {
-            return memberDataStore.updateFeedback(member, feedback).map( success -> {
-                    if (success) {
-                        Feedback f = RealmFactory.transaction(session ->
-                                session.where(Feedback.class).equalTo("event.id", eventId).findFirst()
-                        );
-                        return dtoAssembler.createDTO(f, FeedbackDTO.class);
-                    }
-
-                    return null;
-                }
-            );
-        }
-
+        // update
+        return memberDataStore.updateFeedback(member, feedback).map( success -> {
+            if (success) {
+                Feedback f = RealmFactory.transaction(session ->
+                        session.where(Feedback.class).equalTo("event.id", eventId).findFirst());
+                return dtoAssembler.createDTO(f, FeedbackDTO.class);
+            }
+            return null;
+        });
     }
 
     private String validateFeedback(int rate, String review) {
@@ -102,8 +105,8 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
 
     @Override
     public Feedback getFeedback(int eventId) throws ValidationException {
-        if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-            throw new ValidationException("Feedback can't be created, there is no connectivity");
+        if (!isNetworkingAvailable()) {
+            throw new ValidationException(OpenStackSummitApplication.context.getResources().getString(R.string.no_connectivity_message));
         }
 
         if(!securityManager.isLoggedIn()){

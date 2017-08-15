@@ -9,6 +9,7 @@ import org.openstack.android.summit.common.data_access.repositories.IMemberDataS
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
@@ -35,7 +36,8 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
             ISession session,
-            ISummitSelector summitSelector
+            ISummitSelector summitSelector,
+            IReachability reachability
     ) {
         super
         (
@@ -45,7 +47,8 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
             dtoAssembler,
             securityManager,
             pushNotificationsManager,
-            summitSelector
+            summitSelector,
+            reachability
         );
         this.summitDataStore = summitDataStore;
         this.session = session;

@@ -11,6 +11,7 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitDataS
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
@@ -37,10 +38,11 @@ public class FavoritesScheduleInteractor
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
             ISession session,
-            ISummitSelector summitSelector
+            ISummitSelector summitSelector,
+            IReachability reachability
     )
     {
-        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector, reachability);
     }
 
     @Override

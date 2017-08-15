@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 /**
@@ -16,9 +17,10 @@ public class VenuesInteractor extends BaseInteractor implements IVenuesInteracto
         ISecurityManager securityManager,
         IDTOAssembler dtoAssembler,
         ISummitSelector summitSelector,
-        ISummitDataStore summitDataStore
+        ISummitDataStore summitDataStore,
+        IReachability reachability
     )
     {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
     }
 }

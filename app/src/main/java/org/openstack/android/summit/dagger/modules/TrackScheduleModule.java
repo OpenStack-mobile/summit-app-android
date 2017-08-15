@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ITrackDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.ISession;
@@ -53,10 +54,11 @@ public class TrackScheduleModule {
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
             ISession session,
-            ISummitSelector summitSelector
+            ISummitSelector summitSelector,
+            IReachability reachability
     )
     {
-        return new TrackScheduleInteractor(memberDataStore, summitEventDataStore, summitDataStore, trackDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector);
+        return new TrackScheduleInteractor(memberDataStore, summitEventDataStore, summitDataStore, trackDataStore, dtoAssembler, securityManager, pushNotificationsManager, session, summitSelector, reachability);
     }
 
     @Provides

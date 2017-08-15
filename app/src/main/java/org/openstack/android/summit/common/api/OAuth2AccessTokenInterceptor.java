@@ -5,9 +5,12 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.network.NetworkException;
 import org.openstack.android.summit.common.security.ITokenManager;
 
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.security.InvalidParameterException;
 
 import javax.inject.Inject;
@@ -45,7 +48,15 @@ public class OAuth2AccessTokenInterceptor implements Interceptor {
 
             return chain.proceed(accessTokenSendStrategy.process(chain.request(), accessToken));
         }
-        catch (Exception ex){
+        catch(SocketException ex1){
+            Log.w(Constants.LOG_TAG,ex1.getMessage(), ex1);
+            throw new NetworkException(ex1.getMessage());
+        }
+        catch(SocketTimeoutException ex2){
+            Log.w(Constants.LOG_TAG,ex2.getMessage(), ex2);
+            throw new NetworkException(ex2.getMessage());
+        }
+        catch(Exception ex){
             Crashlytics.logException(ex);
             Log.d(Constants.LOG_TAG,ex.getMessage(), ex);
             throw new IOException("invalid access token!.");

@@ -73,8 +73,8 @@ public class GeneralScheduleModule {
                 securityManager,
                 pushNotificationsManager,
                 session,
-                reachability,
-                summitSelector
+                summitSelector,
+                reachability
         );
     }
 

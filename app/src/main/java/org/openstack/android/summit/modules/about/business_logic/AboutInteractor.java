@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.DTOs.WifiListItemDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitWIFIConnection;
@@ -17,8 +18,8 @@ import java.util.List;
  */
 public class AboutInteractor extends BaseInteractor implements IAboutInteractor {
 
-    public AboutInteractor(ISecurityManager securityManager, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISummitSelector summitSelector) {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+    public AboutInteractor(ISecurityManager securityManager, ISummitDataStore summitDataStore, IDTOAssembler dtoAssembler, ISummitSelector summitSelector,  IReachability reachability) {
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
         this.summitDataStore = summitDataStore;
     }
 

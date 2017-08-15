@@ -1,8 +1,6 @@
 package org.openstack.android.summit.modules.main.business_logic;
 
 import android.util.Log;
-
-import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
     private IPushNotificationsManager pushNotificationsManager;
-    private IReachability reachability;
     private IPushNotificationDataStore pushNotificationDataStore;
     private ISession session;
     private ISummitEventDataStore summitEventDataStore;
@@ -38,15 +35,14 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
         ISecurityManager securityManager,
         IPushNotificationsManager pushNotificationsManager,
         IDTOAssembler dtoAssembler,
-        IReachability reachability,
         IPushNotificationDataStore pushNotificationDataStore,
         ISession session,
-        ISummitSelector summitSelector
+        ISummitSelector summitSelector,
+        IReachability reachability
     )
     {
-        super(securityManager, dtoAssembler, summitSelector, summitDataStore);
+        super(securityManager, dtoAssembler, summitSelector, summitDataStore, reachability);
         this.pushNotificationsManager  = pushNotificationsManager;
-        this.reachability              = reachability;
         this.pushNotificationDataStore = pushNotificationDataStore;
         this.session                   = session;
         this.summitEventDataStore      = summitEventDataStore;
@@ -82,11 +78,6 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
     @Override
     public EventDetailDTO getEventById(int eventId) {
         return dtoAssembler.createDTO(summitEventDataStore.getById(eventId), EventDetailDTO.class);
-    }
-
-    @Override
-    public boolean isNetworkingAvailable() {
-        return reachability.isNetworkingAvailable(OpenStackSummitApplication.context);
     }
 
     @Override

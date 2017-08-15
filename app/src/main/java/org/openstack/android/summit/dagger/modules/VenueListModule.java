@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
 import org.openstack.android.summit.modules.venue_list.IVenueListWireframe;
@@ -33,8 +34,8 @@ public class VenueListModule {
     }
 
     @Provides
-    IVenueListInteractor providesVenueListInteractor(ISecurityManager securityManager, IVenueDataStore venueDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new VenueListInteractor(securityManager, venueDataStore, dtoAssembler, summitDataStore, summitSelector);
+    IVenueListInteractor providesVenueListInteractor(ISecurityManager securityManager, IVenueDataStore venueDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector, IReachability reachability) {
+        return new VenueListInteractor(securityManager, venueDataStore, dtoAssembler, summitDataStore, summitSelector, reachability);
     }
 
     @Provides

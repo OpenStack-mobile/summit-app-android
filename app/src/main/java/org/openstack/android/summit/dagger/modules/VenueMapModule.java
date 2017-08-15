@@ -5,6 +5,7 @@ import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IVenueDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.modules.venue_map.business_logic.VenueMapInteractor;
 import org.openstack.android.summit.modules.venue_map.user_interface.IVenueMapPresenter;
@@ -33,8 +34,8 @@ public class VenueMapModule {
     }
 
     @Provides
-    IVenueMapInteractor providesVenueMapInteractor(ISecurityManager securityManager, IVenueDataStore venueDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector) {
-        return new VenueMapInteractor(securityManager, venueDataStore, dtoAssembler, summitDataStore, summitSelector);
+    IVenueMapInteractor providesVenueMapInteractor(ISecurityManager securityManager, IVenueDataStore venueDataStore, IDTOAssembler dtoAssembler, ISummitDataStore summitDataStore, ISummitSelector summitSelector, IReachability reachability) {
+        return new VenueMapInteractor(securityManager, venueDataStore, dtoAssembler, summitDataStore, summitSelector, reachability);
     }
 
     @Provides

@@ -24,7 +24,6 @@ import io.reactivex.Observable;
  * Created by Claudio Redi on 1/21/2016.
  */
 public class EventDetailInteractor extends ScheduleableInteractor implements IEventDetailInteractor {
-    IReachability reachability;
 
     @Inject
     public EventDetailInteractor
@@ -32,15 +31,14 @@ public class EventDetailInteractor extends ScheduleableInteractor implements IEv
         ISummitEventDataStore summitEventDataStore,
         ISummitDataStore summitDataStore,
         IMemberDataStore memberDataStore,
-        IReachability reachability,
         IDTOAssembler dtoAssembler,
         ISecurityManager securityManager,
         IPushNotificationsManager pushNotificationsManager,
-        ISummitSelector summitSelector
+        ISummitSelector summitSelector,
+        IReachability reachability
     )
     {
-        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, summitSelector);
-        this.reachability = reachability;
+        super(summitEventDataStore, summitDataStore, memberDataStore, dtoAssembler, securityManager, pushNotificationsManager, summitSelector, reachability);
     }
 
     @Override

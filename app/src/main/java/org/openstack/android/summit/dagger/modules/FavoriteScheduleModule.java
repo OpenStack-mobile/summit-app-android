@@ -9,6 +9,7 @@ import org.openstack.android.summit.common.data_access.repositories.IMemberDataS
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
@@ -43,12 +44,12 @@ public class FavoriteScheduleModule {
             IMemberDataStore memberDataStore,
             ISummitEventDataStore summitEventDataStore,
             ISummitDataStore summitDataStore,
-            ISummitAttendeeDataStore summitAttendeeDataStore,
             IDTOAssembler dtoAssembler,
             ISecurityManager securityManager,
             IPushNotificationsManager pushNotificationsManager,
             ISession session,
-            ISummitSelector summitSelector
+            ISummitSelector summitSelector,
+            IReachability reachability
     )
     {
         return new FavoritesScheduleInteractor
@@ -60,7 +61,8 @@ public class FavoriteScheduleModule {
                            securityManager,
                            pushNotificationsManager,
                            session,
-                           summitSelector
+                           summitSelector,
+                           reachability
                    );
     }
 

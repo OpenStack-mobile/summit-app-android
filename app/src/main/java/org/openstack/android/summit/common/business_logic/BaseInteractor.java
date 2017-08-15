@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.business_logic;
 
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
@@ -8,6 +9,7 @@ import org.openstack.android.summit.common.data_access.repositories.ISummitDataS
 import org.openstack.android.summit.common.entities.IEntity;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
@@ -22,16 +24,19 @@ public class BaseInteractor implements IBaseInteractor {
     protected ISummitSelector summitSelector;
     protected ISummitDataStore summitDataStore;
     protected ISecurityManager securityManager;
+    protected IReachability reachability;
 
     public BaseInteractor
     (
         ISecurityManager securityManager,
         IDTOAssembler dtoAssembler,
         ISummitSelector summitSelector,
-        ISummitDataStore summitDataStore
+        ISummitDataStore summitDataStore,
+        IReachability reachability
     )
     {
         this.securityManager = securityManager;
+        this.reachability    = reachability;
         this.dtoAssembler    = dtoAssembler;
         this.summitDataStore = summitDataStore;
         this.summitSelector  = summitSelector;
@@ -87,6 +92,11 @@ public class BaseInteractor implements IBaseInteractor {
         Member member = securityManager.getCurrentMember();
         if(member == null) return null;
         return dtoAssembler.createDTO(member, MemberDTO.class);
+    }
+
+    @Override
+    public boolean isNetworkingAvailable(){
+        return reachability.isNetworkingAvailable(OpenStackSummitApplication.context);
     }
 
 }

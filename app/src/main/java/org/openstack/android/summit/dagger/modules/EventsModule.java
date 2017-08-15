@@ -39,11 +39,11 @@ public class EventsModule {
     (
         ISecurityManager securityManager,
         ISummitDataStore summitDataStore,
-        IReachability reachability,
         IDTOAssembler dtoAssembler,
-        ISummitSelector  summitSelector
+        ISummitSelector  summitSelector,
+        IReachability reachability
     ) {
-        return new EventsInteractor(securityManager, summitDataStore, reachability, dtoAssembler, summitSelector);
+        return new EventsInteractor(securityManager, summitDataStore, dtoAssembler, summitSelector, reachability);
     }
 
     @Provides
