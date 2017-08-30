@@ -214,7 +214,6 @@ public class EventDetailPresenter
             }
         }
         catch(Exception ex){
-            Log.e(Constants.LOG_TAG, ex.getMessage());
             Crashlytics.logException(ex);
         }
     }

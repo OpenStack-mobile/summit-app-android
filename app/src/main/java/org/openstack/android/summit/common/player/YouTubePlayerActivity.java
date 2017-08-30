@@ -316,5 +316,16 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity implements
         if (animEnter != 0 && animExit != 0)
             overridePendingTransition(animEnter, animExit);
     }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        // https://stackoverflow.com/questions/44379747/youtube-android-player-api-throws-badparcelableexception-classnotfoundexception
+        try {
+            super.onRestoreInstanceState(savedInstanceState);
+        }
+        catch(Exception ex){
+            Crashlytics.logException(ex);
+        }
+    }
 }
 
