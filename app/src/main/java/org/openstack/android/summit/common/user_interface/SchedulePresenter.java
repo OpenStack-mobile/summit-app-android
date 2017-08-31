@@ -156,7 +156,6 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
         view.setNowButtonVisibility(currentSummit.isCurrentDateTimeInsideSummitRange() ? View.VISIBLE : View.GONE);
 
-
         // check if current time is on summit time
         List<DateTime> pastDates     = shouldHidePastTalks ? currentSummit.getPastDates() : new ArrayList<>();
         List<DateTime> inactiveDates = hasToCheckDisabledDates || scheduleFilter.hasActiveFilters() ? getDatesWithoutEvents(startDate, endDate) : new ArrayList<>();
@@ -165,8 +164,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         inactiveDates.addAll(pastDates);
         Collections.sort(inactiveDates);
         // set ranger states
-        view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
         DateTime formerSelectedDate       = view.getSelectedDate();
+        view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
         DateTime scheduleStartDate        = currentSummit.getLocalScheduleStartDate();
         boolean scheduleStartDateInactive = false;
         boolean currentDateInactive       = false;
