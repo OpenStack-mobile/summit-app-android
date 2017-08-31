@@ -24,6 +24,7 @@ import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -141,14 +142,28 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         // Initialise the WebView
         WebView webView = (WebView) findViewById(R.id.WebView);
-        webView.getSettings().setJavaScriptEnabled(true);
+
         webView.setWebViewClient(new CustomWebViewClient(this, this.oidcConfigurationManager));
-        // persists the cookies ...
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setDefaultTextEncodingName("utf-8");
+        CookieManager cookieManager = CookieManager.getInstance();
+        webView.clearCache(true);
+        webView.clearHistory();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            cookieManager.setAcceptThirdPartyCookies(webView, true);
+            webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+            webView.getSettings().setAllowFileAccessFromFileURLs(true);
+            cookieManager.removeAllCookies(null);
         }
-        CookieManager.getInstance().setAcceptCookie(true);
-        CookieManager.getInstance().removeAllCookie();
+        else{
+            cookieManager.removeAllCookie();
+        }
+
+        cookieManager.setAcceptCookie(true);
+
         webView.loadUrl(authUrl);
     }
 

@@ -16,8 +16,10 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -106,24 +108,27 @@ public class BrowserActivity extends Activity {
             }
             // Initialise the WebView
             WebView webView = (WebView) findViewById(R.id.WebView);
-
             webView.setWebViewClient(new BrowserActivity.CustomWebViewClient(this));
-
             webView.getSettings().setJavaScriptEnabled(true);
-            webView.clearCache(true);
-            webView.clearHistory();
-            CookieManager cookieManager = CookieManager.getInstance();
-            // persists the oookies ...
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                cookieManager.setAcceptThirdPartyCookies(webView, true);
-            }
-            cookieManager.setAcceptCookie(true);
+            webView.getSettings().setDomStorageEnabled(true);
+            webView.getSettings().setDefaultTextEncodingName("utf-8");
 
+            CookieManager cookieManager = CookieManager.getInstance();
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+                cookieManager.setAcceptThirdPartyCookies(webView, true);
+                webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+                webView.getSettings().setAllowFileAccessFromFileURLs(true);
+                cookieManager.flush();
+            }
+
+            cookieManager.setAcceptCookie(true);
             Uri.Builder builder = url.buildUpon();
-            //String link = builder.appendQueryParameter("mobile_app", "1").build().toString();
             String link = builder.build().toString();
             Log.d(Constants.LOG_TAG, " opening url " + link);
             webView.loadUrl(link);
+
         } catch (Exception ex) {
             Crashlytics.logException(ex);
             Log.e(Constants.LOG_TAG, ex.getMessage());
@@ -151,10 +156,12 @@ public class BrowserActivity extends Activity {
 
         @Override
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-            super.onReceivedHttpError(view, request, errorResponse);
-            WebView webView = (WebView) activity.get().findViewById(R.id.WebView);
-            webView.setVisibility(View.VISIBLE);
-            activity.get().hideActivityIndicator();
+
+        }
+
+        @Override
+        public void onLoadResource(WebView view, String url) {
+            super.onLoadResource(view, url);
         }
 
         @Override
