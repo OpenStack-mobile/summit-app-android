@@ -121,7 +121,7 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="center_vertical"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:text="&#8942;"
+            android:text="@string/vertical_dots"
             android:textAppearance="?android:textAppearanceLarge" />
     </LinearLayout>
 

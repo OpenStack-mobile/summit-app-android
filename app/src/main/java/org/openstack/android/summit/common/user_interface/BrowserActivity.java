@@ -113,6 +113,10 @@ public class BrowserActivity extends Activity {
             webView.getSettings().setDomStorageEnabled(true);
             webView.getSettings().setDefaultTextEncodingName("utf-8");
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                WebView.setWebContentsDebuggingEnabled(true);
+            }
+
             CookieManager cookieManager = CookieManager.getInstance();
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

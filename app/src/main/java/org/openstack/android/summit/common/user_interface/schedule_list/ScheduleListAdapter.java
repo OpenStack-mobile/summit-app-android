@@ -227,6 +227,7 @@ public class ScheduleListAdapter
         }
 
         @Override
+        @SuppressWarnings({"all"})
         public void setContextualMenu() {
           if (buttonViewOptions == null) return;
 
