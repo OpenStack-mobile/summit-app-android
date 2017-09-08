@@ -22,7 +22,11 @@ final public class RealmFactory {
         // The Realm file will be located in Context.getFilesDir() with name "default.realm"
         Realm.init(context);
         https://realm.io/docs/java/latest/#the-default-realmconfiguration
-        return new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
+        return new RealmConfiguration
+                .Builder()
+                .deleteRealmIfMigrationNeeded()
+                .compactOnLaunch()
+                .build();
     }
 
     // Thread local variable containing each thread's ID

@@ -101,10 +101,15 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+        currentSummit = interactor.getActiveSummit();
         selectedDay = (savedInstanceState != null) ?
                 savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_DAY, 0) :
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_DAY, Integer.class);
+
+        // if there isnt selected day and we are not on summit time, default date is
+        if(selectedDay == 0 && !this.currentSummit.isCurrentDateTimeInsideSummitRange()){
+            selectedDay = this.currentSummit.getScheduleStartDay();
+        }
 
         if(savedInstanceState != null)
             setNowButtonInitialState = savedInstanceState.getBoolean(Constants.SETTING_SET_NOW_BUTTON_INITIAL_STATE);
@@ -164,34 +169,22 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         inactiveDates.addAll(pastDates);
         Collections.sort(inactiveDates);
         // set ranger states
-        DateTime formerSelectedDate       = view.getSelectedDate();
         view.setStartAndEndDateWithDisabledDates(startDate, endDate, inactiveDates);
-        DateTime scheduleStartDate        = currentSummit.getLocalScheduleStartDate();
-        boolean scheduleStartDateInactive = false;
+
+        DateTime formerSelectedDate       = view.getSelectedDate();
         boolean currentDateInactive       = false;
 
         for (DateTime dt : inactiveDates) {
-            if (dt.compareTo(scheduleStartDate) == 0) {
-                scheduleStartDateInactive = true;
-            }
             if (formerSelectedDate != null && dt.compareTo(formerSelectedDate) == 0) {
                 currentDateInactive = true;
             }
         }
 
-        // outside of summit time, the default schedule start date should be set
-        if (!scheduleStartDateInactive && formerSelectedDate == null && !currentSummit.isCurrentDateTimeInsideSummitRange()) {
-            this.selectedDay = currentSummit.getScheduleStartDay();
-            view.setSelectedDate(this.selectedDay, false);
-        }
-
         // is current date is inactive, move the current date to next active day ...
         if(formerSelectedDate != null && currentDateInactive){
             DateTime firstDate = currentSummit.getFirstEnabledDate(inactiveDates);
-            if(firstDate != null){
-                this.selectedDay = firstDate.getDayOfMonth();
-                view.setSelectedDate(this.selectedDay, false);
-            }
+            this.selectedDay = (firstDate != null) ? firstDate.getDayOfMonth() : 0;
+            view.setSelectedDate(this.selectedDay, false);
         }
 
         view.hideActivityIndicator();

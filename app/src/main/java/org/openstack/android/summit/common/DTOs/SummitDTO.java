@@ -37,19 +37,19 @@ public class SummitDTO extends NamedDTO {
     }
 
     public DateTime getFirstEnabledDate(List<DateTime> inactiveDates){
-        DateTime start = this.getLocalStartDate();
-        DateTime end   = this.getLocalEndDate();
+        DateTime start = this.getLocalStartDate().withTime(0, 0, 0, 0);
+        DateTime end   = this.getLocalEndDate().withTime(0, 0, 0, 0);
         DateTime first = null;
 
-        while( start.isBefore(end.getMillis())){
-
-          if(inactiveDates.contains(start)){
-              start = start.plusDays(1);
-              continue;
-          }
-          first = start;
-          break;
+        while(start.isBefore(end.getMillis())){
+            if(inactiveDates.contains(start)){
+                start = start.plusDays(1);
+                continue;
+            }
+            first = start;
+            break;
         }
+        if(first == null && !inactiveDates.contains(start)) first = start;
         return first;
     }
 
