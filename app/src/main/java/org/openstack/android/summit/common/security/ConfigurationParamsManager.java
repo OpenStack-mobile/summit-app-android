@@ -13,7 +13,7 @@ public class ConfigurationParamsManager implements IConfigurationParamsManager {
 
     public ConfigurationParamsManager(IConfigurationParamFinderStrategy[] finderStrategies) {
         this.finderStrategies = finderStrategies;
-        cache = new  HashMap<String,String>();
+        cache = new HashMap<>();
     }
 
     @Override

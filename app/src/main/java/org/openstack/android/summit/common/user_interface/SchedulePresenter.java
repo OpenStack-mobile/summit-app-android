@@ -107,7 +107,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_DAY, Integer.class);
 
         // if there isnt selected day and we are not on summit time, default date is
-        if(selectedDay == 0 && currentSummit!= null && !currentSummit.isCurrentDateTimeInsideSummitRange()){
+        if(selectedDay == 0 && currentSummit != null && !currentSummit.isCurrentDateTimeInsideSummitRange()){
             selectedDay = this.currentSummit.getScheduleStartDay();
         }
 
