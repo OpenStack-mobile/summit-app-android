@@ -94,7 +94,7 @@ public class ScheduleListAdapter
         private TextView location;
         private boolean scheduled;
         private boolean favorite;
-        private TextView buttonViewOptions;
+        private ImageView buttonViewOptions;
         private LinearLayout optionsContainer;
         private ImageView favoriteEvent;
         private ImageView goingEvent;
@@ -138,7 +138,7 @@ public class ScheduleListAdapter
             locationContainer = (LinearLayout) itemView.findViewById(R.id.item_schedule_place_container);
             location = (TextView) itemView.findViewById(R.id.item_schedule_textview_location);
 
-            buttonViewOptions                = (TextView) itemView.findViewById(R.id.textViewOptions);
+            buttonViewOptions                = (ImageView) itemView.findViewById(R.id.textViewOptions);
             favoriteEvent                    = (ImageView) itemView.findViewById(R.id.favorite_event);
             goingEvent                       = (ImageView) itemView.findViewById(R.id.going_event);
             optionsContainer                 = (LinearLayout) itemView.findViewById(R.id.options_container);
