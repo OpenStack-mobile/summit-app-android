@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.security.oidc;
 
+import java.util.Locale;
+
 /**
  * Created by smarcet on 2/17/17.
  */
@@ -21,13 +23,13 @@ final public class NativeApplicationScopes {
         return new String[] {
                 OpenIdConnect,
                 Offline,
-                String.format(SummitRead, resourceServerBaseUrl),
-                String.format(SummitWrite, resourceServerBaseUrl),
-                String.format(ReadExternalOrders, resourceServerBaseUrl),
-                String.format(ConfirmExternalOrders, resourceServerBaseUrl),
-                String.format(ReadOwnMember, resourceServerBaseUrl),
-                String.format(OwmMemberAdd2Favorites, resourceServerBaseUrl),
-                String.format(OwmMemberRemoveFromFavorites, resourceServerBaseUrl)
+                String.format(Locale.US, SummitRead, resourceServerBaseUrl),
+                String.format(Locale.US, SummitWrite, resourceServerBaseUrl),
+                String.format(Locale.US, ReadExternalOrders, resourceServerBaseUrl),
+                String.format(Locale.US, ConfirmExternalOrders, resourceServerBaseUrl),
+                String.format(Locale.US, ReadOwnMember, resourceServerBaseUrl),
+                String.format(Locale.US, OwmMemberAdd2Favorites, resourceServerBaseUrl),
+                String.format(Locale.US, OwmMemberRemoveFromFavorites, resourceServerBaseUrl)
         };
     }
 

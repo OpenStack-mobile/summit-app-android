@@ -16,6 +16,7 @@ import org.openstack.android.summit.common.entities.Tag;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -123,10 +124,10 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
 
             TimeZone timeZone = TimeZone.getTimeZone(summit.getTimeZone());
 
-            DateFormat formatterFrom = new SimpleDateFormat("MMM dd, yyyy");
+            DateFormat formatterFrom = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
             formatterFrom.setTimeZone(timeZone);
 
-            return String.format("%s", formatterFrom.format(summitEvent.getStart()));
+            return String.format(Locale.US, "%s", formatterFrom.format(summitEvent.getStart()));
 
         }
         catch (Exception ex){
@@ -140,7 +141,7 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
     protected String getTime(E summitEvent) {
         Summit summit = null;
         try {
-            DateFormat formatterFrom = new SimpleDateFormat("hh:mm a");
+            DateFormat formatterFrom = new SimpleDateFormat("hh:mm a", Locale.US);
             summit                   = summitEvent.getSummit();
 
             if(summit == null)
@@ -151,9 +152,9 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
 
             TimeZone timeZone = TimeZone.getTimeZone(summit.getTimeZone());
             formatterFrom.setTimeZone(timeZone);
-            DateFormat formatterTo = new SimpleDateFormat("hh:mm a");
+            DateFormat formatterTo = new SimpleDateFormat("hh:mm a", Locale.US);
             formatterTo.setTimeZone(timeZone);
-            String timeRange = String.format("%s - %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
+            String timeRange = String.format(Locale.US, "%s - %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
             return timeRange.toLowerCase();
         }
         catch (Exception ex){

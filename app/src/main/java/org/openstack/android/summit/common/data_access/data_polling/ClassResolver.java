@@ -12,6 +12,8 @@ import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
 
+import java.util.Locale;
+
 /**
  * Created by Claudio Redi on 2/8/2016.
  */
@@ -71,7 +73,7 @@ public class ClassResolver implements IClassResolver {
 
         if (type == null) {
             try {
-                fullyQualifiedClassName = String.format("org.openstack.android.summit.common.entities.%s", className.replace("Summit", ""));
+                fullyQualifiedClassName = String.format(Locale.US, "org.openstack.android.summit.common.entities.%s", className.replace("Summit", ""));
                 type = Class.forName(fullyQualifiedClassName);
             } catch (ClassNotFoundException e) {
                 Log.d(Constants.LOG_TAG, String.format("Class with name %s not found", fullyQualifiedClassName));
@@ -79,7 +81,7 @@ public class ClassResolver implements IClassResolver {
         }
 
         if (type == null) {
-            fullyQualifiedClassName = String.format("%s.Summit%s", this.getClass().getPackage().getName(), className);
+            fullyQualifiedClassName = String.format(Locale.US, "%s.Summit%s", this.getClass().getPackage().getName(), className);
             type = Class.forName(fullyQualifiedClassName);
         }
 

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -77,18 +78,18 @@ public class PushNotificationsManager implements IPushNotificationsManager {
     @Override
     public void subscribeMember(int memberId){
         synchronized (this.lock) {
-            if (channels.contains(String.format(MemberChannelSlug,  memberId))) return;
-            channels.add(String.format(MemberChannelSlug, memberId));
-            FirebaseMessaging.getInstance().subscribeToTopic(String.format(MemberChannelSlug, memberId));
+            if (channels.contains(String.format(Locale.US, MemberChannelSlug,  memberId))) return;
+            channels.add(String.format(Locale.US, MemberChannelSlug, memberId));
+            FirebaseMessaging.getInstance().subscribeToTopic(String.format(Locale.US, MemberChannelSlug, memberId));
         }
     }
 
     @Override
     public void subscribeSummit(int summitId){
         synchronized (this.lock) {
-            if (channels.contains(String.format(SummitChannelSlug,  summitId))) return;
-            channels.add(String.format(SummitChannelSlug, summitId));
-            FirebaseMessaging.getInstance().subscribeToTopic(String.format(SummitChannelSlug, summitId));
+            if (channels.contains(String.format(Locale.US, SummitChannelSlug,  summitId))) return;
+            channels.add(String.format(Locale.US, SummitChannelSlug, summitId));
+            FirebaseMessaging.getInstance().subscribeToTopic(String.format(Locale.US, SummitChannelSlug, summitId));
         }
     }
 
@@ -121,36 +122,36 @@ public class PushNotificationsManager implements IPushNotificationsManager {
 
     public void subscribeToTeam(int teamId){
         synchronized (this.lock) {
-            if (channels.contains(String.format(TeamChannelSlug, teamId))) return;
-            channels.add(String.format(TeamChannelSlug, teamId));
-            FirebaseMessaging.getInstance().subscribeToTopic(String.format(TeamChannelSlug, teamId));
+            if (channels.contains(String.format(Locale.US, TeamChannelSlug, teamId))) return;
+            channels.add(String.format(Locale.US, TeamChannelSlug, teamId));
+            FirebaseMessaging.getInstance().subscribeToTopic(String.format(Locale.US, TeamChannelSlug, teamId));
         }
     }
 
     @Override
     public void unsubscribeFromTeam(int teamId) {
         synchronized (this.lock) {
-            if (!channels.contains(String.format(TeamChannelSlug, teamId))) return;
-            channels.remove(String.format(TeamChannelSlug, teamId));
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(String.format(TeamChannelSlug, teamId));
+            if (!channels.contains(String.format(Locale.US, TeamChannelSlug, teamId))) return;
+            channels.remove(String.format(Locale.US, TeamChannelSlug, teamId));
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(String.format(Locale.US, TeamChannelSlug, teamId));
         }
     }
 
     @Override
     public void subscribeToEvent(int eventId) {
         synchronized (this.lock) {
-            if (channels.contains(String.format(EventChannelSlug, eventId))) return;
-            channels.add(String.format(EventChannelSlug, eventId));
-            FirebaseMessaging.getInstance().subscribeToTopic(String.format(EventChannelSlug, eventId));
+            if (channels.contains(String.format(Locale.US, EventChannelSlug, eventId))) return;
+            channels.add(String.format(Locale.US, EventChannelSlug, eventId));
+            FirebaseMessaging.getInstance().subscribeToTopic(String.format(Locale.US, EventChannelSlug, eventId));
         }
     }
 
     @Override
     public void unsubscribeFromEvent(int eventId) {
         synchronized (this.lock) {
-            if (!channels.contains(String.format(EventChannelSlug, eventId))) return;
-            channels.remove(String.format(EventChannelSlug, eventId));
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(String.format(EventChannelSlug, eventId));
+            if (!channels.contains(String.format(Locale.US, EventChannelSlug, eventId))) return;
+            channels.remove(String.format(Locale.US, EventChannelSlug, eventId));
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(String.format(Locale.US, EventChannelSlug, eventId));
         }
     }
 

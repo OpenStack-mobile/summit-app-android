@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.InvalidParameterException;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -595,7 +596,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             Log.e(Constants.LOG_TAG, "Could not get ID Token subject.");
         }
 
-        account = new Account(String.format("%s (%s)", accountName, accountId), accountType);
+        account = new Account(String.format(Locale.US, "%s (%s)", accountName, accountId), accountType);
         accountManager.addAccountExplicitly(account, null, null);
 
         // Store the tokens in the account

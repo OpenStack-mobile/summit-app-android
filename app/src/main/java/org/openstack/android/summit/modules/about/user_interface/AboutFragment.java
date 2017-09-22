@@ -22,6 +22,7 @@ import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.WifiItemView;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,9 +104,9 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
             e.printStackTrace();
         }
 
-        setVersion(String.format("Version %s", pInfo.versionName));
+        setVersion(String.format(Locale.US, "Version %s", pInfo.versionName));
 
-        setBuild(String.format("Build Number %s", pInfo.versionCode));
+        setBuild(String.format(Locale.US, "Build Number %s", pInfo.versionCode));
 
         websiteLink.setOnClickListener(v -> {
             Uri uri = Uri.parse("https://www.openstack.org");

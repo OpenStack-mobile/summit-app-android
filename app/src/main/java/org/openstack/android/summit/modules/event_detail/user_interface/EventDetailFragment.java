@@ -37,6 +37,7 @@ import org.openstack.android.summit.common.user_interface.MenuHelper;
 import org.openstack.android.summit.common.user_interface.PersonItemView;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -584,7 +585,7 @@ public class EventDetailFragment
             avgRate5.setImageResource(R.drawable.ic_star);
         }
 
-        rateVal.setText(String.format("%.1f", rate));
+        rateVal.setText(String.format(Locale.US, "%.1f", rate));
     }
 
     @Override

@@ -31,6 +31,7 @@ import org.openstack.android.summit.common.user_interface.recycler_view.DividerI
 import org.openstack.android.summit.common.user_interface.schedule_list.ScheduleListAdapter;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -140,7 +141,7 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
         noResultsEventsText.setVisibility(View.GONE);
 
         Button eventsButton = (Button)view.findViewById(R.id.search_results_events_subsection_button);
-        eventsButton.setText(String.format("%s (%d)", getResources().getString(R.string.events), events.size()));
+        eventsButton.setText(String.format(Locale.US, "%s (%d)", getResources().getString(R.string.events), events.size()));
 
         RecyclerView eventsList = (RecyclerView)view.findViewById(R.id.search_results_events_list);
         eventsList.setVisibility(View.VISIBLE);
@@ -155,7 +156,7 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
         noResultsEventsText.setVisibility(View.GONE);
 
         Button tracksButton = (Button)view.findViewById(R.id.search_results_tracks_subsection_button);
-        tracksButton.setText(String.format("%s (%d)", getResources().getString(R.string.tracks), tracks.size()));
+        tracksButton.setText(String.format(Locale.US, "%s (%d)", getResources().getString(R.string.tracks), tracks.size()));
 
         LinearListView tracksList = (LinearListView)view.findViewById(R.id.search_results_tracks_list);
         tracksList.setVisibility(View.VISIBLE);
@@ -170,7 +171,7 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
         noResultsEventsText.setVisibility(View.GONE);
 
         Button speakersButton = (Button)view.findViewById(R.id.search_results_speakers_subsection_button);
-        speakersButton.setText(String.format("%s (%d)", getResources().getString(R.string.speakers), speakers.size()));
+        speakersButton.setText(String.format(Locale.US, "%s (%d)", getResources().getString(R.string.speakers), speakers.size()));
 
         LinearListView speakersList = (LinearListView)view.findViewById(R.id.search_results_speakers_list);
         speakersList.setVisibility(View.VISIBLE);
@@ -188,7 +189,7 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
         noResultsText.setVisibility(View.VISIBLE);
 
         Button eventsButton = (Button)view.findViewById(R.id.search_results_events_subsection_button);
-        eventsButton.setText(String.format("%s (0)", getResources().getString(R.string.events)));
+        eventsButton.setText(String.format(Locale.US, "%s (0)", getResources().getString(R.string.events)));
 
         RecyclerView eventsList = (RecyclerView)view.findViewById(R.id.search_results_events_list);
         eventsList.setVisibility(View.GONE);
@@ -200,7 +201,7 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
         noResultsText.setVisibility(View.VISIBLE);
 
         Button tracksButton = (Button)view.findViewById(R.id.search_results_tracks_subsection_button);
-        tracksButton.setText(String.format("%s (0)", getResources().getString(R.string.tracks)));
+        tracksButton.setText(String.format(Locale.US, "%s (0)", getResources().getString(R.string.tracks)));
 
         LinearListView tracksList = (LinearListView)view.findViewById(R.id.search_results_tracks_list);
         tracksList.setVisibility(View.GONE);
@@ -212,7 +213,7 @@ public class SearchFragment extends BaseFragment<ISearchPresenter> implements IS
         noResultsText.setVisibility(View.VISIBLE);
 
         Button speakersButton = (Button)view.findViewById(R.id.search_results_speakers_subsection_button);
-        speakersButton.setText(String.format("%s (0)", getResources().getString(R.string.speakers)));
+        speakersButton.setText(String.format(Locale.US, "%s (0)", getResources().getString(R.string.speakers)));
 
         LinearListView speakersList = (LinearListView)view.findViewById(R.id.search_results_speakers_list);
         speakersList.setVisibility(View.GONE);

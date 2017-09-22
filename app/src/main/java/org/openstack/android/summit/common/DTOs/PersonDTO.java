@@ -1,5 +1,7 @@
 package org.openstack.android.summit.common.DTOs;
 
+import java.util.Locale;
+
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
@@ -27,7 +29,7 @@ public class PersonDTO extends PersonListItemDTO  {
         this.lastName = lastName;
     }
 
-    public String getFullName(){ return String.format("%s %s", firstName, lastName); }
+    public String getFullName(){ return String.format(Locale.US, "%s %s", firstName, lastName); }
 
     public String getBio() {
         return bio;

@@ -12,6 +12,7 @@ import org.openstack.android.summit.common.entities.Venue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Claudio Redi on 2/15/2016.
@@ -63,22 +64,22 @@ public class AbstractVenue2VenueDTO <S extends Venue> extends AbstractConverter<
         }
 
         if (venue.getCity() != null && !venue.getCity().isEmpty()) {
-            fullAddress += String.format("%s%s", separator, venue.getCity());
+            fullAddress += String.format(Locale.US, "%s%s", separator, venue.getCity());
             separator = " ";
         }
 
         if (venue.getState() != null && !venue.getState().isEmpty()) {
-            fullAddress += String.format("%s%s", separator, venue.getState());
+            fullAddress += String.format(Locale.US, "%s%s", separator, venue.getState());
             separator = " ";
         }
 
         if (venue.getZipCode() != null && !venue.getZipCode().isEmpty()) {
-            fullAddress += String.format("%s(%s)", separator, venue.getZipCode());
+            fullAddress += String.format(Locale.US, "%s(%s)", separator, venue.getZipCode());
             separator = " ";
         }
 
         if (venue.getCountry() != null && !venue.getCountry().isEmpty()) {
-            fullAddress += String.format("%s%s", separator, venue.getCountry());
+            fullAddress += String.format(Locale.US, "%s%s", separator, venue.getCountry());
         }
 
         return fullAddress;

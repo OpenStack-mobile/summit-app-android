@@ -73,7 +73,7 @@ public class PushNotificationReceiverService extends FirebaseMessagingService {
 
         String title                 = data.get("title");
         String body                  = data.get("body");
-        String tickerText            = String.format(Locale.getDefault(), "%s: %s", title, body);
+        String tickerText            = String.format(Locale.US, "%s: %s", title, body);
         Random random                = new Random();
         int contentIntentRequestCode = random.nextInt();
         int deleteIntentRequestCode  = random.nextInt();
