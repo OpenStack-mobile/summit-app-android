@@ -12,6 +12,7 @@ import android.view.View;
 import com.crashlytics.android.Crashlytics;
 
 import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -198,33 +199,63 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         view.setSelectedDate(summitCurrentDay, false);
 
         reloadSchedule(summitCurrentDay);
-        DateTime now              = currentSummit.getCurrentLocalTime();
-        boolean  foundFirstsEvent = false;
+
 
         if(this.dayEvents == null || this.dayEvents.isEmpty()){
             AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended)).show();
             return;
         }
 
-        int position = 0;
-        for (ScheduleItemDTO item: dayEvents) {
+        DateTime now                    = currentSummit.getCurrentLocalTime();
+        int candidatePos                = -1;
+        DateTime candidateEndDate       = null;
+        boolean candidateAlreadyStarted = false;
+        int candidatePosFallback        = -1;
+
+        for(int i =0 ; i < dayEvents.size() ; i++) {
+            ScheduleItemDTO item =  dayEvents.get(i);
             if
             (
-                (item.getEndDate().isAfter(now.getMillis()) || item.getEndDate().isEqual(now.getMillis()))
-                &&
+                // not finished
+                (item.getEndDate().isAfter(now.getMillis()) || item.getEndDate().isEqual(now.getMillis())) &&
+                // presentation
                 item.isPresentation()
             )
             {
-                foundFirstsEvent = true;
-                break;
+                // already started
+                boolean currentAlreadyStarted = (item.getStartDate().isBefore(now.getMillis()) || item.getStartDate().isEqual(now.getMillis()));
+                if(currentAlreadyStarted &&
+                   // started over more than hour ago
+                  (((now.getMillis() - item.getStartDate().getMillis())/ 1000) > 3600 )) {
+                    // save it just in case that its only available now event
+                    candidatePosFallback = i;
+                    continue;// exclude it
+                }
+
+                // if our candidate already started but our current didnt then exclude it
+                if(candidateAlreadyStarted && !currentAlreadyStarted) continue;
+
+                if(candidateEndDate == null || candidateEndDate.isAfter(item.getEndDate())) {
+                    candidatePos            = i;
+                    candidateAlreadyStarted = currentAlreadyStarted;
+                    candidateEndDate        = item.getEndDate();
+                }
             }
-            position++;
         }
-        if(!foundFirstsEvent){
+
+        // if we dont have any pos set, then use fallback
+        if(candidatePos < 0 ){
+            candidatePos = candidatePosFallback;
+        }
+
+        if(candidatePos < 0){
+            // if all events finished then set last one as current one
+            view.setListPosition(dayEvents.size() - 1);
             AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended)).show();
             return;
         }
-        view.setListPosition(position);
+
+        view.setListPosition(candidatePos);
     }
 
     @Override
