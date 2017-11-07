@@ -209,8 +209,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     handler.cancel();
                 }
             });
-            final AlertDialog dialog = builder.create();
-            dialog.show();
+            try {
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+            catch(Exception ex){
+                Crashlytics.logException(ex);
+                Log.e(Constants.LOG_TAG, ex.getMessage());
+            }
         }
 
         @Override

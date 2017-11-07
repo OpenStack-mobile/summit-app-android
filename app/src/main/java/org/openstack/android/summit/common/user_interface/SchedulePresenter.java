@@ -107,6 +107,9 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
                 savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_DAY, 0) :
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_DAY, Integer.class);
 
+        if(selectedDay == null)
+            selectedDay = 0;
+
         // if there isnt selected day and we are not on summit time, default date is
         if(selectedDay == 0 && currentSummit != null && !currentSummit.isCurrentDateTimeInsideSummitRange()){
             selectedDay = this.currentSummit.getScheduleStartDay();
@@ -202,7 +205,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
 
         if(this.dayEvents == null || this.dayEvents.isEmpty()){
-            AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended)).show();
+            AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended));
+            if(dialog != null) dialog.show();
             return;
         }
 
@@ -251,7 +255,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
         if(candidatePos < 0){
             // if all events finished then set last one as current one
             view.setListPosition(dayEvents.size() - 1);
-            AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended)).show();
+            AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended));
+            if(dialog != null) dialog.show();
             return;
         }
 

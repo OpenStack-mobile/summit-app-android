@@ -1,6 +1,8 @@
 package org.openstack.android.summit.modules.general_schedule.user_interface;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+
 import org.joda.time.DateTime;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
@@ -79,7 +81,8 @@ public class GeneralSchedulePresenter
     @Override
     public void showFilterView() {
         if(!interactor.isDataLoaded()) {
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available);
+            if(dialog != null) dialog.show();
             return;
         }
         wireframe.showFilterView(view);

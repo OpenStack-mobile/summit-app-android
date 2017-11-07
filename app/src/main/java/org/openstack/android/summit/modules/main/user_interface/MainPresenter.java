@@ -114,7 +114,8 @@ public class MainPresenter
                 if (intent.getAction().contains(Constants.LOG_IN_ERROR_EVENT)) {
                     Log.d(Constants.LOG_TAG, "MainPresenter.LOG_IN_ERROR_EVENT");
                     view.hideActivityIndicator();
-                    AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                    AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                    if(dialog != null) dialog.show();
                     userLoginState             = UserLoginState.None;
                     userLoginButtonInteraction = UserLoginButtonInteraction.None;
                     view.setMenuItemVisible(R.id.nav_my_profile, false);
@@ -146,7 +147,8 @@ public class MainPresenter
                     } catch (MissingMemberException ex1) {
                         Crashlytics.logException(ex1);
                         Log.w(Constants.LOG_TAG, ex1.getMessage());
-                        AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_error_message).show();
+                        AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_error_message);
+                        if(dialog != null) dialog.show();
                     } finally {
                         enableDataUpdateService();
                         view.hideActivityIndicator();
@@ -364,7 +366,8 @@ public class MainPresenter
 
         if (!reachability.isNetworkingAvailable(view.getApplicationContext())) {
             view.hideActivityIndicator();
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_connectivity).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_connectivity);
+            if(dialog != null) dialog.show();
             return;
         }
 
@@ -372,7 +375,8 @@ public class MainPresenter
 
         if (!interactor.isDataLoaded()) {
             view.hideActivityIndicator();
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_data).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_data);
+            if(dialog != null) dialog.show();
             //launchSummitListDataLoadingActivity();
             return;
         }
@@ -426,13 +430,15 @@ public class MainPresenter
 
             if (!isUserLogged && !reachability.isNetworkingAvailable(view.getApplicationContext())) {
                 view.hideActivityIndicator();
-                AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_connectivity).show();
+                AlertDialog dialog =  AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_connectivity);
+                if(dialog != null) dialog.show();
                 return;
             }
 
             if (!isUserLogged && !interactor.isDataLoaded()) {
                 view.hideActivityIndicator();
-                AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_data).show();
+                AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_disallowed_no_data);
+                if(dialog != null) dialog.show();
                 //launchSummitListDataLoadingActivity();
                 return;
             }
@@ -506,7 +512,8 @@ public class MainPresenter
             catch(MissingMemberException ex1){
                 Crashlytics.logException(ex1);
                 Log.w(Constants.LOG_TAG, ex1.getMessage());
-                AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_error_message).show();
+                AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_error_message);
+                if(dialog != null) dialog.show();
             }
         }
     }
@@ -663,7 +670,8 @@ public class MainPresenter
     @Override
     public void showNotificationView() {
         if (!interactor.isDataLoaded()) {
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available);
+            if(dialog != null) dialog.show();
             return;
         }
         wireframe.showNotificationsListView(view);
@@ -691,7 +699,8 @@ public class MainPresenter
 
     private void  showMyProfileView(String defaultTabTitle) {
         if (!interactor.isDataLoaded()) {
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available);
+            if(dialog != null) dialog.show();
             return;
         }
 
@@ -706,7 +715,8 @@ public class MainPresenter
 
     public void showSpeakerListView() {
         if (!interactor.isDataLoaded()) {
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available);
+            if(dialog != null) dialog.show();
             return;
         }
 
@@ -715,7 +725,8 @@ public class MainPresenter
 
     public void showSearchView(String searchTerm) {
         if (!interactor.isDataLoaded()) {
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available);
+            if(dialog != null) dialog.show();
             return;
         }
 
@@ -724,7 +735,8 @@ public class MainPresenter
 
     public void showAboutView() {
         if (!interactor.isDataLoaded()) {
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available);
+            if(dialog != null) dialog.show();
             return;
         }
 
@@ -733,7 +745,8 @@ public class MainPresenter
 
     public void showVenuesView() {
         if (!interactor.isDataLoaded()) {
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available);
+            if(dialog != null) dialog.show();
             return;
         }
         wireframe.showVenuesView(view);

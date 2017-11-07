@@ -2,7 +2,6 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import com.crashlytics.android.Crashlytics;

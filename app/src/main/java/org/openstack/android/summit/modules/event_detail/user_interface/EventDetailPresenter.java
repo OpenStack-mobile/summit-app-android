@@ -429,7 +429,8 @@ public class EventDetailPresenter
             return;
         }
         if(!event.isStarted()){
-            AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.feedback_validation_error_event_not_started)).show();
+            AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.feedback_validation_error_event_not_started));
+            if(dialog != null) dialog.show();
             return;
         }
         wireframe.showFeedbackEditView(event.getId(), event.getName(), rate, view);

@@ -11,7 +11,7 @@ import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe
 import org.openstack.android.summit.modules.feedback_edit.business_logic.IFeedbackEditInteractor;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-
+import android.support.v7.app.AlertDialog;
 /**
  * Created by Claudio Redi on 2/17/2016.
  */
@@ -115,13 +115,15 @@ public class FeedbackEditPresenter
                             },
                             (ex) -> {
                                 view.hideActivityIndicator();
-                                AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                                AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                                if(dialog != null) dialog.show();
                             }
                     );
         }
         catch (ValidationException ex){
             view.hideActivityIndicator();
-            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex.getMessage()).show();
+            AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex.getMessage());
+            if(dialog != null) dialog.show();
         }
     }
 }

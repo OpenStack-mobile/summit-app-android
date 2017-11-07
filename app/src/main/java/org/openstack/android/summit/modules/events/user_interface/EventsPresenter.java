@@ -1,6 +1,7 @@
 package org.openstack.android.summit.modules.events.user_interface;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
@@ -52,7 +53,8 @@ public class EventsPresenter extends BasePresenter<IEventsView, IEventsInteracto
     @Override
     public void showFilterView() {
         if(!interactor.isDataLoaded()) {
-            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available).show();
+            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.no_summit_data_available);
+            if(dialog != null) dialog.show();
             return;
         }
         wireframe.showFilterView(view);

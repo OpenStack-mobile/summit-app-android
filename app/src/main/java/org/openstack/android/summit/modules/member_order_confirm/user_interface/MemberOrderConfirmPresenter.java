@@ -1,5 +1,7 @@
 package org.openstack.android.summit.modules.member_order_confirm.user_interface;
 
+import android.support.v7.app.AlertDialog;
+
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.NonConfirmedSummitAttendeeDTO;
 import org.openstack.android.summit.common.entities.exceptions.NotFoundEntityException;
@@ -39,7 +41,8 @@ public class MemberOrderConfirmPresenter
                     .subscribe((list) -> {
                         nonConfirmedSummitAttendeeDTOs = list;
                         if (list.size() == 0) {
-                            AlertsBuilder.buildError(view.getFragmentActivity(), R.string.order_not_found).show();
+                            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.order_not_found);
+                            if(dialog != null) dialog.show();
                         }
                         else if (list.size() == 1) {
                             selectAttendeeFromOrderList(0);
@@ -57,15 +60,18 @@ public class MemberOrderConfirmPresenter
                         }
                         catch (NotFoundEntityException ex1){
                             view.hideActivityIndicator();
-                            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex1.getMessage()).show();
+                            AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex1.getMessage());
+                            if(dialog != null) dialog.show();
                         }
                         catch (ValidationException ex2){
                             view.hideActivityIndicator();
-                            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex2.getMessage()).show();
+                            AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex2.getMessage());
+                            if(dialog != null) dialog.show();
                         }
                         catch (Throwable ex3){
                             view.hideActivityIndicator();
-                            AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                            AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                            if(dialog != null) dialog.show();
                         }
                     });
         }
@@ -94,21 +100,25 @@ public class MemberOrderConfirmPresenter
                         }
                         catch (NotFoundEntityException ex1){
                             view.hideActivityIndicator();
-                            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex1.getMessage()).show();
+                            AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex1.getMessage());
+                            if(dialog != null) dialog.show();
                         }
                         catch (ValidationException ex2){
                             view.hideActivityIndicator();
-                            AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex2.getMessage()).show();
+                            AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity() ,ex2.getMessage());
+                            if(dialog != null) dialog.show();
                         }
                         catch (Throwable ex3){
                             view.hideActivityIndicator();
-                            AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+                            AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+                            if(dialog != null) dialog.show();
                         }
                     });
         }
         catch (Exception ex){
             view.hideActivityIndicator();
-            AlertsBuilder.buildGenericError(view.getFragmentActivity()).show();
+            AlertDialog dialog = AlertsBuilder.buildGenericError(view.getFragmentActivity());
+            if(dialog != null) dialog.show();
         }
     }
 
