@@ -4,18 +4,22 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        // Gradle 4.1 and higher include support for Google's Maven repo using
+        // the google() method. And you need to include this repo to download
+        // Android plugin 3.0.0 or higher.
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         // Realm
         // https://github.com/realm/realm-java/blob/master/CHANGELOG.md
         classpath "io.realm:realm-gradle-plugin:3.5.0"
         //GCM
-        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.google.gms:google-services:3.1.1'
         // Retrolambda , https://github.com/evant/gradle-retrolambda/
-        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
+        // classpath 'me.tatarka:gradle-retrolambda:3.7.0'
         // https://github.com/JakeWharton/butterknife
         classpath 'com.jakewharton:butterknife-gradle-plugin:8.5.1'
     }

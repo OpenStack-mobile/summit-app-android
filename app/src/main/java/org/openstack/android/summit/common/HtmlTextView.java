@@ -99,11 +99,16 @@ public class HtmlTextView extends ScrollView {
     public void setText(String body) {
 
         if (body == null || body.isEmpty()) return;
+        // convert raw urls to <a> tags
+        body = body.replaceAll("((?<!(href=['\"]))(?:https?|ftps?):\\/\\/[\\w\\.\\?\\=\\d\\/]*)","<a href=\"$1\">$1</a>");
+
         StringBuilder html = new StringBuilder();
         html.append("<html>");
         html.append("<head>");
         if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2)
             html.append("<base href=\""+BaseUrl+"\">");
+
+        // fix urls
 
         html.append("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
         html.append("<link href=\"css/htmltextview.css\" rel=\"stylesheet\" type=\"text/css\">");
