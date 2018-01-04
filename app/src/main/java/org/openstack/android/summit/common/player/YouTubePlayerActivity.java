@@ -152,6 +152,8 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity implements
         this.player = player;
         player.setOnFullscreenListener(this);
         player.setPlayerStateChangeListener(this);
+        if (orientation == null)
+            orientation = PlayerOrientation.AUTO;
 
         switch (orientation) {
             case AUTO:
