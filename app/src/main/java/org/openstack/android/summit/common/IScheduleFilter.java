@@ -31,4 +31,8 @@ public interface IScheduleFilter {
     void setTypeValues(FilterSectionType type, Object ... values);
 
     void clearTypeValues(FilterSectionType type);
+
+    AbstractFilterSection getFilterSectionByName(String filterSectionName);
+
+    void removeFilterSectionByName(String filterSectionName);
 }

@@ -12,18 +12,19 @@ import java.util.List;
  */
 final public class ScheduleFilter implements IScheduleFilter {
 
-    private HashMap<FilterSectionType, List<Object>> selections   = new HashMap<>();
+    private HashMap<FilterSectionType, List<Object>> selections    = new HashMap<>();
     private List<AbstractFilterSection> filterSections             = new ArrayList<>();
     private HashMap<FilterSectionType, FilterSectionType> typesSet = new HashMap<>();
 
     public ScheduleFilter(){
-        getSelections().put(FilterSectionType.SummitType, new ArrayList<>());
-        getSelections().put(FilterSectionType.EventType, new ArrayList<>());
-        getSelections().put(FilterSectionType.Level, new ArrayList<>());
-        getSelections().put(FilterSectionType.TrackGroup, new ArrayList<>());
-        getSelections().put(FilterSectionType.Tag, new ArrayList<>());
-        getSelections().put(FilterSectionType.HidePastTalks, new ArrayList<>());
-        getSelections().put(FilterSectionType.Venues, new ArrayList<>());
+        selections.put(FilterSectionType.SummitType, new ArrayList<>());
+        selections.put(FilterSectionType.EventType, new ArrayList<>());
+        selections.put(FilterSectionType.Level, new ArrayList<>());
+        selections.put(FilterSectionType.TrackGroup, new ArrayList<>());
+        selections.put(FilterSectionType.Tag, new ArrayList<>());
+        selections.put(FilterSectionType.HidePastTalks, new ArrayList<>());
+        selections.put(FilterSectionType.Venues, new ArrayList<>());
+        selections.put(FilterSectionType.Tracks, new ArrayList<>());
     }
 
     @Override
@@ -58,6 +59,22 @@ final public class ScheduleFilter implements IScheduleFilter {
     @Override
     public List<AbstractFilterSection> getFilterSections() {
         return filterSections;
+    }
+
+    @Override
+    public AbstractFilterSection getFilterSectionByName(String filterSectionName){
+        for(AbstractFilterSection section: filterSections){
+            if(section.getName().equals(filterSectionName))
+                return section;
+        }
+        return null;
+    }
+
+    @Override
+    public void removeFilterSectionByName(String filterSectionName) {
+        AbstractFilterSection section = this.getFilterSectionByName(filterSectionName);
+        if(section == null) return;
+        filterSections.remove(section);
     }
 
     @Override

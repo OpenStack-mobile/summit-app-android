@@ -13,12 +13,14 @@ import org.openstack.android.summit.R;
 /**
  * Created by Claudio Redi on 2/3/2016.
  */
-public class GeneralScheduleFilterItemView implements IGeneralScheduleFilterItemView {
-    private View view;
-    private OnSelectedItem itemAction;
+public class GeneralScheduleFilterItemView
+        implements IGeneralScheduleFilterItemView
+{
+    protected View view;
+    protected OnSelectedItem itemAction;
 
-    public interface OnSelectedItem{
-        void onAction( boolean isChecked);
+    public interface OnSelectedItem {
+        void onAction(boolean isChecked);
     }
 
     public void setItemCallback(OnSelectedItem itemAction){

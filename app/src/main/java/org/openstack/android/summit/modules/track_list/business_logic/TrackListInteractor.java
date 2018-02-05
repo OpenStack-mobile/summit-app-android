@@ -56,6 +56,17 @@ public class TrackListInteractor extends BaseInteractor implements ITrackListInt
         return createDTOList(filteredTracks, TrackDTO.class);
     }
 
+    @Override
+    public List<TrackDTO> getTracksById(List<Integer> trackIds) {
+       List<TrackDTO> result = new ArrayList<>();
+       for (Integer trackId:trackIds){
+            Track track = trackDataStore.getById(trackId);
+            if(track == null ) continue;
+            result.add(createDTO(track, TrackDTO.class));
+       }
+       return result;
+    }
+
     private boolean trackMatchFilter(Track track, List<Integer> trackGroupIds) {
         boolean isMatch = false;
         if (track.getTrackGroups().size() > 0) {

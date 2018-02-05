@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface ITrackListInteractor extends IBaseInteractor {
     List<TrackDTO> getTracks(List<Integer> trackGroups);
+
+    List<TrackDTO> getTracksById(List<Integer> trackIds);
 }

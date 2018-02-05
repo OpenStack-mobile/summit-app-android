@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/openStackLightGray"
+    android:padding="13dp">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_gravity="center"
+            android:id="@+id/item_filter_full_circle"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:visibility="gone"
+            android:background="@drawable/solid_circle">
+        </View>
+        <View
+            android:layout_gravity="center"
+            android:id="@+id/item_filter_empty_circle"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:background="@drawable/empty_circle">
+        </View>
+        <TextView
+            android:id="@+id/item_filter_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/openStackGray"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Beginner"/>
+        <ImageView android:id="@+id/item_filter_more" style="@style/AppTheme.MoreImageView" />
+    </LinearLayout>
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_selected_sub_items"
+        android:textSize="@dimen/filter_item_navigation_view_selected_sub_items_text_size"
+        android:visibility="gone"
+    />
+</LinearLayout>

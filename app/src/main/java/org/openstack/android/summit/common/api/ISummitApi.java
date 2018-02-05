@@ -16,6 +16,6 @@ public interface ISummitApi {
     Call<ResponseBody> getSummit(@Path("summit_id") int summitId, @Query("expand") String expand);
 
     @GET("v1/summits")
-    Call<ResponseBody> getSummits();
+    Call<ResponseBody> getSummits(@Query("expand") String expand, @Query("relations") String relations);
 
 }

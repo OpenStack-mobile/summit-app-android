@@ -229,10 +229,10 @@ public class GeneralScheduleFilterFragment
 
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_filter_list, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_filter_arrow_list, parent, false);
             }
 
-            GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
+            GeneralScheduleFilterItemNavigationView generalScheduleFilterItemView = new GeneralScheduleFilterItemNavigationView(convertView);
             presenter.buildTrackGroupFilterItem(generalScheduleFilterItemView, position);
             generalScheduleFilterItemView.setItemCallback(isChecked -> {
                 presenter.toggleSelectionTrackGroup(generalScheduleFilterItemView, position);

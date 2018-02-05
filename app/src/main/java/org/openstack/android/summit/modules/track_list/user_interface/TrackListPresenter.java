@@ -39,8 +39,8 @@ public class TrackListPresenter extends BasePresenter<ITrackListView, ITrackList
     }
 
     private void init() {
-        List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
-        tracks = interactor.getTracks(filtersOnTrackGroups);
+        List<Integer> filtersOnTracks = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tracks);
+        tracks = interactor.getTracksById(filtersOnTracks);
         view.setTracks(tracks);
     }
 

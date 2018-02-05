@@ -59,7 +59,7 @@ public class GeneralSchedulePresenter
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IGeneralScheduleInteractor interactor) {
 
         List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
-        List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
+        List<Integer> filtersOnTracks      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tracks);
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
         List<String> filtersOnLevels       = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
         List<String> filtersOnTags         = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
@@ -70,8 +70,8 @@ public class GeneralSchedulePresenter
                 endDate,
                 filtersOnEventTypes,
                 filtersOnSummitTypes,
-                filtersOnTrackGroups,
                 null,
+                filtersOnTracks,
                 filtersOnTags,
                 filtersOnLevels,
                 filtersOnVenues);

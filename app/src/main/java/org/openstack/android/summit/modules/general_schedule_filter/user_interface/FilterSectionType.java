@@ -7,6 +7,7 @@ public enum FilterSectionType {
     SummitType,
     EventType,
     TrackGroup,
+    Tracks,
     Tag,
     Level,
     HidePastTalks,

@@ -22,4 +22,6 @@
     <dimen name="event_detail_action_btn_padding">5dp</dimen>
     <dimen name="event_row_date_title_size">13sp</dimen>
     <dimen name="event_row_title_size">17sp</dimen>
+    <!-- Filters -->
+    <dimen name="filter_item_navigation_view_selected_sub_items_text_size">11dp</dimen>
 </resources>

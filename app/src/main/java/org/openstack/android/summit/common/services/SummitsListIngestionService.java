@@ -104,7 +104,7 @@ public class SummitsListIngestionService extends IntentService {
 
             Log.d(Constants.LOG_TAG, "SummitsListIngestionService.onHandleIntent: getting list of summits ...");
 
-            Call<ResponseBody> call = restClient.create(ISummitApi.class).getSummits();
+            Call<ResponseBody> call = restClient.create(ISummitApi.class).getSummits("none", "none");
 
             final retrofit2.Response<ResponseBody> response = call.execute();
 

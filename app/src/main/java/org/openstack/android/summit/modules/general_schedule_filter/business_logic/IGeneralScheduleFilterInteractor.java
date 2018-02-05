@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.general_schedule_filter.business_lo
 
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
+import org.openstack.android.summit.common.DTOs.TrackDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.business_logic.IBaseInteractor;
 
@@ -20,10 +21,16 @@ public interface IGeneralScheduleFilterInteractor extends IBaseInteractor {
 
     List<TrackGroupDTO> getTrackGroups();
 
+    List<TrackDTO> getTracksForGroup(int trackGroupId);
+
     List<String> getTags();
 
     SummitDTO getActiveSummit();
 
     List<NamedDTO> getVenues();
+
+    boolean groupIncludesAnyOfGivenTracks(int trackGroupId,  List<Integer> tracksIds);
+
+    List<TrackDTO>  getTracksBelongingToGroup(int trackGroupId,  List<Integer> tracksIds);
 
 }

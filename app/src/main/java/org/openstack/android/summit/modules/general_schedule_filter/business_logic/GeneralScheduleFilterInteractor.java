@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.general_schedule_filter.business_lo
 
 import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
+import org.openstack.android.summit.common.DTOs.TrackDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
@@ -15,20 +16,21 @@ import org.openstack.android.summit.common.data_access.repositories.IVenueDataSt
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
+import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.realm.Sort;
 
 /**
  * Created by Claudio Redi on 2/1/2016.
  */
-public class GeneralScheduleFilterInteractor extends BaseInteractor implements IGeneralScheduleFilterInteractor {
+public class GeneralScheduleFilterInteractor
+        extends BaseInteractor
+        implements IGeneralScheduleFilterInteractor {
 
     private ISummitTypeDataStore summitTypeDataStore;
     private ITagDataStore        tagDataStore;
@@ -96,6 +98,33 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
     }
 
     @Override
+    public boolean groupIncludesAnyOfGivenTracks(int trackGroupId, List<Integer> tracksIds) {
+        if(tracksIds.isEmpty()) return false;
+        TrackGroup trackGroup = trackGroupDataStore.getById(trackGroupId);
+        if(trackGroup == null) return false;
+        List<Integer> tracksOnGroup = new ArrayList<>();
+        for(Track track: trackGroup.getTracks())
+            tracksOnGroup.add(track.getId());
+
+        for(Integer testId:tracksIds){
+            if(tracksOnGroup.contains(testId)) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<TrackDTO> getTracksBelongingToGroup(int trackGroupId, List<Integer> tracksIds) {
+        List<TrackDTO> result = new ArrayList<>();
+        if(tracksIds.isEmpty()) return result;
+        TrackGroup trackGroup = trackGroupDataStore.getById(trackGroupId);
+        if(trackGroup == null) return result;
+        for(Track track: trackGroup.getTracks())
+            if(tracksIds.contains(track.getId()))
+                result.add(createDTO(track, TrackDTO.class));
+        return result;
+    }
+
+    @Override
     public List<TrackGroupDTO> getTrackGroups() {
         List<TrackGroup> trackGroups = trackGroupDataStore.getAllBySummit(summitSelector.getCurrentSummitId());
         List<TrackGroup> results = new ArrayList<>();
@@ -104,6 +133,19 @@ public class GeneralScheduleFilterInteractor extends BaseInteractor implements I
                 results.add(trackGroup);
         }
         return createDTOList(results, TrackGroupDTO.class);
+    }
+
+    @Override
+    public List<TrackDTO> getTracksForGroup(int trackGroupId) {
+        TrackGroup  group     = trackGroupDataStore.getById(trackGroupId);
+        if( group == null) return new ArrayList<>();
+        List<Track> results   = trackGroupDataStore.getTracks(trackGroupId);
+        List<TrackDTO> tracks = createDTOList(results, TrackDTO.class);
+        TrackGroupDTO trackGroupDTO = createDTO(group, TrackGroupDTO.class);
+        for (TrackDTO track: tracks){
+            track.setTrackGroup(trackGroupDTO);
+        }
+        return tracks;
     }
 
     @Override
