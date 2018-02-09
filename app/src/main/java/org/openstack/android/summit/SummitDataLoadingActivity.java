@@ -1,47 +1,38 @@
 package org.openstack.android.summit;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.LinearLayout;
-
-import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.services.SummitDataIngestionService;
-import org.openstack.android.summit.dagger.components.ApplicationComponent;
+import org.openstack.android.summit.common.user_interface.BaseDataLoadingActivity;
 
-import cc.cloudist.acplibrary.ACProgressConstant;
-import cc.cloudist.acplibrary.ACProgressPie;
+import butterknife.ButterKnife;
 
 /**
  * SummitDataLoadingActivity
  * Do the summit data initial loading
  */
-public class SummitDataLoadingActivity extends Activity {
-
-    private ACProgressPie progressDialog;
+public class SummitDataLoadingActivity extends BaseDataLoadingActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getApplicationComponent().inject(this);
 
-
         setFinishOnTouchOutside(false);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_initial_data_loading_activity);
 
-        Button retryButton = (Button) this.findViewById(R.id.initial_data_loading_retry_button);
+        unbinder = ButterKnife.bind(this);
+
         retryButton.setOnClickListener(
                 v -> {
                     Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.retryButton.setOnClickListener");
@@ -63,17 +54,13 @@ public class SummitDataLoadingActivity extends Activity {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(serviceReceiver);
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         hideActivityIndicator();
         showErrorContainer(false);
         Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.onDestroy");
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     private void doInitialDataLoading() {
@@ -112,43 +99,6 @@ public class SummitDataLoadingActivity extends Activity {
             }
         }
     };
-    public ApplicationComponent getApplicationComponent() {
-        return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
-    }
-
-    private Context getActivity() {
-        return this;
-    }
-
-    private void showActivityIndicator() {
-        try {
-            hideActivityIndicator();
-            progressDialog = new ACProgressPie.Builder(this)
-                    .ringColor(Color.WHITE)
-                    .pieColor(Color.WHITE)
-                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                    .build();
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-        catch (Exception ex){
-            Log.e(Constants.LOG_TAG, ex.getMessage());
-            Crashlytics.logException(ex);
-        }
-    }
-
-    private void hideActivityIndicator() {
-        try {
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-                progressDialog = null;
-            }
-        }
-        catch (Exception ex){
-            Log.e(Constants.LOG_TAG, ex.getMessage());
-            Crashlytics.logException(ex);
-        }
-    }
 
     protected void onFailedInitialLoad() {
         hideActivityIndicator();
@@ -156,8 +106,8 @@ public class SummitDataLoadingActivity extends Activity {
     }
 
     private void showErrorContainer(boolean show) {
-        LinearLayout container = (LinearLayout) this.findViewById(R.id.initial_data_loading_no_conectivity);
-        container.setVisibility(show ? View.VISIBLE : View.GONE);
+        if(initialDataLoginNoConnectivity == null) return;
+        initialDataLoginNoConnectivity.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
 }

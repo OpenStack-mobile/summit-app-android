@@ -102,7 +102,7 @@ public class FeedbackEditPresenter
     public void saveFeedback() {
 
         view.showActivityIndicator();
-
+        view.hideKeyboard();
         try {
 
             interactor

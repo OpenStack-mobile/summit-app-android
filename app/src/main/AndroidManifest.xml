@@ -139,11 +139,11 @@
 
         <activity
             android:name=".modules.rsvp.RSVPViewerActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@style/AppTheme.NoTitleBar.Fullscreen"></activity>
 
         <activity
             android:name=".common.user_interface.BrowserActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@style/AppTheme.NoTitleBar.Fullscreen"></activity>
 
         <!-- https://developers.google.com/youtube/android/player/register -->
         <meta-data
@@ -256,6 +256,10 @@
 
         <service
             android:name=".common.services.SummitsListIngestionService"
+            android:exported="false"></service>
+
+        <service
+            android:name=".common.services.UserActionsPostProcessService"
             android:exported="false"></service>
 
     </application>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- on seconds -->
+    <integer name="user_actions_post_process_service_interval">10</integer>
+    <integer name="data_updates_service_interval">60</integer>
+</resources>

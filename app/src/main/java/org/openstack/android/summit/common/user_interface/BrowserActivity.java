@@ -1,12 +1,9 @@
 package org.openstack.android.summit.common.user_interface;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -37,60 +33,32 @@ import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
-import cc.cloudist.acplibrary.ACProgressConstant;
-import cc.cloudist.acplibrary.ACProgressPie;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by smarcet on 3/23/17.
  */
 
-public class BrowserActivity extends Activity {
+public class BrowserActivity extends BaseActivity {
 
     @Inject
     IConfigurationParamsManager configurationParamsManager;
-
-    private ACProgressPie progressDialog;
 
     public ApplicationComponent getApplicationComponent() {
         return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
     }
 
-    public void showActivityIndicator() {
-        try {
-            if (progressDialog != null) return;
-            progressDialog = new ACProgressPie.Builder(this)
-                    .ringColor(Color.WHITE)
-                    .pieColor(Color.WHITE)
-                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                    .build();
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-        catch (Exception ex){
-            Log.e(Constants.LOG_TAG, ex.getMessage());
-            Crashlytics.logException(ex);
-        }
-    }
-
-    public void hideActivityIndicator() {
-        try {
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-                progressDialog = null;
-            }
-        }
-        catch(Exception ex){
-            Crashlytics.logException(ex);
-        }
-    }
+    @BindView(R.id.WebView)
+    WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.rsvp_viewer);
             getApplicationComponent().inject(this);
-
+            setContentView(R.layout.rsvp_viewer);
+            unbinder = ButterKnife.bind(this);
 
             Uri url = getIntent().getData();
 
@@ -107,7 +75,7 @@ public class BrowserActivity extends Activity {
                 return;
             }
             // Initialise the WebView
-            WebView webView = (WebView) findViewById(R.id.WebView);
+
             webView.setWebViewClient(new BrowserActivity.CustomWebViewClient(this));
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setDomStorageEnabled(true);

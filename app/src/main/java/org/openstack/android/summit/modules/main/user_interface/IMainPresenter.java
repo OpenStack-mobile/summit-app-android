@@ -42,4 +42,12 @@ public interface IMainPresenter extends IBasePresenter<IMainView> {
     void onClickMemberProfilePic();
 
     void onActivityResult(int requestCode, int resultCode, Intent data);
+
+    void enableUserActionsPostProcessService();
+
+    void disableUserActionsPostProcessService();
+
+    void enabledBackgroundServices();
+
+    void disableBackgroundServices();
 }

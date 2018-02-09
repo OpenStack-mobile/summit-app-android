@@ -5,8 +5,6 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.DataAccessException;
-
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.realm.Realm;

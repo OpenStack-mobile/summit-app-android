@@ -13,7 +13,8 @@ import org.openstack.android.summit.modules.main.business_logic.IDataLoadingInte
  * Created by smarcet on 12/9/16.
  */
 
-public class SummitListDataLoadingPresenter extends BasePresenter<IDataLoadingView, IDataLoadingInteractor, IBaseWireframe>
+public class SummitListDataLoadingPresenter
+        extends BasePresenter<IDataLoadingView, IDataLoadingInteractor, IBaseWireframe>
 implements IDataLoadingPresenter {
 
     private ISummitSelector summitSelector;

@@ -2,15 +2,12 @@ package org.openstack.android.summit.modules.main.user_interface;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,31 +25,29 @@ import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.user_interface.BadgeCounterMenuItemDecorator;
+import org.openstack.android.summit.common.user_interface.BaseActivity;
 import org.openstack.android.summit.common.utils.KeyboardHelper;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
-import org.openstack.android.summit.dagger.modules.ActivityModule;
 
 import javax.inject.Inject;
 
-import cc.cloudist.acplibrary.ACProgressConstant;
-import cc.cloudist.acplibrary.ACProgressPie;
 
 public class MainActivity
-        extends AppCompatActivity
+        extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, IMainView {
 
     @Inject
     IMainPresenter presenter;
 
-    private ACProgressPie progressDialog;
+    Button loginButton;
+    TextView memberNameTextView;
+    SimpleDraweeView memberProfileImageView;
+    ActionBarDrawerToggle toggle;
+    NavigationView navigationView;
+    EditText searchText;
 
-    private Button loginButton;
-    private TextView memberNameTextView;
-    private SimpleDraweeView memberProfileImageView;
-    private ActionBarDrawerToggle toggle;
     private int selectedMenuItemId;
-    private NavigationView navigationView;
-    private EditText searchText;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -199,7 +194,7 @@ public class MainActivity
         try {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-            KeyboardHelper.hideKeyboard(this);
+            hideKeyboard();
 
             if (!drawer.isDrawerOpen(GravityCompat.START) && getFragmentManager().getBackStackEntryCount() == 0) {
                 // set events tab ...
@@ -277,10 +272,6 @@ public class MainActivity
         return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
     }
 
-    public ActivityModule getActivityModule() {
-        return new ActivityModule(this);
-    }
-
     public void setLoginButtonText(String text) {
         if(loginButton == null) return;
         loginButton.setText(text);
@@ -307,11 +298,6 @@ public class MainActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.getMenu().findItem(R.id.nav_my_profile).setVisible(false);
         navigationView.getMenu().findItem(R.id.nav_events).setChecked(true);
-    }
-
-    private void onError(String message) {
-        showErrorMessage(message);
-        hideActivityIndicator();
     }
 
     @Override
@@ -348,11 +334,6 @@ public class MainActivity
     }
 
     @Override
-    public FragmentActivity getFragmentActivity() {
-        return this;
-    }
-
-    @Override
     public void toggleMenu(boolean show) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (show) {
@@ -374,56 +355,6 @@ public class MainActivity
             return;
         }
         badge.hideCounter();
-    }
-
-    @Override
-    public void setTitle(String title) {
-        setTitle(title);
-    }
-
-    @Override
-    public void showActivityIndicator(int delay) {
-        showActivityIndicator();
-    }
-
-    public void showActivityIndicator() {
-
-        runOnUiThread(() -> {
-            try {
-                if (progressDialog != null) {
-                    hideActivityIndicator();
-                }
-                Log.d(Constants.LOG_TAG, "MainActivity.showActivityIndicator");
-                progressDialog = new ACProgressPie.Builder(MainActivity.this)
-                        .ringColor(Color.WHITE)
-                        .pieColor(Color.WHITE)
-                        .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                        .build();
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-            }
-            catch (Exception ex){
-                Log.e(Constants.LOG_TAG, ex.getMessage());
-                Crashlytics.logException(ex);
-            }
-        });
-    }
-
-    public void hideActivityIndicator() {
-
-        runOnUiThread(() -> {
-            try {
-                if (progressDialog != null && progressDialog.isShowing()) {
-                    Log.d(Constants.LOG_TAG, "MainActivity.hideActivityIndicator");
-                    progressDialog.dismiss();
-                    progressDialog = null;
-                }
-            }
-            catch (Exception ex){
-                Crashlytics.logException(ex);
-            }
-        });
-
     }
 
     @Override

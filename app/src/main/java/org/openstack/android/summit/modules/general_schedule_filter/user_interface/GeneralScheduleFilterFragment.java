@@ -100,7 +100,7 @@ public class GeneralScheduleFilterFragment
     @Override
     public void onPause() {
         super.onPause();
-        hideKeyboard(getActivity());
+        hideKeyboard();
     }
 
     @Override

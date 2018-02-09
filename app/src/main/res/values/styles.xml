@@ -243,6 +243,11 @@
         <item name="android:minHeight">1dp</item>
     </style>
 
+    <style name="AppTheme.NoTitleBar.Fullscreen" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
     <style name="counter" parent="android:Widget.TextView">
         <item name="android:gravity">center</item>
         <item name="android:textSize">12dp</item>

@@ -4,7 +4,9 @@ package org.openstack.android.summit.dagger.components;
  * Created by claudio on 11/3/2015.
  */
 
+import org.openstack.android.summit.common.services.UserActionsPostProcessService;
 import org.openstack.android.summit.common.user_interface.BrowserActivity;
+import org.openstack.android.summit.dagger.modules.BusinessLogicModule;
 import org.openstack.android.summit.dagger.modules.FavoriteScheduleModule;
 import org.openstack.android.summit.dagger.modules.RSVPModule;
 import org.openstack.android.summit.dagger.modules.SplashModule;
@@ -124,6 +126,7 @@ import dagger.Component;
         SplashModule.class,
         RSVPModule.class,
         FavoriteScheduleModule.class,
+        BusinessLogicModule.class,
 })
 public interface ApplicationComponent {
 
@@ -169,4 +172,5 @@ public interface ApplicationComponent {
     void inject(SplashActivity splashActivity);
     void inject(FavoritesScheduleFragment favoritesScheduleFragment);
     void inject(BrowserActivity browserActivity);
+    void inject(UserActionsPostProcessService userActionsPostProcessService);
 }

@@ -1,26 +1,8 @@
 package org.openstack.android.summit.modules.splash.user_interface;
 
-import org.openstack.android.summit.OpenStackSummitApplication;
-import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.notifications.IPushNotification;
-import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
-import org.openstack.android.summit.common.entities.notifications.PushNotification;
-import org.openstack.android.summit.common.security.ISecurityManager;
-import org.openstack.android.summit.common.utils.DeepLinkInfo;
-import org.openstack.android.summit.common.utils.IAppLinkRouter;
-import org.openstack.android.summit.dagger.components.ApplicationComponent;
-import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationInteractor;
-import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.ISettingsInteractor;
-
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -33,16 +15,21 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.user_interface.BaseActivity;
+import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.ISettingsInteractor;
 
 import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by smarcet on 2/3/17.
  */
 
-public class SplashActivity extends AppCompatActivity implements ISplashView {
+public class SplashActivity extends BaseActivity implements ISplashView {
 
     @Inject
     ISplashPresenter presenter;
@@ -50,11 +37,26 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     @Inject
     ISettingsInteractor settings;
 
-    private Button loginButton;
-    private Button guestButton;
-    private LinearLayout summitInfoContainer;
-    private TextView summitDates;
-    private TextView summitName;
+    @BindView(R.id.btn_splash_login)
+    Button loginButton;
+
+    @BindView(R.id.btn_splash_guest)
+    Button guestButton;
+
+    @BindView(R.id.splash_summit_info_container)
+    LinearLayout summitInfoContainer;
+
+    @BindView(R.id.splash_summit_dates)
+    TextView summitDates;
+
+    @BindView(R.id.splash_summit_name)
+    TextView summitName;
+
+    @BindView(R.id.splash_logo)
+    ImageView splashLogo;
+
+    @BindView(R.id.splash_main_container)
+    LinearLayout splashMainContainer;
 
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -65,15 +67,13 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getApplicationComponent().inject(this);
+
         setContentView(R.layout.activity_splash);
 
-        // todo: move to butterkniffe
-        loginButton         = (Button) this.findViewById(R.id.btn_splash_login);
-        guestButton         = (Button) this.findViewById(R.id.btn_splash_guest);
-        summitInfoContainer = (LinearLayout) this.findViewById(R.id.splash_summit_info_container);
-        summitDates         = (TextView) this.findViewById(R.id.splash_summit_dates);
-        summitName          = (TextView) this.findViewById(R.id.splash_summit_name );
-        getApplicationComponent().inject(this);
+        unbinder = ButterKnife.bind(this);
+
         StartAnimations();
         presenter.setView(this);
         presenter.onCreate(savedInstanceState);
@@ -87,20 +87,19 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     private void StartAnimations() {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
         anim.reset();
-        LinearLayout l = (LinearLayout) findViewById(R.id.splash_main_container);
-        l.clearAnimation();
-        l.startAnimation(anim);
+
+        if(splashMainContainer == null) return;
+
+        splashMainContainer.clearAnimation();
+        splashMainContainer.startAnimation(anim);
 
         anim = AnimationUtils.loadAnimation(this, R.anim.translate);
         anim.reset();
-        ImageView iv = (ImageView) findViewById(R.id.splash_logo);
-        iv.clearAnimation();
-        iv.startAnimation(anim);
 
-    }
-
-    public ApplicationComponent getApplicationComponent() {
-        return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
+        if(splashLogo != null) {
+            splashLogo.clearAnimation();
+            splashLogo.startAnimation(anim);
+        }
     }
 
     @Override
@@ -133,58 +132,38 @@ public class SplashActivity extends AppCompatActivity implements ISplashView {
     }
 
     @Override
-    public void showActivityIndicator(int delay) {
-
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         presenter.onDestroy();
     }
 
     @Override
-    public void showActivityIndicator() {
-
-    }
-
-    @Override
-    public void hideActivityIndicator() {
-
-    }
-
-    @Override
-    public void setTitle(String title) {
-
-    }
-
-    @Override
-    public FragmentActivity getFragmentActivity() {
-        return null;
-    }
-
-    @Override
     public void setLoginButtonVisibility(boolean visible) {
+        if(loginButton == null) return;
         loginButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void setGuestButtonVisibility(boolean visible) {
+        if(guestButton == null) return;
         guestButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void setSummitDates(String summitDates) {
+        if(this.summitDates == null) return;
         this.summitDates.setText(summitDates);
     }
 
     @Override
     public void setSummitName(String summitName) {
+        if(this.summitName == null) return;
         this.summitName.setText(summitName);
     }
 
     @Override
     public void setSummitInfoContainerVisibility(boolean visible) {
+        if(summitInfoContainer == null) return;
         summitInfoContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 }

@@ -110,7 +110,9 @@ public class FeedbackEditFragment
         starRateImage4.setOnClickListener(onClickListener);
         starRateImage5.setOnClickListener(onClickListener);
 
-        feedbackCreateButton.setOnClickListener(v -> presenter.saveFeedback());
+        feedbackCreateButton.setOnClickListener(v ->
+                presenter.saveFeedback()
+        );
 
         super.onCreateView(inflater, container, savedInstanceState);
         return view;

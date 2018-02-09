@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.api;
 
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -36,7 +37,7 @@ public interface ISummitEventsApi {
     );
 
     @POST("v2/summits/{summit_id}/events/{event_id}/feedback")
-    Observable<Response<ResponseBody>> postEventFeedback
+    Call<ResponseBody> postEventFeedback
     (
         @Path("summit_id") int summitId,
         @Path("event_id") Integer eventId,
@@ -44,7 +45,7 @@ public interface ISummitEventsApi {
     );
 
     @PUT("v2/summits/{summit_id}/events/{event_id}/feedback")
-    Observable<Response<ResponseBody>> updateEventFeedback
+    Call<ResponseBody> updateEventFeedback
     (
             @Path("summit_id") int summitId,
             @Path("event_id") Integer eventId,

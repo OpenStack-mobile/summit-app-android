@@ -70,8 +70,13 @@ public class SummitDataIngestionService extends IntentService {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public void onCreate(){
+        super.onCreate();
         ((OpenStackSummitApplication) getApplication()).getApplicationComponent().inject(this);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
     }
 

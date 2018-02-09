@@ -11,12 +11,15 @@ import io.realm.annotations.PrimaryKey;
 public class Feedback extends RealmObject implements IEntity {
     @PrimaryKey
     private int id;
-
     private int rate;
     private String review;
     private Date date;
     private SummitEvent event;
     private Member owner;
+
+    public Feedback(){
+        this.id = RealmIdGenerator.generateKey(Feedback.class);
+    }
 
     public int getId() {
         return id;

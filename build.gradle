@@ -15,7 +15,7 @@ buildscript {
         // in the individual module build.gradle files
         // Realm
         // https://github.com/realm/realm-java/blob/master/CHANGELOG.md
-        classpath "io.realm:realm-gradle-plugin:3.5.0"
+        classpath "io.realm:realm-gradle-plugin:4.3.3"
         //GCM
         classpath 'com.google.gms:google-services:3.1.1'
         // Retrolambda , https://github.com/evant/gradle-retrolambda/

@@ -72,6 +72,10 @@ import org.openstack.android.summit.common.data_access.repositories.IEventPushNo
 import org.openstack.android.summit.common.data_access.repositories.IEventTypeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IImageDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IMyFavoriteProcessableUserActionDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IMyFeedbackProcessableUserActionDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IMyRSVPProcessableUserActionDataStore;
+import org.openstack.android.summit.common.data_access.repositories.IMyScheduleProcessableUserActionDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationLinkDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationSlideDataStore;
@@ -96,6 +100,10 @@ import org.openstack.android.summit.common.data_access.repositories.impl.EventPu
 import org.openstack.android.summit.common.data_access.repositories.impl.EventTypeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.ImageDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.MemberDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.MyFavoriteProcessableUserActionDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.MyFeedbackProcessableUserActionDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.MyRSVPProcessableUserActionDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.MyScheduleProcessableUserActionDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationLinkDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationSlideDataStore;
@@ -606,4 +614,23 @@ public class DataAccessModule {
         return new WifiConnectionDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
+    @Provides
+    IMyScheduleProcessableUserActionDataStore providesMyScheduleProcessableUserActionDataStore(){
+        return new MyScheduleProcessableUserActionDataStore();
+    }
+
+    @Provides
+    IMyFavoriteProcessableUserActionDataStore providesMyFavoriteProcessableUserActionDataStore(){
+        return new MyFavoriteProcessableUserActionDataStore();
+    }
+
+    @Provides
+    IMyFeedbackProcessableUserActionDataStore providesMyFeedbackProcessableUserActionDataStore(){
+        return new MyFeedbackProcessableUserActionDataStore();
+    }
+
+    @Provides
+    IMyRSVPProcessableUserActionDataStore providesMyRSVPProcessableUserActionDataStore(){
+        return new MyRSVPProcessableUserActionDataStore();
+    }
 }

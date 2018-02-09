@@ -1,6 +1,6 @@
 package org.openstack.android.summit.common.user_interface;
 
-import android.app.Activity;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.openstack.android.summit.R;
+import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.modules.main.user_interface.MainActivity;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
@@ -169,12 +169,9 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
         getActivity().setTitle(title.toUpperCase());
     }
 
-    protected void hideKeyboard(Activity activity) {
-        View v = activity.getWindow().getCurrentFocus();
-        if (v != null) {
-            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
+    @Override
+    public void hideKeyboard() {
+        ((BaseActivity)getActivity()).hideKeyboard();
     }
 
     @Override
@@ -230,5 +227,15 @@ public abstract class BaseFragment<P extends IBasePresenter> extends Fragment im
     @Override
     public Intent getIntent() {
         return super.getActivity().getIntent();
+    }
+
+    @Override
+    public ApplicationComponent getApplicationComponent() {
+        return ((BaseActivity)getActivity()).getApplicationComponent();
+    }
+
+    @Override
+    public ComponentName startService(Intent service){
+        return ((BaseActivity)getActivity()).startService(service);
     }
 }

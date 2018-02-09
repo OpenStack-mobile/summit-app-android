@@ -29,6 +29,7 @@ import org.openstack.android.summit.common.devices.huawei.HuaweiHelper;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.services.DataUpdatesService;
+import org.openstack.android.summit.common.services.UserActionsPostProcessService;
 import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.BrowserActivity;
@@ -119,7 +120,7 @@ public class MainPresenter
                     userLoginState             = UserLoginState.None;
                     userLoginButtonInteraction = UserLoginButtonInteraction.None;
                     view.setMenuItemVisible(R.id.nav_my_profile, false);
-                    enableDataUpdateService();
+                    enabledBackgroundServices();
                     return;
                 }
 
@@ -150,7 +151,7 @@ public class MainPresenter
                         AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.login_error_message);
                         if(dialog != null) dialog.show();
                     } finally {
-                        enableDataUpdateService();
+                        enabledBackgroundServices();
                         view.hideActivityIndicator();
                         userLoginButtonInteraction   = UserLoginButtonInteraction.None;
                         userLoginState               = UserLoginState.None;
@@ -174,7 +175,7 @@ public class MainPresenter
                     }
                     finally {
                         if(intent.getBooleanExtra(Constants.EXTRA_ENABLE_DATA_UPDATES_AFTER_LOGOUT, false))
-                            enableDataUpdateService();
+                            enabledBackgroundServices();
                         userLoginState             = UserLoginState.None;
                         userLoginButtonInteraction = UserLoginButtonInteraction.None;
                     }
@@ -338,8 +339,8 @@ public class MainPresenter
     private void launchInitialDataLoadingActivity() {
         if (!onDataLoading) {
             onDataLoading = true;
-            // disable data updates ...
-            disableDataUpdateService();
+            // disable background services ...
+            disableBackgroundServices();
             Intent intent = new Intent((Activity) view, SummitDataLoadingActivity.class);
             Log.i(Constants.LOG_TAG, "starting SummitDataLoadingActivity ...");
             view.startActivityForResult(intent, IMainView.DATA_LOAD_REQUEST);
@@ -349,9 +350,8 @@ public class MainPresenter
     private void launchSummitListDataLoadingActivity(){
         if(loadedSummitList) return;
         onDataLoading = true;
-        // disable data updates ...
-        disableDataUpdateService();
-
+        // disable background services ...
+        disableBackgroundServices();
         Intent intent = new Intent((Activity) view, SummitsListDataLoaderActivity.class);
         Log.i(Constants.LOG_TAG, "starting SummitsListDataLoaderActivity ...");
         view.startActivityForResult(intent, IMainView.SUMMITS_LIST_DATA_LOAD_REQUEST);
@@ -371,7 +371,7 @@ public class MainPresenter
             return;
         }
 
-        disableDataUpdateService();
+        disableBackgroundServices();
 
         if (!interactor.isDataLoaded()) {
             view.hideActivityIndicator();
@@ -402,7 +402,7 @@ public class MainPresenter
             // Make sure the request was successful
             if (resultCode == Activity.RESULT_OK) {
                 Log.i(Constants.LOG_TAG, "MainPresenter.onActivityResult: Summit Data Loaded!");
-                enableDataUpdateService();
+                enabledBackgroundServices();
                 this.showEventsView();
             }
         }
@@ -412,8 +412,8 @@ public class MainPresenter
             // Make sure the request was successful
             if (resultCode == Activity.RESULT_OK) {
                 Log.i(Constants.LOG_TAG, "MainPresenter.onActivityResult: Summit Data Loaded!");
-                //re enable data update service
-                enableDataUpdateService();
+                //re enable background services
+                enabledBackgroundServices();
             }
             if(resultCode == SummitsListDataLoaderActivity.RESULT_OK_FIRE_SUMMIT_DATA_LOADING){
                 this.launchInitialDataLoadingActivity();
@@ -443,8 +443,7 @@ public class MainPresenter
                 return;
             }
 
-            disableDataUpdateService();
-
+            disableBackgroundServices();
             // LOGIN
             if (!isUserLogged) {
                 securityManager.login((Activity) view);
@@ -467,8 +466,8 @@ public class MainPresenter
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        // kill any data updates enabled
-        disableDataUpdateService();
+        // kill any background services enabled ...
+        disableBackgroundServices();
         // bind local broadcast receiver
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.START_LOG_IN_EVENT);
@@ -488,7 +487,7 @@ public class MainPresenter
         HuaweiHelper.check((Activity) view);
 
         if (interactor.isDataLoaded()) {
-            enableDataUpdateService();
+            enabledBackgroundServices();
         }
 
         if (savedInstanceState != null) {
@@ -692,6 +691,39 @@ public class MainPresenter
     }
 
     @Override
+    public void enableUserActionsPostProcessService() {
+        /*if (!UserActionsPostProcessService.isServiceAlarmOn((Context) view)) {
+            UserActionsPostProcessService.setServiceAlarm((Context) view, true);
+        }
+        */
+        if(!UserActionsPostProcessService.isRunning()) {
+            UserActionsPostProcessService.start(view.getApplicationContext());
+        }
+    }
+
+    @Override
+    public void disableUserActionsPostProcessService() {
+        /*if (UserActionsPostProcessService.isServiceAlarmOn((Context) view)) {
+            UserActionsPostProcessService.setServiceAlarm((Context) view, false);
+        }*/
+        if(UserActionsPostProcessService.isRunning()) {
+            UserActionsPostProcessService.stop();
+        }
+    }
+
+    @Override
+    public void enabledBackgroundServices() {
+        enableDataUpdateService();
+        enableUserActionsPostProcessService();
+    }
+
+    @Override
+    public void disableBackgroundServices() {
+        disableUserActionsPostProcessService();
+        disableDataUpdateService();
+    }
+
+    @Override
     public void showMyProfileView(){
         showMyProfileView(null);
     }
@@ -795,8 +827,8 @@ public class MainPresenter
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //stop data updates services
-        disableDataUpdateService();
+        //stop background services ...
+        disableBackgroundServices();
         // unbind local broadcast receiver
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).unregisterReceiver(messageReceiver);
         view.hideActivityIndicator();

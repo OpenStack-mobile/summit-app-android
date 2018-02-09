@@ -14,22 +14,8 @@ public interface IMemberRemoteDataStore {
 
     Observable<Member> getMemberInfo();
 
-    Observable<Integer> addFeedback(int eventId, int rate, String review);
-
-    Observable<Boolean> updateFeedback(int eventId, int rate, String review);
-
-    Observable<Boolean> addSummitEvent2Favorites(int summitId, int eventId);
-
-    Observable<Boolean> removeSummitEventFromFavorites(int summitId, int eventId);
-
     Observable<List<NonConfirmedSummitAttendee>> getAttendeesForTicketOrder(String orderNumber);
 
     Observable<Boolean> selectAttendeeFromOrderList(String orderNumber, int externalAttendeeId);
-
-    Observable<Boolean> addEventToSchedule(int summitId, int eventId);
-
-    Observable<Boolean> removeEventFromSchedule(int summitId, int eventId);
-
-    Observable<Boolean> deleteRSVP(int summitId, int eventId);
 
 }

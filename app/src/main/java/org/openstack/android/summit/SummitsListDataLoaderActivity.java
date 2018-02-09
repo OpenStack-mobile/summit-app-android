@@ -1,14 +1,10 @@
 package org.openstack.android.summit;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -16,32 +12,38 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.services.SummitsListIngestionService;
-import org.openstack.android.summit.dagger.components.ApplicationComponent;
+import org.openstack.android.summit.common.user_interface.BaseDataLoadingActivity;
 import org.openstack.android.summit.modules.main.user_interface.IDataLoadingPresenter;
 import org.openstack.android.summit.modules.main.user_interface.IDataLoadingView;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import cc.cloudist.acplibrary.ACProgressConstant;
-import cc.cloudist.acplibrary.ACProgressPie;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by smarcet on 12/5/16.
  */
 
-public class SummitsListDataLoaderActivity extends Activity implements IDataLoadingView {
+public class SummitsListDataLoaderActivity extends BaseDataLoadingActivity implements IDataLoadingView {
 
-    private ACProgressPie progressDialog;
     public static final int RESULT_OK_FIRE_SUMMIT_DATA_LOADING = 0XFF57;
 
     @Inject
     @Named("SummitListDataLoading")
     IDataLoadingPresenter presenter;
+
+    @BindView(R.id.initial_data_loading_do_load)
+    Button doLoadButton;
+
+    @BindView(R.id.initial_data_loading_do_cancel)
+    Button doCancel;
+
+    @BindView(R.id.initial_data_loading_question)
+    LinearLayout initialDataLoadingQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +52,17 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
         setFinishOnTouchOutside(false);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_initial_data_loading_activity);
+        unbinder = ButterKnife.bind(this);
         presenter.setView(this);
-        Button retryButton = (Button) this.findViewById(R.id.initial_data_loading_retry_button);
 
         retryButton.setOnClickListener(
                 v -> presenter.retryButtonPressed()
         );
 
-        Button doLoadButton = (Button) this.findViewById(R.id.initial_data_loading_do_load);
         doLoadButton.setOnClickListener(
                 v -> presenter.loadNewDataButtonPressed()
         );
 
-        Button doCancel = (Button) this.findViewById(R.id.initial_data_loading_do_cancel);
         doCancel.setOnClickListener(
                 v -> presenter.cancelLoadNewDataButtonPressed()
         );
@@ -132,75 +132,15 @@ public class SummitsListDataLoaderActivity extends Activity implements IDataLoad
     };
 
     private void showQuestionContainer(boolean show) {
-        LinearLayout container = (LinearLayout) this.findViewById(R.id.initial_data_loading_question);
-        container.setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
-    public ApplicationComponent getApplicationComponent() {
-        return ((OpenStackSummitApplication) getApplication()).getApplicationComponent();
-    }
-
-    private Context getActivity() {
-        return this;
-    }
-
-    @Override
-    public void showActivityIndicator(int delay) {
-        showActivityIndicator();
-    }
-
-    @Override
-    public void showActivityIndicator() {
-        try {
-            hideActivityIndicator();
-            progressDialog = new ACProgressPie.Builder(this)
-                    .ringColor(Color.WHITE)
-                    .pieColor(Color.WHITE)
-                    .updateType(ACProgressConstant.PIE_AUTO_UPDATE)
-                    .build();
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-        catch (Exception ex){
-            Log.e(Constants.LOG_TAG, ex.getMessage());
-            Crashlytics.logException(ex);
-        }
-    }
-
-    @Override
-    public void hideActivityIndicator() {
-        try {
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-                progressDialog = null;
-            }
-        }
-        catch (Exception ex){
-            Log.e(Constants.LOG_TAG, ex.getMessage());
-            Crashlytics.logException(ex);
-        }
-    }
-
-    @Override
-    public FragmentManager getSupportFragmentManager() {
-        return null;
-    }
-
-    @Override
-    public void setTitle(String title) {
-        throw new UnsupportedOperationException();
-    }
-
-
-    @Override
-    public FragmentActivity getFragmentActivity() {
-        return null;
+        if(initialDataLoadingQuestion == null ) return;
+        initialDataLoadingQuestion.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void showErrorContainer(boolean show) {
-        LinearLayout container = (LinearLayout) this.findViewById(R.id.initial_data_loading_no_conectivity);
-        container.setVisibility(show ? View.VISIBLE : View.GONE);
+
+        if(initialDataLoginNoConnectivity == null) return;
+        initialDataLoginNoConnectivity.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override

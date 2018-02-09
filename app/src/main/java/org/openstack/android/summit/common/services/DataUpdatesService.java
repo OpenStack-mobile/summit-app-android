@@ -8,16 +8,17 @@ import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
 import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
 public class DataUpdatesService extends IntentService {
-
-    private static final int POLL_INTERVAL = 1000 * 60; // 60 seconds
 
     @Inject
     IDataUpdatePoller dataUpdatePoller;
@@ -55,12 +56,13 @@ public class DataUpdatesService extends IntentService {
     public static void setServiceAlarm(Context context, boolean isOn) {
 
         Intent i                  = DataUpdatesService.newIntent(context);
-        PendingIntent pi          = PendingIntent.getService(context, 0, i, 0);
+        PendingIntent pi          = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
         if (isOn) {
+            long interval = TimeUnit.MILLISECONDS.convert(context.getResources().getInteger(R.integer.data_updates_service_interval), TimeUnit.SECONDS);
             Log.d(Constants.LOG_TAG, "Starting Service DataUpdatesService");
-            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), POLL_INTERVAL, pi);
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 100, interval, pi);
             return;
         }
         Log.d(Constants.LOG_TAG, "Stopping Service DataUpdatesService");

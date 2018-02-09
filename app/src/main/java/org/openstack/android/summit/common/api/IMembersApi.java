@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.api;
 
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -19,17 +20,17 @@ public interface IMembersApi {
     Observable<Response<ResponseBody>> info(@Path("summit_id") int summitId, @Query("expand") String expand);
 
     @POST("v1/summits/{summit_id}/members/me/favorites/{event_id}")
-    Observable<Response<ResponseBody>> addToFavorites(@Path("summit_id") int summitId, @Path("event_id") int eventId);
+    Call<ResponseBody> addToFavorites(@Path("summit_id") int summitId, @Path("event_id") int eventId);
 
     @DELETE("v1/summits/{summit_id}/members/me/favorites/{event_id}")
-    Observable<Response<ResponseBody>> removeFromFavorites(@Path("summit_id") int summitId, @Path("event_id") int eventId);
+    Call<ResponseBody> removeFromFavorites(@Path("summit_id") int summitId, @Path("event_id") int eventId);
 
     @POST("v1/summits/{summit_id}/members/me/schedule/{event_id}")
-    Observable<Response<ResponseBody>> addToMySchedule(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
+    Call<ResponseBody> addToMySchedule(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
 
     @DELETE("v1/summits/{summit_id}/members/me/schedule/{event_id}")
-    Observable<Response<ResponseBody>> removeFromMySchedule(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
+    Call<ResponseBody> removeFromMySchedule(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
 
     @DELETE("v1/summits/{summit_id}/members/me/schedule/{event_id}/rsvp")
-    Observable<Response<ResponseBody>> deleteRSVP(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
+    Call<ResponseBody>deleteRSVP(@Path("summit_id") int summitId, @Path("event_id") Integer eventId);
 }

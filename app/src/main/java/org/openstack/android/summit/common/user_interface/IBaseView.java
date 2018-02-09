@@ -1,11 +1,14 @@
 package org.openstack.android.summit.common.user_interface;
 
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+
+import org.openstack.android.summit.dagger.components.ApplicationComponent;
 
 /**
  * Created by Claudio Redi on 1/7/2016.
@@ -39,4 +42,10 @@ public interface IBaseView {
     FragmentActivity getFragmentActivity();
 
     Intent getIntent();
+
+    void hideKeyboard();
+
+    ApplicationComponent getApplicationComponent();
+
+    ComponentName startService(Intent service);
 }
