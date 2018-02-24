@@ -28,9 +28,13 @@ final public class MyScheduleProcessableUserActionDataStore
 
     public List<MyScheduleProcessableUserAction> getAllUnProcessed(int ownerId){
         try{
-            return RealmFactory.transaction(session -> session.where(MyScheduleProcessableUserAction.class)
+            return RealmFactory.transaction(session -> {
+                List<MyScheduleProcessableUserAction>  res = session.where(MyScheduleProcessableUserAction.class)
                     .equalTo("owner.id", ownerId)
-                    .equalTo("isProcessed", false).sort("id").findAll());
+                    .equalTo("isProcessed", false).sort("id").findAll();
+
+                return session.copyFromRealm(res);
+            });
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);

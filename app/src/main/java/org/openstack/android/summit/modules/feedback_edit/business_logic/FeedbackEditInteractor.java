@@ -48,10 +48,6 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
     @Override
     public Observable<FeedbackDTO> saveFeedback(int eventId, int rate, String review) throws ValidationException {
 
-        if (!reachability.isNetworkingAvailable(OpenStackSummitApplication.context)) {
-            throw new ValidationException(OpenStackSummitApplication.context.getResources().getString(R.string.no_connectivity_message));
-        }
-
         if(!securityManager.isLoggedIn()){
             throw new ValidationException("User is not logged!");
         }
@@ -74,9 +70,9 @@ public class FeedbackEditInteractor extends BaseInteractor implements IFeedbackE
         feedback.setDate(new Date());
 
         if (new_feedback)
-            return memberDataStore.addFeedback(member, feedback).map(id -> {
+            return memberDataStore.addFeedback(member, feedback).map(internalId -> {
                         Feedback f = RealmFactory.transaction(session ->
-                                session.where(Feedback.class).equalTo("id", id).findFirst()
+                                session.where(Feedback.class).equalTo("internalId", internalId).findFirst()
                         );
                         return dtoAssembler.createDTO(f, FeedbackDTO.class);
                     }

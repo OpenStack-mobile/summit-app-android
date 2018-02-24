@@ -23,6 +23,8 @@ public interface IGeneralScheduleFilterInteractor extends IBaseInteractor {
 
     List<TrackDTO> getTracksForGroup(int trackGroupId);
 
+    TrackGroupDTO getTrackGroup(int trackGroupId);
+
     List<String> getTags();
 
     SummitDTO getActiveSummit();

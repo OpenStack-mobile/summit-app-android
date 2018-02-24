@@ -26,9 +26,14 @@ public class MyFeedbackProcessableUserActionDataStore extends GenericDataStore<M
 
     public List<MyFeedbackProcessableUserAction> getAllUnProcessed(int ownerId){
         try{
-            return RealmFactory.transaction(session -> session.where(MyFeedbackProcessableUserAction.class)
+            return RealmFactory.transaction(session -> {
+
+                List<MyFeedbackProcessableUserAction>  res = session.where(MyFeedbackProcessableUserAction.class)
                     .equalTo("owner.id", ownerId)
-                    .equalTo("isProcessed", false).sort("id").findAll());
+                    .equalTo("isProcessed", false).sort("id").findAll();
+
+                return session.copyFromRealm(res);
+            });
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);

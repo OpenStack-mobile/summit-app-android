@@ -23,6 +23,7 @@ import org.openstack.android.summit.common.utils.Void;
 import java.util.List;
 
 import javax.inject.Named;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -63,38 +64,48 @@ final public class ProcessableUserActionManager implements IProcessableUserActio
     @Override
     public void processMyScheduleProcessableUserActions() {
         try {
-            RealmFactory.transaction(session -> {
-                List<MyScheduleProcessableUserAction> list = myScheduleProcessableUserActionDataStore.getAllUnProcessed(principalIdentity.getCurrentMemberId());
-                for(MyScheduleProcessableUserAction action: list){
-                    try{
-                        switch(action.getType()){
-                            case "Add":
-                            {
-                                Call<ResponseBody> call = memberApi.addToMySchedule(action.getEvent().getSummit().getId(), action.getEvent().getId());
-                                final retrofit2.Response<ResponseBody> response = call.execute();
-                                Log.i(Constants.LOG_TAG, String.format("call to addToMySchedule for event id %d returned http code %d",action.getEvent().getId(), response.code()));
-
+            List<MyScheduleProcessableUserAction> list = myScheduleProcessableUserActionDataStore.getAllUnProcessed(principalIdentity.getCurrentMemberId());
+            for(MyScheduleProcessableUserAction action: list){
+                try{
+                    switch(action.getType()){
+                        case "Add":
+                        {
+                            Call<ResponseBody> call = memberApi.addToMySchedule(action.getEvent().getSummit().getId(), action.getEvent().getId());
+                            final retrofit2.Response<ResponseBody> response = call.execute();
+                            final int code = response.code();
+                            Log.i(Constants.LOG_TAG, String.format("call to addToMySchedule for event id %d returned http code %d",action.getEvent().getId(), code));
+                            if(code == 500){
+                                throw new Exception();
                             }
-                            break;
-                            case "Remove":
-                            {
-                                Call<ResponseBody> call = memberApi.removeFromMySchedule(action.getEvent().getSummit().getId(), action.getEvent().getId());
-                                final retrofit2.Response<ResponseBody> response = call.execute();
-                                Log.i(Constants.LOG_TAG, String.format("call to removeFromMySchedule for event id %d returned http code %d",action.getEvent().getId(), response.code()));
-                            }
-                            break;
                         }
-                        action.markAsProcessed();
+                        break;
+                        case "Remove":
+                        {
+                            Call<ResponseBody> call = memberApi.removeFromMySchedule(action.getEvent().getSummit().getId(), action.getEvent().getId());
+                            final retrofit2.Response<ResponseBody> response = call.execute();
+                            final int code = response.code();
+                            Log.i(Constants.LOG_TAG, String.format("call to removeFromMySchedule for event id %d returned http code %d",action.getEvent().getId(), code));
+                            if(code == 500){
+                                throw new Exception();
+                            }
+                        }
+                        break;
+                    }
 
-                        session.insertOrUpdate(action);
-                    }
-                    catch (Exception ex){
-                        Log.w(Constants.LOG_TAG, ex.getMessage(), ex);
-                    }
+                    RealmFactory.transaction(session -> {
+                        MyScheduleProcessableUserAction realmCopy = session.where(MyScheduleProcessableUserAction.class)
+                                .equalTo("id", action.getId())
+                                .findFirst();
+                        realmCopy.markAsProcessed();
+                        session.insertOrUpdate(realmCopy);
+                        return Void.getInstance();
+                    });
 
                 }
-                return Void.getInstance();
-            });
+                catch (Exception ex){
+                    Log.w(Constants.LOG_TAG, ex.getMessage(), ex);
+                }
+            }
         }
         catch (Exception e) {
             Crashlytics.logException(e);
@@ -105,38 +116,50 @@ final public class ProcessableUserActionManager implements IProcessableUserActio
     @Override
     public void processMyFavoritesProcessableUserActions() {
         try {
-            RealmFactory.transaction(session -> {
-                List<MyFavoriteProcessableUserAction> list = myFavoriteProcessableUserActionDataStore.getAllUnProcessed(principalIdentity.getCurrentMemberId());
-                for(MyFavoriteProcessableUserAction action: list){
-                    try{
-                        switch(action.getType()){
-                            case "Add":
-                            {
-                                Call<ResponseBody> call = memberApi.addToFavorites(action.getEvent().getSummit().getId(), action.getEvent().getId());
-                                final retrofit2.Response<ResponseBody> response = call.execute();
-                                Log.i(Constants.LOG_TAG, String.format("call to addToFavorites for event id %d returned http code %d",action.getEvent().getId(), response.code()));
 
+            List<MyFavoriteProcessableUserAction> list = myFavoriteProcessableUserActionDataStore.getAllUnProcessed(principalIdentity.getCurrentMemberId());
+            for(MyFavoriteProcessableUserAction action: list){
+                try{
+                    switch(action.getType()){
+                        case "Add":
+                        {
+                            Call<ResponseBody> call = memberApi.addToFavorites(action.getEvent().getSummit().getId(), action.getEvent().getId());
+                            final retrofit2.Response<ResponseBody> response = call.execute();
+                            final int code = response.code();
+                            Log.i(Constants.LOG_TAG, String.format("call to addToFavorites for event id %d returned http code %d",action.getEvent().getId(), code));
+                            if(code == 500){
+                                throw new Exception();
                             }
-                            break;
-                            case "Remove":
-                            {
-                                Call<ResponseBody> call = memberApi.removeFromFavorites(action.getEvent().getSummit().getId(), action.getEvent().getId());
-                                final retrofit2.Response<ResponseBody> response = call.execute();
-                                Log.i(Constants.LOG_TAG, String.format("call to removeFromFavorites for event id %d returned http code %d",action.getEvent().getId(), response.code()));
-                            }
-                            break;
                         }
-                        action.markAsProcessed();
+                        break;
+                        case "Remove":
+                        {
+                            Call<ResponseBody> call = memberApi.removeFromFavorites(action.getEvent().getSummit().getId(), action.getEvent().getId());
+                            final retrofit2.Response<ResponseBody> response = call.execute();
+                            final int code = response.code();
+                            Log.i(Constants.LOG_TAG, String.format("call to removeFromFavorites for event id %d returned http code %d", action.getEvent().getId(), code));
+                            if(code == 500){
+                                throw new Exception();
+                            }
 
-                        session.insertOrUpdate(action);
-                    }
-                    catch (Exception ex){
-                        Log.w(Constants.LOG_TAG, ex.getMessage(), ex);
+                        }
+                        break;
                     }
 
+                    RealmFactory.transaction(session -> {
+                        MyFavoriteProcessableUserAction realmCopy = session.where(MyFavoriteProcessableUserAction.class)
+                                .equalTo("id", action.getId())
+                                .findFirst();
+                        realmCopy.markAsProcessed();
+                        session.insertOrUpdate(realmCopy);
+                        return Void.getInstance();
+                    });
                 }
-                return Void.getInstance();
-            });
+                catch (Exception ex){
+                    Log.w(Constants.LOG_TAG, ex.getMessage(), ex);
+                }
+
+            }
         }
         catch (Exception e) {
             Crashlytics.logException(e);
@@ -147,48 +170,58 @@ final public class ProcessableUserActionManager implements IProcessableUserActio
     @Override
     public void processMyFeedbackProcessableUserActions() {
         try {
-            RealmFactory.transaction(session -> {
-                List<MyFeedbackProcessableUserAction> list = myFeedbackProcessableUserActionDataStore.getAllUnProcessed(principalIdentity.getCurrentMemberId());
-                for(MyFeedbackProcessableUserAction action: list){
-                    try{
-                        switch(action.getType()){
-                            case "Add":
-                            {
-                                Call<ResponseBody> call = summitEventsApi.postEventFeedback
-                                        (
-                                                action.getEvent().getSummit().getId(),
-                                                action.getEvent().getId(),
-                                                new SummitEventFeedbackRequest(action.getRate(), action.getReview())
-                                        );
-                                final retrofit2.Response<ResponseBody> response = call.execute();
-                                Log.i(Constants.LOG_TAG, String.format("call to postEventFeedback for event id %d returned http code %d",action.getEvent().getId(), response.code()));
-
+            List<MyFeedbackProcessableUserAction> list = myFeedbackProcessableUserActionDataStore.getAllUnProcessed(principalIdentity.getCurrentMemberId());
+            for(MyFeedbackProcessableUserAction action: list){
+                try{
+                    switch(action.getType()){
+                        case "Add":
+                        {
+                            Call<ResponseBody> call = summitEventsApi.postEventFeedback
+                                    (
+                                            action.getEvent().getSummit().getId(),
+                                            action.getEvent().getId(),
+                                            new SummitEventFeedbackRequest(action.getRate(), action.getReview())
+                                    );
+                            final retrofit2.Response<ResponseBody> response = call.execute();
+                            final int code = response.code();
+                            Log.i(Constants.LOG_TAG, String.format("call to postEventFeedback for event id %d returned http code %d",action.getEvent().getId(), code));
+                            if(code == 500){
+                                throw new Exception();
                             }
-                            break;
-                            case "Update":
-                            {
-                                Call<ResponseBody> call = summitEventsApi.updateEventFeedback
-                                        (
-                                                action.getEvent().getSummit().getId(),
-                                                action.getEvent().getId(),
-                                                new SummitEventFeedbackRequest(action.getRate(), action.getReview())
-                                        );
-                                final retrofit2.Response<ResponseBody> response = call.execute();
-                                Log.i(Constants.LOG_TAG, String.format("call to updateEventFeedback for event id %d returned http code %d", action.getEvent().getId(), response.code()));
-                            }
-                            break;
                         }
-                        action.markAsProcessed();
-
-                        session.insertOrUpdate(action);
+                        break;
+                        case "Update":
+                        {
+                            Call<ResponseBody> call = summitEventsApi.updateEventFeedback
+                                    (
+                                            action.getEvent().getSummit().getId(),
+                                            action.getEvent().getId(),
+                                            new SummitEventFeedbackRequest(action.getRate(), action.getReview())
+                                    );
+                            final retrofit2.Response<ResponseBody> response = call.execute();
+                            final int code = response.code();
+                            Log.i(Constants.LOG_TAG, String.format("call to updateEventFeedback for event id %d returned http code %d", action.getEvent().getId(), code));
+                            if(code == 500){
+                                throw new Exception();
+                            }
+                        }
+                        break;
                     }
-                    catch (Exception ex){
-                        Log.w(Constants.LOG_TAG, ex.getMessage(), ex);
-                    }
 
+                    RealmFactory.transaction(session -> {
+                        MyFeedbackProcessableUserAction realmCopy = session.where(MyFeedbackProcessableUserAction.class)
+                                .equalTo("id", action.getId())
+                                .findFirst();
+                        realmCopy.markAsProcessed();
+                        session.insertOrUpdate(realmCopy);
+                        return Void.getInstance();
+                    });
                 }
-                return Void.getInstance();
-            });
+                catch (Exception ex){
+                    Log.w(Constants.LOG_TAG, ex.getMessage(), ex);
+                }
+
+            }
         }
         catch (Exception e) {
             Crashlytics.logException(e);
@@ -199,34 +232,41 @@ final public class ProcessableUserActionManager implements IProcessableUserActio
     @Override
     public void processMyRSVPProcessableUserActions() {
         try {
-            RealmFactory.transaction(session -> {
-                List<MyRSVPProcessableUserAction> list = myRSVPProcessableUserActionDataStore.getAllUnProcessed(principalIdentity.getCurrentMemberId());
-                for(MyRSVPProcessableUserAction action: list){
-                    try{
-                        switch(action.getType()){
-                            case "Add":
-                            {
-                            }
-                            break;
-                            case "Remove":
-                            {
-                                Call<ResponseBody> call = memberApi.deleteRSVP(action.getEvent().getSummit().getId(), action.getEvent().getId());
-                                final retrofit2.Response<ResponseBody> response = call.execute();
-                                Log.i(Constants.LOG_TAG, String.format("call to deleteRSVP for event id %d returned http code %d",action.getEvent().getId(), response.code()));
-                            }
-                            break;
+            List<MyRSVPProcessableUserAction> list = myRSVPProcessableUserActionDataStore.getAllUnProcessed(principalIdentity.getCurrentMemberId());
+            for(MyRSVPProcessableUserAction action: list){
+                try{
+                    switch(action.getType()){
+                        case "Add":
+                        {
                         }
-                        action.markAsProcessed();
-
-                        session.insertOrUpdate(action);
+                        break;
+                        case "Remove":
+                        {
+                            Call<ResponseBody> call = memberApi.deleteRSVP(action.getEvent().getSummit().getId(), action.getEvent().getId());
+                            final retrofit2.Response<ResponseBody> response = call.execute();
+                            final int code = response.code();
+                            Log.i(Constants.LOG_TAG, String.format("call to deleteRSVP for event id %d returned http code %d",action.getEvent().getId(), code));
+                            if(code == 500){
+                                throw new Exception();
+                            }
+                        }
+                        break;
                     }
-                    catch (Exception ex){
-                        Log.w(Constants.LOG_TAG, ex.getMessage(), ex);
-                    }
 
+                    RealmFactory.transaction(session -> {
+                        MyRSVPProcessableUserAction realmCopy = session.where(MyRSVPProcessableUserAction.class)
+                                .equalTo("id", action.getId())
+                                .findFirst();
+                        realmCopy.markAsProcessed();
+                        session.insertOrUpdate(realmCopy);
+                        return Void.getInstance();
+                    });
                 }
-                return Void.getInstance();
-            });
+                catch (Exception ex){
+                    Log.w(Constants.LOG_TAG, ex.getMessage(), ex);
+                }
+
+            }
         }
         catch (Exception e) {
             Crashlytics.logException(e);

@@ -56,7 +56,7 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
     }
 
     @Override
-    public Observable<Integer> addFeedback(final Member member, Feedback feedback) {
+    public Observable<String> addFeedback(final Member member, Feedback feedback) {
 
         int eventId   = feedback.getEvent().getId();
         int rate      = feedback.getRate();
@@ -67,16 +67,14 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
         return Observable.fromCallable(() -> RealmFactory.transaction(session -> {
             // save it locally and recreate bc realm does not support xcross threading
             Member owner            = this.getById(memberId);
-            SummitEvent event    = session.where(SummitEvent.class).equalTo("id", eventId).findFirst();
-            Feedback newFeedback = new Feedback();
+            SummitEvent event       = session.where(SummitEvent.class).equalTo("id", eventId).findFirst();
+            Feedback newFeedback    = new Feedback();
             newFeedback.setOwner(owner);
             newFeedback.setDate(date);
             newFeedback.setRate(rate);
             newFeedback.setReview(review);
             newFeedback.setEvent(event);
             owner.getFeedback().add(newFeedback);
-
-            newFeedback = session.copyToRealm(newFeedback);
 
             MyFeedbackProcessableUserAction action = new MyFeedbackProcessableUserAction
                     (
@@ -89,7 +87,7 @@ public class MemberDataStore extends GenericDataStore<Member> implements IMember
 
             session.copyToRealm(action);
 
-            return newFeedback.getId();
+            return newFeedback.getInternalId();
         })).subscribeOn(Schedulers.io()).doOnTerminate(RealmFactory::closeSession);
     }
 

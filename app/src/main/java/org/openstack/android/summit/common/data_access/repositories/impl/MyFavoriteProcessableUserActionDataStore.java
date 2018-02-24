@@ -26,9 +26,12 @@ final public class MyFavoriteProcessableUserActionDataStore extends GenericDataS
 
     public List<MyFavoriteProcessableUserAction> getAllUnProcessed(int ownerId){
         try{
-            return RealmFactory.transaction(session -> session.where(MyFavoriteProcessableUserAction.class)
-                    .equalTo("owner.id", ownerId)
-                    .equalTo("isProcessed", false).sort("id").findAll());
+            return RealmFactory.transaction(session -> {
+                List<MyFavoriteProcessableUserAction>  res = session.where(MyFavoriteProcessableUserAction.class)
+                        .equalTo("owner.id", ownerId)
+                        .equalTo("isProcessed", false).sort("id").findAll();
+                return session.copyFromRealm(res);
+            });
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);

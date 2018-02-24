@@ -10,6 +10,8 @@ import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
@@ -54,20 +56,27 @@ public class UserActionsPostProcessService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if(!securityManager.isLoggedIn()){
-            return;
+        try {
+            if (!securityManager.isLoggedIn()) {
+                return;
+            }
+            if (!reachability.isNetworkingAvailable(this)) {
+                return;
+            }
+            // if we are on data ingestion running , skip it this
+            if (SummitDataIngestionService.isRunning()) return;
+            // process pending changes
+            manager.processMyScheduleProcessableUserActions();
+            manager.processMyFavoritesProcessableUserActions();
+            manager.processMyFeedbackProcessableUserActions();
+            manager.processMyRSVPProcessableUserActions();
         }
-        if (!reachability.isNetworkingAvailable(this)) {
-            return;
+        catch (Exception ex){
+            Crashlytics.logException(ex);
         }
-        // if we are on data ingestion running , skip it this
-        if(SummitDataIngestionService.isRunning()) return;
-        // process pending changes
-        manager.processMyScheduleProcessableUserActions();
-        manager.processMyFavoritesProcessableUserActions();
-        manager.processMyFeedbackProcessableUserActions();
-        manager.processMyRSVPProcessableUserActions();
-        RealmFactory.closeSession();
+        finally {
+            RealmFactory.closeSession();
+        }
     }
 
     public static void setServiceAlarm(Context context, boolean isOn) {

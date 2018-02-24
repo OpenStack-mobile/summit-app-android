@@ -1,9 +1,10 @@
 package org.openstack.android.summit.common.entities.processable_user_actions;
 
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.RealmIdGenerator;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import java.util.Date;
+import java.util.UUID;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -14,7 +15,6 @@ import io.realm.annotations.PrimaryKey;
 public class MyFeedbackProcessableUserAction extends RealmObject {
 
     public MyFeedbackProcessableUserAction(){
-        this.id            = RealmIdGenerator.generateKey(MyFeedbackProcessableUserAction.class);
         this.isProcessed   = false;
         this.processedDate = null;
     }
@@ -42,7 +42,7 @@ public class MyFeedbackProcessableUserAction extends RealmObject {
     }
 
     @PrimaryKey
-    private int id;
+    private String id = UUID.randomUUID().toString();
 
     private int rate;
 
@@ -58,12 +58,8 @@ public class MyFeedbackProcessableUserAction extends RealmObject {
 
     private Date processedDate;
 
-    public int getId() {
+    public String getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getType() {

@@ -26,9 +26,13 @@ public class MyRSVPProcessableUserActionDataStore extends GenericDataStore<MyRSV
 
     public List<MyRSVPProcessableUserAction> getAllUnProcessed(int ownerId){
         try{
-            return RealmFactory.transaction(session -> session.where(MyRSVPProcessableUserAction.class)
-                    .equalTo("owner.id", ownerId)
-                    .equalTo("isProcessed", false).sort("id").findAll());
+            return RealmFactory.transaction(session -> {
+                List<MyRSVPProcessableUserAction> res = session.where(MyRSVPProcessableUserAction.class)
+                        .equalTo("owner.id", ownerId)
+                        .equalTo("isProcessed", false).sort("id").findAll();
+
+                return session.copyFromRealm(res);
+            });
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, e.getMessage(), e);

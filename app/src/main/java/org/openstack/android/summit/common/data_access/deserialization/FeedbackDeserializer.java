@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -25,14 +26,16 @@ public class FeedbackDeserializer extends BaseDeserializer implements IFeedbackD
 
         JSONObject jsonObject = new JSONObject(jsonString);
         String[] missedFields = validateRequiredFields(new String[]{"id", "rate", "created_date", "event_id"}, jsonObject);
+
         handleMissedFieldsIfAny(missedFields);
         int feedbackId    = jsonObject.getInt("id");
 
         Feedback feedback = RealmFactory.getSession().where(Feedback.class).equalTo("id", feedbackId).findFirst();
         if(feedback == null)
-            feedback = RealmFactory.getSession().createObject(Feedback.class, feedbackId);
+            feedback = RealmFactory.getSession().createObject(Feedback.class,  UUID.randomUUID().toString());
 
         feedback.setRate(jsonObject.getInt("rate"));
+        feedback.setId(feedbackId);
         feedback.setReview(
                 !jsonObject.isNull("note") ? jsonObject.getString("note") : null
         );

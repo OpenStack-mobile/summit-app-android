@@ -3,8 +3,11 @@ package org.openstack.android.summit.modules.general_schedule_filter.user_interf
 import android.graphics.Color;
 import android.os.Bundle;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.TrackDTO;
+import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.business_logic.IGeneralScheduleFilterInteractor;
@@ -33,22 +36,31 @@ public class GeneralScheduleTracksFilterPresenter
 
     @Override
     public void onCreateView(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Integer     trackGroupId = view.getSelectedTrackGroupId();
-        tracks      = interactor.getTracksForGroup(trackGroupId);
+        try {
+            super.onCreate(savedInstanceState);
+            Integer trackGroupId = view.getSelectedTrackGroupId();
+            TrackGroupDTO trackGroup = interactor.getTrackGroup(trackGroupId);
+            tracks = interactor.getTracksForGroup(trackGroupId);
 
-        scheduleFilter.removeFilterSectionByName(FilterSectionType.Tracks.toString());
+            scheduleFilter.removeFilterSectionByName(FilterSectionType.Tracks.toString());
 
-        MultiFilterSection filterSection = new MultiFilterSection();
-        filterSection.setType(FilterSectionType.Tracks);
-        filterSection.setName(FilterSectionType.Tracks.toString());
-        FilterSectionItem filterSectionItem;
-        for (NamedDTO track : tracks) {
-            filterSectionItem = createSectionItem(track.getId(), track.getName(), filterSection.getType());
-            filterSection.getItems().add(filterSectionItem);
+            MultiFilterSection filterSection = new MultiFilterSection();
+            filterSection.setType(FilterSectionType.Tracks);
+            filterSection.setName(FilterSectionType.Tracks.toString());
+            FilterSectionItem filterSectionItem;
+
+            for (NamedDTO track : tracks) {
+                filterSectionItem = createSectionItem(track.getId(), track.getName(), filterSection.getType());
+                filterSection.getItems().add(filterSectionItem);
+            }
+
+            scheduleFilter.getFilterSections().add(filterSection);
+            view.showTracks(tracks);
+            view.setTitle(trackGroup.getName());
         }
-        scheduleFilter.getFilterSections().add(filterSection);
-        view.showTracks(tracks);
+        catch (Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 
     @Override

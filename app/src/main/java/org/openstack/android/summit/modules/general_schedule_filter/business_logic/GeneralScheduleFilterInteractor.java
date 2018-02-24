@@ -149,6 +149,13 @@ public class GeneralScheduleFilterInteractor
     }
 
     @Override
+    public TrackGroupDTO getTrackGroup(int trackGroupId) {
+        TrackGroup trackGroup = trackGroupDataStore.getById(trackGroupId);
+        if(trackGroup == null) return null;
+        return createDTO(trackGroup, TrackGroupDTO.class);
+    }
+
+    @Override
     public List<String> getTags() {
         List<Tag> tags = tagDataStore.getAll();
         List<String> dtos = new ArrayList<>();

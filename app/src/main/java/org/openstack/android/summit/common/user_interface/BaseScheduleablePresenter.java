@@ -66,12 +66,6 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
             return;
         }
 
-        if(!this.interactor.isNetworkingAvailable()){
-            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message);
-            if(dialog != null) dialog.show();
-            return;
-        }
-
         if(toggleScheduleStatusListener != null){
             toggleScheduleStatusListener.toggle(position, formerState, scheduleItemView);
         }
@@ -110,12 +104,6 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
         if(!this.interactor.isMemberLoggedIn()){
             // Use the Builder class for convenient dialog construction
             buildLoginModal().show();
-            return;
-        }
-
-        if(!this.interactor.isNetworkingAvailable()){
-            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message);
-            if(dialog != null) dialog.show();
             return;
         }
 
@@ -258,11 +246,6 @@ public abstract class BaseScheduleablePresenter<V extends IBaseView, I extends I
 
         if(!this.interactor.isMemberLoggedIn()){
             buildLoginModal().show();
-            return;
-        }
-        if(!this.interactor.isNetworkingAvailable()){
-            AlertDialog dialog = AlertsBuilder.buildAlert(view.getFragmentActivity(), R.string.generic_error_title, R.string.no_connectivity_message);
-            if(dialog != null) dialog.show();
             return;
         }
 

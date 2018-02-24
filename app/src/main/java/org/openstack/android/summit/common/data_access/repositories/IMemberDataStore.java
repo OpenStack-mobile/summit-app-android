@@ -14,7 +14,7 @@ public interface IMemberDataStore extends IGenericDataStore<Member> {
 
     Observable<Integer> getLoggedInMember();
 
-    Observable<Integer> addFeedback(Member member, Feedback feedback);
+    Observable<String> addFeedback(Member member, Feedback feedback);
 
     Observable<Boolean> updateFeedback(Member member, Feedback feedback);
 

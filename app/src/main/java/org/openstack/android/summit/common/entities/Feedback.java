@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common.entities;
 
 import java.util.Date;
+import java.util.UUID;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -9,7 +10,9 @@ import io.realm.annotations.PrimaryKey;
  * Created by Claudio Redi on 11/4/2015.
  */
 public class Feedback extends RealmObject implements IEntity {
+
     @PrimaryKey
+    private String internalId = UUID.randomUUID().toString();
     private int id;
     private int rate;
     private String review;
@@ -17,13 +20,11 @@ public class Feedback extends RealmObject implements IEntity {
     private SummitEvent event;
     private Member owner;
 
-    public Feedback(){
-        this.id = RealmIdGenerator.generateKey(Feedback.class);
-    }
-
     public int getId() {
         return id;
     }
+
+    public String getInternalId(){ return internalId;}
 
     public void setId(int id) {
         this.id = id;
