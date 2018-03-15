@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -57,7 +58,6 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
 
     ISecurityManager securityManager;
 
-
     public SplashPresenter
     (
         ISplashInteractor interactor,
@@ -85,90 +85,137 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        disableDataUpdateService();
-        PackageInfo pInfo = null;
-
         try {
-            pInfo = view.getApplicationContext().getPackageManager().getPackageInfo(view.getApplicationContext().getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            pInfo = null;
-        }
-        // check current build against stored build
-        if (pInfo != null) {
-            int currentBuildNumber = pInfo.versionCode;
-            int installedBuildNumber = interactor.getInstalledBuildNumber();
-            if (installedBuildNumber < currentBuildNumber) {
-                Log.i(Constants.LOG_TAG, String.format("SplashPresenter.onCreate: old version %d - new version %d", installedBuildNumber, currentBuildNumber));
-                interactor.setInstalledBuildNumber(currentBuildNumber);
-                // if we are updating version and data is already loaded cleaning it ...
-                if (interactor.isDataLoaded()) {
-                    Log.i(Constants.LOG_TAG, "SplashPresenter.onCreate: upgrading data storage");
-                    this.disableDataUpdateService();
-                    interactor.upgradeStorage();
-                    summitSelector.clearCurrentSummit();
+            super.onCreate(savedInstanceState);
+            disableDataUpdateService();
+            PackageInfo pInfo = null;
+
+            try {
+                pInfo = view.getApplicationContext().getPackageManager().getPackageInfo(view.getApplicationContext().getPackageName(), 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                pInfo = null;
+            }
+            // check current build against stored build
+            if (pInfo != null) {
+                int currentBuildNumber = pInfo.versionCode;
+                int installedBuildNumber = interactor.getInstalledBuildNumber();
+                if (installedBuildNumber < currentBuildNumber) {
+                    Log.i(Constants.LOG_TAG, String.format("SplashPresenter.onCreate: old version %d - new version %d", installedBuildNumber, currentBuildNumber));
+                    interactor.setInstalledBuildNumber(currentBuildNumber);
+                    // if we are updating version and data is already loaded cleaning it ...
+                    if (interactor.isDataLoaded()) {
+                        Log.i(Constants.LOG_TAG, "SplashPresenter.onCreate: upgrading data storage");
+                        this.disableDataUpdateService();
+                        interactor.upgradeStorage();
+                        summitSelector.clearCurrentSummit();
+                    }
                 }
             }
-        }
-        if(savedInstanceState != null){
-            onDataLoading    = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
-            loadedSummitList = savedInstanceState.getBoolean(Constants.LOADED_SUMMITS_LIST, false);
-            Log.d(Constants.LOG_TAG, String.format("SplashPresenter.onCreate: Reloading former state - loadedSummitList %b - onDataLoading %b", loadedSummitList, onDataLoading));
-        }
+            if (savedInstanceState != null) {
+                onDataLoading = savedInstanceState.getBoolean(Constants.ON_DATA_LOADING_PROCESS, false);
+                loadedSummitList = savedInstanceState.getBoolean(Constants.LOADED_SUMMITS_LIST, false);
+                Log.d(Constants.LOG_TAG, String.format("SplashPresenter.onCreate: Reloading former state - loadedSummitList %b - onDataLoading %b", loadedSummitList, onDataLoading));
+            }
 
-        if(interactor.isDataLoaded()){
-            Intent intent       = view.getIntent();
+            if (interactor.isDataLoaded()) {
+                Intent intent = view.getIntent();
 
-            if (intent != null && intent.getExtras() != null && intent.getAction().equals(Constants.ACTION_OPEN_OPENSTACK_PUSH_NOTIFICATION_FROM_SYSTRAY)) {
-                Log.i(Constants.LOG_TAG, "fired ACTION_OPEN_OPENSTACK_PUSH_NOTIFICATION_FROM_SYSTRAY");
-                // we got an notification from systray ( app background)
-                Bundle extras = intent.getExtras();
-                // move the extras to payload ...
-                Map<String, String> payload = new HashMap<>();
-                for(String key : extras.keySet()) {
-                    Object value = extras.get(key);
-                    payload.put(key, value.toString());
+                if (intent != null && intent.getExtras() != null && intent.getAction().equals(Constants.ACTION_OPEN_OPENSTACK_PUSH_NOTIFICATION_FROM_SYSTRAY)) {
+                    Log.i(Constants.LOG_TAG, "fired ACTION_OPEN_OPENSTACK_PUSH_NOTIFICATION_FROM_SYSTRAY");
+                    // we got an notification from systray ( app background)
+                    Bundle extras = intent.getExtras();
+                    // move the extras to payload ...
+                    Map<String, String> payload = new HashMap<>();
+                    for (String key : extras.keySet()) {
+                        Object value = extras.get(key);
+                        payload.put(key, value.toString());
+                    }
+                    intent.getExtras().clear();
+
+                    try {
+                        IPushNotification pushNotification = pushNotificationFactory.build(payload);
+                        Member currentMember = securityManager.getCurrentMember();
+
+                        if (currentMember != null)
+                            pushNotification.setOwner(currentMember);
+
+                        pushNotificationInteractor.save(pushNotification);
+                        Integer pushNotificationId = pushNotification.getId();
+                        pushNotificationsListInteractor.markAsOpen(pushNotificationId);
+
+                        wireframe.showNotification(view, appLinkRouter.buildUriFor(DeepLinkInfo.NotificationsPath, pushNotificationId.toString()));
+                        return;
+                    } catch (Exception ex) {
+                        Log.w(Constants.LOG_TAG, ex.getMessage());
+                    }
+
                 }
-                intent.getExtras().clear();
-
-                try {
-                    IPushNotification pushNotification = pushNotificationFactory.build(payload);
-                    Member currentMember               = securityManager.getCurrentMember();
-
-                    if (currentMember != null)
-                        pushNotification.setOwner(currentMember);
-
-                    pushNotificationInteractor.save(pushNotification);
-                    Integer pushNotificationId = pushNotification.getId();
-                    pushNotificationsListInteractor.markAsOpen(pushNotificationId);
-
-                    wireframe.showNotification(view, appLinkRouter.buildUriFor(DeepLinkInfo.NotificationsPath, pushNotificationId.toString()));
-                    return;
-                }
-                catch (Exception ex){
-                    Log.w(Constants.LOG_TAG, ex.getMessage());
-                }
+                // [END handle_dat
 
             }
-            // [END handle_dat
+            view.setLoginButtonVisibility(!interactor.isMemberLoggedIn());
+            view.setGuestButtonVisibility(!interactor.isMemberLoggedIn());
 
+            launchSummitListDataLoadingActivity();
         }
-        view.setLoginButtonVisibility(!interactor.isMemberLoggedIn());
-        view.setGuestButtonVisibility(!interactor.isMemberLoggedIn());
-
-        launchSummitListDataLoadingActivity();
+        catch (Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 
-
     public void showSummitInfo() {
-        SummitDTO summit = interactor.getActiveSummit();
-        if (summit != null) {
-            view.setSummitName(summit.getName());
-            view.setSummitDates(summit.getDatesLabel());
-            view.setSummitInfoContainerVisibility(true);
-            return;
+        try {
+            SummitDTO summit = interactor.getActiveSummit();
+
+            view.setSummitDaysLeftContainerVisibility(false);
+            view.setSummitCurrentDayContainerVisibility(false);
+            view.setSummitInfoContainerVisibility(false);
+
+            if (summit != null) {
+                view.setSummitName(summit.getName());
+                view.setSummitDates(summit.getDatesLabel());
+                view.setSummitInfoContainerVisibility(true);
+
+                if (summit.isNotStarted()) {
+
+                    int daysLeft = summit.getDaysLeft();
+                    if (daysLeft > 0) {
+                        view.setSummitDaysLeftContainerVisibility(true);
+                        char[] days = String.valueOf(daysLeft).toCharArray();
+                        int index = 1;
+                        for (int i = days.length - 1; i >= 0; i--) {
+                            String day = String.valueOf(days[i]);
+                            if (index == 1) {
+                                view.setSummitDay1(day);
+                            }
+                            if (index == 2) {
+                                view.setSummitDay2(day);
+                            }
+                            if (index == 3) {
+                                view.setSummitDay3(day);
+                            }
+                            ++index;
+                        }
+                    }
+                    return;
+                }
+
+                if(summit.isGoingOn()){
+                    int currentDay = summit.getCurrentDay();
+                    if(currentDay > 0){
+                        view.setSummitCurrentDayContainerVisibility(true);
+                        view.setSummitCurrentDay(String.valueOf(currentDay));
+                    }
+                    return;
+                }
+
+                return;
+            }
+            view.setSummitInfoContainerVisibility(false);
         }
-        view.setSummitInfoContainerVisibility(false);
+        catch (Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 
     @Override

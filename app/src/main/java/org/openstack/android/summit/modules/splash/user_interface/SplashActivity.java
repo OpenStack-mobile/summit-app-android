@@ -58,6 +58,24 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     @BindView(R.id.splash_main_container)
     LinearLayout splashMainContainer;
 
+    @BindView(R.id.summit_days_left_container)
+    LinearLayout summitDaysLeftContainer;
+
+    @BindView(R.id.day_until_1)
+    TextView dayUntil1Text;
+
+    @BindView(R.id.day_until_2)
+    TextView dayUntil2Text;
+
+    @BindView(R.id.day_until_3)
+    TextView dayUntil3Text;
+
+    @BindView(R.id.summit_current_day_container)
+    LinearLayout summitCurrentDayContainer;
+
+    @BindView(R.id.current_day_txt)
+    TextView currentDayText;
+
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         Window window = getWindow();
@@ -66,22 +84,26 @@ public class SplashActivity extends BaseActivity implements ISplashView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        try {
+            super.onCreate(savedInstanceState);
 
-        getApplicationComponent().inject(this);
+            getApplicationComponent().inject(this);
 
-        setContentView(R.layout.activity_splash);
+            setContentView(R.layout.activity_splash);
 
-        unbinder = ButterKnife.bind(this);
+            unbinder = ButterKnife.bind(this);
 
-        StartAnimations();
-        presenter.setView(this);
-        presenter.onCreate(savedInstanceState);
+            StartAnimations();
+            presenter.setView(this);
+            presenter.onCreate(savedInstanceState);
 
-        loginButton.setOnClickListener(v -> presenter.loginClicked(v));
+            loginButton.setOnClickListener(v -> presenter.loginClicked(v));
 
-        guestButton.setOnClickListener(v -> presenter.guestClicked(v));
-
+            guestButton.setOnClickListener(v -> presenter.guestClicked(v));
+        }
+        catch (Exception ex){
+            Crashlytics.logException(ex);
+        }
     }
 
     private void StartAnimations() {
@@ -156,14 +178,54 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     }
 
     @Override
+    public void setSummitInfoContainerVisibility(boolean visible) {
+        if(summitInfoContainer == null) return;
+        summitInfoContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
     public void setSummitName(String summitName) {
         if(this.summitName == null) return;
         this.summitName.setText(summitName);
     }
 
     @Override
-    public void setSummitInfoContainerVisibility(boolean visible) {
-        if(summitInfoContainer == null) return;
-        summitInfoContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    public void setSummitDay1(String day1){
+        if(this.dayUntil1Text == null) return;
+        this.dayUntil1Text.setVisibility(View.VISIBLE);
+        this.dayUntil1Text.setText(day1);
+    }
+
+    @Override
+    public void setSummitDay2(String day2){
+        if(this.dayUntil2Text == null) return;
+        this.dayUntil2Text.setVisibility(View.VISIBLE);
+        this.dayUntil2Text.setText(day2);
+    }
+
+    @Override
+    public void setSummitDay3(String day3){
+        if(this.dayUntil3Text == null) return;
+        this.dayUntil3Text.setVisibility(View.VISIBLE);
+        this.dayUntil3Text.setText(day3);
+    }
+
+    @Override
+    public void setSummitCurrentDayContainerVisibility(boolean visible) {
+        if(summitCurrentDayContainer == null) return;
+        summitCurrentDayContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void setSummitCurrentDay(String day) {
+        if(this.currentDayText == null) return;
+        this.currentDayText.setVisibility(View.VISIBLE);
+        this.currentDayText.setText(day);
+    }
+
+    @Override
+    public void setSummitDaysLeftContainerVisibility(boolean visible) {
+        if(summitDaysLeftContainer == null) return;
+        summitDaysLeftContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 }

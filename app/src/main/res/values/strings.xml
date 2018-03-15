@@ -101,6 +101,8 @@
     <string name="push_notification_default_title">OpenStack Notification</string>
     <string name="splash_login_button_txt">SIGN IN USING OPENSTACK ID</string>
     <string name="splash_guest_button_txt">continue as guest</string>
+    <string name="splash_days_left_label">days left</string>
+    <string name="splash_current_day">day</string>
     <string name="now">NOW</string>
     <string name="save_favorite">Watch Later</string>
     <string name="remove_favorite">Don\'t Watch Later</string>

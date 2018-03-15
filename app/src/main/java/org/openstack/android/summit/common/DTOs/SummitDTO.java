@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+import org.joda.time.Days;
 /**
  * Created by Claudio Redi on 11/18/2015.
  */
@@ -107,6 +107,31 @@ public class SummitDTO extends NamedDTO {
     public boolean isCurrentDateTimeInsideSummitRange() {
         DateTime currentLocal = getCurrentLocalTime();
         return this.startDate.before(currentLocal.toDate()) && this.endDate.after(currentLocal.toDate());
+    }
+
+    public boolean isNotStarted(){
+        DateTime currentLocal = getCurrentLocalTime();
+        return this.startDate.after(currentLocal.toDate());
+    }
+
+    public boolean isGoingOn(){
+        return this.isCurrentDateTimeInsideSummitRange();
+    }
+
+    public int getDaysLeft(){
+        if(isNotStarted()){
+            DateTime currentLocal = getCurrentLocalTime();
+            return Days.daysBetween(currentLocal.withTimeAtStartOfDay() , this.getLocalStartDate().withTimeAtStartOfDay() ).getDays();
+        }
+        return 0;
+    }
+
+    public int getCurrentDay(){
+        if(isGoingOn()){
+            DateTime currentLocal = getCurrentLocalTime();
+            return Days.daysBetween(this.getLocalStartDate().withTimeAtStartOfDay() , currentLocal.withTimeAtStartOfDay()).getDays() + 1;
+        }
+        return 0;
     }
 
     public ArrayList<DateTime> getPastDates() {
