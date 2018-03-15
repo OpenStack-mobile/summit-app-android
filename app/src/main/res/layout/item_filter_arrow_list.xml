@@ -37,7 +37,7 @@
         <ImageView android:id="@+id/item_filter_more" style="@style/AppTheme.MoreImageView" />
     </LinearLayout>
     <TextView
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="left|center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/item_selected_sub_items"
