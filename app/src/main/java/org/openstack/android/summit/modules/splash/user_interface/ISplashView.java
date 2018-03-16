@@ -1,7 +1,5 @@
 package org.openstack.android.summit.modules.splash.user_interface;
 
-import android.widget.Button;
-
 import org.openstack.android.summit.common.user_interface.IBaseView;
 
 /**

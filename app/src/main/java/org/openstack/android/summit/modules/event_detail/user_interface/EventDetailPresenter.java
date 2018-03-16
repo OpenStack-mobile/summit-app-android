@@ -286,7 +286,7 @@ public class EventDetailPresenter
                         },
                         (ex) -> {
                             loadingFeedback = false;
-                            view.showFeedbackErrorMessage(ex.getMessage());
+                            view.showFeedbackErrorMessage();
                             showFeedbackInfoIfFinishedLoading();
                         }
                 );
@@ -308,7 +308,7 @@ public class EventDetailPresenter
                         },
                         (ex) -> {
                             loadingFeedback = false;
-                            view.showFeedbackErrorMessage(ex.getMessage());
+                            view.showFeedbackErrorMessage();
                             loadingFeedbackAverage = false;
                             showFeedbackInfoIfFinishedLoading();
                         }

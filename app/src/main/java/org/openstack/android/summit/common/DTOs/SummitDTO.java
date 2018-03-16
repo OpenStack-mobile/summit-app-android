@@ -106,16 +106,23 @@ public class SummitDTO extends NamedDTO {
 
     public boolean isCurrentDateTimeInsideSummitRange() {
         DateTime currentLocal = getCurrentLocalTime();
-        return this.startDate.before(currentLocal.toDate()) && this.endDate.after(currentLocal.toDate());
+        DateTime startDate    = this.getLocalStartDate();
+        DateTime endDate      = this.getLocalEndDate();
+
+        return ( startDate.isBefore(currentLocal) || startDate.isEqual(currentLocal)) && ( endDate.isAfter(currentLocal) || endDate.isEqual(currentLocal));
     }
 
     public boolean isNotStarted(){
-        DateTime currentLocal = getCurrentLocalTime();
-        return this.startDate.after(currentLocal.toDate());
+        DateTime currentLocal = getCurrentLocalTime().withTimeAtStartOfDay();
+        DateTime startDate    = this.getLocalStartDate().withTimeAtStartOfDay();
+        return startDate.isAfter(currentLocal);
     }
 
     public boolean isGoingOn(){
-        return this.isCurrentDateTimeInsideSummitRange();
+        DateTime currentLocal = getCurrentLocalTime().withTimeAtStartOfDay();
+        DateTime startDate    = this.getLocalStartDate().withTimeAtStartOfDay();
+        DateTime endDate      = this.getLocalEndDate().withTimeAtStartOfDay();
+        return ( startDate.isBefore(currentLocal) || startDate.isEqual(currentLocal)) && ( endDate.isAfter(currentLocal) || endDate.isEqual(currentLocal));
     }
 
     public int getDaysLeft(){

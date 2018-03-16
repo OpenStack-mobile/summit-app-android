@@ -702,6 +702,12 @@ public class EventDetailFragment
         ((LinearLayout) feedbackErrorTextView.getParent()).setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void showFeedbackErrorMessage() {
+        if (feedbackErrorTextView == null) return;
+        ((LinearLayout) feedbackErrorTextView.getParent()).setVisibility(View.VISIBLE);
+    }
+
     private class SpeakerListAdapter extends ArrayAdapter<PersonListItemDTO> {
 
         public SpeakerListAdapter(Context context) {

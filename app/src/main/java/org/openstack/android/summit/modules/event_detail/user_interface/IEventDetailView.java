@@ -51,6 +51,8 @@ public interface IEventDetailView extends IBaseView {
 
     void showFeedbackErrorMessage(String message);
 
+    void showFeedbackErrorMessage();
+
     void showFeedbackContainer();
 
     void loadVideo(VideoDTO video);
