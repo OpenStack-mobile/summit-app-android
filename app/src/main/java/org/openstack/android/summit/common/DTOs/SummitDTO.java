@@ -114,13 +114,17 @@ public class SummitDTO extends NamedDTO {
 
     public boolean isNotStarted(){
         DateTime currentLocal = getCurrentLocalTime().withTimeAtStartOfDay();
-        DateTime startDate    = this.getLocalStartDate().withTimeAtStartOfDay();
+        DateTime startDate    = this.scheduleStartDate != null ?
+                                this.getLocalScheduleStartDate().withTimeAtStartOfDay():
+                                this.getLocalStartDate().withTimeAtStartOfDay();
         return startDate.isAfter(currentLocal);
     }
 
     public boolean isGoingOn(){
         DateTime currentLocal = getCurrentLocalTime().withTimeAtStartOfDay();
-        DateTime startDate    = this.getLocalStartDate().withTimeAtStartOfDay();
+        DateTime startDate    = this.scheduleStartDate != null ?
+                                this.getLocalScheduleStartDate().withTimeAtStartOfDay():
+                                this.getLocalStartDate().withTimeAtStartOfDay();
         DateTime endDate      = this.getLocalEndDate().withTimeAtStartOfDay();
         return ( startDate.isBefore(currentLocal) || startDate.isEqual(currentLocal)) && ( endDate.isAfter(currentLocal) || endDate.isEqual(currentLocal));
     }
@@ -128,7 +132,11 @@ public class SummitDTO extends NamedDTO {
     public int getDaysLeft(){
         if(isNotStarted()){
             DateTime currentLocal = getCurrentLocalTime();
-            return Days.daysBetween(currentLocal.withTimeAtStartOfDay() , this.getLocalStartDate().withTimeAtStartOfDay() ).getDays();
+            DateTime startDate    = this.scheduleStartDate != null ?
+                                    this.getLocalScheduleStartDate():
+                                    this.getLocalStartDate();
+
+            return Days.daysBetween(currentLocal.withTimeAtStartOfDay() , startDate.withTimeAtStartOfDay() ).getDays();
         }
         return 0;
     }
@@ -136,7 +144,11 @@ public class SummitDTO extends NamedDTO {
     public int getCurrentDay(){
         if(isGoingOn()){
             DateTime currentLocal = getCurrentLocalTime();
-            return Days.daysBetween(this.getLocalStartDate().withTimeAtStartOfDay() , currentLocal.withTimeAtStartOfDay()).getDays() + 1;
+            DateTime startDate    = this.scheduleStartDate != null ?
+                                    this.getLocalScheduleStartDate():
+                                    this.getLocalStartDate();
+
+            return Days.daysBetween(startDate.withTimeAtStartOfDay() , currentLocal.withTimeAtStartOfDay()).getDays() + 1;
         }
         return 0;
     }
