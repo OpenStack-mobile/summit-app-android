@@ -35,7 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class RestApiModule {
 
-    private static final int       ApiTimeout        = 20 ; //secs;
+    private static final int       ApiTimeout        = 60 ; //secs;
     private static final boolean   RetryOnConnection = true;
     @Provides
     @Named("MemberProfile")
