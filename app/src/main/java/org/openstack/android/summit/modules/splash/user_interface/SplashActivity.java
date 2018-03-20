@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -43,9 +44,6 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     @BindView(R.id.btn_splash_guest)
     Button guestButton;
 
-    @BindView(R.id.splash_summit_info_container)
-    LinearLayout summitInfoContainer;
-
     @BindView(R.id.splash_summit_dates)
     TextView summitDates;
 
@@ -56,7 +54,7 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     ImageView splashLogo;
 
     @BindView(R.id.splash_main_container)
-    LinearLayout splashMainContainer;
+    RelativeLayout splashMainContainer;
 
     @BindView(R.id.summit_days_left_container)
     LinearLayout summitDaysLeftContainer;
@@ -175,18 +173,14 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     public void setSummitDates(String summitDates) {
         if(this.summitDates == null) return;
         this.summitDates.setText(summitDates);
-    }
-
-    @Override
-    public void setSummitInfoContainerVisibility(boolean visible) {
-        if(summitInfoContainer == null) return;
-        summitInfoContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        this.summitDates.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void setSummitName(String summitName) {
         if(this.summitName == null) return;
         this.summitName.setText(summitName);
+        this.summitName.setVisibility(View.VISIBLE);
     }
 
     @Override

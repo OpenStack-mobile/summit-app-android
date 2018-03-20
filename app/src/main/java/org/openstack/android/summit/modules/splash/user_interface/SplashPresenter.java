@@ -163,12 +163,10 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
 
             view.setSummitDaysLeftContainerVisibility(false);
             view.setSummitCurrentDayContainerVisibility(false);
-            view.setSummitInfoContainerVisibility(false);
 
             if (summit != null) {
                 view.setSummitName(summit.getName());
                 view.setSummitDates(summit.getDatesLabel());
-                view.setSummitInfoContainerVisibility(true);
 
                 if (summit.isNotStarted()) {
 
@@ -202,10 +200,8 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
                     }
                     return;
                 }
-
                 return;
             }
-            view.setSummitInfoContainerVisibility(false);
         }
         catch (Exception ex){
             Crashlytics.logException(ex);

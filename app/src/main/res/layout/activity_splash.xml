@@ -1,129 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:id="@+id/splash_main_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:id="@+id/splash_main_container"
-    android:background="@drawable/material_splash_gradient">
+    android:background="@drawable/material_splash_gradient"
+    android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/splash_logo"
         android:layout_width="300dp"
         android:layout_height="100dp"
-        android:src="@drawable/summit_logo"
-        tools:layout_gravity="center_horizontal"
-        android:id="@+id/splash_logo"
-        android:layout_marginTop="60dp" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/summit_logo" />
+
+    <TextView
+        android:id="@+id/splash_summit_dates"
+        style="@style/AppTheme.summitDates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/splash_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="100dp"
+        android:visibility="gone"
+        android:text="MAY 8TH - 11TH , 2017" />
+
+    <TextView
+        android:id="@+id/splash_summit_name"
+        style="@style/AppTheme.summitName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/splash_summit_dates"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        android:text="Barcelona" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:id="@+id/summit_days_left_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/splash_summit_name"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical"
-        android:layout_margin="10dp"
-        android:layout_weight="0.6"
-        android:visibility="visible"
-        android:id="@+id/splash_summit_info_container"
-        android:gravity="center_vertical">
+        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/splash_summit_dates"
-            style="@style/AppTheme.summitDates"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_vertical|center"
-            android:text="MAY 8TH - 11TH , 2017" />
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/day_until_3"
+                style="@style/AppTheme.summitDayUntil"
+                android:background="@drawable/day_until_border"
+                android:text="0"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/day_until_2"
+                style="@style/AppTheme.summitDayUntil"
+                android:background="@drawable/day_until_border"
+                android:text="0"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/day_until_1"
+                style="@style/AppTheme.summitDayUntil"
+                android:background="@drawable/day_until_border"
+                android:text="0"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <TextView
+            android:id="@+id/day_left_label"
+            style="@style/AppTheme.summitDaysLeftLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/splash_summit_name"
-            android:text="Barcelona"
-            style="@style/AppTheme.summitName"
+            android:text="@string/splash_days_left_label"
             tools:gravity="fill_vertical|center_horizontal" />
-
-        <LinearLayout
-            android:id="@+id/summit_days_left_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:layout_marginTop="30dp"
-            android:visibility="gone">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/day_until_3"
-                    style="@style/AppTheme.summitDayUntil"
-                    android:background="@drawable/day_until_border"
-                    android:text="0" />
-                <TextView
-                    android:id="@+id/day_until_2"
-                    android:visibility="gone"
-                    style="@style/AppTheme.summitDayUntil"
-                    android:background="@drawable/day_until_border"
-                    android:text="0" />
-                <TextView
-                    android:id="@+id/day_until_1"
-                    android:visibility="gone"
-                    style="@style/AppTheme.summitDayUntil"
-                    android:background="@drawable/day_until_border"
-                    android:text="0" />
-            </LinearLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/day_left_label"
-                android:text="@string/splash_days_left_label"
-                style="@style/AppTheme.summitDaysLeftLabel"
-                tools:gravity="fill_vertical|center_horizontal" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/summit_current_day_container"
-            android:layout_width="80dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="0dp"
-            android:layout_gravity="center"
-            android:background="@drawable/day_until_border"
-            android:visibility="gone"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/current_day_label"
-                style="@style/AppTheme.summitCurrentDayLabel"
-                android:text="@string/splash_current_day" />
-            <TextView
-                android:id="@+id/current_day_txt"
-                style="@style/AppTheme.summitCurrentDay"
-                android:text="1" />
-        </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/summit_current_day_container"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/splash_summit_name"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/day_until_border"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/current_day_label"
+            style="@style/AppTheme.summitCurrentDayLabel"
+            android:text="@string/splash_current_day" />
+
+        <TextView
+            android:id="@+id/current_day_txt"
+            style="@style/AppTheme.summitCurrentDay"
+            android:text="1" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_splash_login"
+        style="@style/AppTheme.SplashLoginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_above="@+id/btn_splash_guest"
+        android:text="@string/splash_login_button_txt" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_splash_login"
-            style="@style/AppTheme.SplashLoginButton"
-            android:text="@string/splash_login_button_txt" />
+    <Button
+        android:id="@+id/btn_splash_guest"
+        style="@style/AppTheme.SplashGuestButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/splash_guest_button_txt" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_splash_guest"
-            style="@style/AppTheme.SplashGuestButton"
-            android:text="@string/splash_guest_button_txt"/>
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

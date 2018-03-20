@@ -19,8 +19,6 @@ public interface ISplashView extends IBaseView {
 
     void setSummitDates(String summitDates);
 
-    void setSummitInfoContainerVisibility(boolean visible);
-
     void setSummitDaysLeftContainerVisibility(boolean visible);
 
     void setSummitDay1(String day1);
