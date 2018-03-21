@@ -5,8 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -25,7 +29,6 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.MemberDTO;
 import org.openstack.android.summit.common.ISession;
-import org.openstack.android.summit.common.devices.huawei.HuaweiHelper;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.services.DataUpdatesService;
@@ -59,6 +62,8 @@ import bolts.AppLinkNavigation;
 public class MainPresenter
         extends BasePresenter<IMainView, IMainInteractor, IMainWireframe>
         implements IMainPresenter {
+
+    private static final String SKIP_PROTECTED_APPS_MESSAGE = "SKIP_PROTECTED_APPS_MESSAGE";
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -462,6 +467,42 @@ public class MainPresenter
         }
     }
 
+    /**
+     *  @link https://developer.android.com/training/monitoring-device-state/doze-standby.html
+     */
+    private void skipDoze(){
+        try {
+            // battery optimization code
+            final Context ctx                = view.getApplicationContext();
+            final SharedPreferences settings = ctx.getSharedPreferences("ProtectedApps", Context.MODE_PRIVATE);
+            boolean skipMessage              = settings.getBoolean(SKIP_PROTECTED_APPS_MESSAGE, false);
+
+            if (!skipMessage) {
+                final SharedPreferences.Editor editor = settings.edit();
+                PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
+                String packageName = view.getApplicationContext().getPackageName();
+                boolean isIgnoringBatteryOptimizations = true;
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName);
+                }
+
+                if (!isIgnoringBatteryOptimizations) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    intent.setData(Uri.parse("package:" + packageName));
+
+                    editor.putBoolean(SKIP_PROTECTED_APPS_MESSAGE, true);
+                    editor.apply();
+
+                    view.startActivity(intent);
+                }
+            }
+        }
+        catch (Exception ex){
+            Crashlytics.logException(ex);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -484,8 +525,6 @@ public class MainPresenter
 
         LocalBroadcastManager.getInstance(OpenStackSummitApplication.context).registerReceiver(messageReceiver, intentFilter);
 
-        HuaweiHelper.check((Activity) view);
-
         if (interactor.isDataLoaded()) {
             enabledBackgroundServices();
         }
@@ -503,7 +542,7 @@ public class MainPresenter
         }
 
         checkPlayServices();
-
+        skipDoze();
         if (securityManager.isLoggedIn()) {
             try {
                 onLoggedIn();
