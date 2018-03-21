@@ -24,7 +24,7 @@
         android:layout_below="@+id/splash_logo"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="@dimen/splash_summit_dates_margin_top"
         android:visibility="gone"
         android:text="MAY 8TH - 11TH , 2017" />
 

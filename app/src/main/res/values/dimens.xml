@@ -24,4 +24,6 @@
     <dimen name="event_row_title_size">17sp</dimen>
     <!-- Filters -->
     <dimen name="filter_item_navigation_view_selected_sub_items_text_size">11dp</dimen>
+
+    <dimen name="splash_summit_dates_margin_top">50dp</dimen>
 </resources>
