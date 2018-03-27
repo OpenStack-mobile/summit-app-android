@@ -36,6 +36,7 @@ import org.openstack.android.summit.common.services.UserActionsPostProcessServic
 import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
 import org.openstack.android.summit.common.user_interface.BrowserActivity;
+import org.openstack.android.summit.common.utils.CustomWebViewAppLinkResolver;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
 import org.openstack.android.summit.common.utils.RealmFactory;
@@ -690,6 +691,7 @@ public class MainPresenter
                     return false;
                 }
                 Log.d(Constants.LOG_TAG, "do app link url navigation to " + url.toString());
+                AppLinkNavigation.setDefaultResolver(new CustomWebViewAppLinkResolver((MainActivity) view));
                 AppLinkNavigation.navigateInBackground((MainActivity) view, url);
             }
         }

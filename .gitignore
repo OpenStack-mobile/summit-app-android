@@ -9,6 +9,7 @@ build/
 /.idea/
 /summit-app.properties
 /summit-app.debug.properties
+/summit-app.production.properties
 /app/libs
 app/fabric.properties
 /app/src/jni/
