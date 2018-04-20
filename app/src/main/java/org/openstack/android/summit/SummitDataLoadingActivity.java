@@ -71,8 +71,8 @@ public class SummitDataLoadingActivity extends BaseDataLoadingActivity {
         if(SummitDataIngestionService.isRunning()) return;
 
         Log.d(Constants.LOG_TAG, "SummitDataLoadingActivity.doInitialDataLoading: invoking service SummitDataIngestionService ");
-        Intent intent = SummitDataIngestionService.newIntent(this);
-        startService(intent);
+
+        SummitDataIngestionService.enqueueWork(this, SummitDataIngestionService.newIntent(this));
     }
 
     public void finishOk() {

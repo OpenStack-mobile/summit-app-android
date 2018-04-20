@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.SlidingTabLayout;
 import org.openstack.android.summit.common.user_interface.tabs.FragmentLifecycle;
@@ -51,10 +50,10 @@ public class MemberProfileFragment
 
     private MemberProfilePageAdapter memberProfilePageAdapter;
 
-    @BindView(R2.id.tabs)
+    @BindView(R.id.tabs)
     SlidingTabLayout tabs;
 
-    @BindView(R2.id.member_profile_pager)
+    @BindView(R.id.member_profile_pager)
     ViewPager eventsViewPager;
 
     private int selectedTabIndex = 0;

@@ -16,12 +16,11 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
-import org.openstack.android.summit.dagger.components.DaggerApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-
+import org.openstack.android.summit.dagger.components.DaggerApplicationComponent;
 /**
  * Created by claudio on 11/3/2015.
  */
@@ -73,9 +72,11 @@ public class OpenStackSummitApplication extends Application {
     }
 
     private void initializeInjector() {
+
         this.applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+
     }
 
     public ApplicationComponent getApplicationComponent() {

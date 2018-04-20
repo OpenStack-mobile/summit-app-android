@@ -3,8 +3,10 @@ import groovy.json.JsonSlurper
 
 def generateFireBaseJsonConfiguration(file) {
     println('loading file '+file+' ...')
+    def projectDir   = project.rootDir.toString()
+    println('project dir '+projectDir+' ...')
     def properties   = loadPropertiesFile(file)
-    def templateFile = new File("google-services.json.template")
+    def templateFile = new File(projectDir + "/google-services.json.template")
     def json         = new JsonSlurper().parseText(templateFile.text)
 
     // populate properties
@@ -12,15 +14,13 @@ def generateFireBaseJsonConfiguration(file) {
     json.project_info.firebase_url                              = properties['FirebaseProjectInfoUrl']
     json.project_info.project_id                                = properties['FirebaseProjectInfoId']
     json.project_info.storage_bucket                            = properties['FirebaseProjectInfoBucket']
-    json.client[0].client_info.mobilesdk_app_id                 =  properties['FirebaseClientInfoMobileSDKAppId']
-    json.client[0].client_info.android_client_info.package_name = "org.openstack.android.summit"
+    json.client[0].client_info.mobilesdk_app_id                 = properties['FirebaseClientInfoMobileSDKAppId']
     json.client[0].api_key[0].current_key                       = properties['FirebaseClientApiKeyCurrent']
     json.client[0].oauth_client[0].client_id                    = properties['FirebaseClientOAUTH2ClientClientId1']
-    json.client[0].oauth_client[0].client_type                  = 3
     json.client[0].oauth_client[1].client_id                    = properties['FirebaseClientOAUTH2ClientClientId2']
-    json.client[0].oauth_client[1].client_type                  = 3
-
-    def jsonFile = new File("app/google-services.json")
+    json.client[0].oauth_client[2].client_id                    = properties['FirebaseClientOAUTH2ClientClientId3']
+    json.client[0].oauth_client[3].client_id                    = properties['FirebaseClientOAUTH2ClientClientId4']
+    def jsonFile = new File(projectDir + "/app/google-services.json")
     jsonFile.write(JsonOutput.toJson(json))
 }
 
@@ -35,9 +35,12 @@ buildscript {
     }
 }
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-//apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     mavenCentral()
@@ -99,11 +102,9 @@ task expandConfigurationDebug {
     doLast {
         android.productFlavors.beta {
             generateFireBaseJsonConfiguration("../summit-app.debug.properties")
-
         }
         android.productFlavors.development {
             generateFireBaseJsonConfiguration("../summit-app.debug.properties")
-
         }
     }
 }
@@ -122,25 +123,22 @@ tasks.whenTaskAdded { task ->
 
 android {
     flavorDimensions "default"
-    signingConfigs {
-        config {
-        }
-    }
+
     dexOptions {
         javaMaxHeapSize "4g" //specify the heap size for the dex process
         preDexLibraries = false
     }
-    compileSdkVersion 25
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 26
     defaultConfig {
         applicationId "org.openstack.android.summit"
-        minSdkVersion 16
-        targetSdkVersion 25
+        minSdkVersion 15
+        targetSdkVersion 26
         versionCode 126
         versionName "2.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
+
     buildTypes {
         debug {
             // Settings for Crashlytics Beta Distribution
@@ -154,6 +152,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     productFlavors {
         development {
             manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
@@ -167,6 +166,7 @@ android {
             manifestPlaceholders = expandManifest("production", "../summit-app.properties")
         }
     }
+
     packagingOptions {
         pickFirst 'META-INF/license.txt'
         pickFirst 'META-INF/LICENSE.txt'
@@ -174,6 +174,7 @@ android {
         // to avoid error file included twice
         exclude 'META-INF/rxjava.properties'
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -199,92 +200,98 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:design:25.4.0'
-    compile 'jp.wasabeef:recyclerview-animators:2.2.5'
-    compile 'net.danlew:android.joda:2.9.7'
-
-    // Dagger 2 and Compiler
-    // https://github.com/google/dagger
-    compile 'com.google.dagger:dagger:2.8'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'jp.wasabeef:recyclerview-animators:2.2.5'
+    implementation 'net.danlew:android.joda:2.9.7'
 
     // Google's OAuth library for OpenID Connect
     // See https://code.google.com/p/google-oauth-java-client/wiki/Setup
-    compile('com.google.oauth-client:google-oauth-client:1.22.0') {
+    implementation('com.google.oauth-client:google-oauth-client:1.22.0') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'junit', module: 'junit'
         exclude group: 'com.google.android', module: 'android'
     }
 
-    compile ('com.google.api-client:google-api-client-android:1.22.0'){
+    implementation ('com.google.api-client:google-api-client-android:1.22.0'){
         exclude group: 'com.google.guava', module: 'guava-jdk5'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     // Google's JSON parsing, could be replaced with Jackson
-    compile ('com.google.api-client:google-api-client-gson:1.22.0'){
+    implementation ('com.google.api-client:google-api-client-gson:1.22.0'){
         exclude group: 'com.google.guava', module: 'guava-jdk5'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
 
-    compile 'org.modelmapper:modelmapper:0.7.5'
-    compile('com.github.claudioredi:Ranger:da908aa') {
-
-    }
+    implementation 'org.modelmapper:modelmapper:0.7.5'
+    implementation 'com.github.OpenStack-mobile:Ranger:4692e18'
     // progress indicator
-    compile 'cc.cloudist.acplibrary:library:1.2.1'
+    implementation 'cc.cloudist.acplibrary:library:1.2.1'
     // image library
-    compile 'com.facebook.fresco:fresco:0.11.0'
+    implementation 'com.facebook.fresco:fresco:0.11.0'
     // simulate list with a linear layout
-    compile 'com.github.frankiesardo:linearlistview:1.0.1@aar'
+    implementation 'com.github.frankiesardo:linearlistview:1.0.1@aar'
     // page indicator
-    compile 'com.githang:viewpagerindicator:2.4.2@aar'
+    implementation 'com.githang:viewpagerindicator:2.4.2@aar'
     // Tags
-    compile 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
+    implementation 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
     // google maps
-    compile 'com.google.android.gms:play-services-maps:11.8.0'
+    implementation 'com.google.android.gms:play-services-maps:15.0.0'
     // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION: due oo many method references: (max is 65536)
     // https://github.com/BoltsFramework/Bolts-Android
-    compile 'com.android.support:multidex:1.0.2'
-    compile 'com.parse.bolts:bolts-applinks:1.4.0'
-    compile files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.parse.bolts:bolts-applinks:1.4.0'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
     // material design spiner
-    compile('com.weiwangcn.betterspinner:library-material:1.1.0') {
+    implementation('com.weiwangcn.betterspinner:library-material:1.1.0') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
-    testCompile 'org.mockito:mockito-core:2.0.86-beta'
-    testCompile 'junit:junit:4.12'
-    testCompile ('org.robolectric:robolectric:3.1'){
-    }
-    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
-    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.5'
-    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
-    testCompile 'org.powermock:powermock-classloading-xstream:1.6.5'
 
-    androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
-    androidTestCompile 'com.android.support.test:rules:1.0.1'
-    androidTestCompile 'com.android.support:support-annotations:27.0.2'
+    testImplementation 'org.mockito:mockito-core:2.0.86-beta'
+    testImplementation 'junit:junit:4.12'
+    testImplementation ('org.robolectric:robolectric:3.1'){
+    }
+    testImplementation 'org.powermock:powermock-module-junit4:1.6.5'
+    testImplementation 'org.powermock:powermock-module-junit4-rule:1.6.5'
+    testImplementation 'org.powermock:powermock-api-mockito:1.6.5'
+    testImplementation 'org.powermock:powermock-classloading-xstream:1.6.5'
+
+    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'com.android.support:support-annotations:27.1.1'
 
     if (file('libs/safe_storage.aar').exists()) {
         println('adding dependency safe_storage.aar ...')
-        productionCompile "org.openstack.android.summit.safestorage:safe_storage@aar"
+        productionImplementation "org.openstack.android.summit.safestorage:safe_storage@aar"
     }
     if (file('libs/safe_storage-testing.aar').exists()) {
         println('adding dependency safe_storage-testing.aar ...')
-        betaCompile "org.openstack.android.summit.safestorage:safe_storage-testing@aar"
+        betaImplementation "org.openstack.android.summit.safestorage:safe_storage-testing@aar"
     }
     if (file('libs/safe_storage_debug.aar').exists()) {
         println('adding dependency safe_storage_debug.aar ...')
-        developmentCompile "org.openstack.android.summit.safestorage:safe_storage_debug@aar"
+        developmentImplementation "org.openstack.android.summit.safestorage:safe_storage_debug@aar"
     }
     // http://facebook.github.io/stetho and https://github.com/uPhyca/stetho-realm
-    compile 'com.facebook.stetho:stetho:1.5.0'
-    compile 'com.uphyca:stetho_realm:2.0.0'
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.uphyca:stetho_realm:2.0.0'
+
+    // Espresso Dependencies
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.2.2', {
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+    })
+
+    implementation 'com.google.firebase:firebase-core:15.0.0'
+    implementation 'com.google.firebase:firebase-messaging:15.0.0'
+
     // https://github.com/square/retrofit
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
@@ -292,45 +299,25 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    // Espresso Dependencies
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
-    androidTestCompile 'com.android.support.test:rules:1.0.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2', {
-        exclude module: 'support-annotations'
-        exclude module: 'support-v4'
-        exclude module: 'recyclerview-v7'
-        exclude module: 'design'
-    })
-
-    configurations.all {
-        resolutionStrategy {
-            force 'com.android.support:support-annotations:25.2.0'
-            force 'com.google.guava:guava:20.0-rc1'
-        }
-    }
-
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-messaging:11.8.0'
-
-    // RXJAVA
-    // HACK to get rid of an error related to realm https://github.com/realm/realm-java/issues/1963
-    // this is needed bc REALM dependency
-    compile('io.reactivex:rxjava:1.1.7') {
-        exclude module: 'rx.internal.operators'
-    }
+    // https://github.com/JakeWharton/butterknife
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // https://github.com/ReactiveX/RxAndroid
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    // https://github.com/google/dagger
+    implementation 'com.google.dagger:dagger:2.14.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.14.1'
 
-    compile 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+        transitive = true;
+    }
+
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 }
 
 apply plugin: 'realm-android'
 
 apply plugin: 'com.google.gms.google-services'
-
-apply plugin: 'com.jakewharton.butterknife'

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.HtmlTextView;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.tabs.FragmentLifecycle;
@@ -30,28 +29,28 @@ public class MemberProfileDetailFragment
 
     protected Unbinder unbinder;
 
-    @BindView(R2.id.add_eventbrite_order_container)
+    @BindView(R.id.add_eventbrite_order_container)
     LinearLayout addEventbriteOrderContainer;
 
-    @BindView(R2.id.eventbrite_order_container)
+    @BindView(R.id.eventbrite_order_container)
     LinearLayout eventbriteOrderAddedContainer;
 
-    @BindView(R2.id.profile_detail_name)
+    @BindView(R.id.profile_detail_name)
     TextView nameTextView;
 
-    @BindView(R2.id.profile_detail_title)
+    @BindView(R.id.profile_detail_title)
     TextView titleTextView;
 
-    @BindView(R2.id.profile_detail_bio)
+    @BindView(R.id.profile_detail_bio)
     HtmlTextView bioTextView;
 
-    @BindView(R2.id.profile_detail_pic)
+    @BindView(R.id.profile_detail_pic)
     SimpleDraweeView draweeView;
 
-    @BindView(R2.id.member_info_container)
+    @BindView(R.id.member_info_container)
     LinearLayout memberInfoContainer;
 
-    @BindView(R2.id.missing_eventbrite_order_indicator)
+    @BindView(R.id.missing_eventbrite_order_indicator)
     LinearLayout missingEventbriteOrderIndicator;
 
     public MemberProfileDetailFragment() {

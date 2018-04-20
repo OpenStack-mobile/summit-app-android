@@ -10,22 +10,30 @@
       "client_info": {
         "mobilesdk_app_id": "",
         "android_client_info": {
-          "package_name": ""
+          "package_name": "org.openstack.android.summit"
         }
       },
       "oauth_client": [
-            {
-              "client_id": "",
-              "client_type": 3
-            },
-            {
-                "client_id": "",
-                "client_type": 3
-            }
+        {
+          "client_id": "",
+          "client_type": 3
+        },
+        {
+          "client_id": "",
+          "client_type": 3
+        },
+        {
+          "client_id": "",
+          "client_type": 3
+        },
+        {
+          "client_id": "",
+          "client_type": 3
+        }
       ],
       "api_key": [
         {
-           "current_key": ""
+          "current_key": ""
         }
       ],
       "services": {

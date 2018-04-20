@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.DTOs.NonConfirmedSummitAttendeeDTO;
 import org.openstack.android.summit.common.entities.NonConfirmedSummitAttendee;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
@@ -44,13 +43,13 @@ public class MemberOrderConfirmFragment
     private int externalAttendeeSelectedIndex;
     private Unbinder unbinder;
 
-    @BindView(R2.id.member_order_confirm_number_text)
+    @BindView(R.id.member_order_confirm_number_text)
     EditText orderNumberTxt;
 
-    @BindView(R2.id.btn_add_order_action)
+    @BindView(R.id.btn_add_order_action)
     Button addOrderBtn;
 
-    @BindView(R2.id.btn_cancel_order_action)
+    @BindView(R.id.btn_cancel_order_action)
     Button cancelOrderBtn;
 
     public MemberOrderConfirmFragment() {

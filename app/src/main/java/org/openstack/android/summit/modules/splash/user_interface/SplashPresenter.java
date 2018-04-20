@@ -226,14 +226,24 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
     }
 
     private void disableDataUpdateService() {
+        /*
         if (DataUpdatesService.isServiceAlarmOn((Context) view)) {
             DataUpdatesService.setServiceAlarm((Context) view, false);
+        }
+        */
+        if(DataUpdatesService.isRunning()) {
+            DataUpdatesService.stop();
         }
     }
 
     private void enableDataUpdateService() {
+      /*
         if (!DataUpdatesService.isServiceAlarmOn((Context) view)) {
             DataUpdatesService.setServiceAlarm((Context) view, true);
+        }
+        */
+        if(!DataUpdatesService.isRunning()) {
+            DataUpdatesService.start(view.getApplicationContext());
         }
     }
 

@@ -19,7 +19,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.InfiniteScrollListener;
@@ -45,13 +44,13 @@ public class PushPushNotificationsListFragment
     private SearchView searchView;
     private SearchView.OnQueryTextListener queryTextListener;
 
-    @BindView(R2.id.switch_enable_notifications)
+    @BindView(R.id.switch_enable_notifications)
     Switch switchEnableNotifications;
 
-    @BindView(R2.id.list_notifications)
+    @BindView(R.id.list_notifications)
     ListView notificationsList;
 
-    @BindView(R2.id.list_notifications_empty_message)
+    @BindView(R.id.list_notifications_empty_message)
     TextView emptyMessage;
 
     public PushPushNotificationsListFragment() {

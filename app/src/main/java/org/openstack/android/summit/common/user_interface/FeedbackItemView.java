@@ -1,14 +1,11 @@
 package org.openstack.android.summit.common.user_interface;
 
-import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.R2;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,25 +17,25 @@ public class FeedbackItemView implements IFeedbackItemView {
 
     private View view;
 
-    @BindView(R2.id.item_feedback_rate_1)
+    @BindView(R.id.item_feedback_rate_1)
     ImageView rate1;
 
-    @BindView(R2.id.item_feedback_rate_2)
+    @BindView(R.id.item_feedback_rate_2)
     ImageView rate2;
 
-    @BindView(R2.id.item_feedback_rate_3)
+    @BindView(R.id.item_feedback_rate_3)
     ImageView rate3;
 
-    @BindView(R2.id.item_feedback_rate_4)
+    @BindView(R.id.item_feedback_rate_4)
     ImageView rate4;
 
-    @BindView(R2.id.item_feedback_rate_5)
+    @BindView(R.id.item_feedback_rate_5)
     ImageView rate5;
 
-    @BindView(R2.id.item_feedback_date)
+    @BindView(R.id.item_feedback_date)
     TextView dateTextView;
 
-    @BindView(R2.id.item_feedback_review)
+    @BindView(R.id.item_feedback_review)
     TextView reviewTextView;
 
     public FeedbackItemView(View view) {

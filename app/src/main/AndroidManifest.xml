@@ -247,19 +247,23 @@
         <!-- End Push Notifications -->
 
         <service
-            android:name=".common.services.DataUpdatesService"
+            android:name=".common.services.SummitsListIngestionService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"></service>
 
         <service
             android:name=".common.services.SummitDataIngestionService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"></service>
 
         <service
-            android:name=".common.services.SummitsListIngestionService"
+            android:name=".common.services.DataUpdatesService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"></service>
 
         <service
             android:name=".common.services.UserActionsPostProcessService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"></service>
 
     </application>

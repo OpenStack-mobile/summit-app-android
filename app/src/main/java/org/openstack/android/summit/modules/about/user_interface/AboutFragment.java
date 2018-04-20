@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.linearlistview.LinearListView;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.DTOs.WifiListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.WifiItemView;
@@ -36,34 +35,34 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
     private WifiListAdapter wifiListAdapter;
     private Unbinder unbinder;
 
-    @BindView(R2.id.about_wifi_networks_list)
+    @BindView(R.id.about_wifi_networks_list)
     LinearListView wifiList;
 
-    @BindView(R2.id.about_website_link)
+    @BindView(R.id.about_website_link)
     TextView websiteLink;
 
-    @BindView(R2.id.about_conduct_link)
+    @BindView(R.id.about_conduct_link)
     TextView conductLink;
 
-    @BindView(R2.id.about_support_link)
+    @BindView(R.id.about_support_link)
     TextView supportLink;
 
-    @BindView(R2.id.about_inquiries_link)
+    @BindView(R.id.about_inquiries_link)
     TextView inquiriesLink;
 
-    @BindView(R2.id.about_summit_name)
+    @BindView(R.id.about_summit_name)
     TextView nameText;
 
-    @BindView(R2.id.about_summit_date)
+    @BindView(R.id.about_summit_date)
     TextView dateText;
 
-    @BindView(R2.id.about_version_text)
+    @BindView(R.id.about_version_text)
     TextView aboutText;
 
-    @BindView(R2.id.about_build_text)
+    @BindView(R.id.about_build_text)
     TextView aboutBuildText;
 
-    @BindView(R2.id.wifi_networks_container)
+    @BindView(R.id.wifi_networks_container)
     LinearLayout wifiContainer;
 
     public AboutFragment() {

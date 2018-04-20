@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 
 import butterknife.BindView;
@@ -31,21 +30,21 @@ public class FeedbackEditFragment
     private Menu menu;
     private Unbinder unbinder;
 
-    @BindView(R2.id.feedback_rate_1)
+    @BindView(R.id.feedback_rate_1)
     ImageView starRateImage1;
-    @BindView(R2.id.feedback_rate_2)
+    @BindView(R.id.feedback_rate_2)
     ImageView starRateImage2;
-    @BindView(R2.id.feedback_rate_3)
+    @BindView(R.id.feedback_rate_3)
     ImageView starRateImage3;
-    @BindView(R2.id.feedback_rate_4)
+    @BindView(R.id.feedback_rate_4)
     ImageView starRateImage4;
-    @BindView(R2.id.feedback_rate_5)
+    @BindView(R.id.feedback_rate_5)
     ImageView starRateImage5;
-    @BindView(R2.id.feedback_create_button)
+    @BindView(R.id.feedback_create_button)
     Button feedbackCreateButton;
-    @BindView(R2.id.feedback_review_text)
+    @BindView(R.id.feedback_review_text)
     EditText reviewText;
-    @BindView(R2.id.event_name)
+    @BindView(R.id.event_name)
     TextView eventNameText;
 
     @Override

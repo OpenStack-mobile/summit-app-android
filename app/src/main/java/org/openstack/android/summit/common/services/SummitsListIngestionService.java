@@ -1,8 +1,8 @@
 package org.openstack.android.summit.common.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -31,7 +31,7 @@ import retrofit2.Retrofit;
  * Created by smarcet on 12/7/16.
  */
 
-public class SummitsListIngestionService extends IntentService {
+public class SummitsListIngestionService extends JobIntentService {
 
     public static final String ACTION                                   = "org.openstack.android.summit.common.services.SummitsListIngestionService.Action";
     public static final int RESULT_CODE_OK                              = 0xFF03;
@@ -39,6 +39,7 @@ public class SummitsListIngestionService extends IntentService {
     public static final int RESULT_CODE_OK_NEW_SUMMIT_AVAILABLE_LOADING = 0xFF05;
     public static final int RESULT_CODE_ERROR                           = 0xFF06;
     private static boolean isRunning                                    = false;
+    public static final int JOB_ID                                      = 1000;
 
     public static boolean isRunning(){
         synchronized (SummitsListIngestionService.class){
@@ -78,24 +79,17 @@ public class SummitsListIngestionService extends IntentService {
         ((OpenStackSummitApplication) getApplication()).getApplicationComponent().inject(this);
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    public SummitsListIngestionService() {
-        super("SummitsListIngestionService");
-        this.setIntentRedelivery(true);
-    }
-
     private void sendResult(Intent result , int code){
         result.putExtra("res", code);
         LocalBroadcastManager.getInstance(this).sendBroadcast(result);
     }
 
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, SummitsListIngestionService.class, JOB_ID, work);
+    }
+
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(Intent intent) {
 
         Intent result = new Intent(ACTION);
         try {

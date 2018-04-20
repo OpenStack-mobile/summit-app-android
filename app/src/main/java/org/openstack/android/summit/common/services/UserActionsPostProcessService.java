@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
+import android.support.v4.app.JobIntentService;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -28,8 +29,9 @@ import javax.inject.Inject;
  * Created by smarcet on 2/7/18.
  */
 
-public class UserActionsPostProcessService extends IntentService {
+public class UserActionsPostProcessService extends JobIntentService {
 
+    public static final int JOB_ID  = 4000;
     @Inject
     IReachability reachability;
 
@@ -43,19 +45,18 @@ public class UserActionsPostProcessService extends IntentService {
         return new Intent(context, UserActionsPostProcessService.class);
     }
 
-    public UserActionsPostProcessService() {
-        super("UserActionsPostProcessService");
-        this.setIntentRedelivery(true);
+    @Override
+    public void onCreate(){
+        super.onCreate();
+        ((OpenStackSummitApplication) getApplication()).getApplicationComponent().inject(this);
+    }
+
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, UserActionsPostProcessService.class, JOB_ID, work);
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId){
-        ((OpenStackSummitApplication)getApplication()).getApplicationComponent().inject(this);
-        return super.onStartCommand(intent,flags,startId);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(Intent intent) {
         try {
             if (!securityManager.isLoggedIn()) {
                 return;
@@ -119,7 +120,8 @@ public class UserActionsPostProcessService extends IntentService {
             @Override
             public void run() {
                 Log.i(Constants.LOG_TAG, String.format("Calling service UserActionsPostProcessService intent from thread %s", Thread.currentThread().getName()));
-                ctx.startService(UserActionsPostProcessService.newIntent(ctx));
+
+                UserActionsPostProcessService.enqueueWork(ctx, UserActionsPostProcessService.newIntent(ctx));
                 serviceHandler.postDelayed(this, interval);
             }
         };

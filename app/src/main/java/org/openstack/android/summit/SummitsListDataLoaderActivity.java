@@ -99,8 +99,8 @@ public class SummitsListDataLoaderActivity extends BaseDataLoadingActivity imple
         if(SummitsListIngestionService.isRunning()) return;
 
         Log.d(Constants.LOG_TAG, "SummitsListDataLoaderActivity.doInitialDataLoading: invoking service SummitsListIngestionService ");
-        Intent intent = SummitsListIngestionService.newIntent(this);
-        startService(intent);
+
+        SummitsListIngestionService.enqueueWork(this, SummitsListIngestionService.newIntent(this));
     }
 
     private BroadcastReceiver serviceReceiver = new BroadcastReceiver() {

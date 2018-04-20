@@ -104,7 +104,8 @@ public class EventDetailPresenter
                 savedInstanceState.getInt(Constants.NAVIGATION_PARAMETER_EVENT_ID,0) :
                 wireframe.getParameter(Constants.NAVIGATION_PARAMETER_EVENT_ID, Integer.class);
 
-        view.startService(DataUpdatesService.newIntent(view.getFragmentActivity()));
+        Context ctx = view.getFragmentActivity();
+        DataUpdatesService.enqueueWork(ctx, DataUpdatesService.newIntent(ctx));
     }
 
     @Override

@@ -25,7 +25,6 @@ import com.linearlistview.LinearListView;
 
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.R2;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.VideoDTO;
@@ -57,140 +56,140 @@ public class EventDetailFragment
     private SpeakerListAdapter speakerListAdapter;
     private FeedbackListAdapter feedbackListAdapter;
 
-    @BindView(R2.id.event_detail_action_rate)
+    @BindView(R.id.event_detail_action_rate)
     Button buttonRate;
 
-    @BindView(R2.id.event_detail_action_rate_first)
+    @BindView(R.id.event_detail_action_rate_first)
     Button buttonRateFirst;
 
-    @BindView(R2.id.event_detail_action_going)
+    @BindView(R.id.event_detail_action_going)
     ToggleButton buttonGoing;
 
-    @BindView(R2.id.event_detail_action_favorite)
+    @BindView(R.id.event_detail_action_favorite)
     ToggleButton buttonFavorite;
 
-    @BindView(R2.id.event_detail_place_container)
+    @BindView(R.id.event_detail_place_container)
     LinearLayout locationContainer;
 
-    @BindView(R2.id.event_detail_level_container)
+    @BindView(R.id.event_detail_level_container)
     LinearLayout levelContainer;
 
-    @BindView(R2.id.event_detail_speakers_container)
+    @BindView(R.id.event_detail_speakers_container)
     LinearLayout speakersContainer;
 
-    @BindView(R2.id.download_attachment_container)
+    @BindView(R.id.download_attachment_container)
     LinearLayout downloadContainer;
 
-    @BindView(R2.id.download_attachment_button)
+    @BindView(R.id.download_attachment_button)
     TextView downloadAttachmentLink;
 
-    @BindView(R2.id.must_record_view)
+    @BindView(R.id.must_record_view)
     ImageView mustRecordView;
 
-    @BindView(R2.id.event_detail_speakers_list)
+    @BindView(R.id.event_detail_speakers_list)
     LinearListView speakerList;
 
-    @BindView(R2.id.event_detail_feedback_list)
+    @BindView(R.id.event_detail_feedback_list)
     LinearListView feedbackList;
 
-    @BindView(R2.id.event_detail_load_more_feedback_button)
+    @BindView(R.id.event_detail_load_more_feedback_button)
     Button loadMoreFeedbackButton;
 
-    @BindView(R2.id.event_feedback_total_qty)
+    @BindView(R.id.event_feedback_total_qty)
     TextView feedbackQtyTxt;
 
-    @BindView(R2.id.event_detail_name)
+    @BindView(R.id.event_detail_name)
     TextView nameTextView;
 
-    @BindView(R2.id.event_detail_track)
+    @BindView(R.id.event_detail_track)
     TextView trackTextView;
 
-    @BindView(R2.id.event_detail_description)
+    @BindView(R.id.event_detail_description)
     HtmlTextView descriptionTextView;
 
-    @BindView(R2.id.event_detail_date)
+    @BindView(R.id.event_detail_date)
     TextView dateTextView;
 
-    @BindView(R2.id.event_detail_time)
+    @BindView(R.id.event_detail_time)
     TextView timeTextView;
 
-    @BindView(R2.id.event_detail_place)
+    @BindView(R.id.event_detail_place)
     TextView locationTextView;
 
-    @BindView(R2.id.event_detail_level)
+    @BindView(R.id.event_detail_level)
     TextView levelTextView;
 
-    @BindView(R2.id.event_detail_sponsors)
+    @BindView(R.id.event_detail_sponsors)
     TextView sponsorsTextView;
 
-    @BindView(R2.id.event_detail_tags)
+    @BindView(R.id.event_detail_tags)
     TextView tagsTextView;
 
-    @BindView(R2.id.event_detail_my_feedback)
+    @BindView(R.id.event_detail_my_feedback)
     LinearLayout myFeedbackLayout;
 
-    @BindView(R2.id.event_detail_loading_feedback)
+    @BindView(R.id.event_detail_loading_feedback)
     LinearLayout loadingIndicatorLayout;
 
-    @BindView(R2.id.event_detail_feedback_container)
+    @BindView(R.id.event_detail_feedback_container)
     LinearLayout feedbackContainerLayout;
 
-    @BindView(R2.id.event_detail_error_loading_feedback_text)
+    @BindView(R.id.event_detail_error_loading_feedback_text)
     TextView feedbackErrorTextView;
 
-    @BindView(R2.id.item_feedback_review)
+    @BindView(R.id.item_feedback_review)
     TextView reviewText;
 
-    @BindView(R2.id.item_feedback_date)
+    @BindView(R.id.item_feedback_date)
     TextView dateText;
 
-    @BindView(R2.id.event_avg_feedback_rate)
+    @BindView(R.id.event_avg_feedback_rate)
     LinearLayout averageFeedbackLayout;
 
-    @BindView(R2.id.event_avg_feedback_rate_1)
+    @BindView(R.id.event_avg_feedback_rate_1)
     ImageView avgRate1;
 
-    @BindView(R2.id.event_avg_feedback_rate_2)
+    @BindView(R.id.event_avg_feedback_rate_2)
     ImageView avgRate2;
 
-    @BindView(R2.id.event_avg_feedback_rate_3)
+    @BindView(R.id.event_avg_feedback_rate_3)
     ImageView avgRate3;
 
-    @BindView(R2.id.event_avg_feedback_rate_4)
+    @BindView(R.id.event_avg_feedback_rate_4)
     ImageView avgRate4;
 
-    @BindView(R2.id.event_avg_feedback_rate_5)
+    @BindView(R.id.event_avg_feedback_rate_5)
     ImageView avgRate5;
 
-    @BindView(R2.id.item_feedback_rate_1)
+    @BindView(R.id.item_feedback_rate_1)
     ImageView myRate1;
 
-    @BindView(R2.id.item_feedback_rate_2)
+    @BindView(R.id.item_feedback_rate_2)
     ImageView myRate2;
 
-    @BindView(R2.id.item_feedback_rate_3)
+    @BindView(R.id.item_feedback_rate_3)
     ImageView myRate3;
 
-    @BindView(R2.id.item_feedback_rate_4)
+    @BindView(R.id.item_feedback_rate_4)
     ImageView myRate4;
 
-    @BindView(R2.id.item_feedback_rate_5)
+    @BindView(R.id.item_feedback_rate_5)
     ImageView myRate5;
 
-    @BindView(R2.id.event_avg_feedback_val)
+    @BindView(R.id.event_avg_feedback_val)
     TextView rateVal;
 
-    @BindView(R2.id.video_preview)
+    @BindView(R.id.video_preview)
     VideoPlayer videoPlayer;
 
-    @BindString(R2.string.download_attachment) String downloadAttachmentString;
+    @BindString(R.string.download_attachment) String downloadAttachmentString;
 
-    @BindString(R2.string.download_slide) String downloadSlideString;
+    @BindString(R.string.download_slide) String downloadSlideString;
 
-    @BindView(R2.id.feedback_info_container)
+    @BindView(R.id.feedback_info_container)
     LinearLayout feedbackInfoContainer;
 
-    @BindView(R2.id.feedback_first_container)
+    @BindView(R.id.feedback_first_container)
     LinearLayout feedbackFirstContainer;
 
     public EventDetailFragment() {

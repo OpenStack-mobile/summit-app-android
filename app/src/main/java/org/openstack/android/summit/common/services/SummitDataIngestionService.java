@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -30,12 +31,13 @@ import retrofit2.Retrofit;
  * Created by sebastian on 10/5/2016.
  */
 
-public class SummitDataIngestionService extends IntentService {
+public class SummitDataIngestionService extends JobIntentService {
 
     public static final String ACTION         = "org.openstack.android.summit.common.services.SummitDataIngestionService.Action";
     public static final int RESULT_CODE_OK    = 0xFF01;
     public static final int RESULT_CODE_ERROR = 0xFF02;
     private static boolean isRunning          = false;
+    public static final int JOB_ID            = 2000;
 
     public static boolean isRunning(){
         synchronized (SummitDataIngestionService.class){
@@ -75,23 +77,17 @@ public class SummitDataIngestionService extends IntentService {
         ((OpenStackSummitApplication) getApplication()).getApplicationComponent().inject(this);
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    public SummitDataIngestionService() {
-        super("SummitDataIngestionService");
-        this.setIntentRedelivery(true);
-    }
-
     private void sendResult(Intent result , int code){
         result.putExtra("res", code);
         LocalBroadcastManager.getInstance(this).sendBroadcast(result);
     }
 
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, SummitDataIngestionService.class, JOB_ID, work);
+    }
+
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(Intent intent) {
 
         Intent result  = new Intent(ACTION);
 
