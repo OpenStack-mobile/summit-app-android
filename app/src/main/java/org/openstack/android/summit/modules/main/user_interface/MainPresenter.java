@@ -35,7 +35,6 @@ import org.openstack.android.summit.common.services.DataUpdatesService;
 import org.openstack.android.summit.common.services.UserActionsPostProcessService;
 import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
-import org.openstack.android.summit.common.user_interface.BrowserActivity;
 import org.openstack.android.summit.common.utils.CustomWebViewAppLinkResolver;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
@@ -603,12 +602,12 @@ public class MainPresenter
         super.onPause();
     }
 
-    private boolean checkDeepLinks() {
+    private void checkDeepLinks() {
         Intent intent = view.getIntent();
         if (intent != null) {
             String action = intent.getAction();
             Uri url = intent.getData();
-            if (action == Intent.ACTION_VIEW && url != null) {
+            if (action != null && action.equals(Intent.ACTION_VIEW) && url != null) {
                 // mark as processed
                 view.setIntent(null);
                 Log.d(Constants.LOG_TAG, "processing deep link url " + url.toString());
@@ -616,30 +615,30 @@ public class MainPresenter
                     // do routing ...
                     Log.d(Constants.LOG_TAG, "deep link url " + url.toString());
                     DeepLinkInfo deepLinkInfo = appLinkRouter.buildDeepLinkInfo(url);
-                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewEvent) {
-                        if (!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewEvent)) {
+                        if (!deepLinkInfo.hasParam()) return;
                         view.setMenuItemChecked(R.id.nav_events);
                         int eventId          = deepLinkInfo.getParamAsInt();
                         EventDetailDTO event = this.interactor.getEventById(eventId);
                         int day              = event.getStartDate().getDayOfMonth();
                         this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), day, this.view);
-                        return true;
+                        return;
                     }
-                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSpeaker) {
-                        if (!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewSpeaker)) {
+                        if (!deepLinkInfo.hasParam()) return;
                         view.setMenuItemChecked(R.id.nav_speakers);
                         this.wireframe.showSpeakerProfile(deepLinkInfo.getParamAsInt(), this.view);
-                        return true;
+                        return;
                     }
-                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewLevel) {
-                        if (!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewLevel)) {
+                        if (!deepLinkInfo.hasParam()) return;
                         view.setMenuItemChecked(R.id.nav_events);
                         String level = deepLinkInfo.getParam();
                         this.wireframe.showEventsViewByLevel(level, this.view);
-                        return true;
+                        return;
                     }
-                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSearch) {
-                        if (!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewSearch)) {
+                        if (!deepLinkInfo.hasParam()) return;
                         view.setMenuItemChecked(R.id.nav_events);
                         String search = deepLinkInfo.getParam();
                         try{
@@ -649,28 +648,28 @@ public class MainPresenter
 
                         }
                         this.wireframe.showSearchView(search, this.view);
-                        return true;
+                        return;
                     }
-                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewTrack) {
-                        if (!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewTrack)) {
+                        if (!deepLinkInfo.hasParam()) return;
                         view.setMenuItemChecked(R.id.nav_events);
                         int trackId = deepLinkInfo.getParamAsInt();
                         this.wireframe.showEventsViewByTrack(trackId, this.view);
-                        return true;
+                        return;
                     }
-                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewNotification) {
-                        if (!deepLinkInfo.hasParam()) return false;
+                    if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewNotification)) {
+                        if (!deepLinkInfo.hasParam()) return;
                         view.setMenuItemChecked(R.id.nav_notifications);
                         this.wireframe.showPushNotification(deepLinkInfo.getParamAsInt(), this.view);
-                        return true;
+                        return;
                     }
-                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewSchedule) {
+                    if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewSchedule)) {
                         view.setMenuItemChecked(R.id.nav_events);
-                        return true;
+                        return;
                     }
-                    if (deepLinkInfo.getAction() == DeepLinkInfo.ActionViewLocation) {
-                        if (!deepLinkInfo.hasParam()) return false;
-                        return true;
+                    if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewLocation)) {
+                        if (!deepLinkInfo.hasParam()) return;
+                        return;
                     }
                 }
                 // get the app link metadata
@@ -681,21 +680,14 @@ public class MainPresenter
                     Intent i = new Intent((Context) view, RSVPViewerActivity.class);
                     i.setData(url);
                     view.startActivity(i);
-                    return false;
+                    return;
                 }
-                if(this.appLinkRouter.isRawMainSchedule(url)){
-                    Log.d(Constants.LOG_TAG, "opening RAW main schedule ...");
-                    Intent i = new Intent((Context) view, BrowserActivity.class);
-                    i.setData(url);
-                    view.startActivity(i);
-                    return false;
-                }
+
                 Log.d(Constants.LOG_TAG, "do app link url navigation to " + url.toString());
                 AppLinkNavigation.setDefaultResolver(new CustomWebViewAppLinkResolver((MainActivity) view));
                 AppLinkNavigation.navigateInBackground((MainActivity) view, url);
             }
         }
-        return false;
     }
 
     public void showEventsView() {
