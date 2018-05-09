@@ -55,6 +55,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
 import bolts.AppLinkNavigation;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Claudio Redi on 2/12/2016.
@@ -583,6 +584,11 @@ public class MainPresenter
             initialView = InitialView.None;
         }
 
+        if(!interactor.isDataLoaded()){
+            launchSummitListDataLoadingActivity();
+            return;
+        }
+
         checkDeepLinks();
 
         Intent intent = view.getIntent();
@@ -618,11 +624,20 @@ public class MainPresenter
                     if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewEvent)) {
                         if (!deepLinkInfo.hasParam()) return;
                         view.setMenuItemChecked(R.id.nav_events);
-                        int eventId          = deepLinkInfo.getParamAsInt();
-                        EventDetailDTO event = this.interactor.getEventById(eventId);
-                        int day              = event.getStartDate().getDayOfMonth();
-                        this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), day, this.view);
-                        return;
+                        int eventId = deepLinkInfo.getParamAsInt();
+                        this.interactor.getEventById(eventId).observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        ( eventDTO ) -> {
+                                            int day = eventDTO.getStartDate().getDayOfMonth();
+                                            this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), day, this.view);
+
+                                        },
+                                        (ex) -> {
+                                            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.cannot_navigate_event);
+                                            if(dialog != null) dialog.show();
+                                            return;
+                                        }
+                                );
                     }
                     if (deepLinkInfo.getAction().equals(DeepLinkInfo.ActionViewSpeaker)) {
                         if (!deepLinkInfo.hasParam()) return;

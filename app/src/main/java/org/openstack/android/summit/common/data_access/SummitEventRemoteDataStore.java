@@ -1,6 +1,11 @@
 package org.openstack.android.summit.common.data_access;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONObject;
+import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.api.ISummitEventsApi;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.deserialization.IDeserializer;
@@ -14,6 +19,8 @@ import java.util.List;
 import javax.inject.Named;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.exceptions.Exceptions;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import retrofit2.Retrofit;
@@ -88,6 +95,39 @@ public class SummitEventRemoteDataStore extends BaseRemoteDataStore implements I
                     });
 
                     return summitEvent.getAverageRate();
+                }).doOnTerminate( () ->
+                        RealmFactory.closeSession()
+                );
+    }
+
+    @Override
+    public Observable<SummitEvent> getSummitEventById(int eventId) {
+        return summitEventsApi
+                .getPublishedEvent(summitSelector.getCurrentSummitId(), eventId, "", "")
+                .subscribeOn(Schedulers.io())
+                .map( response -> {
+
+                    SummitEvent summitEvent = null;
+                    int code      = response.code();
+                    try {
+                        if(!response.isSuccessful()){
+                            throw new Exception(String.format("SummitEventRemoteDataStore.getSummitEventById http code %d", code));
+                        }
+
+                        final String data = response.body().string();
+
+
+                        summitEvent = RealmFactory.transaction(session ->
+                                session.copyToRealmOrUpdate(deserializer.deserialize(data, SummitEvent.class))
+                        );
+
+                    } catch (Exception ex) {
+                        Crashlytics.logException(ex);
+                        Crashlytics.log(String.format("SummitEventRemoteDataStore.getSummitEventById http code %d", code));
+                        Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
+                        throw Exceptions.propagate(ex);
+                    }
+                    return summitEvent;
                 }).doOnTerminate( () ->
                         RealmFactory.closeSession()
                 );

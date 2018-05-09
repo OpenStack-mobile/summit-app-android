@@ -101,10 +101,10 @@ task expandConfigurationRelease  {
 task expandConfigurationDebug {
     doLast {
         android.productFlavors.beta {
-            generateFireBaseJsonConfiguration("../summit-app.debug.properties")
+            generateFireBaseJsonConfiguration("../summit-app.staging.properties")
         }
         android.productFlavors.development {
-            generateFireBaseJsonConfiguration("../summit-app.debug.properties")
+            generateFireBaseJsonConfiguration("../summit-app.dev.properties")
         }
     }
 }
@@ -133,7 +133,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 127
+        versionCode 128
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -143,7 +143,7 @@ android {
         debug {
             // Settings for Crashlytics Beta Distribution
             ext.betaDistributionReleaseNotes = "Release Notes for this build."
-            ext.betaDistributionEmails = getPropertyFromFile("../summit-app.debug.properties", "BetaDistributionEmails")
+            ext.betaDistributionEmails = getPropertyFromFile("../summit-app.dev.properties", "BetaDistributionEmails")
             ext.enableCrashlytics = false
         }
         release {
@@ -155,11 +155,11 @@ android {
 
     productFlavors {
         development {
-            manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
+            manifestPlaceholders = expandManifest("beta", "../summit-app.dev.properties")
             // applicationIdSuffix ".development"
         }
         beta {
-            manifestPlaceholders = expandManifest("beta", "../summit-app.debug.properties")
+            manifestPlaceholders = expandManifest("beta", "../summit-app.staging.properties")
             // applicationIdSuffix ".beta"
         }
         production {
@@ -289,8 +289,8 @@ dependencies {
         exclude module: 'design'
     })
 
-    implementation 'com.google.firebase:firebase-core:15.0.0'
-    implementation 'com.google.firebase:firebase-messaging:15.0.0'
+    implementation 'com.google.firebase:firebase-core:15.0.2'
+    implementation 'com.google.firebase:firebase-messaging:15.0.2'
 
     // https://github.com/square/retrofit
     implementation 'com.google.code.gson:gson:2.8.2'
@@ -311,7 +311,7 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.14.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.14.1'
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true;
     }
 

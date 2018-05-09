@@ -52,7 +52,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="org.openstack.android.summit.intent.action.OPEN_OPENSTACK_PUSH_NOTIFICATION_FROM_SYSTRAY"></action>
+                <action android:name="org.openstack.android.summit.intent.action.OPEN_OPENSTACK_PUSH_NOTIFICATION_FROM_SYSTRAY" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -135,15 +135,15 @@
             android:name=".common.player.YouTubePlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="sensor"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
         <activity
             android:name=".modules.rsvp.RSVPViewerActivity"
-            android:theme="@style/AppTheme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@style/AppTheme.NoTitleBar.Fullscreen" />
 
         <activity
             android:name=".common.user_interface.BrowserActivity"
-            android:theme="@style/AppTheme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@style/AppTheme.NoTitleBar.Fullscreen"/>
 
         <!-- https://developers.google.com/youtube/android/player/register -->
         <meta-data
@@ -249,22 +249,22 @@
         <service
             android:name=".common.services.SummitsListIngestionService"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <service
             android:name=".common.services.SummitDataIngestionService"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <service
             android:name=".common.services.DataUpdatesService"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <service
             android:name=".common.services.UserActionsPostProcessService"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"></service>
+            android:exported="false"/>
 
     </application>
 
