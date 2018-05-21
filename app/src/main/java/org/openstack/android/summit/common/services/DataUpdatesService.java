@@ -93,6 +93,8 @@ public class DataUpdatesService extends JobIntentService {
         runnableCode   = new Runnable() {
             @Override
             public void run() {
+                if(serviceHandler == null) return;
+
                 Log.i(Constants.LOG_TAG, String.format("Calling service DataUpdatesService intent from thread %s", Thread.currentThread().getName()));
 
                 DataUpdatesService.enqueueWork(ctx, DataUpdatesService.newIntent(ctx));

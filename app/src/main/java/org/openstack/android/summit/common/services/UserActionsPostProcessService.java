@@ -119,6 +119,7 @@ public class UserActionsPostProcessService extends JobIntentService {
         runnableCode   = new Runnable() {
             @Override
             public void run() {
+                if(serviceHandler == null) return;
                 Log.i(Constants.LOG_TAG, String.format("Calling service UserActionsPostProcessService intent from thread %s", Thread.currentThread().getName()));
 
                 UserActionsPostProcessService.enqueueWork(ctx, UserActionsPostProcessService.newIntent(ctx));

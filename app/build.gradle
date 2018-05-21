@@ -133,7 +133,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 129
+        versionCode 131
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
