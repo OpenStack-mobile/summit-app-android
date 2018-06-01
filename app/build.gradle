@@ -133,7 +133,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 131
+        versionCode 132
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -225,9 +225,11 @@ dependencies {
     }
 
     implementation 'org.modelmapper:modelmapper:0.7.5'
+    // https://jitpack.io/com/github/OpenStack-mobile/Ranger/4692e18/build.log
     implementation 'com.github.OpenStack-mobile:Ranger:4692e18'
     // progress indicator
-    implementation 'cc.cloudist.acplibrary:library:1.2.1'
+    // https://jitpack.io/com/github/smarcet/ACProgressLite/ee69096/build.log
+    implementation 'com.github.smarcet:ACProgressLite:ee69096'
     // image library
     implementation 'com.facebook.fresco:fresco:0.11.0'
     // simulate list with a linear layout
