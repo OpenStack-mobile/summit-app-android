@@ -12,10 +12,10 @@ import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.utils.LocalDateFormat;
 
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -161,10 +161,10 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
 
             TimeZone timeZone = TimeZone.getTimeZone(summit.getTimeZone());
 
-            DateFormat formatterFrom = new SimpleDateFormat("EEEE dd MMMM hh:mm a", Locale.US);
+            DateFormat formatterFrom = new LocalDateFormat("EEEE dd MMMM hh:mm a", Locale.US);
             formatterFrom.setTimeZone(timeZone);
 
-            DateFormat formatterTo = new SimpleDateFormat("hh:mm a", Locale.US);
+            DateFormat formatterTo = new LocalDateFormat("hh:mm a", Locale.US);
             formatterTo.setTimeZone(timeZone);
 
             return String.format(Locale.US, "%s / %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
@@ -180,7 +180,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
     protected String getTime(S summitEvent) {
         Summit summit = null;
         try {
-            DateFormat formatterFrom = new SimpleDateFormat("hh:mm a", Locale.US);
+            DateFormat formatterFrom = new LocalDateFormat("hh:mm a", Locale.US);
             summit                   = summitEvent.getSummit();
 
             if(summit == null)
@@ -191,7 +191,7 @@ public class AbstractSummitEvent2ScheduleItemDTO<S extends SummitEvent, T extend
 
             TimeZone timeZone = TimeZone.getTimeZone(summit.getTimeZone());
             formatterFrom.setTimeZone(timeZone);
-            DateFormat formatterTo = new SimpleDateFormat("hh:mm a", Locale.US);
+            DateFormat formatterTo = new LocalDateFormat("hh:mm a", Locale.US);
             formatterTo.setTimeZone(timeZone);
             String timeRange = String.format("%s / %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
             return timeRange.toLowerCase();

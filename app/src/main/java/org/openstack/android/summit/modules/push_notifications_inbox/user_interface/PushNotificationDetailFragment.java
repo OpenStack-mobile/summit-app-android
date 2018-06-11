@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.HtmlTextView;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
+import org.openstack.android.summit.common.utils.LocalDateFormat;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -110,7 +111,7 @@ public class PushNotificationDetailFragment
         TextView receivedTextView = (TextView)view.findViewById(R.id.push_notification_detail_received);
         DateTime nowBegin = new DateTime().withTime(0,0,0,0);
         DateTime nowEnd   = new DateTime().withTime(23,59,59,0);
-        DateFormat df     = received.after(nowBegin.toDate()) && received.before(nowEnd.toDate()) ?  new SimpleDateFormat("hh:mm a") : new SimpleDateFormat("E d");
+        DateFormat df     = received.after(nowBegin.toDate()) && received.before(nowEnd.toDate()) ?  new LocalDateFormat("hh:mm a") : new SimpleDateFormat("E d");
         receivedTextView.setText(df.format(received));
     }
 
