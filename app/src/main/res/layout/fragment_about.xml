@@ -163,7 +163,7 @@
                     android:textColor="@color/openStackLightBlue"
                     android:textSize="16dp"
                     android:textStyle="bold"
-                    android:text="App Support"/>
+                    android:text="Report a Problem"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

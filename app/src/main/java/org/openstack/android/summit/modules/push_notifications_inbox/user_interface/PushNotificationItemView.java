@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.utils.LocalDateFormat;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -43,7 +44,7 @@ public class PushNotificationItemView implements IPushNotificationItemView {
 
         DateTime nowBegin = new DateTime().withTime(0,0,0,0);
         DateTime nowEnd   = new DateTime().withTime(23,59,59,0);
-        DateFormat df     = receivedDate.after(nowBegin.toDate()) && receivedDate.before(nowEnd.toDate()) ?  new SimpleDateFormat("hh:mm a") : new SimpleDateFormat("E d");
+        DateFormat df     = receivedDate.after(nowBegin.toDate()) && receivedDate.before(nowEnd.toDate()) ?  new LocalDateFormat("hh:mm a") : new SimpleDateFormat("E d");
 
         txtReceivedDate.setText(df.format(receivedDate));
     }

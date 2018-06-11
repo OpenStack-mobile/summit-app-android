@@ -12,6 +12,7 @@ import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Tag;
+import org.openstack.android.summit.common.utils.LocalDateFormat;
 
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
@@ -141,7 +142,7 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
     protected String getTime(E summitEvent) {
         Summit summit = null;
         try {
-            DateFormat formatterFrom = new SimpleDateFormat("hh:mm a", Locale.US);
+            DateFormat formatterFrom = new LocalDateFormat("hh:mm a", Locale.US);
             summit                   = summitEvent.getSummit();
 
             if(summit == null)
@@ -152,7 +153,7 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
 
             TimeZone timeZone = TimeZone.getTimeZone(summit.getTimeZone());
             formatterFrom.setTimeZone(timeZone);
-            DateFormat formatterTo = new SimpleDateFormat("hh:mm a", Locale.US);
+            DateFormat formatterTo = new LocalDateFormat("hh:mm a", Locale.US);
             formatterTo.setTimeZone(timeZone);
             String timeRange = String.format(Locale.US, "%s - %s", formatterFrom.format(summitEvent.getStart()), formatterTo.format(summitEvent.getEnd()));
             return timeRange.toLowerCase();
