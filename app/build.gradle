@@ -1,6 +1,12 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
+class FCMOAuthClient {
+    String client_id
+    int client_type;
+}
+
+
 def generateFireBaseJsonConfiguration(file) {
     println('loading file '+file+' ...')
     def projectDir   = project.rootDir.toString()
@@ -16,10 +22,13 @@ def generateFireBaseJsonConfiguration(file) {
     json.project_info.storage_bucket                            = properties['FirebaseProjectInfoBucket']
     json.client[0].client_info.mobilesdk_app_id                 = properties['FirebaseClientInfoMobileSDKAppId']
     json.client[0].api_key[0].current_key                       = properties['FirebaseClientApiKeyCurrent']
-    json.client[0].oauth_client[0].client_id                    = properties['FirebaseClientOAUTH2ClientClientId1']
-    json.client[0].oauth_client[1].client_id                    = properties['FirebaseClientOAUTH2ClientClientId2']
-    json.client[0].oauth_client[2].client_id                    = properties['FirebaseClientOAUTH2ClientClientId3']
-    json.client[0].oauth_client[3].client_id                    = properties['FirebaseClientOAUTH2ClientClientId4']
+
+    // clients
+    json.client[0].oauth_client[0].client_id = properties['FirebaseClientOAUTH2ClientClientId1']
+    json.client[0].oauth_client[1].client_id = properties['FirebaseClientOAUTH2ClientClientId2']
+    json.client[0].oauth_client[2].client_id = properties['FirebaseClientOAUTH2ClientClientId3']
+    json.client[0].oauth_client[3].client_id = properties['FirebaseClientOAUTH2ClientClientId4']
+
     def jsonFile = new File(projectDir + "/app/google-services.json")
     jsonFile.write(JsonOutput.toJson(json))
 }

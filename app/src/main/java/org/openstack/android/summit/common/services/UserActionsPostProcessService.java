@@ -61,15 +61,29 @@ public class UserActionsPostProcessService extends JobIntentService {
             if (!securityManager.isLoggedIn()) {
                 return;
             }
+
+            // if we are on data ingestion running , skip it this
+            if (SummitDataIngestionService.isRunning()) return;
+
+            // process pending changes
             if (!reachability.isNetworkingAvailable(this)) {
                 return;
             }
-            // if we are on data ingestion running , skip it this
-            if (SummitDataIngestionService.isRunning()) return;
-            // process pending changes
             manager.processMyScheduleProcessableUserActions();
+
+            if (!reachability.isNetworkingAvailable(this)) {
+                return;
+            }
             manager.processMyFavoritesProcessableUserActions();
+
+            if (!reachability.isNetworkingAvailable(this)) {
+                return;
+            }
             manager.processMyFeedbackProcessableUserActions();
+
+            if (!reachability.isNetworkingAvailable(this)) {
+                return;
+            }
             manager.processMyRSVPProcessableUserActions();
         }
         catch (Exception ex){
@@ -119,11 +133,11 @@ public class UserActionsPostProcessService extends JobIntentService {
         runnableCode   = new Runnable() {
             @Override
             public void run() {
-                if(serviceHandler == null) return;
                 Log.i(Constants.LOG_TAG, String.format("Calling service UserActionsPostProcessService intent from thread %s", Thread.currentThread().getName()));
-
                 UserActionsPostProcessService.enqueueWork(ctx, UserActionsPostProcessService.newIntent(ctx));
-                serviceHandler.postDelayed(this, interval);
+                Handler localServiceHandler = serviceHandler;
+                if(localServiceHandler != null)
+                    localServiceHandler.postDelayed(this, interval);
             }
         };
         serviceHandler.post(runnableCode);

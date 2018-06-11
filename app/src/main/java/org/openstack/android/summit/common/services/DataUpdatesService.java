@@ -89,16 +89,15 @@ public class DataUpdatesService extends JobIntentService {
         handlerThread.start();
         // An Android service handler is a handler running on a specific background thread.
         serviceHandler = new Handler(DataUpdatesService.handlerThread.getLooper());
-        long interval  = TimeUnit.MILLISECONDS.convert(ctx.getResources().getInteger(R.integer.user_actions_post_process_service_interval), TimeUnit.SECONDS);
+        long interval  = TimeUnit.MILLISECONDS.convert(ctx.getResources().getInteger(R.integer.data_updates_service_interval), TimeUnit.SECONDS);
         runnableCode   = new Runnable() {
             @Override
             public void run() {
-                if(serviceHandler == null) return;
-
                 Log.i(Constants.LOG_TAG, String.format("Calling service DataUpdatesService intent from thread %s", Thread.currentThread().getName()));
-
                 DataUpdatesService.enqueueWork(ctx, DataUpdatesService.newIntent(ctx));
-                serviceHandler.postDelayed(this, interval);
+                Handler localServiceHandler = serviceHandler;
+                if(localServiceHandler != null)
+                    localServiceHandler.postDelayed(this, interval);
             }
         };
         serviceHandler.post(runnableCode);

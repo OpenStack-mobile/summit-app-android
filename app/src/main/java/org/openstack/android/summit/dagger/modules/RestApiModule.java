@@ -1,5 +1,8 @@
 package org.openstack.android.summit.dagger.modules;
 
+import android.os.Build;
+import android.util.Log;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,20 +13,26 @@ import org.openstack.android.summit.common.api.OAuth2AccessTokenAuthenticator;
 import org.openstack.android.summit.common.api.OAuth2AccessTokenInterceptor;
 import org.openstack.android.summit.common.api.OAuth2AccessTokenPostSendStrategy;
 import org.openstack.android.summit.common.api.SummitSelector;
+import org.openstack.android.summit.common.api.Tls12SocketFactory;
 import org.openstack.android.summit.common.security.oidc.IOIDCConfigurationManager;
 import org.openstack.android.summit.common.security.ITokenManagerFactory;
 import org.openstack.android.summit.common.security.TokenManagerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.net.ssl.SSLContext;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Authenticator;
+import okhttp3.ConnectionSpec;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.TlsVersion;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -119,6 +128,31 @@ public class RestApiModule {
         return buildHttpClient(authenticator, interceptor);
     }
 
+    private static OkHttpClient.Builder enableTls12OnPreLollipop(OkHttpClient.Builder client) {
+        if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 22) {
+            try {
+                SSLContext sc = SSLContext.getInstance("TLSv1.2");
+                sc.init(null, null, null);
+                client.sslSocketFactory(new Tls12SocketFactory(sc.getSocketFactory()));
+
+                ConnectionSpec cs = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                        .tlsVersions(TlsVersion.TLS_1_2)
+                        .build();
+
+                List<ConnectionSpec> specs = new ArrayList<>();
+                specs.add(cs);
+                specs.add(ConnectionSpec.COMPATIBLE_TLS);
+                specs.add(ConnectionSpec.CLEARTEXT);
+
+                client.connectionSpecs(specs);
+            } catch (Exception exc) {
+                Log.e("OkHttpTLSCompat", "Error while setting TLS 1.2", exc);
+            }
+        }
+
+        return client;
+    }
+
     private OkHttpClient buildHttpClient
     (
         Authenticator authenticator,
@@ -142,7 +176,7 @@ public class RestApiModule {
         httpClient.addInterceptor(interceptor);
         // refresh access token (401)
         httpClient.authenticator(authenticator);
-        return httpClient.build();
+        return enableTls12OnPreLollipop(httpClient).build();
     }
 
     @Provides
