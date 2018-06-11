@@ -19,13 +19,16 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -40,6 +43,8 @@ public class PushNotificationReceiverService extends FirebaseMessagingService {
     public static final String ACTION_PUSH_RECEIVE      = "org.openstack.android.summit.push_notification.intent.RECEIVE";
 
     public static final String KEY_PUSH_NOTIFICATION_ID = "org.openstack.android.summit.push_notification.intent.PUSH_NOTIFICATION_ID";
+
+    public static final String CHANNEL_ID               = "org.openstack.android.summit.push_notification.CHANNEL";
 
     @Inject
     ISecurityManager securityManager;
@@ -108,7 +113,8 @@ public class PushNotificationReceiverService extends FirebaseMessagingService {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setGroup(GROUP_KEY_OPENSTACK_NOTIFICATIONS)
                 .setSound(defaultSoundUri)
-                .setStyle(style);
+                .setStyle(style)
+                .setChannelId(CHANNEL_ID);
 
         // Large icon appears on the left of the notification
         builder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher));
@@ -133,6 +139,29 @@ public class PushNotificationReceiverService extends FirebaseMessagingService {
             if (notification != null) {
                 // Fire off the notification
                 NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    CharSequence channelName = getString(R.string.fcm_channel_name);
+
+                    String channelDesc = getString(R.string.fcm_channel_description);
+
+                    NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH);
+
+                    // Configure the notification channel.
+                    mChannel.setDescription(channelDesc);
+
+                    mChannel.enableLights(true);
+
+                    // Sets the notification light color for notifications posted to this
+                    // channel, if the device supports this feature.
+                    mChannel.setLightColor(Color.RED);
+
+                    mChannel.enableVibration(true);
+                    mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+                    nm.createNotificationChannel(mChannel);
+                }
                 // build the push notification
                 IPushNotification pushNotification = factory.build(payload);
                 Member currentMember               = securityManager.getCurrentMember();

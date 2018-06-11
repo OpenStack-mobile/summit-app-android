@@ -156,4 +156,6 @@
     <string name="first_rate_text">There are no reviews so far.\nBe the first to rate this event.</string>
     <string name="no_connectivity_message">Please ensure you have an internet connection to perform this task.</string>
     <string name="vertical_dots">&#8942;</string>
+    <string name="fcm_channel_name">OpenStack Summit</string>
+    <string name="fcm_channel_description">OpenStack Summit Notification Channel</string>
 </resources>
