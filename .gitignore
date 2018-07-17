@@ -7,9 +7,7 @@ build/
 /reports
 *.apk
 /.idea/
-/summit-app.properties
-/summit-app.debug.properties
-/summit-app.production.properties
+/*.properties
 /app/libs
 app/fabric.properties
 /app/src/jni/
