@@ -28,4 +28,6 @@ public interface IGeneralScheduleFilterPresenter extends IBasePresenter<IGeneral
     void toggleSelectionSummitType(IGeneralScheduleFilterItemView item, int position);
 
     void toggleHidePastTalks(boolean hidePastTalks);
+
+    void toggleShowVideoTalks(boolean showVideoTalks);
 }

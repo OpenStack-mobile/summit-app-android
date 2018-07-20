@@ -28,8 +28,10 @@
     <string name="levels">Levels</string>
     <string name="filter">Filters</string>
     <string name="tags">Tags</string>
-    <string name="past_talks">Active Talks</string>
-    <string name="past_talks_hide">Hide Past Talks</string>
+    <string name="past_talks">Active Sessions</string>
+    <string name="video_talks">Recorded Sessions</string>
+    <string name="past_talks_hide">Hide Past Sessions</string>
+    <string name="video_talks_show">Show only recorded Sessions</string>
     <string name="profile">Profile</string>
     <string name="venues">Venues</string>
     <string name="rooms">Rooms</string>

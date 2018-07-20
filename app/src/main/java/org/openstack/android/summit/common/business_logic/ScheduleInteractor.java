@@ -55,7 +55,7 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     }
 
     @Override
-    public List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues) {
+    public List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues, boolean showVideoTalks) {
         return postProcessScheduleEventList(createDTOList(
                 summitEventDataStore.getByFilter
                         (
@@ -67,14 +67,15 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                                 tracks,
                                 tags,
                                 levels,
-                                venues
+                                venues,
+                                showVideoTalks
                         ),
                 ScheduleItemDTO.class
         ));
     }
 
     @Override
-    public List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues) {
+    public List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues, boolean showVideoTalks) {
         ArrayList<DateTime> inactiveDates = new ArrayList<>();
         List<SummitEvent> events;
 
@@ -88,7 +89,8 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
                     tracks,
                     tags,
                     levels,
-                    venues);
+                    venues,
+                    showVideoTalks);
             if (events.size() == 0) {
                 inactiveDates.add(startDate);
             }

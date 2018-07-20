@@ -107,6 +107,11 @@ public class GeneralScheduleFilterPresenter
         }
         scheduleFilter.getFilterSections().add(filterSection);
 
+        SingleFilterSelection singleFilterSection2 = new SingleFilterSelection(false);
+        singleFilterSection2.setType(FilterSectionType.ShowVideoTalks);
+        singleFilterSection2.setName(FilterSectionType.ShowVideoTalks.toString());
+        scheduleFilter.getFilterSections().add(singleFilterSection2);
+
         view.showSummitTypes(summitTypes);
         view.showTrackGroups(trackGroups);
         view.showLevels(levels);
@@ -136,6 +141,14 @@ public class GeneralScheduleFilterPresenter
             scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks).add(hidePastTalks);
     }
 
+    @Override
+    public void toggleShowVideoTalks(boolean showVideoTalks) {
+        SingleFilterSelection filterSection = (SingleFilterSelection) scheduleFilter.getFilterSectionByName(FilterSectionType.ShowVideoTalks.toString());;
+        filterSection.setValue(showVideoTalks);
+        scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks).clear();
+        if (showVideoTalks)
+            scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks).add(showVideoTalks);
+    }
 
     @Override
     public void buildEventTypeFilterItem(GeneralScheduleFilterItemView item, int position) {
@@ -228,12 +241,21 @@ public class GeneralScheduleFilterPresenter
     @Override
     public void onResume() {
         super.onResume();
-        if (interactor.getActiveSummit() != null && interactor.getActiveSummit().isCurrentDateTimeInsideSummitRange()) {
-            view.showShowPastTalks(true);
-            List<Boolean> filtersOnPassTalks = (List<Boolean>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks);
-            boolean hidePastTalks            = filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty() ? filtersOnPassTalks.get(0) : false;
-            view.toggleShowPastTalks(hidePastTalks);
+        List<Boolean> filtersOnShowVideoTalks = (List<Boolean>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
+        boolean showVideoTalks = filtersOnShowVideoTalks != null && !filtersOnShowVideoTalks.isEmpty() ? filtersOnShowVideoTalks.get(0) : false;
+        view.toggleShowVideoTalks(showVideoTalks);
+
+        if (interactor.getActiveSummit() != null ){
+
+            if(interactor.getActiveSummit().isCurrentDateTimeInsideSummitRange()) {
+                view.showShowPastTalks(true);
+                List<Boolean> filtersOnPassTalks = (List<Boolean>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks);
+                boolean hidePastTalks = filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty() ? filtersOnPassTalks.get(0) : false;
+                view.toggleShowPastTalks(hidePastTalks);
+            }
         }
+
+
     }
 
 }

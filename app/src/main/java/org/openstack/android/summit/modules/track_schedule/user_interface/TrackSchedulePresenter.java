@@ -62,6 +62,8 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
         List<String> filtersOnLevels = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
         List<String> filtersOnTags = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
         List<Integer> filtersOnVenues = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
+        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
+        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
 
         ArrayList<Integer> tracks = new ArrayList<>();
         tracks.add(trackId);
@@ -74,7 +76,8 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
                 tracks,
                 filtersOnTags,
                 filtersOnLevels,
-                filtersOnVenues
+                filtersOnVenues,
+                showVideoTalks
         );
 
         return summitEvents;
@@ -88,6 +91,8 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
         List<String> filtersOnLevels = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
         List<String> filtersOnTags = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
         List<Integer> filtersOnVenues = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
+        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
+        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
 
         ArrayList<Integer> tracks = new ArrayList<>();
         tracks.add(trackId);
@@ -101,7 +106,9 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
                 tracks,
                 filtersOnTags,
                 filtersOnLevels,
-                filtersOnVenues);
+                filtersOnVenues,
+                showVideoTalks
+                );
 
         return inactiveDates;
     }

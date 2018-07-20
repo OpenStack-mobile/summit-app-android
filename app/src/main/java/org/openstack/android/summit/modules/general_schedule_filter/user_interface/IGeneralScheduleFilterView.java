@@ -24,4 +24,6 @@ public interface IGeneralScheduleFilterView extends IBaseView {
     void toggleShowPastTalks(boolean isChecked);
 
     void showShowPastTalks(boolean show);
+
+    void toggleShowVideoTalks(boolean isChecked);
 }

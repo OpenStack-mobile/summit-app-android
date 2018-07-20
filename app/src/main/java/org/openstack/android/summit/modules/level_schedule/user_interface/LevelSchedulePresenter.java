@@ -73,6 +73,10 @@ public class LevelSchedulePresenter
             return new ArrayList<>();
         }
 
+        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
+        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
+
+
         ArrayList<String> levels = new ArrayList<>();
         levels.add(level);
         List<ScheduleItemDTO> summitEvents = interactor.getScheduleEvents(
@@ -84,7 +88,8 @@ public class LevelSchedulePresenter
                 null,
                 filtersOnTags,
                 levels,
-                filtersOnVenues
+                filtersOnVenues,
+                showVideoTalks
         );
 
         return summitEvents;
@@ -99,6 +104,8 @@ public class LevelSchedulePresenter
         List<String> filtersOnLevels       = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
         List<String> filtersOnTags         = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
         List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
+        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
+        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
 
         if (filtersOnLevels != null && filtersOnLevels.size() > 0 && !filtersOnLevels.contains(level)) {
             return new ArrayList<>();
@@ -116,7 +123,8 @@ public class LevelSchedulePresenter
                 null,
                 filtersOnTags,
                 levels,
-                filtersOnVenues);
+                filtersOnVenues,
+                showVideoTalks);
 
         return inactiveDates;
     }

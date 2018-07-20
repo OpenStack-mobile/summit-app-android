@@ -12,7 +12,7 @@ import io.reactivex.Observable;
  */
 public interface ISummitEventDataStore extends IGenericDataStore<SummitEvent> {
 
-    List<SummitEvent> getByFilter(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues);
+    List<SummitEvent> getByFilter(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues, boolean showVideoTalks);
 
     List<String> getPresentationLevels();
 

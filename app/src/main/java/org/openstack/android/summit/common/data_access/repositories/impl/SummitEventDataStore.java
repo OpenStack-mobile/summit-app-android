@@ -98,7 +98,8 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         List<Integer> tracks,
         List<String> tags,
         List<String> levels,
-        List<Integer> venues
+        List<Integer> venues,
+        boolean showVideoTalks
     )
     {
 
@@ -218,6 +219,10 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
                 isFirst = false;
             }
             query.endGroup();
+        }
+
+        if(showVideoTalks){
+            query = query.isNotEmpty("presentation.videos");
         }
 
         return query.findAllSorted(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });

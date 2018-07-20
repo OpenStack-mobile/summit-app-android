@@ -18,12 +18,18 @@ import org.openstack.android.summit.common.user_interface.BaseFragment;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by Claudio Redi on 2/1/2016.
  */
 public class GeneralScheduleFilterFragment
         extends BaseFragment<IGeneralScheduleFilterPresenter>
         implements IGeneralScheduleFilterView {
+
+    private Unbinder unbinder;
 
     private SummitTypeListAdapter summitTypeListAdapter;
     private TrackGroupListAdapter trackGroupListAdapter;
@@ -37,12 +43,35 @@ public class GeneralScheduleFilterFragment
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
     }
+    @BindView(R.id.filter_summit_types_list)
+    LinearListView summitTypesList;
+
+    @BindView(R.id.filter_track_groups_list)
+    LinearListView trackGroupList;
+
+    @BindView(R.id.filter_venues_list)
+    LinearListView venuesList;
+
+    @BindView(R.id.hide_past_talks)
+    Switch hidePastTalks;
+
+    @BindView(R.id.show_video_talks)
+    Switch showVideoTalks;
+
+    @BindView(R.id.filter_levels_list)
+    LinearListView levelList;
+
+    @BindView(R.id.hide_past_talks_header)
+    LinearLayout pastTalksHeader;
+    @BindView(R.id.hide_past_talks_container)
+    LinearLayout pastTalksContainer;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_general_schedule_filter, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
-        LinearListView summitTypesList = (LinearListView) view.findViewById(R.id.filter_summit_types_list);
         summitTypeListAdapter = new SummitTypeListAdapter(getContext());
         summitTypesList.setAdapter(summitTypeListAdapter);
         summitTypesList.setOnItemClickListener((parent, view1, position, id) -> {
@@ -50,18 +79,16 @@ public class GeneralScheduleFilterFragment
             presenter.toggleSelectionSummitType(generalScheduleFilterItemView, position);
         });
 
-        final Switch hidePastTalks = (Switch) view.findViewById(R.id.hide_past_talks);
         hidePastTalks.setOnClickListener(v -> presenter.toggleHidePastTalks(hidePastTalks.isChecked()));
 
-        LinearListView trackGroupList = (LinearListView) view.findViewById(R.id.filter_track_groups_list);
+        showVideoTalks.setOnClickListener(v -> presenter.toggleShowVideoTalks(showVideoTalks.isChecked()));
+
         trackGroupListAdapter = new TrackGroupListAdapter(getContext());
         trackGroupList.setAdapter(trackGroupListAdapter);
 
-        LinearListView venuesList = (LinearListView) view.findViewById(R.id.filter_venues_list);
         venueListAdapter = new VenueListAdapter(getContext());
         venuesList.setAdapter(venueListAdapter);
 
-        LinearListView levelList = (LinearListView) view.findViewById(R.id.filter_levels_list);
         levelListAdapter = new LevelListAdapter(getContext());
         levelList.setAdapter(levelListAdapter);
 
@@ -78,16 +105,20 @@ public class GeneralScheduleFilterFragment
 
     @Override
     public void toggleShowPastTalks(boolean isChecked) {
-        Switch hidePastTalks = (Switch) view.findViewById(R.id.hide_past_talks);
+        if(hidePastTalks == null) return;
         hidePastTalks.setChecked(isChecked);
     }
 
     @Override
+    public void toggleShowVideoTalks(boolean isChecked) {
+        if(showVideoTalks == null) return;
+        showVideoTalks.setChecked(isChecked);
+    }
+
+    @Override
     public void showShowPastTalks(boolean show) {
-        LinearLayout header = (LinearLayout) view.findViewById(R.id.hide_past_talks_header);
-        LinearLayout container = (LinearLayout) view.findViewById(R.id.hide_past_talks_container);
-        header.setVisibility(show ? View.VISIBLE : View.GONE);
-        container.setVisibility(show ? View.VISIBLE : View.GONE);
+        pastTalksHeader.setVisibility(show ? View.VISIBLE : View.GONE);
+        pastTalksContainer.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -273,6 +304,14 @@ public class GeneralScheduleFilterFragment
         @Override
         public int getCount() {
             return super.getCount();
+        }
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        if(unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
         }
     }
 }

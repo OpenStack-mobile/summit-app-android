@@ -44,6 +44,35 @@
                     android:layout_gravity="center_vertical"
                     />
             </LinearLayout>
+            <LinearLayout android:id="@+id/show_video_talks_header" style="@style/AppTheme.SubsectionHeaderFilter">
+                <TextView
+                    style="@style/AppTheme.SubsectionHeaderFilter.Text"
+                    android:text="@string/video_talks"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/show_video_talks_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/openStackLightGray"
+                android:orientation="horizontal"
+                android:padding="13dp">
+                <TextView
+                    android:id="@+id/show_video_talks_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/openStackGray"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/video_talks_show"/>
+                <Switch
+                    android:id="@+id/show_video_talks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
             <LinearLayout style="@style/AppTheme.SubsectionHeaderFilter">
 
                 <TextView
