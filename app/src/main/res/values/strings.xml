@@ -24,8 +24,8 @@
     <string name="summit_types">Summit Types</string>
     <string name="track_groups">Summit Categories</string>
     <string name="event_types">Event Types</string>
-    <string name="level">Level</string>
-    <string name="levels">Levels</string>
+    <string name="level">Difficulty Level</string>
+    <string name="levels">Difficulty Levels</string>
     <string name="filter">Filters</string>
     <string name="tags">Tags</string>
     <string name="past_talks">Active Sessions</string>
