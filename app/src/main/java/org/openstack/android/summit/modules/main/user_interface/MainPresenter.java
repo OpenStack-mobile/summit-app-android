@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -35,6 +36,7 @@ import org.openstack.android.summit.common.services.DataUpdatesService;
 import org.openstack.android.summit.common.services.UserActionsPostProcessService;
 import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
+import org.openstack.android.summit.common.user_interface.IAlertCommand;
 import org.openstack.android.summit.common.utils.CustomWebViewAppLinkResolver;
 import org.openstack.android.summit.common.utils.DeepLinkInfo;
 import org.openstack.android.summit.common.utils.IAppLinkRouter;
@@ -630,10 +632,20 @@ public class MainPresenter
                                         ( eventDTO ) -> {
                                             int day = eventDTO.getStartDate().getDayOfMonth();
                                             this.wireframe.showEventDetail(deepLinkInfo.getParamAsInt(), day, this.view);
-
                                         },
                                         (ex) -> {
-                                            AlertDialog dialog = AlertsBuilder.buildError(view.getFragmentActivity(), R.string.cannot_navigate_event);
+                                            FragmentActivity ctx = view.getFragmentActivity();
+                                            AlertDialog dialog = AlertsBuilder.buildConfirm(
+                                                    ctx,
+                                                    ctx.getResources().getString(R.string.generic_error_title),
+                                                    ctx.getResources().getString(R.string.cannot_navigate_event),
+                                                    ctx.getResources().getString(R.string.cannot_navigate_event_positive),
+                                                    ctx.getResources().getString(R.string.cannot_navigate_event_negative),
+                                                    () -> {
+                                                        this.loadedSummitList = false;
+                                                        launchSummitListDataLoadingActivity();
+                                                    }
+                                            );
                                             if(dialog != null) dialog.show();
                                             return;
                                         }
