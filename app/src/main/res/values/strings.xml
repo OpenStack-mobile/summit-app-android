@@ -66,9 +66,10 @@
     <string name="eventbrite_order_confirm">EventBrite Order</string>
     <string name="eventbrite_add_order_number">Add your Eventbrite Order # to associate your OpenStackID with your Summit purchase.</string>
     <string name="eventbrite_order_number">Insert your Order #</string>
-    <string name="cannot_navigate_event">It\'s not possible to view this event right now. Do you want to check for new Summit Data?.</string>
+    <string name="cannot_load_event">It\'s not possible to view this event right now.</string>
+    <string name="cannot_navigate_event">It appears your Summit Event data is not up to date. Do you want to check for new Summit Data?.</string>
     <string name="cannot_navigate_event_negative">No, try it later.</string>
-    <string name="cannot_navigate_event_positive">Yes, check for new summit data.</string>
+    <string name="cannot_navigate_event_positive">Yes, check for new data.</string>
     <string name="event_not_exist">This event was removed from schedule.</string>
     <string name="venue_not_exists">This venue was removed from schedule.</string>
     <string name="room_not_exists">This venue was removed from schedule.</string>

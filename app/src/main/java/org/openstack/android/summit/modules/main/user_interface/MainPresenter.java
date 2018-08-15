@@ -67,6 +67,7 @@ public class MainPresenter
         implements IMainPresenter {
 
     private static final String SKIP_PROTECTED_APPS_MESSAGE = "SKIP_PROTECTED_APPS_MESSAGE";
+    private int pendingEventToView = 0;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -412,6 +413,25 @@ public class MainPresenter
                 Log.i(Constants.LOG_TAG, "MainPresenter.onActivityResult: Summit Data Loaded!");
                 enabledBackgroundServices();
                 this.showEventsView();
+                if(this.pendingEventToView > 0){
+                    this.interactor.getEventById(this.pendingEventToView).observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    ( eventDTO ) -> {
+                                        int day = eventDTO.getStartDate().getDayOfMonth();
+                                        this.wireframe.showEventDetail(eventDTO.getId(), day, this.view);
+                                    },
+                                    (ex) -> {
+                                        FragmentActivity ctx = view.getFragmentActivity();
+                                        AlertDialog dialog = AlertsBuilder.buildError(
+                                                ctx,
+                                                R.string.cannot_load_event
+                                        );
+                                        if(dialog != null) dialog.show();
+                                        return;
+                                    }
+                            );
+                    this.pendingEventToView = 0;
+                }
             }
         }
         if(requestCode == IMainView.SUMMITS_LIST_DATA_LOAD_REQUEST){
@@ -421,6 +441,7 @@ public class MainPresenter
             if (resultCode == Activity.RESULT_OK) {
                 Log.i(Constants.LOG_TAG, "MainPresenter.onActivityResult: Summit Data Loaded!");
                 //re enable background services
+                this.pendingEventToView = 0;
                 enabledBackgroundServices();
             }
             if(resultCode == SummitsListDataLoaderActivity.RESULT_OK_FIRE_SUMMIT_DATA_LOADING){
@@ -643,6 +664,7 @@ public class MainPresenter
                                                     ctx.getResources().getString(R.string.cannot_navigate_event_negative),
                                                     () -> {
                                                         this.loadedSummitList = false;
+                                                        this.pendingEventToView = eventId;
                                                         launchSummitListDataLoadingActivity();
                                                     }
                                             );
