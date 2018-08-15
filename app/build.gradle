@@ -234,8 +234,8 @@ dependencies {
     }
 
     implementation 'org.modelmapper:modelmapper:0.7.5'
-    // https://jitpack.io/com/github/OpenStack-mobile/Ranger/4692e18/build.log
-    implementation 'com.github.OpenStack-mobile:Ranger:4692e18'
+    // https://jitpack.io/com/github/OpenStack-mobile/Ranger/2da063b/build.log
+    implementation 'com.github.OpenStack-mobile:Ranger:2da063b'
     // progress indicator
     // https://jitpack.io/com/github/smarcet/ACProgressLite/ee69096/build.log
     implementation 'com.github.smarcet:ACProgressLite:ee69096'
