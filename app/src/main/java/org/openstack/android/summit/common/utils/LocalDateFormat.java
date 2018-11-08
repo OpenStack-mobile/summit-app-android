@@ -16,7 +16,7 @@ public class LocalDateFormat extends SimpleDateFormat {
      */
     public LocalDateFormat(String pattern)
     {
-        this(pattern, Locale.getDefault(Locale.Category.FORMAT));
+        this(pattern, Locale.US);
     }
 
     /**
