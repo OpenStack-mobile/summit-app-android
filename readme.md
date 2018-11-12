@@ -7,3 +7,9 @@ The official app for the OpenStack Summit. ([Google Play](https://play.google.co
 application works with a property file (summit-app.properties for release
 build and summit-app.debug.properties for debug build) that contains all
 info that need to be expanded on AndroidManifest.xml
+
+## Getting help
+
+Reach us by email: summitapps@openstack.org
+
+Report an issue: https://github.com/OpenStack-mobile/summit-app-android/issues
