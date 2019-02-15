@@ -17,6 +17,8 @@ public interface IOIDCConfigurationManager {
 
     String getResourceServerBaseUrl();
 
+    String getResourceServerBaseRealmUrl();
+
     IdentityProviderUrls buildIdentityProviderUrls();
 
 }

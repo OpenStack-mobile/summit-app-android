@@ -3,6 +3,7 @@ package org.openstack.android.summit;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -14,6 +15,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;
@@ -47,16 +49,21 @@ public class OpenStackSummitApplication extends Application {
         context = getApplicationContext();
 
         Fresco.initialize(context);
-        RealmConfiguration realmConfiguration = RealmFactory.buildDefaultConfiguration(context);
-        Realm.setDefaultConfiguration(realmConfiguration);
+        RealmConfiguration realmConfiguration = null;
 
         try {
+            realmConfiguration = RealmFactory.buildDefaultConfiguration(context);
+            Realm.setDefaultConfiguration(realmConfiguration);
             // try to compact file
             Realm.compactRealm(realmConfiguration);
         }
         catch(Exception ex){
-            Log.e(Constants.LOG_TAG, ex.getMessage());
             Crashlytics.logException(ex);
+            if(realmConfiguration != null) {
+                // if error delete the current realm
+                Realm.deleteRealm(realmConfiguration);
+                Realm.setDefaultConfiguration(realmConfiguration);
+            }
         }
 
         if(BuildConfig.DEBUG) {

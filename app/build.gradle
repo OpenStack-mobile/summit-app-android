@@ -91,6 +91,7 @@ def expandManifest(flavor, properties_file) {
             NativeClientSecret: props['NativeClientSecret'],
             NativeClientReturnUrl: props['NativeClientReturnUrl'],
             ResourceServerBaseUrl: props['ResourceServerBaseUrl'],
+            ResourceServerBaseRealmUrl: props['ResourceServerBaseRealmUrl'],
             IdentityProviderBaseUrl: props['IdentityProviderBaseUrl'],
             WebSiteBaseUrl: props['WebSiteBaseUrl'],
             YouTubeAndroidPlayerAPIKey: props['YouTubeAndroidPlayerAPIKey'],
@@ -142,7 +143,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 135
+        versionCode 136
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

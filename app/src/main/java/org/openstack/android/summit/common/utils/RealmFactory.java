@@ -63,6 +63,7 @@ final public class RealmFactory {
                 realmSession.close();
             }
             session.remove();
+            txCounter.remove();
         }
     }
 

@@ -27,6 +27,7 @@ final public class OIDCConfigurationManager extends ConfigurationParamsManager i
     private static final String ServiceClientSecretKey     = "org.openstack.android.summit.common.security.SERVICE_CLIENT_SECRET";
 
     private static final String ResourceServerBaseUrlKey   = "org.openstack.android.summit.common.security.RS_BASE_URL";
+    private static final String ResourceServerBaseRealmKey   = "org.openstack.android.summit.common.security.RS_BASE_REALM_URL";
     private static final String IdentityProviderBaseUrlKey = "org.openstack.android.summit.common.security.IDP_BASE_URL";
 
     public OIDCConfigurationManager(IDecoder decoder, IConfigurationParamFinderStrategy[] finderStrategies){
@@ -64,12 +65,17 @@ final public class OIDCConfigurationManager extends ConfigurationParamsManager i
     }
 
     @Override
+    public String getResourceServerBaseRealmUrl() {
+        return this.findConfigParamBy(ResourceServerBaseRealmKey, false);
+    }
+
+    @Override
     public IdentityProviderUrls buildIdentityProviderUrls() {
         return new IdentityProviderUrls(this.findConfigParamBy(IdentityProviderBaseUrlKey, false));
     }
 
     private String[] buildScopeDefinitionFor(OIDCClientConfiguration.ODICAccountType accountType){
-        String rsBaseUrl = this.getResourceServerBaseUrl();
+        String rsBaseUrl = this.getResourceServerBaseRealmUrl();
         switch (accountType){
             case NativeAccount:{
                 return NativeApplicationScopes.getScopes(rsBaseUrl);

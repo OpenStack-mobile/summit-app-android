@@ -163,4 +163,5 @@
     <string name="vertical_dots">&#8942;</string>
     <string name="fcm_channel_name">OpenStack Summit</string>
     <string name="fcm_channel_description">OpenStack Summit Notification Channel</string>
+    <string name="db_error">DB file got corrupted please reinstall the app and try again.</string>
 </resources>

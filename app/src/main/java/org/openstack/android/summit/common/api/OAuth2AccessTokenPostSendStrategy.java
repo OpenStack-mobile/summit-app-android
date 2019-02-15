@@ -13,6 +13,10 @@ final public class OAuth2AccessTokenPostSendStrategy implements IOAuth2AccessTok
 
         HttpUrl originalHttpUrl = request.url();
 
+        if(originalHttpUrl.queryParameter("access_token") != null){
+            originalHttpUrl= originalHttpUrl.newBuilder().removeAllQueryParameters("access_token").build();
+        }
+
         HttpUrl url = originalHttpUrl.newBuilder()
                 .addQueryParameter("access_token", accessToken)
                 .build();

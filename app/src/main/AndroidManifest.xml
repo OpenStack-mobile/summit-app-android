@@ -218,6 +218,9 @@
             android:name="org.openstack.android.summit.common.security.RS_BASE_URL"
             android:value="${ResourceServerBaseUrl}" />
         <meta-data
+            android:name="org.openstack.android.summit.common.security.RS_BASE_REALM_URL"
+            android:value="${ResourceServerBaseRealmUrl}" />
+        <meta-data
             android:name="org.openstack.android.summit.common.security.IDP_BASE_URL"
             android:value="${IdentityProviderBaseUrl}" />
 
