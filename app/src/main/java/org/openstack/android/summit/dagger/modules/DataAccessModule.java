@@ -36,7 +36,7 @@ import org.openstack.android.summit.common.data_access.deserialization.IPersonDe
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationLinkDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationSlideDeserializer;
-import org.openstack.android.summit.common.data_access.deserialization.IPresentationSpeakerDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.ISpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationVideoDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitDeserializer;
@@ -54,7 +54,7 @@ import org.openstack.android.summit.common.data_access.deserialization.PersonDes
 import org.openstack.android.summit.common.data_access.deserialization.PresentationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationLinkDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSlideDeserializer;
-import org.openstack.android.summit.common.data_access.deserialization.PresentationSpeakerDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.SpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationVideoDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitDeserializer;
@@ -79,7 +79,7 @@ import org.openstack.android.summit.common.data_access.repositories.IMyScheduleP
 import org.openstack.android.summit.common.data_access.repositories.IPresentationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationLinkDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationSlideDataStore;
-import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPresentationVideoDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitAttendeeDataStore;
@@ -107,7 +107,7 @@ import org.openstack.android.summit.common.data_access.repositories.impl.MySched
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationLinkDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationSlideDataStore;
-import org.openstack.android.summit.common.data_access.repositories.impl.PresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.repositories.impl.SpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PresentationVideoDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.PushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.SummitAttendeeDataStore;
@@ -194,7 +194,7 @@ public class DataAccessModule {
                                                    IVenueDeserializer venueDeserializer,
                                                    IVenueRoomDeserializer venueRoomDeserializer,
                                                    ISummitEventDeserializer summitEventDeserializer,
-                                                   IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+                                                   ISpeakerDeserializer presentationSpeakerDeserializer,
                                                    ITrackGroupDeserializer trackGroupDeserializer,
                                                    ITrackDeserializer trackDeserializer,
                                                    IWifiConnectionDeserializer wifiConnectionDeserializer)
@@ -220,7 +220,7 @@ public class DataAccessModule {
     @Provides
     IPresentationDeserializer providesPresentationDeserializer
     (
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        ISpeakerDeserializer presentationSpeakerDeserializer,
         IPresentationLinkDeserializer presentationLinkDeserializer,
         IPresentationSlideDeserializer presentationSlideDeserializer,
         IPresentationVideoDeserializer presentationVideoDeserializer
@@ -235,8 +235,8 @@ public class DataAccessModule {
     }
 
     @Provides
-    IPresentationSpeakerDeserializer providesPresentationSpeakerDeserializer(IPersonDeserializer personDeserializer) {
-        return new PresentationSpeakerDeserializer(personDeserializer);
+    ISpeakerDeserializer providesPresentationSpeakerDeserializer(IPersonDeserializer personDeserializer) {
+        return new SpeakerDeserializer(personDeserializer);
     }
 
     @Provides
@@ -268,7 +268,7 @@ public class DataAccessModule {
     IMemberDeserializer providesMemberDeserializer
     (
         IPersonDeserializer personDeserializer,
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        ISpeakerDeserializer presentationSpeakerDeserializer,
         ISummitAttendeeDeserializer summitAttendeeDeserializer,
         IFeedbackDeserializer feedbackDeserializer,
         ISummitEventDeserializer summitEventDeserializer
@@ -304,7 +304,7 @@ public class DataAccessModule {
                                        IFeedbackDeserializer feedbackDeserializer,
                                        IMemberDeserializer memberDeserializer,
                                        IPresentationDeserializer presentationDeserializer,
-                                       IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+                                       ISpeakerDeserializer presentationSpeakerDeserializer,
                                        ISummitAttendeeDeserializer summitAttendeeDeserializer,
                                        ISummitDeserializer summitDeserializer,
                                        ISummitEventDeserializer summitEventDeserializer,
@@ -393,9 +393,9 @@ public class DataAccessModule {
     }
 
     @Provides
-    IPresentationSpeakerDataStore providesPresentationSpeakerDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
-                                                                       IDeleteStrategy deleteStrategy) {
-        return new PresentationSpeakerDataStore(saveOrUpdateStrategy, deleteStrategy);
+    ISpeakerDataStore providesPresentationSpeakerDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
+                                                           IDeleteStrategy deleteStrategy) {
+        return new SpeakerDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides

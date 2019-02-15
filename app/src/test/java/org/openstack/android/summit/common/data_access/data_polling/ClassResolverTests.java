@@ -4,8 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.entities.EventType;
-import org.openstack.android.summit.common.entities.Presentation;
-import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.TicketType;
@@ -62,13 +61,13 @@ public class ClassResolverTests {
     public void fromName_PresentationSpeaker_returnsCorrectType() throws ClassNotFoundException {
         // Arrange
         ClassResolver classResolver = new ClassResolver();
-        String className = "PresentationSpeaker";
+        String className = "Speaker";
 
         // Act
         Class type = classResolver.fromName(className);
 
         // Assert
-        Assert.assertEquals(type, PresentationSpeaker.class);
+        Assert.assertEquals(type, Speaker.class);
     }
 
     @Test

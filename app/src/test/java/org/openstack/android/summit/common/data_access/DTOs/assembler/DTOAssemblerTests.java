@@ -2,9 +2,6 @@ package org.openstack.android.summit.common.data_access.DTOs.assembler;
 
 import junit.framework.Assert;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,15 +12,13 @@ import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
-import org.openstack.android.summit.common.data_access.MockSupport;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
-import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.Summit;
-import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
 import org.openstack.android.summit.common.entities.Tag;
@@ -31,7 +26,6 @@ import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
@@ -152,21 +146,21 @@ public class DTOAssemblerTests {
     public void createDTO_presentationSpeaker2PersonListItemDTO_createCorrectDTOInstance() {
         // Arrange
         DTOAssembler dtoAssembler = new DTOAssembler();
-        PresentationSpeaker presentationSpeaker = new PresentationSpeaker();
-        presentationSpeaker.setId(1);
-        presentationSpeaker.setFirstName("Aaron");
-        presentationSpeaker.setLastName("Delp");
-        presentationSpeaker.setTitle("Technical Solutions Director");
-        presentationSpeaker.setPictureUrl("https://pictureurl.com/picture.png");
+        Speaker speaker = new Speaker();
+        speaker.setId(1);
+        speaker.setFirstName("Aaron");
+        speaker.setLastName("Delp");
+        speaker.setTitle("Technical Solutions Director");
+        speaker.setPictureUrl("https://pictureurl.com/picture.png");
 
         // Act
-        PersonListItemDTO personListItemDTO = dtoAssembler.createDTO(presentationSpeaker, PersonListItemDTO.class);
+        PersonListItemDTO personListItemDTO = dtoAssembler.createDTO(speaker, PersonListItemDTO.class);
 
         // Assert
-        Assert.assertEquals(personListItemDTO.getId(), presentationSpeaker.getId());
-        Assert.assertEquals(personListItemDTO.getName(), presentationSpeaker.getFirstName() + " " + presentationSpeaker.getLastName());
-        Assert.assertEquals(personListItemDTO.getTitle(), presentationSpeaker.getTitle());
-        Assert.assertEquals(personListItemDTO.getPictureUrl(), presentationSpeaker.getPictureUrl());
+        Assert.assertEquals(personListItemDTO.getId(), speaker.getId());
+        Assert.assertEquals(personListItemDTO.getName(), speaker.getFirstName() + " " + speaker.getLastName());
+        Assert.assertEquals(personListItemDTO.getTitle(), speaker.getTitle());
+        Assert.assertEquals(personListItemDTO.getPictureUrl(), speaker.getPictureUrl());
         Assert.assertTrue(personListItemDTO.getIsSpeaker());
         Assert.assertFalse(personListItemDTO.getIsAttendee());
     }
@@ -221,19 +215,19 @@ public class DTOAssemblerTests {
         tag2.setId(4);
         tag2.setTag("tag2");
 
-        PresentationSpeaker presentationSpeaker1 = new PresentationSpeaker();
-        presentationSpeaker1.setId(1);
-        presentationSpeaker1.setFullName("Test Speaker");
+        Speaker speaker1 = new Speaker();
+        speaker1.setId(1);
+        speaker1.setFullName("Test Speaker");
 
-        PresentationSpeaker presentationSpeaker2 = new PresentationSpeaker();
-        presentationSpeaker2.setId(2);
-        presentationSpeaker2.setFullName("Test Moderator");
+        Speaker speaker2 = new Speaker();
+        speaker2.setId(2);
+        speaker2.setFullName("Test Moderator");
 
         Presentation presentation = new Presentation();
         presentation.setId(2000);
-        presentation.getSpeakers().add(presentationSpeaker1);
-        presentation.getSpeakers().add(presentationSpeaker2);
-        presentation.setModerator(presentationSpeaker2);
+        presentation.getSpeakers().add(speaker1);
+        presentation.getSpeakers().add(speaker2);
+        presentation.setModerator(speaker2);
 
         SummitEvent summitEvent = new SummitEvent();
         summitEvent.setId(4);

@@ -265,9 +265,7 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
                     .or()
                         .contains("tags.tag", searchTerm, Case.INSENSITIVE)
                     .or()
-                        .contains("presentation.speakers.fullName", searchTerm, Case.INSENSITIVE)
-                    .or()
-                        .contains("presentation.moderator.fullName", searchTerm, Case.INSENSITIVE)
+                        .contains("presentation.speakers.speaker.fullName", searchTerm, Case.INSENSITIVE)
                     .or()
                         .contains("presentation.level", searchTerm, Case.INSENSITIVE)
                     .or()
@@ -286,9 +284,7 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
                 .greaterThanOrEqualTo("start", startDate.toDate())
                 .lessThanOrEqualTo("end", endDate.toDate())
                 .beginGroup()
-                    .equalTo("presentation.speakers.id", speakerId)
-                    .or()
-                    .equalTo("presentation.moderator.id", speakerId)
+                    .equalTo("presentation.speakers.speaker.id", speakerId)
                 .endGroup();
 
         return query.findAllSorted(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });

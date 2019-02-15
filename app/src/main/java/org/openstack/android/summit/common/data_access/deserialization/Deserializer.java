@@ -12,7 +12,7 @@ import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.IEntity;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Presentation;
-import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.SummitGroupEvent;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitAttendee;
@@ -40,7 +40,7 @@ public class Deserializer implements IDeserializer {
     IFeedbackDeserializer feedbackDeserializer;
     IMemberDeserializer memberDeserializer;
     IPresentationDeserializer presentationDeserializer;
-    IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
+    ISpeakerDeserializer presentationSpeakerDeserializer;
     ISummitAttendeeDeserializer summitAttendeeDeserializer;
     ISummitDeserializer summitDeserializer;
     ISummitEventDeserializer summitEventDeserializer;
@@ -62,7 +62,7 @@ public class Deserializer implements IDeserializer {
         IFeedbackDeserializer feedbackDeserializer,
         IMemberDeserializer memberDeserializer,
         IPresentationDeserializer presentationDeserializer,
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        ISpeakerDeserializer presentationSpeakerDeserializer,
         ISummitAttendeeDeserializer summitAttendeeDeserializer,
         ISummitDeserializer summitDeserializer,
         ISummitEventDeserializer summitEventDeserializer,
@@ -104,7 +104,7 @@ public class Deserializer implements IDeserializer {
         else if (type == Presentation.class) {
             return (T)presentationDeserializer.deserialize(jsonString);
         }
-        else if (type == PresentationSpeaker.class) {
+        else if (type == Speaker.class) {
             return (T)presentationSpeakerDeserializer.deserialize(jsonString);
         }
         else if (type == SummitAttendee.class) {

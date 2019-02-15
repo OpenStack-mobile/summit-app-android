@@ -4,7 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
-import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ITrackDataStore;
@@ -49,7 +49,7 @@ public class SearchModule {
         IScheduleableInteractor scheduleableInteractor,
         ISummitEventDataStore summitEventDataStore,
         ITrackDataStore trackDataStore,
-        IPresentationSpeakerDataStore presentationSpeakerDataStore,
+        ISpeakerDataStore presentationSpeakerDataStore,
         IDTOAssembler dtoAssembler,
         ISummitDataStore summitDataStore,
         ISummitSelector summitSelector,

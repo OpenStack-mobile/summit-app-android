@@ -13,7 +13,7 @@ public class Member extends RealmObject implements IPerson {
 
     @PrimaryKey
     private int id;
-    private PresentationSpeaker speakerRole;
+    private Speaker speakerRole;
     private SummitAttendee attendeeRole;
     private String firstName;
     private String lastName;
@@ -62,11 +62,11 @@ public class Member extends RealmObject implements IPerson {
     private RealmList<SummitEvent> favoriteEvents = new RealmList<>();
 
 
-    public PresentationSpeaker getSpeakerRole() {
+    public Speaker getSpeakerRole() {
         return speakerRole;
     }
 
-    public void setSpeakerRole(PresentationSpeaker speakerRole) {
+    public void setSpeakerRole(Speaker speakerRole) {
         this.speakerRole = speakerRole;
     }
 

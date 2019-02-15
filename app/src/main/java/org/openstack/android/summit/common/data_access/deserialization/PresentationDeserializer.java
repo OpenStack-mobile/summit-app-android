@@ -7,6 +7,7 @@ import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.PresentationLink;
 import org.openstack.android.summit.common.entities.PresentationSlide;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.utils.RealmFactory;
@@ -18,7 +19,7 @@ import javax.inject.Inject;
  */
 public class PresentationDeserializer extends BaseDeserializer implements IPresentationDeserializer {
 
-    IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
+    ISpeakerDeserializer speakerDeserializer;
     IPresentationLinkDeserializer    presentationLinkDeserializer;
     IPresentationVideoDeserializer   presentationVideoDeserializer;
     IPresentationSlideDeserializer   presentationSlideDeserializer;
@@ -26,12 +27,12 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
     @Inject
     public PresentationDeserializer
     (
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        ISpeakerDeserializer speakerDeserializer,
         IPresentationLinkDeserializer presentationLinkDeserializer,
         IPresentationVideoDeserializer presentationVideoDeserializer,
         IPresentationSlideDeserializer presentationSlideDeserializer
     ){
-        this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
+        this.speakerDeserializer             = speakerDeserializer;
         this.presentationLinkDeserializer    = presentationLinkDeserializer;
         this.presentationVideoDeserializer   = presentationVideoDeserializer;
         this.presentationSlideDeserializer   = presentationSlideDeserializer;
@@ -65,21 +66,32 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
 
 
         if(jsonObject.has("speakers")) {
-            PresentationSpeaker presentationSpeaker;
+            Speaker speaker;
             int speakerId;
+            String speakerRole;
+
             JSONArray jsonArraySpeakers = jsonObject.getJSONArray("speakers");
 
             presentation.getSpeakers().clear();
             for (int i = 0; i < jsonArraySpeakers.length(); i++) {
-                speakerId = jsonArraySpeakers.optInt(i);
-                presentationSpeaker = (speakerId > 0) ?
-                        RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", speakerId).findFirst() :
-                        presentationSpeakerDeserializer.deserialize(jsonArraySpeakers.getJSONObject(i).toString());
-                if (presentationSpeaker == null) continue;
-                presentation.getSpeakers().add(presentationSpeaker);
 
-                if(summit.getSpeakers().where().equalTo("id", presentationSpeaker.getId()).count() == 0)
-                    summit.getSpeakers().add(presentationSpeaker);
+                JSONObject jsonSpeaker = jsonArraySpeakers.getJSONObject(i);
+                if(jsonSpeaker == null) continue;
+                missedFields = validateRequiredFields(new String[] {"id", "role"},  jsonSpeaker);
+
+                if(missedFields.length > 0) continue;
+
+                speakerId   = jsonSpeaker.getInt("id");
+                speakerRole = jsonSpeaker.getString("role");
+
+                speaker = RealmFactory.getSession().where(Speaker.class).equalTo("id", speakerId).findFirst();
+                if(speaker == null)
+                    speaker = speakerDeserializer.deserialize(jsonSpeaker.toString());
+                if (speaker == null) continue;
+                presentation.getSpeakers().add(new PresentationSpeaker(speaker, speakerRole));
+
+                if(summit.getSpeakers().where().equalTo("id", speaker.getId()).count() == 0)
+                    summit.getSpeakers().add(speaker);
             }
         }
 
@@ -122,32 +134,6 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
                 if(link == null) continue;
                 presentation.getLinks().add(link);
                 link.setPresentation(presentation);
-            }
-        }
-
-        if (jsonObject.has("moderator")) {
-            JSONObject jsonObjectModerator = jsonObject.getJSONObject("moderator");
-            int moderatorId                = jsonObjectModerator.getInt("id");
-            // check local db
-            PresentationSpeaker moderator  = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", moderatorId).findFirst();
-            // if not create it
-            if(moderator == null)
-                moderator = presentationSpeakerDeserializer.deserialize(jsonObjectModerator.toString());
-
-            if(moderator != null) {
-                presentation.setModerator(moderator);
-                if(summit.getSpeakers().where().equalTo("id", moderator.getId()).count() == 0)
-                    summit.getSpeakers().add(moderator);
-            }
-        }
-        else if (jsonObject.has("moderator_speaker_id") && !jsonObject.isNull("moderator_speaker_id")) {
-
-            PresentationSpeaker moderator = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", jsonObject.getInt("moderator_speaker_id")).findFirst();
-
-            if(moderator != null) {
-                presentation.setModerator(moderator);
-                if(summit.getSpeakers().where().equalTo("id", moderator.getId()).count() == 0)
-                    summit.getSpeakers().add(moderator);
             }
         }
 

@@ -5,5 +5,6 @@ import io.realm.PresentationSpeakerRealmProxy;
 /**
  * Created by Claudio Redi on 1/27/2016.
  */
-public class PresentationSpeakerRealmProxy2PersonDTO extends AbstractPresentationSpeaker2PersonDTO<PresentationSpeakerRealmProxy> {
+public class PresentationSpeakerRealmProxy2PersonDTO
+        extends AbstractPresentationSpeaker2PersonDTO<PresentationSpeakerRealmProxy> {
 }

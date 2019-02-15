@@ -83,7 +83,7 @@ public class Summit extends RealmObject implements INamedEntity {
     private RealmList<Track> tracks                         = new RealmList<>();
     private RealmList<EventType> eventTypes                 = new RealmList<>();
     private RealmList<Company> sponsors                     = new RealmList<>();
-    private RealmList<PresentationSpeaker> speakers         = new RealmList<>();
+    private RealmList<Speaker> speakers         = new RealmList<>();
     private RealmList<SummitWIFIConnection> wifiConnections = new RealmList<>();
 
     public int getId() {
@@ -222,11 +222,11 @@ public class Summit extends RealmObject implements INamedEntity {
         this.sponsors = sponsors;
     }
 
-    public RealmList<PresentationSpeaker> getSpeakers() {
+    public RealmList<Speaker> getSpeakers() {
         return speakers;
     }
 
-    public void setSpeakers(RealmList<PresentationSpeaker> speakers) {
+    public void setSpeakers(RealmList<Speaker> speakers) {
         this.speakers = speakers;
     }
 

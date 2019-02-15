@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.data_access.deserialization.FeedbackDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.GenericDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.SpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitEventWithFileDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitGroupEventDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IMemberDeserializer;
@@ -19,7 +20,6 @@ import org.openstack.android.summit.common.data_access.deserialization.PersonDes
 import org.openstack.android.summit.common.data_access.deserialization.PresentationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationLinkDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSlideDeserializer;
-import org.openstack.android.summit.common.data_access.deserialization.PresentationSpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationVideoDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitEventDeserializer;
@@ -204,10 +204,10 @@ public class DeserializerTests  extends InstrumentationTestCase {
                     SummitAttendeeDeserializer summitAttendeeDeserializer = new SummitAttendeeDeserializer();
                     PersonDeserializer personDeserializer = new PersonDeserializer();
                     FeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
-                    PresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
+                    SpeakerDeserializer presentationSpeakerDeserializer = new SpeakerDeserializer(personDeserializer);
 
                     SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(new GenericDeserializer(), new PresentationDeserializer(
-                            new PresentationSpeakerDeserializer(new PersonDeserializer()),
+                            new SpeakerDeserializer(new PersonDeserializer()),
                             new PresentationLinkDeserializer(),
                             new PresentationVideoDeserializer(),
                             new PresentationSlideDeserializer()
@@ -228,10 +228,10 @@ public class DeserializerTests  extends InstrumentationTestCase {
                     SummitAttendeeDeserializer summitAttendeeDeserializer = new SummitAttendeeDeserializer();
                     PersonDeserializer personDeserializer = new PersonDeserializer();
                     FeedbackDeserializer feedbackDeserializer = new FeedbackDeserializer();
-                    PresentationSpeakerDeserializer presentationSpeakerDeserializer = new PresentationSpeakerDeserializer(personDeserializer);
+                    SpeakerDeserializer presentationSpeakerDeserializer = new SpeakerDeserializer(personDeserializer);
 
                     SummitEventDeserializer summitEventDeserializer = new SummitEventDeserializer(new GenericDeserializer(), new PresentationDeserializer(
-                            new PresentationSpeakerDeserializer(new PersonDeserializer()),
+                            new SpeakerDeserializer(new PersonDeserializer()),
                             new PresentationLinkDeserializer(),
                             new PresentationVideoDeserializer(),
                             new PresentationSlideDeserializer()

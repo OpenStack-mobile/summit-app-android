@@ -1,9 +1,9 @@
 package org.openstack.android.summit.common.data_access.repositories.impl;
 
-import org.openstack.android.summit.common.data_access.repositories.IPresentationSpeakerDataStore;
+import org.openstack.android.summit.common.data_access.repositories.ISpeakerDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
-import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
@@ -18,20 +18,20 @@ import io.realm.Sort;
 /**
  * Created by Claudio Redi on 1/13/2016.
  */
-public class PresentationSpeakerDataStore extends GenericDataStore<PresentationSpeaker> implements IPresentationSpeakerDataStore {
+public class SpeakerDataStore extends GenericDataStore<Speaker> implements ISpeakerDataStore {
 
-    public PresentationSpeakerDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy, IDeleteStrategy deleteStrategy) {
-        super(PresentationSpeaker.class, saveOrUpdateStrategy, deleteStrategy);
+    public SpeakerDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy, IDeleteStrategy deleteStrategy) {
+        super(Speaker.class, saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Override
-    public List<PresentationSpeaker> getByFilter(int summitId, String searchTerm, int page, int objectsPerPage) {
+    public List<Speaker> getByFilter(int summitId, String searchTerm, int page, int objectsPerPage) {
 
-        ArrayList<PresentationSpeaker> presentationSpeakers = new ArrayList<>();
+        ArrayList<Speaker> speakers = new ArrayList<>();
         Summit summit                                       = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
-        if(summit == null) return presentationSpeakers;
+        if(summit == null) return speakers;
 
-        RealmQuery<PresentationSpeaker> query               = summit.getSpeakers().where().isNotNull("fullName");
+        RealmQuery<Speaker> query               = summit.getSpeakers().where().isNotNull("fullName");
 
         if (searchTerm != null && !searchTerm.isEmpty()) {
             query
@@ -42,7 +42,7 @@ public class PresentationSpeakerDataStore extends GenericDataStore<PresentationS
                     .endGroup();
         }
 
-        RealmResults<PresentationSpeaker> results = query.findAll();
+        RealmResults<Speaker> results = query.findAll();
         results                                   = results.sort(new String[] { "firstName", "lastName"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING });
 
 
@@ -55,39 +55,39 @@ public class PresentationSpeakerDataStore extends GenericDataStore<PresentationS
         if (startRecord <= endRecord) {
             int index = startRecord;
             while (index  <= endRecord && index < size) {
-                presentationSpeakers.add(results.get(index));
+                speakers.add(results.get(index));
                 index++;
             }
         }
 
-        return presentationSpeakers;
+        return speakers;
     }
 
-    public List<PresentationSpeaker> getAllByFilter(int summitId, String searchTerm) {
+    public List<Speaker> getAllByFilter(int summitId, String searchTerm) {
 
         Summit summit = RealmFactory.getSession().where(Summit.class).equalTo("id", summitId).findFirst();
 
         if(summit == null) return new ArrayList<>();
 
-        RealmQuery<PresentationSpeaker> query = summit.getSpeakers().where().isNotNull("fullName");
+        RealmQuery<Speaker> query = summit.getSpeakers().where().isNotNull("fullName");
 
         if (searchTerm != null && !searchTerm.isEmpty()) {
             query.contains("fullName", searchTerm, Case.INSENSITIVE);
         }
 
-        RealmResults<PresentationSpeaker> results = query.findAll();
+        RealmResults<Speaker> results = query.findAll();
         results                                   = results.sort(new String[] { "firstName", "lastName"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING });
 
-        ArrayList<PresentationSpeaker> presentationSpeakers = new ArrayList<>();
+        ArrayList<Speaker> speakers = new ArrayList<>();
 
         int index = 0;
         int size = results.size();
         while (index < size) {
-            presentationSpeakers.add(results.get(index));
+            speakers.add(results.get(index));
             index++;
         }
 
-        return presentationSpeakers;
+        return speakers;
     }
 
 }

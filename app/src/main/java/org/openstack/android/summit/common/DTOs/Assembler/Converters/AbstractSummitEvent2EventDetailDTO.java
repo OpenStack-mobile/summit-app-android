@@ -8,6 +8,7 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
@@ -68,15 +69,10 @@ public class AbstractSummitEvent2EventDetailDTO<E extends SummitEvent, S extends
 
                 PersonListItemDTO speakerListItemDTO;
                 for (PresentationSpeaker presentationSpeaker : source.getPresentation().getSpeakers()) {
-                    if (presentationSpeaker.getFullName() != null && !presentationSpeaker.getFullName().isEmpty()) {
+                    if (presentationSpeaker.getSpeaker().getFullName() != null && !presentationSpeaker.getSpeaker().getFullName().isEmpty()) {
                         speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S) presentationSpeaker);
                         eventDetailDTO.getSpeakers().add(speakerListItemDTO);
                     }
-                }
-
-                if (source.getPresentation().getModerator() != null) {
-                    speakerListItemDTO = presentationSpeaker2PersonListIemDTO.convert((S) source.getPresentation().getModerator());
-                    eventDetailDTO.setModerator(speakerListItemDTO);
                 }
 
                 if (source.getPresentation().getVideos().size() > 0) {

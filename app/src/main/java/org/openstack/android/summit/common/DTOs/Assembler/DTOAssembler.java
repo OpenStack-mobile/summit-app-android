@@ -12,6 +12,8 @@ import org.openstack.android.summit.common.DTOs.Assembler.Converters.Presentatio
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.PushNotification2PushNotificationListItemDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.PushNotificationRealmProxy2PushNotificationDetailDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.PushNotificationRealmProxy2PushNotificationListItemDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.Speaker2PersonDTO;
+import org.openstack.android.summit.common.DTOs.Assembler.Converters.SpeakerRealmProxy2PersonDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitAttendee2PersonDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitAttendeeRealmProxy2PersonDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.SummitEvent2EventDetailDTO;
@@ -26,6 +28,8 @@ import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueRealmP
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.VenueRoomRealmProxy2VenueRoomDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.PushNotification2PushNotificationDetailDTO;
 import org.openstack.android.summit.common.DTOs.Assembler.Converters.WifiConnection2WifiListItemDTO;
+import org.openstack.android.summit.common.DTOs.Speaker2PersonListIemDTO;
+import org.openstack.android.summit.common.DTOs.SpeakerRealmProxy2PersonListItemDTO;
 
 import javax.inject.Inject;
 
@@ -44,7 +48,11 @@ public class DTOAssembler implements IDTOAssembler {
         modelMapper.addConverter(new PresentationSpeaker2PersonListIemDTO());
         modelMapper.addConverter(new PresentationSpeakerRealmProxy2PersonListItemDTO());
         modelMapper.addConverter(new PresentationSpeaker2PersonDTO());
+        modelMapper.addConverter(new Speaker2PersonListIemDTO());
+        modelMapper.addConverter(new SpeakerRealmProxy2PersonListItemDTO());
+        modelMapper.addConverter(new Speaker2PersonDTO());
         modelMapper.addConverter(new PresentationSpeakerRealmProxy2PersonDTO());
+        modelMapper.addConverter(new SpeakerRealmProxy2PersonDTO());
         modelMapper.addConverter(new SummitAttendee2PersonDTO());
         modelMapper.addConverter(new SummitAttendeeRealmProxy2PersonDTO());
         modelMapper.addConverter(new Member2MemberDTO());

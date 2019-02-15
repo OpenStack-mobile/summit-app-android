@@ -6,12 +6,9 @@ import com.crashlytics.android.Crashlytics;
 
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.PersonDTO;
-import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 
-/**
- * Created by Claudio Redi on 1/27/2016.
- */
-public class AbstractPresentationSpeaker2PersonDTO<S extends PresentationSpeaker> extends AbstractPresentationSpeaker2PersonListIemDTO<S, PersonDTO> {
+public class AbstractSpeaker2PersonDTO <S extends Speaker> extends AbstractSpeaker2PersonListIemDTO<S, PersonDTO> {
 
     @Override
     protected PersonDTO convert(S source) {
@@ -19,9 +16,9 @@ public class AbstractPresentationSpeaker2PersonDTO<S extends PresentationSpeaker
 
         try {
             convertInternal(source, personDTO);
-            personDTO.setBio(source.getSpeaker().getBio());
-            personDTO.setTwitter(source.getSpeaker().getTwitter());
-            personDTO.setIrc(source.getSpeaker().getIrc());
+            personDTO.setBio(source.getBio());
+            personDTO.setTwitter(source.getTwitter());
+            personDTO.setIrc(source.getIrc());
         }
         catch (Exception e) {
             Crashlytics.logException(e);

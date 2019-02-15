@@ -6,12 +6,11 @@ import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.entities.Presentation;
-import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.Track;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Claudio Redi on 11/16/2015.
@@ -28,14 +27,14 @@ public class PresentationDeserializerTests {
         track.setId(trackId);
 
         int speakerId1 = 795;
-        PresentationSpeaker presentationSpeaker1 = new PresentationSpeaker();
-        presentationSpeaker1.setId(speakerId1);
+        Speaker speaker1 = new Speaker();
+        speaker1.setId(speakerId1);
 
         int speakerId2 = 1873;
-        PresentationSpeaker presentationSpeaker2 = new PresentationSpeaker();
-        presentationSpeaker1.setId(speakerId2);
+        Speaker speaker2 = new Speaker();
+        speaker1.setId(speakerId2);
 
-        PresentationSpeakerDeserializer presentationSpeakerDeserializerMock = mock(PresentationSpeakerDeserializer.class);
+        SpeakerDeserializer presentationSpeakerDeserializerMock = mock(SpeakerDeserializer.class);
         PresentationSlideDeserializer presentationSlideDeserializer         = mock(PresentationSlideDeserializer.class);
         PresentationVideoDeserializer presentationVideoDeserializer         = mock(PresentationVideoDeserializer.class);
         PresentationLinkDeserializer presentationLinkDeserializer           = mock(PresentationLinkDeserializer.class);
@@ -49,15 +48,15 @@ public class PresentationDeserializerTests {
         Assert.assertEquals(4189, presentation.getId());
         Assert.assertEquals("Intermediate", presentation.getLevel());
         Assert.assertEquals(2, presentation.getSpeakers().size());
-        Assert.assertEquals(presentationSpeaker1, presentation.getSpeakers().get(0));
-        Assert.assertEquals(presentationSpeaker2, presentation.getSpeakers().get(1));
+        Assert.assertEquals(speaker1, presentation.getSpeakers().get(0));
+        Assert.assertEquals(speaker2, presentation.getSpeakers().get(1));
     }
 
     @Test
     public void deserialize_invalidJSONWithAllRequiredFieldsMissled_throwsJSONException() throws JSONException {
         String jsonString = "{}";
 
-        PresentationSpeakerDeserializer presentationSpeakerDeserializerMock = mock(PresentationSpeakerDeserializer.class);
+        SpeakerDeserializer presentationSpeakerDeserializerMock = mock(SpeakerDeserializer.class);
         PresentationSlideDeserializer presentationSlideDeserializer         = mock(PresentationSlideDeserializer.class);
         PresentationVideoDeserializer presentationVideoDeserializer         = mock(PresentationVideoDeserializer.class);
         PresentationLinkDeserializer presentationLinkDeserializer           = mock(PresentationLinkDeserializer.class);
@@ -91,14 +90,14 @@ public class PresentationDeserializerTests {
         track.setId(trackId);
 
         int speakerId1 = 795;
-        PresentationSpeaker presentationSpeaker1 = new PresentationSpeaker();
-        presentationSpeaker1.setId(speakerId1);
+        Speaker speaker1 = new Speaker();
+        speaker1.setId(speakerId1);
 
         int speakerId2 = 1873;
-        PresentationSpeaker presentationSpeaker2 = new PresentationSpeaker();
-        presentationSpeaker1.setId(speakerId2);
+        Speaker speaker2 = new Speaker();
+        speaker1.setId(speakerId2);
 
-        PresentationSpeakerDeserializer presentationSpeakerDeserializerMock = mock(PresentationSpeakerDeserializer.class);
+        SpeakerDeserializer presentationSpeakerDeserializerMock = mock(SpeakerDeserializer.class);
         PresentationSlideDeserializer presentationSlideDeserializer         = mock(PresentationSlideDeserializer.class);
         PresentationVideoDeserializer presentationVideoDeserializer         = mock(PresentationVideoDeserializer.class);
         PresentationLinkDeserializer presentationLinkDeserializer           = mock(PresentationLinkDeserializer.class);
@@ -112,7 +111,7 @@ public class PresentationDeserializerTests {
         Assert.assertEquals(4189, presentation.getId());
         Assert.assertNull(presentation.getLevel());
         Assert.assertEquals(2, presentation.getSpeakers().size());
-        Assert.assertEquals(presentationSpeaker1, presentation.getSpeakers().get(0));
-        Assert.assertEquals(presentationSpeaker2, presentation.getSpeakers().get(1));
+        Assert.assertEquals(speaker1, presentation.getSpeakers().get(0));
+        Assert.assertEquals(speaker2, presentation.getSpeakers().get(1));
     }
 }

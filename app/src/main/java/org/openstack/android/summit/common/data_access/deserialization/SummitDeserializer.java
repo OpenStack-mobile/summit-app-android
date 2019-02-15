@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Company;
 import org.openstack.android.summit.common.entities.EventType;
-import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitWIFIConnection;
@@ -32,7 +32,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
     IVenueDeserializer venueDeserializer;
     IVenueRoomDeserializer venueRoomDeserializer;
     ISummitEventDeserializer summitEventDeserializer;
-    IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
+    ISpeakerDeserializer presentationSpeakerDeserializer;
     ITrackGroupDeserializer trackGroupDeserializer;
     ITrackDeserializer trackDeserializer;
     IWifiConnectionDeserializer wifiConnectionDeserializer;
@@ -45,7 +45,7 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
                     IVenueDeserializer venueDeserializer,
                     IVenueRoomDeserializer venueRoomDeserializer,
                     ISummitEventDeserializer summitEventDeserializer,
-                    IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+                    ISpeakerDeserializer presentationSpeakerDeserializer,
                     ITrackGroupDeserializer trackGroupDeserializer,
                     ITrackDeserializer trackDeserializer,
                     IWifiConnectionDeserializer wifiConnectionDeserializer
@@ -220,14 +220,14 @@ public class SummitDeserializer extends BaseDeserializer implements ISummitDeser
             }
 
             if (jsonObject.has("speakers")) {
-                PresentationSpeaker presentationSpeaker = null;
+                Speaker speaker = null;
                 summit.getSpeakers().clear();
                 JSONObject jsonObjectPresentationSpeaker;
                 JSONArray jsonArrayPresentationSpeakers = jsonObject.getJSONArray("speakers");
                 for (int i = 0; i < jsonArrayPresentationSpeakers.length(); i++) {
                     jsonObjectPresentationSpeaker = jsonArrayPresentationSpeakers.getJSONObject(i);
-                    presentationSpeaker = presentationSpeakerDeserializer.deserialize(jsonObjectPresentationSpeaker.toString());
-                    summit.getSpeakers().add(presentationSpeaker);
+                    speaker = presentationSpeakerDeserializer.deserialize(jsonObjectPresentationSpeaker.toString());
+                    summit.getSpeakers().add(speaker);
                 }
             }
 

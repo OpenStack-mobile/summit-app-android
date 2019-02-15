@@ -10,6 +10,15 @@ public class PersonListItemDTO extends NamedDTO {
     private String pictureUrl;
     private Boolean isAttendee;
     private Boolean isSpeaker;
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getTitle() {
         return title;

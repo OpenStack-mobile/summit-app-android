@@ -384,9 +384,7 @@ public class EventDetailPresenter
         PersonListItemDTO personListItemDTO = event.getModeratorAndSpeakers().get(position);
         personItemView.setName(personListItemDTO.getName());
         personItemView.setTitle(personListItemDTO.getTitle());
-        personItemView.setIsModerator(
-                event.getModerator() != null && personListItemDTO.getId() == event.getModerator().getId()
-        );
+        personItemView.setIsModerator(personListItemDTO.getRole().equals("Moderator"));
         Uri uri = Uri.parse(personListItemDTO.getPictureUrl().replace("https", "http"));
         personItemView.setPictureUri(uri);
     }

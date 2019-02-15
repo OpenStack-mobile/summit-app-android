@@ -1,6 +1,7 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.PresentationVideo;
 import org.openstack.android.summit.common.entities.SummitEvent;
 

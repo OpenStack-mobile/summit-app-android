@@ -10,10 +10,9 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.PresentationSpeaker;
+import org.openstack.android.summit.common.entities.Speaker;
 import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
-import org.openstack.android.summit.common.entities.SummitGroupEvent;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
@@ -24,7 +23,7 @@ import javax.inject.Inject;
 public class MemberDeserializer extends BaseDeserializer implements IMemberDeserializer {
 
     IPersonDeserializer personDeserializer;
-    IPresentationSpeakerDeserializer presentationSpeakerDeserializer;
+    ISpeakerDeserializer presentationSpeakerDeserializer;
     ISummitAttendeeDeserializer summitAttendeeDeserializer;
     IFeedbackDeserializer feedbackDeserializer;
     ISummitEventDeserializer eventDeserializer;
@@ -33,7 +32,7 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
     public MemberDeserializer
     (
         IPersonDeserializer personDeserializer,
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+        ISpeakerDeserializer presentationSpeakerDeserializer,
         ISummitAttendeeDeserializer summitAttendeeDeserializer,
         IFeedbackDeserializer feedbackDeserializer,
         ISummitEventDeserializer eventDeserializer
@@ -62,8 +61,8 @@ public class MemberDeserializer extends BaseDeserializer implements IMemberDeser
         member.setSpeakerRole(null);
         if (jsonObject.has("speaker")) {
             JSONObject speakerJSONObject = jsonObject.getJSONObject("speaker");
-            PresentationSpeaker presentationSpeaker = presentationSpeakerDeserializer.deserialize(speakerJSONObject.toString());
-            member.setSpeakerRole(presentationSpeaker);
+            Speaker speaker = presentationSpeakerDeserializer.deserialize(speakerJSONObject.toString());
+            member.setSpeakerRole(speaker);
         }
 
         member.setAttendeeRole(null);
