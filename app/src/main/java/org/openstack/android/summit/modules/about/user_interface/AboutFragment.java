@@ -108,7 +108,7 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
         setBuild(String.format(Locale.US, "Build Number %s", pInfo.versionCode));
 
         websiteLink.setOnClickListener(v -> {
-            Uri uri = Uri.parse("https://www.openstack.org");
+            Uri uri = Uri.parse("https://www.openstack.org/summit");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         });

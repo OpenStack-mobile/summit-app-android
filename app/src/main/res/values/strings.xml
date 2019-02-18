@@ -161,7 +161,14 @@
     <string name="first_rate_text">There are no reviews so far.\nBe the first to rate this event.</string>
     <string name="no_connectivity_message">Please ensure you have an internet connection to perform this task.</string>
     <string name="vertical_dots">&#8942;</string>
-    <string name="fcm_channel_name">OpenStack Summit</string>
-    <string name="fcm_channel_description">OpenStack Summit Notification Channel</string>
+    <string name="fcm_channel_name">Open Infrastructure Summit</string>
+    <string name="fcm_channel_description">Open Infrastructure Summit Notification Channel</string>
     <string name="db_error">DB file got corrupted please reinstall the app and try again.</string>
+    <string name="nav_bar_footer">Powered by Vexxhost</string>
+    <string name="about_website_list_item_title">Summit Website</string>
+    <string name="about_code_of_conduct_list_item_title">Code of Conduct</string>
+    <string name="about_report_problem_list_item_title">Report a Problem</string>
+    <string name="about_general_inquires_list_item_title">General Inquiries</string>
+    <string name="about_title">The Open Infrastructure Summit</string>
+    <string name="about_desc">At the Open Infrastructure Summit (formerly the OpenStack Summit), collaborate directly with the people building and running open source infrastructure using OpenStack, Kubernetes and 30+ other technologies. Thousands of IT decision makers, operators and the developers will gather at the Summit to collaborate across common use cases including Container Infrastructure, CI/CD, Telecom + NFV, Public Cloud, Private &amp; Hybrid Cloud, and Security.</string>
 </resources>

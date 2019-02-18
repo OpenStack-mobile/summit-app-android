@@ -127,8 +127,7 @@
                     android:textColor="@color/openStackLightBlue"
                     android:textSize="16dp"
                     android:textStyle="bold"
-                    android:text="OpenStack Website"/>
-
+                    android:text="@string/about_website_list_item_title"/>
             </LinearLayout>
 
             <LinearLayout
@@ -146,7 +145,7 @@
                     android:textColor="@color/openStackLightBlue"
                     android:textSize="16dp"
                     android:textStyle="bold"
-                    android:text="Code of Conduct"/>
+                    android:text="@string/about_code_of_conduct_list_item_title"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -163,7 +162,7 @@
                     android:textColor="@color/openStackLightBlue"
                     android:textSize="16dp"
                     android:textStyle="bold"
-                    android:text="Report a Problem"/>
+                    android:text="@string/about_report_problem_list_item_title"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -180,7 +179,7 @@
                     android:textColor="@color/openStackLightBlue"
                     android:textSize="16dp"
                     android:textStyle="bold"
-                    android:text="General Inquiries"/>
+                    android:text="@string/about_general_inquires_list_item_title"/>
             </LinearLayout>
             <TextView
                 android:layout_marginTop="30dp"
@@ -189,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingLeft="20dp"
-                android:text="The Must-Attend OpenStack Event"
+                android:text="@string/about_title"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 android:layout_marginBottom="5dp"/>
@@ -199,7 +198,7 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:text="The OpenStack Summit is the most important gathering of IT leaders, telco operators, cloud administrators, app developers and OpenStack contributors building the future of cloud computing. Hear business cases and operational experience directly from users, learn about new products in the ecosystem and participate in hands-on workshops to build your skills. Attended by thousands of people from more than 50 countries, it’s the ideal venue to plan your cloud strategy and share knowledge about architecting and operating OpenStack clouds."/>
+                android:text="@string/about_desc"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
