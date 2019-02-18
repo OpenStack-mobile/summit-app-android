@@ -8,6 +8,7 @@
     <color name="openStackSecondBlue">#30739C</color>
     <color name="openStackLightGray">#E5E5E5</color>
     <color name="openStackGray">#8A8A8A</color>
+    <color name="openStackGray2">#dddddd</color>
     <color name="openStackSecondText">#9B9B9B</color>
     <color name="openStackDarkGray">#4A4A4A</color>
     <color name="openStackOrange">#F5A623</color>
