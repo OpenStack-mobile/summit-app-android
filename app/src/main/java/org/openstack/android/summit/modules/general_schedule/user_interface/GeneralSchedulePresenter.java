@@ -61,9 +61,9 @@ public class GeneralSchedulePresenter
         List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
         List<Integer> filtersOnTracks      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tracks);
         List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels       = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags         = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
+        List<String>  filtersOnLevels      = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
+        List<String>  filtersOnTags        = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
+        List<Integer> filtersOnRooms       = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Rooms);
         List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
         Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
         List<ScheduleItemDTO> events = interactor.getScheduleEvents(
@@ -75,7 +75,7 @@ public class GeneralSchedulePresenter
                 filtersOnTracks,
                 filtersOnTags,
                 filtersOnLevels,
-                filtersOnVenues,
+                filtersOnRooms,
                 showVideoTalks);
         return events;
     }

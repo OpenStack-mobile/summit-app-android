@@ -13,4 +13,5 @@ public enum FilterSectionType {
     HidePastTalks,
     Venues,
     ShowVideoTalks,
+    Rooms,
 }

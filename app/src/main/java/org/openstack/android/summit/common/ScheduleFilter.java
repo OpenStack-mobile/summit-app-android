@@ -25,6 +25,7 @@ final public class ScheduleFilter implements IScheduleFilter {
         selections.put(FilterSectionType.HidePastTalks, new ArrayList<>());
         selections.put(FilterSectionType.Venues, new ArrayList<>());
         selections.put(FilterSectionType.Tracks, new ArrayList<>());
+        selections.put(FilterSectionType.Rooms, new ArrayList<>());
         selections.put(FilterSectionType.ShowVideoTalks, new ArrayList<>());
     }
 

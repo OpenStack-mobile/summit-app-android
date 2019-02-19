@@ -14,4 +14,5 @@ public interface IVenueDataStore extends IGenericDataStore<Venue> {
     List<Venue> getExternalBySummit(int summitId);
 
     List<Venue> getAllBySummit(int summitId);
+
 }

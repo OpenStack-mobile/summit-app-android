@@ -56,4 +56,5 @@ public class GeneralScheduleFilterItemView
         View circle = view.findViewById(R.id.item_filter_circle);
         circle.setVisibility(showCircle ? View.VISIBLE : View.GONE);
     }
+
 }

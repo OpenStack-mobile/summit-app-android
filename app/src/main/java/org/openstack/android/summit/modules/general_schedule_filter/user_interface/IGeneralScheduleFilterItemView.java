@@ -12,4 +12,5 @@ public interface IGeneralScheduleFilterItemView {
     void setCircleColor(int color);
 
     void setShowCircle(boolean showCircle);
+
 }

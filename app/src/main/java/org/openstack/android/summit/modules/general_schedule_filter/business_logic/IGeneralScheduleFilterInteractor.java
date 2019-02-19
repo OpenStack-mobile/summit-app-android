@@ -33,6 +33,14 @@ public interface IGeneralScheduleFilterInteractor extends IBaseInteractor {
 
     boolean groupIncludesAnyOfGivenTracks(int trackGroupId,  List<Integer> tracksIds);
 
+    boolean VenueIncludesAnyOfGivenRooms(int venueId, List<Integer> roomIds);
+
     List<TrackDTO>  getTracksBelongingToGroup(int trackGroupId,  List<Integer> tracksIds);
+
+    List<NamedDTO>  getRoomsBelongingToVenue(int venueId,  List<Integer> roomsIds);
+
+    NamedDTO getVenue(int venueId);
+
+    List<NamedDTO> getRoomsForVenue(int venueId);
 
 }

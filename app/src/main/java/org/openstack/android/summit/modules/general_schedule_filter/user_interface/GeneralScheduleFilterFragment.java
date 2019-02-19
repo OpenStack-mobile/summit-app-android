@@ -66,7 +66,6 @@ public class GeneralScheduleFilterFragment
     @BindView(R.id.hide_past_talks_container)
     LinearLayout pastTalksContainer;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_general_schedule_filter, container, false);
@@ -139,7 +138,6 @@ public class GeneralScheduleFilterFragment
         presenter.onSaveInstanceState(outState);
     }
 
-
     @Override
     public void showTrackGroups(List<TrackGroupDTO> trackGroups) {
         trackGroupListAdapter.clear();
@@ -163,7 +161,6 @@ public class GeneralScheduleFilterFragment
         levelListAdapter.clear();
         levelListAdapter.addAll(levels);
     }
-
 
     private class SummitTypeListAdapter extends ArrayAdapter<NamedDTO> {
 
@@ -231,11 +228,13 @@ public class GeneralScheduleFilterFragment
 
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_filter_list, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_filter_arrow_list, parent, false);
             }
 
-            GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
+            //GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
+            GeneralScheduleFilterItemNavigationView generalScheduleFilterItemView = new GeneralScheduleFilterItemNavigationView(convertView);
             presenter.buildVenueFilterItem(generalScheduleFilterItemView, position);
+
             generalScheduleFilterItemView.setItemCallback(isChecked -> {
                 presenter.toggleSelectionVenue(generalScheduleFilterItemView, position);
             });

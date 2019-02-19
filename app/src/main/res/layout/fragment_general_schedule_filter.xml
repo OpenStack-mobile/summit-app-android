@@ -74,7 +74,6 @@
                     />
             </LinearLayout>
             <LinearLayout style="@style/AppTheme.SubsectionHeaderFilter">
-
                 <TextView
                     style="@style/AppTheme.SubsectionHeaderFilter.Text"
                     android:text="@string/track_groups"
@@ -83,6 +82,7 @@
             <com.linearlistview.LinearListView
                 android:id="@+id/filter_track_groups_list"
                 style="@style/AppTheme.FilterSectionList" />
+
             <LinearLayout style="@style/AppTheme.SubsectionHeaderFilter">
                 <TextView
                     style="@style/AppTheme.SubsectionHeaderFilter.Text"

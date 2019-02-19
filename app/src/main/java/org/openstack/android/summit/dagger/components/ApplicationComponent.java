@@ -11,6 +11,7 @@ import org.openstack.android.summit.dagger.modules.FavoriteScheduleModule;
 import org.openstack.android.summit.dagger.modules.RSVPModule;
 import org.openstack.android.summit.dagger.modules.SplashModule;
 import org.openstack.android.summit.modules.favorites_schedule.user_interface.FavoritesScheduleFragment;
+import org.openstack.android.summit.modules.general_schedule_filter.user_interface.GeneralScheduleRoomsFilterFragment;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.GeneralScheduleTracksFilterFragment;
 import org.openstack.android.summit.modules.splash.user_interface.SplashActivity;
 import org.openstack.android.summit.SummitDataLoadingActivity;
@@ -148,6 +149,7 @@ public interface ApplicationComponent {
     void inject(FeedbackGivenListFragment feedbackGivenListFragment);
     void inject(GeneralScheduleFilterFragment generalScheduleFilterFragment);
     void inject(GeneralScheduleTracksFilterFragment generalScheduleTracksFilterFragment);
+    void inject(GeneralScheduleRoomsFilterFragment generalScheduleRommsFilterFragment);
     void inject(VenuesFragment venuesFragment);
     void inject(VenueListFragment venueListFragment);
     void inject(VenuesMapFragment venuesMapFragment);

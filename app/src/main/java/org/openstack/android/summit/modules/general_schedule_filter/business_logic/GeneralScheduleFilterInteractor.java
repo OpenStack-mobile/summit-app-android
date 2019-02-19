@@ -19,6 +19,8 @@ import org.openstack.android.summit.common.entities.Tag;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
+import org.openstack.android.summit.common.entities.VenueFloor;
+import org.openstack.android.summit.common.entities.VenueRoom;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import java.util.ArrayList;
@@ -113,6 +115,23 @@ public class GeneralScheduleFilterInteractor
     }
 
     @Override
+    public boolean VenueIncludesAnyOfGivenRooms(int venueId, List<Integer> roomsIds) {
+        if(roomsIds.isEmpty()) return false;
+        Venue venue = venueDataStore.getById(venueId);
+        if(venue == null) return false;
+
+        List<VenueFloor> floors   = venue.getFloors();
+        for(VenueFloor floor: floors){
+            for(VenueRoom  room: floor.getRooms()){
+                if(roomsIds.contains(room.getId()))
+                  return true;
+            }
+
+        }
+        return false;
+    }
+
+    @Override
     public List<TrackDTO> getTracksBelongingToGroup(int trackGroupId, List<Integer> tracksIds) {
         List<TrackDTO> result = new ArrayList<>();
         if(tracksIds.isEmpty()) return result;
@@ -122,6 +141,46 @@ public class GeneralScheduleFilterInteractor
             if(tracksIds.contains(track.getId()))
                 result.add(createDTO(track, TrackDTO.class));
         return result;
+    }
+
+    @Override
+    public List<NamedDTO> getRoomsBelongingToVenue(int venueId, List<Integer> roomsIds) {
+        List<NamedDTO> result = new ArrayList<>();
+        if(roomsIds.isEmpty()) return result;
+        Venue venue = venueDataStore.getById(venueId);
+        if(venue == null) return result;
+
+        List<VenueFloor> floors   = venue.getFloors();
+        for(VenueFloor floor: floors){
+            for(VenueRoom  room: floor.getRooms()){
+                if(roomsIds.contains(room.getId()))
+                    result.add(createDTO(room, NamedDTO.class));
+            }
+
+        }
+
+        return result;
+    }
+
+    @Override
+    public NamedDTO getVenue(int venueId) {
+        Venue venue = venueDataStore.getById(venueId);
+        if(venue == null) return null;
+        return createDTO(venue, NamedDTO.class);
+    }
+
+    @Override
+    public List<NamedDTO> getRoomsForVenue(int venueId) {
+        Venue venue = venueDataStore.getById(venueId);
+        if(venue == null) return new ArrayList<>();
+        List<NamedDTO> rooms = new ArrayList<>();
+        List<VenueFloor> floors   = venue.getFloors();
+        for(VenueFloor floor: floors){
+            List<VenueRoom> results = floor.getRooms();
+            List<NamedDTO> dtos = createDTOList(results, NamedDTO.class);
+            rooms.addAll(dtos);
+        }
+        return rooms;
     }
 
     @Override

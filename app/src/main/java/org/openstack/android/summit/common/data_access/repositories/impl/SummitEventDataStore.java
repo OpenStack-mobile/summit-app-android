@@ -98,7 +98,7 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         List<Integer> tracks,
         List<String> tags,
         List<String> levels,
-        List<Integer> venues,
+        List<Integer> rooms,
         boolean showVideoTalks
     )
     {
@@ -207,15 +207,13 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         }
 
         isFirst = true;
-        if (venues != null) {
+        if (rooms != null) {
             query.beginGroup();
-            for (int venueId : venues) {
+            for (int roomId : rooms) {
                 if (!isFirst) {
                     query = query.or();
                 }
-                query = query.equalTo("venueRoom.venue.id", venueId);
-                query = query.or();
-                query = query.equalTo("venue.id", venueId);
+                query   = query.equalTo("venueRoom.id", roomId);
                 isFirst = false;
             }
             query.endGroup();

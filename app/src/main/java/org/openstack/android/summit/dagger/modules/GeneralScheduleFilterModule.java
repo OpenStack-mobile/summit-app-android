@@ -19,8 +19,10 @@ import org.openstack.android.summit.modules.general_schedule_filter.business_log
 import org.openstack.android.summit.modules.general_schedule_filter.business_logic.IGeneralScheduleFilterInteractor;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.GeneralScheduleFilterFragment;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.GeneralScheduleFilterPresenter;
+import org.openstack.android.summit.modules.general_schedule_filter.user_interface.GeneralScheduleRoomsFilterPresenter;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.GeneralScheduleTracksFilterPresenter;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.IGeneralScheduleFilterPresenter;
+import org.openstack.android.summit.modules.general_schedule_filter.user_interface.IGeneralScheduleRoomsFilterPresenter;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.IGeneralScheduleTracksFilterPresenter;
 
 import dagger.Module;
@@ -86,5 +88,16 @@ public class GeneralScheduleFilterModule {
     )
     {
         return new GeneralScheduleTracksFilterPresenter(interactor, wireframe, scheduleFilter);
+    }
+
+    @Provides
+    IGeneralScheduleRoomsFilterPresenter providesGeneralScheduleRoomsFilterPresenter
+    (
+        IGeneralScheduleFilterInteractor interactor,
+        IGeneralScheduleFilterWireframe wireframe,
+        IScheduleFilter scheduleFilter
+    )
+    {
+        return new GeneralScheduleRoomsFilterPresenter(interactor, wireframe, scheduleFilter);
     }
 }
