@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import org.openstack.android.summit.common.DTOs.NamedDTO;
+import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.DTOs.TrackDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
@@ -117,7 +118,7 @@ public class GeneralScheduleFilterPresenter
         view.showLevels(levels);
         view.showVenues(venues);
         view.showShowPastTalks(false);
-
+        view.showVenuesFilter(false);
     }
 
     @Override
@@ -261,14 +262,17 @@ public class GeneralScheduleFilterPresenter
         List<Boolean> filtersOnShowVideoTalks = (List<Boolean>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
         boolean showVideoTalks = filtersOnShowVideoTalks != null && !filtersOnShowVideoTalks.isEmpty() ? filtersOnShowVideoTalks.get(0) : false;
         view.toggleShowVideoTalks(showVideoTalks);
+        SummitDTO activeSummit = interactor.getActiveSummit();
+        if (activeSummit != null ){
 
-        if (interactor.getActiveSummit() != null ){
-
-            if(interactor.getActiveSummit().isCurrentDateTimeInsideSummitRange()) {
+            if(activeSummit.isCurrentDateTimeInsideSummitRange()) {
                 view.showShowPastTalks(true);
                 List<Boolean> filtersOnPassTalks = (List<Boolean>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.HidePastTalks);
                 boolean hidePastTalks = filtersOnPassTalks != null && !filtersOnPassTalks.isEmpty() ? filtersOnPassTalks.get(0) : false;
                 view.toggleShowPastTalks(hidePastTalks);
+            }
+            if(activeSummit.shouldShowVenues()){
+                view.showVenuesFilter(true);
             }
         }
 

@@ -49,9 +49,6 @@ public class GeneralScheduleFilterFragment
     @BindView(R.id.filter_track_groups_list)
     LinearListView trackGroupList;
 
-    @BindView(R.id.filter_venues_list)
-    LinearListView venuesList;
-
     @BindView(R.id.hide_past_talks)
     Switch hidePastTalks;
 
@@ -63,8 +60,15 @@ public class GeneralScheduleFilterFragment
 
     @BindView(R.id.hide_past_talks_header)
     LinearLayout pastTalksHeader;
+
     @BindView(R.id.hide_past_talks_container)
     LinearLayout pastTalksContainer;
+
+    @BindView(R.id.venues_header)
+    LinearLayout venuesHeader;
+
+    @BindView(R.id.filter_venues_list)
+    LinearListView venuesList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,6 +122,12 @@ public class GeneralScheduleFilterFragment
     public void showShowPastTalks(boolean show) {
         pastTalksHeader.setVisibility(show ? View.VISIBLE : View.GONE);
         pastTalksContainer.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showVenuesFilter(boolean show) {
+        venuesHeader.setVisibility(show ? View.VISIBLE : View.GONE);
+        venuesList.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override

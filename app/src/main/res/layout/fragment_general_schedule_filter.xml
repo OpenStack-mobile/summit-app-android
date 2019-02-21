@@ -92,7 +92,8 @@
                 android:id="@+id/filter_levels_list"
                 style="@style/AppTheme.FilterSectionList" />
 
-            <LinearLayout style="@style/AppTheme.SubsectionHeaderFilter">
+            <LinearLayout style="@style/AppTheme.SubsectionHeaderFilter"
+                android:id="@+id/venues_header">
                 <TextView
                     style="@style/AppTheme.SubsectionHeaderFilter.Text"
                     android:text="@string/venues"/>

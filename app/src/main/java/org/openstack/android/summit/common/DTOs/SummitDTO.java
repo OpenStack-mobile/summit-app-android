@@ -78,6 +78,12 @@ public class SummitDTO extends NamedDTO {
         return new DateTime(getStartDate(), summitTimeZone);
     }
 
+    public DateTime getLocalStartShowingVenuesDate() {
+        if(this.startShowingVenuesDate == null) return null;
+        DateTimeZone summitTimeZone = DateTimeZone.forID(getTimeZone());
+        return new DateTime(this.startShowingVenuesDate, summitTimeZone);
+    }
+
     public DateTime getLocalEndDate() {
         DateTimeZone summitTimeZone = DateTimeZone.forID(getTimeZone());
         return new DateTime(getEndDate(), summitTimeZone);
@@ -110,6 +116,13 @@ public class SummitDTO extends NamedDTO {
         DateTime endDate      = this.getLocalEndDate();
 
         return ( startDate.isBefore(currentLocal) || startDate.isEqual(currentLocal)) && ( endDate.isAfter(currentLocal) || endDate.isEqual(currentLocal));
+    }
+
+    public boolean shouldShowVenues(){
+        DateTime currentLocal = getCurrentLocalTime();
+        DateTime startDate    = this.getLocalStartShowingVenuesDate();
+        if(startDate == null) return true;
+        return currentLocal.isAfter(startDate) || currentLocal.isEqual(startDate);
     }
 
     public boolean isNotStarted(){

@@ -126,7 +126,6 @@ public class GeneralScheduleFilterInteractor
                 if(roomsIds.contains(room.getId()))
                   return true;
             }
-
         }
         return false;
     }
@@ -150,13 +149,12 @@ public class GeneralScheduleFilterInteractor
         Venue venue = venueDataStore.getById(venueId);
         if(venue == null) return result;
 
-        List<VenueFloor> floors   = venue.getFloors();
+        List<VenueFloor> floors   = venue.getFloors().sort("number");
         for(VenueFloor floor: floors){
             for(VenueRoom  room: floor.getRooms()){
                 if(roomsIds.contains(room.getId()))
                     result.add(createDTO(room, NamedDTO.class));
             }
-
         }
 
         return result;
@@ -174,7 +172,7 @@ public class GeneralScheduleFilterInteractor
         Venue venue = venueDataStore.getById(venueId);
         if(venue == null) return new ArrayList<>();
         List<NamedDTO> rooms = new ArrayList<>();
-        List<VenueFloor> floors   = venue.getFloors();
+        List<VenueFloor> floors   = venue.getFloors().sort("number");
         for(VenueFloor floor: floors){
             List<VenueRoom> results = floor.getRooms();
             List<NamedDTO> dtos = createDTOList(results, NamedDTO.class);

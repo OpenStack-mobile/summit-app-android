@@ -15,6 +15,7 @@ public class VenueFloor extends RealmObject implements INamedEntity {
     private String pictureUrl;
     private String description;
     private Venue venue;
+    private int number;
 
     public RealmList<VenueRoom> getRooms() {
         if(rooms == null) rooms = new RealmList<>();
@@ -25,7 +26,6 @@ public class VenueFloor extends RealmObject implements INamedEntity {
         this.rooms = rooms;
     }
 
-    private int number;
     private RealmList<VenueRoom> rooms = new RealmList<>();
 
     public String getPictureUrl() {
