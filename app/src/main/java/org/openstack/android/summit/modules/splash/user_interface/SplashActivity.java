@@ -59,6 +59,9 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     @BindView(R.id.summit_days_left_container)
     LinearLayout summitDaysLeftContainer;
 
+    @BindView(R.id.day_left_label)
+    TextView dayLeftLabel;
+
     @BindView(R.id.day_until_1)
     TextView dayUntil1Text;
 
@@ -221,5 +224,11 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     public void setSummitDaysLeftContainerVisibility(boolean visible) {
         if(summitDaysLeftContainer == null) return;
         summitDaysLeftContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void setDayLeftLabel(String label){
+        if(dayLeftLabel == null) return;
+        dayLeftLabel.setText(label);
     }
 }

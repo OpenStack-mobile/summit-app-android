@@ -12,6 +12,8 @@ import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.openstack.android.summit.OpenStackSummitApplication;
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.SummitDTO;
@@ -171,6 +173,7 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
                 if (summit.isNotStarted()) {
 
                     int daysLeft = summit.getDaysLeft();
+
                     if (daysLeft > 0) {
                         view.setSummitDaysLeftContainerVisibility(true);
                         char[] days = String.valueOf(daysLeft).toCharArray();
@@ -188,6 +191,11 @@ public class SplashPresenter extends BasePresenter<ISplashView, ISplashInteracto
                             }
                             ++index;
                         }
+                        String label = daysLeft == 1 ?
+                                OpenStackSummitApplication.context.getString(R.string.splash_day_left_label):
+                                OpenStackSummitApplication.context.getString(R.string.splash_days_left_label);
+
+                        view.setDayLeftLabel(label);
                     }
                     return;
                 }

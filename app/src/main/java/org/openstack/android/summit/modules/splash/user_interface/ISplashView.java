@@ -30,4 +30,6 @@ public interface ISplashView extends IBaseView {
     void setSummitCurrentDayContainerVisibility(boolean visible);
 
     void setSummitCurrentDay(String day);
+
+    void setDayLeftLabel(String label);
 }
