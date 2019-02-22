@@ -117,7 +117,7 @@ public class ScheduleFragment<P extends ISchedulePresenter>
             presenter.reloadSchedule(date.getDayOfMonth());
         });
 
-        nowButton.setOnClickListener(view1 -> presenter.gotoNowOnSchedule());
+        nowButton.setOnClickListener(view1 -> presenter.gotoNowOnSchedule(true));
 
         return view;
     }

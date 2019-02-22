@@ -11,6 +11,8 @@ public interface ISchedulePresenter<V extends IScheduleView> extends IScheduleLi
 
     void setRangerState();
 
+    void gotoNowOnSchedule(boolean isFromButton);
+
     void gotoNowOnSchedule();
 }
 

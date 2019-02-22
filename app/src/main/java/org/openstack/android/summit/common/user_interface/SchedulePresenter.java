@@ -195,7 +195,12 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
     }
 
     @Override
-    public void gotoNowOnSchedule() {
+    public void gotoNowOnSchedule(){
+        this.gotoNowOnSchedule(false);
+    }
+
+    @Override
+    public void gotoNowOnSchedule(boolean isFromButton){
         currentSummit = interactor.getActiveSummit();
         if (currentSummit == null) return;
         int summitCurrentDay = currentSummit.getCurrentLocalTime().withTime(0, 0, 0, 0).getDayOfMonth();
@@ -203,8 +208,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
         reloadSchedule(summitCurrentDay);
 
-
-        if(this.dayEvents == null || this.dayEvents.isEmpty()){
+        if((this.dayEvents == null || this.dayEvents.isEmpty()) && isFromButton){
             AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended));
             if(dialog != null) dialog.show();
             return;
@@ -252,7 +256,7 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             candidatePos = candidatePosFallback;
         }
 
-        if(candidatePos < 0){
+        if(candidatePos < 0 && isFromButton){
             // if all events finished then set last one as current one
             view.setListPosition(dayEvents.size() - 1);
             AlertDialog dialog = AlertsBuilder.buildValidationError(view.getFragmentActivity(), view.getResources().getString(R.string.error_events_has_ended));
@@ -278,7 +282,8 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
             currentSummit = interactor.getActiveSummit();
             // called only in case that we are doing a filtering, we need to set the ranger state again
             setRangerState();
-            // show now the first time that activity is created
+            // go to summit current day the first time that activity is created if we are on summit
+            // time
             if(currentSummit != null && currentSummit.isCurrentDateTimeInsideSummitRange() && shouldShowNow){
                 gotoNowOnSchedule();
                 shouldShowNow = false;

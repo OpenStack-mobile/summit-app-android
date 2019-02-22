@@ -93,7 +93,6 @@ public class SpeakerPresentationsPresenter
 
     @Override
     public void onResume() {
-        this.shouldShowNow = false;
         super.onResume();
     }
 

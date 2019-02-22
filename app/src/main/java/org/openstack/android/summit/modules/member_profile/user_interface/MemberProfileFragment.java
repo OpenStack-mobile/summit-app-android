@@ -35,6 +35,7 @@ public class MemberProfileFragment
         IMemberProfileView {
 
     protected Unbinder unbinder;
+    public static boolean showAlert = true;
 
     @Inject
     PersonalScheduleFragment personalScheduleFragment;

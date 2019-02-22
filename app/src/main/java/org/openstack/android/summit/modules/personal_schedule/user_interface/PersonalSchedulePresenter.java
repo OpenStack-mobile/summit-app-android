@@ -38,7 +38,6 @@ public class PersonalSchedulePresenter
 
     @Override
     public void onResume() {
-        this.shouldShowNow = false;
         super.onResume();
     }
 
