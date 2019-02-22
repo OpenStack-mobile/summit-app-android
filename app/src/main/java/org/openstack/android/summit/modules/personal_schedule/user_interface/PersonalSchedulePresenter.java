@@ -93,7 +93,7 @@ public class PersonalSchedulePresenter
                         scheduleItemDTO.getAllowFeedback(),
                         scheduleItemDTO.isToRecord(),
                         true,
-                        false
+                        true
                 );
     }
 }
