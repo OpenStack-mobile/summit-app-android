@@ -21,6 +21,8 @@ import org.openstack.android.summit.common.DTOs.SummitDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
 import org.openstack.android.summit.common.IScheduleWireframe;
 import org.openstack.android.summit.common.business_logic.IScheduleInteractor;
+import org.openstack.android.summit.common.filters.DateRangeCondition;
+import org.openstack.android.summit.common.filters.FilterConditionsBuilder;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
 
 import java.util.ArrayList;
@@ -307,29 +309,10 @@ public abstract class SchedulePresenter<V extends IScheduleView, I extends ISche
 
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
 
-        List<Integer> filtersOnEventTypes  = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
-        List<Integer> filtersOnTracks      = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tracks);
-        List<Integer> filterOnRooms        = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Rooms);
-        List<Integer> filtersOnSummitTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String>  filtersOnLevels      = (List<String>)  (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String>  filtersOnTags        = (List<String>)  (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
-        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
-
         List<DateTime> inactiveDates = interactor.getDatesWithoutEvents
         (
-            startDate,
-            endDate,
-            filtersOnEventTypes,
-            filtersOnSummitTypes,
-            null,
-            filtersOnTracks,
-            filtersOnTags,
-            filtersOnLevels,
-            filterOnRooms,
-            showVideoTalks
+            FilterConditionsBuilder.build(new DateRangeCondition(startDate, endDate), scheduleFilter)
         );
-
         return inactiveDates;
     }
 

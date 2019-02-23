@@ -6,6 +6,8 @@ import org.joda.time.DateTime;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
+import org.openstack.android.summit.common.filters.DateRangeCondition;
+import org.openstack.android.summit.common.filters.FilterConditionsBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
@@ -62,34 +64,20 @@ public class LevelSchedulePresenter
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, ILevelScheduleInteractor interactor) {
 
-        List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
-        List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
-        List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels       = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags         = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
+        List<String> filtersOnLevels= (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
 
         if (filtersOnLevels != null && filtersOnLevels.size() > 0 && !filtersOnLevels.contains(level)) {
             return new ArrayList<>();
         }
 
-        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
-        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
-
+        filtersOnLevels.clear();
+        filtersOnLevels.add(level);
 
         ArrayList<String> levels = new ArrayList<>();
         levels.add(level);
+
         List<ScheduleItemDTO> summitEvents = interactor.getScheduleEvents(
-                startDate,
-                endDate,
-                filtersOnEventTypes,
-                filtersOnSummitTypes,
-                filtersOnTrackGroups,
-                null,
-                filtersOnTags,
-                levels,
-                filtersOnVenues,
-                showVideoTalks
+            FilterConditionsBuilder.build(new DateRangeCondition(startDate, endDate), scheduleFilter)
         );
 
         return summitEvents;
@@ -98,33 +86,21 @@ public class LevelSchedulePresenter
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
 
-        List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
-        List<Integer> filtersOnTrackGroups = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
-        List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels       = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags         = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnVenues      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
-        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
-        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
+        List<String> filtersOnLevels= (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
 
         if (filtersOnLevels != null && filtersOnLevels.size() > 0 && !filtersOnLevels.contains(level)) {
             return new ArrayList<>();
         }
 
+        filtersOnLevels.clear();
+        filtersOnLevels.add(level);
+
         ArrayList<String> levels = new ArrayList<>();
         levels.add(level);
 
         List<DateTime> inactiveDates = interactor.getDatesWithoutEvents(
-                startDate,
-                endDate,
-                filtersOnEventTypes,
-                filtersOnSummitTypes,
-                filtersOnTrackGroups,
-                null,
-                filtersOnTags,
-                levels,
-                filtersOnVenues,
-                showVideoTalks);
+            FilterConditionsBuilder.build(new DateRangeCondition(startDate, endDate), scheduleFilter)
+        );
 
         return inactiveDates;
     }

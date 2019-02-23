@@ -14,7 +14,9 @@ import org.openstack.android.summit.common.security.ISecurityManager;
 /**
  * Created by Claudio Redi on 12/21/2015.
  */
-public class GeneralScheduleInteractor extends ScheduleInteractor implements IGeneralScheduleInteractor {
+public class GeneralScheduleInteractor
+        extends ScheduleInteractor
+        implements IGeneralScheduleInteractor {
 
     public GeneralScheduleInteractor
     (

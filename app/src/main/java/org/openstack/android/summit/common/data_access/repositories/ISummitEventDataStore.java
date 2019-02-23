@@ -3,6 +3,9 @@ package org.openstack.android.summit.common.data_access.repositories;
 import org.joda.time.DateTime;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.filters.DateRangeCondition;
+import org.openstack.android.summit.common.filters.FilterConditions;
+
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -12,7 +15,9 @@ import io.reactivex.Observable;
  */
 public interface ISummitEventDataStore extends IGenericDataStore<SummitEvent> {
 
-    List<SummitEvent> getByFilter(DateTime startDate, DateTime endDate, List<Integer> eventTypes, List<Integer> summitTypes, List<Integer> trackGroups, List<Integer> tracks, List<String> tags, List<String> levels, List<Integer> venues, boolean showVideoTalks);
+    List<SummitEvent> getByFilter(FilterConditions conditions);
+
+    List<SummitEvent> getByFilter(DateRangeCondition dateRangeCondition, FilterConditions conditions);
 
     List<String> getPresentationLevels();
 
@@ -33,4 +38,8 @@ public interface ISummitEventDataStore extends IGenericDataStore<SummitEvent> {
     long countBySummitType(int sumitTypeId);
 
     long countByLevel(String level);
+
+    boolean existEventsOnRoom(int roomId);
+
+    boolean existEventsOnVenue(int venueId);
 }

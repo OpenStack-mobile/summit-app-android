@@ -2,6 +2,7 @@ package org.openstack.android.summit.modules.general_schedule_filter.user_interf
 
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
+import org.openstack.android.summit.common.DTOs.VenueFilterDTO;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface IGeneralScheduleFilterView extends IBaseView {
 
     void showEventTypes(List<NamedDTO> eventTypes);
 
-    void showVenues(List<NamedDTO> venues);
+    void showVenues(List<VenueFilterDTO> venues);
 
     void showLevels(List<String> levels);
 

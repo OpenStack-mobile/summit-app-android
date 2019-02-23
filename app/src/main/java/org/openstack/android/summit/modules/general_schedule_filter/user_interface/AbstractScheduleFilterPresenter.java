@@ -61,35 +61,39 @@ public abstract class AbstractScheduleFilterPresenter<V extends IBaseView>
     }
 
     protected void buildFilterItem(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, boolean showCircle, MultiFilterSection filterSection, int position) {
-        FilterSectionItem filterItem = filterSection.getItems().get(position);
-        boolean isItemSelected = isItemSelected(filterSection.getType(), filterItem.getId());
-        item.setText(filterItem.getName());
-        item.setIsSelected(isItemSelected);
-        item.setCircleColor(isItemSelected ? selectedColor : unselectedColor);
-        item.setShowCircle(showCircle);
+        this.view.runOnUiThread(() -> {
+            FilterSectionItem filterItem = filterSection.getItems().get(position);
+            boolean isItemSelected = isItemSelected(filterSection.getType(), filterItem.getId());
+            item.setText(filterItem.getName());
+            item.setIsSelected(isItemSelected);
+            item.setCircleColor(isItemSelected ? selectedColor : unselectedColor);
+            item.setShowCircle(showCircle);
+        });
     }
 
     public void toggleSelection(IGeneralScheduleFilterItemView item, int selectedColor, int unselectedColor, MultiFilterSection filterSection, int position) {
-        FilterSectionItem filterItem = filterSection.getItems().get(position);
-        if (isItemSelected(filterSection.getType(), filterItem.getId())) {
-            int filterItemPosition = 0;
-            boolean found = false;
-            int id;
-            while (!found) {
-                id = (int) scheduleFilter.getSelections().get(filterSection.getType()).get(filterItemPosition);
-                if (id == filterItem.getId()) {
-                    found = true;
-                } else {
-                    filterItemPosition++;
+        this.view.runOnUiThread(() -> {
+            FilterSectionItem filterItem = filterSection.getItems().get(position);
+            if (isItemSelected(filterSection.getType(), filterItem.getId())) {
+                int filterItemPosition = 0;
+                boolean found = false;
+                int id;
+                while (!found) {
+                    id = (int) scheduleFilter.getSelections().get(filterSection.getType()).get(filterItemPosition);
+                    if (id == filterItem.getId()) {
+                        found = true;
+                    } else {
+                        filterItemPosition++;
+                    }
                 }
-            }
 
-            scheduleFilter.getSelections().get(filterSection.getType()).remove(filterItemPosition);
-            item.setIsSelected(false);
-        } else {
-            scheduleFilter.getSelections().get(filterSection.getType()).add(filterItem.getId());
-            item.setIsSelected(true);
-        }
+                scheduleFilter.getSelections().get(filterSection.getType()).remove(filterItemPosition);
+                item.setIsSelected(false);
+            } else {
+                scheduleFilter.getSelections().get(filterSection.getType()).add(filterItem.getId());
+                item.setIsSelected(true);
+            }
+        });
     }
 
 

@@ -2,15 +2,12 @@ package org.openstack.android.summit.modules.general_schedule_filter.user_interf
 
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.DTOs.TrackDTO;
 
 import java.util.List;
 
@@ -20,7 +17,7 @@ import java.util.List;
 
 public class GeneralScheduleFilterItemNavigationView
         extends GeneralScheduleFilterItemView
-    implements IGeneralScheduleFilterItemNavigationView
+        implements IGeneralScheduleFilterItemNavigationView
 {
 
     public GeneralScheduleFilterItemNavigationView(View view) {

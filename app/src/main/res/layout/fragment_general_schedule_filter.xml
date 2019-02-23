@@ -10,8 +10,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <com.linearlistview.LinearListView
+            <org.openstack.android.summit.common.user_interface.NonScrollListView
                 android:id="@+id/filter_summit_types_list"
                 style="@style/AppTheme.FilterSectionList" />
 
@@ -79,7 +78,7 @@
                     android:text="@string/track_groups"
                     />
             </LinearLayout>
-            <com.linearlistview.LinearListView
+            <org.openstack.android.summit.common.user_interface.NonScrollListView
                 android:id="@+id/filter_track_groups_list"
                 style="@style/AppTheme.FilterSectionList" />
 
@@ -88,7 +87,7 @@
                     style="@style/AppTheme.SubsectionHeaderFilter.Text"
                     android:text="@string/levels"/>
             </LinearLayout>
-            <com.linearlistview.LinearListView
+            <org.openstack.android.summit.common.user_interface.NonScrollListView
                 android:id="@+id/filter_levels_list"
                 style="@style/AppTheme.FilterSectionList" />
 
@@ -98,7 +97,7 @@
                     style="@style/AppTheme.SubsectionHeaderFilter.Text"
                     android:text="@string/venues"/>
             </LinearLayout>
-            <com.linearlistview.LinearListView
+            <org.openstack.android.summit.common.user_interface.NonScrollListView
                 android:id="@+id/filter_venues_list"
                 style="@style/AppTheme.FilterSectionList" />
         </LinearLayout>

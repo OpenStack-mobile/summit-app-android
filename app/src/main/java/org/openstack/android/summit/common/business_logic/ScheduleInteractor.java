@@ -9,6 +9,8 @@ import org.openstack.android.summit.common.data_access.repositories.IMemberDataS
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
 import org.openstack.android.summit.common.entities.SummitEvent;
+import org.openstack.android.summit.common.filters.DateRangeCondition;
+import org.openstack.android.summit.common.filters.FilterConditions;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.push_notifications.IPushNotificationsManager;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -57,31 +59,13 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     @Override
     public List<ScheduleItemDTO> getScheduleEvents
     (
-            DateTime startDate,
-            DateTime endDate,
-            List<Integer> eventTypes,
-            List<Integer> summitTypes,
-            List<Integer> trackGroups,
-            List<Integer> tracks,
-            List<String> tags,
-            List<String> levels,
-            List<Integer> rooms,
-            boolean showVideoTalks
+            FilterConditions conditions
     )
     {
         return postProcessScheduleEventList(createDTOList(
                 summitEventDataStore.getByFilter
                         (
-                                startDate,
-                                endDate,
-                                eventTypes,
-                                summitTypes,
-                                trackGroups,
-                                tracks,
-                                tags,
-                                levels,
-                                rooms,
-                                showVideoTalks
+                                conditions
                         ),
                 ScheduleItemDTO.class
         ));
@@ -90,32 +74,21 @@ public class ScheduleInteractor extends ScheduleableInteractor implements ISched
     @Override
     public List<DateTime> getDatesWithoutEvents
     (
-            DateTime startDate,
-            DateTime endDate,
-            List<Integer> eventTypes,
-            List<Integer> summitTypes,
-            List<Integer> trackGroups,
-            List<Integer> tracks,
-            List<String> tags,
-            List<String> levels,
-            List<Integer> rooms,
-            boolean showVideoTalks
+            FilterConditions conditions
     ) {
         ArrayList<DateTime> inactiveDates = new ArrayList<>();
         List<SummitEvent> events;
-
+        DateTime startDate = conditions.getStartDate();
+        DateTime endDate   = conditions.getEndDate();
         while (startDate.isBefore(endDate)) {
-            events = summitEventDataStore.getByFilter(
-                    startDate.withTime(0, 0, 0, 0),
-                    startDate.withTime(23, 59, 59, 999),
-                    eventTypes,
-                    summitTypes,
-                    trackGroups,
-                    tracks,
-                    tags,
-                    levels,
-                    rooms,
-                    showVideoTalks);
+            events = summitEventDataStore.getByFilter
+                    (
+                        new DateRangeCondition(
+                            startDate.withTime(0, 0, 0, 0),
+                            startDate.withTime(23, 59, 59, 999)
+                        ),
+                        conditions
+                    );
             if (events.size() == 0) {
                 inactiveDates.add(startDate);
             }

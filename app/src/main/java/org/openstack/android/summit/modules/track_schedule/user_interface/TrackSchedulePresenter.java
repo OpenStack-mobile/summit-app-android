@@ -7,14 +7,14 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
+import org.openstack.android.summit.common.filters.DateRangeCondition;
+import org.openstack.android.summit.common.filters.FilterConditionsBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
 import org.openstack.android.summit.common.user_interface.SchedulePresenter;
 import org.openstack.android.summit.modules.general_schedule_filter.user_interface.FilterSectionType;
 import org.openstack.android.summit.modules.track_schedule.ITrackScheduleWireframe;
 import org.openstack.android.summit.modules.track_schedule.business_logic.ITrackScheduleInteractor;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,28 +56,11 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, ITrackScheduleInteractor interactor) {
 
-        List<Integer> filtersOnEventTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
-        List<Integer> filtersOnTrackGroups = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
-        List<Integer> filtersOnSummitTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnVenues = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
-        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
-        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
+        scheduleFilter.getSelections().get(FilterSectionType.Tracks).clear();
+        scheduleFilter.getSelections().get(FilterSectionType.Tracks).add(trackId);
 
-        ArrayList<Integer> tracks = new ArrayList<>();
-        tracks.add(trackId);
         List<ScheduleItemDTO> summitEvents = interactor.getScheduleEvents(
-                startDate,
-                endDate,
-                filtersOnEventTypes,
-                filtersOnSummitTypes,
-                filtersOnTrackGroups,
-                tracks,
-                filtersOnTags,
-                filtersOnLevels,
-                filtersOnVenues,
-                showVideoTalks
+                FilterConditionsBuilder.build(new DateRangeCondition(startDate, endDate), scheduleFilter)
         );
 
         return summitEvents;
@@ -85,31 +68,13 @@ public class TrackSchedulePresenter extends SchedulePresenter<ITrackScheduleView
 
     @Override
     protected List<DateTime> getDatesWithoutEvents(DateTime startDate, DateTime endDate) {
-        List<Integer> filtersOnEventTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
-        List<Integer> filtersOnTrackGroups = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.TrackGroup);
-        List<Integer> filtersOnSummitTypes = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String> filtersOnLevels = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String> filtersOnTags = (List<String>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnVenues = (List<Integer>) (List<?>) scheduleFilter.getSelections().get(FilterSectionType.Venues);
-        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
-        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
+        scheduleFilter.getSelections().get(FilterSectionType.Tracks).clear();
+        scheduleFilter.getSelections().get(FilterSectionType.Tracks).add(trackId);
 
-        ArrayList<Integer> tracks = new ArrayList<>();
-        tracks.add(trackId);
-
-        List<DateTime> inactiveDates = interactor.getDatesWithoutEvents(
-                startDate,
-                endDate,
-                filtersOnEventTypes,
-                filtersOnSummitTypes,
-                filtersOnTrackGroups,
-                tracks,
-                filtersOnTags,
-                filtersOnLevels,
-                filtersOnVenues,
-                showVideoTalks
-                );
-
+        List<DateTime> inactiveDates = interactor.getDatesWithoutEvents
+        (
+            FilterConditionsBuilder.build(new DateRangeCondition(startDate, endDate), scheduleFilter)
+        );
         return inactiveDates;
     }
 

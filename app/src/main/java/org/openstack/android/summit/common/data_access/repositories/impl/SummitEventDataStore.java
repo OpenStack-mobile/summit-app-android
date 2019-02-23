@@ -12,6 +12,8 @@ import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
+import org.openstack.android.summit.common.filters.DateRangeCondition;
+import org.openstack.android.summit.common.filters.FilterConditions;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
@@ -19,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Case;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -88,38 +89,45 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
     }
 
     @Override
-    public List<SummitEvent> getByFilter
-    (
-        DateTime startDate,
-        DateTime endDate,
-        List<Integer> eventTypes,
-        List<Integer> summitTypes,
-        List<Integer> trackGroups,
-        List<Integer> tracks,
-        List<String> tags,
-        List<String> levels,
-        List<Integer> rooms,
-        boolean showVideoTalks
-    )
-    {
+    public List<SummitEvent> getByFilter(FilterConditions conditions){
+        return getByFilter(new DateRangeCondition(conditions.getStartDate(), conditions.getEndDate()), conditions);
+    }
 
+    @Override
+    public boolean existEventsOnRoom(int roomId){
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
+        query   = query.equalTo("venueRoom.id", roomId);
+        return query.count() > 0;
+    }
+
+    @Override
+    public boolean existEventsOnVenue(int venueId){
+        RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class);
+        query = query.equalTo("venueRoom.venue.id", venueId);
+        query = query.or();
+        query = query.equalTo("venue.id", venueId);
+        return query.count() > 0;
+    }
+
+    @Override
+    public List<SummitEvent> getByFilter(DateRangeCondition dateRangeCondition, FilterConditions conditions){
         RealmQuery<SummitEvent> query = RealmFactory.getSession().where(SummitEvent.class)
-                .greaterThanOrEqualTo("end", startDate.toDate())
-                .lessThanOrEqualTo("end", endDate.toDate());
+                .greaterThanOrEqualTo("end", dateRangeCondition.getStartDate().toDate())
+                .lessThanOrEqualTo("end", dateRangeCondition.getEndDate().toDate());
 
         boolean isFirst;
         Member currentMember = securityManager.getCurrentMember();
 
         isFirst = true;
-        if (eventTypes != null) {
+        if (conditions.getEventTypes() != null) {
             query.beginGroup();
-                for (int eventTypeId : eventTypes) {
-                    if (!isFirst) {
-                        query = query.or();
-                    }
-                    query = query.equalTo("type.id", eventTypeId);
-                    isFirst = false;
+            for (int eventTypeId : conditions.getEventTypes() ) {
+                if (!isFirst) {
+                    query = query.or();
                 }
+                query = query.equalTo("type.id", eventTypeId);
+                isFirst = false;
+            }
             query.endGroup();
         }
 
@@ -128,23 +136,23 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         }
         else{
             query.beginGroup();
-                query = query.in("class_name", new String[]{
-                        ISummitEventType.Type.SummitEvent.toString(),
-                        ISummitEventType.Type.Presentation.toString(),
-                        ISummitEventType.Type.SummitEventWithFile.toString()
-                });
-                query = query.or();
-                    query.beginGroup();
-                        query = query.equalTo("class_name", ISummitEventType.Type.SummitGroupEvent.toString());
-                        query = query.equalTo("groupEvent.owner.id", currentMember.getId());
-                    query.endGroup();
+            query = query.in("class_name", new String[]{
+                    ISummitEventType.Type.SummitEvent.toString(),
+                    ISummitEventType.Type.Presentation.toString(),
+                    ISummitEventType.Type.SummitEventWithFile.toString()
+            });
+            query = query.or();
+            query.beginGroup();
+            query = query.equalTo("class_name", ISummitEventType.Type.SummitGroupEvent.toString());
+            query = query.equalTo("groupEvent.owner.id", currentMember.getId());
+            query.endGroup();
             query.endGroup();
         }
 
         isFirst = true;
-        if (tags != null) {
+        if (conditions.getTags() != null) {
             query.beginGroup();
-            for (String tag : tags) {
+            for (String tag : conditions.getTags() ) {
                 if (!isFirst) {
                     query = query.or();
                 }
@@ -155,9 +163,9 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         }
 
         isFirst = true;
-        if (summitTypes != null) {
+        if (conditions.getSummitTypes() != null) {
             query.beginGroup();
-            for (int summitTypeId : summitTypes) {
+            for (int summitTypeId : conditions.getSummitTypes()) {
                 if (!isFirst) {
                     query = query.or();
                 }
@@ -168,9 +176,9 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         }
 
         isFirst = true;
-        if (levels != null) {
+        if (conditions.getLevels() != null) {
             query.beginGroup();
-            for (String level : levels) {
+            for (String level : conditions.getLevels()) {
                 if (!isFirst) {
                     query = query.or();
                 }
@@ -181,9 +189,9 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         }
 
         isFirst = true;
-        if (tracks != null) {
+        if (conditions.getTracks() != null) {
             query.beginGroup();
-            for (int trackId : tracks) {
+            for (int trackId : conditions.getTracks()) {
                 if (!isFirst) {
                     query = query.or();
                 }
@@ -194,9 +202,9 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
         }
 
         isFirst = true;
-        if (trackGroups != null) {
+        if (conditions.getTrackGroups() != null) {
             query.beginGroup();
-            for (int trackGroupId : trackGroups) {
+            for (int trackGroupId : conditions.getTrackGroups() ) {
                 if (!isFirst) {
                     query = query.or();
                 }
@@ -206,26 +214,38 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
             query.endGroup();
         }
 
+        // venues and rooms
         isFirst = true;
-        if (rooms != null) {
+        if (conditions.getRooms() != null || conditions.getVenues() != null) {
             query.beginGroup();
-            for (int roomId : rooms) {
+
+            for (int roomId : conditions.getRooms() ) {
                 if (!isFirst) {
                     query = query.or();
                 }
                 query   = query.equalTo("venueRoom.id", roomId);
                 isFirst = false;
             }
+
+            for (int venueId : conditions.getVenues()) {
+                if (!isFirst) {
+                    query = query.or();
+                }
+                query = query.equalTo("venueRoom.venue.id", venueId);
+                query = query.or();
+                query = query.equalTo("venue.id", venueId);
+                isFirst = false;
+            }
+
             query.endGroup();
         }
 
-        if(showVideoTalks){
+        if(conditions.isShowVideoTalks() ){
             query = query.isNotEmpty("presentation.videos");
         }
 
         return query.findAllSorted(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
     }
-
 
     @Override
     public List<String> getPresentationLevels() {

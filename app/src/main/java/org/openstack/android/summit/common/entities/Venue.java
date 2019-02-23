@@ -22,12 +22,29 @@ public class Venue extends RealmObject implements INamedEntity, ISummitOwned {
     private Boolean isInternal;
     private RealmList<Image> maps        = new RealmList<>();
     private RealmList<Image> images      = new RealmList<>();
+    private RealmList<VenueRoom> rooms   = new RealmList<>();
     private RealmList<VenueFloor> floors = new RealmList<>();
     private Summit summit;
 
     public RealmList<VenueFloor> getFloors() {
         if(floors == null) floors = new RealmList<>();
         return floors;
+    }
+
+    public boolean hasRooms(){
+        if(rooms.size() > 0) return true;
+        if(floors.size() > 0){
+            for(VenueFloor floor:floors){
+                if(floor.getRooms().size() > 0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public RealmList<VenueRoom> getRooms() {
+        if(rooms == null) rooms = new RealmList<>();
+        return rooms;
     }
 
     public void setFloors(RealmList<VenueFloor> floors) {

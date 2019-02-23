@@ -179,8 +179,14 @@ public class DataAccessModule {
     }
 
     @Provides
-    IVenueDeserializer providesVenueDeserializer(IGenericDeserializer genericDeserializer, IVenueFloorDeserializer venueFloorDeserializer) {
-        return new VenueDeserializer(genericDeserializer, venueFloorDeserializer);
+    IVenueDeserializer providesVenueDeserializer
+    (
+            IGenericDeserializer genericDeserializer,
+            IVenueFloorDeserializer venueFloorDeserializer,
+            IVenueRoomDeserializer venueRoomDeserializer
+    )
+    {
+        return new VenueDeserializer(genericDeserializer, venueFloorDeserializer, venueRoomDeserializer);
     }
 
     @Provides

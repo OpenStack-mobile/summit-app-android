@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Switch;
 
 import com.linearlistview.LinearListView;
@@ -14,7 +15,9 @@ import com.linearlistview.LinearListView;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
+import org.openstack.android.summit.common.DTOs.VenueFilterDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
+import org.openstack.android.summit.common.user_interface.NonScrollListView;
 
 import java.util.List;
 
@@ -43,11 +46,12 @@ public class GeneralScheduleFilterFragment
         getComponent().inject(this);
         super.onCreate(savedInstanceState);
     }
+
     @BindView(R.id.filter_summit_types_list)
-    LinearListView summitTypesList;
+    NonScrollListView summitTypesList;
 
     @BindView(R.id.filter_track_groups_list)
-    LinearListView trackGroupList;
+    NonScrollListView trackGroupList;
 
     @BindView(R.id.hide_past_talks)
     Switch hidePastTalks;
@@ -56,7 +60,7 @@ public class GeneralScheduleFilterFragment
     Switch showVideoTalks;
 
     @BindView(R.id.filter_levels_list)
-    LinearListView levelList;
+    NonScrollListView levelList;
 
     @BindView(R.id.hide_past_talks_header)
     LinearLayout pastTalksHeader;
@@ -68,7 +72,7 @@ public class GeneralScheduleFilterFragment
     LinearLayout venuesHeader;
 
     @BindView(R.id.filter_venues_list)
-    LinearListView venuesList;
+    NonScrollListView venuesList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -161,7 +165,7 @@ public class GeneralScheduleFilterFragment
     }
 
     @Override
-    public void showVenues(List<NamedDTO> venues) {
+    public void showVenues(List<VenueFilterDTO> venues) {
         venueListAdapter.clear();
         venueListAdapter.addAll(venues);
     }
@@ -227,7 +231,7 @@ public class GeneralScheduleFilterFragment
         }
     }
 
-    private class VenueListAdapter extends ArrayAdapter<NamedDTO> {
+    private class VenueListAdapter extends ArrayAdapter<VenueFilterDTO> {
 
         public VenueListAdapter(Context context) {
             super(context, 0);
@@ -237,12 +241,16 @@ public class GeneralScheduleFilterFragment
         public View getView(final int position, View convertView, ViewGroup parent) {
 
             // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_filter_arrow_list, parent, false);
-            }
+            VenueFilterDTO venueFilterDTO = this.getItem(position);
+            convertView = venueFilterDTO.isHasRooms() ?
+                    LayoutInflater.from(getContext()).inflate(R.layout.item_filter_arrow_list, parent, false):
+                    LayoutInflater.from(getContext()).inflate(R.layout.item_filter_list, parent, false);
 
-            //GeneralScheduleFilterItemView generalScheduleFilterItemView = new GeneralScheduleFilterItemView(convertView);
-            GeneralScheduleFilterItemNavigationView generalScheduleFilterItemView = new GeneralScheduleFilterItemNavigationView(convertView);
+            GeneralScheduleFilterItemView generalScheduleFilterItemView =
+                    venueFilterDTO.isHasRooms() ?
+                            new GeneralScheduleFilterItemNavigationView(convertView):
+                            new GeneralScheduleFilterItemView(convertView);
+
             presenter.buildVenueFilterItem(generalScheduleFilterItemView, position);
 
             generalScheduleFilterItemView.setItemCallback(isChecked -> {
@@ -306,6 +314,7 @@ public class GeneralScheduleFilterFragment
             generalScheduleFilterItemView.setItemCallback(isChecked -> {
                 presenter.toggleSelectionLevel(generalScheduleFilterItemView, position);
             });
+
             // Return the completed view to render on screen
             return convertView;
         }

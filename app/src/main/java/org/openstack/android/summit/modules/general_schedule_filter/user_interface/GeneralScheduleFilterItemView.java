@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -26,7 +27,11 @@ public class GeneralScheduleFilterItemView
     public void setItemCallback(OnSelectedItem itemAction){
         this.itemAction = itemAction;
         Switch checkedImageView = (Switch) view.findViewById(R.id.item_filter_checked);
-        checkedImageView.setOnCheckedChangeListener((buttonView, isChecked) -> itemAction.onAction(isChecked));
+        checkedImageView.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if(!buttonView.isPressed()) return;
+                    itemAction.onAction(isChecked);
+                }
+        );
     }
 
     public GeneralScheduleFilterItemView(View view) {

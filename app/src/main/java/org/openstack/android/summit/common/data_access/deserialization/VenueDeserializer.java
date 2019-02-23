@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.openstack.android.summit.common.entities.Image;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
+import org.openstack.android.summit.common.entities.VenueRoom;
 import org.openstack.android.summit.common.utils.RealmFactory;
 
 import javax.inject.Inject;
@@ -18,11 +19,19 @@ import javax.inject.Inject;
 public class VenueDeserializer extends BaseDeserializer implements IVenueDeserializer {
     IGenericDeserializer genericDeserializer;
     IVenueFloorDeserializer venueFloorDeserializer;
+    IVenueRoomDeserializer venueRoomDeserializer;
 
     @Inject
-    public VenueDeserializer(IGenericDeserializer genericDeserializer, IVenueFloorDeserializer venueFloorDeserializer){
+    public VenueDeserializer
+    (
+        IGenericDeserializer genericDeserializer,
+        IVenueFloorDeserializer venueFloorDeserializer,
+        IVenueRoomDeserializer venueRoomDeserializer
+    )
+    {
         this.genericDeserializer    = genericDeserializer;
         this.venueFloorDeserializer = venueFloorDeserializer;
+        this.venueRoomDeserializer  = venueRoomDeserializer;
     }
 
     @Override
@@ -96,6 +105,22 @@ public class VenueDeserializer extends BaseDeserializer implements IVenueDeseria
                 floor           = venueFloorDeserializer.deserialize(jsonObjectFloor.toString());
                 venue.getFloors().add(floor);
                 floor.setVenue(venue);
+            }
+        }
+
+        if(jsonObject.has("rooms")) {
+            VenueRoom room;
+            JSONObject jsonObjectRoom;
+            JSONArray jsonArrayRooms = jsonObject.getJSONArray("rooms");
+            venue.getRooms().clear();
+            for (int i = 0; i < jsonArrayRooms.length(); i++) {
+                jsonObjectRoom = jsonArrayRooms.getJSONObject(i);
+                if(!jsonObjectRoom.has("floor_id")) continue;
+                int floorId    = jsonObjectRoom.getInt("floor_id");
+                if(floorId != 0) continue;
+                room           = venueRoomDeserializer.deserialize(jsonObjectRoom.toString());
+                venue.getRooms().add(room);
+                room.setVenue(venue);
             }
         }
 

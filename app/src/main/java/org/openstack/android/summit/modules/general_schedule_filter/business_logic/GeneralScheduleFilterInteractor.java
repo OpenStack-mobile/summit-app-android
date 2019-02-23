@@ -4,6 +4,7 @@ import org.openstack.android.summit.common.DTOs.Assembler.IDTOAssembler;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.DTOs.TrackDTO;
 import org.openstack.android.summit.common.DTOs.TrackGroupDTO;
+import org.openstack.android.summit.common.DTOs.VenueFilterDTO;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IEventTypeDataStore;
@@ -94,9 +95,9 @@ public class GeneralScheduleFilterInteractor
     }
 
     @Override
-    public List<NamedDTO> getVenues() {
-        List<Venue> venues = venueDataStore.getInternalsBySummit(summitSelector.getCurrentSummitId());
-        return createDTOList(venues, NamedDTO.class);
+    public List<VenueFilterDTO> getVenues() {
+        List<Venue> venues = venueDataStore.getAllBySummit(summitSelector.getCurrentSummitId());
+        return createDTOList(venues, VenueFilterDTO.class);
     }
 
     @Override
@@ -119,6 +120,12 @@ public class GeneralScheduleFilterInteractor
         if(roomsIds.isEmpty()) return false;
         Venue venue = venueDataStore.getById(venueId);
         if(venue == null) return false;
+
+        // rooms without floor
+        for(VenueRoom room:venue.getRooms().sort("name")){
+            if(roomsIds.contains(room.getId()))
+                return true;
+        }
 
         List<VenueFloor> floors   = venue.getFloors();
         for(VenueFloor floor: floors){
@@ -149,11 +156,17 @@ public class GeneralScheduleFilterInteractor
         Venue venue = venueDataStore.getById(venueId);
         if(venue == null) return result;
 
+        // rooms without floor
+        for(VenueRoom room:venue.getRooms().sort("name")){
+            if(!roomsIds.contains(room.getId())) continue;
+            result.add(createDTO(room, NamedDTO.class));
+        }
+
         List<VenueFloor> floors   = venue.getFloors().sort("number");
         for(VenueFloor floor: floors){
             for(VenueRoom  room: floor.getRooms()){
-                if(roomsIds.contains(room.getId()))
-                    result.add(createDTO(room, NamedDTO.class));
+                if(!roomsIds.contains(room.getId())) continue;
+                result.add(createDTO(room, NamedDTO.class));
             }
         }
 
@@ -172,10 +185,21 @@ public class GeneralScheduleFilterInteractor
         Venue venue = venueDataStore.getById(venueId);
         if(venue == null) return new ArrayList<>();
         List<NamedDTO> rooms = new ArrayList<>();
+        // rooms without floor
+        for(VenueRoom room:venue.getRooms().sort("name")){
+            if(!summitEventDataStore.existEventsOnRoom(room.getId())) continue;
+            rooms.add(createDTO(room, NamedDTO.class));
+        }
+        // rooms with floors
         List<VenueFloor> floors   = venue.getFloors().sort("number");
         for(VenueFloor floor: floors){
-            List<VenueRoom> results = floor.getRooms();
-            List<NamedDTO> dtos = createDTOList(results, NamedDTO.class);
+            List<VenueRoom> results = new ArrayList<>();
+            for (VenueRoom roomOnFloor:floor.getRooms()) {
+                if (!summitEventDataStore.existEventsOnRoom(roomOnFloor.getId())) continue;
+                results.add(roomOnFloor);
+            }
+
+            List<NamedDTO> dtos     = createDTOList(results, NamedDTO.class);
             rooms.addAll(dtos);
         }
         return rooms;

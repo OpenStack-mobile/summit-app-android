@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.ScheduleItemDTO;
 import org.openstack.android.summit.common.IScheduleFilter;
+import org.openstack.android.summit.common.filters.DateRangeCondition;
+import org.openstack.android.summit.common.filters.FilterConditionsBuilder;
 import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleItemViewBuilder;
 import org.openstack.android.summit.common.user_interface.IScheduleablePresenter;
@@ -58,25 +60,9 @@ public class GeneralSchedulePresenter
     @Override
     protected List<ScheduleItemDTO> getScheduleEvents(DateTime startDate, DateTime endDate, IGeneralScheduleInteractor interactor) {
 
-        List<Integer> filtersOnEventTypes  = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.EventType);
-        List<Integer> filtersOnTracks      = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Tracks);
-        List<Integer> filtersOnSummitTypes = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.SummitType);
-        List<String>  filtersOnLevels      = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Level);
-        List<String>  filtersOnTags        = (List<String>)(List<?>)  scheduleFilter.getSelections().get(FilterSectionType.Tag);
-        List<Integer> filtersOnRooms       = (List<Integer>)(List<?>) scheduleFilter.getSelections().get(FilterSectionType.Rooms);
-        List<Boolean> filtersOnVideoTalks  = (List<Boolean>)(List<?>)scheduleFilter.getSelections().get(FilterSectionType.ShowVideoTalks);
-        Boolean showVideoTalks             = (filtersOnVideoTalks != null && !filtersOnVideoTalks.isEmpty()) ? filtersOnVideoTalks.get(0) : false;
         List<ScheduleItemDTO> events = interactor.getScheduleEvents(
-                startDate,
-                endDate,
-                filtersOnEventTypes,
-                filtersOnSummitTypes,
-                null,
-                filtersOnTracks,
-                filtersOnTags,
-                filtersOnLevels,
-                filtersOnRooms,
-                showVideoTalks);
+            FilterConditionsBuilder.build(new DateRangeCondition(startDate, endDate), scheduleFilter)
+        );
         return events;
     }
 
