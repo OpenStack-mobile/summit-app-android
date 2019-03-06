@@ -25,12 +25,12 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
 
     @Inject
     public PresentationDeserializer
-    (
-        IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
-        IPresentationLinkDeserializer presentationLinkDeserializer,
-        IPresentationVideoDeserializer presentationVideoDeserializer,
-        IPresentationSlideDeserializer presentationSlideDeserializer
-    ){
+            (
+                    IPresentationSpeakerDeserializer presentationSpeakerDeserializer,
+                    IPresentationLinkDeserializer presentationLinkDeserializer,
+                    IPresentationVideoDeserializer presentationVideoDeserializer,
+                    IPresentationSlideDeserializer presentationSlideDeserializer
+            ){
         this.presentationSpeakerDeserializer = presentationSpeakerDeserializer;
         this.presentationLinkDeserializer    = presentationLinkDeserializer;
         this.presentationVideoDeserializer   = presentationVideoDeserializer;
@@ -72,9 +72,19 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
             presentation.getSpeakers().clear();
             for (int i = 0; i < jsonArraySpeakers.length(); i++) {
                 speakerId = jsonArraySpeakers.optInt(i);
-                presentationSpeaker = (speakerId > 0) ?
-                        RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", speakerId).findFirst() :
-                        presentationSpeakerDeserializer.deserialize(jsonArraySpeakers.getJSONObject(i).toString());
+
+                if(speakerId == 0){
+                    JSONObject speakerJSONObject = jsonArraySpeakers.optJSONObject(i);
+                    speakerId = speakerJSONObject.optInt("id");
+                }
+
+                presentationSpeaker = RealmFactory.getSession().where(PresentationSpeaker.class).equalTo("id", speakerId).findFirst();
+                if(presentationSpeaker == null) {
+                    JSONObject speakerJSONObject = jsonArraySpeakers.optJSONObject(i);
+                    if(speakerJSONObject != null)
+                        presentationSpeaker = presentationSpeakerDeserializer.deserialize(speakerJSONObject.toString());
+                }
+
                 if (presentationSpeaker == null) continue;
                 presentation.getSpeakers().add(presentationSpeaker);
 
