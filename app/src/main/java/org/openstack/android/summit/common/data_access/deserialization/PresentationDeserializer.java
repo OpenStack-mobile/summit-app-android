@@ -64,15 +64,16 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
         if(summit == null)
             throw new JSONException(String.format("Can't deserialize presentation id %d (summit not found)!", presentationId));
 
-
-        if(jsonObject.has("speakers")) {
+        // hosts = speakers + moderators ( all roles )
+        if(jsonObject.has("hosts")) {
             Speaker speaker;
             int speakerId;
             String speakerRole;
 
-            JSONArray jsonArraySpeakers = jsonObject.getJSONArray("speakers");
+            JSONArray jsonArraySpeakers = jsonObject.getJSONArray("hosts");
 
             presentation.getSpeakers().clear();
+
             for (int i = 0; i < jsonArraySpeakers.length(); i++) {
 
                 JSONObject jsonSpeaker = jsonArraySpeakers.getJSONObject(i);
@@ -87,6 +88,7 @@ public class PresentationDeserializer extends BaseDeserializer implements IPrese
                 speaker = RealmFactory.getSession().where(Speaker.class).equalTo("id", speakerId).findFirst();
                 if(speaker == null)
                     speaker = speakerDeserializer.deserialize(jsonSpeaker.toString());
+
                 if (speaker == null) continue;
                 presentation.getSpeakers().add(new PresentationSpeaker(speaker, speakerRole));
 
