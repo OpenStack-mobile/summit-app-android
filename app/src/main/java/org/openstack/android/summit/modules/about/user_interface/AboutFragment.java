@@ -1,10 +1,8 @@
 package org.openstack.android.summit.modules.about.user_interface;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,33 +106,19 @@ public class AboutFragment extends BaseFragment<IAboutPresenter> implements IAbo
         setBuild(String.format(Locale.US, "Build Number %s", pInfo.versionCode));
 
         websiteLink.setOnClickListener(v -> {
-            Uri uri = Uri.parse("https://www.openstack.org/summit");
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+           presenter.redirect2SummitPage();
         });
 
         conductLink.setOnClickListener(v -> {
-            Uri uri = Uri.parse("https://www.openstack.org/code-of-conduct/");
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            presenter.redirect2CodeConductPage();
         });
 
         supportLink.setOnClickListener(v -> {
-            Intent emailIntent = new Intent(Intent.ACTION_SEND);
-            emailIntent.setType("plain/text");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL,new String[] {"summitapp@openstack.org" });
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
-            emailIntent.putExtra(Intent.EXTRA_TEXT,"");
-            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            presenter.redirect2IssueTrackerPage();
         });
 
         inquiriesLink.setOnClickListener(v -> {
-            Intent emailintent = new Intent(Intent.ACTION_SEND);
-            emailintent.setType("plain/text");
-            emailintent.putExtra(Intent.EXTRA_EMAIL,new String[] {"summit@openstack.org" });
-            emailintent.putExtra(Intent.EXTRA_SUBJECT, "");
-            emailintent.putExtra(Intent.EXTRA_TEXT,"");
-            startActivity(Intent.createChooser(emailintent, "Send mail..."));
+           presenter.sendInquireEmail();
         });
 
         presenter.onCreateView(savedInstanceState);

@@ -9,4 +9,12 @@ import org.openstack.android.summit.common.user_interface.WifiItemView;
 public interface IAboutPresenter extends IBasePresenter<IAboutView> {
 
     void buildWifiListItem(WifiItemView wifiItemView, int position);
+
+    void redirect2IssueTrackerPage();
+
+    void redirect2SummitPage();
+
+    void redirect2CodeConductPage();
+
+    void sendInquireEmail();
 }
