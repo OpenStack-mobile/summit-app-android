@@ -143,7 +143,7 @@ android {
         applicationId "org.openstack.android.summit"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 138
+        versionCode 139
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -284,7 +284,7 @@ dependencies {
     }
     if (file('libs/safe_storage_debug.aar').exists()) {
         println('adding dependency safe_storage_debug.aar ...')
-        developmentImplementation "org.openstack.android.summit.safestorage:safe_storage_debug@aar"
+        developmentImplementation "org.openstack.android.summit.safestorage:safe_storage@aar"
     }
     // http://facebook.github.io/stetho and https://github.com/uPhyca/stetho-realm
     implementation 'com.facebook.stetho:stetho:1.5.0'
