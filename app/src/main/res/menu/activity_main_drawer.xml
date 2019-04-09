@@ -5,6 +5,10 @@
         <item android:id="@+id/nav_events"
             android:icon="@drawable/events"
             android:title="@string/nav_item_events" />
+        <item android:id="@+id/nav_my_profile"
+            android:icon="@drawable/ic_check_circle_nav_menu"
+            android:title="@string/nav_item_my_summit"
+            android:visible="false" />
         <item android:id="@+id/nav_venues"
             android:icon="@drawable/venues"
             android:title="@string/nav_item_venues" />
@@ -19,9 +23,5 @@
         <item android:id="@+id/nav_about"
             android:icon="@drawable/about"
             android:title="@string/nav_item_about" />
-        <item android:id="@+id/nav_my_profile"
-            android:icon="@drawable/ic_check_circle_nav_menu"
-            android:title="@string/nav_item_my_summit"
-            android:visible="false" />
     </group>
 </menu>
