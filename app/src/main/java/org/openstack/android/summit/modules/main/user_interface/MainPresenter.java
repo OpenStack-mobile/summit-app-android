@@ -668,7 +668,12 @@ public class MainPresenter
                                                         launchSummitListDataLoadingActivity();
                                                     }
                                             );
-                                            if(dialog != null) dialog.show();
+
+                                            if(!(ctx).isFinishing() && dialog != null)
+                                            {
+                                                dialog.show();
+                                            }
+
                                             return;
                                         }
                                 );
