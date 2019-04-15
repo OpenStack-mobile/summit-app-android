@@ -4,8 +4,10 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -341,8 +343,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             catch(Exception ex){
                 view.stopLoading();
                 Crashlytics.logException(ex);
-                Dialog dialog = AlertsBuilder.buildRawAlert(authActivity.get(), authActivity.get().getResources().getString(R.string.login_error_message));
-                if(dialog != null) dialog.show();
+                Activity ctx = authActivity.get();
+                if(ctx == null) return;
+                Dialog dialog = AlertsBuilder.buildRawAlert(ctx, authActivity.get().getResources().getString(R.string.login_error_message));
+                if(!(ctx).isFinishing() && dialog != null)
+                {
+                    dialog.show();
+                }
                 Log.e(Constants.LOG_TAG, ex.getMessage());
             }
         }
