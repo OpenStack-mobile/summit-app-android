@@ -165,7 +165,8 @@
     <string name="fcm_channel_name">Open Infrastructure Summit</string>
     <string name="fcm_channel_description">Open Infrastructure Summit Notification Channel</string>
     <string name="db_error">DB file got corrupted please reinstall the app and try again.</string>
-    <string name="nav_bar_footer">Powered by Vexxhost</string>
+    <string name="nav_bar_footer1">App Hosting</string>
+    <string name="nav_bar_footer2">Courtesy of VEXXHOST</string>
     <string name="about_website_list_item_title">Summit Website</string>
     <string name="about_code_of_conduct_list_item_title">Code of Conduct</string>
     <string name="about_report_problem_list_item_title">Report a Problem</string>

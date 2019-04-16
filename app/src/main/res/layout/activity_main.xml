@@ -41,14 +41,30 @@
             android:layout_gravity="bottom"
             android:clickable="true"
             android:orientation="vertical">
+
             <TextView
-                android:id="@+id/nav_view_footer"
+                android:id="@+id/nav_view_footer1"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center"
-                android:textColor="@color/openStackGray2"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="@string/nav_bar_footer" />
+                android:gravity="left"
+                android:paddingBottom="5sp"
+                android:paddingLeft="18dp"
+                android:text="@string/nav_bar_footer1"
+                android:textColor="@color/openStackGray2"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/nav_view_footer2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="left"
+                android:paddingBottom="15dp"
+                android:paddingLeft="18dp"
+                android:text="@string/nav_bar_footer2"
+                android:textColor="@color/openStackGray2"
+                android:textSize="15sp" />
         </LinearLayout>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
