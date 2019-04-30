@@ -105,6 +105,13 @@ public class MainActivity
     }
 
     @Override
+    public void onStop() {
+        Log.d(Constants.LOG_TAG, "MainActivity.onStop");
+        super.onStop();
+        presenter.onStop();
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         setupNavigationIcons();

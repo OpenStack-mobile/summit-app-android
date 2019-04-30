@@ -52,7 +52,6 @@ public class DataUpdatesService extends JobIntentService {
         if(SummitDataIngestionService.isRunning()) return;
         // normal flow ...
         dataUpdatePoller.pollServer();
-        RealmFactory.closeSession();
     }
 
     public static void setServiceAlarm(Context context, boolean isOn) {

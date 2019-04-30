@@ -66,4 +66,9 @@ public class BasePresenter<V extends IBaseView, I extends IBaseInteractor, W> im
     public void onStart() {
 
     }
+
+    @Override
+    public void onStop() {
+
+    }
 }

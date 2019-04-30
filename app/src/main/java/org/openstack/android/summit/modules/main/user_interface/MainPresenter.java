@@ -934,6 +934,13 @@ public class MainPresenter
     }
 
     @Override
+    public void onStop(){
+        super.onStop();
+        //close realm session for current thread
+        RealmFactory.closeSession();
+    }
+
+    @Override
     public void onOpenedNavigationMenu() {
 
     }

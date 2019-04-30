@@ -105,6 +105,9 @@ public class DataUpdatePoller extends BaseRemoteDataStore implements IDataUpdate
             Crashlytics.logException(e);
             Log.e(Constants.LOG_TAG, e.getMessage(), e);
         }
+        finally {
+            RealmFactory.closeSession();
+        }
     }
 
     private Call<ResponseBody> getCall(ISummitEntityEventsApi api) {
