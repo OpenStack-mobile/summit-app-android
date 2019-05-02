@@ -1,7 +1,7 @@
 package org.openstack.android.summit.modules.general_schedule.user_interface;
 
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 
 import org.joda.time.DateTime;
 import org.openstack.android.summit.R;

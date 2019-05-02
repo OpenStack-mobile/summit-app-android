@@ -1,6 +1,6 @@
 package org.openstack.android.summit.modules.venues_map;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
@@ -10,7 +10,6 @@ import org.openstack.android.summit.common.DTOs.VenueListItemDTO;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.venue_detail.IVenueDetailWireframe;
-import org.openstack.android.summit.modules.venue_detail.user_interface.VenueDetailFragment;
 import org.openstack.android.summit.modules.venues_map.user_interface.VenuesMapFragment;
 
 /**

@@ -1,6 +1,6 @@
 package org.openstack.android.summit.common.player;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import org.openstack.android.summit.common.player.enums.ThumbnailQuality;
 
 /**

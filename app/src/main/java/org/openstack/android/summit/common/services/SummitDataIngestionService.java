@@ -1,10 +1,9 @@
 package org.openstack.android.summit.common.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.JobIntentService;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.app.JobIntentService;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;

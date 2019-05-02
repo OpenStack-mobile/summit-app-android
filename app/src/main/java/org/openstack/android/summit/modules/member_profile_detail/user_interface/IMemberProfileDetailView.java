@@ -1,7 +1,7 @@
 package org.openstack.android.summit.modules.member_profile_detail.user_interface;
 
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 
 import org.openstack.android.summit.common.user_interface.IBaseView;
 

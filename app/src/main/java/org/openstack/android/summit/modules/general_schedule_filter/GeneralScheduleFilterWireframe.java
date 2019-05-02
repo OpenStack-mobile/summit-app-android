@@ -1,6 +1,6 @@
 package org.openstack.android.summit.modules.general_schedule_filter;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.DTOs.NamedDTO;

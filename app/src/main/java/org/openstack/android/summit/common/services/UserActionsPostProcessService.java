@@ -1,14 +1,13 @@
 package org.openstack.android.summit.common.services;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
-import android.support.v4.app.JobIntentService;
+import androidx.core.app.JobIntentService;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;

@@ -7,14 +7,13 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
-import android.support.v4.app.JobIntentService;
+import androidx.core.app.JobIntentService;
 import android.util.Log;
 import org.openstack.android.summit.OpenStackSummitApplication;
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.data_access.data_polling.IDataUpdatePoller;
 import org.openstack.android.summit.common.network.IReachability;
-import org.openstack.android.summit.common.utils.RealmFactory;
 
 import java.util.concurrent.TimeUnit;
 

@@ -2,9 +2,7 @@ package org.openstack.android.summit;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import androidx.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -14,8 +12,6 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.user_interface.AlertsBuilder;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.dagger.components.ApplicationComponent;
 import org.openstack.android.summit.dagger.modules.ApplicationModule;

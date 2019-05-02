@@ -1,7 +1,7 @@
 package org.openstack.android.summit.modules.venue_detail.user_interface;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,11 +1,9 @@
 package org.openstack.android.summit.modules.search;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import org.openstack.android.summit.R;
-import org.openstack.android.summit.common.BaseWireframe;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.ScheduleWireframe;
 import org.openstack.android.summit.common.user_interface.IBaseView;

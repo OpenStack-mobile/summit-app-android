@@ -1,6 +1,6 @@
 package org.openstack.android.summit.modules.about;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.user_interface.IBaseView;

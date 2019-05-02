@@ -2,7 +2,7 @@ package org.openstack.android.summit.modules.level_list.user_interface;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +14,6 @@ import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.SimpleListItemView;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.

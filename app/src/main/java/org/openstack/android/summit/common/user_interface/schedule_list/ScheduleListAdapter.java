@@ -1,10 +1,10 @@
 package org.openstack.android.summit.common.user_interface.schedule_list;
 
 import android.graphics.Color;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuBuilder.Callback;
-import android.support.v7.view.menu.MenuPopupHelper;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuBuilder.Callback;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;

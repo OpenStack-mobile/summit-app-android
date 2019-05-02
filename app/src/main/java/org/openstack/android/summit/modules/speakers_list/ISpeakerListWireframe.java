@@ -1,9 +1,8 @@
 package org.openstack.android.summit.modules.speakers_list;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import org.openstack.android.summit.common.user_interface.IBaseView;
-import org.openstack.android.summit.modules.speakers_list.user_interface.ISpeakerListView;
 
 /**
  * Created by Claudio Redi on 1/13/2016.

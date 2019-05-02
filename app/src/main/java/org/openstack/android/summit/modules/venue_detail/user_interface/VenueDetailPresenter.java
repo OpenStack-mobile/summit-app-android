@@ -1,7 +1,7 @@
 package org.openstack.android.summit.modules.venue_detail.user_interface;
 
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;

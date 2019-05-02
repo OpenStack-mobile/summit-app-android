@@ -1,7 +1,6 @@
 package org.openstack.android.summit.common.user_interface.recycler_view;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;

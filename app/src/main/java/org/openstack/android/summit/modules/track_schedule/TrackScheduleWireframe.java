@@ -1,17 +1,15 @@
 package org.openstack.android.summit.modules.track_schedule;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.openstack.android.summit.common.INavigationParametersStore;
 import org.openstack.android.summit.common.ScheduleWireframe;
 import org.openstack.android.summit.common.user_interface.IBaseView;
 import org.openstack.android.summit.modules.event_detail.IEventDetailWireframe;
 import org.openstack.android.summit.modules.general_schedule_filter.IGeneralScheduleFilterWireframe;
 import org.openstack.android.summit.modules.rsvp.IRSVPWireframe;
-import org.openstack.android.summit.modules.track_schedule.user_interface.ITrackScheduleView;
 import org.openstack.android.summit.modules.track_schedule.user_interface.TrackScheduleFragment;
 
 /**

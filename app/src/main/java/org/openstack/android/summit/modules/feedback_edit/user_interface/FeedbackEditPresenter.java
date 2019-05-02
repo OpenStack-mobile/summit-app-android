@@ -11,7 +11,7 @@ import org.openstack.android.summit.modules.feedback_edit.IFeedbackEditWireframe
 import org.openstack.android.summit.modules.feedback_edit.business_logic.IFeedbackEditInteractor;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 /**
  * Created by Claudio Redi on 2/17/2016.
  */

@@ -1,8 +1,8 @@
 package org.openstack.android.summit.common.user_interface;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +90,7 @@ public class ScheduleFragment<P extends ISchedulePresenter>
         unbinder       = ButterKnife.bind(this, view);
         layoutManager  = new LinearLayoutManager(getContext());
 
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         scheduleList.setLayoutManager(layoutManager);
         scheduleList.setHasFixedSize(true);
         RecyclerView.ItemDecoration itemDecoration =

@@ -1,6 +1,6 @@
 package org.openstack.android.summit.modules.member_order_confirm.user_interface;
 
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.NonConfirmedSummitAttendeeDTO;

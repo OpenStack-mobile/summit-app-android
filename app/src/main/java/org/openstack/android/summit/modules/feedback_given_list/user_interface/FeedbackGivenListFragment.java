@@ -2,7 +2,7 @@ package org.openstack.android.summit.modules.feedback_given_list.user_interface;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +12,11 @@ import android.widget.TextView;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
-import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
 import org.openstack.android.summit.common.user_interface.BaseFragment;
 import org.openstack.android.summit.common.user_interface.FeedbackItemView;
 import org.openstack.android.summit.common.user_interface.IFeedbackItemView;
-import org.openstack.android.summit.common.user_interface.InfiniteScrollListener;
-import org.openstack.android.summit.common.user_interface.PersonItemView;
-import org.openstack.android.summit.common.user_interface.SlidingTabLayout;
-import org.openstack.android.summit.modules.speakers_list.user_interface.ISpeakerListPresenter;
-import org.openstack.android.summit.modules.speakers_list.user_interface.ISpeakerListView;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * Created by Claudio Redi on 1/27/2016.

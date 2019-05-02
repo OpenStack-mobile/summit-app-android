@@ -13,13 +13,13 @@
         android:background="@color/openStackDarkBlue"
         style="@style/AppTheme.SlidingTabLayout"/>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/events_pager"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_weight="1">
 
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
     <include layout="@layout/active_filters_indicator"></include>
 
 </LinearLayout>

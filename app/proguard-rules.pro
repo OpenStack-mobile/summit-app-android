@@ -30,7 +30,7 @@
 -keep public class * extends java.lang.Exception
 -dontwarn org.modelmapper.**
 -keep class android.support.v7.widget.ShareActionProvider { *; }
--keep class android.support.v7.widget.LinearLayoutManager { *; }
+-keep class androidx.recyclerview.widget.LinearLayoutManager { *; }
 -keep class android.support.v4.view.MenuItemCompat { *; }
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class android.support.v7.view.menu.** { *; }

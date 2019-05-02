@@ -7,10 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Switch;
-
-import com.linearlistview.LinearListView;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.NamedDTO;

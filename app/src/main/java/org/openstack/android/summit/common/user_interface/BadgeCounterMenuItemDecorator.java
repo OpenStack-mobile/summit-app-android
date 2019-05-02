@@ -1,6 +1,6 @@
 package org.openstack.android.summit.common.user_interface;
 
-import android.support.v4.view.MenuItemCompat;
+import androidx.core.view.MenuItemCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;

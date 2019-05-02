@@ -1,6 +1,6 @@
 package org.openstack.android.summit.modules.venue_detail;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import com.crashlytics.android.Crashlytics;
 

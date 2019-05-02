@@ -1,7 +1,7 @@
 package org.openstack.android.summit.modules.events.user_interface;
 
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 
 import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.DTOs.SummitDTO;

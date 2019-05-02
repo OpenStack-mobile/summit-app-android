@@ -64,7 +64,7 @@ public class BrowserActivity extends BaseActivity {
 
             if (url == null) {
 
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
 
                 builder.setTitle(R.string.generic_error_title)
                        .setMessage(R.string.generic_error_message)

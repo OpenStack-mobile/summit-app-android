@@ -2,8 +2,8 @@ package org.openstack.android.summit.common.user_interface;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import com.crashlytics.android.Crashlytics;
 import org.openstack.android.summit.R;
 
@@ -18,7 +18,7 @@ public final class AlertsBuilder {
 
     public static AlertDialog buildAlert(Context context, String title, String message){
         try{
-            android.support.v7.app.AlertDialog.Builder  builder = new android.support.v7.app.AlertDialog.Builder(context);
+            androidx.appcompat.app.AlertDialog.Builder  builder = new androidx.appcompat.app.AlertDialog.Builder(context);
 
             return builder.setTitle(title)
                     .setMessage(message)
@@ -63,7 +63,7 @@ public final class AlertsBuilder {
 
     public static AlertDialog buildAlert(Context context, @StringRes int title, @StringRes int  message){
         try {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
 
             return builder.setTitle(title)
                     .setMessage(message)
@@ -86,7 +86,7 @@ public final class AlertsBuilder {
 
     ){
         try {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
 
             return builder.setTitle(title)
                     .setMessage(message)
@@ -105,7 +105,7 @@ public final class AlertsBuilder {
 
     public static AlertDialog buildAlert(Context context, @StringRes int title, String message){
         try{
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
             return builder.setTitle(title)
                     .setMessage(message)
                     .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )

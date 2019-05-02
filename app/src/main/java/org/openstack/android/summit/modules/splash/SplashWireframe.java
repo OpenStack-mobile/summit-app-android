@@ -3,9 +3,8 @@ package org.openstack.android.summit.modules.splash;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.View;
 
 import org.openstack.android.summit.SummitDataLoadingActivity;
 import org.openstack.android.summit.SummitsListDataLoaderActivity;
