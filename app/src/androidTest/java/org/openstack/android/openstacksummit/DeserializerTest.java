@@ -1,9 +1,7 @@
 package org.openstack.android.openstacksummit;
 
-import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
-import android.test.suitebuilder.annotation.LargeTest;
-
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,7 +33,7 @@ import io.realm.RealmConfiguration;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class DeserializerTests  extends InstrumentationTestCase {
+public class DeserializerTest extends junit.framework.TestCase {
 
     @Before
     public void setUp() throws Exception {

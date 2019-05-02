@@ -1,8 +1,7 @@
 package org.openstack.android.openstacksummit;
 
-import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
-import android.test.suitebuilder.annotation.LargeTest;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -22,10 +21,9 @@ import io.realm.RealmConfiguration;
 /**
  * Created by Claudio Redi on 11/17/2015.
  */
-
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ModelTests extends InstrumentationTestCase {
+public class ModelTest extends junit.framework.TestCase {
 
     @Before
     public void setUp() throws Exception {

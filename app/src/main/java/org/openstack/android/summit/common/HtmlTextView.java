@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import org.openstack.android.summit.R;
+import org.openstack.android.summit.common.utils.HtmlTextParser;
 
 /**
  * Created by sebastian on 8/10/2016.
@@ -97,32 +98,15 @@ public class HtmlTextView extends ScrollView {
     }
 
     public void setText(String body) {
-
-        if (body == null || body.isEmpty()) return;
-        // convert raw urls to <a> tags
-        body = body.replaceAll("((?<!(href=['\"]))(?:https?|ftps?):\\/\\/[\\w\\.\\?\\=\\d\\/]*)","<a href=\"$1\">$1</a>");
-
-        StringBuilder html = new StringBuilder();
-        html.append("<html>");
-        html.append("<head>");
-        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            html.append("<base href=\""+BaseUrl+"\">");
-
         // fix urls
-
-        html.append("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
-        html.append("<link href=\"css/htmltextview.css\" rel=\"stylesheet\" type=\"text/css\">");
-        html.append("</head>");
-        html.append("<body>");
-        html.append(body);
-        html.append("</body>");
-        html.append("</html>");
+        body = HtmlTextParser.parse(body , BaseUrl);
+        if (body.isEmpty()) return;
 
         if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2){
-            webView.loadData(html.toString(), MimeType , Encoding);
+            webView.loadData(body, MimeType , Encoding);
             return;
         }
 
-        webView.loadDataWithBaseURL(BaseUrl, html.toString(), MimeType, Encoding, null);
+        webView.loadDataWithBaseURL(BaseUrl, body, MimeType, Encoding, null);
     }
 }
