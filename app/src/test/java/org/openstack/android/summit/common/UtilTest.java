@@ -1,15 +1,12 @@
-package org.openstack.android.openstacksummit;
+package org.openstack.android.summit.common;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.utils.HtmlTextParser;
-
 @RunWith(AndroidJUnit4.class)
-@LargeTest
-public class UtilTest extends junit.framework.TestCase {
+public class UtilTest {
 
 
     @Test

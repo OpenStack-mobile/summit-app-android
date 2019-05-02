@@ -38,7 +38,7 @@ public class DeserializerTest extends junit.framework.TestCase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        Realm.setDefaultConfiguration( new RealmConfiguration.Builder()
+        Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .inMemory()
                 .build());

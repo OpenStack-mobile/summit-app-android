@@ -1,10 +1,10 @@
 package org.openstack.android.summit.common.data_access.data_polling;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.entities.EventType;
-import org.openstack.android.summit.common.entities.Presentation;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.SummitType;
@@ -12,12 +12,11 @@ import org.openstack.android.summit.common.entities.TicketType;
 import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
-import org.robolectric.RobolectricTestRunner;
 
 /**
  * Created by Claudio Redi on 2/8/2016.
  */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class ClassResolverTests {
     @Test
     public void fromName_Presentation_returnsCorrectType() throws ClassNotFoundException {

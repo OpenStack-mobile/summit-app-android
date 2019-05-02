@@ -1,8 +1,7 @@
 package org.openstack.android.summit.common;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.openstack.android.summit.common.DTOs.NamedDTO;
 import org.robolectric.RobolectricTestRunner;

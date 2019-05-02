@@ -2,9 +2,6 @@ package org.openstack.android.summit.common.data_access.DTOs.assembler;
 
 import junit.framework.Assert;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,10 +28,8 @@ import org.openstack.android.summit.common.entities.Track;
 import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueRoom;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
-
 import java.util.Date;
 
 /**

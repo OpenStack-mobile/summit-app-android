@@ -206,7 +206,14 @@ android {
             variant.ignore = true
         }
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -259,13 +266,32 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+
+    // Local Unit Tests
+    // Required -- JUnit 4 framework
+    testImplementation 'junit:junit:4.12'
     // Optional -- Robolectric environment
+    testImplementation 'org.robolectric:robolectric:4.2'
     testImplementation 'androidx.test:core:1.1.0'
     // Optional -- Mockito framework
     testImplementation 'org.mockito:mockito-core:2.15.0'
+    // Optional - Power Mock
+    testImplementation "org.powermock:powermock-module-junit4:1.6.6"
+    testImplementation "org.powermock:powermock-module-junit4-rule:1.6.6"
+    testImplementation "org.powermock:powermock-api-mockito:1.6.6"
+    testImplementation "org.powermock:powermock-classloading-xstream:1.6.6"
+
+    testImplementation 'androidx.test.ext:junit:1.1.0'
+
+    testImplementation 'androidx.test:runner:1.1.0'
+
+    testImplementation 'androidx.test:rules:1.1.0'
+
+    // Instrumented tests
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+
     androidTestImplementation 'androidx.test:rules:1.1.0'
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
@@ -278,10 +304,12 @@ dependencies {
         println('adding dependency safe_storage.aar ...')
         productionImplementation "org.openstack.android.summit.safestorage:safe_storage@aar"
     }
+
     if (file('libs/safe_storage-testing.aar').exists()) {
         println('adding dependency safe_storage-testing.aar ...')
         betaImplementation "org.openstack.android.summit.safestorage:safe_storage-testing@aar"
     }
+
     if (file('libs/safe_storage_debug.aar').exists()) {
         println('adding dependency safe_storage_debug.aar ...')
         developmentImplementation "org.openstack.android.summit.safestorage:safe_storage@aar"
@@ -289,17 +317,6 @@ dependencies {
     // http://facebook.github.io/stetho and https://github.com/uPhyca/stetho-realm
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.uphyca:stetho_realm:2.0.0'
-
-    // Espresso Dependencies
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test:rules:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0', {
-        exclude module: 'support-annotations'
-        exclude module: 'support-v4'
-        exclude module: 'recyclerview-v7'
-        exclude module: 'design'
-    })
 
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-messaging:17.6.0'
