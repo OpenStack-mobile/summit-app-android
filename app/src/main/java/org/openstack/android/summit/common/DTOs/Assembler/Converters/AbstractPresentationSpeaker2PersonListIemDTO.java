@@ -7,7 +7,6 @@ import com.crashlytics.android.Crashlytics;
 import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.PersonListItemDTO;
-import org.openstack.android.summit.common.entities.IPerson;
 import org.openstack.android.summit.common.entities.PresentationSpeaker;
 
 /**

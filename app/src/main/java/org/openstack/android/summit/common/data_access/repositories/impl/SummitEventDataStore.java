@@ -244,7 +244,7 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
             query = query.isNotEmpty("presentation.videos");
         }
 
-        return query.findAllSorted(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
+        return query.sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING }).findAll();
     }
 
     @Override
@@ -291,7 +291,9 @@ public class SummitEventDataStore extends GenericDataStore<SummitEvent> implemen
                     .equalTo("presentation.moderator.id", speakerId)
                 .endGroup();
 
-        return query.findAllSorted(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING });
+        return query
+                .sort(new String[] { "start", "end", "name"}, new Sort[] { Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING })
+                .findAll();
     }
 
     @Override

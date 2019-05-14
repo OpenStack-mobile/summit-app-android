@@ -1,6 +1,5 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
 
-import org.modelmapper.AbstractConverter;
 import org.openstack.android.summit.common.entities.Feedback;
 
 /**

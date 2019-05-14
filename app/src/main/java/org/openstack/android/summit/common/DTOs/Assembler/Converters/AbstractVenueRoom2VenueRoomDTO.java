@@ -1,4 +1,5 @@
 package org.openstack.android.summit.common.DTOs.Assembler.Converters;
+
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import org.modelmapper.AbstractConverter;

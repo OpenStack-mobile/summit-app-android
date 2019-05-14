@@ -27,7 +27,9 @@ public class SummitDataStore extends GenericDataStore<Summit> implements ISummit
 
     @Override
     public Summit getLatest() {
-        List<Summit> summits = RealmFactory.getSession().where(Summit.class).findAllSorted("startDate", Sort.DESCENDING);
+        List<Summit> summits = RealmFactory.getSession().where(Summit.class)
+                .sort("startDate", Sort.DESCENDING)
+                .findAll();
         return summits.size() > 0 ? summits.get(0) : null;
     }
 

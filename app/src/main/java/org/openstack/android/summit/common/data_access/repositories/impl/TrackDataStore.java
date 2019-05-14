@@ -19,7 +19,8 @@ public class TrackDataStore extends GenericDataStore<Track> implements ITrackDat
 
     @Override
     public List<Track> getAllOrderedByName(int summitId) {
-        return RealmFactory.getSession().where(Track.class).equalTo("summit.id", summitId).findAllSorted("name", Sort.ASCENDING);
+        return RealmFactory.getSession().where(Track.class).equalTo("summit.id", summitId)
+                .sort("name", Sort.ASCENDING).findAll();
     }
 
 }

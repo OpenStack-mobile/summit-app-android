@@ -16,17 +16,23 @@ public class VenueDataStore extends GenericDataStore<Venue> implements IVenueDat
 
     @Override
     public List<Venue> getInternalsBySummit(int summitId) {
-        return RealmFactory.getSession().where(Venue.class).equalTo("summit.id", summitId).equalTo("isInternal", true).findAllSorted("name");
+        return RealmFactory.getSession().where(Venue.class).equalTo("summit.id", summitId).equalTo("isInternal", true)
+                .sort("name")
+                .findAll();
     }
 
     @Override
     public List<Venue> getExternalBySummit(int summitId) {
-        return RealmFactory.getSession().where(Venue.class).equalTo("summit.id", summitId).equalTo("isInternal", false).findAllSorted("name");
+        return RealmFactory.getSession().where(Venue.class).equalTo("summit.id", summitId).equalTo("isInternal", false)
+                .sort("name")
+                .findAll();
     }
 
     @Override
     public List<Venue> getAllBySummit(int summitId) {
-        return RealmFactory.getSession().where(Venue.class).equalTo("summit.id", summitId).findAllSorted("name");
+        return RealmFactory.getSession().where(Venue.class).equalTo("summit.id", summitId)
+                .sort("name")
+                .findAll();
     }
 
 }

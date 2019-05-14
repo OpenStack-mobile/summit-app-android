@@ -62,7 +62,7 @@ public class TrackGroupDataStore extends GenericDataStore<TrackGroup> implements
 
     @Override
     public List<TrackGroup> getAllBySummit(int summitId) {
-        return RealmFactory.getSession().where(TrackGroup.class).equalTo("summit.id", summitId).findAllSorted("name");
+        return RealmFactory.getSession().where(TrackGroup.class).equalTo("summit.id", summitId).sort("name").findAll();
     }
 
 }

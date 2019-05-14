@@ -10,7 +10,6 @@ import org.openstack.android.summit.common.Constants;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.entities.Feedback;
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.SummitAttendee;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
 /**

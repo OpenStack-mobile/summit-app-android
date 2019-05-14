@@ -15,7 +15,7 @@ buildscript {
         // in the individual module build.gradle files
         // Realm
         // https://github.com/realm/realm-java/blob/master/CHANGELOG.md
-        classpath "io.realm:realm-gradle-plugin:4.3.3"
+        classpath "io.realm:realm-gradle-plugin:5.11.0"
         //GCM
         classpath 'com.google.gms:google-services:4.2.0'
 

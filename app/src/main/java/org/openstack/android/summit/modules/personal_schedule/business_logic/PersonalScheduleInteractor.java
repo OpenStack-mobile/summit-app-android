@@ -40,7 +40,8 @@ public class PersonalScheduleInteractor extends ScheduleInteractor implements IP
             .where()
             .greaterThanOrEqualTo("start", startDate)
             .lessThanOrEqualTo("end", endDate)
-            .findAllSorted(new String[]{"start", "end", "name"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING});
+            .sort(new String[]{"start", "end", "name"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING})
+            .findAll();
 
         return postProcessScheduleEventList(createDTOList(scheduleEvents, ScheduleItemDTO.class));
     }
