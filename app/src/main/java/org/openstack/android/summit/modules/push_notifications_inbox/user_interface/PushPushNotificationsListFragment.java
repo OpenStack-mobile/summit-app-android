@@ -130,7 +130,9 @@ public class PushPushNotificationsListFragment
             default:
                 break;
         }
-        searchView.setOnQueryTextListener(queryTextListener);
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
         return super.onOptionsItemSelected(item);
     }
 
