@@ -60,6 +60,7 @@
                         android:text="Vice President Jr."/>
                 </LinearLayout>
             </LinearLayout>
+            <!--
             <LinearLayout
                 android:id="@+id/add_eventbrite_order_container"
                 android:visibility="gone"
@@ -70,6 +71,7 @@
                     android:text="@string/add_eventbrite_order_action"/>
                 <ImageView style="@style/AppTheme.MoreImageView" />
             </LinearLayout>
+            -->
             <LinearLayout
                 android:id="@+id/eventbrite_order_container"
                 android:visibility="gone"

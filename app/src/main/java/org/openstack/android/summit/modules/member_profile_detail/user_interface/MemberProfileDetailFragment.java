@@ -29,11 +29,14 @@ public class MemberProfileDetailFragment
 
     protected Unbinder unbinder;
 
+    /*
     @BindView(R.id.add_eventbrite_order_container)
     LinearLayout addEventbriteOrderContainer;
 
+
     @BindView(R.id.eventbrite_order_container)
     LinearLayout eventbriteOrderAddedContainer;
+    */
 
     @BindView(R.id.profile_detail_name)
     TextView nameTextView;
@@ -85,9 +88,9 @@ public class MemberProfileDetailFragment
         this.view = view;
 
         super.onCreateView(inflater, container, savedInstanceState);
-        addEventbriteOrderContainer.setOnClickListener(v -> {
+        /*addEventbriteOrderContainer.setOnClickListener(v -> {
             presenter.onAddEventBriteOrderClicked();
-        });
+        });*/
         return view;
     }
 
@@ -162,14 +165,14 @@ public class MemberProfileDetailFragment
 
     @Override
     public void showAddEventBriteOrderContainer(boolean show) {
-        if(addEventbriteOrderContainer == null) return;
-        addEventbriteOrderContainer.setVisibility(show ? view.VISIBLE : view.GONE);
+        //if(addEventbriteOrderContainer == null) return;
+        //addEventbriteOrderContainer.setVisibility(show ? view.VISIBLE : view.GONE);
     }
 
     @Override
     public void showEventBriteOrderAdded(boolean show) {
-        if(eventbriteOrderAddedContainer == null) return;
-        eventbriteOrderAddedContainer.setVisibility(show ? view.VISIBLE : view.GONE);
+       //if(eventbriteOrderAddedContainer == null) return;
+       //eventbriteOrderAddedContainer.setVisibility(show ? view.VISIBLE : view.GONE);
     }
 
     private void setTextViewOrHide(int id, String text) {

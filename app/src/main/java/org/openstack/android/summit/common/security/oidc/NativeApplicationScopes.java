@@ -25,8 +25,8 @@ final public class NativeApplicationScopes {
                 Offline,
                 String.format(Locale.US, SummitRead, resourceServerBaseUrl),
                 String.format(Locale.US, SummitWrite, resourceServerBaseUrl),
-                String.format(Locale.US, ReadExternalOrders, resourceServerBaseUrl),
-                String.format(Locale.US, ConfirmExternalOrders, resourceServerBaseUrl),
+                //String.format(Locale.US, ReadExternalOrders, resourceServerBaseUrl),
+                //String.format(Locale.US, ConfirmExternalOrders, resourceServerBaseUrl),
                 String.format(Locale.US, ReadOwnMember, resourceServerBaseUrl),
                 String.format(Locale.US, OwmMemberAdd2Favorites, resourceServerBaseUrl),
                 String.format(Locale.US, OwmMemberRemoveFromFavorites, resourceServerBaseUrl)

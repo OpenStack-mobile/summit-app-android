@@ -92,12 +92,14 @@ public class MemberProfileDetailPresenter
         super.onCreate(savedInstanceState);
         view.setShowMissingEventBriteOrderIndicator(false);
 
+        /*
         if(isMyProfile && !isAttendee){
             int willAttend = session.getInt(Constants.WILL_ATTEND);
             if(willAttend == 0)
                 view.createNotAttendeeAlertDialog().show();
             view.setShowMissingEventBriteOrderIndicator(willAttend == 1);
         }
+        */
     }
 
     @Override

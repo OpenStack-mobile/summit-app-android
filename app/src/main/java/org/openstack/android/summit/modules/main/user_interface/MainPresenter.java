@@ -137,16 +137,16 @@ public class MainPresenter
                         onLoggedIn();
                         view.setMenuItemVisible(R.id.nav_my_profile, true);
                         if(!initiatedExternalLogin && !initiatedExternalRedeemOrder){
-                            if(interactor.isMemberLoggedInAndConfirmedAttendee()){
+                            //if(interactor.isMemberLoggedInAndConfirmedAttendee()){
                                 // if we are confirmed attendee start on main view
                                 view.setMenuItemChecked(R.id.nav_events);
                                 showEventsView();
-                            }
-                            else {
+                            //}
+                            //else {
                                 // if we are not confirmed attendee show my profile
-                                view.setMenuItemChecked(R.id.nav_my_profile);
-                                showMyProfileView(Constants.MY_PROFILE_TAB_PROFILE);
-                            }
+                              //  view.setMenuItemChecked(R.id.nav_my_profile);
+                                //showMyProfileView(Constants.MY_PROFILE_TAB_PROFILE);
+                            //}
                         }
                         if(initiatedExternalRedeemOrder){
                             // just do back
