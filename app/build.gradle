@@ -141,8 +141,8 @@ android {
     defaultConfig {
         applicationId "org.openstack.android.summit"
         minSdkVersion 18
-        targetSdkVersion 28
-        versionCode 144
+        targetSdkVersion 26
+        versionCode 145
         versionName "2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
