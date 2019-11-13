@@ -387,8 +387,8 @@ public class EventDetailPresenter
         personItemView.setIsModerator(
                 event.getModerator() != null && personListItemDTO.getId() == event.getModerator().getId()
         );
-        Uri uri = Uri.parse(personListItemDTO.getPictureUrl().replace("https", "http"));
-        personItemView.setPictureUri(uri);
+        personItemView.setPictureUri(Uri.parse(personListItemDTO.getPictureUrl()));
+        personItemView.setRoundWithOverlayColor(view.getResources().getColor(R.color.openStackGray3));
     }
 
     @Override

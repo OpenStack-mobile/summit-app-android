@@ -164,6 +164,11 @@ public class SpeakerListAdapter
             this.picture.setImageURI(pictureUri);
         }
 
+        @Override
+        public void setRoundWithOverlayColor(int color) {
+
+        }
+
         public void setIsModerator(boolean isModerator) {
             this.is_moderator.setVisibility(isModerator ? View.VISIBLE : View.GONE);
         }

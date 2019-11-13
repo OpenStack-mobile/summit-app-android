@@ -11,5 +11,7 @@ public interface IPersonItemView {
     void setTitle(String title);
 
     void setPictureUri(Uri pictureUri);
+
+    void setRoundWithOverlayColor(int color);
 }
 

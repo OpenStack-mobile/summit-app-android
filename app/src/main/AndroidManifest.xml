@@ -233,12 +233,6 @@
             </intent-filter>
         </service>
 
-        <service android:name=".common.services.FirebaseIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-
         <receiver
             android:name=".common.push_notifications.PushNotificationsBroadcastReceiver"
             android:exported="false">

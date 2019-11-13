@@ -66,8 +66,7 @@ public class SpeakerListPresenter
         speakerItemView.setName(personListItemDTO.getName());
         speakerItemView.setTitle(personListItemDTO.getTitle());
         speakerItemView.setIsModerator(false);
-        Uri uri = Uri.parse(personListItemDTO.getPictureUrl().replace("https", "http"));
-        speakerItemView.setPictureUri(uri);
+        speakerItemView.setPictureUri(Uri.parse(personListItemDTO.getPictureUrl()));
     }
 
     public HashMap<String, Integer> createMapIndex() {

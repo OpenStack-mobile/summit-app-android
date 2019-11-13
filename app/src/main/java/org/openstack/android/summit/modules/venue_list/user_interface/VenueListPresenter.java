@@ -47,8 +47,7 @@ public class VenueListPresenter extends BasePresenter<IVenueListView, IVenueList
         String imageUrl = venue.getImages().size() > 0 ? venue.getImages().get(0) : null;
 
         if (imageUrl != null) {
-            Uri uri = Uri.parse(imageUrl.replace("https", "http"));
-            venueListItemView.setPictureUri(uri);
+            venueListItemView.setPictureUri(Uri.parse(imageUrl));
         }
     }
 

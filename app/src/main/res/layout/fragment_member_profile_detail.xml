@@ -31,7 +31,8 @@
                     android:layout_height="110dp"
                     fresco:placeholderImage="@drawable/generic_user_avatar"
                     android:paddingRight="15dp"
-                    fresco:actualImageScaleType="centerCrop"
+                    fresco:roundWithOverlayColor="@color/openStackDarkBlue"
+                    fresco:actualImageScaleType="fitCenter"
                     android:layout_gravity="center"
                     />
                 <LinearLayout

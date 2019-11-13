@@ -23,8 +23,9 @@
             fresco:roundingBorderColor="@color/openStackLightGray"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            fresco:roundWithOverlayColor="@color/openStackDarkBlue"
             fresco:placeholderImage="@drawable/generic_user_avatar"
-            fresco:actualImageScaleType="centerCrop"
+            fresco:actualImageScaleType="fitCenter"
             android:layout_gravity="center"
             />
         <LinearLayout

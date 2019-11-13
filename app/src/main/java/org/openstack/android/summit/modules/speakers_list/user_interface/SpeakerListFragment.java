@@ -60,7 +60,7 @@ public class SpeakerListFragment extends BaseFragment<ISpeakerListPresenter> imp
 
         LinearLayoutManager layoutManager  = new LinearLayoutManager(getContext());
 
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         speakerList.setLayoutManager(layoutManager);
 
         speakerListAdapter  = new SpeakerListAdapter(presenter);

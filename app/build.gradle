@@ -141,7 +141,7 @@ android {
     defaultConfig {
         applicationId "org.openstack.android.summit"
         minSdkVersion 18
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 146
         versionName "2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -247,7 +247,7 @@ dependencies {
     // https://jitpack.io/com/github/smarcet/ACProgressLite/ee69096/build.log
     implementation 'com.github.smarcet:ACProgressLite:ee69096'
     // image library
-    implementation 'com.facebook.fresco:fresco:0.11.0'
+    implementation 'com.facebook.fresco:fresco:2.0.0'
     // simulate list with a linear layout
     implementation 'com.github.frankiesardo:linearlistview:1.0.1@aar'
     // page indicator
@@ -255,7 +255,7 @@ dependencies {
     // Tags
     implementation 'com.github.kaedea:Android-Cloud-TagView-Plus:5a49f4f'
     // google maps
-    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
     // to get rid of UNEXPECTED TOP-LEVEL EXCEPTION: due oo many method references: (max is 65536)
     // https://github.com/BoltsFramework/Bolts-Android
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -272,7 +272,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     // Optional -- Robolectric environment
     testImplementation 'org.robolectric:robolectric:4.2'
-    testImplementation 'androidx.test:core:1.1.0'
+    testImplementation 'androidx.test:core:1.2.0'
     // Optional -- Mockito framework
     testImplementation 'org.mockito:mockito-core:2.15.0'
     // Optional - Power Mock
@@ -281,22 +281,22 @@ dependencies {
     testImplementation "org.powermock:powermock-api-mockito:1.6.6"
     testImplementation "org.powermock:powermock-classloading-xstream:1.6.6"
 
-    testImplementation 'androidx.test.ext:junit:1.1.0'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
 
-    testImplementation 'androidx.test:runner:1.1.0'
+    testImplementation 'androidx.test:runner:1.2.0'
 
-    testImplementation 'androidx.test:rules:1.1.0'
+    testImplementation 'androidx.test:rules:1.2.0'
 
     // Instrumented tests
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
 
-    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
 
-    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
     // Optional -- UI testing with Espresso
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     // Optional -- UI testing with UI Automator
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 
@@ -318,12 +318,12 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.uphyca:stetho_realm:2.0.0'
 
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-messaging:17.6.0'
+    implementation 'com.google.firebase:firebase-core:17.2.1'
+    implementation 'com.google.firebase:firebase-messaging:20.0.1'
 
     // https://github.com/square/retrofit
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'

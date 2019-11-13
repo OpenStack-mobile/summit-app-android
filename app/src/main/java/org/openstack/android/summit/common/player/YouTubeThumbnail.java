@@ -7,7 +7,7 @@ import org.openstack.android.summit.common.player.enums.ThumbnailQuality;
  * Created by sebastian on 8/17/2016.
  */
 public class YouTubeThumbnail {
-    public static final String IMG_YOUTUBE_COM_VI = "http://img.youtube.com/vi/";
+    public static final String IMG_YOUTUBE_COM_VI = "https://img.youtube.com/vi/";
 
     private YouTubeThumbnail() {}
 

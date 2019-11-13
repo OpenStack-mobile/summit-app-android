@@ -12,12 +12,13 @@
             fresco:roundAsCircle="true"
             fresco:roundingBorderWidth="1dp"
             fresco:roundingBorderColor="@color/openStackLightGray"
+            fresco:roundWithOverlayColor="@color/white"
             android:layout_width="90dp"
             android:layout_height="90dp"
             fresco:placeholderImage="@drawable/generic_user_avatar"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            fresco:actualImageScaleType="centerCrop"
+            fresco:actualImageScaleType="fitCenter"
             android:layout_gravity="center"
             />
 

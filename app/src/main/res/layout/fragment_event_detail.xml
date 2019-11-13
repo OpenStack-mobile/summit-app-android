@@ -250,7 +250,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:showDividers="middle|end"
-                        android:background="#eeeeee"
+                        android:background="@color/openStackGray3"
                         android:divider="@color/openStackLightGray"
                         app:dividerThickness="1dp" />
                 </LinearLayout>

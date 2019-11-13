@@ -275,19 +275,19 @@ public class EventDetailFragment
     @Override
     public void showGoingButton(boolean show) {
         if(buttonGoing == null) return;
-        buttonGoing.setVisibility(show ? View.VISIBLE : view.GONE);
+        buttonGoing.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void showFavoriteButton(boolean show) {
         if(buttonFavorite == null) return;
-        buttonFavorite.setVisibility(show ? View.VISIBLE : view.GONE);
+        buttonFavorite.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void showRateButton(boolean show) {
         if(buttonRate == null) return;
-        buttonRate.setVisibility(show ? View.VISIBLE : view.GONE);
+        buttonRate.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override

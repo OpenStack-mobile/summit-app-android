@@ -117,9 +117,7 @@ public class SearchPresenter
         PersonListItemDTO personListItemDTO = speakers.get(position);
         personItemView.setName(personListItemDTO.getName());
         personItemView.setTitle(personListItemDTO.getTitle());
-
-        Uri uri = Uri.parse(personListItemDTO.getPictureUrl().replace("https", "http"));
-        personItemView.setPictureUri(uri);
+        personItemView.setPictureUri(Uri.parse(personListItemDTO.getPictureUrl()));
     }
 
     @Override

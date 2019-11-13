@@ -84,7 +84,7 @@ public class MemberProfileDetailPresenter
         view.setTwitter(person.getTwitter());
         view.setIrc(person.getIrc());
         Uri uri = person.getPictureUrl() != null && !person.getPictureUrl().isEmpty()
-            ? Uri.parse(person.getPictureUrl().replace("https", "http"))
+            ? Uri.parse(person.getPictureUrl())
             : null;
         view.setPictureUri(uri);
         view.showAddEventBriteOrderContainer(isMyProfile && !isAttendee);
