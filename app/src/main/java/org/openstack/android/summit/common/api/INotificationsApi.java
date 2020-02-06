@@ -13,7 +13,9 @@ public interface INotificationsApi {
     Observable<Response<ResponseBody>> getSent(
             @Path("summit_id") int summitId,
             @Query("page") int page,
-            @Query("per_page") int per_page
+            @Query("per_page") int per_page,
+            @Query("filter") String filter,
+            @Query("order") String order
     );
 
 }

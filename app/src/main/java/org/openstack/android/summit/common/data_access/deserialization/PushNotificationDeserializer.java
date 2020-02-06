@@ -46,9 +46,8 @@ public class PushNotificationDeserializer
             !jsonObject.isNull("title") ? jsonObject.getString("title") : OpenStackSummitApplication.context.getString(R.string.push_notification_default_title)
         );
 
-        if(jsonObject.has("event")){
-            JSONObject jsonObjectEvent = jsonObject.getJSONObject("event");
-            int eventId = jsonObjectEvent.getInt("id");
+        if(jsonObject.has("event_id")){
+            int eventId = jsonObject.getInt("event_id");
             SummitEvent summitEvent = RealmFactory.getSession().where(SummitEvent.class).equalTo("id", eventId).findFirst();
 
             if(summitEvent != null){

@@ -51,9 +51,17 @@ public class PushNotificationRemoteDataStore
         Retrofit restClient = securityManager.isLoggedIn() ?
                 this.restClientUserProfile :
                 this.restClientServiceProfile;
+        String filter = null;
 
+        if(searchTerm != null && !searchTerm.isEmpty()){
+            filter = "message=@"+searchTerm;
+        }
         return restClient.create(INotificationsApi.class)
-                .getSent(summitSelector.getCurrentSummitId(),  page, objectsPerPage)
+                .getSent(summitSelector.getCurrentSummitId(),
+                        page,
+                        objectsPerPage,
+                        filter,
+                        "-sent_date")
                 .subscribeOn(Schedulers.io())
                 .map( response -> {
                     if(!response.isSuccessful()){
