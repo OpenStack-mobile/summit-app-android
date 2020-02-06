@@ -3,6 +3,7 @@ package org.openstack.android.summit.common.entities.notifications;
 import org.openstack.android.summit.common.entities.IEntity;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.entities.SummitEvent;
 
 import java.util.Date;
 
@@ -44,4 +45,7 @@ public interface IPushNotification extends IEntity {
 
     void markAsRead();
 
+    SummitEvent getEvent();
+
+    void setEvent(SummitEvent event);
 }

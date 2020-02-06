@@ -1,8 +1,8 @@
 package org.openstack.android.summit.common.entities.notifications;
 
-import org.openstack.android.summit.common.entities.IEntity;
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.entities.SummitEvent;
 
 import java.util.Date;
 import io.realm.RealmObject;
@@ -19,6 +19,11 @@ public class PushNotification extends RealmObject implements IPushNotification {
     private String body;
     private String type;
     private String channel;
+    private SummitEvent event;
+    private Date created_at;
+    private boolean opened;
+    private Summit summit;
+    private Member owner;
 
     public String getTitle() {
         return title;
@@ -44,10 +49,6 @@ public class PushNotification extends RealmObject implements IPushNotification {
         this.created_at = created_at;
     }
 
-    private Date created_at;
-    private boolean opened;
-    private Summit summit;
-    private Member owner;
 
     public Member getOwner() {
         return owner;
@@ -55,6 +56,10 @@ public class PushNotification extends RealmObject implements IPushNotification {
 
     public void setOwner(Member owner) {
         this.owner = owner;
+    }
+
+    public void clearOwner(){
+        this.owner = null;
     }
 
     @Override
@@ -74,7 +79,6 @@ public class PushNotification extends RealmObject implements IPushNotification {
     public void setSummit(Summit summit) {
         this.summit = summit;
     }
-
 
     public String getBody() {
         return body;
@@ -101,4 +105,12 @@ public class PushNotification extends RealmObject implements IPushNotification {
     }
 
     public void markAsRead(){ this.setOpened(true);}
+
+    public SummitEvent getEvent() {
+        return event;
+    }
+
+    public void setEvent(SummitEvent event) {
+        this.event = event;
+    }
 }

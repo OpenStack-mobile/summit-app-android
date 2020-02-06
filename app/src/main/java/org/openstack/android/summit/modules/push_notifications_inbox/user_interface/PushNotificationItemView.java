@@ -10,6 +10,7 @@ import org.openstack.android.summit.common.utils.LocalDateFormat;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -39,12 +40,23 @@ public class PushNotificationItemView implements IPushNotificationItemView {
 
     @Override
     public void setReceivedDate(Date receivedDate) {
-        TextView txtReceivedDate = (TextView) view.findViewById(R.id.item_push_notification_received_date);
+        TextView txtReceivedDate = view.findViewById(R.id.item_push_notification_received_date);
         if(txtReceivedDate == null) return;
-
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(receivedDate);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
         DateTime nowBegin = new DateTime().withTime(0,0,0,0);
         DateTime nowEnd   = new DateTime().withTime(23,59,59,0);
-        DateFormat df     = receivedDate.after(nowBegin.toDate()) && receivedDate.before(nowEnd.toDate()) ?  new LocalDateFormat("hh:mm a") : new SimpleDateFormat("E d");
+        DateFormat df = null;
+        // if we are on current month
+        if ( ( month == nowBegin.getMonthOfYear() ) && ( year == nowBegin.getYear() ) ) {
+            df = receivedDate.after(nowBegin.toDate()) && receivedDate.before(nowEnd.toDate()) ? new LocalDateFormat("hh:mm a") : new SimpleDateFormat("E d");
+        }
+        else{
+            df = new SimpleDateFormat("yyyy/MM/dd hh:mm a");
+        }
+
 
         txtReceivedDate.setText(df.format(receivedDate));
     }

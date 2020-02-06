@@ -2,6 +2,7 @@ package org.openstack.android.summit.common.entities.notifications;
 
 import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.Summit;
+import org.openstack.android.summit.common.entities.SummitEvent;
 import org.openstack.android.summit.common.entities.teams.Team;
 
 import java.util.Date;
@@ -137,6 +138,16 @@ public class TeamPushNotification extends RealmObject implements ITeamPushNotifi
     @Override
     public void markAsRead() {
         notification.markAsRead();
+    }
+
+    @Override
+    public SummitEvent getEvent() {
+        return null;
+    }
+
+    @Override
+    public void setEvent(SummitEvent event) {
+
     }
 
 }

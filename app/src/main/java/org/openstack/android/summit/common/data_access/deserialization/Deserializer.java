@@ -23,6 +23,8 @@ import org.openstack.android.summit.common.entities.TrackGroup;
 import org.openstack.android.summit.common.entities.Venue;
 import org.openstack.android.summit.common.entities.VenueFloor;
 import org.openstack.android.summit.common.entities.VenueRoom;
+import org.openstack.android.summit.common.entities.notifications.PushNotification;
+import org.openstack.android.summit.common.security.ISecurityManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +53,17 @@ public class Deserializer implements IDeserializer {
     IVenueRoomDeserializer venueRoomDeserializer;
     IGroupEventDeserializer groupEventDeserializer;
     IWifiConnectionDeserializer wifiConnectionDeserializer;
+    IPushNotificationDeserializer pushNotificationDeserializer;
+    ISecurityManager securityManager;
 
     public Deserializer()
     {
+    }
+
+    @Override
+    public void setSecurityManager(ISecurityManager securityManager) {
+        this.securityManager = securityManager;
+        this.pushNotificationDeserializer.setSecurityManager(this.securityManager);
     }
 
     @Inject
@@ -72,7 +82,8 @@ public class Deserializer implements IDeserializer {
         IVenueDeserializer venueDeserializer,
         IVenueFloorDeserializer venueFloorDeserializer,
         IGroupEventDeserializer groupEventDeserializer,
-        IWifiConnectionDeserializer wifiConnectionDeserializer
+        IWifiConnectionDeserializer wifiConnectionDeserializer,
+        IPushNotificationDeserializer pushNotificationDeserializer
     )
     {
         this.genericDeserializer             = genericDeserializer;
@@ -90,6 +101,7 @@ public class Deserializer implements IDeserializer {
         this.venueFloorDeserializer          = venueFloorDeserializer;
         this.groupEventDeserializer          = groupEventDeserializer;
         this.wifiConnectionDeserializer      = wifiConnectionDeserializer;
+        this.pushNotificationDeserializer    = pushNotificationDeserializer;
     }
 
     @Override
@@ -136,6 +148,9 @@ public class Deserializer implements IDeserializer {
         }
         else if (type == SummitWIFIConnection.class) {
             return (T)wifiConnectionDeserializer.deserialize(jsonString);
+        }
+        else if (type == PushNotification.class) {
+            return (T)pushNotificationDeserializer.deserialize(jsonString);
         }
         else {
             return genericDeserializer.deserialize(jsonString, type);

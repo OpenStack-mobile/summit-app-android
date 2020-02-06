@@ -13,7 +13,6 @@ import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.notifications.IPushNotification;
 import org.openstack.android.summit.common.entities.notifications.PushNotification;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -24,6 +23,7 @@ import java.security.InvalidParameterException;
 import java.util.List;
 
 import io.realm.Realm;
+import io.reactivex.Observable;
 
 /**
  * Created by sebastian on 8/20/2016.
@@ -52,9 +52,23 @@ public class PushNotificationsListInteractor
     }
 
     @Override
-    public List<PushNotificationListItemDTO> getNotifications(String term, Member member, int page, int objectsPerPage) {
-        List<IPushNotification> notifications = pushNotificationDataStore.getByFilter(term, member, page, objectsPerPage);
-        return createDTOList(notifications, PushNotificationListItemDTO.class);
+    public Observable<List<PushNotificationListItemDTO>> getNotifications(String term, Member member, int page, int objectsPerPage) {
+        // try to get remote
+        try {
+            return pushNotificationDataStore
+                    .getByFilterRemote(term, page, objectsPerPage)
+                    .map(list -> createDTOList(list, PushNotificationListItemDTO.class));
+        }
+        catch (Exception ex){
+            // if not get local
+            Log.e(Constants.LOG_TAG, ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
+    public List<PushNotificationListItemDTO> getLocalNotifications(String term, Member member, int page, int objectsPerPage) {
+        return createDTOList(pushNotificationDataStore.getByFilter(term, member, page, objectsPerPage), PushNotificationListItemDTO.class);
     }
 
     @Override

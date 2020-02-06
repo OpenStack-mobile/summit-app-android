@@ -1,7 +1,6 @@
 package org.openstack.android.summit.common.data_access;
 
 import org.openstack.android.summit.common.entities.Feedback;
-import org.openstack.android.summit.common.entities.Summit;
 import org.openstack.android.summit.common.entities.SummitEvent;
 
 import java.util.List;

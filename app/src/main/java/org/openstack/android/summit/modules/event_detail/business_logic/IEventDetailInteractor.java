@@ -2,8 +2,6 @@ package org.openstack.android.summit.modules.event_detail.business_logic;
 
 import org.openstack.android.summit.common.DTOs.EventDetailDTO;
 import org.openstack.android.summit.common.DTOs.FeedbackDTO;
-import org.openstack.android.summit.common.IBaseWireframe;
-import org.openstack.android.summit.common.business_logic.IInteractorAsyncOperationListener;
 import org.openstack.android.summit.common.business_logic.IScheduleableInteractor;
 
 import java.util.List;

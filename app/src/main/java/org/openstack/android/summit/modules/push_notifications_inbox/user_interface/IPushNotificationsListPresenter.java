@@ -10,7 +10,7 @@ public interface IPushNotificationsListPresenter extends IBasePresenter<IPushNot
 
     void setView(IPushNotificationsListView notificationsListFragment);
 
-    void loadData();
+    void loadData(int page, int totalItemsCount);
 
     int getObjectsPerPage();
 

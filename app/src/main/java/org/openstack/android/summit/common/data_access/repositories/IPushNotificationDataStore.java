@@ -1,9 +1,10 @@
 package org.openstack.android.summit.common.data_access.repositories;
 
 import org.openstack.android.summit.common.entities.Member;
-import org.openstack.android.summit.common.entities.notifications.IPushNotification;
 import org.openstack.android.summit.common.entities.notifications.PushNotification;
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * Created by sebastian on 8/20/2016.
@@ -12,5 +13,7 @@ public interface IPushNotificationDataStore extends IGenericDataStore<PushNotifi
 
     long getNotOpenedCountBy(Member member);
 
-    List<IPushNotification> getByFilter(String searchTerm, Member member, int page, int objectsPerPage);
+    List<PushNotification> getByFilter(String searchTerm, Member member, int page, int objectsPerPage);
+
+    Observable<List<PushNotification>> getByFilterRemote(String searchTerm, int page, int objectsPerPage);
 }

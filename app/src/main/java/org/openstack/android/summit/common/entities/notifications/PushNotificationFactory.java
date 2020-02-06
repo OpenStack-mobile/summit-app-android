@@ -57,13 +57,12 @@ public class PushNotificationFactory implements IPushNotificationFactory {
 
                 switch(channel){
                     case IPushNotificationChannel.Event:{
-                        pushNotification  = new EventPushNotification();
+                        pushNotification  = new PushNotification();
                         int eventId       = Integer.parseInt(data.get("event_id"));
                         SummitEvent event = this.eventDataStore.getById(eventId);
 
                         if(event == null) throw new NotFoundEntityException();
-
-                        ((EventPushNotification)pushNotification).setEvent(event);
+                        pushNotification.setEvent(event);
                     }
                     break;
                     default:{

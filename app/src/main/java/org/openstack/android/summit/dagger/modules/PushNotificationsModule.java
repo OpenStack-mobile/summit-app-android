@@ -1,7 +1,6 @@
 package org.openstack.android.summit.dagger.modules;
 
 import org.openstack.android.summit.common.api.ISummitSelector;
-import org.openstack.android.summit.common.data_access.repositories.IEventPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitEventDataStore;
@@ -29,7 +28,6 @@ public class PushNotificationsModule {
             ISecurityManager securityManager,
             IPushNotificationDataStore pushNotificationDataStore,
             ITeamPushNotificationDataStore teamPushNotificationDataStore,
-            IEventPushNotificationDataStore eventPushNotificationDataStore,
             ISummitSelector summitSelector,
             ISummitDataStore summitDataStore,
             IReachability reachability
@@ -40,7 +38,6 @@ public class PushNotificationsModule {
                         securityManager,
                         pushNotificationDataStore,
                         teamPushNotificationDataStore,
-                        eventPushNotificationDataStore,
                         summitDataStore,
                         summitSelector,
                         reachability

@@ -3,8 +3,10 @@ package org.openstack.android.summit.dagger.modules;
 import org.openstack.android.summit.common.ISession;
 import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.data_access.IMemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.IPushNotificationRemoteDataStore;
 import org.openstack.android.summit.common.data_access.ISummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.MemberRemoteDataStore;
+import org.openstack.android.summit.common.data_access.PushNotificationRemoteDataStore;
 import org.openstack.android.summit.common.data_access.SummitEventRemoteDataStore;
 import org.openstack.android.summit.common.data_access.data_polling.ClassResolver;
 import org.openstack.android.summit.common.data_access.data_polling.DataUpdatePoller;
@@ -38,6 +40,7 @@ import org.openstack.android.summit.common.data_access.deserialization.IPresenta
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationSlideDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationSpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.IPresentationVideoDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.IPushNotificationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.ISummitEventDeserializer;
@@ -56,6 +59,7 @@ import org.openstack.android.summit.common.data_access.deserialization.Presentat
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSlideDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationSpeakerDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.PresentationVideoDeserializer;
+import org.openstack.android.summit.common.data_access.deserialization.PushNotificationDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitAttendeeDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.SummitEventDeserializer;
@@ -68,7 +72,6 @@ import org.openstack.android.summit.common.data_access.deserialization.VenueFloo
 import org.openstack.android.summit.common.data_access.deserialization.VenueRoomDeserializer;
 import org.openstack.android.summit.common.data_access.deserialization.WifiConnectionDeserializer;
 import org.openstack.android.summit.common.data_access.repositories.IDataUpdateDataStore;
-import org.openstack.android.summit.common.data_access.repositories.IEventPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IEventTypeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IImageDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IMemberDataStore;
@@ -96,7 +99,6 @@ import org.openstack.android.summit.common.data_access.repositories.IVenueFloorD
 import org.openstack.android.summit.common.data_access.repositories.IVenueRoomDataStore;
 import org.openstack.android.summit.common.data_access.repositories.IWifiConnectionDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.DataUpdateDataStore;
-import org.openstack.android.summit.common.data_access.repositories.impl.EventPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.EventTypeDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.ImageDataStore;
 import org.openstack.android.summit.common.data_access.repositories.impl.MemberDataStore;
@@ -159,6 +161,11 @@ public class DataAccessModule {
     @Provides
     IGroupEventDeserializer providesGroupEventDeserializer() {
         return new SummitGroupEventDeserializer();
+    }
+
+    @Provides
+    IPushNotificationDeserializer providesPushNotificationDeserializer(){
+        return new PushNotificationDeserializer();
     }
 
     @Provides
@@ -314,7 +321,8 @@ public class DataAccessModule {
                                        IVenueDeserializer venueDeserializer,
                                        IVenueFloorDeserializer venueFloorDeserializer,
                                        IGroupEventDeserializer groupEventDeserializer,
-                                       IWifiConnectionDeserializer wifiConnectionDeserializer
+                                       IWifiConnectionDeserializer wifiConnectionDeserializer,
+                                       IPushNotificationDeserializer pushNotificationDeserializer
                                        )
     {
         return new Deserializer
@@ -333,7 +341,8 @@ public class DataAccessModule {
             venueDeserializer,
             venueFloorDeserializer,
             groupEventDeserializer,
-            wifiConnectionDeserializer
+            wifiConnectionDeserializer,
+            pushNotificationDeserializer
         );
     }
 
@@ -353,6 +362,24 @@ public class DataAccessModule {
     )
     {
         return new MemberRemoteDataStore(nonConfirmedSummitAttendeeDeserializer, deserializer, restClientRxJava, summitSelector);
+    }
+
+    @Provides
+    IPushNotificationRemoteDataStore providesPushNotificationRemoteDataStore(
+            ISecurityManager securityManager,
+            IDeserializer deserializer,
+            @Named("MemberProfileRXJava2") Retrofit restClientUserProfile,
+            @Named("ServiceProfileRXJava2") Retrofit restClientServiceProfile,
+            ISummitSelector summitSelector
+    ){
+        return new PushNotificationRemoteDataStore
+        (
+            securityManager,
+            deserializer,
+            restClientUserProfile,
+            restClientServiceProfile,
+            summitSelector
+        );
     }
 
     @Provides
@@ -399,9 +426,13 @@ public class DataAccessModule {
     }
 
     @Provides
-    IPushNotificationDataStore providesNotificationDataStore(ISaveOrUpdateStrategy saveOrUpdateStrategy,
-                                                             IDeleteStrategy deleteStrategy) {
-        return new PushNotificationDataStore(saveOrUpdateStrategy, deleteStrategy);
+    IPushNotificationDataStore providesNotificationDataStore
+    (
+        IPushNotificationRemoteDataStore remoteDataStore,
+        ISaveOrUpdateStrategy saveOrUpdateStrategy,
+        IDeleteStrategy deleteStrategy
+    ) {
+        return new PushNotificationDataStore(remoteDataStore, saveOrUpdateStrategy, deleteStrategy);
     }
 
     @Provides
@@ -559,15 +590,6 @@ public class DataAccessModule {
         return new TeamPushNotificationDataStore(saveOrUpdateStrategy, deleteStrategy);
     }
 
-    @Provides
-    IEventPushNotificationDataStore providesEventPushNotificationDataStore
-    (
-        ISaveOrUpdateStrategy saveOrUpdateStrategy,
-        IDeleteStrategy deleteStrategy
-    )
-    {
-        return new EventPushNotificationDataStore(saveOrUpdateStrategy, deleteStrategy);
-    }
 
     @Provides
     IPresentationDataStore providesPresentationDataStore

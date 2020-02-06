@@ -6,9 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.openstack.android.summit.common.Constants;
+import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
@@ -18,6 +21,8 @@ import org.openstack.android.summit.modules.push_notifications_inbox.business_lo
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 /**
  * Created by sebastian on 8/19/2016.
  */
@@ -26,7 +31,7 @@ public class PushNotificationsListPresenter
         implements IPushNotificationsListPresenter {
 
     private int page                       = 1;
-    private final int OBJECTS_PER_PAGE     = 20;
+    private final int OBJECTS_PER_PAGE     = 10;
     private Boolean loadedAllNotifications = false;
     private String  term                   = "";
     private boolean resetState             = false;
@@ -53,7 +58,7 @@ public class PushNotificationsListPresenter
         super.onResume();
         if(resetState){
             resetState();
-            loadData();
+            loadData(1, getObjectsPerPage());
             resetState = false;
         }
     }
@@ -78,7 +83,7 @@ public class PushNotificationsListPresenter
     public void loadDataByTerm(String term){
         this.term = term;
         resetState();
-        loadData();
+        loadData(1, this.getObjectsPerPage());
     }
 
     @Override
@@ -98,19 +103,46 @@ public class PushNotificationsListPresenter
     public void onCreateView(Bundle savedInstanceState) {
         view.setSwitchEnableNotificationsState(interactor.getBlockAllNotifications());
         loadedAllNotifications = false;
-        loadData();
+        loadData(1 , this.getObjectsPerPage());
     }
 
     @Override
-    public void loadData() {
+    public void loadData(int page, int totalItemsCount) {
+
         if (loadedAllNotifications) {
             return;
         }
-        List<PushNotificationListItemDTO> notificationsPage = interactor.getNotifications(term, securityManager.getCurrentMember(), page, OBJECTS_PER_PAGE);
-        notifications.addAll(notificationsPage);
-        view.setNotifications(notifications);
-        loadedAllNotifications = notificationsPage.size() < OBJECTS_PER_PAGE;
-        page++;
+
+        this.view.showActivityIndicator();
+
+        interactor
+                .getNotifications(term, securityManager.getCurrentMember(), page, OBJECTS_PER_PAGE)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        ( notifications ) -> {
+                            if(page == 1)
+                                this.notifications.clear();
+                            this.notifications.addAll(notifications);
+                            view.setNotifications(this.notifications);
+
+                            loadedAllNotifications = notifications.size() < OBJECTS_PER_PAGE;
+
+                            view.hideActivityIndicator();
+                        },
+                        (ex) -> {
+                            Log.e(Constants.LOG_TAG, ex.getMessage());
+                            Log.i(Constants.LOG_TAG, "trying to get notification data from local storage ...");
+                            List localNotifications = this.interactor.getLocalNotifications(term, securityManager.getCurrentMember(), page, OBJECTS_PER_PAGE);
+                            if(page == 1)
+                                this.notifications.clear();
+                            this.notifications.addAll(localNotifications);
+                            view.setNotifications(this.notifications);
+
+                            loadedAllNotifications = localNotifications.size() < OBJECTS_PER_PAGE;
+
+                            view.hideActivityIndicator();
+                        }
+                );
     }
 
     @Override
