@@ -51,11 +51,13 @@ public class PushNotificationRemoteDataStore
         Retrofit restClient = securityManager.isLoggedIn() ?
                 this.restClientUserProfile :
                 this.restClientServiceProfile;
+
         String filter = null;
 
         if(searchTerm != null && !searchTerm.isEmpty()){
             filter = "message=@"+searchTerm;
         }
+
         return restClient.create(INotificationsApi.class)
                 .getSent(summitSelector.getCurrentSummitId(),
                         page,
@@ -77,8 +79,7 @@ public class PushNotificationRemoteDataStore
                     return RealmFactory.transaction(session ->
                             deserializer.deserializePage(response.body().string(), PushNotification.class)
                     );
-                }).doOnTerminate( () ->
-                        RealmFactory.closeSession()
-                );
+                }).doOnTerminate(RealmFactory::closeSession);
+
     }
 }

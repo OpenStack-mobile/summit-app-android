@@ -1,5 +1,6 @@
 package org.openstack.android.summit.common.services;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -10,6 +11,7 @@ import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.notifications.IPushNotification;
 import org.openstack.android.summit.common.entities.notifications.IPushNotificationFactory;
 import org.openstack.android.summit.common.security.ISecurityManager;
+import org.openstack.android.summit.common.utils.RealmFactory;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.IPushNotificationInteractor;
 import org.openstack.android.summit.modules.push_notifications_inbox.business_logic.ISettingsInteractor;
 import java.util.Locale;
@@ -183,6 +185,9 @@ public class PushNotificationReceiverService extends FirebaseMessagingService {
         }
         catch (Exception ex) {
             Log.w(Constants.LOG_TAG, ex);
+        }
+        finally {
+            RealmFactory.closeSession();
         }
     }
 }

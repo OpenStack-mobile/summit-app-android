@@ -4,12 +4,10 @@ import org.openstack.android.summit.common.data_access.IPushNotificationRemoteDa
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.strategies.IDeleteStrategy;
 import org.openstack.android.summit.common.data_access.repositories.strategies.ISaveOrUpdateStrategy;
-import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.notifications.PushNotification;
 import org.openstack.android.summit.common.utils.RealmFactory;
 import java.util.ArrayList;
 import java.util.List;
-
 import io.reactivex.Observable;
 import io.realm.Case;
 import io.realm.RealmQuery;
@@ -36,15 +34,15 @@ public class PushNotificationDataStore
     }
 
     @Override
-    public long getNotOpenedCountBy(Member member) {
+    public long getNotOpenedCountBy(Integer memberId) {
         RealmQuery<PushNotification> query = RealmFactory.getSession().where(PushNotification.class).equalTo("opened", false);
-        if(member == null){
+        if(memberId == null || memberId == 0){
             query = query.isNull("owner");
         }
         else{
             query
                     .beginGroup()
-                    .equalTo("owner.id", member.getId())
+                    .equalTo("owner.id", memberId)
                     .or()
                     .isNull("owner")
                     .endGroup();
@@ -53,16 +51,16 @@ public class PushNotificationDataStore
     }
 
     @Override
-    public List<PushNotification> getByFilter(String searchTerm, Member member, int page, int objectsPerPage) {
+    public List<PushNotification> getByFilter(String searchTerm, Integer memberId, int page, int objectsPerPage) {
         RealmQuery<PushNotification> query = RealmFactory.getSession().where(PushNotification.class);
 
-        if(member == null){
+        if(memberId == null || memberId == 0){
             query = query.isNull("owner");
         }
         else{
             query
                     .beginGroup()
-                        .equalTo("owner.id", member.getId())
+                        .equalTo("owner.id", memberId)
                         .or()
                         .isNull("owner")
                     .endGroup();
@@ -98,7 +96,9 @@ public class PushNotificationDataStore
     }
 
     @Override
-    public Observable<List<PushNotification>> getByFilterRemote(String searchTerm, int page, int objectsPerPage) {
-        return remoteDataStore.get(searchTerm, page, objectsPerPage);
+    public Observable<List<PushNotification>> getByFilterRemote(String searchTerm, Integer memberId, int page, int objectsPerPage) {
+        return remoteDataStore.get(searchTerm, page, objectsPerPage).onErrorReturn(ex -> RealmFactory.transaction(session ->
+             this.getByFilter(searchTerm, memberId, page, objectsPerPage)
+        )).doOnTerminate(RealmFactory::closeSession);
     }
 }

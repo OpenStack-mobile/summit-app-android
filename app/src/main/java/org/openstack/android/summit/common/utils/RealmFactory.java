@@ -32,7 +32,7 @@ final public class RealmFactory {
         new ThreadLocal<Realm>() {
         @Override
         protected Realm initialValue() {
-            Log.d(Constants.LOG_TAG, String.format("Getting initial Realm instance for thread %s", Thread.currentThread().getName()));
+            Log.d(Constants.LOG_TAG, String.format("Getting initial Realm instance for thread %s (%d)", Thread.currentThread().getName(), Thread.currentThread().getId()));
             return Realm.getDefaultInstance();
         }
     };
@@ -59,7 +59,7 @@ final public class RealmFactory {
         synchronized (lockCloseSession) {
             Realm realmSession = session.get();
             if (realmSession != null && !realmSession.isClosed()) {
-                Log.d(Constants.LOG_TAG, String.format("Closing Realm instance for thread %s", Thread.currentThread().getName()));
+                Log.d(Constants.LOG_TAG, String.format("Closing Realm instance for thread %s (%d)", Thread.currentThread().getName(), Thread.currentThread().getId()));
                 realmSession.close();
             }
             session.remove();

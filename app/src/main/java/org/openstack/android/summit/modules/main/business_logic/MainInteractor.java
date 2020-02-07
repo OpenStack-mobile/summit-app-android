@@ -94,6 +94,6 @@ public class MainInteractor extends BaseInteractor implements IMainInteractor {
 
     @Override
     public long getNotReadNotificationsCount() {
-        return pushNotificationDataStore.getNotOpenedCountBy(securityManager.getCurrentMember());
+        return pushNotificationDataStore.getNotOpenedCountBy(securityManager.getCurrentMemberId());
     }
 }

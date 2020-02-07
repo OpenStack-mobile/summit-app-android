@@ -12,7 +12,6 @@ import org.openstack.android.summit.common.api.ISummitSelector;
 import org.openstack.android.summit.common.business_logic.BaseInteractor;
 import org.openstack.android.summit.common.data_access.repositories.IPushNotificationDataStore;
 import org.openstack.android.summit.common.data_access.repositories.ISummitDataStore;
-import org.openstack.android.summit.common.entities.Member;
 import org.openstack.android.summit.common.entities.notifications.PushNotification;
 import org.openstack.android.summit.common.network.IReachability;
 import org.openstack.android.summit.common.security.ISecurityManager;
@@ -52,23 +51,22 @@ public class PushNotificationsListInteractor
     }
 
     @Override
-    public Observable<List<PushNotificationListItemDTO>> getNotifications(String term, Member member, int page, int objectsPerPage) {
+    public Observable<List<PushNotificationListItemDTO>> getNotifications(String term, Integer memberId, int page, int objectsPerPage) {
         // try to get remote
         try {
             return pushNotificationDataStore
-                    .getByFilterRemote(term, page, objectsPerPage)
+                    .getByFilterRemote(term, memberId, page, objectsPerPage)
                     .map(list -> createDTOList(list, PushNotificationListItemDTO.class));
         }
         catch (Exception ex){
-            // if not get local
             Log.e(Constants.LOG_TAG, ex.getMessage());
             throw ex;
         }
     }
 
     @Override
-    public List<PushNotificationListItemDTO> getLocalNotifications(String term, Member member, int page, int objectsPerPage) {
-        return createDTOList(pushNotificationDataStore.getByFilter(term, member, page, objectsPerPage), PushNotificationListItemDTO.class);
+    public List<PushNotificationListItemDTO> getLocalNotifications(String term, Integer memberId, int page, int objectsPerPage) {
+        return createDTOList(pushNotificationDataStore.getByFilter(term, memberId, page, objectsPerPage), PushNotificationListItemDTO.class);
     }
 
     @Override

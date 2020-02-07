@@ -10,8 +10,10 @@ import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.crashlytics.android.Crashlytics;
+
+import org.openstack.android.summit.R;
 import org.openstack.android.summit.common.Constants;
-import org.openstack.android.summit.common.DTOs.FeedbackDTO;
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
 import org.openstack.android.summit.common.security.ISecurityManager;
 import org.openstack.android.summit.common.user_interface.BasePresenter;
@@ -116,7 +118,7 @@ public class PushNotificationsListPresenter
         this.view.showActivityIndicator();
 
         interactor
-                .getNotifications(term, securityManager.getCurrentMember(), page, OBJECTS_PER_PAGE)
+                .getNotifications(term, securityManager.getCurrentMemberId(), page, OBJECTS_PER_PAGE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         ( notifications ) -> {
@@ -131,16 +133,15 @@ public class PushNotificationsListPresenter
                         },
                         (ex) -> {
                             Log.e(Constants.LOG_TAG, ex.getMessage());
-                            Log.i(Constants.LOG_TAG, "trying to get notification data from local storage ...");
-                            List localNotifications = this.interactor.getLocalNotifications(term, securityManager.getCurrentMember(), page, OBJECTS_PER_PAGE);
-                            if(page == 1)
-                                this.notifications.clear();
-                            this.notifications.addAll(localNotifications);
-                            view.setNotifications(this.notifications);
-
-                            loadedAllNotifications = localNotifications.size() < OBJECTS_PER_PAGE;
-
+                            Crashlytics.logException(ex);
                             view.hideActivityIndicator();
+                            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(view.getFragmentActivity());
+
+                            builder.setTitle(R.string.generic_error_title)
+                                    .setMessage(R.string.generic_error_message)
+                                    .setPositiveButton(R.string.generic_error_message_ok,  (dialog, id) -> dialog.dismiss() )
+                                    .create()
+                                    .show();
                         }
                 );
     }

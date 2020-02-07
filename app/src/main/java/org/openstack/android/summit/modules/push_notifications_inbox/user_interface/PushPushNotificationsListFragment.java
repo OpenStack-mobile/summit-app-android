@@ -152,8 +152,9 @@ public class PushPushNotificationsListFragment
         notificationsList.setAdapter(listAdapter);
         notificationsList.setOnScrollListener(new InfiniteScrollListener(presenter.getObjectsPerPage()) {
             @Override
-            public void loadMore(int page, int totalItemsCount) {
+            public boolean onLoadMore(int page, int totalItemsCount) {
                 presenter.loadData(page, totalItemsCount);
+                return true;
             }
         });
 

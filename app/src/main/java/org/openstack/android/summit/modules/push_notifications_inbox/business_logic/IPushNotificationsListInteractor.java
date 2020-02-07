@@ -2,7 +2,6 @@ package org.openstack.android.summit.modules.push_notifications_inbox.business_l
 
 import org.openstack.android.summit.common.DTOs.PushNotificationListItemDTO;
 import org.openstack.android.summit.common.business_logic.IBaseInteractor;
-import org.openstack.android.summit.common.entities.Member;
 import java.util.List;
 import io.reactivex.Observable;
 
@@ -11,9 +10,9 @@ import io.reactivex.Observable;
  */
 public interface IPushNotificationsListInteractor extends IBaseInteractor, ISettingsInteractor {
 
-     Observable<List<PushNotificationListItemDTO>> getNotifications(String term, Member member, int page, int objectsPerPage);
+     Observable<List<PushNotificationListItemDTO>> getNotifications(String term, Integer memberId, int page, int objectsPerPage);
 
-     List<PushNotificationListItemDTO> getLocalNotifications(String term, Member member, int page, int objectsPerPage);
+     List<PushNotificationListItemDTO> getLocalNotifications(String term, Integer memberId, int page, int objectsPerPage);
 
      void deleteNotification(PushNotificationListItemDTO notification);
 
